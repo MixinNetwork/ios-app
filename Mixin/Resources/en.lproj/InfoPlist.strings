@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "Mixin";
+"NSContactsUsageDescription" = "Mixin uses your address book to connect you with your contacts.";
+"NSCameraUsageDescription" = "Mixin uses the camera to set profile photo, and send photo to your contact in chat.";
+"NSPhotoLibraryUsageDescription" = "Mixin uses the photo library to set profile photo, and send photo to your contact in chat.";

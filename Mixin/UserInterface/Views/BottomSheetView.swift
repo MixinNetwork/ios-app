@@ -1,0 +1,77 @@
+import UIKit
+
+class BottomSheetView: UIView {
+
+    @IBOutlet weak var popupView: UIView!
+
+    @IBOutlet weak var contentBottomConstraint: NSLayoutConstraint!
+
+    internal(set) var isShowing = false
+    internal(set) var windowBackgroundColor = UIColor(white: 0.0, alpha: 0.7)
+
+    private var animationOriginPoint: CGPoint {
+        return CGPoint(x: self.center.x, y: self.bounds.size.height + self.popupView.bounds.size.height)
+    }
+    private var animationEndPoint: CGPoint {
+        return CGPoint(x: self.center.x, y: self.bounds.size.height-(self.popupView.bounds.size.height * 0.5))
+    }
+
+    func presentPopupControllerAnimated() {
+        UIApplication.currentActivity()?.view.endEditing(true)
+        guard !isShowing, let window = UIApplication.shared.keyWindow else {
+            return
+        }
+
+        isShowing = true
+        self.frame = window.bounds
+
+        self.backgroundColor = windowBackgroundColor
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupControllerAnimated))
+        gestureRecognizer.delegate = self
+        self.addGestureRecognizer(gestureRecognizer)
+
+        self.popupView.center = getAnimationStartPoint()
+        window.addSubview(self)
+        self.alpha = 0
+
+        UIView.animate(withDuration: 0.3, animations: {
+            self.popAnimationBody()
+        })
+    }
+
+    @objc func dismissPopupControllerAnimated() {
+        self.alpha = 1.0
+        isShowing = false
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alpha = 0
+            self.popupView.center = self.getAnimationStartPoint()
+        }, completion: { (finished: Bool) -> Void in
+            self.removeFromSuperview()
+        })
+    }
+
+    internal func popAnimationBody() {
+        self.alpha = 1.0
+        self.popupView.center = self.getAnimationEndPoint()
+    }
+
+    func getAnimationStartPoint() -> CGPoint {
+        return animationOriginPoint
+    }
+
+    func getAnimationEndPoint() -> CGPoint {
+        return animationEndPoint
+    }
+}
+
+extension BottomSheetView: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if popupView.point(inside: touch.location(in: popupView), with: nil) {
+            return false
+        }
+        return true
+    }
+
+}
+

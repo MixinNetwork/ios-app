@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NumberPadView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="contentViewBottomConstraint" destination="3r6-sf-cQn" id="Ame-O3-ovn"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="226"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="oof-pp-1JB">
+                    <rect key="frame" x="6" y="6" width="363" height="218"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="HOl-Eg-XgN">
+                            <rect key="frame" x="0.0" y="0.0" width="363" height="50"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ace-dV-Ufg" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="1"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="1bR-J0-NVO"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IDe-df-6wP" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="123" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="2"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="Ye2-C5-eGR"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BJi-dP-dcG" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="246" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="3"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="bgL-Sd-Prw"/>
+                                    </connections>
+                                </view>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="hyJ-Kf-3rw">
+                            <rect key="frame" x="0.0" y="56" width="363" height="50"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vc3-93-UYA" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="4"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="WxT-SJ-mI2"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DIX-ma-Ccx" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="123" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="5"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="rm3-vC-5ZI"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qnm-QB-D6g" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="246" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="6"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="V0F-g0-D53"/>
+                                    </connections>
+                                </view>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="NgJ-yU-g3N">
+                            <rect key="frame" x="0.0" y="112" width="363" height="50"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3ee-NU-nWb" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="7"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="KYB-Mq-SJb"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tcp-xH-jsN" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="123" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="kLj-4f-jXW"/>
+                                    </connections>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IyS-r3-gHl" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="246" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="9"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="UZx-3M-y3j"/>
+                                    </connections>
+                                </view>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="ffT-ay-LCe">
+                            <rect key="frame" x="0.0" y="168" width="363" height="50"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E1M-YI-kHY">
+                                    <rect key="frame" x="0.0" y="0.0" width="117" height="50"/>
+                                    <color key="backgroundColor" red="0.78039215689999997" green="0.79607843140000001" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KMT-73-JmU" customClass="NumberPadButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="123" y="0.0" width="117" height="50"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="number">
+                                            <integer key="value" value="0"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="inputAction:" destination="-1" eventType="touchUpInside" id="18A-7C-tG3"/>
+                                    </connections>
+                                </view>
+                                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VW6-4a-Bcr">
+                                    <rect key="frame" x="246" y="0.0" width="117" height="50"/>
+                                    <color key="backgroundColor" red="0.78039215689999997" green="0.79607843140000001" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    <state key="normal" image="ic_keyboard_delete">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="deleteAction:" destination="-1" eventType="touchUpInside" id="l52-AH-r1e"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="0.7803921568627451" green="0.79607843137254897" blue="0.82745098039215681" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="oof-pp-1JB" secondAttribute="bottom" constant="2" id="3r6-sf-cQn"/>
+                <constraint firstItem="oof-pp-1JB" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="6" id="DXQ-31-olw"/>
+                <constraint firstAttribute="trailing" secondItem="oof-pp-1JB" secondAttribute="trailing" constant="6" id="fMM-yg-h4S"/>
+                <constraint firstItem="oof-pp-1JB" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="6" id="nIV-51-Wok"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="34.5" y="227"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_keyboard_delete" width="23" height="17"/>
+    </resources>
+</document>

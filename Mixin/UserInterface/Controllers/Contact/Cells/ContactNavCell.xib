@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="78" id="gBT-V8-a8z" userLabel="ContactNavCell" customClass="ContactNavCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gBT-V8-a8z" id="XZ4-gd-lxM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="63.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qep-5h-mGg">
+                        <rect key="frame" x="15" y="12" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="1Ew-px-myO"/>
+                            <constraint firstAttribute="height" constant="40" id="AtC-Iw-lE6"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Group Chat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AAh-V1-Eh2">
+                        <rect key="frame" x="70" y="12" width="120.5" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create a group chat with up to 100 friends" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXl-Oj-4Ry">
+                        <rect key="frame" x="70" y="38" width="268.5" height="17"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Qep-5h-mGg" firstAttribute="centerY" secondItem="XZ4-gd-lxM" secondAttribute="centerY" id="HSs-iZ-JcP"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="vXl-Oj-4Ry" secondAttribute="trailing" constant="15" id="HxP-Wz-9cL"/>
+                    <constraint firstItem="AAh-V1-Eh2" firstAttribute="leading" secondItem="Qep-5h-mGg" secondAttribute="trailing" constant="15" id="Pmz-ix-cEd"/>
+                    <constraint firstItem="vXl-Oj-4Ry" firstAttribute="top" secondItem="AAh-V1-Eh2" secondAttribute="bottom" constant="6" id="QH4-5i-tse"/>
+                    <constraint firstItem="vXl-Oj-4Ry" firstAttribute="leading" secondItem="Qep-5h-mGg" secondAttribute="trailing" constant="15" id="aUm-OM-gqo"/>
+                    <constraint firstItem="AAh-V1-Eh2" firstAttribute="top" secondItem="Qep-5h-mGg" secondAttribute="top" id="qg6-yq-x2O"/>
+                    <constraint firstItem="Qep-5h-mGg" firstAttribute="leading" secondItem="XZ4-gd-lxM" secondAttribute="leading" constant="15" id="tNq-jo-cPr"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="iconImageView" destination="Qep-5h-mGg" id="SUa-3P-rGx"/>
+                <outlet property="summaryLabel" destination="vXl-Oj-4Ry" id="JrS-W8-Jw2"/>
+                <outlet property="titleLabel" destination="AAh-V1-Eh2" id="HAo-JD-iRt"/>
+            </connections>
+            <point key="canvasLocation" x="-127.5" y="-98"/>
+        </tableViewCell>
+    </objects>
+</document>

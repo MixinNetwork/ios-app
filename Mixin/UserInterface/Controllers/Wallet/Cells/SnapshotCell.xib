@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell_identifier_snapshot" rowHeight="60" id="KGk-i7-Jjw" customClass="SnapshotCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="59.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="+ 1.000000000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cTW-Ua-QlQ">
+                        <rect key="frame" x="16" y="10" width="119.5" height="20.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="1" green="0.0" blue="0.1215686275" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="Nov 14, 11:28" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HSn-UN-ipO">
+                        <rect key="frame" x="225.5" y="13" width="78.5" height="16"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From Crossle" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cfr-nK-Z3S">
+                        <rect key="frame" x="16" y="32.5" width="288" height="17"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Cfr-nK-Z3S" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="7Ex-Oq-B5n"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="Cfr-nK-Z3S" secondAttribute="trailing" id="9JH-7E-3IG"/>
+                    <constraint firstItem="Cfr-nK-Z3S" firstAttribute="top" secondItem="cTW-Ua-QlQ" secondAttribute="bottom" constant="2" id="PBP-Jy-Jqg"/>
+                    <constraint firstItem="HSn-UN-ipO" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="cTW-Ua-QlQ" secondAttribute="trailing" constant="4" id="TVx-pZ-ky4"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="HSn-UN-ipO" secondAttribute="trailing" id="XVv-TO-Jhg"/>
+                    <constraint firstItem="HSn-UN-ipO" firstAttribute="centerY" secondItem="cTW-Ua-QlQ" secondAttribute="centerY" id="jS1-Hc-ri5"/>
+                    <constraint firstItem="cTW-Ua-QlQ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="r0Y-YC-zUE"/>
+                    <constraint firstItem="cTW-Ua-QlQ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="sFf-6I-1Nq"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="amountLabel" destination="cTW-Ua-QlQ" id="PvH-yb-FvR"/>
+                <outlet property="detailLabel" destination="Cfr-nK-Z3S" id="4HZ-cO-yvC"/>
+                <outlet property="timeLabel" destination="HSn-UN-ipO" id="Wdi-0h-xDb"/>
+            </connections>
+            <point key="canvasLocation" x="25" y="64"/>
+        </tableViewCell>
+    </objects>
+</document>

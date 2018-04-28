@@ -1,0 +1,380 @@
+
+// Common
+"dialog_button_ok" = "确定";
+"dialog_button_yes" = "是";
+"dialog_button_cancel" = "取消";
+"dialog_button_save" = "保存";
+"dialog_button_change" = "更改";
+"dialog_button_confirm" = "确认";
+"dialog_button_got_it" = "知道了";
+"dialog_progress_logout" = "退出登录...";
+"dialog_progress_connect" = "正在连接...";
+"connection_hint_connecting" = "正在连接";
+"connection_hint_waiting" = "等待重连";
+"action_next" = "下一步";
+"action_camera" = "相机";
+"action_continue" = "继续";
+"action_choose_photo" = "选择图片";
+"action_remove" = "删除";
+"action_done" = "完成";
+"action_save" = "保存";
+"action_see_more" = "查看更多";
+"menu_delete" = "删除";
+
+"date_format_day" = "ahh:mm";
+"date_format_date" = "yyyy/MM/dd";
+"date_format_month" = "MM月d日 E";
+"date_format_transation" = "MM月d日 HH:mm";
+
+// Toast
+"toast_server_error" = "服务器正在维护中";
+"toast_api_error_forbidden" = "禁止访问";
+"toast_api_error_no_connection" = "无网络连接";
+"toast_api_error_connection_timeout" = "网络连接超时";
+"toast_api_error_server_data_error" = "数据解析错误";
+"toast_api_error_server_5xx" = "服务器出错";
+"toast_api_error_not_found" = "没有找到相应的信息";
+"toast_api_error_too_many_requests" = "请求太快啦";
+"toast_api_error_unavailable_phone_number" = "此手机号已被使用";
+"permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
+"toast_copied" = "已复制到剪贴板";
+
+// Login
+"navigation_title_select_country" = "选择一个国家";
+"navigation_title_enter_mobile_number" = "输入你的手机号码";
+"navigation_title_enter_verification_code" = "请输入发送至以下号码的 4 位验证码： %@";
+"navigation_title_enter_name" = "名字";
+"landing_welcome_title" = "欢迎使用 Mixin";
+"text_intro" = "点击 \"%@\" 接受 Mixin %@和%@";
+"text_mobile_number_privacy" = "我们不会公开你的手机号码";
+"text_confirm_send_code" = "确认你的手机号码 %@";
+"text_invalid_verification_code" = "验证码不正确。";
+"button_title_agree_and_continue" = "同意并继续";
+"button_title_terms_of_service" = "服务条款";
+"button_title_privacy_policy" = "隐私政策";
+"button_title_resend_code" = "重发验证码";
+"button_title_resend_code_pending" = "%@ 后重新发送验证码";
+"header_title_current_selected" = "当前选择";
+"header_title_current_location" = "当前位置";
+"placeholder_search_bar" = "搜索国家";
+"placeholder_mobile_number" = "手机号码";
+"init_signal" = "正在初始化";
+
+// Contacts
+"contact_title" = "联系人";
+"contact_title_change_name" = "修改名称";
+"contact_new_group_title" = "新群聊";
+"contact_new_group_summary" = "创建一个最多支持 256 人的群";
+"contact_add_title" = "添加联系人";
+"contact_add_summary" = "通过 Mixin ID 或手机号添加联系人";
+"contact_qr_code_title" = "Mixin 二维码";
+"contact_qr_code_summary" = "扫描好友的二维码";
+"contact_invite_title" = "邀请好友";
+"contact_invite_summary" = "我的邀请码 %@";
+"contact_invite" = "我正在使用 Mixin 聊天。下载：https://mixin.one .";
+"contact_profile_title" = "我的";
+"contact_phone_contact" = "通讯录";
+"contact_phone_contact_summary" = "Mixin 需要访问你的通讯录来帮助你更快找到你的朋友。";
+"contact_my_identity_number" = "我的 Mixin ID: %@";
+"contact_error_compose_avatar" = "头像解析失败，请尝试使用其他图片。";
+"contact_phone_contact_invite" = "邀请至 Mixin";
+"contact_identity_number" = "Mixin ID: %@";
+"contact_mobile" = "手机号: %@";
+"contact_search_not_found" = "找不到这个用户";
+"contact_avatar_picking_fail" = "上传头像失败，请稍后重试";
+"contact_change_name_fail" = "修改名称失败，请稍后重试";
+
+"button_title_search" = "搜索";
+"placeholder_mixin_id_or_phone" = "Mixin ID 或手机号";
+"placeholder_new_name" = "名称";
+"navigation_title_add_people" = "添加联系人";
+
+// Home
+"home_start_messaging_guide" = "你可以与你的 Mixin 好友一起聊天。";
+"home_start_messaging" = "开始聊天";
+
+// Chat
+"chat_message_menu_reply" = "回复";
+"chat_message_menu_forward" = "转发";
+"chat_message_menu_copy" = "复制";
+"chat_message_open_url" = "打开链接";
+"chat_time_today" = "今天";
+"chat_cell_title_unread_messages" = "未读消息";
+"chat_message_you" = "你";
+"chat_message_created" = "%@创建了这个群组";
+"chat_message_removed" = "%@将%@移出了群组";
+"chat_message_added" = "%@邀请%@加入了群组";
+"chat_message_joined" = "%@通过邀请链接加入群组";
+"chat_message_left" = "%@离开了群组";
+"chat_message_admin" = "%@现在是管理员";
+"chat_message_changed_title" = "%@修改群组名称为'%@'";
+"chat_cell_title_encryption" = "此对话中的消息使用端对端加密。点击了解更多。";
+"chat_cell_title_unknown_category" = "不支持此类型消息。请升级 Mixin 查看。";
+"chat_forward_title" = "转发";
+"chat_forward_chats" = "最近聊天";
+"chat_forward_contacts" = "联系人";
+"chat_decryption_failed_hint" = "等待%@上线后建立加密会话。";
+"chat_decryption_failed_link" = "了解更多。";
+"chat_send_photo_failed" = "发送图片失败，请稍后重试";
+"chat_send_file_failed" = "发送文件失败，请稍后重试";
+"chat_menu_camera" = "相机";
+"chat_menu_photo" = "照片";
+"chat_menu_file" = "文件";
+"chat_menu_transfer" = "转账";
+"chat_photo_save" = "保存到相册";
+"chat_file_expired" = "已过期";
+
+// Camera
+"camera_save_photo_success" = "图片已成功保存在相册";
+"camera_save_photo_failed" = "保存图片失败";
+"camera_send_to_title" = "发送至";
+
+// Group
+"group_navigation_title_add_member" = "添加成员";
+"group_navigation_title_new_group" = "新建群组";
+"group_navigation_title_group_info" = "群组信息";
+"group_navigation_title_invite_link" = "通过链接邀请加入群组";
+"group_navigation_title_announcement" = "群组公告";
+"group_cell_title_photo" = "群组头像";
+"group_cell_title_name" = "群组名称";
+"group_cell_title_notice" = "群组公告";
+"group_cell_title_group_link" = "群组链接";
+"group_cell_title_group_price" = "加入群组价格";
+"group_cell_title_group_price_free" = "免费";
+"group_cell_title_my_alias" = "我在本群的昵称";
+"group_section_title_members" = "群组成员";
+"group_button_title_create" = "创建";
+"group_button_title_share_link" = "分享链接";
+"group_button_title_copy_link" = "复制链接";
+"group_button_title_qr_code" = "二维码";
+"group_button_title_reset_link" = "重置链接";
+"group_button_title_join" = "加入群组";
+"group_button_title_view" = "查看群组";
+"group_placeholder_group_name" = "新群组名称";
+"group_placeholder_group_notice" = "关于";
+"group_create_group_fail" = "创建群组失败，请稍后重试";
+"group_menu_clear" = "清空聊天记录";
+"group_menu_delete" = "删除聊天";
+"group_menu_exit" = "删除并退出群组";
+"group_clear_success" = "已清空";
+"group_remove_confirm" = "从 '%@' 群组中移除 %@ 吗？";
+"group_remove_button" = "从群组中移除";
+"group_role_admin" = "管理员";
+"group_participant_menu_info" = "信息";
+"group_participant_menu_send" = "发送消息";
+"group_participant_menu_admin" = "设为管理员";
+"group_participant_menu_remove" = "从群组中移除";
+"group_invite_hint" = "Mixin 使用者可使用此链接加入这个群组，请只跟你信任的人分享链接。";
+"group_join_fail_title" = "无法加入群组";
+"group_join_fail_summary" = "没有找到这个邀请链接相关的群组";
+"group_join_fail_full" = "群组成员人数已达上限";
+"group_link_checking" = "正在检查链接";
+"group_remove_title" = "你已被群组移除";
+"group_announcement_placeholder" = "增加群公告";
+
+"code_recognition_fail_title" = "未识别的链接";
+"code_recognition_fail_summary" = "没有找到这个链接相关的群组或人";
+
+
+// Wallet
+"wallet_title" = "钱包";
+"wallet_title_withdrawal" = "提现";
+"wallet_transfer_out" = "转出";
+"wallet_symbol_other" = "其它";
+"wallet_password_title" = "设置支付密码";
+"wallet_password_cofirm_title" = "确认支付密码";
+"wallet_password_verify_title" = "验证旧的支付密码";
+"wallet_password_inconsistency" = "两次密码不一致，请重新设置";
+"wallet_password_tips" = "输入 6 位数字支付密码并牢记它。如果忘记，你的钱包将无法找回！";
+"wallet_password_tips_again" = "再次输入支付密码并牢记它。如果忘记，你的钱包将无法找回！";
+"wallet_password_tips_verify" = "输入旧的 6 位数字支付密码";
+"wallet_password_too_many_requests" = "你已经尝试了超过 5 次，请等待 24 小时后再次尝试。";
+"wallet_change_password" = "修改支付密码";
+"wallet_change_password_success" = "修改支付密码成功";
+"wallet_set_password_success" = "设置支付密码成功";
+"wallet_snapshot_from" = "转账来自%@";
+"wallet_snapshot_to" = "你转账给%@";
+"wallet_deposit" = "充值";
+"wallet_pin_tips_title" = "输入你的钱包密码";
+"wallet_pin_tips_description" = "定期输入钱包密码有助于记住该密码";
+"wallet_menu_show_hidden_assets" = "隐藏资产";
+"wallet_menu_show_asset" = "显示资产";
+"wallet_menu_hide_asset" = "隐藏资产";
+"wallet_hide_asset_empty" = "没有需要隐藏的资产";
+"wallet_menu_withdraw" = "提现";
+"wallet_withdraw_amount" = "提现金额";
+"wallet_withdraw_memo" = "备注 (可选)";
+"wallet_button_add_address" = "点击添加地址";
+"wallet_hint_transaction_fee" = "需要 %@ 作为 %@ 提现手续费";
+"wallet_password_address_tips" = "确认钱包密码保护地址簿安全";
+"wallet_withdrawal_asset" = "%@ 提现";
+"wallet_withdrawal_pay_password" = "通过密码提现";
+"wallet_blockchian_not_in_sync" = "区块链同步异常";
+
+// Transaction
+"transaction_title" = "交易详情";
+"transaction_id" = "交易编号";
+"transaction_type" = "交易类型";
+"transaction_asset" = "资产类型";
+"transaction_memo" = "备注";
+"transaction_date" = "时间";
+"transaction_sender" = "发送者";
+"transaction_receiver" = "接收者";
+"transaction_address" = "地址";
+"transaction_transaction_hash" = "交易哈希";
+"transaction_type_deposit" = "充值";
+"transaction_type_transfer" = "转账";
+"transaction_type_withdrawal" = "提现";
+"transaction_type_fee" = "手续费";
+"transaction_type_rebate" = "退款";
+
+// Address Book
+"address_book_title" = "%@ 地址簿";
+"address_book_add_address" = "添加地址";
+"address_list_title" = "地址";
+"address_new_placeholder_label" = "标签";
+"address_new_placeholder_address" = "地址";
+"address_new_title" = "增加 %@ 地址";
+"address_edit_title" = "修改 %@ 地址";
+"address_format_error" = "地址格式错误";
+
+// Transfer
+"transfer_title" = "转账";
+"transfer_title_to" = "给%@";
+"transfer_balance" = "余额";
+"transfer_transactions" = "转账记录";
+"transfer_transfer_type" = "转账类型";
+"transfer_transfer_amount" = "转账金额";
+"transfer_transfer_memo" = "备注 (可选)";
+"transfer_touch_id_reason" = "请验证指纹完成转账";
+"transfer_error_balance_insufficient" = "余额不足";
+"transfer_error_amount_too_small" = "转账金额太小";
+"transfer_error_pin_incorrect" = "支付密码不正确";
+"transfer_amount" = "金额";
+"transfer_memo" = "备注";
+"transfer_asset" = "%@ 转账";
+"transfer_paid" = "已支付";
+"transfer_pay_password" = "通过密码支付";
+
+// QRCode
+"myqrcode_title" = "我的二维码";
+"myqrcode_prompt" = "用 Mixin 扫描二维码加我为联系人";
+"group_qr_code" = "群组二维码";
+"group_qr_code_prompt" = "扫描二维码加入群组";
+"not_mixin_qr_code" = "无法识别该二维码";
+"auth_permission_profile" = "个人资料(必须)";
+"auth_permission_phone" = "手机号码";
+"auth_permission_assets" = "资产余额";
+"auth_permission_apps_read" = "读取应用";
+"auth_permission_apps_read_description" = "访问你的应用列表";
+"auth_permission_apps_write" = "管理应用";
+"auth_permission_apps_write_description" = "管理你所有的应用";
+"auth_assets_more" = "等";
+"auth_profile_description" = "%@, %@, 头像";
+"auth_success" = "成功登录 %@";
+"auth_description" = "需要访问你的";
+"scan_qr_code" = "识别二维码";
+
+// Profile
+"profile_title" = "信息";
+"profile_send_message" = "发消息";
+"profile_share_card" = "分享他的名片";
+"profile_notification" = "通知";
+"profile_add" = "添加联系人";
+"profile_remove" = "删除联系人";
+"profile_block" = "屏蔽用户";
+"profile_unblock" = "解除屏蔽";
+"profile_photo" = "个人头像";
+"profile_full_name" = "名称";
+"profile_my_qrcode" = "我的二维码";
+"profile_my_invitation_code" = "我的邀请码";
+"profile_change_number" = "更换手机号";
+"profile_change_number_confirmation" = "是否更换手机号？";
+"profile_change_number_succeeded" = "更换手机号成功";
+"profile_change_number_verify_pin" = "验证钱包密码";
+"profile_change_number_new_number" = "请输入新号码";
+"profile_mixin_id" = "Mixin ID: %@";
+"profile_reputation_score" = "荣誉值: %@";
+"profile_invitation_code_consumed_count" = "你总共邀请了 %@ 好友。";
+"profile_edit_name" = "编辑名称";
+"profile_add_contact_fail" = "添加联系人失败，请稍后重试";
+"profile_remove_contact_fail" = "删除联系人失败，请稍后重试";
+"profile_mute_duration_8h" = "8 小时";
+"profile_mute_duration_1week" = "1 周";
+"profile_mute_duration_1year" = "1 年";
+"profile_status_not_muted" = "静音";
+"profile_status_muted" = "已设静音";
+"profile_status_no" = "否";
+"profile_mute_duration_prefix" = "至";
+"profile_unmute" = "取消静音";
+
+// Home
+"button_title_contacts_and_chats" = "搜索";
+"section_title_contacts" = "联系";
+"section_title_messages" = "信息";
+"section_title_assets" = "资产";
+"home_cell_action_pin" = "置顶";
+"home_cell_action_unpin" = "取消置顶";
+
+// Setting
+"setting_title" = "设置";
+"setting_notification" = "通知";
+"setting_notification_show" = "显示通知";
+"setting_notification_sound" = "提醒音";
+"setting_notification_message" = "信息通知";
+"setting_notification_message_summary" = "你可以在用户信息页单独设置通知";
+"setting_notification_group" = "群组通知";
+"setting_notification_group_summary" = "你可以在群组信息页单独设置通知";
+"setting_privacy_and_security" = "隐私和安全";
+"setting_privacy_and_security_title" = "隐私";
+"setting_privacy_and_security_summary" = "设置谁可以给你发消息或添加到群组";
+"setting_blocked_user_count_suffix" = " 联系人";
+"setting_blocked_user_count_none" = "无";
+"setting_about" = "关于";
+"setting_blocked" = "屏蔽名单";
+"setting_blocked_summary" = "被屏蔽的用户不能给你发消息也不能邀请你入群。";
+"setting_conversation" = "会话";
+"setting_conversation_summary" = "你可以限制谁可以给你发消息或邀请你加入群聊。";
+"setting_conversation_everybody" = "任何人";
+"setting_conversation_contacts" = "我的联系人";
+"setting_logout" = "退出登录";
+
+// Notifications
+"notification_reply" = "回复";
+"notification_mute" = "屏蔽";
+"notification_content_photo" = "[图片]";
+"notification_content_transfer" = "[转账]";
+"notification_content_file" = "[文件]";
+"notification_content_sticker" = "[贴纸]";
+"notification_content_contact" = "[名片]";
+"notification_content_deposit" = "[充值]";
+"notification_content_fee" = "[手续费]";
+"notification_content_withdrawal" = "[提现]";
+"notification_content_rebate" = "[退款]";
+"alert_key_group_message" = "%@发来一条信息";
+"alert_key_group_text_message" = "%@发来一条信息";
+"alert_key_group_image_message" = "%@发来一张图片";
+"alert_key_group_video_message" = "%@发来一个视频";
+"alert_key_group_data_message" = "%@发来了一个文件";
+"alert_key_group_sticker_message" = "%@发来了一个贴纸";
+"alert_key_group_contact_message" = "%@分享了一个联系人";
+"alert_key_contact_message" = "发来一条信息";
+"alert_key_contact_text_message" = "发来一条信息";
+"alert_key_contact_image_message" = "发来一张图片";
+"alert_key_contact_video_message" = "发来一个视频";
+"alert_key_contact_transfer_message" = "发来一笔转账";
+"alert_key_contact_data_message" = "发来了一个文件";
+"alert_key_contact_sticker_message" = "发来了一个贴纸";
+"alert_key_contact_contact_message" = "分享了一个联系人";
+
+// About
+"about_twitter" = "关注我们的 Twitter";
+"about_facebook" = "关注我们的 Facebook";
+"about_help" = "帮助中心";
+"about_terms_of_service" = "隐私政策";
+"about_privacy_policy" = "服务条款";
+"about_logout_title" = "想要退出登录？";
+"about_logout_message" = "退出期间所有给你发的消息都将丢弃且无法找回（转账除外）!";
+
+"report_title"="给开发人员发送聊天日志（不包含聊天内容）?";
+"report_button"="发送";

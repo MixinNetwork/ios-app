@@ -1,0 +1,23 @@
+import Foundation
+import WCDBSwift
+
+final class JobDAO {
+
+    static let shared = JobDAO()
+
+    func nextJob() -> Job? {
+        return MixinDatabase.shared.getCodables(orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
+    }
+
+    func updateJobRunCount(jobId: String, runCount: Int) {
+        MixinDatabase.shared.update(maps: [(Job.Properties.runCount, runCount)], tableName: Job.tableName, condition: Job.Properties.jobId == jobId)
+    }
+
+    func removeJob(jobId: String) {
+        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId == jobId)
+    }
+
+    func isExist(conversationId: String, userId: String, action: JobAction) -> Bool {
+        return MixinDatabase.shared.isExist(type: Job.self, condition: Job.Properties.conversationId == conversationId && Job.Properties.userId == userId && Job.Properties.action == action.rawValue)
+    }
+}

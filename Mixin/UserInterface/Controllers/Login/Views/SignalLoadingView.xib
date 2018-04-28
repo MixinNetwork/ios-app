@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="JEk-LU-tt6" customClass="SignalLoadingView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SxA-r7-xeA">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="7bG-M5-ZTX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <blurEffect style="light"/>
+                </visualEffectView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IMR-yj-ipG" customClass="PopupView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yeo-O0-Rbs">
+                            <rect key="frame" x="144.5" y="299.5" width="87" height="69"/>
+                            <subviews>
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="gFl-e1-ivg">
+                                    <rect key="frame" x="25.5" y="0.0" width="37" height="37"/>
+                                    <color key="color" white="0.080000000000000002" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
+                                </activityIndicatorView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pSI-kF-iqb">
+                                    <rect key="frame" x="0.0" y="45" width="87" height="24"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                    <color key="textColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_signal"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="pSI-kF-iqb" secondAttribute="trailing" id="5rt-PG-h3Q"/>
+                                <constraint firstItem="pSI-kF-iqb" firstAttribute="leading" secondItem="Yeo-O0-Rbs" secondAttribute="leading" id="FIb-gQ-DRo"/>
+                                <constraint firstAttribute="bottom" secondItem="pSI-kF-iqb" secondAttribute="bottom" id="Ihs-6I-Fgo"/>
+                                <constraint firstItem="pSI-kF-iqb" firstAttribute="top" secondItem="gFl-e1-ivg" secondAttribute="bottom" constant="8" id="Oah-Lx-z5g"/>
+                                <constraint firstItem="gFl-e1-ivg" firstAttribute="top" secondItem="Yeo-O0-Rbs" secondAttribute="top" id="eGu-LR-G2R"/>
+                                <constraint firstItem="gFl-e1-ivg" firstAttribute="centerX" secondItem="Yeo-O0-Rbs" secondAttribute="centerX" id="rXc-KF-ZSm"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="Yeo-O0-Rbs" firstAttribute="centerX" secondItem="IMR-yj-ipG" secondAttribute="centerX" id="BxS-Gm-ios"/>
+                        <constraint firstItem="Yeo-O0-Rbs" firstAttribute="centerY" secondItem="IMR-yj-ipG" secondAttribute="centerY" id="VkO-iu-d6I"/>
+                        <constraint firstAttribute="width" constant="375" id="c26-1q-11N"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="SxA-r7-xeA" firstAttribute="top" secondItem="IMR-yj-ipG" secondAttribute="top" id="2cx-tC-Ubi"/>
+                <constraint firstItem="SxA-r7-xeA" firstAttribute="trailing" secondItem="IMR-yj-ipG" secondAttribute="trailing" id="3d4-Rr-Ubd"/>
+                <constraint firstItem="IMR-yj-ipG" firstAttribute="trailing" secondItem="0Ed-pV-qgx" secondAttribute="trailing" id="5HW-q1-mTn"/>
+                <constraint firstItem="IMR-yj-ipG" firstAttribute="leading" secondItem="0Ed-pV-qgx" secondAttribute="leading" id="Fx7-DA-wVG"/>
+                <constraint firstItem="SxA-r7-xeA" firstAttribute="leading" secondItem="IMR-yj-ipG" secondAttribute="leading" id="Nyl-PT-t6M"/>
+                <constraint firstItem="SxA-r7-xeA" firstAttribute="bottom" secondItem="IMR-yj-ipG" secondAttribute="bottom" id="Pq9-9K-QKw"/>
+                <constraint firstItem="IMR-yj-ipG" firstAttribute="top" secondItem="JEk-LU-tt6" secondAttribute="top" id="bmv-xu-R8Y"/>
+                <constraint firstAttribute="bottom" secondItem="IMR-yj-ipG" secondAttribute="bottom" id="uTR-DO-OGP"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="0Ed-pV-qgx"/>
+            <connections>
+                <outlet property="popupView" destination="IMR-yj-ipG" id="9K2-ve-P6S"/>
+            </connections>
+            <point key="canvasLocation" x="25.5" y="52.5"/>
+        </view>
+    </objects>
+</document>

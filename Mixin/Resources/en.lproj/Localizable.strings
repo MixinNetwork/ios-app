@@ -1,0 +1,379 @@
+
+// Common
+"dialog_button_ok" = "OK";
+"dialog_button_yes" = "Yes";
+"dialog_button_cancel" = "Cancel";
+"dialog_button_save" = "Save";
+"dialog_button_change" = "Change";
+"dialog_button_confirm" = "Confirm";
+"dialog_button_got_it" = "Got It";
+"dialog_progress_logout" = "Log out...";
+"dialog_progress_connect" = "Connecting...";
+"connection_hint_connecting" = "Connecting";
+"connection_hint_waiting" = "Waiting to reconnect";
+"action_next" = "Next";
+"action_camera" = "Camera";
+"action_continue" = "Continue";
+"action_choose_photo" = "Choose Photo";
+"action_remove" = "Remove";
+"action_done" = "Done";
+"action_save" = "Save";
+"action_see_more" = "See more";
+"menu_delete" = "Delete";
+
+"date_format_day" = "hh:mm a";
+"date_format_date" = "dd/MM/yyyy";
+"date_format_month" = "E, d MMM";
+"date_format_transation" = "MMM dd, HH:mm";
+
+// Toast
+"toast_server_error" = "Server is under maintenance";
+"toast_api_error_forbidden" = "Access denied";
+"toast_api_error_no_connection" = "No network connection";
+"toast_api_error_connection_timeout" = "Network connection timeout";
+"toast_api_error_server_5xx" = "Mixin server encounters errors";
+"toast_api_error_server_data_error" = "Data parsing error";
+"toast_api_error_not_found" = "Not found";
+"toast_api_error_too_many_requests" = "Rate limit exceeded";
+"toast_api_error_unavailable_phone_number" = "This phone number is already associated with another account";
+"permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
+"toast_operation_failed" = "The operation failed, please try again later";
+"toast_copied" = "Successfully copied to clipboard";
+
+// Login
+"navigation_title_select_country" = "Select a Country";
+"navigation_title_enter_mobile_number" = "Enter your phone number";
+"navigation_title_enter_verification_code" = "Enter the 4-digit code sent to you at %@";
+"navigation_title_enter_name" = "What's your name?";
+"landing_welcome_title" = "Welcome to Mixin";
+"text_intro" = "Tap \"%@\" to accept %@ and %@";
+"text_mobile_number_privacy" = "We will never display your phone number publicly";
+"text_confirm_send_code" = "Please confirm the phone number %@";
+"text_invalid_verification_code" = "The code is incorrect.";
+"button_title_agree_and_continue" = "Agree & Continue";
+"button_title_terms_of_service" = "Terms of Service";
+"button_title_privacy_policy" = "Privacy Policy";
+"button_title_resend_code" = "Resend code";
+"button_title_resend_code_pending" = "Resend code in %@";
+"header_title_current_selected" = "Current Selected";
+"header_title_current_location" = "Current Location";
+"placeholder_search_bar" = "Search for a country";
+"placeholder_mobile_number" = "Phone number";
+"init_signal" = "Initializing";
+
+// Contacts
+"contact_title" = "Contacts";
+"contact_title_change_name" = "Change name";
+"contact_new_group_title" = "New Group Chat";
+"contact_new_group_summary" = "Create a group chat up to 256 people";
+"contact_add_title" = "Add Contact";
+"contact_add_summary" = "Add people by Mixin ID or phone number";
+"contact_qr_code_title" = "Mixin QR Code";
+"contact_qr_code_summary" = "Scan a friend's Mixin QR Code";
+"contact_invite_title" = "Invite People";
+"contact_invite_summary" = "My invitation code %@";
+"contact_invite" = "Hey, I'm using Mixin Messenger to chat. Download it here: https://mixin.one .";
+"contact_profile_title" = "My Profile";
+"contact_phone_contact" = "Phone Contact";
+"contact_phone_contact_summary" = "Mixin needs access to your contacts to help you connect with other people on Mixin.";
+"contact_my_identity_number" = "My Mixin ID: %@";
+"contact_error_compose_avatar" = "Failed to compose avatar. Try another picture instead.";
+"contact_phone_contact_invite" = "Invite to Mixin";
+"contact_identity_number" = "Mixin ID: %@";
+"contact_mobile" = "Mobile: %@";
+"contact_search_not_found" = "user not found";
+"contact_avatar_picking_fail" = "Failed to change your profile photo";
+"contact_change_name_fail" = "Failed to change your name";
+
+"button_title_search" = "Search";
+"placeholder_mixin_id_or_phone" = "Mixin ID or Phone number";
+"placeholder_new_name" = "new name";
+"navigation_title_add_people" = "Add people";
+
+// Home
+"home_start_messaging_guide" = "You can chat with contacts who have Mixin installed on their phone.";
+"home_start_messaging" = "Start Messaging";
+"home_cell_action_pin" = "Pin";
+"home_cell_action_unpin" = "Unpin";
+
+// Chat
+"chat_message_menu_reply" = "Reply";
+"chat_message_menu_forward" = "Forward";
+"chat_message_menu_copy" = "Copy";
+"chat_message_open_url" = "Open URL";
+"chat_time_today" = "Today";
+"chat_cell_title_unread_messages" = "Unread messages";
+"chat_message_you" = "You";
+"chat_message_created" = "%@ created this group";
+"chat_message_removed" = "%@ removed %@";
+"chat_message_added" = "%@ added %@";
+"chat_message_joined" = "%@ joined the group via invite link";
+"chat_message_left" = "%@ left";
+"chat_message_admin" = "%@ now an admin";
+"chat_message_changed_title" = "%@ changed the subject to %@";
+"chat_cell_title_encryption" = "Messages to this conversation are encrypted end-to-end, click for more information";
+"chat_cell_title_unknown_category" = "This type of message is not supported, please upgrade Mixin to the latest version.";
+"chat_forward_title" = "Forward";
+"chat_forward_chats" = "CHATS";
+"chat_forward_contacts" = "CONTACTS";
+"chat_decryption_failed_hint" = "Waiting for %@ to get online and establish an encrypted session. ";
+"chat_decryption_failed_link" = "Learn more.";
+"chat_send_photo_failed" = "Failed to send photo";
+"chat_send_file_failed" = "Failed to send file";
+"chat_menu_camera" = "Camera";
+"chat_menu_photo" = "Photo";
+"chat_menu_file" = "File";
+"chat_menu_transfer" = "Transfer";
+"chat_photo_save" = "Save to Camera Roll";
+"chat_file_expired" = "Expired";
+
+// Camera
+"camera_save_photo_success" = "Photo saved.";
+"camera_save_photo_failed" = "Unable to save photo.";
+"camera_send_to_title" = "Send To";
+
+// Group
+"group_navigation_title_add_member" = "Add Participants";
+"group_navigation_title_new_group" = "New Group";
+"group_navigation_title_group_info" = "Group Info";
+"group_navigation_title_invite_link" = "Invite to Group via Link";
+"group_navigation_title_announcement" = "Group Description";
+"group_cell_title_photo" = "Group Photo";
+"group_cell_title_name" = "Group Name";
+"group_cell_title_notice" = "Group Notice";
+"group_cell_title_group_link" = "Group Link";
+"group_cell_title_group_price" = "Join Group Price";
+"group_cell_title_group_price_free" = "free";
+"group_cell_title_my_alias" = "My Alias in Group";
+"group_section_title_members" = "PARTICIPANTS";
+"group_button_title_create" = "Create";
+"group_button_title_share_link" = "Share Link";
+"group_button_title_copy_link" = "Copy Link";
+"group_button_title_qr_code" = "QR Code";
+"group_button_title_reset_link" = "Reset Link";
+"group_button_title_join" = "Join Group";
+"group_button_title_view" = "View Group";
+"group_placeholder_group_name" = "new group name";
+"group_placeholder_group_notice" = "about";
+"group_create_group_fail" = "Failed to create a group, please try again later";
+"group_menu_clear" = "Clear Chat";
+"group_menu_delete" = "Delete Chat";
+"group_menu_exit" = "Delete and Exit";
+"group_clear_success" = "Cleared";
+"group_remove_confirm" = "Remove %@ from the '%@' group?";
+"group_remove_button" = "Remove from Group";
+"group_role_admin" = "Admin";
+"group_participant_menu_info" = "Info";
+"group_participant_menu_send" = "Send Message";
+"group_participant_menu_admin" = "Make Group Admin";
+"group_participant_menu_remove" = "Remove from Group";
+"group_invite_hint" = "Anyone with Mixin can follow this link to join this group. Only share it with people you trust.";
+"group_join_fail_title" = "Couldn't Join Group";
+"group_join_fail_summary" = "This invite link doesn't match any Mixin groups.";
+"group_join_fail_full" = "The group chat is full.";
+"group_link_checking" = "Checking invite link";
+"group_remove_title" = "you were removed from the group";
+"group_announcement_placeholder" = "Add group description";
+
+"code_recognition_fail_title" = "Unrecognized codes";
+"code_recognition_fail_summary" = "This codes doesn't match any Mixin groups or users.";
+
+// Wallet
+"wallet_title" = "Wallet";
+"wallet_title_withdrawal" = "Withdrawal";
+"wallet_transfer_out" = "Transfer Out";
+"wallet_symbol_other" = "Other";
+"wallet_password_title" = "Set PIN";
+"wallet_password_cofirm_title" = "Confirm PIN";
+"wallet_password_verify_title" = "Old PIN";
+"wallet_password_inconsistency" = "The PIN is not the same twice, please reset it";
+"wallet_password_tips" = "Please set a 6 digit PIN and remember it. If lost, there is no way to recover your wallet.";
+"wallet_password_tips_again" = "Please confirm the 6 digit PIN and remember it. If lost, there is no way to recover your wallet.";
+"wallet_password_tips_verify" = "Please enter the 6 digit PIN to verify.";
+"wallet_password_too_many_requests" = "You have tried more than 5 times, please wait at least 24 hours to try again.";
+"wallet_change_password" = "Change PIN";
+"wallet_change_password_success" = "Change wallet PIN successfully";
+"wallet_set_password_success" = "Set wallet PIN successfully";
+"wallet_snapshot_from" = "From %@";
+"wallet_snapshot_to" = "To %@";
+"wallet_deposit" = "Deposit";
+"wallet_pin_tips_title" = "Enter your Wallet PIN";
+"wallet_pin_tips_description" = "You'll be asked for it periodically to help you remember it.";
+"wallet_menu_show_hidden_assets" = "Hidden assets";
+"wallet_menu_show_asset" = "Show asset";
+"wallet_menu_hide_asset" = "Hide asset";
+"wallet_hide_asset_empty" = "No hidden assets";
+"wallet_menu_withdraw" = "Withdraw";
+"wallet_withdraw_amount" = "Amount";
+"wallet_withdraw_memo" = "Memo (Optional)";
+"wallet_button_add_address" = "Tap to add address";
+"wallet_hint_transaction_fee" = "A transaction fee of %@ is required for withdrawing %@.";
+"wallet_password_address_tips" = "Confirm PIN to protect your address security.";
+"wallet_withdrawal_asset" = "%@ Withdrawal";
+"wallet_withdrawal_pay_password" = "Withdrawal with PIN";
+"wallet_blockchian_not_in_sync" = "Blockchain not in sync.";
+
+// Transaction
+"transaction_title" = "Transaction";
+"transaction_id" = "Transaction Id";
+"transaction_type" = "Transaction Type";
+"transaction_asset" = "Asset Type";
+"transaction_memo" = "Memo";
+"transaction_date" = "Date";
+"transaction_sender" = "Sender";
+"transaction_receiver" = "Receiver";
+"transaction_transaction_hash" = "Transaction Hash";
+"transaction_type_deposit" = "Deposit";
+"transaction_type_transfer" = "Tansfer";
+"transaction_type_withdrawal" = "Withdrawal";
+"transaction_type_fee" = "Fee";
+"transaction_type_rebate" = "Rebate";
+
+// Address Book
+"address_book_title" = "%@ Address Book";
+"address_book_add_address" = "Add address";
+"address_list_title" = "Address";
+"address_new_placeholder_label" = "Label";
+"address_new_placeholder_address" = "Address";
+"address_new_title" = "New %@ Address";
+"address_edit_title" = "Edit %@ Address";
+"address_format_error" = "Invalid address format.";
+
+// Transfer
+"transfer_title" = "Transfer";
+"transfer_title_to" = "to %@";
+"transfer_balance" = "BALANCE";
+"transfer_transactions" = "TRANSACTIONS";
+"transfer_transfer_type" = "Transfer Type";
+"transfer_transfer_amount" = "Transfer Amount";
+"transfer_transfer_memo" = "Memo (optional)";
+"transfer_touch_id_reason" = "Use an existing fingerprint to make the payment";
+"transfer_error_balance_insufficient" = "Insufficient balance";
+"transfer_error_amount_too_small" = "Transfer amount too small";
+"transfer_error_pin_incorrect" = "PIN incorrect";
+"transfer_amount" = "Amount";
+"transfer_memo" = "Memo";
+"transfer_asset" = "%@ Transfer";
+"transfer_paid" = "Paid";
+"transfer_pay_password" = "Pay with PIN";
+
+// QRCode
+"myqrcode_title" = "My QR Code";
+"myqrcode_prompt" = "Scan the QR Code to add me on Mixin";
+"not_mixin_qr_code" = "Not Mixin QR Code";
+"group_qr_code" = "Group QR Code";
+"group_qr_code_prompt" = "Scan the QR Code to join this group";
+"auth_permission_profile" = "Public profile (required)";
+"auth_permission_phone" = "Phone number";
+"auth_permission_assets" = "Assets balance";
+"auth_permission_apps_read" = "Read apps";
+"auth_permission_apps_read_description" = "access your apps list";
+"auth_permission_apps_write" = "Manage apps";
+"auth_permission_apps_write_description" = "mange all your apps";
+"auth_assets_more" = " and more";
+"auth_profile_description" = "%@, %@, profile photo";
+"auth_success" = "Successfully log in to %@";
+"auth_description" = "requests access to your";
+"scan_qr_code" = "Scan QR Code";
+
+// Profile
+"profile_title" = "Info";
+"profile_send_message" = "Send Message";
+"profile_share_card" = "Share Contact";
+"profile_notification" = "Notifications";
+"profile_add" = "Add Contact";
+"profile_remove" = "Remove Contact";
+"profile_block" = "Block User";
+"profile_unblock" = "Unblock User";
+"profile_photo" = "Profile Photo";
+"profile_full_name" = "Name";
+"profile_my_qrcode" = "My QR Code";
+"profile_my_invitation_code" = "My Invitation Code";
+"profile_change_number" = "Change Number";
+"profile_change_number_confirmation" = "Do you want to change the phone number?";
+"profile_change_number_succeeded" = "Successfully changed phone number";
+"profile_change_number_verify_pin" = "Verify PIN";
+"profile_change_number_new_number" = "Enter your new phone number";
+"profile_mixin_id" = "Mixin ID: %@";
+"profile_reputation_score" = "Reputation Score: %@";
+"profile_invitation_code_consumed_count" = "You have invited a total of %@ people.";
+"profile_edit_name" = "Edit Name";
+"profile_add_contact_fail" = "Failed to add contact";
+"profile_remove_contact_fail" = "Failed to remove contact";
+"profile_mute_duration_8h" = "8 hours";
+"profile_mute_duration_1week" = "1 week";
+"profile_mute_duration_1year" = "1 year";
+"profile_status_not_muted" = "Mute";
+"profile_status_muted" = "Muted";
+"profile_status_no" = "No";
+"profile_mute_duration_prefix" = "until ";
+"profile_unmute" = "Unmute";
+
+// Home
+"button_title_contacts_and_chats" = "Contacts and Chats";
+"section_title_contacts" = "CONTACTS";
+"section_title_messages" = "MESSAGES";
+"section_title_assets" = "ASSETS";
+
+// Setting
+"setting_title" = "Setting";
+"setting_notification" = "Notifications";
+"setting_notification_show" = "Show Notifications";
+"setting_notification_sound" = "Sound";
+"setting_notification_message" = "MESSAGE NOTIFICATIONS";
+"setting_notification_message_summary" = "You can set custom notifications for specific users on their Contact page.";
+"setting_notification_group" = "GROUP NOTIFICATIONS";
+"setting_notification_group_summary" = "You can set custom notifications for specific groups on their Group Info page.";
+"setting_privacy_and_security" = "Privacy and Security";
+"setting_privacy_and_security_title" = "PRIVACY";
+"setting_privacy_and_security_summary" = "Change who can add you to conversation and groups.";
+"setting_blocked_user_count_suffix" = " contacts";
+"setting_blocked_user_count_none" = "None";
+"setting_about" = "About";
+"setting_blocked" = "Blocked Users";
+"setting_blocked_summary" = "Blocked users can't send you messages or add you to groups.";
+"setting_conversation" = "Conversation";
+"setting_conversation_summary" = "You can restrict who can send message to me or add me to group chats.";
+"setting_conversation_everybody" = "Everybody";
+"setting_conversation_contacts" = "My Contacts";
+"setting_logout" = "Log Out";
+
+// Notifications
+"notification_reply" = "Reply";
+"notification_mute" = "Mute";
+"notification_content_photo" = "[Photo]";
+"notification_content_transfer" = "[Transfer]";
+"notification_content_file" = "[File]";
+"notification_content_sticker" = "[Sticker]";
+"notification_content_contact" = "[Contact]";
+"notification_content_deposit" = "[Deposit]";
+"notification_content_fee" = "[Fee]";
+"notification_content_withdrawal" = "[Withdrawal]";
+"notification_content_rebate" = "[Rebate]";
+"alert_key_group_message" = "%@ send a message";
+"alert_key_group_text_message" = "%@ send a message";
+"alert_key_group_image_message" = "%@ send a photo";
+"alert_key_group_video_message" = "%@ send a video";
+"alert_key_group_data_message" = "%@ send you a file";
+"alert_key_group_sticker_message" = "%@ send you a sticker";
+"alert_key_group_contact_message" = "%@ share you a contact";
+"alert_key_contact_message" = "send you a message";
+"alert_key_contact_text_message" = "send you a message";
+"alert_key_contact_image_message" = "send you a photo";
+"alert_key_contact_video_message" = "send you a video";
+"alert_key_contact_transfer_message" = "send you a transfer";
+"alert_key_contact_data_message" = "send a file";
+"alert_key_contact_sticker_message" = "send a sticker";
+"alert_key_contact_contact_message" = "shared a contact";
+
+// About
+"about_twitter" = "Follow us on Twitter";
+"about_facebook" = "Follow us on Facebook";
+"about_help" = "Help Center";
+"about_terms_of_service" = "Terms of Service";
+"about_privacy_policy" = "Privacy Policy";
+"about_logout_title" = "Do you want to log out?";
+"about_logout_message" = "All messages sent to you during the withdrawal will be discarded and can not be retrieved!";
+
+"report_title"="Send the conversation log to developers?";
+"report_button"="Send";

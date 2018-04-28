@@ -64,7 +64,7 @@ DEPENDENCIES:
   - SnapKit (~> 4.0.0)
   - SocketRocket
   - SwiftMessages
-  - "WCDB.swift (from `git@code.repo.io:mixin/wcdb.git`)"
+  - "WCDB.swift (from `git@github.com:over140/wcdb.git`)"
   - Zip (~> 1.1)
 
 SPEC REPOS:
@@ -95,7 +95,7 @@ EXTERNAL SOURCES:
     :git: "git@github.com:crossle/SignalProtocolC.git"
     :submodules: true
   WCDB.swift:
-    :git: "git@code.repo.io:mixin/wcdb.git"
+    :git: "git@github.com:over140/wcdb.git"
 
 CHECKOUT OPTIONS:
   SignalProtocolC:
@@ -103,8 +103,8 @@ CHECKOUT OPTIONS:
     :git: "git@github.com:crossle/SignalProtocolC.git"
     :submodules: true
   WCDB.swift:
-    :commit: 02a39b72c1ec2523d820483ae3782e5ba7b00d6e
-    :git: "git@code.repo.io:mixin/wcdb.git"
+    :commit: e177e73e20eb319f3cf2015885ac122cd495c1f2
+    :git: "git@github.com:over140/wcdb.git"
 
 SPEC CHECKSUMS:
   Alamofire: 68d7d521118d49c615a8d2214d87cdf525599d30
@@ -130,6 +130,6 @@ SPEC CHECKSUMS:
   WCDB.swift: 5bb038bc5bb46067cccc7c48392e8f4c4a15def0
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 63fde561c88ea0e8e5f2eb1a02168c4eb17e4103
+PODFILE CHECKSUM: 4a0a1727335d91dc0c1a6aecf220cd0af1185cd4
 
 COCOAPODS: 1.5.0

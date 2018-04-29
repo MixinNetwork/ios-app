@@ -6,7 +6,6 @@ class TransactionViewController: UIViewController {
 
     private var asset: AssetItem!
     private var snapshot: SnapshotItem!
-    private let transactionIdIndexPath = IndexPath(row: 0, section: 1)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,7 +105,7 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
             case 5:
                 cell.render(title: Localized.TRANSACTION_MEMO, value: snapshot.memo ?? "      ")
             case 6:
-                cell.render(title: Localized.TRANSACTION_DATE, value: snapshot.createdAt)
+                cell.render(title: Localized.TRANSACTION_DATE, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate()))
             default:
                 break
             }
@@ -116,6 +115,30 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+
+        guard indexPath.section == 1, snapshot.type == SnapshotType.transfer.rawValue else {
+            return
+        }
+
+        var transferUserId: String?
+        if indexPath.row == 3  && snapshot.amount.toDouble() > 0 {
+            transferUserId = snapshot.counterUserId
+        } else if indexPath.row == 4 && snapshot.amount.toDouble() < 0 {
+            transferUserId = snapshot.counterUserId
+        }
+
+        guard let userId = transferUserId, !userId.isEmpty else {
+            return
+        }
+
+        DispatchQueue.global().async { [weak self] in
+            guard let user = UserDAO.shared.getUser(userId: userId) else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.navigationController?.pushViewController(InfoViewController.instance(user: user), animated: true)
+            }
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -127,19 +150,50 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
-        return indexPath == transactionIdIndexPath
+        return canCopyAction(indexPath: indexPath).0
     }
     
     func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return indexPath == transactionIdIndexPath && action == #selector(copy(_:))
+        return canCopyAction(indexPath: indexPath).0 && action == #selector(copy(_:))
     }
     
     func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
-        guard indexPath == transactionIdIndexPath && action == #selector(copy(_:)) else {
+        let copy: (can: Bool, body: String) = canCopyAction(indexPath: indexPath)
+        guard copy.can else {
             return
         }
-        UIPasteboard.general.string = snapshot.snapshotId
+        UIPasteboard.general.string = copy.body
         NotificationCenter.default.post(name: .ToastMessageDidAppear, object: Localized.TOAST_COPIED)
     }
 
+    private func canCopyAction(indexPath: IndexPath) -> (Bool, String) {
+        guard indexPath.section == 1 else {
+            return (false, "")
+        }
+        switch indexPath.row {
+        case 0:
+            return (true, snapshot.snapshotId)
+        case 3:
+            switch snapshot.type {
+            case SnapshotType.deposit.rawValue:
+                return (true, snapshot.sender ?? "")
+            case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
+                return (true, snapshot.transactionHash ?? "")
+            default:
+                break
+            }
+        case 4:
+            switch snapshot.type {
+            case SnapshotType.deposit.rawValue:
+                return (true, snapshot.transactionHash ?? "")
+            case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
+                return (true, snapshot.receiver ?? "")
+            default:
+                break
+            }
+        default:
+            break
+        }
+        return (false, "")
+    }
 }

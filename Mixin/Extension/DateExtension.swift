@@ -7,6 +7,7 @@ extension DateFormatter {
     static let month = DateFormatter(dateFormat: Localized.DATE_FORMAT_MONTH)
     static let date = DateFormatter(dateFormat: "MMM d, yyyy")
     static let dateSimple = DateFormatter(dateFormat: Localized.DATE_FORMAT_DATE)
+    static let dateFull = DateFormatter(dateFormat: "yyyy-MM-dd HH:mm:ss")
     static let yyyymmdd = DateFormatter(dateFormat: "yyyyMMdd")
     static let MMMddHHmm = DateFormatter(dateFormat: Localized.DATE_FORMAT_TRANSATION)
     static let filename = DateFormatter(dateFormat: "yyyy-MM-dd_HH:mm:ss")

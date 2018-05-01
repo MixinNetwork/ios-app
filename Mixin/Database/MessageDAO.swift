@@ -254,11 +254,13 @@ final class MessageDAO {
         let lastReadCondition: Condition
         if let myLastMessage = myLastMessage {
             lastReadCondition = Message.Properties.conversationId == conversationId
+                && Message.Properties.category != MessageCategory.SYSTEM_CONVERSATION.rawValue
                 && Message.Properties.status == MessageStatus.READ.rawValue
                 && Message.Properties.userId != AccountAPI.shared.accountUserId
                 && Message.Properties.createdAt > myLastMessage.createdAt
         } else {
             lastReadCondition = Message.Properties.conversationId == conversationId
+                && Message.Properties.category != MessageCategory.SYSTEM_CONVERSATION.rawValue
                 && Message.Properties.status == MessageStatus.READ.rawValue
                 && Message.Properties.userId != AccountAPI.shared.accountUserId
         }

@@ -51,7 +51,7 @@ class ConversationViewController: UIViewController {
     private var lastInputWrapperBottomConstant: CGFloat = 0
     private var isShowingMenu = false
     private var isShowingStickerPanel = false
-    private var isDisappearing = true
+    private var isAppearanceAnimating = true
     private var hideStatusBar = false
     
     private var tapRecognizer: UITapGestureRecognizer!
@@ -189,15 +189,20 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        isAppearanceAnimating = true
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        isDisappearing = false
+        isAppearanceAnimating = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         dismissMenu(animated: true)
-        isDisappearing = true
+        isAppearanceAnimating = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -479,7 +484,7 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        guard !isDisappearing else {
+        guard !isAppearanceAnimating else {
             return
         }
         let endFrame: CGRect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
@@ -739,7 +744,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
 extension ConversationViewController: UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        updateAccessoryButtons(animated: true)
+        updateAccessoryButtons(animated: !isAppearanceAnimating)
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

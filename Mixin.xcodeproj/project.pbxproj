@@ -177,6 +177,8 @@
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
 		9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BB351681FB1A94100EDDD2C /* ConversationDateHeaderView.xib */; };
+		DF016B292096BD0700B8FFDE /* UserWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF016B282096BD0700B8FFDE /* UserWindow.swift */; };
+		DF016B2B2096BDB100B8FFDE /* UserWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF016B2A2096BDB100B8FFDE /* UserWindow.xib */; };
 		DF03C85D1FF2BE6500C1ED6B /* MessageHistoryDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C85C1FF2BE6500C1ED6B /* MessageHistoryDAO.swift */; };
 		DF03C85F1FF2C01B00C1ED6B /* MessageHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C85E1FF2C01B00C1ED6B /* MessageHistory.swift */; };
 		DF03C8611FF2C1EF00C1ED6B /* RatchetSenderKeyDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C8601FF2C1EF00C1ED6B /* RatchetSenderKeyDAO.swift */; };
@@ -244,7 +246,6 @@
 		DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */; };
 		DF3FF05B20123BD6000A0C0A /* FileDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */; };
 		DF3FF05D20134C4C000A0C0A /* DatabaseUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */; };
-		DF46B4031FA999FD00243A8B /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4021FA999FD00243A8B /* InfoViewController.swift */; };
 		DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4041FA9B48500243A8B /* ContactsManager.swift */; };
 		DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */; };
 		DF46B4091FA9E79700243A8B /* PhoneContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF46B4081FA9E79700243A8B /* PhoneContactCell.xib */; };
@@ -633,6 +634,8 @@
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDateHeaderView.swift; sourceTree = "<group>"; };
 		9BB351681FB1A94100EDDD2C /* ConversationDateHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationDateHeaderView.xib; sourceTree = "<group>"; };
+		DF016B282096BD0700B8FFDE /* UserWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserWindow.swift; sourceTree = "<group>"; };
+		DF016B2A2096BDB100B8FFDE /* UserWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserWindow.xib; sourceTree = "<group>"; };
 		DF03C85C1FF2BE6500C1ED6B /* MessageHistoryDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHistoryDAO.swift; sourceTree = "<group>"; };
 		DF03C85E1FF2C01B00C1ED6B /* MessageHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHistory.swift; sourceTree = "<group>"; };
 		DF03C8601FF2C1EF00C1ED6B /* RatchetSenderKeyDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatchetSenderKeyDAO.swift; sourceTree = "<group>"; };
@@ -700,7 +703,6 @@
 		DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAttachmentData.swift; sourceTree = "<group>"; };
 		DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloadJob.swift; sourceTree = "<group>"; };
 		DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUserDefault.swift; sourceTree = "<group>"; };
-		DF46B4021FA999FD00243A8B /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		DF46B4041FA9B48500243A8B /* ContactsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsManager.swift; sourceTree = "<group>"; };
 		DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactCell.swift; sourceTree = "<group>"; };
 		DF46B4081FA9E79700243A8B /* PhoneContactCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactCell.xib; sourceTree = "<group>"; };
@@ -1169,6 +1171,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DF016B2C2098B35F00B8FFDE /* Windows */ = {
+			isa = PBXGroup;
+			children = (
+				DF53BB6D202362A9002BF028 /* Cells */,
+				DF53BB6620233647002BF028 /* Views */,
+				DF114B0B2020B56E00EA8F9C /* DAppWebWindow.swift */,
+				DF114B0D2020B85600EA8F9C /* DAppWebWindow.xib */,
+				DF8CECD61FC2EE4200E40064 /* DAppPayWindow.swift */,
+				DF8CECE61FC317BF00E40064 /* DAppPayWindow.xib */,
+				DF8EF6AE2030679100E99CE8 /* DAppUrlWindow.swift */,
+				DF8EF6AC203055DD00E99CE8 /* DAppUrlWindow.xib */,
+				DF6DB83E20258BEA0060CF31 /* ZoomWindow.swift */,
+				DF016B282096BD0700B8FFDE /* UserWindow.swift */,
+				DF016B2A2096BDB100B8FFDE /* UserWindow.xib */,
+			);
+			path = Windows;
+			sourceTree = "<group>";
+		};
 		DF05F0131FE6757600F98479 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -1271,22 +1291,6 @@
 			path = Storage;
 			sourceTree = "<group>";
 		};
-		DF53BB5F2023140C002BF028 /* DApp */ = {
-			isa = PBXGroup;
-			children = (
-				DF53BB6D202362A9002BF028 /* Cells */,
-				DF53BB6620233647002BF028 /* Views */,
-				DF114B0B2020B56E00EA8F9C /* DAppWebWindow.swift */,
-				DF114B0D2020B85600EA8F9C /* DAppWebWindow.xib */,
-				DF8CECD61FC2EE4200E40064 /* DAppPayWindow.swift */,
-				DF8CECE61FC317BF00E40064 /* DAppPayWindow.xib */,
-				DF8EF6AE2030679100E99CE8 /* DAppUrlWindow.swift */,
-				DF8EF6AC203055DD00E99CE8 /* DAppUrlWindow.xib */,
-				DF6DB83E20258BEA0060CF31 /* ZoomWindow.swift */,
-			);
-			path = DApp;
-			sourceTree = "<group>";
-		};
 		DF53BB6620233647002BF028 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -1387,6 +1391,7 @@
 			children = (
 				DF5D9F1E1F9C779C0036D5FD /* Controllers */,
 				DF5D9F1F1F9C78700036D5FD /* Views */,
+				DF016B2C2098B35F00B8FFDE /* Windows */,
 				DF5D9F1D1F9C77830036D5FD /* Storyboard */,
 			);
 			path = UserInterface;
@@ -1416,7 +1421,6 @@
 				DF2081B320060C4400B87DB0 /* Camera */,
 				DFD294331FA6BECE00FADAAD /* Contact */,
 				9B8D579B1F9F0AF4008A7957 /* Chat */,
-				DF53BB5F2023140C002BF028 /* DApp */,
 				DFA5B5851FADBE5800549728 /* Group */,
 				DF5D9F491F9CDC200036D5FD /* Home */,
 				7B2E3E491FA07F4500DDDDEB /* Login */,
@@ -1720,7 +1724,6 @@
 				DFB961431FA85F4B00F0922E /* MyProfileViewController.swift */,
 				7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */,
 				9B748DD71FA88DB300BC009B /* QRCodeViewController.swift */,
-				DF46B4021FA999FD00243A8B /* InfoViewController.swift */,
 				DF46B4041FA9B48500243A8B /* ContactsManager.swift */,
 				7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */,
 				DFA5B5831FADAACB00549728 /* PhoneContactViewController.swift */,
@@ -1996,6 +1999,7 @@
 				DF8CECE71FC317BF00E40064 /* DAppPayWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
+				DF016B2B2096BDB100B8FFDE /* UserWindow.xib in Resources */,
 				DF8EF6B52032D1D700E99CE8 /* DAppPayView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
@@ -2163,6 +2167,7 @@
 				DFF353061FEE6A3400058453 /* RefreshAssetsJob.swift in Sources */,
 				DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */,
 				7B4D1122205A9EF80074BF60 /* AddressBookView.swift in Sources */,
+				DF016B292096BD0700B8FFDE /* UserWindow.swift in Sources */,
 				273FACAF205FB9A800513327 /* DataExtensions.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
 				27B84EE51FCDA34A0081DD12 /* MD5Digest.swift in Sources */,
@@ -2252,7 +2257,6 @@
 				DFF5D3F4207B7302008B9B75 /* ShareContactViewController.swift in Sources */,
 				7BADC842204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift in Sources */,
 				DFD87C851FD9881900BBCFFC /* FileManagerExtension.swift in Sources */,
-				DF46B4031FA999FD00243A8B /* InfoViewController.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,

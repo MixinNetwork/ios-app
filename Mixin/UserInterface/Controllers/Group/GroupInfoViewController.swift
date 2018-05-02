@@ -23,6 +23,7 @@ class GroupInfoViewController: UIViewController {
     private var participants = [UserItem]()
     private var initialAnnouncementMode = CollapsingTextView.Mode.collapsed
     private var blinkAnnouncement = false
+    private lazy var userWindow = UserWindow.instance()
     
     private var newName: String {
         return changeNameController.textFields?.first?.text ?? ""
@@ -283,6 +284,8 @@ extension GroupInfoViewController: UITableViewDelegate {
                 guard participant.userId != AccountAPI.shared.accountUserId else {
                     return
                 }
+
+                userWindow.updateUser(user: participant).presentPopupControllerAnimated()
                 
                 let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_INFO, style: .default, handler: { [weak self] (action) in
@@ -447,7 +450,7 @@ extension GroupInfoViewController {
     }
     
     private func infoAction(participant: UserItem) {
-        navigationController?.pushViewController(InfoViewController.instance(user: participant), animated: true)
+        userWindow.updateUser(user: participant).presentPopupControllerAnimated()
     }
     
     private func sendMessageAction(participant: UserItem) {

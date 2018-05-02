@@ -1,0 +1,298 @@
+import Foundation
+import SDWebImage
+import SwiftMessages
+
+class UserWindow: BottomSheetView {
+
+    @IBOutlet weak var avatarImageView: AvatarImageView!
+    @IBOutlet weak var fullnameLabel: UILabel!
+    @IBOutlet weak var idLabel: UILabel!
+    @IBOutlet weak var descTextView: CollapsingTextView!
+    @IBOutlet weak var addContactLineView: UIView!
+    @IBOutlet weak var addContactButton: StateResponsiveButton!
+    @IBOutlet weak var openBotLineView: UIView!
+    @IBOutlet weak var openBotButton: UIButton!
+    @IBOutlet weak var unblockLineView: UIView!
+    @IBOutlet weak var unblockButton: StateResponsiveButton!
+    @IBOutlet weak var sendLineView: UIView!
+    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var verifiedImageView: UIImageView!
+    @IBOutlet weak var moreButton: StateResponsiveButton!
+    
+    private var user: UserItem!
+    private var relationship = ""
+
+    private lazy var editAliasNameController: UIAlertController = {
+        let vc = UIApplication.currentActivity()!.alertInput(title: Localized.PROFILE_EDIT_NAME, placeholder: Localized.PROFILE_FULL_NAME, handler: { [weak self](_) in
+            self?.saveAliasNameAction()
+        })
+        vc.textFields?.first?.addTarget(self, action: #selector(alertInputChangedAction(_:)), for: .editingChanged)
+        return vc
+    }()
+
+    @objc func alertInputChangedAction(_ sender: Any) {
+        guard let text = editAliasNameController.textFields?.first?.text else {
+            return
+        }
+        editAliasNameController.actions[1].isEnabled = !text.isEmpty
+    }
+
+    override func presentPopupControllerAnimated() {
+        guard !isShowing, let superView = UIApplication.currentActivity()?.view else {
+            return
+        }
+        superView.endEditing(true)
+
+        isShowing = true
+        self.frame = superView.bounds
+
+        self.backgroundColor = windowBackgroundColor
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupControllerAnimated))
+        gestureRecognizer.delegate = self
+        self.addGestureRecognizer(gestureRecognizer)
+
+        self.popupView.center = getAnimationStartPoint()
+        superView.addSubview(self)
+        self.alpha = 0
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.popAnimationBody()
+        })
+    }
+
+    @discardableResult
+    func updateUser(user: UserItem, animated: Bool = false, refreshUser: Bool = true) -> UserWindow {
+        self.user = user
+        avatarImageView.setImage(with: user)
+        fullnameLabel.text = user.fullName
+        idLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
+        verifiedImageView.isHidden = !user.isVerified
+
+        if user.isVerified {
+            verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")
+            verifiedImageView.isHidden = false
+        } else if user.isBot {
+            verifiedImageView.image = #imageLiteral(resourceName: "ic_user_bot")
+            verifiedImageView.isHidden = false
+        } else {
+            verifiedImageView.isHidden = true
+        }
+
+        if refreshUser {
+            UserAPI.shared.showUser(userId: user.userId) { [weak self](result) in
+                self?.handlerUpdateUser(result)
+            }
+        }
+
+        guard user.relationship != relationship else {
+            return self
+        }
+
+        relationship = user.relationship
+        let isBot = user.isBot
+        let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
+        let isStranger = user.relationship == Relationship.STRANGER.rawValue
+        let block = {
+            self.addContactButton.isHidden = !isStranger || isBlocked
+            self.addContactLineView.isHidden = !isStranger || isBlocked
+            self.sendButton.isHidden = isBlocked
+            self.sendLineView.isHidden = isBlocked
+            self.openBotButton.isHidden = !isBot || isBlocked
+            self.openBotLineView.isHidden = !isBot || isBlocked
+            self.unblockButton.isHidden = !isBlocked
+            self.unblockLineView.isHidden = !isBlocked
+        }
+        if animated {
+            UIView.animate(withDuration: 0.15, animations: {
+                block()
+            })
+        } else {
+            block()
+        }
+        return self
+    }
+
+    @IBAction func dismissAction(_ sender: Any) {
+        dismissPopupControllerAnimated()
+    }
+
+    @IBAction func moreAction(_ sender: Any) {
+        dismissPopupControllerAnimated()
+        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
+            self?.shareAction()
+        }))
+        switch user.relationship {
+        case Relationship.FRIEND.rawValue:
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
+                self?.editNameAction()
+            }))
+            addMuteAlertAction(alc: alc)
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_REMOVE, style: .destructive, handler: { [weak self](action) in
+                self?.removeAction()
+            }))
+        case Relationship.STRANGER.rawValue:
+            addMuteAlertAction(alc: alc)
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_BLOCK, style: .destructive, handler: { [weak self](action) in
+                self?.blockAction()
+            }))
+        default:
+            break
+        }
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
+    }
+
+    private func addMuteAlertAction(alc: UIAlertController) {
+        if user.isMuted {
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_UNMUTE, style: .default, handler: { [weak self](action) in
+                self?.unmuteAction()
+            }))
+        } else {
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_MUTE, style: .default, handler: { [weak self](action) in
+                self?.muteAction()
+            }))
+        }
+    }
+
+    private func saveAliasNameAction() {
+        guard let aliasName = editAliasNameController.textFields?.first?.text, !aliasName.isEmpty else {
+            return
+        }
+        UserAPI.shared.remarkFriend(userId: user.userId, full_name: aliasName) { [weak self](result) in
+            self?.handlerUpdateUser(result)
+        }
+    }
+
+    private func shareAction() {
+        dismissPopupControllerAnimated()
+        UIApplication.rootNavigationController()?.pushViewController(ShareContactViewController.instance(ownerUser: user), animated: true)
+    }
+
+    private func blockAction() {
+        UserAPI.shared.blockUser(userId: user.userId) { [weak self](result) in
+            self?.handlerUpdateUser(result)
+        }
+    }
+
+    private func muteAction() {
+        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.PROFILE_MUTE_DURATION_8H, style: .default, handler: { [weak self](alert) in
+            self?.saveMuteUntil(muteIntervalInSeconds: muteDuration8H)
+        }))
+        alc.addAction(UIAlertAction(title: Localized.PROFILE_MUTE_DURATION_1WEEK, style: .default, handler: { [weak self](alert) in
+            self?.saveMuteUntil(muteIntervalInSeconds: muteDuration1Week)
+        }))
+        alc.addAction(UIAlertAction(title: Localized.PROFILE_MUTE_DURATION_1YEAR, style: .default, handler: { [weak self](alert) in
+            self?.saveMuteUntil(muteIntervalInSeconds: muteDuration1Year)
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
+    }
+
+    private func unmuteAction() {
+        saveMuteUntil(muteIntervalInSeconds: 0)
+    }
+
+    private func saveMuteUntil(muteIntervalInSeconds: Int64) {
+        let userId = user.userId
+        ConversationAPI.shared.mute(userId: userId, duration: muteIntervalInSeconds) { [weak self] (result) in
+            switch result {
+            case let .success(response):
+                self?.user.muteUntil = response.muteUntil
+                UserDAO.shared.updateNotificationEnabled(userId: userId, muteUntil: response.muteUntil)
+                let toastMessage: String
+                if muteIntervalInSeconds == 0 {
+                    toastMessage = Localized.PROFILE_TOAST_UNMUTED
+                } else {
+                    toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
+                }
+                NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: toastMessage)
+            case let .failure(error, didHandled):
+                guard !didHandled else {
+                    return
+                }
+                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.kind.localizedDescription ?? error.description)
+            }
+        }
+    }
+
+    private func editNameAction() {
+        editAliasNameController.textFields?.first?.text = user.fullName
+        UIApplication.currentActivity()?.present(editAliasNameController, animated: true, completion: nil)
+    }
+
+    private func removeAction() {
+        UserAPI.shared.removeFriend(userId: user.userId, completion: { [weak self](result) in
+            self?.handlerUpdateUser(result)
+        })
+    }
+
+    private func handlerUpdateUser(_ result: APIResult<UserResponse>, successBlock: (() -> Void)? = nil) {
+        switch result {
+        case let .success(user):
+            UserDAO.shared.updateUsers(users: [user], notifyContact: true)
+            updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false)
+            successBlock?()
+        case let .failure(error, didHandled):
+            guard !didHandled else {
+                return
+            }
+            SwiftMessages.showToast(message: error.kind.localizedDescription ?? error.description, backgroundColor: .hintRed)
+        }
+    }
+
+    @IBAction func unblockAction(_ sender: Any) {
+        guard !unblockButton.isBusy else {
+            return
+        }
+        unblockButton.isBusy = true
+
+        UserAPI.shared.unblockUser(userId: user.userId) { [weak self](result) in
+            self?.unblockButton.isBusy = false
+            self?.handlerUpdateUser(result)
+        }
+    }
+    
+
+    @IBAction func sendAction(_ sender: Any) {
+        dismissPopupControllerAnimated()
+        if let conversationVC = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController, conversationVC.dataSource?.category == ConversationDataSource.Category.contact && conversationVC.dataSource?.conversation.ownerId == user.userId {
+            return
+        }
+
+        UIApplication.rootNavigationController()?.pushViewController(withBackChat: ConversationViewController.instance(ownerUser: user))
+    }
+
+    @IBAction func openAction(_ sender: Any) {
+        let userId = user.userId
+        DispatchQueue.global().async { [weak self] in
+            guard let app = AppDAO.shared.getUserBot(userId: userId), let url = URL(string: app.homeUri) else {
+                return
+            }
+            let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: userId)
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.dismissPopupControllerAnimated()
+                DAppWebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+            }
+        }
+    }
+
+    @IBAction func addAction(_ sender: Any) {
+        guard !addContactButton.isBusy else {
+            return
+        }
+        addContactButton.isBusy = true
+        UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName, completion: { [weak self](result) in
+            self?.addContactButton.isBusy = false
+            self?.handlerUpdateUser(result)
+        })
+    }
+
+    class func instance() -> UserWindow {
+        return Bundle.main.loadNibNamed("UserWindow", owner: nil, options: nil)?.first as! UserWindow
+    }
+}

@@ -116,12 +116,7 @@ extension DAppUrlWindow {
                             UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
                         }
                     } else {
-                        let vc = InfoViewController.instance(user: UserItem.createUser(from: user))
-                        if clearNavigationStack {
-                            UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
-                        } else {
-                            UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
-                        }
+                        UserWindow.instance().updateUser(user: UserItem.createUser(from: user)).presentPopupControllerAnimated()
                     }
                 } else if let authorization = code.authorization {
                     weakSelf.load(authorization: authorization)

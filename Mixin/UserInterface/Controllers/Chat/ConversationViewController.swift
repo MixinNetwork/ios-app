@@ -61,6 +61,7 @@ class ConversationViewController: UIViewController {
     private var previewDocumentController: UIDocumentInteractionController?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
+    private lazy var userWindow = UserWindow.instance()
     
     private lazy var photoPreviewViewController: PhotoPreviewViewController = {
         let controller = PhotoPreviewViewController.instance(conversationId: conversationId)
@@ -232,7 +233,7 @@ class ConversationViewController: UIViewController {
         if let dataSource = dataSource, dataSource.category == .group {
             navigationController?.pushViewController(GroupInfoViewController.instance(conversation: dataSource.conversation), animated: true)
         } else if let user = ownerUser {
-            navigationController?.pushViewController(InfoViewController.instance(user: user), animated: true)
+            userWindow.updateUser(user: user).presentPopupControllerAnimated()
         }
     }
     
@@ -431,7 +432,7 @@ class ConversationViewController: UIViewController {
             if shareUserId == AccountAPI.shared.accountUserId {
                 navigationController?.pushViewController(withBackRoot: MyProfileViewController.instance())
             } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
-                navigationController?.pushViewController(InfoViewController.instance(user: user), animated: true)
+                userWindow.updateUser(user: user).presentPopupControllerAnimated()
             }
         } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
             guard let cell = cell as? SystemMessageCell, cell.contentFrame.contains(recognizer.location(in: cell)) else {
@@ -826,33 +827,7 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
             return
         }
-        let participantIds = participants.map{ $0.userId }
-        let conversationId = self.conversationId
-        
-        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_INFO, style: .default, handler: { [weak self](action) in
-            self?.navigationController?.pushViewController(InfoViewController.instance(user: user), animated: true)
-        }))
-        alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_SEND, style: .default, handler: { [weak self](action) in
-            self?.navigationController?.pushViewController(ConversationViewController.instance(ownerUser: user), animated: true)
-        }))
-        let errorHandler = { (result: APIResult<ConversationResponse>) in
-            if case let .failure(_, didHandled) = result, !didHandled {
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_OPERATION_FAILED)
-            }
-        }
-        if role == ParticipantRole.OWNER.rawValue, participantIds.contains(user.userId) {
-            alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_ADMIN, style: .default, handler: { (action) in
-                ConversationAPI.shared.adminParticipant(conversationId: conversationId, userId: user.userId, completion: errorHandler)
-            }))
-        }
-        if !role.isEmpty, participantIds.contains(user.userId) {
-            alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_REMOVE, style: .destructive, handler: { (action) in
-                ConversationAPI.shared.removeParticipant(conversationId: conversationId, userId: user.userId, completion: errorHandler)
-            }))
-        }
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        present(alc, animated: true, completion: nil)
+        userWindow.updateUser(user: user).presentPopupControllerAnimated()
     }
     
 }
@@ -1095,10 +1070,10 @@ extension ConversationViewController {
             if dataSource?.category == .group {
                 moreMenuViewController?.apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
             } else {
-                guard let ownerId = ownerUser?.userId else {
+                guard let ownerId = ownerUser?.userId, let userBot = AppDAO.shared.getUserBot(userId: ownerId) else {
                     return
                 }
-                moreMenuViewController?.apps = AppDAO.shared.getConversationBots(userId: ownerId)
+                moreMenuViewController?.apps = [userBot]
             }
         }
     }

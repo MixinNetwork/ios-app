@@ -278,6 +278,7 @@
 // Profile
 "profile_title" = "信息";
 "profile_send_message" = "发消息";
+"profile_open_bot" = "打开小程序";
 "profile_share_card" = "分享他的名片";
 "profile_notification" = "通知";
 "profile_add" = "添加联系人";
@@ -302,11 +303,10 @@
 "profile_mute_duration_8h" = "8 小时";
 "profile_mute_duration_1week" = "1 周";
 "profile_mute_duration_1year" = "1 年";
-"profile_status_not_muted" = "静音";
-"profile_status_muted" = "已设静音";
-"profile_status_no" = "否";
-"profile_mute_duration_prefix" = "至";
 "profile_unmute" = "取消静音";
+"profile_mute" = "静音";
+"profile_toast_unmuted" = "已取消静音";
+"profile_toast_muted" = "已静音至 %@";
 
 // Home
 "button_title_contacts_and_chats" = "搜索";

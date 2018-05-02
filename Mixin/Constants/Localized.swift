@@ -225,8 +225,8 @@ public class Localized {
     public static let PROFILE_SHARE_CARD = LocalizedString("profile_share_card", comment: "Share Contact")
     public static let PROFILE_ADD = LocalizedString("profile_add", comment: "Add Contact")
     public static let PROFILE_REMOVE = LocalizedString("profile_remove", comment: "Remove Contact")
-    public static let PROFILE_BLOCK = LocalizedString("profile_block", comment: "Block User")
-    public static let PROFILE_UNBLOCK = LocalizedString("profile_unblock", comment: "Unblock User")
+    public static let PROFILE_BLOCK = LocalizedString("profile_block", comment: "Block")
+    public static let PROFILE_UNBLOCK = LocalizedString("profile_unblock", comment: "Unblock")
     public static func PROFILE_INVITATION_CODE_CONSUMED_COUNT(consumed_count: Int) -> String {
         return String(format: LocalizedString("profile_invitation_code_consumed_count", comment: "You have invited a total of %@ people."), String(consumed_count))
     }
@@ -237,15 +237,16 @@ public class Localized {
     public static let PROFILE_MUTE_DURATION_8H = LocalizedString("profile_mute_duration_8h", comment: "8 hours")
     public static let PROFILE_MUTE_DURATION_1WEEK = LocalizedString("profile_mute_duration_1week", comment: "1 week")
     public static let PROFILE_MUTE_DURATION_1YEAR = LocalizedString("profile_mute_duration_1year", comment: "1 year")
-    public static let PROFILE_STATUS_NOT_MUTED = LocalizedString("profile_status_not_muted", comment: "Mute")
-    public static let PROFILE_STATUS_MUTED = LocalizedString("profile_status_muted", comment: "Muted")
-    public static let PROFILE_STATUS_NO = LocalizedString("profile_status_no", comment: "No")
-    public static let PROFILE_MUTE_DURATION_PREFIX = LocalizedString("profile_mute_duration_prefix", comment: "until ")
     public static let PROFILE_UNMUTE = LocalizedString("profile_unmute", comment: "Unmute")
+    public static let PROFILE_MUTE = LocalizedString("profile_mute", comment: "Mute")
     public static let PROFILE_CHANGE_NUMBER = LocalizedString("profile_change_number", comment: "Change Number")
     public static let PROFILE_CHANGE_NUMBER_CONFIRMATION = LocalizedString("profile_change_number_confirmation", comment: "Do you want to change the phone number?")
     public static let PROFILE_CHANGE_NUMBER_SUCCEEDED = LocalizedString("profile_change_number_succeeded", comment: "Successfully changed phone number")
-    
+    public static let PROFILE_TOAST_UNMUTED = LocalizedString("profile_toast_unmuted", comment: "Unmuted")
+    public static func PROFILE_TOAST_MUTED(muteUntil: String) -> String {
+        return String(format: LocalizedString("profile_toast_muted", comment: "Muted until %@"), muteUntil)
+    }
+
     // Home
     public static let SECTION_TITLE_CONTACTS = LocalizedString("section_title_contacts", comment: "CONTACTS")
     public static let SECTION_TITLE_MESSAGES = LocalizedString("section_title_messages", comment: "MESSAGES")

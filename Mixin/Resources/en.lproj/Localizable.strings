@@ -280,11 +280,12 @@
 "profile_title" = "Info";
 "profile_send_message" = "Send Message";
 "profile_share_card" = "Share Contact";
+"profile_open_bot" = "Open App";
 "profile_notification" = "Notifications";
 "profile_add" = "Add Contact";
 "profile_remove" = "Remove Contact";
-"profile_block" = "Block User";
-"profile_unblock" = "Unblock User";
+"profile_block" = "Block";
+"profile_unblock" = "Unblock";
 "profile_photo" = "Profile Photo";
 "profile_full_name" = "Name";
 "profile_my_qrcode" = "My QR Code";
@@ -303,11 +304,10 @@
 "profile_mute_duration_8h" = "8 hours";
 "profile_mute_duration_1week" = "1 week";
 "profile_mute_duration_1year" = "1 year";
-"profile_status_not_muted" = "Mute";
-"profile_status_muted" = "Muted";
-"profile_status_no" = "No";
-"profile_mute_duration_prefix" = "until ";
 "profile_unmute" = "Unmute";
+"profile_mute" = "Mute";
+"profile_toast_unmuted" = "Unmuted";
+"profile_toast_muted" = "Muted until %@";
 
 // Home
 "button_title_contacts_and_chats" = "Contacts and Chats";

@@ -92,6 +92,9 @@
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5E5D971FCE9CAA00F6048D /* InputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D961FCE9CAA00F6048D /* InputTextView.swift */; };
 		7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B60A374206537FE00673CA1 /* GeometryExtension.swift */; };
+		7B61EB8E20978856001C1985 /* AttachmentCryptography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61EB8B20978855001C1985 /* AttachmentCryptography.swift */; };
+		7B61EB8F20978856001C1985 /* AttachmentEncryptingInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61EB8C20978855001C1985 /* AttachmentEncryptingInputStream.swift */; };
+		7B61EB9020978856001C1985 /* AttachmentDecryptingOutputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61EB8D20978855001C1985 /* AttachmentDecryptingOutputStream.swift */; };
 		7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */; };
 		7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */; };
 		7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B78B2451FF2170400371632 /* InviteLinkViewController.swift */; };
@@ -355,10 +358,6 @@
 		DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */; };
 		DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6BB2034737F00E99CE8 /* payment_success.caf */; };
 		DF8F3F23207F52F9007DFDB4 /* MessageJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8F3F22207F52F9007DFDB4 /* MessageJob.swift */; };
-		DF955BFA1FEBD5B500DF98A2 /* Cryptography.m in Sources */ = {isa = PBXBuildFile; fileRef = DF955BF91FEBD5B500DF98A2 /* Cryptography.m */; };
-		DF955BFE1FEBDAEE00DF98A2 /* OWSError.m in Sources */ = {isa = PBXBuildFile; fileRef = DF955BFC1FEBDAEE00DF98A2 /* OWSError.m */; };
-		DF955C011FEBDBA500DF98A2 /* NSData+OWSConstantTimeCompare.m in Sources */ = {isa = PBXBuildFile; fileRef = DF955C001FEBDBA500DF98A2 /* NSData+OWSConstantTimeCompare.m */; };
-		DF955C041FEBDBD400DF98A2 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = DF955C031FEBDBD400DF98A2 /* NSData+Base64.m */; };
 		DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */; };
 		DF9E66E7205C0A7E00F1A0B9 /* AddressRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */; };
 		DF9E66ED205C16AD00F1A0B9 /* WithdrawalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */; };
@@ -550,6 +549,9 @@
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5E5D961FCE9CAA00F6048D /* InputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTextView.swift; sourceTree = "<group>"; };
 		7B60A374206537FE00673CA1 /* GeometryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtension.swift; sourceTree = "<group>"; };
+		7B61EB8B20978855001C1985 /* AttachmentCryptography.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentCryptography.swift; sourceTree = "<group>"; };
+		7B61EB8C20978855001C1985 /* AttachmentEncryptingInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentEncryptingInputStream.swift; sourceTree = "<group>"; };
+		7B61EB8D20978855001C1985 /* AttachmentDecryptingOutputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentDecryptingOutputStream.swift; sourceTree = "<group>"; };
 		7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationButton.swift; sourceTree = "<group>"; };
 		7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabel.swift; sourceTree = "<group>"; };
 		7B78B2451FF2170400371632 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
@@ -819,15 +821,6 @@
 		DF8EF6B62032D3D700E99CE8 /* PayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayView.swift; sourceTree = "<group>"; };
 		DF8EF6BB2034737F00E99CE8 /* payment_success.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = payment_success.caf; sourceTree = "<group>"; };
 		DF8F3F22207F52F9007DFDB4 /* MessageJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageJob.swift; sourceTree = "<group>"; };
-		DF955BF81FEBD5B500DF98A2 /* Cryptography.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cryptography.h; sourceTree = "<group>"; };
-		DF955BF91FEBD5B500DF98A2 /* Cryptography.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cryptography.m; sourceTree = "<group>"; };
-		DF955BFB1FEBDACB00DF98A2 /* Asserts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Asserts.h; sourceTree = "<group>"; };
-		DF955BFC1FEBDAEE00DF98A2 /* OWSError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWSError.m; sourceTree = "<group>"; };
-		DF955BFD1FEBDAEE00DF98A2 /* OWSError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWSError.h; sourceTree = "<group>"; };
-		DF955BFF1FEBDBA400DF98A2 /* NSData+OWSConstantTimeCompare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+OWSConstantTimeCompare.h"; sourceTree = "<group>"; };
-		DF955C001FEBDBA500DF98A2 /* NSData+OWSConstantTimeCompare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+OWSConstantTimeCompare.m"; sourceTree = "<group>"; };
-		DF955C021FEBDBD400DF98A2 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
-		DF955C031FEBDBD400DF98A2 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenAssetViewController.swift; sourceTree = "<group>"; };
 		DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRequest.swift; sourceTree = "<group>"; };
 		DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalRequest.swift; sourceTree = "<group>"; };
@@ -1026,7 +1019,7 @@
 			children = (
 				DF5CDA78205005EE004A52BA /* Database */,
 				DF503D3D1FED05F600C008E7 /* Storage */,
-				DF8A96921FD7CE9300FD38D9 /* SignalKit */,
+				7B61EB8A209787DD001C1985 /* Attachment */,
 				27B84EE41FCDA34A0081DD12 /* MD5Digest.swift */,
 				27DA337E1FE8F92900A4D16F /* SignalProtocol.swift */,
 				27382EC51FECDF0D00437A1B /* PreKeyUtil.swift */,
@@ -1134,6 +1127,16 @@
 				DFEECF581FF6804E00B177B1 /* SignalLoadingView.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		7B61EB8A209787DD001C1985 /* Attachment */ = {
+			isa = PBXGroup;
+			children = (
+				7B61EB8B20978855001C1985 /* AttachmentCryptography.swift */,
+				7B61EB8D20978855001C1985 /* AttachmentDecryptingOutputStream.swift */,
+				7B61EB8C20978855001C1985 /* AttachmentEncryptingInputStream.swift */,
+			);
+			path = Attachment;
 			sourceTree = "<group>";
 		};
 		7B8D273F2087BAA00098E473 /* Views */ = {
@@ -1572,22 +1575,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		DF8A96921FD7CE9300FD38D9 /* SignalKit */ = {
-			isa = PBXGroup;
-			children = (
-				DF955BFB1FEBDACB00DF98A2 /* Asserts.h */,
-				DF955BFD1FEBDAEE00DF98A2 /* OWSError.h */,
-				DF955BFC1FEBDAEE00DF98A2 /* OWSError.m */,
-				DF955BFF1FEBDBA400DF98A2 /* NSData+OWSConstantTimeCompare.h */,
-				DF955C001FEBDBA500DF98A2 /* NSData+OWSConstantTimeCompare.m */,
-				DF955C021FEBDBD400DF98A2 /* NSData+Base64.h */,
-				DF955C031FEBDBD400DF98A2 /* NSData+Base64.m */,
-				DF955BF81FEBD5B500DF98A2 /* Cryptography.h */,
-				DF955BF91FEBD5B500DF98A2 /* Cryptography.m */,
-			);
-			path = SignalKit;
-			sourceTree = "<group>";
-		};
 		DF8CECF01FC4255700E40064 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -1630,8 +1617,8 @@
 				DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */,
 				DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */,
 				DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */,
-				DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */,
 				DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */,
+				DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */,
 				DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */,
 				DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */,
 				DF05F0111FE5598300F98479 /* ExitConversationJob.swift */,
@@ -2149,8 +2136,10 @@
 				9B748DD81FA88DB300BC009B /* QRCodeViewController.swift in Sources */,
 				DF53BB732023F466002BF028 /* SwiftMessageExtension.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
+				7B61EB9020978856001C1985 /* AttachmentDecryptingOutputStream.swift in Sources */,
 				DFE63CA61FC6B7D700D6E028 /* ConversationResponse.swift in Sources */,
 				DFF353021FEE532300058453 /* AssetDAO.swift in Sources */,
+				7B61EB8F20978856001C1985 /* AttachmentEncryptingInputStream.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
 				DF503D411FED162300C008E7 /* MixinPreKeyStore.swift in Sources */,
 				273FACBA205FB9A800513327 /* SenderKeyStore.swift in Sources */,
@@ -2221,7 +2210,6 @@
 				7B0B01981FEA63FA000EEE4F /* StrangerTipsView.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
 				DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */,
-				DF955C011FEBDBA500DF98A2 /* NSData+OWSConstantTimeCompare.m in Sources */,
 				DF3FF05B20123BD6000A0C0A /* FileDownloadJob.swift in Sources */,
 				7B2E3E521FA07F7B00DDDDEB /* CountryCell.swift in Sources */,
 				DFF353161FEEBC4700058453 /* SnapshotCell.swift in Sources */,
@@ -2273,6 +2261,7 @@
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
 				7B5747411FA08E18005A6BB5 /* MobileNumberViewController.swift in Sources */,
 				DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */,
+				7B61EB8E20978856001C1985 /* AttachmentCryptography.swift in Sources */,
 				7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				DF114B0A20206D3300EA8F9C /* App.swift in Sources */,
@@ -2300,7 +2289,6 @@
 				DF8CECDD1FC302EB00E40064 /* TransferTypeView.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,
-				DF955BFA1FEBD5B500DF98A2 /* Cryptography.m in Sources */,
 				7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */,
 				DFE63C9A1FC6B15600D6E028 /* SignalKeyRequest.swift in Sources */,
 				DF2A3CDA20173F2D0095F024 /* TransferStickerData.swift in Sources */,
@@ -2409,7 +2397,6 @@
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
 				DF5D9F2C1F9C7A9D0036D5FD /* APIError.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,
-				DF955BFE1FEBDAEE00DF98A2 /* OWSError.m in Sources */,
 				DFF353191FEEC83100058453 /* WalletUserDefault.swift in Sources */,
 				DF6DB83D2024EAD10060CF31 /* PaymentResponse.swift in Sources */,
 				7B4D112A205BA64B0074BF60 /* Address.swift in Sources */,
@@ -2449,7 +2436,6 @@
 				DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */,
 				DF8CECE91FC411AB00E40064 /* NotificationViewController.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingViewController.swift in Sources */,
-				DF955C041FEBDBD400DF98A2 /* NSData+Base64.m in Sources */,
 				DF503D381FECF98900C008E7 /* SignedPreKey.swift in Sources */,
 				7B1CCBA31FEE63C300137644 /* UserRequest.swift in Sources */,
 				DF8DA1A41FD64C5800425CEC /* BlazeMessageData.swift in Sources */,

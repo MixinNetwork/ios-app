@@ -5,9 +5,16 @@ import Bugsnag
 class AttachmentUploadJob: UploadOrDownloadJob {
 
     internal var attachResponse: AttachmentResponse?
-    internal var encryptionKey: NSData? = nil
-    internal var digest: NSData? = nil
+    
+    private var stream: InputStream?
 
+    internal var fileUrl: URL? {
+        guard let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty else {
+            return nil
+        }
+        return MixinFile.chatPhotosUrl(mediaUrl)
+    }
+    
     init(message: Message) {
         super.init(messageId: message.messageId)
         super.message = message
@@ -45,45 +52,55 @@ class AttachmentUploadJob: UploadOrDownloadJob {
             UIApplication.trackError("AttachmentUploadJob", action: "uploadAttachment upload_url is nil", userInfo: ["uploadUrl": "\(attachResponse.uploadUrl ?? "")"])
             return false
         }
-        guard let data = fileContent() else {
-            UIApplication.trackError("AttachmentUploadJob", action: "uploadAttachment data is nil")
+        guard let fileUrl = fileUrl else {
             return false
         }
 
-        var fileData = data
+        let contentLength: Int
         if message.category.hasPrefix("SIGNAL_") {
-            fileData = Cryptography.encryptAttachmentData(data, outKey: &encryptionKey, outDigest: &digest)
-            if encryptionKey == nil || digest == nil {
-                UIApplication.trackError("AttachmentUploadJob", action: "uploadAttachment", userInfo: ["mediaKey": "\(encryptionKey == nil)", "mediaDigest": "\(digest == nil)"])
+            if let inputStream = AttachmentEncryptingInputStream(url: fileUrl) {
+                contentLength = inputStream.contentLength
+                stream = inputStream
+            } else {
+                UIApplication.trackError("AttachmentUploadJob", action: "AttachmentEncryptingInputStream init failed")
                 return false
             }
+        } else {
+            stream = InputStream(url: fileUrl)
+            if stream == nil {
+                UIApplication.trackError("AttachmentUploadJob", action: "InputStream init failed")
+                return false
+            } else {
+                contentLength = Int(FileManager.default.fileSize(fileUrl.path))
+            }
         }
+        guard let inputStream = stream else {
+            return false
+        }
+        
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 30
         request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
+        request.setValue("\(contentLength)", forHTTPHeaderField: "Content-Length")
         request.setValue("public-read", forHTTPHeaderField: "x-amz-acl")
         request.setValue("Connection", forHTTPHeaderField: "close")
         request.cachePolicy = .reloadIgnoringCacheData
-
+        request.httpBodyStream = inputStream
+        
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-        task = session.uploadTask(with: request, from: fileData, completionHandler: completionHandler)
+        task = session.dataTask(with: request, completionHandler: completionHandler)
         task?.resume()
         session.finishTasksAndInvalidate()
         return true
     }
 
-    func fileContent() -> Data? {
-        guard let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty else {
-            return nil
-        }
-        return FileManager.default.contents(atPath: MixinFile.chatPhotosUrl(mediaUrl).path)
-    }
-
-    override func taskFinished(data: Any?) {
+    override func taskFinished() {
         guard let attachResponse = self.attachResponse else {
             return
         }
-        let content = getMediaDataText(attachmentId: attachResponse.attachmentId, key: encryptionKey as Data?, digest: digest as Data?)
+        let key = (stream as? AttachmentEncryptingInputStream)?.key
+        let digest = (stream as? AttachmentEncryptingInputStream)?.digest
+        let content = getMediaDataText(attachmentId: attachResponse.attachmentId, key: key, digest: digest)
         message.content = content
         MessageDAO.shared.updateMessageContentAndMediaStatus(content: content, mediaStatus: .DONE, messageId: message.messageId, conversationId: message.conversationId)
 

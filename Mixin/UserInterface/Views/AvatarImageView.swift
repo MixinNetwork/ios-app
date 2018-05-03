@@ -31,6 +31,10 @@ class AvatarImageView: CornerImageView {
         }
     }
 
+    func setImage(user: ParticipantUser) {
+        setImage(with: user.userAvatarUrl, identityNumber: user.userIdentityNumber, name: user.userFullName)
+    }
+
     func setImage(with user: Account) {
         setImage(with: user.avatar_url, identityNumber: user.identity_number, name: user.full_name)
     }

@@ -18,10 +18,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vA4-NF-tjz" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="499.5" width="375" height="175.5"/>
+                    <rect key="frame" x="0.0" y="439.5" width="375" height="235.5"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="3WX-Q2-mQ2" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="187.5" y="32" width="64" height="64"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="3WX-Q2-mQ2" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="155.5" y="30" width="64" height="64"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="64" id="ang-8k-a5S"/>
                                 <constraint firstAttribute="width" constant="64" id="kIB-zF-uYY"/>
@@ -33,7 +33,7 @@
                             </userDefinedRuntimeAttributes>
                         </imageView>
                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="aJ9-Cw-svR">
-                            <rect key="frame" x="187.5" y="108" width="61" height="21.5"/>
+                            <rect key="frame" x="157" y="109" width="61" height="21.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Crossle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="08I-6z-iRv">
                                     <rect key="frame" x="0.0" y="0.0" width="61" height="21.5"/>
@@ -43,30 +43,59 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" image="ic_user_verified" translatesAutoresizingMaskIntoConstraints="NO" id="D1x-rK-Am8">
-                                    <rect key="frame" x="-187.5" y="4" width="0.0" height="14"/>
+                                    <rect key="frame" x="-157" y="4" width="0.0" height="14"/>
                                 </imageView>
                             </subviews>
                         </stackView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Mixin Id: 32543" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JcR-T6-ZxP">
-                            <rect key="frame" x="187.5" y="133.5" width="98.5" height="17"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3CZ-Oi-YX6">
-                            <rect key="frame" x="0.0" y="150.5" width="375" height="17"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="lbm-hO-lLD">
+                            <rect key="frame" x="138.5" y="136.5" width="98.5" height="17"/>
                             <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Mixin Id: 32543" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JcR-T6-ZxP">
+                                    <rect key="frame" x="0.0" y="0.0" width="98.5" height="17"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                    <color key="textColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VVl-Lm-7c0" customClass="CornerButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="19" y="-576" width="61" height="24"/>
+                                    <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="24" id="hV7-Zg-keM"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
+                                    <inset key="contentEdgeInsets" minX="8" minY="0.0" maxX="8" maxY="0.0"/>
+                                    <state key="normal" title="Crossle">
+                                        <color key="titleColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="12"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </button>
+                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="duH-1h-HeM">
+                                    <rect key="frame" x="-138" y="-576" width="375" height="3"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="3" id="Dxx-bJ-hqf"/>
+                                    </constraints>
+                                </view>
                                 <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="I will help you to claim your Mixin invitation network bonus." textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tct-qV-KnO" customClass="CollapsingTextView" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
+                                    <rect key="frame" x="-138.5" y="-576" width="0.0" height="0.0"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <accessibility key="accessibilityConfiguration">
                                         <accessibilityTraits key="traits" link="YES"/>
                                     </accessibility>
-                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 </textView>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3CZ-Oi-YX6">
+                            <rect key="frame" x="0.0" y="153.5" width="375" height="74"/>
+                            <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EyU-0R-HCE">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="15"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -74,18 +103,18 @@
                                         <constraint firstAttribute="height" constant="15" id="6zP-qs-Xg9"/>
                                     </constraints>
                                 </view>
-                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="932-oi-ubB">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="932-oi-ubB">
                                     <rect key="frame" x="0.0" y="15" width="375" height="1"/>
                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="jr2-GF-SA2" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
                                     </constraints>
                                 </view>
-                                <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J6x-cW-Ihl" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="15" width="375" height="60"/>
+                                <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J6x-cW-Ihl" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="16" width="375" height="56"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="60" id="epD-tW-6TJ"/>
+                                        <constraint firstAttribute="height" constant="56" id="epD-tW-6TJ"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <state key="normal" title="Add Contact"/>
@@ -97,17 +126,17 @@
                                     </connections>
                                 </button>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e1e-TP-lRx">
-                                    <rect key="frame" x="0.0" y="15" width="375" height="1"/>
+                                    <rect key="frame" x="0.0" y="72" width="375" height="1"/>
                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="58S-xO-cvj" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
                                     </constraints>
                                 </view>
                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C9L-4F-9cA">
-                                    <rect key="frame" x="0.0" y="15" width="375" height="60"/>
+                                    <rect key="frame" x="0.0" y="72" width="375" height="56"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="60" id="GvT-9G-Rdr"/>
+                                        <constraint firstAttribute="height" constant="56" id="GvT-9G-Rdr"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <state key="normal" title="Send Message"/>
@@ -119,17 +148,17 @@
                                     </connections>
                                 </button>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I4A-DR-6ih">
-                                    <rect key="frame" x="0.0" y="15" width="375" height="1"/>
+                                    <rect key="frame" x="0.0" y="72" width="375" height="1"/>
                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="l8I-Et-7Bp" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
                                     </constraints>
                                 </view>
                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bX3-3H-JnE">
-                                    <rect key="frame" x="0.0" y="16" width="375" height="60"/>
+                                    <rect key="frame" x="0.0" y="73" width="375" height="56"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="60" id="dwl-G4-uaO"/>
+                                        <constraint firstAttribute="height" constant="56" id="dwl-G4-uaO"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <state key="normal" title="Open Bot"/>
@@ -141,17 +170,17 @@
                                     </connections>
                                 </button>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RpB-GK-rbc">
-                                    <rect key="frame" x="0.0" y="16" width="375" height="1"/>
+                                    <rect key="frame" x="0.0" y="73" width="375" height="1"/>
                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="Xku-qw-SWr" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
                                     </constraints>
                                 </view>
                                 <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Yd-cu-ahU" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="16" width="375" height="60"/>
+                                    <rect key="frame" x="0.0" y="73" width="375" height="56"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="60" id="fIn-US-xjd"/>
+                                        <constraint firstAttribute="height" constant="56" id="fIn-US-xjd"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <state key="normal" title="Unblock">
@@ -165,7 +194,7 @@
                                     </connections>
                                 </button>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kKh-KE-kpC">
-                                    <rect key="frame" x="0.0" y="16" width="375" height="1"/>
+                                    <rect key="frame" x="0.0" y="73" width="375" height="1"/>
                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="58E-i8-8pw" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
@@ -185,7 +214,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6yx-EZ-YSv" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="375" y="0.0" width="56" height="56"/>
+                            <rect key="frame" x="319" y="0.0" width="56" height="56"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="56" id="0zN-sm-8YS"/>
                                 <constraint firstAttribute="width" secondItem="6yx-EZ-YSv" secondAttribute="height" multiplier="1:1" id="ROC-rF-8sB"/>
@@ -199,17 +228,19 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="6yx-EZ-YSv" secondAttribute="trailing" id="7lp-yi-Vsd"/>
+                        <constraint firstItem="3CZ-Oi-YX6" firstAttribute="top" secondItem="lbm-hO-lLD" secondAttribute="bottom" id="9xw-Rb-Fnu"/>
                         <constraint firstItem="gVe-3v-Dh9" firstAttribute="leading" secondItem="vA4-NF-tjz" secondAttribute="leading" id="Gaa-1j-IYJ"/>
                         <constraint firstAttribute="trailing" secondItem="3CZ-Oi-YX6" secondAttribute="trailing" id="HOK-05-QWz"/>
                         <constraint firstItem="3WX-Q2-mQ2" firstAttribute="centerX" secondItem="vA4-NF-tjz" secondAttribute="centerX" id="IKI-bj-vAS"/>
-                        <constraint firstItem="JcR-T6-ZxP" firstAttribute="centerX" secondItem="vA4-NF-tjz" secondAttribute="centerX" id="J1I-mU-QLj"/>
                         <constraint firstItem="3CZ-Oi-YX6" firstAttribute="leading" secondItem="vA4-NF-tjz" secondAttribute="leading" id="KSp-X5-LpN"/>
-                        <constraint firstItem="3WX-Q2-mQ2" firstAttribute="top" secondItem="vA4-NF-tjz" secondAttribute="top" constant="32" id="NC7-9D-Z3i"/>
-                        <constraint firstItem="JcR-T6-ZxP" firstAttribute="top" secondItem="aJ9-Cw-svR" secondAttribute="bottom" constant="4" id="PNe-dj-SrZ"/>
-                        <constraint firstItem="3CZ-Oi-YX6" firstAttribute="top" secondItem="JcR-T6-ZxP" secondAttribute="bottom" id="W6F-gh-G6h"/>
+                        <constraint firstItem="3WX-Q2-mQ2" firstAttribute="top" secondItem="vA4-NF-tjz" secondAttribute="top" constant="30" id="NC7-9D-Z3i"/>
+                        <constraint firstItem="lbm-hO-lLD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vA4-NF-tjz" secondAttribute="leading" constant="30" id="NxD-gG-TK2"/>
+                        <constraint firstItem="lbm-hO-lLD" firstAttribute="top" secondItem="aJ9-Cw-svR" secondAttribute="bottom" constant="6" id="PAh-aJ-KGR"/>
+                        <constraint firstItem="lbm-hO-lLD" firstAttribute="centerX" secondItem="vA4-NF-tjz" secondAttribute="centerX" id="aJW-aN-eYB"/>
                         <constraint firstItem="aJ9-Cw-svR" firstAttribute="centerX" secondItem="vA4-NF-tjz" secondAttribute="centerX" id="bfd-ge-H8f"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="lbm-hO-lLD" secondAttribute="trailing" constant="30" id="tK3-BS-Wvx"/>
                         <constraint firstItem="6yx-EZ-YSv" firstAttribute="top" secondItem="vA4-NF-tjz" secondAttribute="top" id="tqP-N5-qa9"/>
-                        <constraint firstItem="aJ9-Cw-svR" firstAttribute="top" secondItem="3WX-Q2-mQ2" secondAttribute="bottom" constant="12" id="vLZ-cg-16H"/>
+                        <constraint firstItem="aJ9-Cw-svR" firstAttribute="top" secondItem="3WX-Q2-mQ2" secondAttribute="bottom" constant="15" id="vLZ-cg-16H"/>
                         <constraint firstItem="gVe-3v-Dh9" firstAttribute="top" secondItem="vA4-NF-tjz" secondAttribute="top" id="yd3-9u-Da2"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
@@ -230,9 +261,11 @@
             <connections>
                 <outlet property="addContactButton" destination="J6x-cW-Ihl" id="7s4-3B-frR"/>
                 <outlet property="addContactLineView" destination="932-oi-ubB" id="4Zj-60-7Bx"/>
+                <outlet property="appPlaceView" destination="duH-1h-HeM" id="s25-B3-StD"/>
                 <outlet property="avatarImageView" destination="3WX-Q2-mQ2" id="RAW-nV-t9f"/>
                 <outlet property="contentBottomConstraint" destination="2x5-Dc-XaS" id="rZF-k5-HRG"/>
                 <outlet property="descTextView" destination="tct-qV-KnO" id="SZQ-YF-jrZ"/>
+                <outlet property="developButton" destination="VVl-Lm-7c0" id="rC8-Ok-Bye"/>
                 <outlet property="fullnameLabel" destination="08I-6z-iRv" id="l5W-61-Wku"/>
                 <outlet property="idLabel" destination="JcR-T6-ZxP" id="tFR-ba-i7o"/>
                 <outlet property="moreButton" destination="6yx-EZ-YSv" id="SnP-1w-cuB"/>
@@ -249,9 +282,9 @@
         </view>
     </objects>
     <resources>
+        <image name="ic_place_holder" width="38" height="38"/>
         <image name="ic_titlebar_close" width="44" height="44"/>
         <image name="ic_titlebar_more" width="44" height="44"/>
         <image name="ic_user_verified" width="14" height="14"/>
-        <image name="ic_wallet_xin" width="40" height="40"/>
     </resources>
 </document>

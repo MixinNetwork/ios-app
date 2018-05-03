@@ -1,6 +1,5 @@
 import Foundation
 import SDWebImage
-import SwiftMessages
 
 class UserWindow: BottomSheetView {
 
@@ -18,7 +17,9 @@ class UserWindow: BottomSheetView {
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var moreButton: StateResponsiveButton!
-    
+    @IBOutlet weak var developButton: CornerButton!
+    @IBOutlet weak var appPlaceView: UIView!
+
     private var user: UserItem!
     private var relationship = ""
 
@@ -37,29 +38,6 @@ class UserWindow: BottomSheetView {
         editAliasNameController.actions[1].isEnabled = !text.isEmpty
     }
 
-    override func presentPopupControllerAnimated() {
-        guard !isShowing, let superView = UIApplication.currentActivity()?.view else {
-            return
-        }
-        superView.endEditing(true)
-
-        isShowing = true
-        self.frame = superView.bounds
-
-        self.backgroundColor = windowBackgroundColor
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupControllerAnimated))
-        gestureRecognizer.delegate = self
-        self.addGestureRecognizer(gestureRecognizer)
-
-        self.popupView.center = getAnimationStartPoint()
-        superView.addSubview(self)
-        self.alpha = 0
-
-        UIView.animate(withDuration: 0.25, animations: {
-            self.popAnimationBody()
-        })
-    }
-
     @discardableResult
     func updateUser(user: UserItem, animated: Bool = false, refreshUser: Bool = true) -> UserWindow {
         self.user = user
@@ -76,6 +54,17 @@ class UserWindow: BottomSheetView {
             verifiedImageView.isHidden = false
         } else {
             verifiedImageView.isHidden = true
+        }
+
+        if user.isBot, let appDescription = user.appDescription, !appDescription.isEmpty {
+            descTextView.text = appDescription
+            descTextView.isHidden = false
+            developButton.isHidden = false
+            appPlaceView.isHidden = false
+        } else {
+            descTextView.isHidden = true
+            developButton.isHidden = true
+            appPlaceView.isHidden = true
         }
 
         if refreshUser {
@@ -238,7 +227,7 @@ class UserWindow: BottomSheetView {
             guard !didHandled else {
                 return
             }
-            SwiftMessages.showToast(message: error.kind.localizedDescription ?? error.description, backgroundColor: .hintRed)
+            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.kind.localizedDescription ?? error.description)
         }
     }
 

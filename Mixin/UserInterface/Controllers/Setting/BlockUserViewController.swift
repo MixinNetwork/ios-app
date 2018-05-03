@@ -58,7 +58,7 @@ extension BlockUserViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        userWindow.updateUser(user: users[indexPath.row]).presentPopupControllerAnimated()
+        userWindow.updateUser(user: users[indexPath.row]).present()
     }
     
 }

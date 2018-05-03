@@ -17,7 +17,7 @@ class DAppUrlWindow: BottomSheetView {
         return CGPoint(x: self.bounds.size.width-(self.popupView.bounds.size.width * 0.5), y: self.popupView.center.y)
     }
 
-    private lazy var groupView = DAppGroupView.instance()
+    private lazy var groupView = GroupView.instance()
     private lazy var loginView = DAppLoginView.instance()
     private lazy var payView = DAppPayView.instance()
 
@@ -116,7 +116,7 @@ extension DAppUrlWindow {
                             UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
                         }
                     } else {
-                        UserWindow.instance().updateUser(user: UserItem.createUser(from: user)).presentPopupControllerAnimated()
+                        UserWindow.instance().updateUser(user: UserItem.createUser(from: user)).present()
                     }
                 } else if let authorization = code.authorization {
                     weakSelf.load(authorization: authorization)
@@ -168,14 +168,15 @@ extension DAppUrlWindow {
 
     private func load(conversation: ConversationResponse, codeId: String) {
         DispatchQueue.global().async { [weak self] in
-            let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(12)
+            let subParticipants: ArraySlice<ParticipantResponse> = conversation.participants.prefix(4)
             let accountUserId = AccountAPI.shared.accountUserId
+            let conversationId = conversation.conversationId
             let alreadyInTheGroup = conversation.participants.first(where: { $0.userId == accountUserId }) != nil
             let userIds = subParticipants.map{ $0.userId }
-            var participants = [UserResponse]()
+            var participants = [ParticipantUser]()
             switch UserAPI.shared.showUsers(userIds: userIds) {
             case let .success(users):
-                participants = users
+                participants = users.flatMap { ParticipantUser.createParticipantUser(conversationId: conversationId, user: $0) }
             case let .failure(error):
                 DispatchQueue.main.async {
                     self?.failedHandler(error.localizedDescription)

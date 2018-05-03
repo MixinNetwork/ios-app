@@ -39,6 +39,29 @@ class BottomSheetView: UIView {
         })
     }
 
+    func present() {
+        guard !isShowing, let superView = UIApplication.currentActivity()?.view else {
+            return
+        }
+        superView.endEditing(true)
+
+        isShowing = true
+        self.frame = superView.bounds
+
+        self.backgroundColor = windowBackgroundColor
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupControllerAnimated))
+        gestureRecognizer.delegate = self
+        self.addGestureRecognizer(gestureRecognizer)
+
+        self.popupView.center = getAnimationStartPoint()
+        superView.addSubview(self)
+        self.alpha = 0
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.popAnimationBody()
+        })
+    }
+
     @objc func dismissPopupControllerAnimated() {
         self.alpha = 1.0
         isShowing = false

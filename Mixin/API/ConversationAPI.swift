@@ -56,8 +56,8 @@ class ConversationAPI : BaseAPI {
         return request(method: .post, url: url.exit(id: conversationId))
     }
 
-    func joinConversation(codeId: String, completion: @escaping (APIResult<ConversationResponse>) -> Void) -> Request {
-        return request(method: .post, url: url.join(codeId: codeId), completion: completion)
+    func joinConversation(codeId: String, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
+        request(method: .post, url: url.join(codeId: codeId), completion: completion)
     }
 
     func addParticipant(conversationId: String, participants: [GroupUser], completion: @escaping (APIResult<ConversationResponse>) -> Void) {

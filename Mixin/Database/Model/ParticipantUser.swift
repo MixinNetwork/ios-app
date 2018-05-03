@@ -20,3 +20,11 @@ struct ParticipantUser: TableCodable {
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
     }
 }
+
+extension ParticipantUser {
+
+    static func createParticipantUser(conversationId: String, user: UserResponse) -> ParticipantUser {
+        return ParticipantUser(conversationId: conversationId, role: "", userId: user.userId, userFullName: user.fullName, userAvatarUrl: user.avatarUrl, userIdentityNumber: user.identityNumber)
+    }
+
+}

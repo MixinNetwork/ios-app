@@ -62,6 +62,7 @@ class ConversationViewController: UIViewController {
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
     private lazy var userWindow = UserWindow.instance()
+    private lazy var groupWindow = GroupWindow.instance()
     
     private lazy var photoPreviewViewController: PhotoPreviewViewController = {
         let controller = PhotoPreviewViewController.instance(conversationId: conversationId)
@@ -231,9 +232,9 @@ class ConversationViewController: UIViewController {
     // MARK: - Actions
     @IBAction func profileAction(_ sender: Any) {
         if let dataSource = dataSource, dataSource.category == .group {
-            navigationController?.pushViewController(GroupInfoViewController.instance(conversation: dataSource.conversation), animated: true)
+            groupWindow.updateGroup(conversation: dataSource.conversation).present()
         } else if let user = ownerUser {
-            userWindow.updateUser(user: user).presentPopupControllerAnimated()
+            userWindow.updateUser(user: user).present()
         }
     }
     
@@ -241,8 +242,7 @@ class ConversationViewController: UIViewController {
         guard let conversation = dataSource?.conversation, dataSource?.category == .group else {
             return
         }
-        let vc = GroupInfoViewController.instance(conversation: conversation, initialAnnouncementMode: .normal, blinkAnnouncement: true)
-        navigationController?.pushViewController(vc, animated: true)
+        groupWindow.updateGroup(conversation: conversation, initialAnnouncementMode: .normal).present()
         CommonUserDefault.shared.setHasUnreadAnnouncement(false, forConversationId: conversationId)
     }
     
@@ -432,7 +432,7 @@ class ConversationViewController: UIViewController {
             if shareUserId == AccountAPI.shared.accountUserId {
                 navigationController?.pushViewController(withBackRoot: MyProfileViewController.instance())
             } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
-                userWindow.updateUser(user: user).presentPopupControllerAnimated()
+                userWindow.updateUser(user: user).present()
             }
         } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
             guard let cell = cell as? SystemMessageCell, cell.contentFrame.contains(recognizer.location(in: cell)) else {
@@ -460,6 +460,8 @@ class ConversationViewController: UIViewController {
         case let .updateGroupIcon(iconUrl):
             avatarImageView?.setGroupImage(with: iconUrl, conversationId: conversationId)
         case let .updateConversation(conversation):
+            titleLabel.text = conversation.name
+            dataSource?.conversation.name = conversation.name
             dataSource?.conversation.announcement = conversation.announcement
             announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         default:
@@ -827,7 +829,7 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
             return
         }
-        userWindow.updateUser(user: user).presentPopupControllerAnimated()
+        userWindow.updateUser(user: user).present()
     }
     
 }

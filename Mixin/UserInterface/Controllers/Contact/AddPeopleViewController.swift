@@ -42,7 +42,7 @@ class AddPeopleViewController: UIViewController {
             switch result {
             case let .success(user):
                 UserDAO.shared.updateUsers(users: [user])
-                UserWindow.instance().updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentPopupControllerAnimated()
+                UserWindow.instance().updateUser(user: UserItem.createUser(from: user), refreshUser: false).present()
             case let .failure(error, didHandled):
                 guard !didHandled else {
                     return

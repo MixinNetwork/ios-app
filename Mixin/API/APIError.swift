@@ -89,6 +89,7 @@ extension APIError {
         case groupChatFull
         case invalidPinFormat
         case insufficientBalance
+        case insufficientFee
         case pinIncorrect
         case transferTooSmall
         case unavailablePhoneNumber
@@ -138,6 +139,8 @@ extension APIError {
                 self = .transferTooSmall
             case 20122:
                 self = .unavailablePhoneNumber
+            case 20124:
+                self = .insufficientFee
             case 30100:
                 self = .blockchainNotInSync
             case 30102:
@@ -161,6 +164,8 @@ extension APIError {
                 return Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS
             case .insufficientBalance:
                 return Localized.TRANSFER_ERROR_BALANCE_INSUFFICIENT
+            case .insufficientFee:
+                return Localized.TRANSFER_ERROR_FEE_INSUFFICIENT
             case .pinIncorrect, .invalidPinFormat:
                 return Localized.TRANSFER_ERROR_PIN_INCORRECT
             case .transferTooSmall:

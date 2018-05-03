@@ -33,10 +33,14 @@ final class ParticipantDAO {
     SELECT u.user_id as userId, u.identity_number as userIdentityNumber, u.full_name as userFullName, u.avatar_url as userAvatarUrl, p.role, p.conversation_id as conversationId
     FROM participants p
     INNER JOIN users u ON u.user_id = p.user_id
-    WHERE p.conversation_id = ?
+    WHERE p.conversation_id = ? AND ifnull(u.app_id, '') = ''
     ORDER BY p.created_at ASC
     LIMIT 4
     """
+
+    func isAdmin(conversationId: String, userId: String) -> Bool {
+        return MixinDatabase.shared.isExist(type: Participant.self, condition: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId && (Participant.Properties.role == ParticipantRole.ADMIN.rawValue || Participant.Properties.role == ParticipantRole.OWNER.rawValue))
+    }
 
     func getGroupIconParticipants(conversationId: String) -> [ParticipantUser] {
         return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryGroupIconParticipants, values: [conversationId], inTransaction: false)

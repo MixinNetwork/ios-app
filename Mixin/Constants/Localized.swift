@@ -161,18 +161,12 @@ public class Localized {
     public static let GROUP_NAVIGATION_TITLE_GROUP_INFO = LocalizedString("group_navigation_title_group_info", comment: "Group Info")
     public static let GROUP_NAVIGATION_TITLE_INVITE_LINK = LocalizedString("group_navigation_title_invite_link", comment: "Invite to Group via Link")
     public static let GROUP_NAVIGATION_TITLE_ANNOUNCEMENT = LocalizedString("group_navigation_title_announcement", comment: "Group Description")
-    public static let GROUP_CELL_TITLE_GROUP_PRICE = LocalizedString("group_cell_title_group_price", comment: "Join Group Price")
-    public static let GROUP_CELL_TITLE_GROUP_PRICE_FREE = LocalizedString("group_cell_title_group_price_free", comment: "free")
-    public static let GROUP_CELL_TITLE_MY_ALIAS = LocalizedString("group_cell_title_my_alias", comment: "My Alias in Group")
     public static func GROUP_SECTION_TITLE_MEMBERS(count: Int) -> String {
         let number = count > 0 ? "\(count) " : ""
         return number + LocalizedString("group_section_title_members", comment: "PARTICIPANTS")
     }
     public static let GROUP_BUTTON_TITLE_CREATE = LocalizedString("group_button_title_create", comment: "Create")
     public static let GROUP_CREATE_GROUP_FAIL = LocalizedString("group_create_group_fail", comment: "Failed to create a group, please try again later")
-    public static let GROUP_MENU_CLEAR = LocalizedString("group_menu_clear", comment: "Clear Chat")
-    public static let GROUP_MENU_DELETE = LocalizedString("group_menu_delete", comment: "Delete Chat")
-    public static let GROUP_MENU_EXIT = LocalizedString("group_menu_exit", comment: "Delete and Exit")
     public static let GROUP_CLEAR_SUCCESS = LocalizedString("group_clear_success", comment: "Cleared")
     public static func GROUP_REMOVE_CONFIRM(fullName: String, groupName: String) -> String {
         return String(format: LocalizedString("group_remove_confirm", comment: "Remove %@ from the '%@' group?"), fullName, groupName)
@@ -190,6 +184,11 @@ public class Localized {
     public static let GROUP_JOIN_FAIL_FULL = LocalizedString("group_join_fail_full", comment: "The group chat is full.")
     public static let GROUP_LINK_CHECKING = LocalizedString("group_link_checking", comment: "Checking invite link")
     public static let GROUP_REMOVE_TITLE = LocalizedString("group_remove_title", comment: "you were removed from the group")
+    public static let GROUP_MENU_CLEAR = LocalizedString("group_menu_clear", comment: "Clear Chat")
+    public static let GROUP_MENU_DELETE = LocalizedString("group_menu_delete", comment: "Delete Chat")
+    public static let GROUP_MENU_EXIT = LocalizedString("group_menu_exit", comment: "Delete and Exit")
+    public static let GROUP_MENU_ANNOUNCEMENT = LocalizedString("group_menu_announcement", comment: "Edit Group Description")
+    public static let GROUP_MENU_PARTICIPANTS = LocalizedString("group_menu_participants", comment: "Participants")
 
     // QRCode
     public static let MYQRCODE_TITLE = LocalizedString("myqrcode_title", comment: "My QR Code")
@@ -258,6 +257,7 @@ public class Localized {
     public static let WALLET_TITLE = LocalizedString("wallet_title", comment: "Wallet")
     public static let WALLET_TRANSFER_OUT = LocalizedString("wallet_transfer_out", comment: "Transfer Out")
     public static let TRANSFER_ERROR_BALANCE_INSUFFICIENT = LocalizedString("transfer_error_balance_insufficient", comment: "Insufficient balance")
+    public static let TRANSFER_ERROR_FEE_INSUFFICIENT = LocalizedString("transfer_error_fee_insufficient", comment: "Insufficient transaction fee")
     public static let TRANSFER_ERROR_AMOUNT_TOO_SMALL = LocalizedString("transfer_error_amount_too_small", comment: "Transfer amount too small")
     public static let TRANSFER_ERROR_PIN_INCORRECT = LocalizedString("transfer_error_pin_incorrect", comment: "PIN incorrect")
     public static let WALLET_SYMBOL_OTHER = LocalizedString("wallet_symbol_other", comment: "Other")

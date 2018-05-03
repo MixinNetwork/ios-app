@@ -6,7 +6,6 @@ class WebWindow: ZoomWindow {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webViewWrapperView: UIView!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
-    @IBOutlet weak var panGestureRecognizableView: UIView!
 
     private let userContentController = WKUserContentController()
     private let swipeZoomVelocityThreshold: CGFloat = 800
@@ -39,9 +38,6 @@ class WebWindow: ZoomWindow {
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.addObserver(self, forKeyPath: "title", options: .new, context: nil)
-
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
-        panGestureRecognizableView.addGestureRecognizer(panRecognizer)
         
         NotificationCenter.default.addObserver(forName: .UIKeyboardWillShow, object: nil, queue: .main) { [weak self](_) in
             guard let weakSelf = self, UIApplication.shared.keyWindow?.subviews.last == weakSelf, !weakSelf.windowMaximum else {
@@ -72,29 +68,6 @@ class WebWindow: ZoomWindow {
 
     @IBAction func backAction(_ sender: Any) {
         dismissPopupControllerAnimated()
-    }
-    
-    @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case.began:
-            webView.endEditing(true)
-            recognizer.setTranslation(.zero, in: self)
-        case .changed:
-            let targetHeight = webViewWrapperHeightConstraint.constant - recognizer.translation(in: self).y
-            zoomAnimation(targetHeight: targetHeight)
-            recognizer.setTranslation(.zero, in: self)
-        case .ended, .cancelled, .failed:
-            if recognizer.velocity(in: self).y > swipeZoomVelocityThreshold {
-                windowMaximum = true
-            } else if recognizer.velocity(in: self).y < -swipeZoomVelocityThreshold {
-                windowMaximum = false
-            } else {
-                windowMaximum = !(webViewWrapperHeightConstraint.constant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2)
-            }
-            toggleZoomAction()
-        default:
-            break
-        }
     }
 
     deinit {

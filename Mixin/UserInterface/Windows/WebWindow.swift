@@ -35,6 +35,7 @@ class WebWindow: ZoomWindow {
             make.edges.equalToSuperview()
         }
 
+        webView.scrollView.delegate = self
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.addObserver(self, forKeyPath: "title", options: .new, context: nil)
@@ -99,6 +100,7 @@ class WebWindow: ZoomWindow {
     deinit {
         userContentController.removeScriptMessageHandler(forName: "MixinContext")
         webView.removeObserver(self, forKeyPath: "title")
+        webView.scrollView.delegate = nil
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -129,7 +131,43 @@ extension WebWindow: WKScriptMessageHandler {
 
 }
 
+extension WebWindow: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView.isTracking && !scrollView.isDecelerating else {
+            return
+        }
+        let newConstant = webViewWrapperHeightConstraint.constant + scrollView.contentOffset.y
+        if newConstant <= maximumWebViewHeight {
+            webViewWrapperHeightConstraint.constant = newConstant
+            layoutIfNeeded()
+            scrollView.contentOffset.y = 0
+            let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
+            if windowMaximum != shouldMaximizeWindow {
+                windowMaximum = shouldMaximizeWindow
+                zoomButton.setImage(shouldMaximizeWindow ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if abs(velocity.y) > 0.01 {
+            let suggestedWindowMaximum = velocity.y > 0
+            if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
+                windowMaximum = suggestedWindowMaximum
+                zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+        webViewWrapperHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        UIView.animate(withDuration: 0.25) {
+            self.layoutIfNeeded()
+        }
+    }
+    
+}
+
 extension WebWindow: WKNavigationDelegate {
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else {
             decisionHandler(.cancel)

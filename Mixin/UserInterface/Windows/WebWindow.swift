@@ -39,12 +39,7 @@ class WebWindow: ZoomWindow {
         webView.uiDelegate = self
         webView.addObserver(self, forKeyPath: "title", options: .new, context: nil)
         
-        NotificationCenter.default.addObserver(forName: .UIKeyboardWillShow, object: nil, queue: .main) { [weak self](_) in
-            guard let weakSelf = self, UIApplication.shared.keyWindow?.subviews.last == weakSelf, !weakSelf.windowMaximum else {
-                return
-            }
-            weakSelf.toggleZoomAction()
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
     }
 
     override func zoomAnimation(targetHeight: CGFloat) {
@@ -63,6 +58,7 @@ class WebWindow: ZoomWindow {
 
     override func dismissPopupControllerAnimated() {
         webView.stopLoading()
+        userContentController.removeScriptMessageHandler(forName: "MixinContext")
         super.dismissPopupControllerAnimated()
     }
 
@@ -71,7 +67,7 @@ class WebWindow: ZoomWindow {
     }
 
     deinit {
-        userContentController.removeScriptMessageHandler(forName: "MixinContext")
+        NotificationCenter.default.removeObserver(self)
         webView.removeObserver(self, forKeyPath: "title")
         webView.scrollView.delegate = nil
     }
@@ -90,11 +86,19 @@ class WebWindow: ZoomWindow {
         }
     }
 
+    @objc func keyboardWillShow(_ notification: Notification) {
+        guard UIApplication.shared.keyWindow?.subviews.last == self, !windowMaximum else {
+            return
+        }
+        toggleZoomAction()
+    }
+    
     class func instance(conversationId: String) -> WebWindow {
         let win = Bundle.main.loadNibNamed("WebWindow", owner: nil, options: nil)?.first as! WebWindow
         win.conversationId = conversationId
         return win
     }
+    
 }
 
 extension WebWindow: WKScriptMessageHandler {

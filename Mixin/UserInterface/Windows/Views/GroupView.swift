@@ -123,7 +123,7 @@ class GroupView: CornerView {
 
     @IBAction func moreAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
-        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alc = UIAlertController(title: conversation.name, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_PARTICIPANTS, style: .default, handler: { [weak self] (action) in
             self?.participantSettingsAction()
         }))

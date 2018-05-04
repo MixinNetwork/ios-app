@@ -147,7 +147,7 @@ class UserWindow: BottomSheetView {
 
     @IBAction func moreAction(_ sender: Any) {
         dismissView()
-        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alc = UIAlertController(title: user.fullName, message: user.identityNumber, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
             self?.shareAction()
         }))

@@ -6,7 +6,6 @@ class WebWindow: ZoomWindow {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webViewWrapperView: UIView!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
-    @IBOutlet weak var panGestureRecognizableView: UIView!
 
     private let userContentController = WKUserContentController()
     private let swipeZoomVelocityThreshold: CGFloat = 800
@@ -35,19 +34,12 @@ class WebWindow: ZoomWindow {
             make.edges.equalToSuperview()
         }
 
+        webView.scrollView.delegate = self
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.addObserver(self, forKeyPath: "title", options: .new, context: nil)
-
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
-        panGestureRecognizableView.addGestureRecognizer(panRecognizer)
         
-        NotificationCenter.default.addObserver(forName: .UIKeyboardWillShow, object: nil, queue: .main) { [weak self](_) in
-            guard let weakSelf = self, UIApplication.shared.keyWindow?.subviews.last == weakSelf, !weakSelf.windowMaximum else {
-                return
-            }
-            weakSelf.toggleZoomAction()
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
     }
 
     override func zoomAnimation(targetHeight: CGFloat) {
@@ -66,39 +58,18 @@ class WebWindow: ZoomWindow {
 
     override func dismissPopupControllerAnimated() {
         webView.stopLoading()
+        userContentController.removeScriptMessageHandler(forName: "MixinContext")
         super.dismissPopupControllerAnimated()
     }
 
     @IBAction func backAction(_ sender: Any) {
         dismissPopupControllerAnimated()
     }
-    
-    @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case.began:
-            webView.endEditing(true)
-            recognizer.setTranslation(.zero, in: self)
-        case .changed:
-            let targetHeight = webViewWrapperHeightConstraint.constant - recognizer.translation(in: self).y
-            zoomAnimation(targetHeight: targetHeight)
-            recognizer.setTranslation(.zero, in: self)
-        case .ended, .cancelled, .failed:
-            if recognizer.velocity(in: self).y > swipeZoomVelocityThreshold {
-                windowMaximum = true
-            } else if recognizer.velocity(in: self).y < -swipeZoomVelocityThreshold {
-                windowMaximum = false
-            } else {
-                windowMaximum = !(webViewWrapperHeightConstraint.constant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2)
-            }
-            toggleZoomAction()
-        default:
-            break
-        }
-    }
 
     deinit {
-        userContentController.removeScriptMessageHandler(forName: "MixinContext")
+        NotificationCenter.default.removeObserver(self)
         webView.removeObserver(self, forKeyPath: "title")
+        webView.scrollView.delegate = nil
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -115,11 +86,19 @@ class WebWindow: ZoomWindow {
         }
     }
 
+    @objc func keyboardWillShow(_ notification: Notification) {
+        guard UIApplication.shared.keyWindow?.subviews.last == self, !windowMaximum else {
+            return
+        }
+        toggleZoomAction()
+    }
+    
     class func instance(conversationId: String) -> WebWindow {
         let win = Bundle.main.loadNibNamed("WebWindow", owner: nil, options: nil)?.first as! WebWindow
         win.conversationId = conversationId
         return win
     }
+    
 }
 
 extension WebWindow: WKScriptMessageHandler {
@@ -129,7 +108,43 @@ extension WebWindow: WKScriptMessageHandler {
 
 }
 
+extension WebWindow: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView.isTracking && !scrollView.isDecelerating else {
+            return
+        }
+        let newConstant = webViewWrapperHeightConstraint.constant + scrollView.contentOffset.y
+        if newConstant <= maximumWebViewHeight {
+            webViewWrapperHeightConstraint.constant = newConstant
+            layoutIfNeeded()
+            scrollView.contentOffset.y = 0
+            let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
+            if windowMaximum != shouldMaximizeWindow {
+                windowMaximum = shouldMaximizeWindow
+                zoomButton.setImage(shouldMaximizeWindow ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if abs(velocity.y) > 0.01 {
+            let suggestedWindowMaximum = velocity.y > 0
+            if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
+                windowMaximum = suggestedWindowMaximum
+                zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+        webViewWrapperHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            self.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+}
+
 extension WebWindow: WKNavigationDelegate {
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else {
             decisionHandler(.cancel)

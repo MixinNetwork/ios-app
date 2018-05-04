@@ -33,11 +33,6 @@
                                         <action selector="backAction:" destination="Qmy-MR-oXV" eventType="touchUpInside" id="9Zb-ah-xGi"/>
                                     </connections>
                                 </button>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7NA-2V-EFh">
-                                    <rect key="frame" x="56" y="0.0" width="263" height="56"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <gestureRecognizers/>
-                                </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k5S-YR-Z3Z">
                                     <rect key="frame" x="56" y="28.5" width="263" height="0.0"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -82,12 +77,8 @@
                                 <constraint firstItem="uvk-a8-USK" firstAttribute="leading" secondItem="Rr0-ei-B13" secondAttribute="leading" id="WbM-Jg-THO"/>
                                 <constraint firstItem="BdC-R9-TIr" firstAttribute="centerY" secondItem="Rr0-ei-B13" secondAttribute="centerY" id="Zfg-24-YAB"/>
                                 <constraint firstAttribute="trailing" secondItem="BdC-R9-TIr" secondAttribute="trailing" id="cND-qh-Lss"/>
-                                <constraint firstItem="7NA-2V-EFh" firstAttribute="leading" secondItem="uvk-a8-USK" secondAttribute="trailing" id="dGz-vR-UPP"/>
-                                <constraint firstItem="BdC-R9-TIr" firstAttribute="leading" secondItem="7NA-2V-EFh" secondAttribute="trailing" id="daP-QS-Tc4"/>
                                 <constraint firstAttribute="trailing" secondItem="40E-Gy-rhn" secondAttribute="trailing" id="j6e-XT-eUz"/>
                                 <constraint firstAttribute="bottom" secondItem="40E-Gy-rhn" secondAttribute="bottom" id="ja1-f3-dSf"/>
-                                <constraint firstItem="7NA-2V-EFh" firstAttribute="top" secondItem="Rr0-ei-B13" secondAttribute="top" id="lAR-xs-gDW"/>
-                                <constraint firstAttribute="bottom" secondItem="7NA-2V-EFh" secondAttribute="bottom" id="pnQ-yA-xSq"/>
                                 <constraint firstItem="uvk-a8-USK" firstAttribute="centerY" secondItem="Rr0-ei-B13" secondAttribute="centerY" id="rCv-K5-IKt"/>
                                 <constraint firstItem="uvk-a8-USK" firstAttribute="height" secondItem="Rr0-ei-B13" secondAttribute="height" id="v5C-mr-i5z"/>
                             </constraints>
@@ -132,7 +123,6 @@
             <viewLayoutGuide key="safeArea" id="7b3-bB-hYw"/>
             <connections>
                 <outlet property="loadingView" destination="AbR-VA-i5f" id="0Gr-Ng-eZQ"/>
-                <outlet property="panGestureRecognizableView" destination="7NA-2V-EFh" id="eik-vn-Dl0"/>
                 <outlet property="popupView" destination="nW9-LR-ccq" id="S6i-Pw-tuJ"/>
                 <outlet property="titleLabel" destination="k5S-YR-Z3Z" id="6Cw-vX-V6L"/>
                 <outlet property="webViewWrapperHeightConstraint" destination="FTp-5J-UK8" id="vEw-jW-U95"/>

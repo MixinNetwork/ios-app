@@ -95,7 +95,7 @@ class WithdrawalViewController: UIViewController {
         guard amount.isNumeric() && address != nil else {
             return
         }
-        DAppPayWindow.shared.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+        PayWindow.shared.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
     }
     
     @IBAction func addAddressAction(_ sender: Any) {

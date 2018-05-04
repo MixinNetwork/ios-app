@@ -1,7 +1,7 @@
 import UIKit
 import SwiftMessages
 
-class DAppLoginView: UIView {
+class LoginView: UIView {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
@@ -13,7 +13,7 @@ class DAppLoginView: UIView {
     @IBOutlet weak var iconTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var iconBottomConstaint: NSLayoutConstraint!
 
-    private weak var superView: DAppUrlWindow?
+    private weak var superView: UrlWindow?
     private var authInfo: AuthorizationResponse!
     private var assets: [AssetItem] = []
     private var windowMaximum = false
@@ -55,7 +55,7 @@ class DAppLoginView: UIView {
         authButton.activityIndicator.activityIndicatorViewStyle = .white
     }
 
-    func render(authInfo: AuthorizationResponse, assets: [AssetItem], superView: DAppUrlWindow) {
+    func render(authInfo: AuthorizationResponse, assets: [AssetItem], superView: UrlWindow) {
         self.authInfo = authInfo
         self.assets = assets
         self.superView = superView
@@ -157,12 +157,12 @@ class DAppLoginView: UIView {
         return result
     }
 
-    class func instance() -> DAppLoginView {
-        return Bundle.main.loadNibNamed("DAppLoginView", owner: nil, options: nil)?.first as! DAppLoginView
+    class func instance() -> LoginView {
+        return Bundle.main.loadNibNamed("LoginView", owner: nil, options: nil)?.first as! LoginView
     }
 }
 
-extension DAppLoginView: UITableViewDelegate, UITableViewDataSource {
+extension LoginView: UITableViewDelegate, UITableViewDataSource {
 
     private func prepareTableView() {
         tableView.register(UINib(nibName: "AuthorizationScopeCell", bundle: nil), forCellReuseIdentifier: AuthorizationScopeCell.cellIdentifier)

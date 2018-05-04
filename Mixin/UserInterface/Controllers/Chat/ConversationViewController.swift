@@ -930,13 +930,13 @@ extension ConversationViewController: TextMessageLabelDelegate {
     }
     
     private func open(url: URL) {
-        guard !DAppUrlWindow.checkUrl(url: url) else {
+        guard !UrlWindow.checkUrl(url: url) else {
             return
         }
         guard !conversationId.isEmpty else {
             return
         }
-        DAppWebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+        WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
     }
     
 }

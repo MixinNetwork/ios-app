@@ -191,8 +191,8 @@
 		DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1148461FED45E200023CAF /* AssetAPI.swift */; };
 		DF114B062020551900EA8F9C /* AppDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF114B052020551900EA8F9C /* AppDAO.swift */; };
 		DF114B0A20206D3300EA8F9C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF114B0920206D3300EA8F9C /* App.swift */; };
-		DF114B0C2020B56E00EA8F9C /* DAppWebWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF114B0B2020B56E00EA8F9C /* DAppWebWindow.swift */; };
-		DF114B0E2020B85600EA8F9C /* DAppWebWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF114B0D2020B85600EA8F9C /* DAppWebWindow.xib */; };
+		DF114B0C2020B56E00EA8F9C /* WebWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF114B0B2020B56E00EA8F9C /* WebWindow.swift */; };
+		DF114B0E2020B85600EA8F9C /* WebWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF114B0D2020B85600EA8F9C /* WebWindow.xib */; };
 		DF121F2E1FA1C244000F701D /* ConversationDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF121F2D1FA1C244000F701D /* ConversationDAO.swift */; };
 		DF121F311FA1C767000F701D /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF121F301FA1C767000F701D /* ConversationCell.swift */; };
 		DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF121F321FA1C778000F701D /* ConversationCell.xib */; };
@@ -262,7 +262,7 @@
 		DF503D431FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D421FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift */; };
 		DF503D451FED1D3C00C008E7 /* MixinSenderKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D441FED1D3C00C008E7 /* MixinSenderKeyStore.swift */; };
 		DF503D491FED200300C008E7 /* MixinSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D481FED200300C008E7 /* MixinSessionStore.swift */; };
-		DF53BB6820233657002BF028 /* DAppWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB6720233657002BF028 /* DAppWebView.swift */; };
+		DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB6720233657002BF028 /* MixinWebView.swift */; };
 		DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */; };
 		DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */; };
 		DF53BB732023F466002BF028 /* SwiftMessageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB722023F466002BF028 /* SwiftMessageExtension.swift */; };
@@ -318,14 +318,14 @@
 		DF879498207504CA004A1E55 /* TransactionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF879497207504CA004A1E55 /* TransactionHeaderCell.swift */; };
 		DF87949A20750596004A1E55 /* TransactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF87949920750596004A1E55 /* TransactionCell.xib */; };
 		DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF87949B207505F4004A1E55 /* TransactionCell.swift */; };
-		DF8CECD71FC2EE4200E40064 /* DAppPayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECD61FC2EE4200E40064 /* DAppPayWindow.swift */; };
+		DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECD61FC2EE4200E40064 /* PayWindow.swift */; };
 		DF8CECDB1FC3015D00E40064 /* TransferTypeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECDA1FC3015D00E40064 /* TransferTypeView.xib */; };
 		DF8CECDD1FC302EB00E40064 /* TransferTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECDC1FC302EB00E40064 /* TransferTypeView.swift */; };
 		DF8CECDF1FC3053B00E40064 /* TransferTypeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECDE1FC3053B00E40064 /* TransferTypeCell.xib */; };
 		DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */; };
 		DF8CECE31FC3075B00E40064 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE21FC3075B00E40064 /* TransferViewController.swift */; };
 		DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE41FC3177100E40064 /* BottomSheetView.swift */; };
-		DF8CECE71FC317BF00E40064 /* DAppPayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECE61FC317BF00E40064 /* DAppPayWindow.xib */; };
+		DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECE61FC317BF00E40064 /* PayWindow.xib */; };
 		DF8CECE91FC411AB00E40064 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE81FC411AB00E40064 /* NotificationViewController.swift */; };
 		DF8CECEB1FC419E900E40064 /* PrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECEA1FC419E900E40064 /* PrivacyViewController.swift */; };
 		DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */; };
@@ -344,12 +344,12 @@
 		DF8DA1A81FD6783200425CEC /* ConversationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DA1A71FD6783200425CEC /* ConversationAPI.swift */; };
 		DF8DA1AD1FD6820600425CEC /* RefreshConversationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DA1AC1FD6820600425CEC /* RefreshConversationJob.swift */; };
 		DF8DA1AF1FD6832000425CEC /* RefreshUserJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */; };
-		DF8EF6AD203055DD00E99CE8 /* DAppUrlWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6AC203055DD00E99CE8 /* DAppUrlWindow.xib */; };
-		DF8EF6AF2030679100E99CE8 /* DAppUrlWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6AE2030679100E99CE8 /* DAppUrlWindow.swift */; };
-		DF8EF6B120315D2A00E99CE8 /* DAppLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6B020315D2A00E99CE8 /* DAppLoginView.swift */; };
-		DF8EF6B32031614700E99CE8 /* DAppLoginView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6B22031614700E99CE8 /* DAppLoginView.xib */; };
-		DF8EF6B52032D1D700E99CE8 /* DAppPayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6B42032D1D700E99CE8 /* DAppPayView.xib */; };
-		DF8EF6B72032D3D700E99CE8 /* DAppPayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6B62032D3D700E99CE8 /* DAppPayView.swift */; };
+		DF8EF6AD203055DD00E99CE8 /* UrlWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */; };
+		DF8EF6AF2030679100E99CE8 /* UrlWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */; };
+		DF8EF6B120315D2A00E99CE8 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6B020315D2A00E99CE8 /* LoginView.swift */; };
+		DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6B22031614700E99CE8 /* LoginView.xib */; };
+		DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6B42032D1D700E99CE8 /* PayView.xib */; };
+		DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6B62032D3D700E99CE8 /* PayView.swift */; };
 		DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */; };
 		DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6BB2034737F00E99CE8 /* payment_success.caf */; };
 		DF8F3F23207F52F9007DFDB4 /* MessageJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8F3F22207F52F9007DFDB4 /* MessageJob.swift */; };
@@ -648,8 +648,8 @@
 		DF1148461FED45E200023CAF /* AssetAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAPI.swift; sourceTree = "<group>"; };
 		DF114B052020551900EA8F9C /* AppDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDAO.swift; sourceTree = "<group>"; };
 		DF114B0920206D3300EA8F9C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		DF114B0B2020B56E00EA8F9C /* DAppWebWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppWebWindow.swift; sourceTree = "<group>"; };
-		DF114B0D2020B85600EA8F9C /* DAppWebWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DAppWebWindow.xib; sourceTree = "<group>"; };
+		DF114B0B2020B56E00EA8F9C /* WebWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebWindow.swift; sourceTree = "<group>"; };
+		DF114B0D2020B85600EA8F9C /* WebWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebWindow.xib; sourceTree = "<group>"; };
 		DF121F2D1FA1C244000F701D /* ConversationDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDAO.swift; sourceTree = "<group>"; };
 		DF121F301FA1C767000F701D /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		DF121F321FA1C778000F701D /* ConversationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationCell.xib; sourceTree = "<group>"; };
@@ -719,7 +719,7 @@
 		DF503D421FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinSignedPreKeyStore.swift; sourceTree = "<group>"; };
 		DF503D441FED1D3C00C008E7 /* MixinSenderKeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinSenderKeyStore.swift; sourceTree = "<group>"; };
 		DF503D481FED200300C008E7 /* MixinSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinSessionStore.swift; sourceTree = "<group>"; };
-		DF53BB6720233657002BF028 /* DAppWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppWebView.swift; sourceTree = "<group>"; };
+		DF53BB6720233657002BF028 /* MixinWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinWebView.swift; sourceTree = "<group>"; };
 		DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeCell.xib; sourceTree = "<group>"; };
 		DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeCell.swift; sourceTree = "<group>"; };
 		DF53BB722023F466002BF028 /* SwiftMessageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMessageExtension.swift; sourceTree = "<group>"; };
@@ -779,14 +779,14 @@
 		DF87949920750596004A1E55 /* TransactionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionCell.xib; sourceTree = "<group>"; };
 		DF87949B207505F4004A1E55 /* TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
 		DF8CECCE1FC2B1C900E40064 /* Mixin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mixin-Bridging-Header.h"; sourceTree = "<group>"; };
-		DF8CECD61FC2EE4200E40064 /* DAppPayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppPayWindow.swift; sourceTree = "<group>"; };
+		DF8CECD61FC2EE4200E40064 /* PayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWindow.swift; sourceTree = "<group>"; };
 		DF8CECDA1FC3015D00E40064 /* TransferTypeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferTypeView.xib; sourceTree = "<group>"; };
 		DF8CECDC1FC302EB00E40064 /* TransferTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeView.swift; sourceTree = "<group>"; };
 		DF8CECDE1FC3053B00E40064 /* TransferTypeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferTypeCell.xib; sourceTree = "<group>"; };
 		DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeCell.swift; sourceTree = "<group>"; };
 		DF8CECE21FC3075B00E40064 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
 		DF8CECE41FC3177100E40064 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
-		DF8CECE61FC317BF00E40064 /* DAppPayWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DAppPayWindow.xib; sourceTree = "<group>"; };
+		DF8CECE61FC317BF00E40064 /* PayWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayWindow.xib; sourceTree = "<group>"; };
 		DF8CECE81FC411AB00E40064 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		DF8CECEA1FC419E900E40064 /* PrivacyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewController.swift; sourceTree = "<group>"; };
 		DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSettingViewController.swift; sourceTree = "<group>"; };
@@ -807,12 +807,12 @@
 		DF8DA1A71FD6783200425CEC /* ConversationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationAPI.swift; sourceTree = "<group>"; };
 		DF8DA1AC1FD6820600425CEC /* RefreshConversationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshConversationJob.swift; sourceTree = "<group>"; };
 		DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshUserJob.swift; sourceTree = "<group>"; };
-		DF8EF6AC203055DD00E99CE8 /* DAppUrlWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DAppUrlWindow.xib; sourceTree = "<group>"; };
-		DF8EF6AE2030679100E99CE8 /* DAppUrlWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppUrlWindow.swift; sourceTree = "<group>"; };
-		DF8EF6B020315D2A00E99CE8 /* DAppLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppLoginView.swift; sourceTree = "<group>"; };
-		DF8EF6B22031614700E99CE8 /* DAppLoginView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DAppLoginView.xib; sourceTree = "<group>"; };
-		DF8EF6B42032D1D700E99CE8 /* DAppPayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DAppPayView.xib; sourceTree = "<group>"; };
-		DF8EF6B62032D3D700E99CE8 /* DAppPayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppPayView.swift; sourceTree = "<group>"; };
+		DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UrlWindow.xib; sourceTree = "<group>"; };
+		DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlWindow.swift; sourceTree = "<group>"; };
+		DF8EF6B020315D2A00E99CE8 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		DF8EF6B22031614700E99CE8 /* LoginView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginView.xib; sourceTree = "<group>"; };
+		DF8EF6B42032D1D700E99CE8 /* PayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayView.xib; sourceTree = "<group>"; };
+		DF8EF6B62032D3D700E99CE8 /* PayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayView.swift; sourceTree = "<group>"; };
 		DF8EF6BB2034737F00E99CE8 /* payment_success.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = payment_success.caf; sourceTree = "<group>"; };
 		DF8F3F22207F52F9007DFDB4 /* MessageJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageJob.swift; sourceTree = "<group>"; };
 		DF955BF81FEBD5B500DF98A2 /* Cryptography.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cryptography.h; sourceTree = "<group>"; };
@@ -1176,12 +1176,12 @@
 			children = (
 				DF53BB6D202362A9002BF028 /* Cells */,
 				DF53BB6620233647002BF028 /* Views */,
-				DF114B0B2020B56E00EA8F9C /* DAppWebWindow.swift */,
-				DF114B0D2020B85600EA8F9C /* DAppWebWindow.xib */,
-				DF8CECD61FC2EE4200E40064 /* DAppPayWindow.swift */,
-				DF8CECE61FC317BF00E40064 /* DAppPayWindow.xib */,
-				DF8EF6AE2030679100E99CE8 /* DAppUrlWindow.swift */,
-				DF8EF6AC203055DD00E99CE8 /* DAppUrlWindow.xib */,
+				DF114B0B2020B56E00EA8F9C /* WebWindow.swift */,
+				DF114B0D2020B85600EA8F9C /* WebWindow.xib */,
+				DF8CECD61FC2EE4200E40064 /* PayWindow.swift */,
+				DF8CECE61FC317BF00E40064 /* PayWindow.xib */,
+				DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */,
+				DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */,
 				DF6DB83E20258BEA0060CF31 /* ZoomWindow.swift */,
 				DF016B282096BD0700B8FFDE /* UserWindow.swift */,
 				DF016B2A2096BDB100B8FFDE /* UserWindow.xib */,
@@ -1298,13 +1298,13 @@
 		DF53BB6620233647002BF028 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				DF53BB6720233657002BF028 /* DAppWebView.swift */,
+				DF53BB6720233657002BF028 /* MixinWebView.swift */,
 				7BD69C421FF2753E00758D7C /* GroupView.swift */,
 				7BD69C441FF2755D00758D7C /* GroupView.xib */,
-				DF8EF6B020315D2A00E99CE8 /* DAppLoginView.swift */,
-				DF8EF6B22031614700E99CE8 /* DAppLoginView.xib */,
-				DF8EF6B62032D3D700E99CE8 /* DAppPayView.swift */,
-				DF8EF6B42032D1D700E99CE8 /* DAppPayView.xib */,
+				DF8EF6B020315D2A00E99CE8 /* LoginView.swift */,
+				DF8EF6B22031614700E99CE8 /* LoginView.xib */,
+				DF8EF6B62032D3D700E99CE8 /* PayView.swift */,
+				DF8EF6B42032D1D700E99CE8 /* PayView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1960,7 +1960,7 @@
 				DFD294471FA7092800FADAAD /* ContactCell.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
-				DF8EF6AD203055DD00E99CE8 /* DAppUrlWindow.xib in Resources */,
+				DF8EF6AD203055DD00E99CE8 /* UrlWindow.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
 				DFB9B3981FAAB8B9009503CE /* PhoneContactHeaderFooter.xib in Resources */,
@@ -1991,18 +1991,18 @@
 				7B4D1128205B8D380074BF60 /* AddressCell.xib in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				7B2E3E531FA07F9F00DDDDEB /* CountryCode.xcassets in Resources */,
-				DF114B0E2020B85600EA8F9C /* DAppWebWindow.xib in Resources */,
-				DF8EF6B32031614700E99CE8 /* DAppLoginView.xib in Resources */,
+				DF114B0E2020B85600EA8F9C /* WebWindow.xib in Resources */,
+				DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */,
 				DF736F8A1FC08C49001DB063 /* WalletTotalBalanceCell.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
 				DFD294451FA7087800FADAAD /* ContactNavCell.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				DFAA4B3B2010AE0300C696D3 /* PinTipsView.xib in Resources */,
-				DF8CECE71FC317BF00E40064 /* DAppPayWindow.xib in Resources */,
+				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				DF016B2B2096BDB100B8FFDE /* UserWindow.xib in Resources */,
-				DF8EF6B52032D1D700E99CE8 /* DAppPayView.xib in Resources */,
+				DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 			);
@@ -2118,7 +2118,7 @@
 				DFD87C871FDA9DD300BBCFFC /* NetworkManager.swift in Sources */,
 				DF5D9F221F9C79E10036D5FD /* BaseAPI.swift in Sources */,
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,
-				DF8EF6B120315D2A00E99CE8 /* DAppLoginView.swift in Sources */,
+				DF8EF6B120315D2A00E99CE8 /* LoginView.swift in Sources */,
 				7B481A022020712000843B1D /* LeftAlignedFlowLayout.swift in Sources */,
 				DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */,
 				DFDC7E431FAC8D50003233EE /* ContactAPI.swift in Sources */,
@@ -2158,7 +2158,7 @@
 				DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerCollectionViewCell.swift in Sources */,
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
-				DF114B0C2020B56E00EA8F9C /* DAppWebWindow.swift in Sources */,
+				DF114B0C2020B56E00EA8F9C /* WebWindow.swift in Sources */,
 				273FACB9205FB9A800513327 /* PreKeyStore.swift in Sources */,
 				DFF353041FEE657000058453 /* CryptoUserDefault.swift in Sources */,
 				7BB1EDBF1FB1A481000DF9E7 /* GroupParticipentViewController.swift in Sources */,
@@ -2199,7 +2199,7 @@
 				DF191198208F290700BD415D /* MixinService.swift in Sources */,
 				DF503D491FED200300C008E7 /* MixinSessionStore.swift in Sources */,
 				DF7A4B461FCDA6A000F21BCB /* User.swift in Sources */,
-				DF8EF6AF2030679100E99CE8 /* DAppUrlWindow.swift in Sources */,
+				DF8EF6AF2030679100E99CE8 /* UrlWindow.swift in Sources */,
 				DFD294411FA7075300FADAAD /* ContactCell.swift in Sources */,
 				270842392069F8C300B0A53F /* PrintLog.swift in Sources */,
 				273FACC7205FB9A800513327 /* SignedPreKeyStoreWrapper.swift in Sources */,
@@ -2242,7 +2242,7 @@
 				DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */,
 				DF736F901FC09724001DB063 /* WalletTotalBalanceCell.swift in Sources */,
 				7BFF3B041FAAFD110039A1C5 /* SearchNavigationController.swift in Sources */,
-				DF8EF6B72032D3D700E99CE8 /* DAppPayView.swift in Sources */,
+				DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */,
 				DFE63C9C1FC6B18900D6E028 /* SignalKeyResponse.swift in Sources */,
 				DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */,
 				DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */,
@@ -2393,7 +2393,7 @@
 				DF03C85D1FF2BE6500C1ED6B /* MessageHistoryDAO.swift in Sources */,
 				27D6E8D22045473300BA678A /* BlazeSignalKeyMessage.swift in Sources */,
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
-				DF8CECD71FC2EE4200E40064 /* DAppPayWindow.swift in Sources */,
+				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */,
 				DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
@@ -2462,7 +2462,7 @@
 				DFE356271FB40C4700E0E3A8 /* NotificationCenterExtension.swift in Sources */,
 				DF68F18C201567D6001C4225 /* StickerAlbumDAO.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
-				DF53BB6820233657002BF028 /* DAppWebView.swift in Sources */,
+				DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,
 				DFA5B58C1FADC5B200549728 /* GroupMemberSelectionCell.swift in Sources */,
 				273FACB2205FB9A800513327 /* Fingerprint.swift in Sources */,

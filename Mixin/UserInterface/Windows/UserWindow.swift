@@ -61,6 +61,7 @@ class UserWindow: BottomSheetView {
                 if creator == nil {
                     switch UserAPI.shared.showUser(userId: creatorId) {
                     case let .success(user):
+                        UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                         creator = UserItem.createUser(from: user)
                     case .failure:
                         return
@@ -255,14 +256,14 @@ class UserWindow: BottomSheetView {
     private func removeAction() {
         showLoading()
         UserAPI.shared.removeFriend(userId: user.userId, completion: { [weak self](result) in
-            self?.handlerUpdateUser(result)
+            self?.handlerUpdateUser(result, notifyContact: true)
         })
     }
 
-    private func handlerUpdateUser(_ result: APIResult<UserResponse>, successBlock: (() -> Void)? = nil) {
+    private func handlerUpdateUser(_ result: APIResult<UserResponse>, notifyContact: Bool = false, successBlock: (() -> Void)? = nil) {
         switch result {
         case let .success(user):
-            UserDAO.shared.updateUsers(users: [user], notifyContact: true)
+            UserDAO.shared.updateUsers(users: [user], notifyContact: notifyContact)
             updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false)
             successBlock?()
         case let .failure(error, didHandled):
@@ -306,7 +307,7 @@ class UserWindow: BottomSheetView {
                     return
                 }
                 weakSelf.dismissView()
-                DAppWebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+                WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
             }
         }
     }
@@ -318,7 +319,7 @@ class UserWindow: BottomSheetView {
         addContactButton.isBusy = true
         UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName, completion: { [weak self](result) in
             self?.addContactButton.isBusy = false
-            self?.handlerUpdateUser(result)
+            self?.handlerUpdateUser(result, notifyContact: true)
         })
     }
 

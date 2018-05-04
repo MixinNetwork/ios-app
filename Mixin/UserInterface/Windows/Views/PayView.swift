@@ -4,7 +4,7 @@ import LocalAuthentication
 import SwiftMessages
 import AudioToolbox
 
-class DAppPayView: UIStackView {
+class PayView: UIStackView {
 
     @IBOutlet weak var fingerPayView: UIView!
     @IBOutlet weak var passwordPayView: UIView!
@@ -116,12 +116,12 @@ class DAppPayView: UIStackView {
         }
     }
 
-    class func instance() -> DAppPayView {
-        return Bundle.main.loadNibNamed("DAppPayView", owner: nil, options: nil)?.first as! DAppPayView
+    class func instance() -> PayView {
+        return Bundle.main.loadNibNamed("PayView", owner: nil, options: nil)?.first as! PayView
     }
 }
 
-extension DAppPayView {
+extension PayView {
 
     @objc func keyboardWillAppear(_ sender: Notification) {
         guard let info = sender.userInfo, let superView = self.superView, superView.isShowing else {
@@ -139,7 +139,7 @@ extension DAppPayView {
         let options = UIViewAnimationOptions(rawValue: UInt(animation << 16))
         UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
             superView.contentBottomConstraint.constant = endKeyboardRect.height
-            (superView as? DAppUrlWindow)?.contentHeightConstraint.constant = 318
+            (superView as? UrlWindow)?.contentHeightConstraint.constant = 318
             superView.layoutIfNeeded()
             self.layoutIfNeeded()
         }, completion: nil)
@@ -176,7 +176,7 @@ extension DAppPayView {
 
 }
 
-extension DAppPayView: PinFieldDelegate {
+extension PayView: PinFieldDelegate {
 
     func inputFinished(pin: String) {
         transferLoadingView.startAnimating()
@@ -221,7 +221,7 @@ extension DAppPayView: PinFieldDelegate {
                     return
                 }
                 let errorMsg = error.kind.localizedDescription ?? error.description
-                if (weakSelf.superView as? DAppUrlWindow)?.fromWeb ?? false {
+                if (weakSelf.superView as? UrlWindow)?.fromWeb ?? false {
                     SwiftMessages.showToast(message: errorMsg, backgroundColor: .hintRed)
                 } else {
                     UIApplication.currentActivity()?.alert(errorMsg, message: nil)

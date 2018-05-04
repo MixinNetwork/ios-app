@@ -146,7 +146,7 @@ class PhotoPreviewViewController: UIViewController {
         }))
         if let url = page.urlFromQRCode {
             alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
-                if !DAppUrlWindow.checkUrl(url: url, clearNavigationStack: false) {
+                if !UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
                     SwiftMessages.showToast(message: Localized.NOT_MIXIN_QR_CODE, backgroundColor: .hintRed)
                 }
             }))

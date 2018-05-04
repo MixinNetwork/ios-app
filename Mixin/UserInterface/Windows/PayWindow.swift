@@ -3,13 +3,13 @@ import LocalAuthentication
 import SwiftMessages
 import Alamofire
 
-class DAppPayWindow: BottomSheetView {
+class PayWindow: BottomSheetView {
 
     @IBOutlet weak var containerView: UIView!
         
     private weak var textfield: UITextField?
 
-    private let payView = DAppPayView.instance()
+    private let payView = PayView.instance()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -19,7 +19,7 @@ class DAppPayWindow: BottomSheetView {
         })
     }
 
-    static let shared = Bundle.main.loadNibNamed("DAppPayWindow", owner: nil, options: nil)?.first as! DAppPayWindow
+    static let shared = Bundle.main.loadNibNamed("PayWindow", owner: nil, options: nil)?.first as! PayWindow
 
     func presentPopupControllerAnimated(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, textfield: UITextField?) {
         guard !isShowing else {

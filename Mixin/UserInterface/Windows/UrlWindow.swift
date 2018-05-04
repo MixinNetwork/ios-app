@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Alamofire
 
-class DAppUrlWindow: BottomSheetView {
+class UrlWindow: BottomSheetView {
 
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var errorLabel: UILabel!
@@ -18,15 +18,15 @@ class DAppUrlWindow: BottomSheetView {
     }
 
     private lazy var groupView = GroupView.instance()
-    private lazy var loginView = DAppLoginView.instance()
-    private lazy var payView = DAppPayView.instance()
+    private lazy var loginView = LoginView.instance()
+    private lazy var payView = PayView.instance()
 
     private(set) var fromWeb = false
     private var showLoginView = false
     private var interceptDismiss = false
 
-    class func checkUrl(url: URL, fromWeb: Bool = false, clearNavigationStack: Bool = true) -> Bool {
-        if UIApplication.shared.keyWindow?.subviews.last is DAppUrlWindow {
+    class func checkUrl(url: URL, fromWeb: Bool = false, clearNavigationStack: Bool = true, checkLastWindow: Bool = true) -> Bool {
+        if checkLastWindow && UIApplication.shared.keyWindow?.subviews.last is UrlWindow {
             return false
         }
         switch MixinURL(url: url) {
@@ -78,19 +78,19 @@ class DAppUrlWindow: BottomSheetView {
         return fromWeb ? animationPushEndPoint : super.getAnimationEndPoint()
     }
 
-    class func instance() -> DAppUrlWindow {
-        return Bundle.main.loadNibNamed("DAppUrlWindow", owner: nil, options: nil)?.first as! DAppUrlWindow
+    class func instance() -> UrlWindow {
+        return Bundle.main.loadNibNamed("UrlWindow", owner: nil, options: nil)?.first as! UrlWindow
     }
 }
 
-extension DAppUrlWindow {
+extension UrlWindow {
 
     class func checkCodesUrl(_ codeId: String, fromWeb: Bool = false, clearNavigationStack: Bool) -> Bool {
         guard !codeId.isEmpty, UUID(uuidString: codeId) != nil else {
             return false
         }
 
-        DAppUrlWindow.instance().presentPopupControllerAnimated(codeId: codeId, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
+        UrlWindow.instance().presentPopupControllerAnimated(codeId: codeId, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         return true
     }
 
@@ -230,7 +230,7 @@ extension DAppUrlWindow {
     }
 }
 
-extension DAppUrlWindow {
+extension UrlWindow {
 
     func presentPopupControllerAnimated(assetId: String, counterUserId: String, amount: String, traceId: String, fromWeb: Bool = false) {
         self.fromWeb = fromWeb
@@ -245,8 +245,8 @@ extension DAppUrlWindow {
                     weakSelf.failedHandler(Localized.TRANSFER_PAID)
                     return
                 }
-                if DAppPayWindow.shared.isShowing {
-                    DAppPayWindow.shared.removeFromSuperview()
+                if PayWindow.shared.isShowing {
+                    PayWindow.shared.removeFromSuperview()
                 }
 
                 weakSelf.interceptDismiss = true
@@ -275,7 +275,7 @@ extension DAppUrlWindow {
             return false
         }
 
-         DAppUrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, counterUserId: recipientId, amount: amount, traceId: traceId, fromWeb: fromWeb)
+         UrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, counterUserId: recipientId, amount: amount, traceId: traceId, fromWeb: fromWeb)
 
         return true
     }

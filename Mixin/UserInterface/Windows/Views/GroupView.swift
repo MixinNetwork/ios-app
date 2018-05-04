@@ -205,6 +205,7 @@ class GroupView: CornerView {
 extension GroupView {
 
     @objc func participentsAction(_ recognizer: UIGestureRecognizer) {
+        superView?.dismissPopupControllerAnimated()
         participantSettingsAction()
     }
 
@@ -309,8 +310,8 @@ extension GroupView {
 extension GroupView: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        _ = DAppUrlWindow.checkUrl(url: URL)
         superView?.dismissPopupControllerAnimated()
+        _ = UrlWindow.checkUrl(url: URL, checkLastWindow: false)
         return false
     }
 

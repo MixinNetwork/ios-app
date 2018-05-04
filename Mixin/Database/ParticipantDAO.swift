@@ -22,7 +22,7 @@ final class ParticipantDAO {
     """
     static let sqlUpdateStatus = "UPDATE participants SET status = 1 WHERE conversation_id = ? AND user_id in (SELECT user_id FROM users)"
     private static let sqlQueryParticipantUsers = """
-    SELECT u.user_id, u.full_name, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, a.description as appDescription, p.role
+    SELECT u.user_id, u.full_name, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, a.description as appDescription, a.creator_id as appCreatorId, p.role
     FROM participants p
     INNER JOIN users u ON u.user_id = p.user_id
     LEFT JOIN apps a ON a.app_id = u.app_id
@@ -37,6 +37,10 @@ final class ParticipantDAO {
     ORDER BY p.created_at ASC
     LIMIT 4
     """
+
+    func isAdmin(conversationId: String, userId: String) -> Bool {
+        return MixinDatabase.shared.isExist(type: Participant.self, condition: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId && (Participant.Properties.role == ParticipantRole.ADMIN.rawValue || Participant.Properties.role == ParticipantRole.OWNER.rawValue))
+    }
 
     func getGroupIconParticipants(conversationId: String) -> [ParticipantUser] {
         return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryGroupIconParticipants, values: [conversationId], inTransaction: false)

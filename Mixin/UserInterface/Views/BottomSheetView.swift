@@ -7,7 +7,7 @@ class BottomSheetView: UIView {
     @IBOutlet weak var contentBottomConstraint: NSLayoutConstraint!
 
     internal(set) var isShowing = false
-    internal(set) var windowBackgroundColor = UIColor(white: 0.0, alpha: 0.7)
+    internal(set) var windowBackgroundColor = UIColor(white: 0.0, alpha: 0.5)
 
     private var animationOriginPoint: CGPoint {
         return CGPoint(x: self.center.x, y: self.bounds.size.height + self.popupView.bounds.size.height)
@@ -34,7 +34,7 @@ class BottomSheetView: UIView {
         window.addSubview(self)
         self.alpha = 0
 
-        UIView.animate(withDuration: 0.3, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.popAnimationBody()
         })
     }
@@ -42,7 +42,7 @@ class BottomSheetView: UIView {
     @objc func dismissPopupControllerAnimated() {
         self.alpha = 1.0
         isShowing = false
-        UIView.animate(withDuration: 0.3, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.alpha = 0
             self.popupView.center = self.getAnimationStartPoint()
         }, completion: { (finished: Bool) -> Void in
@@ -71,6 +71,44 @@ extension BottomSheetView: UIGestureRecognizerDelegate {
             return false
         }
         return true
+    }
+
+}
+
+extension BottomSheetView {
+
+    func presentView() {
+        guard !isShowing, let superView = UIApplication.currentActivity()?.view else {
+            return
+        }
+        superView.endEditing(true)
+
+        isShowing = true
+
+        if self.superview == nil {
+            self.frame = superView.bounds
+
+            self.backgroundColor = windowBackgroundColor
+            let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupControllerAnimated))
+            gestureRecognizer.delegate = self
+            self.addGestureRecognizer(gestureRecognizer)
+
+            self.popupView.center = getAnimationStartPoint()
+            superView.addSubview(self)
+        }
+        self.alpha = 0
+        UIView.animate(withDuration: 0.25, animations: {
+            self.popAnimationBody()
+        })
+    }
+
+    func dismissView() {
+        self.alpha = 1.0
+        isShowing = false
+        UIView.animate(withDuration: 0.25, animations: {
+            self.alpha = 0
+            self.popupView.center = self.getAnimationStartPoint()
+        })
     }
 
 }

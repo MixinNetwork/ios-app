@@ -137,11 +137,6 @@
 "group_navigation_title_announcement" = "群组公告";
 "group_cell_title_photo" = "群组头像";
 "group_cell_title_name" = "群组名称";
-"group_cell_title_notice" = "群组公告";
-"group_cell_title_group_link" = "群组链接";
-"group_cell_title_group_price" = "加入群组价格";
-"group_cell_title_group_price_free" = "免费";
-"group_cell_title_my_alias" = "我在本群的昵称";
 "group_section_title_members" = "群组成员";
 "group_button_title_create" = "创建";
 "group_button_title_share_link" = "分享链接";
@@ -149,13 +144,8 @@
 "group_button_title_qr_code" = "二维码";
 "group_button_title_reset_link" = "重置链接";
 "group_button_title_join" = "加入群组";
-"group_button_title_view" = "查看群组";
 "group_placeholder_group_name" = "新群组名称";
-"group_placeholder_group_notice" = "关于";
 "group_create_group_fail" = "创建群组失败，请稍后重试";
-"group_menu_clear" = "清空聊天记录";
-"group_menu_delete" = "删除聊天";
-"group_menu_exit" = "删除并退出群组";
 "group_clear_success" = "已清空";
 "group_remove_confirm" = "从 '%@' 群组中移除 %@ 吗？";
 "group_remove_button" = "从群组中移除";
@@ -170,7 +160,11 @@
 "group_join_fail_full" = "群组成员人数已达上限";
 "group_link_checking" = "正在检查链接";
 "group_remove_title" = "你已被群组移除";
-"group_announcement_placeholder" = "增加群公告";
+"group_menu_announcement" = "编辑群公告";
+"group_menu_clear" = "清空聊天记录";
+"group_menu_delete" = "删除聊天";
+"group_menu_exit" = "删除并退出群组";
+"group_menu_participants" = "群组成员";
 
 "code_recognition_fail_title" = "未识别的链接";
 "code_recognition_fail_summary" = "没有找到这个链接相关的群组或人";
@@ -248,6 +242,7 @@
 "transfer_transfer_memo" = "备注 (可选)";
 "transfer_touch_id_reason" = "请验证指纹完成转账";
 "transfer_error_balance_insufficient" = "余额不足";
+"transfer_error_fee_insufficient" = "手续费不足";
 "transfer_error_amount_too_small" = "转账金额太小";
 "transfer_error_pin_incorrect" = "支付密码不正确";
 "transfer_amount" = "金额";
@@ -278,6 +273,7 @@
 // Profile
 "profile_title" = "信息";
 "profile_send_message" = "发消息";
+"profile_open_bot" = "打开小程序";
 "profile_share_card" = "分享他的名片";
 "profile_notification" = "通知";
 "profile_add" = "添加联系人";
@@ -302,11 +298,10 @@
 "profile_mute_duration_8h" = "8 小时";
 "profile_mute_duration_1week" = "1 周";
 "profile_mute_duration_1year" = "1 年";
-"profile_status_not_muted" = "静音";
-"profile_status_muted" = "已设静音";
-"profile_status_no" = "否";
-"profile_mute_duration_prefix" = "至";
 "profile_unmute" = "取消静音";
+"profile_mute" = "静音";
+"profile_toast_unmuted" = "已取消静音";
+"profile_toast_muted" = "已静音至 %@";
 
 // Home
 "button_title_contacts_and_chats" = "搜索";

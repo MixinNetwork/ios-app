@@ -1,7 +1,7 @@
 import Foundation
 import WebKit
 
-class DAppWebWindow: ZoomWindow {
+class WebWindow: ZoomWindow {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webViewWrapperView: UIView!
@@ -11,7 +11,7 @@ class DAppWebWindow: ZoomWindow {
     private let userContentController = WKUserContentController()
     private let swipeZoomVelocityThreshold: CGFloat = 800
 
-    private lazy var webView: DAppWebView = {
+    private lazy var webView: MixinWebView = {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
         config.preferences = WKPreferences()
@@ -20,7 +20,7 @@ class DAppWebWindow: ZoomWindow {
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController = userContentController
         userContentController.add(self, name: "MixinContext")
-        return DAppWebView(frame: .zero, configuration: config)
+        return MixinWebView(frame: .zero, configuration: config)
     }()
 
     private var conversationId = ""
@@ -115,27 +115,27 @@ class DAppWebWindow: ZoomWindow {
         }
     }
 
-    class func instance(conversationId: String) -> DAppWebWindow {
-        let win = Bundle.main.loadNibNamed("DAppWebWindow", owner: nil, options: nil)?.first as! DAppWebWindow
+    class func instance(conversationId: String) -> WebWindow {
+        let win = Bundle.main.loadNibNamed("WebWindow", owner: nil, options: nil)?.first as! WebWindow
         win.conversationId = conversationId
         return win
     }
 }
 
-extension DAppWebWindow: WKScriptMessageHandler {
+extension WebWindow: WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     }
 
 }
 
-extension DAppWebWindow: WKNavigationDelegate {
+extension WebWindow: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else {
             decisionHandler(.cancel)
             return
         }
-        if DAppUrlWindow.checkUrl(url: url, fromWeb: true) {
+        if UrlWindow.checkUrl(url: url, fromWeb: true) {
             decisionHandler(.cancel)
             return
         } else if "file" == url.scheme {
@@ -147,7 +147,7 @@ extension DAppWebWindow: WKNavigationDelegate {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             } else {
-                UIApplication.trackError("DAppWebWindow", action: "webview navigation canOpenURL false", userInfo: ["url": url.absoluteString])
+                UIApplication.trackError("WebWindow", action: "webview navigation canOpenURL false", userInfo: ["url": url.absoluteString])
             }
             decisionHandler(.cancel)
             return
@@ -162,7 +162,7 @@ extension DAppWebWindow: WKNavigationDelegate {
 
 }
 
-extension DAppWebWindow: WKUIDelegate {
+extension WebWindow: WKUIDelegate {
 
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
         if prompt == "MixinContext.getContext()" {

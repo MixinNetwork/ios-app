@@ -140,11 +140,6 @@
 "group_navigation_title_announcement" = "Group Description";
 "group_cell_title_photo" = "Group Photo";
 "group_cell_title_name" = "Group Name";
-"group_cell_title_notice" = "Group Notice";
-"group_cell_title_group_link" = "Group Link";
-"group_cell_title_group_price" = "Join Group Price";
-"group_cell_title_group_price_free" = "free";
-"group_cell_title_my_alias" = "My Alias in Group";
 "group_section_title_members" = "PARTICIPANTS";
 "group_button_title_create" = "Create";
 "group_button_title_share_link" = "Share Link";
@@ -152,13 +147,8 @@
 "group_button_title_qr_code" = "QR Code";
 "group_button_title_reset_link" = "Reset Link";
 "group_button_title_join" = "Join Group";
-"group_button_title_view" = "View Group";
 "group_placeholder_group_name" = "new group name";
-"group_placeholder_group_notice" = "about";
 "group_create_group_fail" = "Failed to create a group, please try again later";
-"group_menu_clear" = "Clear Chat";
-"group_menu_delete" = "Delete Chat";
-"group_menu_exit" = "Delete and Exit";
 "group_clear_success" = "Cleared";
 "group_remove_confirm" = "Remove %@ from the '%@' group?";
 "group_remove_button" = "Remove from Group";
@@ -173,7 +163,11 @@
 "group_join_fail_full" = "The group chat is full.";
 "group_link_checking" = "Checking invite link";
 "group_remove_title" = "you were removed from the group";
-"group_announcement_placeholder" = "Add group description";
+"group_menu_announcement" = "Edit Group Description";
+"group_menu_clear" = "Clear Chat";
+"group_menu_delete" = "Delete Chat";
+"group_menu_exit" = "Delete and Exit";
+"group_menu_participants" = "Participants";
 
 "code_recognition_fail_title" = "Unrecognized codes";
 "code_recognition_fail_summary" = "This codes doesn't match any Mixin groups or users.";
@@ -249,6 +243,7 @@
 "transfer_transfer_memo" = "Memo (optional)";
 "transfer_touch_id_reason" = "Use an existing fingerprint to make the payment";
 "transfer_error_balance_insufficient" = "Insufficient balance";
+"transfer_error_fee_insufficient" = "Insufficient transaction fee";
 "transfer_error_amount_too_small" = "Transfer amount too small";
 "transfer_error_pin_incorrect" = "PIN incorrect";
 "transfer_amount" = "Amount";
@@ -280,11 +275,12 @@
 "profile_title" = "Info";
 "profile_send_message" = "Send Message";
 "profile_share_card" = "Share Contact";
+"profile_open_bot" = "Open App";
 "profile_notification" = "Notifications";
 "profile_add" = "Add Contact";
 "profile_remove" = "Remove Contact";
-"profile_block" = "Block User";
-"profile_unblock" = "Unblock User";
+"profile_block" = "Block";
+"profile_unblock" = "Unblock";
 "profile_photo" = "Profile Photo";
 "profile_full_name" = "Name";
 "profile_my_qrcode" = "My QR Code";
@@ -303,11 +299,10 @@
 "profile_mute_duration_8h" = "8 hours";
 "profile_mute_duration_1week" = "1 week";
 "profile_mute_duration_1year" = "1 year";
-"profile_status_not_muted" = "Mute";
-"profile_status_muted" = "Muted";
-"profile_status_no" = "No";
-"profile_mute_duration_prefix" = "until ";
 "profile_unmute" = "Unmute";
+"profile_mute" = "Mute";
+"profile_toast_unmuted" = "Unmuted";
+"profile_toast_muted" = "Muted until %@";
 
 // Home
 "button_title_contacts_and_chats" = "Contacts and Chats";

@@ -42,8 +42,7 @@ class AddPeopleViewController: UIViewController {
             switch result {
             case let .success(user):
                 UserDAO.shared.updateUsers(users: [user])
-                let vc = InfoViewController.instance(user: UserItem.createUser(from: user))
-                weakSelf.navigationController?.pushViewController(vc, animated: true)
+                UserWindow.instance().updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentView()
             case let .failure(error, didHandled):
                 guard !didHandled else {
                     return

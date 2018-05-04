@@ -12,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="IEY-lq-lbI" customClass="DAppUrlWindow" customModule="Mixin" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="IEY-lq-lbI" customClass="UrlWindow" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -23,7 +23,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="369"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="369" id="QzS-ax-9fo"/>
+                                <constraint firstAttribute="height" priority="250" constant="369" id="QzS-ax-9fo"/>
                             </constraints>
                         </view>
                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="wf9-GX-H4l">

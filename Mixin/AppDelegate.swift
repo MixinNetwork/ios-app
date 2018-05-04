@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     open func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        return DAppUrlWindow.checkUrl(url: url)
+        return UrlWindow.checkUrl(url: url)
     }
 
     func checkLogin() {

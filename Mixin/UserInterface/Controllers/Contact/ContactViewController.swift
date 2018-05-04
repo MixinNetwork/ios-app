@@ -7,6 +7,7 @@ class ContactViewController: UITableViewController {
     private var showPhoneContactTips = false
     private var phoneContactSections = [[PhoneContact]]()
     private var sectionIndexTitles = [String]()
+    private lazy var phoneContactWindow = PhoneContactWindow.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -259,7 +260,7 @@ extension ContactViewController {
                 requestAccessPhoneContactAction()
             } else {
                 let phoneContact = phoneContactSections[indexPath.section - 3][indexPath.row]
-                navigationController?.pushViewController(PhoneContactViewController.instance(phoneContact: phoneContact), animated: true)
+                phoneContactWindow.updatePhoneContact(phoneContact: phoneContact).presentView()
             }
             break
         }

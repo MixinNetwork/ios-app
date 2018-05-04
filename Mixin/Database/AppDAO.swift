@@ -20,7 +20,7 @@ final class AppDAO {
         })
     }
 
-    func getConversationBots(userId: String) -> [App] {
-        return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryAppsByUser, values: [userId], inTransaction: false)
+    func getUserBot(userId: String) -> App? {
+        return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryAppsByUser, values: [userId], inTransaction: false).first
     }
 }

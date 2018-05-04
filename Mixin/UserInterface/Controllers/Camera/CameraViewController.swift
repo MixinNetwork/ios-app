@@ -423,7 +423,7 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
             return
         }
 
-        guard DAppUrlWindow.checkUrl(url: url) else {
+        guard UrlWindow.checkUrl(url: url) else {
             detectQRCode = false
             return
         }

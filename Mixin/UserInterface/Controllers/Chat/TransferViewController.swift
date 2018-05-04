@@ -87,7 +87,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         guard let user = user else {
             return
         }
-        navigationController?.pushViewController(InfoViewController.instance(user: user), animated: true)
+        UserWindow.instance().updateUser(user: user).presentView()
     }
 
     @IBAction func closeAction(_ sender: Any) {
@@ -111,7 +111,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         let amount = amountTextField.text ?? ""
         let memo = memoTextField.text ?? ""
 
-        DAppPayWindow.shared.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+        PayWindow.shared.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
     }
 
     

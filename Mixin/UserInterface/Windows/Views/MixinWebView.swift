@@ -1,16 +1,16 @@
 import UIKit
 import WebKit
 
-class DAppWebView: WKWebView {
+class MixinWebView: WKWebView {
 
-    class func instance() -> DAppWebView {
+    class func instance() -> MixinWebView {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
         config.preferences = WKPreferences()
         config.preferences.minimumFontSize = 12
         config.preferences.javaScriptEnabled = true
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
-        return DAppWebView(frame: .zero, configuration: config)
+        return MixinWebView(frame: .zero, configuration: config)
     }
 
     class func clearCookies() {

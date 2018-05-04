@@ -12,26 +12,26 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DAppPayWindow" customModule="Mixin" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="cnl-VT-kwW" customClass="GroupWindow" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bst-np-9j8" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1T8-gq-7Sp" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="349" width="375" height="326"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q9R-fA-z23">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iOU-1t-yw6">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="318"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="318" placeholder="YES" id="bFK-2y-eGk"/>
+                                <constraint firstAttribute="height" constant="318" placeholder="YES" id="aBJ-lR-clM"/>
                             </constraints>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="Q9R-fA-z23" firstAttribute="top" secondItem="Bst-np-9j8" secondAttribute="top" id="fdv-6B-Vn9"/>
-                        <constraint firstItem="Q9R-fA-z23" firstAttribute="leading" secondItem="Bst-np-9j8" secondAttribute="leading" id="ma2-Sq-Ydj"/>
-                        <constraint firstAttribute="trailing" secondItem="Q9R-fA-z23" secondAttribute="trailing" id="xFr-NA-jBp"/>
+                        <constraint firstItem="iOU-1t-yw6" firstAttribute="top" secondItem="1T8-gq-7Sp" secondAttribute="top" id="7r6-Ad-uRd"/>
+                        <constraint firstAttribute="trailing" secondItem="iOU-1t-yw6" secondAttribute="trailing" id="MZy-s0-xiT"/>
+                        <constraint firstItem="iOU-1t-yw6" firstAttribute="leading" secondItem="1T8-gq-7Sp" secondAttribute="leading" id="oit-oN-9XF"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -42,16 +42,16 @@
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="Bst-np-9j8" secondAttribute="bottom" constant="-8" id="B7p-8n-yPj"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Q9R-fA-z23" secondAttribute="bottom" id="Dt7-j4-fvH"/>
-                <constraint firstItem="Bst-np-9j8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="HSK-Ux-Xby"/>
-                <constraint firstAttribute="trailing" secondItem="Bst-np-9j8" secondAttribute="trailing" id="LhC-bb-fCQ"/>
+                <constraint firstAttribute="bottom" secondItem="1T8-gq-7Sp" secondAttribute="bottom" constant="-8" id="NYg-Eb-1z4"/>
+                <constraint firstAttribute="trailing" secondItem="1T8-gq-7Sp" secondAttribute="trailing" id="ab7-7F-Q2d"/>
+                <constraint firstItem="icL-Xf-Bar" firstAttribute="bottom" secondItem="iOU-1t-yw6" secondAttribute="bottom" id="fkp-rE-HnD"/>
+                <constraint firstItem="1T8-gq-7Sp" firstAttribute="leading" secondItem="cnl-VT-kwW" secondAttribute="leading" id="of8-Pl-uT9"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <viewLayoutGuide key="safeArea" id="icL-Xf-Bar"/>
             <connections>
-                <outlet property="containerView" destination="Q9R-fA-z23" id="ZaJ-rm-OHP"/>
-                <outlet property="contentBottomConstraint" destination="Dt7-j4-fvH" id="4kM-GB-EIV"/>
-                <outlet property="popupView" destination="Bst-np-9j8" id="naN-XQ-uMY"/>
+                <outlet property="containerView" destination="iOU-1t-yw6" id="Eri-yr-4Ut"/>
+                <outlet property="contentBottomConstraint" destination="fkp-rE-HnD" id="Mzk-iq-Zim"/>
+                <outlet property="popupView" destination="1T8-gq-7Sp" id="bLL-Hp-610"/>
             </connections>
             <point key="canvasLocation" x="82.5" y="63.5"/>
         </view>

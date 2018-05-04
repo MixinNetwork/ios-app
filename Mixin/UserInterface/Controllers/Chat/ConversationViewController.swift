@@ -458,6 +458,11 @@ class ConversationViewController: UIViewController {
                     self?.navigationController?.pushViewController(TransactionViewController.instance(asset: asset, snapshot: snapshot), animated: true)
                 }
             }
+        } else if message.category == MessageCategory.APP_CARD.rawValue {
+            guard let action = message.appCard?.action else {
+                return
+            }
+            open(url: action)
         }
     }
     
@@ -934,16 +939,6 @@ extension ConversationViewController: TextMessageLabelDelegate {
         present(alert, animated: true, completion: nil)
     }
     
-    private func open(url: URL) {
-        guard !UrlWindow.checkUrl(url: url) else {
-            return
-        }
-        guard !conversationId.isEmpty else {
-            return
-        }
-        WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
-    }
-    
 }
 
 // MARK: - ImagePickerControllerDelegate
@@ -1388,6 +1383,17 @@ extension ConversationViewController {
         loadingView.stopAnimating()
         titleStackView.isHidden = false
     }
+    
+    private func open(url: URL) {
+        guard !UrlWindow.checkUrl(url: url) else {
+            return
+        }
+        guard !conversationId.isEmpty else {
+            return
+        }
+        WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+    }
+    
 }
 
 // MARK: - Embedded classes

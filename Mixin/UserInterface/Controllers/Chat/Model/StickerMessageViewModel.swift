@@ -3,12 +3,15 @@ import UIKit
 class StickerMessageViewModel: DetailInfoMessageViewModel {
 
     static let maxHeight: CGFloat = UIScreen.main.bounds.height / 2
-    static let contentMargin = Margin(leading: 17, trailing: 0, top: 2, bottom: 2)
     static let timeMargin = Margin(leading: 2, trailing: 2, top: 4, bottom: 4)
     static let maxWidth: CGFloat = 120
     
     internal(set) var contentFrame = CGRect.zero
 
+    override lazy var contentMargin: Margin = {
+        Margin(leading: 17, trailing: 0, top: 2, bottom: 2)
+    }()
+    
     private let contentSize: CGSize
 
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
@@ -29,7 +32,6 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     override func didSetStyle() {
         let bottomSeparatorHeight = style.contains(.hasBottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
         let fullnameHeight = style.contains(.showFullname) ? fullnameFrame.height : 0
-        let contentMargin = StickerMessageViewModel.contentMargin
         let timeMargin = StickerMessageViewModel.timeMargin
         if style.contains(.received) {
             contentFrame = CGRect(x: contentMargin.leading,

@@ -134,6 +134,7 @@ enum MessageCategory: String {
     case PLAIN_STICKER
     case PLAIN_CONTACT
     case PLAIN_JSON
+    case APP_CARD
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION
     case SYSTEM_ACCOUNT_SNAPSHOT

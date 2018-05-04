@@ -84,7 +84,7 @@ class ReceiveMessageService: MixinService {
     }
 
     private func processAppButton(data: BlazeMessageData) {
-        guard data.category == MessageCategory.APP_BUTTON_GROUP.rawValue else {
+        guard data.category == MessageCategory.APP_BUTTON_GROUP.rawValue || data.category == MessageCategory.APP_CARD.rawValue else {
             return
         }
         MessageDAO.shared.insertMessage(message: Message.createMessage(appMessage: data), messageSource: data.source)

@@ -221,6 +221,7 @@ extension ConversationTableView {
         case unreadHint = "UnreadHintMessageCell"
         case appButtonGroup = "AppButtonGroupCell"
         case contact = "ContactMessageCell"
+        case appCard = "AppCardMessageCell"
         case header = "DateHeader"
 
         init(category: String) {
@@ -242,6 +243,8 @@ extension ConversationTableView {
                 self = .system
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 self = .appButtonGroup
+            } else if category == MessageCategory.APP_CARD.rawValue {
+                self = .appCard
             } else {
                 self = .unknown
             }

@@ -691,6 +691,8 @@ extension ConversationDataSource {
                 viewModel = SystemMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 viewModel = AppButtonGroupViewModel(message: message, style: style, fits: layoutWidth)
+            } else if message.category == MessageCategory.APP_CARD.rawValue {
+                viewModel = AppCardMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category == MessageCategory.EXT_UNREAD.rawValue {
                 viewModel = MessageViewModel(message: message, style: style, fits: layoutWidth)
                 viewModel.cellHeight = 38

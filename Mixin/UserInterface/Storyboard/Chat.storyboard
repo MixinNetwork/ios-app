@@ -372,6 +372,74 @@
                                             <outlet property="verifiedImageView" destination="PZe-iD-xew" id="syA-Fr-4DR"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AppCardMessageCell" rowHeight="72" id="eSa-4i-2Gg" customClass="AppCardMessageCell" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="352" width="375" height="72"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eSa-4i-2Gg" id="CN4-9k-2AV">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aMu-ar-KoH">
+                                                    <rect key="frame" x="150" y="10" width="48" height="48"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="48" id="U4r-Gq-QiT"/>
+                                                        <constraint firstAttribute="width" constant="48" id="y68-C2-zhy"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <integer key="value" value="5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </imageView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YgD-LM-tmU">
+                                                    <rect key="frame" x="208" y="12" width="99" height="44"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Alejandro Dean" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eA7-tr-Hy0">
+                                                            <rect key="frame" x="0.0" y="0.0" width="99" height="23"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="23" id="Fzp-Sm-VMx"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10000001" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="104-rN-D9d">
+                                                            <rect key="frame" x="0.0" y="27" width="99" height="17"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="104-rN-D9d" secondAttribute="trailing" id="8cm-4j-PDp"/>
+                                                        <constraint firstAttribute="trailing" secondItem="eA7-tr-Hy0" secondAttribute="trailing" id="AKZ-hO-V3g"/>
+                                                        <constraint firstAttribute="bottom" secondItem="104-rN-D9d" secondAttribute="bottom" id="Azq-vX-KTS"/>
+                                                        <constraint firstItem="eA7-tr-Hy0" firstAttribute="top" secondItem="YgD-LM-tmU" secondAttribute="top" id="Ocf-fe-FVH"/>
+                                                        <constraint firstItem="104-rN-D9d" firstAttribute="top" secondItem="eA7-tr-Hy0" secondAttribute="bottom" constant="4" id="TJd-Wt-UlC"/>
+                                                        <constraint firstItem="104-rN-D9d" firstAttribute="leading" secondItem="YgD-LM-tmU" secondAttribute="leading" id="XNH-yU-Etn"/>
+                                                        <constraint firstItem="eA7-tr-Hy0" firstAttribute="leading" secondItem="YgD-LM-tmU" secondAttribute="leading" id="av9-ad-PDk"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="YgD-LM-tmU" secondAttribute="trailing" constant="68" placeholder="YES" id="230-IU-CGd"/>
+                                                <constraint firstItem="aMu-ar-KoH" firstAttribute="top" secondItem="CN4-9k-2AV" secondAttribute="top" constant="10" id="Erc-in-APs"/>
+                                                <constraint firstItem="YgD-LM-tmU" firstAttribute="centerY" secondItem="aMu-ar-KoH" secondAttribute="centerY" id="SDQ-Y7-PKh"/>
+                                                <constraint firstItem="aMu-ar-KoH" firstAttribute="leading" secondItem="CN4-9k-2AV" secondAttribute="leading" constant="150" placeholder="YES" id="cdD-zk-Dv8"/>
+                                                <constraint firstItem="YgD-LM-tmU" firstAttribute="leading" secondItem="aMu-ar-KoH" secondAttribute="trailing" constant="10" id="qBs-Iv-uD4"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="contentTopConstraint" destination="Erc-in-APs" id="ifO-Di-QzX"/>
+                                            <outlet property="descriptionLabel" destination="104-rN-D9d" id="L7S-kE-IZR"/>
+                                            <outlet property="iconImageView" destination="aMu-ar-KoH" id="Efv-eq-eUV"/>
+                                            <outlet property="leftView" destination="aMu-ar-KoH" id="Gja-aE-2vl"/>
+                                            <outlet property="rightView" destination="YgD-LM-tmU" id="UE9-qw-8QL"/>
+                                            <outlet property="titleLabel" destination="eA7-tr-Hy0" id="1T6-XS-gg7"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                                 <sections/>
                             </tableView>

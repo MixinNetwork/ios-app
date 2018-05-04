@@ -44,7 +44,9 @@ class DetailInfoMessageViewModel: MessageViewModel {
     }
 
     internal var maxContentWidth: CGFloat {
-        return layoutWidth - MessageViewModel.backgroundImageMargin.horizontal - 26
+        return layoutWidth
+            - MessageViewModel.backgroundImageMargin.horizontal
+            - contentMargin.horizontal
     }
     
     var status: String {

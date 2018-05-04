@@ -349,17 +349,17 @@
 "alert_key_group_text_message" = "%@ send a message";
 "alert_key_group_image_message" = "%@ send a photo";
 "alert_key_group_video_message" = "%@ send a video";
-"alert_key_group_data_message" = "%@ send you a file";
-"alert_key_group_sticker_message" = "%@ send you a sticker";
-"alert_key_group_contact_message" = "%@ share you a contact";
+"alert_key_group_data_message" = "%@ send a file";
+"alert_key_group_sticker_message" = "%@ send a sticker";
+"alert_key_group_contact_message" = "%@ send a contact";
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";
 "alert_key_contact_video_message" = "send you a video";
 "alert_key_contact_transfer_message" = "send you a transfer";
-"alert_key_contact_data_message" = "send a file";
-"alert_key_contact_sticker_message" = "send a sticker";
-"alert_key_contact_contact_message" = "shared a contact";
+"alert_key_contact_data_message" = "send you a file";
+"alert_key_contact_sticker_message" = "send you a sticker";
+"alert_key_contact_contact_message" = "send you a contact";
 
 // About
 "about_twitter" = "Follow us on Twitter";

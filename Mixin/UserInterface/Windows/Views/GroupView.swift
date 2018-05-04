@@ -6,7 +6,7 @@ class GroupView: CornerView {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var announcementTextView: CollapsingTextView!
+    @IBOutlet weak var announcementTextView: UITextView!
     @IBOutlet weak var participantView1: AvatarImageView!
     @IBOutlet weak var participantView2: AvatarImageView!
     @IBOutlet weak var participantView3: AvatarImageView!
@@ -18,6 +18,10 @@ class GroupView: CornerView {
     @IBOutlet weak var participantsView: UIStackView!
     @IBOutlet weak var moreButton: StateResponsiveButton!
 
+    @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
+
+    private let contentSizeKeyPath = "contentSize"
+    
     private weak var superView: BottomSheetView?
     private var conversation: ConversationItem!
     private var codeId: String?
@@ -37,10 +41,26 @@ class GroupView: CornerView {
     private var newName: String {
         return changeNameController.textFields?.first?.text ?? ""
     }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if (object as? NSObject) == announcementTextView, keyPath == contentSizeKeyPath {
+            textViewHeightConstraint.constant = announcementTextView.contentSize.height
+            layoutIfNeeded()
+            announcementTextView.contentOffset = .zero
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        announcementTextView.delegate = self
+        announcementTextView.addObserver(self, forKeyPath: contentSizeKeyPath, options: [.initial, .new], context: nil)
         participantsView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(participentsAction(_:))))
+    }
+    
+    deinit {
+        announcementTextView.removeObserver(self, forKeyPath: contentSizeKeyPath)
     }
 
     func render(codeId: String, conversation: ConversationResponse, ownerUser: UserItem, participants: [ParticipantUser], alreadyInTheGroup: Bool, superView: BottomSheetView) {
@@ -78,7 +98,7 @@ class GroupView: CornerView {
 
         avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
         nameLabel.text = conversation.name
-        announcementTextView.mode = initialAnnouncementMode
+//        announcementTextView.mode = initialAnnouncementMode
         announcementTextView.isHidden = conversation.announcement.isEmpty
         announcementTextView.text = conversation.announcement
     }
@@ -286,3 +306,12 @@ extension GroupView {
     }
 }
 
+extension GroupView: UITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        _ = DAppUrlWindow.checkUrl(url: URL)
+        superView?.dismissPopupControllerAnimated()
+        return false
+    }
+
+}

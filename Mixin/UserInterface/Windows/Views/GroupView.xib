@@ -18,7 +18,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="9f1-By-myT" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="192.5" y="30" width="64" height="64"/>
+                    <rect key="frame" x="160.5" y="30" width="64" height="64"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="64" id="nde-tu-eTb"/>
                         <constraint firstAttribute="width" constant="64" id="vpp-Br-auY"/>
@@ -29,30 +29,35 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </imageView>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="iaa-gO-WcY">
-                    <rect key="frame" x="30" y="109" width="385" height="87"/>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="iaa-gO-WcY">
+                    <rect key="frame" x="30" y="109" width="325" height="87"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin Team" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYa-yc-XuN">
-                            <rect key="frame" x="162.5" y="0.0" width="91" height="20"/>
+                            <rect key="frame" x="0.0" y="0.0" width="325" height="20"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="I will help you to claim your Mixin invitation network bonus." textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Dv-aC-whV" customClass="CollapsingTextView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="35" width="385" height="52"/>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" showsHorizontalScrollIndicator="NO" editable="NO" text="I will help you to claim your Mixin invitation network bonus." textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3Dv-aC-whV">
+                            <rect key="frame" x="0.0" y="35" width="325" height="52"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" link="YES"/>
                             </accessibility>
+                            <constraints>
+                                <constraint firstAttribute="height" priority="999" constant="52" id="2sx-MW-YxU"/>
+                                <constraint firstAttribute="height" relation="lessThanOrEqual" constant="320" id="Jfg-qw-xFU"/>
+                            </constraints>
                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            <dataDetectorType key="dataDetectorTypes" link="YES"/>
                         </textView>
                     </subviews>
                 </stackView>
                 <stackView opaque="NO" alpha="0.84999999999999998" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hww-Vd-bce">
-                    <rect key="frame" x="192.5" y="226" width="240" height="40"/>
+                    <rect key="frame" x="72.5" y="226" width="240" height="40"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_announcement" translatesAutoresizingMaskIntoConstraints="NO" id="sS6-AH-T0E" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
@@ -66,7 +71,7 @@
                             </userDefinedRuntimeAttributes>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_announcement" translatesAutoresizingMaskIntoConstraints="NO" id="aNy-3K-K2K" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                            <rect key="frame" x="50" y="0.0" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="7or-sR-RRe"/>
                             </constraints>
@@ -77,7 +82,7 @@
                             </userDefinedRuntimeAttributes>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_announcement" translatesAutoresizingMaskIntoConstraints="NO" id="h7H-p5-NON" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                            <rect key="frame" x="100" y="0.0" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="3xF-gH-svY"/>
                             </constraints>
@@ -88,7 +93,7 @@
                             </userDefinedRuntimeAttributes>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_announcement" translatesAutoresizingMaskIntoConstraints="NO" id="K3X-ER-GOQ" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                            <rect key="frame" x="150" y="0.0" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="m7A-6G-Rmc"/>
                             </constraints>
@@ -99,7 +104,7 @@
                             </userDefinedRuntimeAttributes>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+252" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SzD-Xf-jc2" customClass="ConerLabel" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                            <rect key="frame" x="200" y="0.0" width="40" height="40"/>
                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="2kX-bn-w5c"/>
@@ -172,7 +177,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UMD-Uz-cTl" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="385" y="0.0" width="56" height="56"/>
+                    <rect key="frame" x="329" y="0.0" width="56" height="56"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="56" id="oIF-kj-kXt"/>
                         <constraint firstAttribute="width" secondItem="UMD-Uz-cTl" secondAttribute="height" multiplier="1:1" id="rPk-00-fFh"/>
@@ -185,12 +190,12 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="iaa-gO-WcY" secondAttribute="trailing" constant="30" id="2nW-tD-XBm"/>
+                <constraint firstAttribute="trailing" secondItem="iaa-gO-WcY" secondAttribute="trailing" constant="30" id="2nW-tD-XBm"/>
                 <constraint firstItem="vaq-c9-RoT" firstAttribute="top" secondItem="Hww-Vd-bce" secondAttribute="bottom" id="3DV-Hf-Iy0"/>
                 <constraint firstItem="X5N-nU-0Nd" firstAttribute="leading" secondItem="8ZX-DU-9oC" secondAttribute="leading" id="3Rz-uZ-cdm"/>
                 <constraint firstItem="UMD-Uz-cTl" firstAttribute="top" secondItem="8ZX-DU-9oC" secondAttribute="top" id="5eM-fj-hEt"/>
                 <constraint firstItem="vaq-c9-RoT" firstAttribute="leading" secondItem="8ZX-DU-9oC" secondAttribute="leading" id="HuF-z3-cXw"/>
-                <constraint firstItem="iaa-gO-WcY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8ZX-DU-9oC" secondAttribute="leading" constant="30" id="LKD-ro-2W8"/>
+                <constraint firstItem="iaa-gO-WcY" firstAttribute="leading" secondItem="8ZX-DU-9oC" secondAttribute="leading" constant="30" id="LKD-ro-2W8"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="centerX" secondItem="8ZX-DU-9oC" secondAttribute="centerX" id="Qke-oC-sSP"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="bottom" secondItem="vaq-c9-RoT" secondAttribute="bottom" id="Qzq-Bm-DrI"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="top" secondItem="8ZX-DU-9oC" secondAttribute="top" constant="30" id="URV-eq-6C8"/>
@@ -225,6 +230,7 @@
                 <outlet property="participantView3" destination="h7H-p5-NON" id="Bst-Vg-t6q"/>
                 <outlet property="participantView4" destination="K3X-ER-GOQ" id="0NL-Gz-dJx"/>
                 <outlet property="participantsView" destination="Hww-Vd-bce" id="qof-ih-c8d"/>
+                <outlet property="textViewHeightConstraint" destination="2sx-MW-YxU" id="nSq-v2-j8U"/>
             </connections>
             <point key="canvasLocation" x="38.5" y="-126"/>
         </view>

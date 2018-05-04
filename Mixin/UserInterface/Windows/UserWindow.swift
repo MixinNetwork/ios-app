@@ -297,7 +297,12 @@ class UserWindow: BottomSheetView {
 
     @IBAction func openAction(_ sender: Any) {
         let userId = user.userId
-        let conversationId = self.conversationId
+        let conversationId: String
+        if let vc = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController {
+            conversationId = vc.conversationId
+        } else {
+            conversationId = self.conversationId
+        }
         DispatchQueue.global().async { [weak self] in
             guard let app = AppDAO.shared.getUserBot(userId: userId), let url = URL(string: app.homeUri) else {
                 return

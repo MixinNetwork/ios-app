@@ -136,9 +136,9 @@ extension WebWindow: UIScrollViewDelegate {
             }
         }
         webViewWrapperHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
-        UIView.animate(withDuration: 0.25) {
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
             self.layoutIfNeeded()
-        }
+        }, completion: nil)
     }
     
 }

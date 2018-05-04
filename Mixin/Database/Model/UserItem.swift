@@ -18,6 +18,7 @@ struct UserItem: BaseCodable {
 
     var role: String = ""
     var appDescription: String? = nil
+    var appCreatorId: String? = nil
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = UserItem
@@ -32,6 +33,7 @@ struct UserItem: BaseCodable {
         case relationship
         case createdAt = "created_at"
         case appDescription
+        case appCreatorId
         case role
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -56,11 +58,11 @@ struct UserItem: BaseCodable {
 extension UserItem {
 
     static func createUser(userId: String, fullName: String, identityNumber: String, avatarUrl: String) -> UserItem {
-        return UserItem(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: avatarUrl, phone: nil, isVerified: false, muteUntil: nil, appId: nil, createdAt: nil, relationship: "", role: "", appDescription: nil)
+        return UserItem(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: avatarUrl, phone: nil, isVerified: false, muteUntil: nil, appId: nil, createdAt: nil, relationship: "", role: "", appDescription: nil, appCreatorId: nil)
     }
 
     static func createUser(from user: UserResponse) -> UserItem {
-        return UserItem(userId: user.userId, fullName: user.fullName, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, role: "", appDescription: user.app?.description)
+        return UserItem(userId: user.userId, fullName: user.fullName, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, role: "", appDescription: user.app?.description, appCreatorId: user.app?.creatorId)
     }
 
 }

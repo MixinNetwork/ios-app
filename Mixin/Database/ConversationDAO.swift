@@ -44,8 +44,9 @@ final class ConversationDAO {
         return MixinDatabase.shared.isExist(type: Conversation.self, condition: Conversation.Properties.conversationId == conversationId)
     }
 
-    func updateCodeUrl(conversationId: String, codeUrl: String) {
-        MixinDatabase.shared.update(maps: [(Conversation.Properties.codeUrl, codeUrl)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
+    func updateCodeUrl(conversation: ConversationResponse) {
+        MixinDatabase.shared.update(maps: [(Conversation.Properties.codeUrl, conversation.codeUrl)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversation.conversationId)
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversation.conversationId, action: .updateConversation(conversation: conversation)))
     }
 
     func getConversationIconUrl(conversationId: String) -> String? {

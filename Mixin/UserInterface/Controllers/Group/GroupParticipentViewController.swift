@@ -1,7 +1,8 @@
 import UIKit
 
 class GroupParticipentViewController: UIViewController {
-    
+
+    @IBOutlet weak var keywordTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
 
     private let addMemberCellReuseId = "AddMember"
@@ -15,7 +16,11 @@ class GroupParticipentViewController: UIViewController {
     private var conversation: ConversationItem!
     private var participants = [UserItem]()
     private lazy var userWindow = UserWindow.instance()
+    private var searchResult = [UserItem]()
 
+    private var isSearching: Bool {
+        return !(keywordTextField.text ?? "").isEmpty
+    }
     private var hasAdminPrivileges: Bool {
         return currentAccountRole == ParticipantRole.ADMIN.rawValue
             || currentAccountRole == ParticipantRole.OWNER.rawValue
@@ -28,12 +33,24 @@ class GroupParticipentViewController: UIViewController {
         super.viewDidLoad()
         fetchParticipants()
         prepareTableView()
+        keywordTextField.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: conversation.conversationId))
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+
+    @IBAction func searchAction(_ sender: Any) {
+        let keyword = (keywordTextField.text ?? "").uppercased()
+        if keyword.isEmpty {
+            searchResult = []
+        } else {
+            searchResult = participants.filter { $0.fullName.uppercased().contains(keyword) }
+        }
+        tableView.reloadData()
     }
     
     @objc func participantDidChange(_ notification: Notification) {
@@ -42,11 +59,24 @@ class GroupParticipentViewController: UIViewController {
         }
         fetchParticipants()
     }
+
+    @objc func conversationDidChange(_ sender: Notification) {
+        guard let change = sender.object as? ConversationChange, change.conversationId == conversation.conversationId else {
+            return
+        }
+        switch change.action {
+        case let .updateConversation(conversation):
+            self.conversation.codeUrl = conversation.codeUrl
+        default:
+            break
+        }
+    }
+
     
     class func instance(conversation: ConversationItem) -> UIViewController {
         let vc = Storyboard.group.instantiateViewController(withIdentifier: "group_info") as! GroupParticipentViewController
         vc.conversation = conversation
-        return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_GROUP_INFO)
+        return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_MENU_PARTICIPANTS)
     }
     
 }
@@ -55,30 +85,33 @@ class GroupParticipentViewController: UIViewController {
 extension GroupParticipentViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return showAdminActions ? participants.count + 2 : participants.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let showAdminActions = self.showAdminActions
-        if showAdminActions && indexPath.row == 0 {
-            return addMemberCell
-        } else if showAdminActions && indexPath.row == 1 {
-            return inviteLinkCell
+        if isSearching {
+            return searchResult.count
         } else {
-            let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
-            let participant = participants[idx]
-            let cell = tableView.dequeueReusableCell(withIdentifier: memberCellReuseId) as! GroupMemberCell
-            cell.render(user: participant)
-            return cell
+            return showAdminActions ? participants.count + 2 : participants.count
         }
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section == 2 ? Localized.GROUP_SECTION_TITLE_MEMBERS(count: participants.count) : nil
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: UITableViewCell
+        if isSearching {
+            let participantCell = tableView.dequeueReusableCell(withIdentifier: memberCellReuseId) as! GroupMemberCell
+            participantCell.render(user: searchResult[indexPath.row])
+            cell = participantCell
+        } else {
+            let showAdminActions = self.showAdminActions
+            if showAdminActions && indexPath.row == 0 {
+                cell = addMemberCell
+            } else if showAdminActions && indexPath.row == 1 {
+                cell = inviteLinkCell
+            } else {
+                let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
+                let participantCell = tableView.dequeueReusableCell(withIdentifier: memberCellReuseId) as! GroupMemberCell
+                participantCell.render(user: participants[idx])
+                cell = participantCell
+            }
+        }
+        return cell
     }
     
 }
@@ -92,39 +125,50 @@ extension GroupParticipentViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let showAdminActions = self.showAdminActions
-        if showAdminActions && indexPath.row == 0 {
-            navigationController?.pushViewController(AddMemberViewController.instance(conversationId: conversation.conversationId), animated: true)
-        } else if showAdminActions && indexPath.row == 1 {
-            navigationController?.pushViewController(InviteLinkViewController.instance(conversation: conversation), animated: true)
-        } else {
-            let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
-            let participant = participants[idx]
+        if isSearching {
+            let participant = searchResult[indexPath.row]
             guard participant.userId != AccountAPI.shared.accountUserId else {
                 return
             }
-
-            let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_INFO, style: .default, handler: { [weak self] (action) in
-                self?.infoAction(participant: participant)
-            }))
-            alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_SEND, style: .default, handler: { [weak self] (action) in
-                self?.sendMessageAction(participant: participant)
-            }))
-
-            if currentAccountRole == ParticipantRole.OWNER.rawValue {
-                alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_ADMIN, style: .default, handler: { [weak self] (action) in
-                    self?.makeAdminAction(participant: participant, indexPath: indexPath)
-                }))
+            showMenuAction(participant: participant, indexPath: indexPath)
+        } else {
+            let showAdminActions = self.showAdminActions
+            if showAdminActions && indexPath.row == 0 {
+                navigationController?.pushViewController(AddMemberViewController.instance(conversationId: conversation.conversationId), animated: true)
+            } else if showAdminActions && indexPath.row == 1 {
+                navigationController?.pushViewController(InviteLinkViewController.instance(conversation: conversation), animated: true)
+            } else {
+                let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
+                let participant = participants[idx]
+                guard participant.userId != AccountAPI.shared.accountUserId else {
+                    return
+                }
+                showMenuAction(participant: participant, indexPath: indexPath)
             }
-            if !currentAccountRole.isEmpty {
-                alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_REMOVE, style: .destructive, handler: { [weak self] (action) in
-                    self?.removeParticipantAction(participant: participant, indexPath: indexPath)
-                }))
-            }
-            alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-            self.present(alc, animated: true, completion: nil)
         }
+    }
+
+    private func showMenuAction(participant: UserItem, indexPath: IndexPath) {
+        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_INFO, style: .default, handler: { [weak self] (action) in
+            self?.infoAction(participant: participant)
+        }))
+        alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_SEND, style: .default, handler: { [weak self] (action) in
+            self?.sendMessageAction(participant: participant)
+        }))
+
+        if currentAccountRole == ParticipantRole.OWNER.rawValue {
+            alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_ADMIN, style: .default, handler: { [weak self] (action) in
+                self?.makeAdminAction(participant: participant, indexPath: indexPath)
+            }))
+        }
+        if !currentAccountRole.isEmpty {
+            alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_REMOVE, style: .destructive, handler: { [weak self] (action) in
+                self?.removeParticipantAction(participant: participant, indexPath: indexPath)
+            }))
+        }
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        self.present(alc, animated: true, completion: nil)
     }
     
 }
@@ -136,6 +180,7 @@ extension GroupParticipentViewController {
         tableView.register(UINib(nibName: "GroupMemberCell", bundle: .main), forCellReuseIdentifier: memberCellReuseId)
         addMemberCell = tableView.dequeueReusableCell(withIdentifier: addMemberCellReuseId)
         inviteLinkCell = tableView.dequeueReusableCell(withIdentifier: inviteLinkCellReuseId)
+        tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.reloadData()
@@ -157,13 +202,18 @@ extension GroupParticipentViewController {
                 }) {
                     weakSelf.currentAccountRole = my.role
                 }
-                weakSelf.tableView.reloadData()
+                weakSelf.searchAction(weakSelf.keywordTextField)
+                if weakSelf.searchResult.count == 0 {
+                    weakSelf.keywordTextField.text = ""
+                    weakSelf.view.endEditing(true)
+                    weakSelf.tableView.reloadData()
+                }
             }
         }
     }
 
     private func infoAction(participant: UserItem) {
-        userWindow.updateUser(user: participant).present()
+        userWindow.updateUser(user: participant).presentView()
     }
     
     private func sendMessageAction(participant: UserItem) {
@@ -211,4 +261,15 @@ extension GroupParticipentViewController {
         }
     }
     
+}
+
+extension GroupParticipentViewController: UITextFieldDelegate {
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        keywordTextField.text = nil
+        keywordTextField.resignFirstResponder()
+        tableView.reloadData()
+        return false
+    }
+
 }

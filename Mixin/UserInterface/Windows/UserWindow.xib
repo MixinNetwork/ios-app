@@ -73,6 +73,9 @@
                                             <real key="value" value="12"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="appCreatorAction:" destination="vRu-kn-MmU" eventType="touchUpInside" id="RVA-p2-AMq"/>
+                                    </connections>
                                 </button>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="duH-1h-HeM">
                                     <rect key="frame" x="-138" y="-576" width="375" height="3"/>

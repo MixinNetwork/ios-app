@@ -136,7 +136,7 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
                 return
             }
             DispatchQueue.main.async {
-                UserWindow.instance().updateUser(user: user).present()
+                UserWindow.instance().updateUser(user: user).presentView()
             }
         }
     }

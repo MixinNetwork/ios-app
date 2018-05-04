@@ -14,6 +14,10 @@ class GroupWindow: BottomSheetView {
         })
     }
 
+    override func dismissPopupControllerAnimated() {
+        dismissView()
+    }
+
     func updateGroup(conversation: ConversationItem, initialAnnouncementMode: CollapsingTextView.Mode = .collapsed) -> GroupWindow {
         groupView.render(conversation: conversation, superView: self, initialAnnouncementMode: initialAnnouncementMode)
         return self

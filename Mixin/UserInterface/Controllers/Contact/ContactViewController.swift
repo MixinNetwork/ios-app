@@ -260,7 +260,7 @@ extension ContactViewController {
                 requestAccessPhoneContactAction()
             } else {
                 let phoneContact = phoneContactSections[indexPath.section - 3][indexPath.row]
-                phoneContactWindow.updatePhoneContact(phoneContact: phoneContact).present()
+                phoneContactWindow.updatePhoneContact(phoneContact: phoneContact).presentView()
             }
             break
         }

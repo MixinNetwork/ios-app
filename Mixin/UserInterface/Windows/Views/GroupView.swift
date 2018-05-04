@@ -198,7 +198,6 @@ extension GroupView {
     }
 
     private func participantSettingsAction() {
-        superView?.dismissPopupControllerAnimated()
         UIApplication.rootNavigationController()?.pushViewController(GroupParticipentViewController.instance(conversation: conversation), animated: true)
     }
 
@@ -242,6 +241,7 @@ extension GroupView {
 
     private func saveMuteUntil(muteIntervalInSeconds: Int64) {
         let conversationId = conversation.conversationId
+        NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
         ConversationAPI.shared.mute(conversationId: conversationId, duration: muteIntervalInSeconds) { [weak self] (result) in
             switch result {
             case let .success(response):
@@ -264,6 +264,7 @@ extension GroupView {
     }
 
     private func changeNameAction() {
+        NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversation.conversationId, action: .startedUpdateConversation))
         ConversationAPI.shared.updateGroupName(conversationId: conversation.conversationId, name: newName) { [weak self] (result) in
             guard let weakSelf = self else {
                 return

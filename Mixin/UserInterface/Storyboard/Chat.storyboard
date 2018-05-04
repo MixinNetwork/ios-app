@@ -391,7 +391,7 @@
                                                     <action selector="backAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="FG6-cG-FYk"/>
                                                 </connections>
                                             </button>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="eFB-Ny-P1V">
+                                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="eFB-Ny-P1V">
                                                 <rect key="frame" x="60" y="9" width="255" height="38.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Crossle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6GB-fs-Cdu">
@@ -427,6 +427,10 @@
                                                     <action selector="profileAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="gA5-T8-XGV"/>
                                                 </connections>
                                             </button>
+                                            <activityIndicatorView contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="pcl-Ex-irR">
+                                                <rect key="frame" x="177" y="18" width="20" height="20"/>
+                                                <color key="color" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                                            </activityIndicatorView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jbb-Gh-CU3">
                                                 <rect key="frame" x="0.0" y="55" width="375" height="1"/>
                                                 <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
@@ -452,7 +456,9 @@
                                             <constraint firstItem="Jbb-Gh-CU3" firstAttribute="leading" secondItem="tke-V3-5nw" secondAttribute="leading" id="FDY-Wl-c2r"/>
                                             <constraint firstItem="O59-FP-w9y" firstAttribute="top" secondItem="tke-V3-5nw" secondAttribute="top" id="Gjb-Np-KVI"/>
                                             <constraint firstItem="eFB-Ny-P1V" firstAttribute="centerY" secondItem="tke-V3-5nw" secondAttribute="centerY" id="Jfv-Vf-df0"/>
+                                            <constraint firstItem="pcl-Ex-irR" firstAttribute="centerY" secondItem="tke-V3-5nw" secondAttribute="centerY" id="QXp-dZ-vTd"/>
                                             <constraint firstItem="O59-FP-w9y" firstAttribute="leading" secondItem="tke-V3-5nw" secondAttribute="leading" id="WQ0-8G-UbR"/>
+                                            <constraint firstItem="pcl-Ex-irR" firstAttribute="centerX" secondItem="tke-V3-5nw" secondAttribute="centerX" id="Wde-D4-mWy"/>
                                             <constraint firstItem="tCB-t3-VXy" firstAttribute="height" secondItem="WEY-ma-B2d" secondAttribute="height" id="Y46-mn-fcV"/>
                                             <constraint firstItem="tCB-t3-VXy" firstAttribute="width" secondItem="WEY-ma-B2d" secondAttribute="width" id="ZbK-Fe-OVA"/>
                                             <constraint firstItem="tCB-t3-VXy" firstAttribute="centerX" secondItem="WEY-ma-B2d" secondAttribute="centerX" id="ZiD-OI-Adj"/>
@@ -733,6 +739,7 @@
                         <outlet property="inputTextView" destination="LmC-o2-ndc" id="oTt-5n-LgP"/>
                         <outlet property="inputTextViewHeightConstraint" destination="Y55-r4-fIf" id="Ic3-i4-NT1"/>
                         <outlet property="inputWrapperBottomConstraint" destination="QsO-2V-Rt7" id="Pcd-20-jDE"/>
+                        <outlet property="loadingView" destination="pcl-Ex-irR" id="Xco-m3-g7P"/>
                         <outlet property="moreButton" destination="JPe-wH-0KV" id="Q6U-HN-ajg"/>
                         <outlet property="moreMenuContainerView" destination="wvG-ds-JD9" id="hTY-9u-jdw"/>
                         <outlet property="moreMenuHeightConstraint" destination="pLr-Yd-ULj" id="QPf-3K-eEy"/>
@@ -747,6 +754,7 @@
                         <outlet property="stickerPanelContainerView" destination="OCN-L0-tlY" id="qw6-7P-w3t"/>
                         <outlet property="tableView" destination="v0e-5f-Xnl" id="vhP-ha-ee7"/>
                         <outlet property="titleLabel" destination="6GB-fs-Cdu" id="Gzl-mK-sF2"/>
+                        <outlet property="titleStackView" destination="eFB-Ny-P1V" id="LqH-oj-Pg0"/>
                         <outlet property="toggleStickerPanelButton" destination="x0u-1Q-H95" id="HDa-sO-KOI"/>
                         <outlet property="unblockButton" destination="bTL-3p-VYH" id="buh-za-KfW"/>
                         <outlet property="unreadBadgeLabel" destination="x2d-vg-jlV" id="M0W-3d-aPa"/>

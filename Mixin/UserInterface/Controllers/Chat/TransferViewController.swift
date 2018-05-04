@@ -87,7 +87,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         guard let user = user else {
             return
         }
-        UserWindow.instance().updateUser(user: user).present()
+        UserWindow.instance().updateUser(user: user).presentView()
     }
 
     @IBAction func closeAction(_ sender: Any) {

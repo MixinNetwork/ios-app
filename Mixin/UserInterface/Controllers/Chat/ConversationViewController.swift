@@ -22,6 +22,8 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var stickerPanelContainerView: UIView!
     @IBOutlet weak var moreMenuContainerView: UIView!
     @IBOutlet weak var dismissMoreMenuButton: UIButton!
+    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    @IBOutlet weak var titleStackView: UIStackView!
     
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
@@ -112,6 +114,7 @@ class ConversationViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        showLoading()
         if let swipeBackRecognizer = navigationController?.interactivePopGestureRecognizer {
             tableView.gestureRecognizers?.forEach {
                 $0.require(toFail: swipeBackRecognizer)
@@ -171,6 +174,7 @@ class ConversationViewController: UIViewController {
                     self?.announcementButton.isHidden = false
                 }
                 self?.prepareInterfaceAndObservers()
+                self?.hideLoading()
             }
         }
     }
@@ -232,9 +236,9 @@ class ConversationViewController: UIViewController {
     // MARK: - Actions
     @IBAction func profileAction(_ sender: Any) {
         if let dataSource = dataSource, dataSource.category == .group {
-            groupWindow.updateGroup(conversation: dataSource.conversation).present()
+            groupWindow.updateGroup(conversation: dataSource.conversation).presentView()
         } else if let user = ownerUser {
-            userWindow.updateUser(user: user).present()
+            userWindow.updateUser(user: user).presentView()
         }
     }
     
@@ -242,8 +246,9 @@ class ConversationViewController: UIViewController {
         guard let conversation = dataSource?.conversation, dataSource?.category == .group else {
             return
         }
-        groupWindow.updateGroup(conversation: conversation, initialAnnouncementMode: .normal).present()
+        groupWindow.updateGroup(conversation: conversation, initialAnnouncementMode: .normal).presentView()
         CommonUserDefault.shared.setHasUnreadAnnouncement(false, forConversationId: conversationId)
+        announcementButton.isHidden = true
     }
     
     @IBAction func backAction(_ sender: Any) {
@@ -432,7 +437,7 @@ class ConversationViewController: UIViewController {
             if shareUserId == AccountAPI.shared.accountUserId {
                 navigationController?.pushViewController(withBackRoot: MyProfileViewController.instance())
             } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
-                userWindow.updateUser(user: user).present()
+                userWindow.updateUser(user: user).presentView()
             }
         } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
             guard let cell = cell as? SystemMessageCell, cell.contentFrame.contains(recognizer.location(in: cell)) else {
@@ -459,11 +464,16 @@ class ConversationViewController: UIViewController {
         switch change.action {
         case let .updateGroupIcon(iconUrl):
             avatarImageView?.setGroupImage(with: iconUrl, conversationId: conversationId)
+        case .update:
+            hideLoading()
         case let .updateConversation(conversation):
             titleLabel.text = conversation.name
             dataSource?.conversation.name = conversation.name
             dataSource?.conversation.announcement = conversation.announcement
             announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
+            hideLoading()
+        case .startedUpdateConversation:
+            showLoading()
         default:
             break
         }
@@ -478,6 +488,7 @@ class ConversationViewController: UIViewController {
             updateBottomView()
             updateStrangerTipsView()
         }
+        hideLoading()
         dataSource?.ownerUser = ownerUser
     }
     
@@ -829,7 +840,7 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
             return
         }
-        userWindow.updateUser(user: user).present()
+        userWindow.updateUser(user: user).presentView()
     }
     
 }
@@ -1360,7 +1371,18 @@ extension ConversationViewController {
             }
         }
     }
-    
+
+    private func showLoading() {
+        loadingView.isHidden = false
+        loadingView.startAnimating()
+        titleStackView.isHidden = true
+    }
+
+    private func hideLoading() {
+        loadingView.isHidden = true
+        loadingView.stopAnimating()
+        titleStackView.isHidden = false
+    }
 }
 
 // MARK: - Embedded classes

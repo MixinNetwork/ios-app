@@ -9,6 +9,10 @@ class PhoneContactWindow: BottomSheetView {
 
     private var phoneContact: PhoneContact!
 
+    override func dismissPopupControllerAnimated() {
+        dismissView()
+    }
+
     func updatePhoneContact(phoneContact: PhoneContact) -> PhoneContactWindow {
         self.phoneContact = phoneContact
         fullnameLabel.text = phoneContact.fullName
@@ -18,7 +22,7 @@ class PhoneContactWindow: BottomSheetView {
     }
 
     @IBAction func inviteAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissView()
         if MFMessageComposeViewController.canSendText() {
             sendSMS()
         } else {
@@ -29,7 +33,7 @@ class PhoneContactWindow: BottomSheetView {
     }
 
     @IBAction func dismissAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissView()
     }
 
     class func instance() -> PhoneContactWindow {

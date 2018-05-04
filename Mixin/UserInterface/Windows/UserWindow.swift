@@ -21,7 +21,15 @@ class UserWindow: BottomSheetView {
     @IBOutlet weak var appPlaceView: UIView!
 
     private var user: UserItem!
+    private var appCreator: UserItem?
     private var relationship = ""
+    private var conversationId: String {
+        return ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: user.userId)
+    }
+
+    override func dismissPopupControllerAnimated() {
+        dismissView()
+    }
 
     private lazy var editAliasNameController: UIAlertController = {
         let vc = UIApplication.currentActivity()!.alertInput(title: Localized.PROFILE_EDIT_NAME, placeholder: Localized.PROFILE_FULL_NAME, handler: { [weak self](_) in
@@ -45,6 +53,30 @@ class UserWindow: BottomSheetView {
         fullnameLabel.text = user.fullName
         idLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
         verifiedImageView.isHidden = !user.isVerified
+        developButton.isHidden = true
+
+        if let creatorId = user.appCreatorId {
+            DispatchQueue.global().async { [weak self] in
+                var creator = UserDAO.shared.getUser(userId: creatorId)
+                if creator == nil {
+                    switch UserAPI.shared.showUser(userId: creatorId) {
+                    case let .success(user):
+                        creator = UserItem.createUser(from: user)
+                    case .failure:
+                        return
+                    }
+                }
+                self?.appCreator = creator
+                if let creatorFullname = creator?.fullName {
+                    DispatchQueue.main.async {
+                        UIView.performWithoutAnimation {
+                            self?.developButton.setTitle(creatorFullname, for: .normal)
+                            self?.developButton.isHidden = false
+                        }
+                    }
+                }
+            }
+        }
 
         if user.isVerified {
             verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")
@@ -101,12 +133,19 @@ class UserWindow: BottomSheetView {
         return self
     }
 
+    @IBAction func appCreatorAction(_ sender: Any) {
+        guard let creator = appCreator else {
+            return
+        }
+        updateUser(user: creator, animated: true)
+    }
+
     @IBAction func dismissAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissView()
     }
 
     @IBAction func moreAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissView()
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
             self?.shareAction()
@@ -148,17 +187,18 @@ class UserWindow: BottomSheetView {
         guard let aliasName = editAliasNameController.textFields?.first?.text, !aliasName.isEmpty else {
             return
         }
+        showLoading()
         UserAPI.shared.remarkFriend(userId: user.userId, full_name: aliasName) { [weak self](result) in
             self?.handlerUpdateUser(result)
         }
     }
 
     private func shareAction() {
-        dismissPopupControllerAnimated()
         UIApplication.rootNavigationController()?.pushViewController(ShareContactViewController.instance(ownerUser: user), animated: true)
     }
 
     private func blockAction() {
+        showLoading()
         UserAPI.shared.blockUser(userId: user.userId) { [weak self](result) in
             self?.handlerUpdateUser(result)
         }
@@ -184,6 +224,7 @@ class UserWindow: BottomSheetView {
     }
 
     private func saveMuteUntil(muteIntervalInSeconds: Int64) {
+        showLoading()
         let userId = user.userId
         ConversationAPI.shared.mute(userId: userId, duration: muteIntervalInSeconds) { [weak self] (result) in
             switch result {
@@ -212,6 +253,7 @@ class UserWindow: BottomSheetView {
     }
 
     private func removeAction() {
+        showLoading()
         UserAPI.shared.removeFriend(userId: user.userId, completion: { [weak self](result) in
             self?.handlerUpdateUser(result)
         })
@@ -236,7 +278,6 @@ class UserWindow: BottomSheetView {
             return
         }
         unblockButton.isBusy = true
-
         UserAPI.shared.unblockUser(userId: user.userId) { [weak self](result) in
             self?.unblockButton.isBusy = false
             self?.handlerUpdateUser(result)
@@ -245,7 +286,7 @@ class UserWindow: BottomSheetView {
     
 
     @IBAction func sendAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        dismissView()
         if let conversationVC = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController, conversationVC.dataSource?.category == ConversationDataSource.Category.contact && conversationVC.dataSource?.conversation.ownerId == user.userId {
             return
         }
@@ -255,16 +296,16 @@ class UserWindow: BottomSheetView {
 
     @IBAction func openAction(_ sender: Any) {
         let userId = user.userId
+        let conversationId = self.conversationId
         DispatchQueue.global().async { [weak self] in
             guard let app = AppDAO.shared.getUserBot(userId: userId), let url = URL(string: app.homeUri) else {
                 return
             }
-            let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: userId)
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.dismissPopupControllerAnimated()
+                weakSelf.dismissView()
                 DAppWebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
             }
         }
@@ -279,6 +320,10 @@ class UserWindow: BottomSheetView {
             self?.addContactButton.isBusy = false
             self?.handlerUpdateUser(result)
         })
+    }
+
+    private func showLoading() {
+        NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
     }
 
     class func instance() -> UserWindow {

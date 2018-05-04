@@ -316,7 +316,7 @@ extension ConversationDataSource {
             updateMediaProgress(messageId: messageId, progress: progress)
         case .updateDownloadProgress(let messageId, let progress):
             updateMediaProgress(messageId: messageId, progress: progress)
-        case .updateConversation(_):
+        default:
             break
         }
     }

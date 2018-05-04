@@ -13,6 +13,7 @@ struct App: BaseCodable {
     var capabilites: [String]?
     let appSecret: String
     let homeUri: String
+    let creatorId: String
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = App
@@ -25,6 +26,7 @@ struct App: BaseCodable {
         case capabilites
         case appSecret = "app_secret"
         case homeUri = "home_uri"
+        case creatorId = "creator_id"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {

@@ -54,6 +54,7 @@ struct ConversationChange {
         case updateMediaStatus(messageId: String, mediaStatus: MediaStatus)
         case updateUploadProgress(messageId: String, progress: Double)
         case updateDownloadProgress(messageId: String, progress: Double)
+        case startedUpdateConversation
     }
     
 }

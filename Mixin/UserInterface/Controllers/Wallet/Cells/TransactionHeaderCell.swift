@@ -24,22 +24,22 @@ class TransactionHeaderCell: UITableViewCell {
 
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
-            amountLabel.textColor = .deposit
+            amountLabel.textColor = .walletGreen
             amountLabel.text = "+\(snapshot.amount.formatBalance()) \(asset.symbol)"
         case SnapshotType.transfer.rawValue:
             let amount = snapshot.amount.toDouble()
             if amount > 0 {
-                amountLabel.textColor = .deposit
+                amountLabel.textColor = .walletGreen
                 amountLabel.text = "+\(snapshot.amount.formatBalance()) \(asset.symbol)"
             } else {
-                amountLabel.textColor = .transfer
+                amountLabel.textColor = .walletRed
                 amountLabel.text = "\(snapshot.amount.formatBalance()) \(asset.symbol)"
             }
         case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue:
-            amountLabel.textColor = .transfer
+            amountLabel.textColor = .walletRed
             amountLabel.text = "\(snapshot.amount.formatBalance()) \(asset.symbol)"
         case SnapshotType.rebate.rawValue:
-            amountLabel.textColor = .deposit
+            amountLabel.textColor = .walletGreen
             amountLabel.text = "+\(snapshot.amount.formatBalance()) \(asset.symbol)"
         default:
             break

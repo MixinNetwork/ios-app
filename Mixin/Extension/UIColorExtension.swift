@@ -11,10 +11,11 @@ extension UIColor {
     static let messageKeywordHighlight = UIColor(rgbValue: 0xC4EF6E)
     static let selectedLinkBackground = UIColor.black.withAlphaComponent(0.1)
     static let systemTint = UIColor(rgbValue: 0x007AFF)
-    static let deposit = UIColor(rgbValue: 0x00C500)
-    static let transfer = UIColor(rgbValue: 0xFF001F)
     static let cameraSendBlue = UIColor(rgbValue: 0x0a5ffe)
     static let selection = UIColor(rgbValue: 0xEDEEEE)
+
+    static let walletGreen = UIColor(rgbValue: 0x00C500)
+    static let walletRed = UIColor(rgbValue: 0xFF001F)
 
     static let hintBlue = UIColor(rgbValue: 0x1FB4FC)
     static let hintRed = UIColor(rgbValue: 0xFF7070)

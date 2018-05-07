@@ -31,7 +31,7 @@
                         </userDefinedRuntimeAttributes>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="959-Vc-w76">
-                        <rect key="frame" x="70" y="24" width="31" height="20"/>
+                        <rect key="frame" x="70" y="14" width="31" height="19.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -46,6 +46,12 @@
                         <rect key="frame" x="194.5" y="38" width="79.5" height="16"/>
                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="$19.89 (+10.78%)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Zi-Wh-GVk">
+                        <rect key="frame" x="70" y="38" width="104.5" height="16"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
+                        <color key="textColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="hBi-xY-EdG" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
@@ -63,17 +69,19 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="0Cf-RW-MT0" firstAttribute="bottom" secondItem="Yih-xY-d02" secondAttribute="bottom" id="3FJ-Gx-bIe"/>
+                    <constraint firstItem="959-Vc-w76" firstAttribute="top" secondItem="Yih-xY-d02" secondAttribute="top" id="Bjr-FJ-lk2"/>
                     <constraint firstAttribute="trailing" secondItem="6av-Wp-nrs" secondAttribute="trailing" constant="12" id="Ffb-k8-f4Y"/>
                     <constraint firstItem="6av-Wp-nrs" firstAttribute="top" secondItem="Yih-xY-d02" secondAttribute="top" id="GB8-98-Zji"/>
                     <constraint firstAttribute="trailing" secondItem="0Cf-RW-MT0" secondAttribute="trailing" constant="12" id="JR5-lH-ESs"/>
                     <constraint firstItem="6av-Wp-nrs" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="959-Vc-w76" secondAttribute="trailing" constant="12" id="WQq-Jg-b7k"/>
                     <constraint firstItem="959-Vc-w76" firstAttribute="leading" secondItem="Yih-xY-d02" secondAttribute="trailing" constant="15" id="YIA-3P-XU1"/>
                     <constraint firstItem="hBi-xY-EdG" firstAttribute="leading" secondItem="Yih-xY-d02" secondAttribute="leading" id="Ykv-oa-T58"/>
-                    <constraint firstItem="0Cf-RW-MT0" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="959-Vc-w76" secondAttribute="trailing" constant="12" id="ag4-KB-grU"/>
+                    <constraint firstItem="9Zi-Wh-GVk" firstAttribute="leading" secondItem="Yih-xY-d02" secondAttribute="trailing" constant="15" id="Z67-Wa-Y0u"/>
+                    <constraint firstItem="0Cf-RW-MT0" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="9Zi-Wh-GVk" secondAttribute="trailing" constant="12" id="bCT-RH-LUa"/>
                     <constraint firstItem="hBi-xY-EdG" firstAttribute="bottom" secondItem="Yih-xY-d02" secondAttribute="bottom" id="h4P-mR-7AW"/>
+                    <constraint firstItem="9Zi-Wh-GVk" firstAttribute="bottom" secondItem="Yih-xY-d02" secondAttribute="bottom" id="jeb-7F-rsb"/>
                     <constraint firstItem="Yih-xY-d02" firstAttribute="centerY" secondItem="ZRK-9b-jjr" secondAttribute="centerY" id="miq-0D-a8M"/>
                     <constraint firstItem="Yih-xY-d02" firstAttribute="leading" secondItem="ZRK-9b-jjr" secondAttribute="leading" constant="15" id="sUx-YV-sCT"/>
-                    <constraint firstItem="959-Vc-w76" firstAttribute="centerY" secondItem="Yih-xY-d02" secondAttribute="centerY" id="srh-XY-Wy4"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
@@ -82,6 +90,7 @@
                 <outlet property="exchangeLabel" destination="0Cf-RW-MT0" id="NnD-Ep-rMU"/>
                 <outlet property="iconImageView" destination="Yih-xY-d02" id="zP1-GC-uYR"/>
                 <outlet property="nameLabel" destination="959-Vc-w76" id="d5s-8U-giE"/>
+                <outlet property="priceChangeLabel" destination="9Zi-Wh-GVk" id="pq2-fm-HYJ"/>
             </connections>
         </tableViewCell>
     </objects>

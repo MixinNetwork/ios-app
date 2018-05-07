@@ -295,6 +295,7 @@ public class Localized {
     }
     public static let WALLET_WITHDRAWAL_PAY_PASSWORD = LocalizedString("wallet_withdrawal_pay_password", comment: "Withdrawal with PIN")
     public static let WALLET_BLOCKCHIAN_NOT_IN_SYNC = LocalizedString("wallet_blockchian_not_in_sync", comment: "Blockchain not in sync.")
+    public static let WALLET_NO_PRICE = LocalizedString("wallet_no_price", comment: "N/A")
 
     // Transaction
     public static let TRANSACTION_TITLE = LocalizedString("transaction_title", comment: "Transaction")

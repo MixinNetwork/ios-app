@@ -2,7 +2,8 @@ import UIKit
 
 class SearchViewController: UIViewController {
 
-    @IBOutlet weak var keywordTextField: ResignationRefusingTextField!
+    @IBOutlet weak var keywordTextField: UITextField!
+    @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var navigationBarContentHeightConstraint: NSLayoutConstraint!
@@ -25,8 +26,6 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         queryQueue.maxConcurrentOperationCount = 1
-        keywordTextField.allowsResigning = false
-        keywordTextField.becomeFirstResponder()
         tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.register(UINib(nibName: "SearchResultContactCell", bundle: .main), forCellReuseIdentifier: contactCellReuseId)
         tableView.register(UINib(nibName: "ConversationCell", bundle: .main), forCellReuseIdentifier: conversationCellReuseId)
@@ -35,30 +34,8 @@ class SearchViewController: UIViewController {
         tableView.contentInset.top = navigationBarContentHeightConstraint.constant
         tableView.dataSource = self
         tableView.delegate = self
-        showContacts()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        keywordTextField.becomeFirstResponder()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        DispatchQueue.main.async {
-            self.keywordTextField.allowsResigning = true
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        keywordTextField.resignFirstResponder()
-    }
-    
-    @IBAction func cancelAction(_ sender: Any) {
-        navigationController?.dismiss(animated: true, completion: nil)
-    }
-    
     @IBAction func searchAction(_ sender: Any) {
         let keyword = self.keyword
         queryQueue.cancelAllOperations()
@@ -79,12 +56,20 @@ class SearchViewController: UIViewController {
         }
     }
     
-    func layoutForPresentAnimation() {
+    func present() {
+        prepareForReuse()
         beforePresentingConstraints.forEach {
             $0.priority = .defaultLow
         }
         afterPresentingConstraints.forEach {
             $0.priority = .defaultHigh
+        }
+        keywordTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded()
+        }) { (_) in
+            self.showContacts()
+            self.keywordTextField.becomeFirstResponder()
         }
     }
     
@@ -108,6 +93,24 @@ class SearchViewController: UIViewController {
         } else {
             tableView.reloadData()
         }
+    }
+    
+    private func prepareForReuse() {
+        queryQueue.cancelAllOperations()
+        keywordTextField.text = nil
+        users = []
+        assets = []
+        conversations = []
+        tableView.reloadData()
+        tableView.contentOffset.y = -tableView.contentInset.top
+        beforePresentingConstraints.forEach {
+            $0.priority = .defaultHigh
+        }
+        afterPresentingConstraints.forEach {
+            $0.priority = .defaultLow
+        }
+        keywordTextField.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        view.layoutIfNeeded()
     }
 
 }

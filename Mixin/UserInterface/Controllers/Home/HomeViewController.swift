@@ -5,6 +5,7 @@ import AVFoundation
 
 class HomeViewController: UIViewController {
 
+    @IBOutlet weak var searchContainerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var guideView: UIView!
     @IBOutlet weak var bottomNavView: UIView!
@@ -20,6 +21,18 @@ class HomeViewController: UIViewController {
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
     private lazy var pinAction = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_PIN, handler: tableViewCommitPinAction)
     private lazy var unpinAction = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_UNPIN, handler: tableViewCommitPinAction)
+    private lazy var searchViewController: SearchViewController? = {
+        let vc = SearchViewController.instance()
+        addChildViewController(vc)
+        searchContainerView.addSubview(vc.view)
+        vc.view.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        searchContainerView.layoutIfNeeded()
+        vc.didMove(toParentViewController: self)
+        vc.cancelButton.addTarget(self, action: #selector(dismissSearch(_:)), for: .touchUpInside)
+        return vc
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,6 +126,13 @@ class HomeViewController: UIViewController {
         }
         fetchConversations()
     }
+    
+    @objc func dismissSearch(_ sender: Any) {
+        searchViewController?.keywordTextField.resignFirstResponder()
+        UIView.animate(withDuration: 0.3) {
+            self.searchContainerView.alpha = 0
+        }
+    }
 
     @IBAction func walletAction(_ sender: Any) {
         guard let account = AccountAPI.shared.account else {
@@ -125,6 +145,14 @@ class HomeViewController: UIViewController {
         }
     }
 
+    @IBAction func searchAction(_ sender: Any) {
+        guard let searchViewController = searchViewController else {
+            return
+        }
+        searchContainerView.alpha = 1
+        searchViewController.present()
+    }
+    
     @IBAction func contactsAction(_ sender: Any) {
         navigationController?.pushViewController(ContactViewController.instance(), animated: true)
     }

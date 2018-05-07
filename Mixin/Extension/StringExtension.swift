@@ -114,12 +114,17 @@ extension String {
         return "\(startString)...\(endString)"
     }
 
-    func formatBalance() -> String {
-        let result = NumberFormatter.balanceFormatter.string(from: NSDecimalNumber(string: self)) ?? self
-        guard result.hasSuffix(".") else {
-            return result
+    func formatSimpleBalance() -> String {
+        guard !hasPrefix("0."), let dotIdx = index(of: ".") else {
+            return self
         }
-        return String(result.dropLast())
+        let formatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 8)
+        formatter.maximumFractionDigits = 8 - dotIdx.encodedOffset
+        return formatter.string(from: NSDecimalNumber(string: self)) ?? self
+    }
+
+    func formatFullBalance() -> String {
+        return NumberFormatter.balanceFormatter.string(from: NSDecimalNumber(string: self)) ?? self
     }
 }
 

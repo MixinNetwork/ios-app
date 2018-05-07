@@ -22,7 +22,7 @@ class TransferMessageCell: CardMessageCell {
             if let icon = viewModel.message.assetIcon {
                 iconImageView.sd_setImage(with: URL(string: icon), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
             }
-            amountLabel.text = viewModel.message.snapshotAmount?.formatBalance()
+            amountLabel.text = viewModel.message.snapshotAmount?.formatSimpleBalance()
             symbolLabel.text = viewModel.message.assetSymbol
         }
     }

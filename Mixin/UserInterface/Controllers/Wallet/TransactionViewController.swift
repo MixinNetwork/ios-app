@@ -131,7 +131,7 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
             return
         }
 
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async {
             guard let user = UserDAO.shared.getUser(userId: userId) else {
                 return
             }

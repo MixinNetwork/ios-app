@@ -14,6 +14,7 @@ struct AssetItem: TableCodable {
     let priceUsd: String
     let chainId: String
     let chainIconUrl: String?
+    let changeUsd: String
 
     enum CodingKeys: String, CodingTableKey {
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -28,6 +29,7 @@ struct AssetItem: TableCodable {
         case publicKey = "public_key"
         case priceBtc = "price_btc"
         case priceUsd = "price_usd"
+        case changeUsd = "change_usd"
         case chainId = "chain_id"
         case chainIconUrl = "chain_icon_url"
     }
@@ -35,13 +37,12 @@ struct AssetItem: TableCodable {
 
 extension AssetItem {
 
-    func getOriginalBalance() -> String {
-        return String(format: "%@ %@", balance.formatBalance(), symbol)
-    }
-
     func getUSDBalance() -> String {
         return String(format: "≈ %@ USD", (balance.toDouble() * priceUsd.toDouble()).toFormatLegalTender())
     }
 
+    func getUsdChange() -> String {
+        return (changeUsd.toDouble() * 100).toFormatLegalTender()
+    }
 }
 

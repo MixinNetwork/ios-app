@@ -13,8 +13,8 @@ class SnapshotCell: UITableViewCell {
         timeLabel.text = DateFormatter.MMMddHHmm.string(from: snapshot.createdAt.toUTCDate())
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
-            amountLabel.textColor = .deposit
-            amountLabel.text = "+\(snapshot.amount.formatBalance()) \(symbol)"
+            amountLabel.textColor = .walletGreen
+            amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
             if let hash = snapshot.transactionHash {
                 detailLabel.text = hash.toSimpleKey()
             } else {
@@ -23,25 +23,25 @@ class SnapshotCell: UITableViewCell {
         case SnapshotType.transfer.rawValue:
             let amount = snapshot.amount.toDouble()
             if amount > 0 {
-                amountLabel.textColor = .deposit
+                amountLabel.textColor = .walletGreen
                 detailLabel.text = Localized.WALLET_SNAPSHOT_FROM(fullName: snapshot.counterUserFullName ?? "")
-                amountLabel.text = "+\(snapshot.amount.formatBalance()) \(symbol)"
+                amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
             } else {
-                amountLabel.textColor = .transfer
+                amountLabel.textColor = .walletRed
                 detailLabel.text = Localized.WALLET_SNAPSHOT_TO(fullName: snapshot.counterUserFullName ?? "")
-                amountLabel.text = "\(snapshot.amount.formatBalance()) \(symbol)"
+                amountLabel.text = "\(snapshot.amount.formatFullBalance()) \(symbol)"
             }
         case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue:
-            amountLabel.textColor = .transfer
-            amountLabel.text = "\(snapshot.amount.formatBalance()) \(symbol)"
+            amountLabel.textColor = .walletRed
+            amountLabel.text = "\(snapshot.amount.formatFullBalance()) \(symbol)"
             if let receiver = snapshot.receiver, !receiver.isEmpty {
                 detailLabel.text = receiver.toSimpleKey()
             } else {
                 detailLabel.text = nil
             }
         case SnapshotType.rebate.rawValue:
-            amountLabel.textColor = .deposit
-            amountLabel.text = "+\(snapshot.amount.formatBalance()) \(symbol)"
+            amountLabel.textColor = .walletGreen
+            amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
             if let receiver = snapshot.receiver, !receiver.isEmpty {
                 detailLabel.text = receiver.toSimpleKey()
             } else {

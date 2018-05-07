@@ -2,7 +2,7 @@ import Foundation
 
 extension NumberFormatter {
 
-    static let balanceFormatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 8, alwaysShowsDecimalSeparator: true)
+    static let balanceFormatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 8)
     static let legalTenderFormatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 2)
 
     convenience init(numberStyle: NumberFormatter.Style) {
@@ -26,12 +26,11 @@ extension NumberFormatter {
 
 extension Double {
 
-    func toFormatBalance() -> String {
-        return NumberFormatter.balanceFormatter.string(from: NSNumber(value: self)) ?? String(format: "%.6f", self)
-    }
-
     func toFormatLegalTender() -> String {
         return NumberFormatter.legalTenderFormatter.string(from: NSNumber(value: self)) ?? String(format: "%.2f", self)
     }
 
+    func formatSimpleBalance() -> String {
+        return NumberFormatter().string(from: NSNumber(value: self))?.formatSimpleBalance() ?? String(format: "%.6f", self)
+    }
 }

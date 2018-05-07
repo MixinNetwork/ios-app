@@ -204,6 +204,7 @@
 "wallet_withdrawal_asset" = "%@ 提现";
 "wallet_withdrawal_pay_password" = "通过密码提现";
 "wallet_blockchian_not_in_sync" = "区块链同步异常";
+"wallet_no_price" = "暂无价格";
 
 // Transaction
 "transaction_title" = "交易详情";

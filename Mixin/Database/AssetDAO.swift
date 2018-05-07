@@ -5,15 +5,16 @@ final class AssetDAO {
     static let shared = AssetDAO()
 
     private static let sqlQueryTable = """
-    SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.public_key, a1.price_btc, a1.price_usd, a1.chain_id, a2.icon_url as chain_icon_url
+    SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.public_key, a1.price_btc, a1.price_usd, a1.change_usd, a1.chain_id, a2.icon_url as chain_icon_url
     FROM assets a1
     LEFT JOIN assets a2 ON a1.chain_id = a2.asset_id
     """
-    private static let sqlQuery = "\(sqlQueryTable) ORDER BY a1.balance * a1.price_usd DESC, a1.price_usd DESC, cast(a1.balance AS REAL) DESC, a1.name DESC"
-    private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a1.balance > 0 ORDER BY a1.balance * a1.price_usd DESC, a1.price_usd DESC, cast(a1.balance AS REAL) DESC, a1.name DESC LIMIT 1"
-    private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a1.balance > 0 ORDER BY a1.balance * a1.price_usd DESC, a1.price_usd DESC, cast(a1.balance AS REAL) DESC, a1.name DESC"
+    private static let sqlOrder = "AND NOT (a1.balance == 0 AND a1.asset_id != a1.chain_id) ORDER BY a1.balance * a1.price_usd DESC, a1.price_usd DESC, cast(a1.balance AS REAL) DESC, a1.name DESC"
+    private static let sqlQuery = "\(sqlQueryTable) WHERE 1 = 1 \(sqlOrder)"
+    private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a1.balance > 0 \(sqlOrder) LIMIT 1"
+    private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a1.balance > 0 \(sqlOrder)"
+    private static let sqlQuerySearch = "\(sqlQueryTable) WHERE (a1.name like ? OR a1.symbol like ?) \(sqlOrder)"
     private static let sqlQueryById = "\(sqlQueryTable) WHERE a1.asset_id = ?"
-    private static let sqlQuerySearch = "\(sqlQueryTable) WHERE a1.name like ? OR a1.symbol like ? ORDER BY a1.balance * a1.price_usd DESC, a1.price_usd DESC, cast(a1.balance AS REAL) DESC, a1.name DESC"
 
     func getAsset(assetId: String) -> AssetItem? {
         return MixinDatabase.shared.getCodables(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [assetId], inTransaction: false).first

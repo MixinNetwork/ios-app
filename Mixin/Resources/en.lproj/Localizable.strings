@@ -206,6 +206,7 @@
 "wallet_withdrawal_asset" = "%@ Withdrawal";
 "wallet_withdrawal_pay_password" = "Withdrawal with PIN";
 "wallet_blockchian_not_in_sync" = "Blockchain not in sync.";
+"wallet_no_price" = "N/A";
 
 // Transaction
 "transaction_title" = "Transaction";

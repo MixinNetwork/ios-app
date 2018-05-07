@@ -232,7 +232,7 @@ extension UrlWindow {
 
 extension UrlWindow {
 
-    func presentPopupControllerAnimated(assetId: String, counterUserId: String, amount: String, traceId: String, fromWeb: Bool = false) {
+    func presentPopupControllerAnimated(assetId: String, counterUserId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
         AssetAPI.shared.payments(assetId: assetId, counterUserId: counterUserId, amount: amount, traceId: traceId) { [weak self](result) in
@@ -256,7 +256,7 @@ extension UrlWindow {
                     make.edges.equalToSuperview()
                 })
                 
-                weakSelf.payView.render(asset: payment.asset, user: UserItem.createUser(from: payment.recipient), amount: amount, memo: "", trackId: traceId, superView: weakSelf)
+                weakSelf.payView.render(asset: payment.asset, user: UserItem.createUser(from: payment.recipient), amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
                 weakSelf.successHandler()
             case let .failure(error, _):
                 weakSelf.failedHandler(error.kind.localizedDescription ?? error.description)
@@ -275,7 +275,11 @@ extension UrlWindow {
             return false
         }
 
-         UrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, counterUserId: recipientId, amount: amount, traceId: traceId, fromWeb: fromWeb)
+        var memo = query["memo"]
+        if let urlDecodeMemo = memo?.removingPercentEncoding {
+            memo = urlDecodeMemo
+        }
+        UrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, counterUserId: recipientId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
 
         return true
     }

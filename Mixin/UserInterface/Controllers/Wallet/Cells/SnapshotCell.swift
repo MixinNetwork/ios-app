@@ -14,7 +14,7 @@ class SnapshotCell: UITableViewCell {
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
             amountLabel.textColor = .walletGreen
-            amountLabel.text = "+\(snapshot.amount.formatBalance()) \(symbol)"
+            amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
             if let hash = snapshot.transactionHash {
                 detailLabel.text = hash.toSimpleKey()
             } else {
@@ -25,15 +25,15 @@ class SnapshotCell: UITableViewCell {
             if amount > 0 {
                 amountLabel.textColor = .walletGreen
                 detailLabel.text = Localized.WALLET_SNAPSHOT_FROM(fullName: snapshot.counterUserFullName ?? "")
-                amountLabel.text = "+\(snapshot.amount.formatBalance()) \(symbol)"
+                amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
             } else {
                 amountLabel.textColor = .walletRed
                 detailLabel.text = Localized.WALLET_SNAPSHOT_TO(fullName: snapshot.counterUserFullName ?? "")
-                amountLabel.text = "\(snapshot.amount.formatBalance()) \(symbol)"
+                amountLabel.text = "\(snapshot.amount.formatFullBalance()) \(symbol)"
             }
         case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue:
             amountLabel.textColor = .walletRed
-            amountLabel.text = "\(snapshot.amount.formatBalance()) \(symbol)"
+            amountLabel.text = "\(snapshot.amount.formatFullBalance()) \(symbol)"
             if let receiver = snapshot.receiver, !receiver.isEmpty {
                 detailLabel.text = receiver.toSimpleKey()
             } else {
@@ -41,7 +41,7 @@ class SnapshotCell: UITableViewCell {
             }
         case SnapshotType.rebate.rawValue:
             amountLabel.textColor = .walletGreen
-            amountLabel.text = "+\(snapshot.amount.formatBalance()) \(symbol)"
+            amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
             if let receiver = snapshot.receiver, !receiver.isEmpty {
                 detailLabel.text = receiver.toSimpleKey()
             } else {

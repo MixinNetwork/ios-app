@@ -37,10 +37,6 @@ struct AssetItem: TableCodable {
 
 extension AssetItem {
 
-    func getOriginalBalance() -> String {
-        return String(format: "%@ %@", balance.formatBalance(), symbol)
-    }
-
     func getUSDBalance() -> String {
         return String(format: "≈ %@ USD", (balance.toDouble() * priceUsd.toDouble()).toFormatLegalTender())
     }

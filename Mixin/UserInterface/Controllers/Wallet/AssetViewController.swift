@@ -84,7 +84,7 @@ class AssetViewController: UITableViewController {
             blockchainImageView.sd_setImage(with: chainUrl)
             blockchainImageView.isHidden = false
         }
-        balanceLabel.text = String(format: "%@ %@", asset.balance.formatBalance(), asset.symbol)
+        balanceLabel.text = String(format: "%@ %@", asset.balance.formatFullBalance(), asset.symbol)
         exchangeLabel.text = asset.getUSDBalance()
         depositButton.isBusy = asset.publicKey.isEmpty
     }

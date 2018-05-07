@@ -53,6 +53,9 @@ class HomeViewController: UIViewController {
         tableView.tableFooterView = UIView()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+            self?.searchViewController?.prepare()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

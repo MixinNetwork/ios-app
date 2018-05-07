@@ -55,6 +55,10 @@ class SearchViewController: UIViewController {
             }
         }
     }
+
+    func prepare() {
+        showContacts()
+    }
     
     func present() {
         prepareForReuse()

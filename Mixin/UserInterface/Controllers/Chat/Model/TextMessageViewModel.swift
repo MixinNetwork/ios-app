@@ -22,6 +22,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     private let timeLeftMargin: CGFloat = 20
     
+    private let minimumTextSize = CGSize(width: 5, height: 18)
     private let font = UIFont.systemFont(ofSize: 16)
     private let linkColor = UIColor.systemTint
     private let textAlignment = CTTextAlignment.left
@@ -83,8 +84,10 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         let maxLabelWidth = layoutWidth - MessageViewModel.backgroundImageMargin.horizontal - contentMargin.horizontal
         let framesetter = CTFramesetterCreateWithAttributedString(str as CFAttributedString)
         let layoutSize = CGSize(width: maxLabelWidth, height: UILayoutFittingExpandedSize.height)
-        var textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, layoutSize, nil)
-        textSize = CGSize(width: ceil(textSize.width), height: ceil(textSize.height))
+        textSize = ceil(CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, layoutSize, nil))
+        if textSize.height < minimumTextSize.height {
+            textSize = minimumTextSize
+        }
         let path = CGPath(rect: CGRect(origin: .zero, size: textSize), transform: nil)
         let frame = CTFramesetterCreateFrame(framesetter, .zero, path, nil)
         lines = CTFrameGetLines(frame) as! [CTLine]
@@ -145,7 +148,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 contentSize.width = min(layoutSize.width, max(contentSize.width, fullnameWidth))
             }
         }
-        self.textSize = textSize
         self.contentSize = contentSize
         didSetStyle()
     }

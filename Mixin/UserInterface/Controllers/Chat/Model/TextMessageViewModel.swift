@@ -20,7 +20,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return .black
     }
     
-    private let labelMargin = Margin(leading: 16, trailing: 10, top: 7, bottom: 7)
     private let timeLeftMargin: CGFloat = 20
     
     private let font = UIFont.systemFont(ofSize: 16)
@@ -81,7 +80,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             str.setColor(linkColor, for: range)
         }
         // Make CTLine and Origins
-        let maxLabelWidth = layoutWidth - MessageViewModel.backgroundImageMargin.horizontal - labelMargin.horizontal
+        let maxLabelWidth = layoutWidth - MessageViewModel.backgroundImageMargin.horizontal - contentMargin.horizontal
         let framesetter = CTFramesetterCreateWithAttributedString(str as CFAttributedString)
         let layoutSize = CGSize(width: maxLabelWidth, height: UILayoutFittingExpandedSize.height)
         var textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, layoutSize, nil)
@@ -153,23 +152,23 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     override func didSetStyle() {
         let fullnameHeight = style.contains(.showFullname) ? fullnameFrame.height : 0
-        let backgroundHeightAdjustment = style.contains(.showFullname) ? fullnameHeight + labelMargin.bottom : labelMargin.vertical
+        let backgroundHeightAdjustment = style.contains(.showFullname) ? fullnameHeight + contentMargin.bottom : contentMargin.vertical
         if style.contains(.received) {
             backgroundImageFrame = CGRect(x: MessageViewModel.backgroundImageMargin.leading,
                                           y: 0,
-                                          width: contentSize.width + labelMargin.horizontal,
+                                          width: contentSize.width + contentMargin.horizontal,
                                           height: contentSize.height + backgroundHeightAdjustment)
-            contentLabelFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + labelMargin.leading),
-                                       y: ceil(style.contains(.showFullname) ? fullnameHeight : labelMargin.top),
+            contentLabelFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.leading),
+                                       y: ceil(style.contains(.showFullname) ? fullnameHeight : contentMargin.top),
                                        width: textSize.width,
                                        height: textSize.height)
         } else if style.contains(.sent) {
-            backgroundImageFrame = CGRect(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - labelMargin.horizontal - contentSize.width,
+            backgroundImageFrame = CGRect(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - contentMargin.horizontal - contentSize.width,
                                           y: 0,
-                                          width: contentSize.width + labelMargin.horizontal,
+                                          width: contentSize.width + contentMargin.horizontal,
                                           height: contentSize.height + backgroundHeightAdjustment)
-            contentLabelFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + labelMargin.trailing),
-                                       y: ceil(labelMargin.top),
+            contentLabelFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.trailing),
+                                       y: ceil(contentMargin.top),
                                        width: textSize.width,
                                        height: textSize.height)
         }

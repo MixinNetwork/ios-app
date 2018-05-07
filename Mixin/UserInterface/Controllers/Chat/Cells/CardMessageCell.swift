@@ -11,7 +11,9 @@ class CardMessageCell: DetailInfoMessageCell {
     var leftViewLeadingConstraint: Constraint!
     var rightViewTrailingConstraint: Constraint!
     
-    private let contentTopMargin: CGFloat = 14
+    internal var contentTopMargin: CGFloat {
+        return 14
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,11 +22,13 @@ class CardMessageCell: DetailInfoMessageCell {
         leftView.snp.makeConstraints { (make) in
             leftViewLeadingConstraint = make.leading
                 .equalTo(backgroundImageView)
+                .priority(.high)
                 .constraint
         }
         rightView.snp.makeConstraints { (make) in
             rightViewTrailingConstraint = make.trailing
                 .equalTo(backgroundImageView)
+                .priority(.high)
                 .constraint
         }
     }

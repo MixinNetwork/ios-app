@@ -2,11 +2,6 @@ import UIKit
 
 class CardMessageViewModel: DetailInfoMessageViewModel {
     
-    static let leftLeadingMargin: CGFloat = 22
-    static let rightLeadingMargin: CGFloat = 12
-    static let leftTrailingMargin: CGFloat = -20
-    static let rightTrailingMargin: CGFloat = -30
-    
     internal(set) var leadingConstant: CGFloat = 0
     internal(set) var trailingConstant: CGFloat = 0
     
@@ -16,6 +11,22 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
     
     internal var size: CGSize {
         return CGSize(width: 220, height: 72)
+    }
+    
+    internal var leftLeadingMargin: CGFloat {
+        return 22
+    }
+    
+    internal var rightLeadingMargin: CGFloat {
+        return 12
+    }
+    
+    internal var leftTrailingMargin: CGFloat {
+        return -20
+    }
+    
+    internal var rightTrailingMargin: CGFloat {
+        return -30
     }
 
     override var rightBubbleImage: UIImage {
@@ -30,14 +41,16 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
         let backgroundOrigin: CGPoint
         if style.contains(.received) {
             backgroundOrigin = CGPoint(x: MessageViewModel.backgroundImageMargin.leading, y: fullnameHeight)
-            leadingConstant = TransferMessageViewModel.leftLeadingMargin
-            trailingConstant = TransferMessageViewModel.leftTrailingMargin
+            leadingConstant = leftLeadingMargin
+            trailingConstant = leftTrailingMargin
         } else {
             backgroundOrigin = CGPoint(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - size.width, y: fullnameHeight)
-            leadingConstant = TransferMessageViewModel.rightLeadingMargin
-            trailingConstant = TransferMessageViewModel.rightTrailingMargin
+            leadingConstant = rightLeadingMargin
+            trailingConstant = rightTrailingMargin
         }
-        backgroundImageFrame = CGRect(origin: backgroundOrigin, size: size)
+        let backgroundSize = CGSize(width: min(size.width, layoutWidth - MessageViewModel.backgroundImageMargin.horizontal),
+                                    height: size.height)
+        backgroundImageFrame = CGRect(origin: backgroundOrigin, size: backgroundSize)
         cellHeight = fullnameHeight + size.height + bottomSeparatorHeight
         super.didSetStyle()
     }

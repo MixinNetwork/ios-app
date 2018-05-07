@@ -3,7 +3,6 @@ import UIKit
 class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMessageViewModel {
     
     static let contentWidth: CGFloat = 220
-    static let contentMargin = Margin(leading: 9, trailing: 5, top: 4, bottom: 6)
     static let maxHeight: CGFloat = UIScreen.main.bounds.height / 2
     static let leftShadowImage = #imageLiteral(resourceName: "ic_chat_shadow_left")
     static let rightShadowImage = #imageLiteral(resourceName: "ic_chat_shadow_right")
@@ -14,6 +13,10 @@ class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMess
     internal(set) var shadowImageOrigin = CGPoint.zero
     internal(set) var networkOperationButtonStyle = NetworkOperationButton.Style.finished
 
+    override lazy var contentMargin: Margin = {
+        Margin(leading: 9, trailing: 5, top: 4, bottom: 6)
+    }()
+    
     private let contentSize: CGSize
     
     var progress: Double?

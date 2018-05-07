@@ -92,7 +92,7 @@
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MV2-s0-cvZ">
                                                         <rect key="frame" x="0.0" y="0.0" width="263" height="36"/>
                                                         <connections>
-                                                            <segue destination="Lup-0g-xdo" kind="presentation" id="fWf-IW-SHu"/>
+                                                            <action selector="searchAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="5G9-PI-eka"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
@@ -214,6 +214,10 @@
                                     <action selector="cameraAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="bie-cC-3OD"/>
                                 </connections>
                             </button>
+                            <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uc0-po-iUR">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -222,6 +226,7 @@
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="bottom" secondItem="5mk-Fk-SFN" secondAttribute="top" constant="56" id="B2h-KP-rca"/>
                             <constraint firstItem="BkB-8V-9ox" firstAttribute="centerX" secondItem="z69-58-QNg" secondAttribute="centerX" id="F99-Ne-PpZ"/>
                             <constraint firstItem="L82-pj-DlR" firstAttribute="centerY" secondItem="J91-yj-SMd" secondAttribute="centerY" id="Hw5-RC-nn1"/>
+                            <constraint firstAttribute="trailing" secondItem="uc0-po-iUR" secondAttribute="trailing" id="I8h-eb-FTk"/>
                             <constraint firstItem="5mk-Fk-SFN" firstAttribute="trailing" secondItem="9MA-tT-pfZ" secondAttribute="trailing" id="KfX-nW-UaE"/>
                             <constraint firstItem="L82-pj-DlR" firstAttribute="leading" secondItem="5mk-Fk-SFN" secondAttribute="leading" constant="50" id="KrU-FX-kXI"/>
                             <constraint firstAttribute="bottomMargin" secondItem="9MA-tT-pfZ" secondAttribute="bottom" id="P6s-kl-6G5"/>
@@ -231,8 +236,11 @@
                             <constraint firstItem="BAF-NI-V3r" firstAttribute="top" secondItem="2PV-tA-eIh" secondAttribute="bottom" id="WUx-C2-O8K"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" id="ZK1-Gs-NMQ"/>
                             <constraint firstItem="BAF-NI-V3r" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="ZaE-Sk-UPj"/>
+                            <constraint firstItem="uc0-po-iUR" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" id="fgG-G8-pI0"/>
                             <constraint firstItem="5mk-Fk-SFN" firstAttribute="bottom" secondItem="z69-58-QNg" secondAttribute="bottom" id="geY-tE-A2H"/>
+                            <constraint firstAttribute="bottom" secondItem="uc0-po-iUR" secondAttribute="bottom" id="iWw-Rm-VGV"/>
                             <constraint firstItem="9MA-tT-pfZ" firstAttribute="leading" secondItem="5mk-Fk-SFN" secondAttribute="leading" id="kUd-46-YUM"/>
+                            <constraint firstItem="uc0-po-iUR" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="lG1-3J-Tzd"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="llA-nx-Hsw"/>
                             <constraint firstItem="5mk-Fk-SFN" firstAttribute="trailing" secondItem="L82-pj-DlR" secondAttribute="trailing" constant="50" id="pAp-KP-Em7"/>
                             <constraint firstAttribute="trailing" secondItem="2PV-tA-eIh" secondAttribute="trailing" id="rdw-hn-eBw"/>
@@ -245,6 +253,7 @@
                         <outlet property="bottomNavConstraint" destination="geY-tE-A2H" id="xhe-EV-fJr"/>
                         <outlet property="bottomNavView" destination="z69-58-QNg" id="Z9R-JF-1xc"/>
                         <outlet property="guideView" destination="L82-pj-DlR" id="X4h-WI-gQy"/>
+                        <outlet property="searchContainerView" destination="uc0-po-iUR" id="Q0R-V2-fEi"/>
                         <outlet property="tableView" destination="9MA-tT-pfZ" id="c0q-R0-LjX"/>
                     </connections>
                 </viewController>
@@ -280,7 +289,7 @@
                                                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_search" translatesAutoresizingMaskIntoConstraints="NO" id="21L-oj-gqm">
                                                                 <rect key="frame" x="0.0" y="0.0" width="12" height="36"/>
                                                             </imageView>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Contacts and Chats" textAlignment="natural" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="7f4-y9-Z2S" customClass="ResignationRefusingTextField" customModule="Mixin" customModuleProvider="target">
+                                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Contacts and Chats" textAlignment="natural" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="7f4-y9-Z2S">
                                                                 <rect key="frame" x="18" y="0.0" width="130.5" height="36"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="textColor"/>
@@ -331,9 +340,6 @@
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
                                                 </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="cancelAction:" destination="wBP-M4-Xow" eventType="touchUpInside" id="I7d-r4-glY"/>
-                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -384,6 +390,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="oNh-bA-9Hf"/>
                     <connections>
+                        <outlet property="cancelButton" destination="Bb6-Fw-r7x" id="M2Q-Xi-zlO"/>
                         <outlet property="keywordTextField" destination="7f4-y9-Z2S" id="Tz0-VV-Svn"/>
                         <outlet property="navigationBarContentHeightConstraint" destination="IJw-eM-eAL" id="kFA-3z-Ebt"/>
                         <outlet property="tableView" destination="fJ7-r4-Szs" id="o3z-Ff-t8W"/>
@@ -398,24 +405,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FYX-l7-xTH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="577" y="-278"/>
-        </scene>
-        <!--Search Navigation Controller-->
-        <scene sceneID="B0B-NR-C63">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="currentContext" navigationBarHidden="YES" id="Lup-0g-xdo" customClass="SearchNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="H0F-Zo-RBo">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="wBP-M4-Xow" kind="relationship" relationship="rootViewController" id="U6c-j3-bVH"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Fhn-YZ-NsO" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-154" y="-278"/>
+            <point key="canvasLocation" x="-151" y="-277"/>
         </scene>
     </scenes>
     <resources>

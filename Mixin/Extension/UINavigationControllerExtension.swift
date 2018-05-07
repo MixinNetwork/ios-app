@@ -4,7 +4,7 @@ extension UINavigationController {
 
     func pushViewController(withBackRoot viewController: UIViewController) {
         var viewControllers: [UIViewController] = self.viewControllers
-        while viewControllers.count > 0 && !(viewControllers.last is HomeViewController) && !(viewControllers.last is SearchViewController) {
+        while viewControllers.count > 0 && !(viewControllers.last is HomeViewController) {
             viewControllers.removeLast()
         }
         viewControllers.append(viewController)
@@ -13,7 +13,7 @@ extension UINavigationController {
 
     func pushViewController(withBackChat viewController: UIViewController) {
         var viewControllers: [UIViewController] = self.viewControllers
-        while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
+        while viewControllers.count > 0 && !(viewControllers.last is HomeViewController) && !(viewControllers.last is ConversationViewController) {
             viewControllers.removeLast()
         }
         viewControllers.append(viewController)

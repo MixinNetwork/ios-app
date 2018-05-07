@@ -142,7 +142,6 @@
 		7BB1EDC71FB1B43B000DF9E7 /* GroupMemberCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB1EDC61FB1B43B000DF9E7 /* GroupMemberCell.xib */; };
 		7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */; };
 		7BB470491FB1965E0059AE79 /* GroupMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */; };
-		7BB559551FA89D5D0013A719 /* ResignationRefusingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB559541FA89D5D0013A719 /* ResignationRefusingTextField.swift */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
 		7BBA1CA920692C7600B2F0CE /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBA1CA820692C7600B2F0CE /* Photo.swift */; };
 		7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */; };
@@ -171,7 +170,6 @@
 		7BF653562000DFE8007CCFAA /* AboutContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF653552000DFE8007CCFAA /* AboutContainerViewController.swift */; };
 		7BFF3B011FAAE92F0039A1C5 /* SearchResultContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFF3AFF1FAAE92F0039A1C5 /* SearchResultContactCell.swift */; };
 		7BFF3B021FAAE92F0039A1C5 /* SearchResultContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFF3B001FAAE92F0039A1C5 /* SearchResultContactCell.xib */; };
-		7BFF3B041FAAFD110039A1C5 /* SearchNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFF3B031FAAFD100039A1C5 /* SearchNavigationController.swift */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
 		9B748DD81FA88DB300BC009B /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DD71FA88DB300BC009B /* QRCodeViewController.swift */; };
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
@@ -601,7 +599,6 @@
 		7BB1EDC61FB1B43B000DF9E7 /* GroupMemberCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupMemberCell.xib; sourceTree = "<group>"; };
 		7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberCell.swift; sourceTree = "<group>"; };
-		7BB559541FA89D5D0013A719 /* ResignationRefusingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResignationRefusingTextField.swift; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
 		7BBA1CA820692C7600B2F0CE /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPeopleViewController.swift; sourceTree = "<group>"; };
@@ -630,7 +627,6 @@
 		7BF653552000DFE8007CCFAA /* AboutContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutContainerViewController.swift; sourceTree = "<group>"; };
 		7BFF3AFF1FAAE92F0039A1C5 /* SearchResultContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultContactCell.swift; sourceTree = "<group>"; };
 		7BFF3B001FAAE92F0039A1C5 /* SearchResultContactCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchResultContactCell.xib; sourceTree = "<group>"; };
-		7BFF3B031FAAFD100039A1C5 /* SearchNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationController.swift; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9B748DD71FA88DB300BC009B /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
@@ -1457,7 +1453,6 @@
 				DFF2145C209AC7D400612234 /* ConerLabel.swift */,
 				7B9863921FA3141F00D4B16C /* XibDesignable.swift */,
 				7B2E3E4F1FA07F7B00DDDDEB /* GeneralTableViewHeader.swift */,
-				7BB559541FA89D5D0013A719 /* ResignationRefusingTextField.swift */,
 				7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */,
 				7BD89DBD1FB2D59000665635 /* PlaceholderTextView.swift */,
 				7BD51DDB1FB4231400865CB8 /* ConnectionHintView.swift */,
@@ -1542,7 +1537,6 @@
 			children = (
 				DFD2943B1FA7069600FADAAD /* Cells */,
 				DF3C47461FA071F400A07C71 /* HomeViewController.swift */,
-				7BFF3B031FAAFD100039A1C5 /* SearchNavigationController.swift */,
 				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
 			);
 			path = Home;
@@ -2251,7 +2245,6 @@
 				DFD87C8B1FDBF10100BBCFFC /* RefreshOffsetJob.swift in Sources */,
 				DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */,
 				DF736F901FC09724001DB063 /* WalletTotalBalanceCell.swift in Sources */,
-				7BFF3B041FAAFD110039A1C5 /* SearchNavigationController.swift in Sources */,
 				DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */,
 				DFE63C9C1FC6B18900D6E028 /* SignalKeyResponse.swift in Sources */,
 				DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */,
@@ -2453,7 +2446,6 @@
 				DF8CECE91FC411AB00E40064 /* NotificationViewController.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingViewController.swift in Sources */,
 				DF955C041FEBDBD400DF98A2 /* NSData+Base64.m in Sources */,
-				7BB559551FA89D5D0013A719 /* ResignationRefusingTextField.swift in Sources */,
 				DF503D381FECF98900C008E7 /* SignedPreKey.swift in Sources */,
 				7B1CCBA31FEE63C300137644 /* UserRequest.swift in Sources */,
 				DF8DA1A41FD64C5800425CEC /* BlazeMessageData.swift in Sources */,

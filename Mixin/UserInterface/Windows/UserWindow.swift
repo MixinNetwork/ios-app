@@ -292,7 +292,7 @@ class UserWindow: BottomSheetView {
             return
         }
 
-        UIApplication.rootNavigationController()?.pushViewController(withBackChat: ConversationViewController.instance(ownerUser: user))
+        UIApplication.rootNavigationController()?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: user))
     }
 
     @IBAction func openAction(_ sender: Any) {

@@ -3,9 +3,9 @@ import UIKit
 extension UINavigationController {
 
     func pushViewController(withBackRoot viewController: UIViewController) {
-        var viewControllers: [UIViewController] = []
-        if let first = self.viewControllers.first, first is HomeViewController, self.viewControllers.count > 0 {
-            viewControllers = [first]
+        var viewControllers: [UIViewController] = self.viewControllers
+        while viewControllers.count > 0 && !(viewControllers.last is HomeViewController) {
+            viewControllers.removeLast()
         }
         viewControllers.append(viewController)
         setViewControllers(viewControllers, animated: true)

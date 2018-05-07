@@ -477,8 +477,10 @@ class ConversationViewController: UIViewController {
         case .update:
             hideLoading()
         case let .updateConversation(conversation):
-            titleLabel.text = conversation.name
-            dataSource?.conversation.name = conversation.name
+            if !conversation.name.isEmpty {
+                titleLabel.text = conversation.name
+                dataSource?.conversation.name = conversation.name
+            }
             dataSource?.conversation.announcement = conversation.announcement
             announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
             hideLoading()

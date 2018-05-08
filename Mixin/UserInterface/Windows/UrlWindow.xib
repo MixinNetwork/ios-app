@@ -23,7 +23,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="369"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" priority="250" constant="369" id="QzS-ax-9fo"/>
+                                <constraint firstAttribute="height" constant="369" id="QzS-ax-9fo"/>
                             </constraints>
                         </view>
                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="wf9-GX-H4l">

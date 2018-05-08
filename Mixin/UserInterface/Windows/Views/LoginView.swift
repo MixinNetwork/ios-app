@@ -17,9 +17,20 @@ class LoginView: UIView {
     private var authInfo: AuthorizationResponse!
     private var assets: [AssetItem] = []
     private var windowMaximum = false
-    private var minimumWebViewHeight: CGFloat = 0
+    private var minimumWebViewHeight: CGFloat = 484
     private var loginSuccess = false
 
+    private var maximumWebViewHeight: CGFloat {
+        guard let superView = superView else {
+            return minimumWebViewHeight
+        }
+        if #available(iOS 11.0, *) {
+            return superView.frame.height - max(safeAreaInsets.top, 20) - safeAreaInsets.bottom
+        } else {
+            return superView.frame.height - 20
+        }
+    }
+    
     private enum Scope: String {
         case PROFILE = "PROFILE:READ"
         case PHONE = "PHONE:READ"
@@ -68,6 +79,8 @@ class LoginView: UIView {
 
         prepareTableView()
         tableView.reloadData()
+        windowMaximum = superView.contentHeightConstraint.constant > minimumWebViewHeight
+        zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
         DispatchQueue.main.async {
             for idx in 0..<self.scopes.count {
                 self.tableView.selectRow(at: IndexPath(row: idx, section: 0), animated: false, scrollPosition: .none)
@@ -82,17 +95,8 @@ class LoginView: UIView {
         windowMaximum = !windowMaximum
         zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
 
-        if minimumWebViewHeight == 0 {
-            minimumWebViewHeight = self.frame.height
-        }
-
-        let oldHeight = self.frame.height
-        let targetHeight: CGFloat
-        if #available(iOS 11.0, *) {
-            targetHeight = windowMaximum ? superView.frame.height - max(safeAreaInsets.top, 20) - safeAreaInsets.bottom : minimumWebViewHeight
-        } else {
-            targetHeight = windowMaximum ? superView.frame.height - 20 : minimumWebViewHeight
-        }
+        let oldHeight = superView.contentHeightConstraint.constant
+        let targetHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
         let scale = targetHeight / oldHeight
 
         iconTopConstraint.constant = iconTopConstraint.constant * scale
@@ -202,4 +206,42 @@ extension LoginView: UITableViewDelegate, UITableViewDataSource {
 
         selectedScopes.remove(at: idx)
     }
+}
+
+extension LoginView: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let superView = superView, scrollView.isTracking && !scrollView.isDecelerating else {
+            return
+        }
+        let newConstant = superView.contentHeightConstraint.constant + scrollView.contentOffset.y
+        if newConstant <= maximumWebViewHeight {
+            superView.contentHeightConstraint.constant = newConstant
+            layoutIfNeeded()
+            scrollView.contentOffset.y = 0
+            let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
+            if windowMaximum != shouldMaximizeWindow {
+                windowMaximum = shouldMaximizeWindow
+                zoomButton.setImage(shouldMaximizeWindow ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        guard let superView = superView else {
+            return
+        }
+        if abs(velocity.y) > 0.01 {
+            let suggestedWindowMaximum = velocity.y > 0
+            if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
+                windowMaximum = suggestedWindowMaximum
+                zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+        superView.contentHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            superView.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
 }

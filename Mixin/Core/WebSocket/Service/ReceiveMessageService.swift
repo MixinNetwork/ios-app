@@ -199,7 +199,14 @@ class ReceiveMessageService: MixinService {
     
     private func processDecryptSuccess(data: BlazeMessageData, plainText: String) {
         if data.category.hasSuffix("_TEXT") {
-            MessageDAO.shared.insertMessage(message: Message.createMessage(textMessage: plainText, data: data), messageSource: data.source)
+            var content = plainText
+            if data.category == MessageCategory.PLAIN_TEXT.rawValue {
+                guard let decoded = plainText.base64Decoded() else {
+                    return
+                }
+                content = decoded
+            }
+            MessageDAO.shared.insertMessage(message: Message.createMessage(textMessage: content, data: data), messageSource: data.source)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_DATA")  {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -407,11 +414,7 @@ class ReceiveMessageService: MixinService {
                 break
             }
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
-            guard let plainData = Data(base64Encoded: data.data), let plainText = String(data: plainData, encoding: .utf8) else {
-                UIApplication.trackError("ReceiveMessageService", action: "processPlainMessage parse decode failded")
-                return
-            }
-            processDecryptSuccess(data: data, plainText: plainText)
+            processDecryptSuccess(data: data, plainText: data.data)
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED, createdAt: data.createdAt)
         default:
             break

@@ -3,6 +3,7 @@ import WebKit
 
 class WebWindow: ZoomWindow {
 
+    @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webViewWrapperView: UIView!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!

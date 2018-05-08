@@ -125,6 +125,7 @@
                 <outlet property="loadingView" destination="AbR-VA-i5f" id="0Gr-Ng-eZQ"/>
                 <outlet property="popupView" destination="nW9-LR-ccq" id="S6i-Pw-tuJ"/>
                 <outlet property="titleLabel" destination="k5S-YR-Z3Z" id="6Cw-vX-V6L"/>
+                <outlet property="titleView" destination="Rr0-ei-B13" id="brG-AX-Tem"/>
                 <outlet property="webViewWrapperHeightConstraint" destination="FTp-5J-UK8" id="vEw-jW-U95"/>
                 <outlet property="webViewWrapperView" destination="okA-Lg-ndE" id="1Ic-MR-X9a"/>
                 <outlet property="zoomButton" destination="BdC-R9-TIr" id="ZhI-eI-Drh"/>

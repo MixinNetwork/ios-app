@@ -17,7 +17,7 @@ class LoginView: UIView {
     private var authInfo: AuthorizationResponse!
     private var assets: [AssetItem] = []
     private var windowMaximum = false
-    private var minimumWebViewHeight: CGFloat = 0
+    private var minimumWebViewHeight: CGFloat = 484
     private var loginSuccess = false
 
     private enum Scope: String {
@@ -68,6 +68,8 @@ class LoginView: UIView {
 
         prepareTableView()
         tableView.reloadData()
+        windowMaximum = superView.contentHeightConstraint.constant > minimumWebViewHeight
+        zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
         DispatchQueue.main.async {
             for idx in 0..<self.scopes.count {
                 self.tableView.selectRow(at: IndexPath(row: idx, section: 0), animated: false, scrollPosition: .none)
@@ -82,11 +84,7 @@ class LoginView: UIView {
         windowMaximum = !windowMaximum
         zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
 
-        if minimumWebViewHeight == 0 {
-            minimumWebViewHeight = self.frame.height
-        }
-
-        let oldHeight = self.frame.height
+        let oldHeight = superView.contentHeightConstraint.constant
         let targetHeight: CGFloat
         if #available(iOS 11.0, *) {
             targetHeight = windowMaximum ? superView.frame.height - max(safeAreaInsets.top, 20) - safeAreaInsets.bottom : minimumWebViewHeight

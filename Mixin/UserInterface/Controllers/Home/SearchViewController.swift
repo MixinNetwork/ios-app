@@ -21,11 +21,14 @@ class SearchViewController: UIViewController {
     private var users = [UserItem]()
     private var assets = [AssetItem]()
     private var conversations = [ConversationItem]()
-    private var queryQueue = OperationQueue()
-
+    private var searchQueue = OperationQueue()
+    private var contactsLoadingQueue = OperationQueue()
+    private var isPresenting = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        queryQueue.maxConcurrentOperationCount = 1
+        searchQueue.maxConcurrentOperationCount = 1
+        contactsLoadingQueue.maxConcurrentOperationCount = 1
         tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.register(UINib(nibName: "SearchResultContactCell", bundle: .main), forCellReuseIdentifier: contactCellReuseId)
         tableView.register(UINib(nibName: "ConversationCell", bundle: .main), forCellReuseIdentifier: conversationCellReuseId)
@@ -34,15 +37,20 @@ class SearchViewController: UIViewController {
         tableView.contentInset.top = navigationBarContentHeightConstraint.constant
         tableView.dataSource = self
         tableView.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: .ContactsDidChange, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     @IBAction func searchAction(_ sender: Any) {
         let keyword = self.keyword
-        queryQueue.cancelAllOperations()
+        searchQueue.cancelAllOperations()
         if keyword.isEmpty {
             showContacts()
         } else {
-            queryQueue.addOperation {
+            searchQueue.addOperation {
                 let assets = AssetDAO.shared.searchAssets(content: keyword)
                 let users = UserDAO.shared.getUsers(nameOrPhone: keyword)
                 let messages = ConversationDAO.shared.searchConversation(content: keyword)
@@ -57,24 +65,36 @@ class SearchViewController: UIViewController {
     }
 
     func prepare() {
-        showContacts()
+        reloadContacts()
     }
     
     func present() {
         prepareForReuse()
+        isPresenting = true
         beforePresentingConstraints.forEach {
             $0.priority = .defaultLow
         }
         afterPresentingConstraints.forEach {
             $0.priority = .defaultHigh
         }
+        showContacts()
         keywordTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
         }) { (_) in
-            self.showContacts()
             self.keywordTextField.becomeFirstResponder()
         }
+    }
+    
+    func dismiss() {
+        isPresenting = false
+        keywordTextField.resignFirstResponder()
+        searchQueue.cancelAllOperations()
+        contactsLoadingQueue.cancelAllOperations()
+    }
+    
+    @objc func contactsDidChange(_ notification: Notification) {
+        reloadContacts()
     }
     
     class func instance() -> SearchViewController {
@@ -85,22 +105,28 @@ class SearchViewController: UIViewController {
         return keywordTextField.text ?? ""
     }
     
-    private func showContacts() {
-        if allContacts.isEmpty {
-            queryQueue.addOperation {
-                let allContacts = UserDAO.shared.contacts()
-                DispatchQueue.main.async {
-                    self.allContacts = allContacts
+    private func reloadContacts() {
+        contactsLoadingQueue.cancelAllOperations()
+        contactsLoadingQueue.addOperation {
+            let allContacts = UserDAO.shared.contacts()
+            DispatchQueue.main.async {
+                self.allContacts = allContacts
+                if self.isPresenting && self.keyword.isEmpty {
                     self.tableView.reloadData()
                 }
             }
+        }
+    }
+    
+    private func showContacts() {
+        if allContacts.isEmpty {
+            reloadContacts()
         } else {
             tableView.reloadData()
         }
     }
     
     private func prepareForReuse() {
-        queryQueue.cancelAllOperations()
         keywordTextField.text = nil
         users = []
         assets = []

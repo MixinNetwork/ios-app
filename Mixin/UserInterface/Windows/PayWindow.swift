@@ -31,7 +31,7 @@ class PayWindow: BottomSheetView {
     }
 
     override func dismissPopupControllerAnimated() {
-        if payView.transfering {
+        if payView.processing {
             return
         }
         super.dismissPopupControllerAnimated()

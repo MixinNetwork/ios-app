@@ -6,7 +6,6 @@ import AudioToolbox
 
 class PayView: UIStackView {
 
-    @IBOutlet weak var fingerPayView: UIView!
     @IBOutlet weak var passwordPayView: UIView!
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var avatarImageView: AvatarImageView!
@@ -15,15 +14,11 @@ class PayView: UIStackView {
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoLabel: UILabel!
-    @IBOutlet weak var payButton: StateResponsiveButton!
-    @IBOutlet weak var transferAssetLabel: UILabel!
     @IBOutlet weak var transferLoadingView: UIActivityIndicatorView!
     @IBOutlet weak var payStatusLabel: UILabel!
     @IBOutlet weak var paySuccessImageView: UIImageView!
-    @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var addressLabel: UILabel!
-    @IBOutlet weak var addressView: UIView!
-    @IBOutlet weak var userView: UIView!
+    @IBOutlet weak var dismissButton: UIButton!
+    @IBOutlet weak var memoView: UIView!
     
 
     private weak var superView: BottomSheetView?
@@ -35,8 +30,9 @@ class PayView: UIStackView {
     private var address: Address!
     private var amount = ""
     private var memo = ""
-    private(set) var transfering = false
+    private(set) var processing = false
     private var soundId: SystemSoundID = 0
+    private lazy var userWindow = UserWindow.instance()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -60,21 +56,19 @@ class PayView: UIStackView {
         self.superView = superView
         if let user = user {
             self.user = user
-            userView.isHidden = false
-            addressView.isHidden = true
             avatarImageView.setImage(with: user)
-            nameLabel.text = user.fullName
-            mixinIDLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
-            transferAssetLabel.text = Localized.TRANSFER_ASSET(assetName: asset.name)
+            avatarImageView.isHidden = false
+            nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
+            mixinIDLabel.text = user.identityNumber
             payStatusLabel.text = Localized.TRANSFER_PAY_PASSWORD
         } else if let address = address {
             self.address = address
-            userView.isHidden = true
-            addressView.isHidden = false
-            addressLabel.text = "\(address.label) (\(address.publicKey))"
-            transferAssetLabel.text = Localized.WALLET_WITHDRAWAL_ASSET(assetName: asset.name)
+            avatarImageView.isHidden = true
+            nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label)
+            mixinIDLabel.text = address.publicKey.toSimpleKey()
             payStatusLabel.text = Localized.WALLET_WITHDRAWAL_PAY_PASSWORD
         }
+        memoView.isHidden = memo.isEmpty
         transferLoadingView.stopAnimating()
         transferLoadingView.isHidden = true
         pinField.isHidden = false
@@ -83,38 +77,22 @@ class PayView: UIStackView {
         amountLabel.text =  String(format: "%@ %@", amount, asset.symbol)
         amountExchangeLabel.text = String(format: "≈ %@ USD", (amount.toDouble() * asset.priceUsd.toDouble()).toFormatLegalTender())
         paySuccessImageView.isHidden = true
+        dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
     }
 
-    @IBAction func cancelAction(_ sender: Any) {
+    @IBAction func dismissAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
     }
 
-    @IBAction func payAction(_ sender: Any) {
-        guard !payButton.isBusy else {
+    @IBAction func profileAction(_ sender: Any) {
+        guard let user = self.user, !avatarImageView.isHidden, !processing else {
             return
         }
-        payButton.isBusy = true
-        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: Localized.TRANSFER_TOUCH_ID_REASON) { [weak self](success, error) in
-            guard let weakSelf = self else {
-                return
-            }
-            DispatchQueue.main.async {
-                if success {
-                    //weakSelf.transferAction()
-                } else {
-                    if error?.errorCode == LAError.userCancel.rawValue {
-
-                    } else {
-                        weakSelf.passwordPayView.isHidden = false
-                        weakSelf.fingerPayView.isHidden = true
-                        weakSelf.pinField.becomeFirstResponder()
-                    }
-                    weakSelf.payButton.isBusy = false
-                }
-            }
-        }
+        superView?.dismissPopupControllerAnimated()
+        userWindow.updateUser(user: user).presentView()
     }
+    
 
     class func instance() -> PayView {
         return Bundle.main.loadNibNamed("PayView", owner: nil, options: nil)?.first as! PayView
@@ -186,12 +164,12 @@ extension PayView: PinFieldDelegate {
     }
 
     private func transferAction(pin: String) {
-        guard !transfering else {
+        guard !processing else {
             return
         }
-        transfering = true
-        cancelButton.isHidden = true
+        processing = true
         let assetId = asset.assetId
+        dismissButton.isEnabled = false
 
         let completion = { [weak self](result: APIResult<Snapshot>) in
             guard let weakSelf = self else {
@@ -201,21 +179,20 @@ extension PayView: PinFieldDelegate {
             switch result {
             case let .success(snapshot):
                 SnapshotDAO.shared.replaceSnapshot(snapshot: snapshot)
-                if weakSelf.addressView.isHidden {
-                    WalletUserDefault.shared.defalutTransferAssetId = assetId
-                } else {
+                if weakSelf.avatarImageView.isHidden {
                     WalletUserDefault.shared.lastWithdrawalAddress[assetId] = weakSelf.address.addressId
+                } else {
+                    WalletUserDefault.shared.defalutTransferAssetId = assetId
                 }
                 WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                 weakSelf.transferLoadingView.stopAnimating()
                 weakSelf.transferLoadingView.isHidden = true
-                weakSelf.payButton.isBusy = false
                 weakSelf.paySuccessImageView.isHidden = false
                 weakSelf.payStatusLabel.text = Localized.ACTION_DONE
                 weakSelf.playSuccessSound()
                 weakSelf.delayDismissWindow()
             case let .failure(error, _):
-                weakSelf.transfering = false
+                weakSelf.processing = false
                 weakSelf.superView?.dismissPopupControllerAnimated()
                 guard error.kind != .cancelled else {
                     return
@@ -229,10 +206,10 @@ extension PayView: PinFieldDelegate {
             }
         }
 
-        if addressView.isHidden {
-            AssetAPI.shared.transfer(assetId: assetId, counterUserId: user.userId, amount: amount, memo: memo, pin: pin, traceId: trackId, completion: completion)
-        } else {
+        if avatarImageView.isHidden {
             WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: amount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+        } else {
+            AssetAPI.shared.transfer(assetId: assetId, counterUserId: user.userId, amount: amount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         }
     }
 
@@ -242,7 +219,7 @@ extension PayView: PinFieldDelegate {
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.transfering = false
+            weakSelf.processing = false
             weakSelf.superView?.dismissPopupControllerAnimated()
             if let lastViewController = UIApplication.rootNavigationController()?.viewControllers.last, lastViewController is TransferViewController || lastViewController is WithdrawalViewController || lastViewController is CameraViewController {
                 UIApplication.rootNavigationController()?.popViewController(animated: true)

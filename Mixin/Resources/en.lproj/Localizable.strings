@@ -247,11 +247,10 @@
 "transfer_error_fee_insufficient" = "Insufficient transaction fee";
 "transfer_error_amount_too_small" = "Transfer amount too small";
 "transfer_error_pin_incorrect" = "PIN incorrect";
-"transfer_amount" = "Amount";
-"transfer_memo" = "Memo";
-"transfer_asset" = "%@ Transfer";
 "transfer_paid" = "Paid";
 "transfer_pay_password" = "Pay with PIN";
+"pay_transfer_title" = "Transfer to %@";
+"pay_withdrawal_title" = "Withdrawal to %@";
 
 // QRCode
 "myqrcode_title" = "My QR Code";

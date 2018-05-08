@@ -53,7 +53,7 @@ class UrlWindow: BottomSheetView {
 
     override func dismissPopupControllerAnimated() {
         if interceptDismiss {
-            if payView.transfering {
+            if payView.processing {
                 return
             }
             if payView.pinField.isFirstResponder {

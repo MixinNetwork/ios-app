@@ -334,11 +334,14 @@ public class Localized {
     }
     public static let TRANSFER_TRANSACTIONS = LocalizedString("transfer_transactions", comment: "TRANSACTIONS")
     public static let TRANSFER_TOUCH_ID_REASON = LocalizedString("transfer_touch_id_reason", comment: "Use an existing fingerprint to make the payment")
-    public static func TRANSFER_ASSET(assetName: String) -> String {
-        return String(format: LocalizedString("transfer_asset", comment: "%@ Transfer"), assetName)
-    }
     public static let TRANSFER_PAID = LocalizedString("transfer_paid", comment: "Paid")
     public static let TRANSFER_PAY_PASSWORD = LocalizedString("transfer_pay_password", comment: "Pay with PIN")
+    public static func PAY_TRANSFER_TITLE(fullname: String) -> String {
+        return String(format: LocalizedString("pay_transfer_title", comment: "Transfer to %@"), fullname)
+    }
+    public static func PAY_WITHDRAWAL_TITLE(label: String) -> String {
+        return String(format: LocalizedString("pay_withdrawal_title", comment: "Withdrawal to %@"), label)
+    }
 
     // Setting
     public static let SETTING_TITLE = LocalizedString("setting_title", comment: "Setting")

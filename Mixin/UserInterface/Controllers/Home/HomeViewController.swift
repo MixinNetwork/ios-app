@@ -131,7 +131,7 @@ class HomeViewController: UIViewController {
     }
     
     @objc func dismissSearch(_ sender: Any) {
-        searchViewController?.keywordTextField.resignFirstResponder()
+        searchViewController?.dismiss()
         UIView.animate(withDuration: 0.3) {
             self.searchContainerView.alpha = 0
         }

@@ -79,6 +79,7 @@ class BaseAPI {
     
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()
+    private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")
 
     static func getJwtHeaders(request: URLRequest, uri: String) -> HTTPHeaders {
         var headers = baseHeaders
@@ -232,48 +233,48 @@ extension BaseAPI {
         guard AccountAPI.shared.didLogin else {
             return .failure(JobError.clientError(code: 401))
         }
-        let semaphore = DispatchSemaphore(value: 0)
+
         var result: Result<T>?
         var errorCode: Int?
-        var errorMsg = ""
-        let req = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
-            .validate(statusCode: 200...299)
-            .responseData(completionHandler: { (response) in
-                let httpStatusCode = response.response?.statusCode ?? -1
-                switch response.result {
-                case let .success(data):
-                    do {
-                        let responseObject = try BaseAPI.jsonDecoder.decode(ResponseObject<T>.self, from: data)
-                        if let data = responseObject.data {
-                            result = .success(data)
-                        } else if let error = responseObject.error {
-                            errorCode = error.code
-                            errorMsg = error.description
-                        } else {
-                            if let model = try? BaseAPI.jsonDecoder.decode(T.self, from: data) {
-                                result = .success(model)
+
+        dispatchQueue.sync {
+            let semaphore = DispatchSemaphore(value: 0)
+            var errorMsg = ""
+
+            let req = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
+                .validate(statusCode: 200...299)
+                .responseData(completionHandler: { (response) in
+                    let httpStatusCode = response.response?.statusCode ?? -1
+                    switch response.result {
+                    case let .success(data):
+                        do {
+                            let responseObject = try BaseAPI.jsonDecoder.decode(ResponseObject<T>.self, from: data)
+                            if let data = responseObject.data {
+                                result = .success(data)
+                            } else if let error = responseObject.error {
+                                errorCode = error.code
+                                errorMsg = error.description
                             } else {
-                                errorCode = httpStatusCode
+                                if let model = try? BaseAPI.jsonDecoder.decode(T.self, from: data) {
+                                    result = .success(model)
+                                } else {
+                                    errorCode = httpStatusCode
+                                }
                             }
+                        } catch {
+                            errorCode = error.errorCode
+                            errorMsg = error.localizedDescription
                         }
-                    } catch {
-                        errorCode = error.errorCode
+                    case let .failure(error):
+                        errorCode = httpStatusCode
                         errorMsg = error.localizedDescription
                     }
-                case let .failure(error):
-                    errorCode = httpStatusCode
-                    errorMsg = error.localizedDescription
-                }
-                semaphore.signal()
-            })
+                    semaphore.signal()
+                })
 
-        if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut {
-            return .failure(JobError.timeoutError)
-        }
-
-        if let result = result {
-            return result
-        } else if let errorCode = errorCode {
+            if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut {
+                result = .failure(JobError.timeoutError)
+            }
             if errorCode == 401 {
                 var userInfo = UIApplication.getTrackUserInfo()
                 userInfo["request"] = req.debugDescription
@@ -281,6 +282,11 @@ extension BaseAPI {
                 UIApplication.trackError("BaseAPI", action: "401", userInfo: userInfo)
                 AccountAPI.shared.logout()
             }
+        }
+
+        if let result = result {
+            return result
+        } else if let errorCode = errorCode {
             return .failure(JobError.instance(code: errorCode))
         } else {
             return .failure(JobError.networkError)

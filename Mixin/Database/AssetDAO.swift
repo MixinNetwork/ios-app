@@ -9,7 +9,7 @@ final class AssetDAO {
     FROM assets a1
     LEFT JOIN assets a2 ON a1.chain_id = a2.asset_id
     """
-    private static let sqlOrder = "AND NOT (a1.balance == 0 AND a1.asset_id != a1.chain_id) ORDER BY a1.balance * a1.price_usd DESC, a1.price_usd DESC, cast(a1.balance AS REAL) DESC, a1.name DESC"
+    private static let sqlOrder = "AND NOT (a1.balance = 0 AND a1.asset_id != a1.chain_id) ORDER BY a1.balance * a1.price_usd DESC, a1.price_usd DESC, cast(a1.balance AS REAL) DESC, a1.name DESC"
     private static let sqlQuery = "\(sqlQueryTable) WHERE 1 = 1 \(sqlOrder)"
     private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a1.balance > 0 \(sqlOrder) LIMIT 1"
     private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a1.balance > 0 \(sqlOrder)"

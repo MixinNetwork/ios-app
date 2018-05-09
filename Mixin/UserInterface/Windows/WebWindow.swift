@@ -8,7 +8,9 @@ class WebWindow: ZoomWindow {
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
 
     private let userContentController = WKUserContentController()
-    private let swipeZoomVelocityThreshold: CGFloat = 800
+    private let swipeToDismissByPositionThresholdHeight: CGFloat = 180
+    private let swipeToDismissByVelocityThresholdHeight: CGFloat = 250
+    private let swipeToDismissByVelocityThresholdVelocity: CGFloat = 1200
 
     private lazy var webView: MixinWebView = {
         let config = WKWebViewConfiguration()
@@ -128,17 +130,24 @@ extension WebWindow: UIScrollViewDelegate {
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if abs(velocity.y) > 0.01 {
-            let suggestedWindowMaximum = velocity.y > 0
-            if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
-                windowMaximum = suggestedWindowMaximum
-                zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+        let shouldDismissByPosition = webViewWrapperHeightConstraint.constant < swipeToDismissByPositionThresholdHeight
+        let shouldDismissByVelocity = webViewWrapperHeightConstraint.constant < swipeToDismissByVelocityThresholdHeight
+            && scrollView.panGestureRecognizer.velocity(in: scrollView).y > swipeToDismissByVelocityThresholdVelocity
+        if shouldDismissByPosition || shouldDismissByVelocity {
+            dismissPopupControllerAnimated()
+        } else {
+            if abs(velocity.y) > 0.01 {
+                let suggestedWindowMaximum = velocity.y > 0
+                if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
+                    windowMaximum = suggestedWindowMaximum
+                    zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+                }
             }
+            webViewWrapperHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+                self.layoutIfNeeded()
+            }, completion: nil)
         }
-        webViewWrapperHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-            self.layoutIfNeeded()
-        }, completion: nil)
     }
     
 }

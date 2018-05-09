@@ -151,16 +151,10 @@ extension UrlWindow {
                 }
 
                 weakSelf.showLoginView = true
-                if let webWindow = UIApplication.shared.keyWindow?.subviews.first(where: { $0 is WebWindow }) as? WebWindow {
-                    weakSelf.loginView.contentHeightConstraint.constant = webWindow.webViewWrapperView.frame.height
-                } else {
-                    weakSelf.loginView.contentHeightConstraint.constant = 428
-                }
                 weakSelf.containerView.addSubview(weakSelf.loginView)
                 weakSelf.loginView.snp.makeConstraints({ (make) in
                     make.edges.equalToSuperview()
                 })
-                weakSelf.layoutIfNeeded()
                 weakSelf.loginView.render(authInfo: authorization, assets: assets, superView: weakSelf)
                 weakSelf.successHandler()
 

@@ -208,3 +208,41 @@ extension LoginView: UITableViewDelegate, UITableViewDataSource {
         selectedScopes.remove(at: idx)
     }
 }
+
+extension LoginView: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let superView = superView, scrollView.isTracking && !scrollView.isDecelerating else {
+            return
+        }
+        let newConstant = contentHeightConstraint.constant + scrollView.contentOffset.y
+        if newConstant <= maximumWebViewHeight {
+            contentHeightConstraint.constant = newConstant
+            layoutIfNeeded()
+            scrollView.contentOffset.y = 0
+            let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
+            if windowMaximum != shouldMaximizeWindow {
+                windowMaximum = shouldMaximizeWindow
+                zoomButton.setImage(shouldMaximizeWindow ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        guard let superView = superView else {
+            return
+        }
+        if abs(velocity.y) > 0.01 {
+            let suggestedWindowMaximum = velocity.y > 0
+            if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
+                windowMaximum = suggestedWindowMaximum
+                zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+        contentHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            superView.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+}

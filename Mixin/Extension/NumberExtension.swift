@@ -31,6 +31,6 @@ extension Double {
     }
 
     func formatSimpleBalance() -> String {
-        return NumberFormatter().string(from: NSNumber(value: self))?.formatSimpleBalance() ?? String(format: "%.6f", self)
+        return NumberFormatter.balanceFormatter.string(from: NSNumber(value: self))?.formatSimpleBalance() ?? String(format: "%.6f", self)
     }
 }

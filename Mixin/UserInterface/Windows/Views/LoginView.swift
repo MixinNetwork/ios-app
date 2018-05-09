@@ -10,6 +10,7 @@ class LoginView: UIView {
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var zoomButton: UIButton!
 
+    @IBOutlet weak var contentHeightConstraint: LayoutConstraintCompat!
     @IBOutlet weak var iconTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var iconBottomConstaint: NSLayoutConstraint!
 
@@ -17,9 +18,20 @@ class LoginView: UIView {
     private var authInfo: AuthorizationResponse!
     private var assets: [AssetItem] = []
     private var windowMaximum = false
-    private var minimumWebViewHeight: CGFloat = 0
+    private var minimumWebViewHeight: CGFloat = 428
     private var loginSuccess = false
 
+    private var maximumWebViewHeight: CGFloat {
+        guard let superView = superView else {
+            return minimumWebViewHeight
+        }
+        if #available(iOS 11.0, *) {
+            return superView.frame.height - 56 - max(safeAreaInsets.top, 20) - safeAreaInsets.bottom
+        } else {
+            return superView.frame.height - 56 - 20
+        }
+    }
+    
     private enum Scope: String {
         case PROFILE = "PROFILE:READ"
         case PHONE = "PHONE:READ"
@@ -68,6 +80,8 @@ class LoginView: UIView {
 
         prepareTableView()
         tableView.reloadData()
+        windowMaximum = contentHeightConstraint.constant > minimumWebViewHeight
+        zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
         DispatchQueue.main.async {
             for idx in 0..<self.scopes.count {
                 self.tableView.selectRow(at: IndexPath(row: idx, section: 0), animated: false, scrollPosition: .none)
@@ -82,22 +96,13 @@ class LoginView: UIView {
         windowMaximum = !windowMaximum
         zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
 
-        if minimumWebViewHeight == 0 {
-            minimumWebViewHeight = self.frame.height
-        }
-
-        let oldHeight = self.frame.height
-        let targetHeight: CGFloat
-        if #available(iOS 11.0, *) {
-            targetHeight = windowMaximum ? superView.frame.height - max(safeAreaInsets.top, 20) - safeAreaInsets.bottom : minimumWebViewHeight
-        } else {
-            targetHeight = windowMaximum ? superView.frame.height - 20 : minimumWebViewHeight
-        }
+        let oldHeight = contentHeightConstraint.constant
+        let targetHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
         let scale = targetHeight / oldHeight
 
         iconTopConstraint.constant = iconTopConstraint.constant * scale
         iconBottomConstaint.constant = iconBottomConstaint.constant * scale
-        superView.contentHeightConstraint.constant = targetHeight
+        contentHeightConstraint.constant = targetHeight
         UIView.animate(withDuration: 0.25) {
             self.layoutIfNeeded()
             superView.layoutIfNeeded()

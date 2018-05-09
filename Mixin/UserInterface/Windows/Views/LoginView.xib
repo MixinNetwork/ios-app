@@ -177,6 +177,7 @@
             <connections>
                 <outlet property="authButton" destination="OQX-er-Pi3" id="JLT-6I-Tbe"/>
                 <outlet property="closeButton" destination="DiI-uj-Xy3" id="Rg0-g8-6RD"/>
+                <outlet property="contentHeightConstraint" destination="5bj-cY-Eyf" id="V8T-Il-VGZ"/>
                 <outlet property="iconBottomConstaint" destination="sxn-bg-xwa" id="zNP-Ry-WYP"/>
                 <outlet property="iconImageView" destination="8oA-Mi-qQD" id="fuF-Qr-5gS"/>
                 <outlet property="iconTopConstraint" destination="RDP-tI-918" id="qQ6-DF-dfn"/>

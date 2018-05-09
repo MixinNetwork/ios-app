@@ -10,6 +10,7 @@ class LoginView: UIView {
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var zoomButton: UIButton!
 
+    @IBOutlet weak var contentHeightConstraint: LayoutConstraintCompat!
     @IBOutlet weak var iconTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var iconBottomConstaint: NSLayoutConstraint!
 
@@ -17,9 +18,21 @@ class LoginView: UIView {
     private var authInfo: AuthorizationResponse!
     private var assets: [AssetItem] = []
     private var windowMaximum = false
-    private var minimumWebViewHeight: CGFloat = 0
+    private var minimumWebViewHeight: CGFloat = 428
     private var loginSuccess = false
+    private var backgroundWindow: WebWindow?
 
+    private var maximumWebViewHeight: CGFloat {
+        guard let superView = superView else {
+            return minimumWebViewHeight
+        }
+        if #available(iOS 11.0, *) {
+            return superView.frame.height - 56 - max(safeAreaInsets.top, 20) - safeAreaInsets.bottom
+        } else {
+            return superView.frame.height - 56 - 20
+        }
+    }
+    
     private enum Scope: String {
         case PROFILE = "PROFILE:READ"
         case PHONE = "PHONE:READ"
@@ -62,12 +75,20 @@ class LoginView: UIView {
         if !superView.fromWeb {
             closeButton.setImage(#imageLiteral(resourceName: "ic_titlebar_close"), for: .normal)
         }
+        
+        if let webWindow = UIApplication.shared.keyWindow?.subviews.first(where: { $0 is WebWindow }) as? WebWindow {
+            self.backgroundWindow = webWindow
+        }
+        contentHeightConstraint.constant = backgroundWindow?.webViewWrapperView.frame.height ?? minimumWebViewHeight
+        superView.layoutIfNeeded()
 
         titleLabel.text = authInfo.app.name
         iconImageView.sd_setImage(with: URL(string: authInfo.app.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
 
         prepareTableView()
         tableView.reloadData()
+        windowMaximum = contentHeightConstraint.constant > minimumWebViewHeight
+        zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
         DispatchQueue.main.async {
             for idx in 0..<self.scopes.count {
                 self.tableView.selectRow(at: IndexPath(row: idx, section: 0), animated: false, scrollPosition: .none)
@@ -82,24 +103,15 @@ class LoginView: UIView {
         windowMaximum = !windowMaximum
         zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
 
-        if minimumWebViewHeight == 0 {
-            minimumWebViewHeight = self.frame.height
-        }
-
-        let oldHeight = self.frame.height
-        let targetHeight: CGFloat
-        if #available(iOS 11.0, *) {
-            targetHeight = windowMaximum ? superView.frame.height - max(safeAreaInsets.top, 20) - safeAreaInsets.bottom : minimumWebViewHeight
-        } else {
-            targetHeight = windowMaximum ? superView.frame.height - 20 : minimumWebViewHeight
-        }
+        let oldHeight = contentHeightConstraint.constant
+        let targetHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
         let scale = targetHeight / oldHeight
 
         iconTopConstraint.constant = iconTopConstraint.constant * scale
         iconBottomConstaint.constant = iconBottomConstaint.constant * scale
-        superView.contentHeightConstraint.constant = targetHeight
+        contentHeightConstraint.constant = targetHeight
         UIView.animate(withDuration: 0.25) {
-            self.layoutIfNeeded()
+            self.backgroundWindow?.zoomAnimation(targetHeight: self.contentHeightConstraint.constant)
             superView.layoutIfNeeded()
         }
     }
@@ -202,4 +214,44 @@ extension LoginView: UITableViewDelegate, UITableViewDataSource {
 
         selectedScopes.remove(at: idx)
     }
+}
+
+extension LoginView: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let superView = superView, scrollView.isTracking && !scrollView.isDecelerating else {
+            return
+        }
+        let newConstant = contentHeightConstraint.constant + scrollView.contentOffset.y
+        if newConstant <= maximumWebViewHeight {
+            contentHeightConstraint.constant = newConstant
+            self.backgroundWindow?.zoomAnimation(targetHeight: self.contentHeightConstraint.constant)
+            superView.layoutIfNeeded()
+            scrollView.contentOffset.y = 0
+            let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
+            if windowMaximum != shouldMaximizeWindow {
+                windowMaximum = shouldMaximizeWindow
+                zoomButton.setImage(shouldMaximizeWindow ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        guard let superView = superView else {
+            return
+        }
+        if abs(velocity.y) > 0.01 {
+            let suggestedWindowMaximum = velocity.y > 0
+            if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
+                windowMaximum = suggestedWindowMaximum
+                zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
+            }
+        }
+        contentHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            self.backgroundWindow?.zoomAnimation(targetHeight: self.contentHeightConstraint.constant)
+            superView.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
 }

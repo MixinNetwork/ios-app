@@ -158,7 +158,6 @@ extension UrlWindow {
                 weakSelf.loginView.render(authInfo: authorization, assets: assets, superView: weakSelf)
                 weakSelf.successHandler()
 
-                weakSelf.contentHeightConstraint.constant = 484
                 UIView.animate(withDuration: 0.15, animations: {
                     weakSelf.layoutIfNeeded()
                 })

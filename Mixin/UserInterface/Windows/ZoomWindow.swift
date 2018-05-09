@@ -32,6 +32,12 @@ class ZoomWindow: BottomSheetView {
         self.layoutIfNeeded()
     }
 
+    func zoomAnimation(targetHeight: CGFloat, zoomImage: UIImage) {
+        self.webViewWrapperHeightConstraint.constant = targetHeight
+        self.zoomButton.setImage(zoomImage, for: .normal)
+        self.layoutIfNeeded()
+    }
+
     internal func toggleZoomAction() {
         windowMaximum = !windowMaximum
         zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)

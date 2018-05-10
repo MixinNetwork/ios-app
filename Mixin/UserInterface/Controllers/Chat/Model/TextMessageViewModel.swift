@@ -2,17 +2,7 @@ import UIKit
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
     
-    struct Link {
-        let hitFrame: CGRect
-        let backgroundPath: UIBezierPath
-        let url: URL
-    }
-    
-    static let linkDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
-    
-    private(set) var lines = [CTLine]()
-    private(set) var lineOrigins = [CGPoint]()
-    private(set) var links = [Link]()
+    private(set) var content: CoreTextLabel.Content?
     private(set) var contentLabelFrame = CGRect.zero
     private(set) var highlightPaths = [UIBezierPath]()
     
@@ -48,12 +38,12 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         let text = message.content
         let fullRange = NSRange(location: 0, length: (text as NSString).length)
         // Detect links
-        var links = [NSRange: URL]()
+        var linksMap = [NSRange: URL]()
         if let fixedLinks = fixedLinks {
-            links = fixedLinks
-        } else if let matches = TextMessageViewModel.linkDetector?.matches(in: text, options: [], range: fullRange) {
+            linksMap = fixedLinks
+        } else if let matches = Link.detector?.matches(in: text, options: [], range: fullRange) {
             for match in matches {
-                links[match.range] = match.url
+                linksMap[match.range] = match.url
             }
         }
         // Set attributes
@@ -77,8 +67,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             .ctForegroundColor: textColor.cgColor
         ]
         str.setAttributes(attr, range: fullRange)
-        for range in links.keys {
-            str.setColor(linkColor, for: range)
+        for range in linksMap.keys {
+            str.setCTForegroundColor(linkColor, for: range)
         }
         // Make CTLine and Origins
         let maxLabelWidth = layoutWidth - MessageViewModel.backgroundImageMargin.horizontal - contentMargin.horizontal
@@ -90,12 +80,13 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         }
         let path = CGPath(rect: CGRect(origin: .zero, size: textSize), transform: nil)
         let frame = CTFramesetterCreateFrame(framesetter, .zero, path, nil)
-        lines = CTFrameGetLines(frame) as! [CTLine]
+        let lines = CTFrameGetLines(frame) as! [CTLine]
         var origins = [CGPoint](repeating: .zero, count: lines.count)
         CTFrameGetLineOrigins(frame, .zero, &origins)
-        self.lineOrigins = origins.map{ CGPoint(x: ceil($0.x), y: ceil($0.y)) }
+        let lineOrigins = origins.map{ CGPoint(x: ceil($0.x), y: ceil($0.y)) }
         // Make Links
-        for link in links {
+        var links = [Link]()
+        for link in linksMap {
             let linkRects: [CGRect] = lines.enumerated().flatMap({ (index, line) -> CGRect? in
                 let lineOrigin = lineOrigins[index]
                 let cfLineRange = CTLineGetStringRange(line)
@@ -116,12 +107,11 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 }
             }
             if let path = path {
-                let links = linkRects.map {
-                    Link(hitFrame: $0, backgroundPath: path, url: link.value)
-                }
-                self.links.append(contentsOf: links)
+                links += linkRects.map{ Link(hitFrame: $0, backgroundPath: path, url: link.value) }
             }
         }
+        // Make content
+        content = CoreTextLabel.Content(lines: lines, lineOrigins: lineOrigins, links: links)
         // Calculate content size
         let time = message.createdAt.toUTCDate().timeHoursAndMinutes() as NSString
         let timeSize = time.size(withAttributes: [.font: DetailInfoMessageViewModel.timeFont])
@@ -179,22 +169,25 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     func highlight(keyword: String) {
-        let content = message.content as NSString
-        var searchRange = NSRange(location: 0, length: content.length)
+        guard let content = content else {
+            return
+        }
+        let messageContent = message.content as NSString
+        var searchRange = NSRange(location: 0, length: messageContent.length)
         var highlightRanges = [NSRange]()
-        while searchRange.location < content.length {
-            let foundRange = content.range(of: keyword, options: .caseInsensitive, range: searchRange)
+        while searchRange.location < messageContent.length {
+            let foundRange = messageContent.range(of: keyword, options: .caseInsensitive, range: searchRange)
             if foundRange.location != NSNotFound {
                 highlightRanges.append(foundRange)
                 searchRange.location = foundRange.location + foundRange.length
-                searchRange.length = content.length - searchRange.location
+                searchRange.length = messageContent.length - searchRange.location
             } else {
                 break
             }
         }
-        assert(lines.count == lineOrigins.count)
-        for (i, line) in lines.enumerated() {
-            let lineOrigin = lineOrigins[i]
+        assert(content.lines.count == content.lineOrigins.count)
+        for (i, line) in content.lines.enumerated() {
+            let lineOrigin = content.lineOrigins[i]
             for highlightRange in highlightRanges {
                 guard let highlightRect = line.frame(forRange: highlightRange, lineOrigin: lineOrigin) else {
                     continue
@@ -209,75 +202,4 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         highlightPaths = []
     }
 
-}
-
-fileprivate extension CTLine {
-    
-    func frame(forRange range: NSRange, lineOrigin: CGPoint) -> CGRect? {
-        var highlightRect: CGRect?
-        let runs = CTLineGetGlyphRuns(self) as! [CTRun]
-        for run in runs {
-            let cfRunRange = CTRunGetStringRange(run)
-            let runRange = NSRange(cfRange: cfRunRange)
-            if let intersection = runRange.intersection(range) {
-                var ascent: CGFloat = 0
-                var descent: CGFloat = 0
-                var leading: CGFloat = 0
-                let highlightRange = CFRange(location: intersection.location - runRange.location, length: intersection.length)
-                let width = CGFloat(CTRunGetTypographicBounds(run, highlightRange, &ascent, &descent, &leading))
-                let offsetX = CTLineGetOffsetForStringIndex(self, intersection.location, nil)
-                let newRect = CGRect(x: lineOrigin.x + offsetX - leading,
-                                     y: lineOrigin.y - descent,
-                                     width: width + leading,
-                                     height: ascent + descent)
-                if let oldRect = highlightRect {
-                    highlightRect = oldRect.union(newRect)
-                } else {
-                    highlightRect = newRect
-                }
-            }
-        }
-        return highlightRect
-    }
-    
-}
-
-fileprivate extension NSAttributedStringKey {
-    static let ctFont = kCTFontAttributeName as NSAttributedStringKey
-    static let ctForegroundColor = kCTForegroundColorAttributeName as NSAttributedStringKey
-    static let ctParagraphStyle = kCTParagraphStyleAttributeName as NSAttributedStringKey
-}
-
-fileprivate extension CFRange {
-    static let zero = CFRange(location: 0, length: 0)
-    init(nsRange: NSRange) {
-        self = CFRange(location: nsRange.location, length: nsRange.length)
-    }
-}
-
-fileprivate extension NSRange {
-    init(cfRange: CFRange) {
-        self = NSRange(location: cfRange.location, length: cfRange.length)
-    }
-}
-
-fileprivate extension NSMutableAttributedString {
-    
-    func setFont(_ font: CTFont) {
-        let fullRange = NSRange(location: 0, length: length)
-        removeAttribute(.ctFont, range: fullRange)
-        let attr = [NSAttributedStringKey.ctFont: font]
-        addAttributes(attr, range: fullRange)
-    }
-    
-    func setColor(_ color: UIColor, for range: NSRange) {
-        removeAttribute(.ctForegroundColor, range: range)
-        let attr = [NSAttributedStringKey.ctForegroundColor: color.cgColor]
-        addAttributes(attr, range: range)
-    }
-    
-    func setColor(_ color: UIColor) {
-        setColor(color, for: NSRange(location: 0, length: length))
-    }
-    
 }

@@ -1,5 +1,6 @@
-import Foundation
+import UIKit
 import Goutils
+import CoreText
 
 extension String {
 
@@ -126,5 +127,20 @@ extension String {
     func formatFullBalance() -> String {
         return NumberFormatter.balanceFormatter.string(from: NSDecimalNumber(string: self)) ?? self
     }
+}
+
+extension NSAttributedStringKey {
+    static let ctFont = kCTFontAttributeName as NSAttributedStringKey
+    static let ctForegroundColor = kCTForegroundColorAttributeName as NSAttributedStringKey
+    static let ctParagraphStyle = kCTParagraphStyleAttributeName as NSAttributedStringKey
+}
+
+extension NSMutableAttributedString {
+    
+    func setCTForegroundColor(_ color: UIColor, for range: NSRange) {
+        removeAttribute(.ctForegroundColor, range: range)
+        addAttributes([.ctForegroundColor: color.cgColor], range: range)
+    }
+    
 }
 

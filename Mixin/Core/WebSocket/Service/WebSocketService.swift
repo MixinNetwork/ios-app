@@ -299,6 +299,18 @@ extension WebSocketService {
                     result = blazeMessage
                 case let .failure(error):
                     if let responseError = error as? APIError {
+                        if responseError.code == 10002 {
+                            var userInfo = UIApplication.getTrackUserInfo()
+                            if let param = blazeMessage.params {
+                                userInfo["category"] = param.category ?? ""
+                                userInfo["messageId"] = param.messageId ?? ""
+                                userInfo["conversationId"] = param.conversationId ?? ""
+                                userInfo["status"] = param.status ?? ""
+                                userInfo["recipientId"] = param.recipientId ?? ""
+                                userInfo["data"] = param.data ?? ""
+                            }
+                            UIApplication.trackError("The request data has invalid field", action: blazeMessage.action, userInfo: userInfo)
+                        }
                         err = responseError.toJobError()
                     } else {
                         err = error.toJobError()

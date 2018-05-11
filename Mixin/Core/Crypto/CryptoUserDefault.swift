@@ -34,7 +34,7 @@ class CryptoUserDefault {
 
     var statusOffset: Int64 {
         get {
-            return session.object(forKey: keyStatusOffset) as? Int64 ?? 0
+            return session.object(forKey: keyStatusOffset) as? Int64 ?? Date().nanosecond()
         }
         set {
             session.set(newValue, forKey: keyStatusOffset)

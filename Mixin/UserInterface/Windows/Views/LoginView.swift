@@ -142,12 +142,14 @@ class LoginView: UIView {
                 return
             }
             switch result {
-            case .success:
+            case let .success(response):
                 weakSelf.loginSuccess = true
                 weakSelf.superView?.dismissPopupControllerAnimated()
                 if UIApplication.rootNavigationController()?.viewControllers.last is CameraViewController {
                     UIApplication.rootNavigationController()?.popViewController(animated: true)
                 }
+
+                UIApplication.shared.tryOpenThirdApp(callback: response.app.redirectUri)
             case let .failure(error, _):
                 weakSelf.authButton.isBusy = false
                 SwiftMessages.showToast(message: error.kind.localizedDescription ?? error.description, backgroundColor: .hintRed)

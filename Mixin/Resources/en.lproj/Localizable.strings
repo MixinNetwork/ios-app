@@ -177,13 +177,7 @@
 "wallet_title_withdrawal" = "Withdrawal";
 "wallet_transfer_out" = "Transfer Out";
 "wallet_symbol_other" = "Other";
-"wallet_password_title" = "Set PIN";
-"wallet_password_cofirm_title" = "Confirm PIN";
 "wallet_password_verify_title" = "Old PIN";
-"wallet_password_inconsistency" = "The PIN is not the same twice, please reset it";
-"wallet_password_tips" = "Please set a 6 digit PIN and remember it. If lost, there is no way to recover your wallet.";
-"wallet_password_tips_again" = "Please confirm the 6 digit PIN and remember it. If lost, there is no way to recover your wallet.";
-"wallet_password_tips_verify" = "Please enter the 6 digit PIN to verify.";
 "wallet_password_too_many_requests" = "You have tried more than 5 times, please wait at least 24 hours to try again.";
 "wallet_change_password" = "Change PIN";
 "wallet_change_password_success" = "Change wallet PIN successfully";
@@ -191,8 +185,6 @@
 "wallet_snapshot_from" = "From %@";
 "wallet_snapshot_to" = "To %@";
 "wallet_deposit" = "Deposit";
-"wallet_pin_tips_title" = "Enter your Wallet PIN";
-"wallet_pin_tips_description" = "You'll be asked for it periodically to help you remember it.";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";
@@ -207,6 +199,18 @@
 "wallet_withdrawal_pay_password" = "Withdrawal with PIN";
 "wallet_blockchian_not_in_sync" = "Blockchain not in sync.";
 "wallet_no_price" = "N/A";
+"wallet_pin_init_title" = "Set PIN";
+"wallet_pin_init_tips1" = "Please set a 6 digit PIN.";
+"wallet_pin_init_tips2" = "Please confirm the 6 digit PIN and remember it. If lost, there is no way to recover your wallet.";
+"wallet_pin_init_tips3" = "Please confirm your 6 digit PIN again. It's rare to see a third confirmation somewhere else, so please remember the PIN is unrecoverable if lost.";
+"wallet_pin_init_tips4" = "Yes, there is a forth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
+"wallet_pin_change_tips" = "Please set a new 6 digit PIN.";
+"wallet_pin_verify_tips" = "Please enter the 6 digit PIN to verify.";
+"wallet_pin_inconsistency" = "The PIN is not the same twice, please reset it";
+"wallet_pin_too_simple" = "The PIN is too simple and insecure.";
+"wallet_pin_confirm_title" = "Confirm PIN";
+"wallet_pin_tips_title" = "Enter your Wallet PIN";
+"wallet_pin_tips_description" = "You'll be asked for it periodically to help you remember it.";
 
 // Transaction
 "transaction_title" = "Transaction";

@@ -11,25 +11,25 @@ class DatabaseUserDefault {
         return "key_database_signal_version_\(AccountAPI.shared.accountIdentityNumber)"
     }
 
-    private let session = UserDefaults(suiteName: SuiteName.database)
+    private let session = UserDefaults(suiteName: SuiteName.database)!
 
     var mixinDatabaseVersion: Int {
         get {
-            return session?.integer(forKey: keyMixinDatabaseVersion) ?? 0
+            return session.integer(forKey: keyMixinDatabaseVersion)
         }
         set {
-            session?.set(newValue, forKey: keyMixinDatabaseVersion)
-            session?.synchronize()
+            session.set(newValue, forKey: keyMixinDatabaseVersion)
+            session.synchronize()
         }
     }
 
     var signalDatabaseVersion: Int {
         get {
-            return session?.integer(forKey: keySignalDatabaseVersion) ?? 0
+            return session.integer(forKey: keySignalDatabaseVersion)
         }
         set {
-            session?.set(newValue, forKey: keySignalDatabaseVersion)
-            session?.synchronize()
+            session.set(newValue, forKey: keySignalDatabaseVersion)
+            session.synchronize()
         }
     }
 

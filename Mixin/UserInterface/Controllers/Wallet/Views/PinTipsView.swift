@@ -103,6 +103,9 @@ extension PinTipsView: PinFieldDelegate {
             weakSelf.loadingView.isHidden = true
             switch result {
             case .success:
+                if WalletUserDefault.shared.checkPinInterval < WalletUserDefault.shared.checkMaxInterval {
+                    WalletUserDefault.shared.checkPinInterval *= 2
+                }
                 WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                 weakSelf.successCallback?(pin)
                 weakSelf.pinField.resignFirstResponder()

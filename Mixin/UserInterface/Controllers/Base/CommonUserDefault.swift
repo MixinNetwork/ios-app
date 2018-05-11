@@ -17,23 +17,23 @@ class CommonUserDefault {
         return "default_unread_announcement_\(AccountAPI.shared.accountIdentityNumber)"
     }
     
-    private let session = UserDefaults(suiteName: SuiteName.common)
+    private let session = UserDefaults(suiteName: SuiteName.common)!
 
     private var conversationDraft: [String: Any] {
         get {
-            return session?.dictionary(forKey: keyConversationDraft) ?? [:]
+            return session.dictionary(forKey: keyConversationDraft) ?? [:]
         }
         set {
-            session?.set(newValue, forKey: keyConversationDraft)
+            session.set(newValue, forKey: keyConversationDraft)
         }
     }
 
     private var hasUnreadAnnouncement: [String: Bool] {
         get {
-            return (session?.dictionary(forKey: keyHasUnreadAnnouncement) as? [String : Bool]) ?? [:]
+            return (session.dictionary(forKey: keyHasUnreadAnnouncement) as? [String : Bool]) ?? [:]
         }
         set {
-            session?.set(newValue, forKey: keyHasUnreadAnnouncement)
+            session.set(newValue, forKey: keyHasUnreadAnnouncement)
         }
     }
     
@@ -50,18 +50,18 @@ class CommonUserDefault {
     }
 
     var lastUpdateOrInstallVersion: String? {
-        return session?.string(forKey: keyLastUpdateOrInstallVersion)
+        return session.string(forKey: keyLastUpdateOrInstallVersion)
     }
 
     func checkUpdateOrInstallVersion() {
         if lastUpdateOrInstallVersion != Bundle.main.bundleVersion {
-            session?.set(Bundle.main.bundleVersion, forKey: keyLastUpdateOrInstallVersion)
-            session?.set(Date().toUTCString(), forKey: keyLastUpdateOrInstallDate)
+            session.set(Bundle.main.bundleVersion, forKey: keyLastUpdateOrInstallVersion)
+            session.set(Date().toUTCString(), forKey: keyLastUpdateOrInstallDate)
         }
     }
 
     var lastUpdateOrInstallTime: String {
-        return session?.string(forKey: keyLastUpdateOrInstallDate) ?? Date().toUTCString()
+        return session.string(forKey: keyLastUpdateOrInstallDate) ?? Date().toUTCString()
     }
 
     func hasUnreadAnnouncement(conversationId: String) -> Bool {

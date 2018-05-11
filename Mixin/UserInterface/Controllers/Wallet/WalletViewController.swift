@@ -17,7 +17,7 @@ class WalletViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime > 60 * 60 * 24 {
+        if Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime > WalletUserDefault.shared.checkPinInterval {
             PinTipsView.instance().presentPopupControllerAnimated()
         }
     }

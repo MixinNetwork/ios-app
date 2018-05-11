@@ -175,13 +175,7 @@
 "wallet_title_withdrawal" = "提现";
 "wallet_transfer_out" = "转出";
 "wallet_symbol_other" = "其它";
-"wallet_password_title" = "设置支付密码";
-"wallet_password_cofirm_title" = "确认支付密码";
 "wallet_password_verify_title" = "验证旧的支付密码";
-"wallet_password_inconsistency" = "两次密码不一致，请重新设置";
-"wallet_password_tips" = "输入 6 位数字支付密码并牢记它。如果忘记，你的钱包将无法找回！";
-"wallet_password_tips_again" = "再次输入支付密码并牢记它。如果忘记，你的钱包将无法找回！";
-"wallet_password_tips_verify" = "输入旧的 6 位数字支付密码";
 "wallet_password_too_many_requests" = "你已经尝试了超过 5 次，请等待 24 小时后再次尝试。";
 "wallet_change_password" = "修改支付密码";
 "wallet_change_password_success" = "修改支付密码成功";
@@ -189,8 +183,6 @@
 "wallet_snapshot_from" = "转账来自%@";
 "wallet_snapshot_to" = "你转账给%@";
 "wallet_deposit" = "充值";
-"wallet_pin_tips_title" = "输入你的钱包密码";
-"wallet_pin_tips_description" = "定期输入钱包密码有助于记住该密码";
 "wallet_menu_show_hidden_assets" = "隐藏资产";
 "wallet_menu_show_asset" = "显示资产";
 "wallet_menu_hide_asset" = "隐藏资产";
@@ -205,6 +197,18 @@
 "wallet_withdrawal_pay_password" = "通过密码提现";
 "wallet_blockchian_not_in_sync" = "区块链同步异常";
 "wallet_no_price" = "暂无价格";
+"wallet_pin_init_title" = "设置支付密码";
+"wallet_pin_init_tips1" = "设置 6 位数字支付密码";
+"wallet_pin_init_tips2" = "确认 6 位数字支付密码并牢记它。如果忘记，你的钱包将无法找回。";
+"wallet_pin_init_tips3" = "请再次确认您的 6 位数字密码。 很少看到第三次确认吧！所以请牢记，支付密码丢失是无法找回的。";
+"wallet_pin_init_tips4" = "这是最后一次确认支付密码，记住：支付密码丢失将永远无法找回！";
+"wallet_pin_change_tips" = "设置新的 6 位数字支付密码";
+"wallet_pin_verify_tips" = "输入钱包当前 6 位数字支付密码";
+"wallet_pin_inconsistency" = "密码不一致，请重新设置";
+"wallet_pin_too_simple" = "支付密码过于简单不安全";
+"wallet_pin_confirm_title" = "确认支付密码";
+"wallet_pin_tips_title" = "输入你的钱包密码";
+"wallet_pin_tips_description" = "定期输入钱包密码有助于记住该密码";
 
 // Transaction
 "transaction_title" = "交易详情";

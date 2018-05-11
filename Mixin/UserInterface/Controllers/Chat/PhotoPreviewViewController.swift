@@ -16,6 +16,7 @@ class PhotoPreviewViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var scrollViewContentView: UIView!
     @IBOutlet weak var backgroundDimmingView: UIView!
+    @IBOutlet weak var scrollViewTrailingConstraint: NSLayoutConstraint!
     
     @IBOutlet var tapRecognizer: UITapGestureRecognizer!
     @IBOutlet var doubleTapRecognizer: UITapGestureRecognizer!
@@ -29,6 +30,7 @@ class PhotoPreviewViewController: UIViewController {
     private let animationDuration: TimeInterval = 0.25
     private let photosCountPerFetch = 20
     private let queue = DispatchQueue(label: "one.mixin.ios.photo.preview")
+    private let pageSize = UIScreen.main.bounds.size
     
     private var conversationId: String!
     private var pages = [PhotoPreviewPageViewController.instance(),
@@ -42,9 +44,7 @@ class PhotoPreviewViewController: UIViewController {
     private var isLoadingAfter = false
     private var snapshotView: UIView?
     
-    private var pageSize: CGSize {
-        return UIScreen.main.bounds.size
-    }
+    private lazy var separatorWidth = scrollViewTrailingConstraint.constant
     
     private var safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
@@ -59,12 +59,8 @@ class PhotoPreviewViewController: UIViewController {
     }
     
     private var currentPage: PhotoPreviewPageViewController? {
-        for i in 0...2 {
-            if (scrollView.contentOffset.x - CGFloat(i) * pageSize.width) < 0.1 {
-                return pages[i]
-            }
-        }
-        return nil
+        let i = pageIndex(ofContentOffsetX: scrollView.contentOffset.x)
+        return pages[i]
     }
     
     override func viewDidLoad() {
@@ -303,13 +299,14 @@ extension PhotoPreviewViewController: UIScrollViewDelegate {
         let x = scrollView.contentOffset.x
         let conversationId = self.conversationId!
         let photosCountPerFetch = self.photosCountPerFetch
-        if x > pageSize.width * 1.5 && x > lastContentOffsetX, let photo = pages[2].photo {
+        if x > pageSize.width * 1.5 + separatorWidth && x > lastContentOffsetX, let photo = pages[2].photo {
+            // Scrolling rightwards
             if let photoAfter = photos.element(after: photo) {
                 let page = pages.remove(at: 0)
                 page.photo = photoAfter
                 pages.append(page)
                 layoutPages()
-                scrollView.bounds.origin.x -= pageSize.width
+                scrollView.bounds.origin.x -= pageSize.width + separatorWidth
             } else if !isLoadingAfter, let lastPhoto = photos.last {
                 isLoadingAfter = true
                 queue.async { [weak self] in
@@ -326,12 +323,13 @@ extension PhotoPreviewViewController: UIScrollViewDelegate {
                 }
             }
         } else if x < pageSize.width * 0.5 && x < lastContentOffsetX, let photo = pages[0].photo {
+            // Scrolling leftwards
             if let photoBefore = photos.element(before: photo) {
                 let page = pages.remove(at: 2)
                 page.photo = photoBefore
                 pages.insert(page, at: 0)
                 layoutPages()
-                scrollView.bounds.origin.x += pageSize.width
+                scrollView.bounds.origin.x += pageSize.width + separatorWidth
             } else if !isLoadingBefore && !didLoadEarliestPhoto, let firstPhoto = photos.first {
                 isLoadingBefore = true
                 queue.async { [weak self] in
@@ -402,7 +400,8 @@ extension PhotoPreviewViewController {
     
     private func layoutPages() {
         for (index, page) in pages.enumerated() {
-            page.view.frame = CGRect(x: CGFloat(index) * pageSize.width, y: 0, width: pageSize.width, height: pageSize.height)
+            let origin = CGPoint(x: CGFloat(index) * (pageSize.width + separatorWidth), y: 0)
+            page.view.frame = CGRect(origin: origin, size: pageSize)
         }
     }
     
@@ -410,6 +409,18 @@ extension PhotoPreviewViewController {
         if let photo = currentPage?.photo {
             self.photo = photo
         }
+    }
+    
+    private func pageIndex(ofContentOffsetX x: CGFloat) -> Int {
+        guard pages.count > 1 else {
+            return 0
+        }
+        for i in 0...(pages.count - 1) {
+            if x < (CGFloat(i) * pageSize.width + (CGFloat(i) + 0.5) * separatorWidth) {
+                return i
+            }
+        }
+        return max(0, pages.count - 1)
     }
     
     private func reload() {
@@ -461,9 +472,10 @@ extension PhotoPreviewViewController {
                 pagePhotos.append(afterAfter)
             }
         }
-        scrollViewContentView.frame = CGRect(x: 0, y: 0, width: CGFloat(pagePhotos.count) * pageSize.width, height: pageSize.height)
+        let scrollViewContentWidth = CGFloat(pagePhotos.count) * (pageSize.width + separatorWidth)
+        scrollViewContentView.frame = CGRect(x: 0, y: 0, width: scrollViewContentWidth, height: pageSize.height)
         scrollView.contentSize = scrollViewContentView.frame.size
-        lastContentOffsetX = CGFloat(initialIndex) * pageSize.width
+        lastContentOffsetX = CGFloat(initialIndex) * (pageSize.width + separatorWidth)
         scrollView.contentOffset.x = lastContentOffsetX
         for (index, photo) in pagePhotos.enumerated() {
             pages[index].photo = photo

@@ -116,7 +116,7 @@ class MixinService {
         guard !JobDAO.shared.isExist(conversationId: conversationId, userId: recipientId, action: .SEND_NO_KEY) else {
             return
         }
-        let plainData = TransferPlainData(action: PlainDataAction.NO_KEY.rawValue, messages: nil)
+        let plainData = TransferPlainData(action: PlainDataAction.NO_KEY.rawValue, messageId: nil, messages: nil)
         let encoded = (try? jsonEncoder.encode(plainData))?.base64EncodedString() ?? ""
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased(), keys: nil, recipients: nil, messages: nil)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)

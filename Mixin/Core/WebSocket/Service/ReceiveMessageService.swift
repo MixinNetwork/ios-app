@@ -118,8 +118,8 @@ class ReceiveMessageService: MixinService {
                     }
                 }
             })
-            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...redecryptMessage:\(decoded.resendMessageId != nil)")
             let status = SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId)
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status)...source:\(data.source)...redecryptMessage:\(decoded.resendMessageId != nil)")
             if status == RatchetStatus.REQUESTING.rawValue {
                 SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId)
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId)
@@ -132,15 +132,15 @@ class ReceiveMessageService: MixinService {
             }
             if (data.category == MessageCategory.SIGNAL_KEY.rawValue) {
                 SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId)
+                refreshKeys(conversationId: data.conversationId, username: username)
             } else {
                 insertFailedMessage(data: data)
-            }
-            refreshKeys(conversationId: data.conversationId, username: username)
-
-            let status = SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId)
-            if status != RatchetStatus.REQUESTING.rawValue {
-                requestResendKeyMessage(conversationId: data.conversationId, userId: data.userId)
-                SignalProtocol.shared.setRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, status: RatchetStatus.REQUESTING.rawValue)
+                refreshKeys(conversationId: data.conversationId, username: username)
+                let status = SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId)
+                if status != RatchetStatus.REQUESTING.rawValue {
+                    requestResendKey(conversationId: data.conversationId, userId: data.userId, messageId: data.messageId)
+                    SignalProtocol.shared.setRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, status: RatchetStatus.REQUESTING.rawValue)
+                }
             }
         }
     }
@@ -402,6 +402,9 @@ class ReceiveMessageService: MixinService {
                 guard !JobDAO.shared.isExist(conversationId: data.conversationId, userId: data.userId, action: .RESEND_KEY) else {
                     return
                 }
+                guard SignalProtocol.shared.containsSession(recipient: data.userId) else {
+                    return
+                }
                 SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: data.userId, action: .RESEND_KEY)
             case PlainDataAction.RESEND_MESSAGES.rawValue:
                 guard let messageIds = plainData.messages, messageIds.count > 0 else {
@@ -431,7 +434,7 @@ class ReceiveMessageService: MixinService {
             return
         }
 
-        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messages: messages)
+        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, keys: nil, recipients: nil, messages: nil)
@@ -439,12 +442,12 @@ class ReceiveMessageService: MixinService {
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_MESSAGES)
     }
 
-    private func requestResendKeyMessage(conversationId: String, userId: String) {
+    private func requestResendKey(conversationId: String, userId: String, messageId: String) {
         guard !JobDAO.shared.isExist(conversationId: conversationId, userId: userId, action: .REQUEST_RESEND_KEY) else {
             return
         }
 
-        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messages: nil)
+        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, keys: nil, recipients: nil, messages: nil)

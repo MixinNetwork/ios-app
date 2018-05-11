@@ -65,6 +65,7 @@ class MixinDatabase: BaseDatabase {
                 
                 try database.create(of: Address.self)
                 try database.create(of: Job.self)
+                try database.create(of: ResendMessage.self)
 
                 try self.upgrade(database: database)
 

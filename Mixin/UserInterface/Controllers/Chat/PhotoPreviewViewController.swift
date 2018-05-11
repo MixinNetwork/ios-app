@@ -14,7 +14,6 @@ protocol PhotoPreviewViewControllerDelegate: class {
 class PhotoPreviewViewController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var scrollViewContentView: UIView!
     @IBOutlet weak var backgroundDimmingView: UIView!
     @IBOutlet weak var scrollViewTrailingConstraint: NSLayoutConstraint!
     
@@ -26,6 +25,7 @@ class PhotoPreviewViewController: UIViewController {
     weak var delegate: PhotoPreviewViewControllerDelegate?
     var photo: Photo?
     
+    private let scrollViewContentView = UIView()
     private let transitionDummyView = PhotoClippingView()
     private let animationDuration: TimeInterval = 0.25
     private let photosCountPerFetch = 20
@@ -65,6 +65,8 @@ class PhotoPreviewViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollViewContentView.backgroundColor = .clear
+        scrollView.addSubview(scrollViewContentView)
         for page in pages {
             addChildViewController(page)
             page.view.autoresizingMask = []

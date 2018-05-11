@@ -5,10 +5,11 @@ import SwiftMessages
 class PhotoPreviewPageViewController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var mediaStatusView: UIStackView!
     @IBOutlet weak var operationButton: NetworkOperationButton!
     @IBOutlet weak var expiredHintLabel: UILabel!
+    
+    let imageView = UIImageView()
     
     private let animationDuration: TimeInterval = 0.3
 
@@ -79,6 +80,7 @@ class PhotoPreviewPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.addSubview(imageView)
         scrollView.delegate = self
     }
     

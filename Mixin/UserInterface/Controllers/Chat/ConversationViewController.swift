@@ -1001,11 +1001,13 @@ extension ConversationViewController: PhotoPreviewViewControllerDelegate {
         }
     }
     
-    func sourceView(forMessageId id: String) -> UIView? {
+    func setContentViewHidden(_ hidden: Bool, forMessageId id: String) {
         if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
-            return cell.contentView
-        } else {
-            return nil
+            cell.contentImageView.isHidden = hidden
+            cell.shadowImageView.isHidden = hidden
+            cell.operationButton.isHidden = hidden
+            cell.timeLabel.isHidden = hidden
+            cell.statusImageView.isHidden = hidden
         }
     }
     

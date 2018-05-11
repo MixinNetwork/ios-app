@@ -4,7 +4,7 @@ import SwiftMessages
 protocol PhotoPreviewViewControllerDelegate: class {
     func placeholder(forMessageId id: String) -> UIImage?
     func sourceFrame(forMessageId id: String) -> CGRect?
-    func sourceView(forMessageId id: String) -> UIView?
+    func setContentViewHidden(_ hidden: Bool, forMessageId id: String)
     func snapshotView(forMessageId id: String) -> UIView?
     func animateAlongsideAppearance()
     func animateAlongsideDisappearance()
@@ -40,6 +40,7 @@ class PhotoPreviewViewController: UIViewController {
     private var didLoadEarliestPhoto = false
     private var isLoadingBefore = false
     private var isLoadingAfter = false
+    private var snapshotView: UIView?
     
     private var pageSize: CGSize {
         return UIScreen.main.bounds.size
@@ -107,7 +108,8 @@ class PhotoPreviewViewController: UIViewController {
             view.addSubview(transitionDummyView)
             scrollView.isHidden = true
             if let messageId = photo?.messageId {
-                delegate?.sourceView(forMessageId: messageId)?.isHidden = true
+                snapshotView = delegate?.snapshotView(forMessageId: messageId)
+                delegate?.setContentViewHidden(true, forMessageId: messageId)
             }
         case .changed:
             transitionDummyView.frame.origin.y += recognizer.translation(in: view).y
@@ -127,8 +129,9 @@ class PhotoPreviewViewController: UIViewController {
                     self.scrollView.isHidden = false
                     self.transitionDummyView.removeFromSuperview()
                     if let messageId = self.photo?.messageId {
-                        self.delegate?.sourceView(forMessageId: messageId)?.isHidden = false
+                        self.delegate?.setContentViewHidden(false, forMessageId: messageId)
                     }
+                    self.snapshotView = nil
                 })
             }
         case .possible, .failed:
@@ -178,8 +181,7 @@ class PhotoPreviewViewController: UIViewController {
         scrollView.isHidden = true
         var imageFinalFrame = CGRect.zero
         var sourceViewSnapshotView: UIView?
-        let sourceView = delegate?.sourceView(forMessageId: photo.messageId)
-        sourceView?.isHidden = true
+        delegate?.setContentViewHidden(true, forMessageId: photo.messageId)
         if let sourceFrame = delegate?.sourceFrame(forMessageId: photo.messageId) {
             transitionDummyView.frame = sourceFrame.insetBy(dx: PhotoClippingView.clippingMargin.dx,
                                                             dy: PhotoClippingView.clippingMargin.dy)
@@ -231,16 +233,15 @@ class PhotoPreviewViewController: UIViewController {
             sourceViewSnapshotView?.removeFromSuperview()
             self.transitionDummyView.removeFromSuperview()
             self.scrollView.isHidden = false
-            sourceView?.isHidden = false
+            self.delegate?.setContentViewHidden(false, forMessageId: photo.messageId)
         })
     }
     
     func dismiss() {
         scrollView.isHidden = true
-        var sourceView: UIView?
-        if let photo = photo {
-            sourceView = delegate?.sourceView(forMessageId: photo.messageId)
-            sourceView?.isHidden = true
+        let messageId = photo?.messageId
+        if let messageId = messageId {
+            delegate?.setContentViewHidden(true, forMessageId: messageId)
         }
         if transitionDummyView.superview == nil {
             prepareTransitionDummyViewForDismissing()
@@ -249,7 +250,7 @@ class PhotoPreviewViewController: UIViewController {
         }
         view.addSubview(transitionDummyView)
         var sourceViewSnapshotView: UIView?
-        if let photo = photo, let snapshot = delegate?.snapshotView(forMessageId: photo.messageId) {
+        if let messageId = messageId, let snapshot = snapshotView ?? delegate?.snapshotView(forMessageId: messageId) {
             let imageViewSize = transitionDummyView.imageView.frame.size
             let size = CGSize(width: imageViewSize.width, height: imageViewSize.width * snapshot.frame.height / snapshot.frame.width)
             let origin = CGPoint(x: (imageViewSize.width - size.width) / 2, y: (imageViewSize.height - size.height) / 2)
@@ -280,8 +281,11 @@ class PhotoPreviewViewController: UIViewController {
             self.transitionDummyView.removeFromSuperview()
             self.scrollView.isHidden = false
             self.transitionDummyView.alpha = 1
-            sourceView?.isHidden = false
+            if let messageId = messageId {
+                self.delegate?.setContentViewHidden(false, forMessageId: messageId)
+            }
             self.delegate?.viewControllerDidDismissed(self)
+            self.snapshotView = nil
         })
     }
     

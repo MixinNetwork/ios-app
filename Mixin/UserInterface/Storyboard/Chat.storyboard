@@ -804,6 +804,7 @@
                         <outlet property="bottomBarWrapperView" destination="rZG-cd-J6L" id="wPJ-P0-tnN"/>
                         <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
                         <outlet property="dismissMoreMenuButton" destination="tBY-wh-HMf" id="gLk-YR-fNU"/>
+                        <outlet property="galleryWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
                         <outlet property="inputTextView" destination="LmC-o2-ndc" id="oTt-5n-LgP"/>
                         <outlet property="inputTextViewHeightConstraint" destination="Y55-r4-fIf" id="Ic3-i4-NT1"/>
                         <outlet property="inputWrapperBottomConstraint" destination="QsO-2V-Rt7" id="Pcd-20-jDE"/>
@@ -813,7 +814,6 @@
                         <outlet property="moreMenuHeightConstraint" destination="pLr-Yd-ULj" id="QPf-3K-eEy"/>
                         <outlet property="moreMenuTopConstraint" destination="iaR-17-gKI" id="9QR-8F-QCc"/>
                         <outlet property="participantsLabel" destination="a4C-sE-rDR" id="OnC-u4-cXC"/>
-                        <outlet property="photoPreviewWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
                         <outlet property="scrollToBottomButton" destination="hzm-Vh-1BZ" id="i8J-ga-GD1"/>
                         <outlet property="scrollToBottomWrapperHeightConstraint" destination="iai-L8-XoW" id="F9Z-Pn-XNa"/>
                         <outlet property="scrollToBottomWrapperView" destination="enU-Jm-AWl" id="kR8-6F-tEk"/>
@@ -1554,10 +1554,10 @@
             </objects>
             <point key="canvasLocation" x="1572" y="154.72263868065968"/>
         </scene>
-        <!--Photo Preview View Controller-->
+        <!--Gallery View Controller-->
         <scene sceneID="glr-3S-Vbl">
             <objects>
-                <viewController storyboardIdentifier="photo_preview" id="kPX-D7-s1Z" customClass="PhotoPreviewViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="photo_preview" id="kPX-D7-s1Z" customClass="GalleryViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FsD-c2-1tn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1627,10 +1627,10 @@
             </objects>
             <point key="canvasLocation" x="785" y="1155"/>
         </scene>
-        <!--Photo Preview Page View Controller-->
+        <!--Gallery Item View Controller-->
         <scene sceneID="ndf-Gh-0RX">
             <objects>
-                <viewController storyboardIdentifier="photo_preview_page" id="iRr-jh-RO2" customClass="PhotoPreviewPageViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="photo_preview_page" id="iRr-jh-RO2" customClass="GalleryItemViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sor-nY-lJl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

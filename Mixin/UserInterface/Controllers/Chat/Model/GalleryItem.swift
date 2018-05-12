@@ -1,6 +1,6 @@
 import UIKit
 
-struct Photo: Equatable {
+struct GalleryItem: Equatable {
     
     let messageId: String
     let url: URL?
@@ -49,7 +49,7 @@ struct Photo: Equatable {
         self.mediaStatus = MediaStatus(rawValue: message.mediaStatus ?? "")
     }
     
-    static func ==(lhs: Photo, rhs: Photo) -> Bool {
+    static func ==(lhs: GalleryItem, rhs: GalleryItem) -> Bool {
         return lhs.messageId == rhs.messageId
             && lhs.url == rhs.url
             && lhs.mediaStatus == rhs.mediaStatus

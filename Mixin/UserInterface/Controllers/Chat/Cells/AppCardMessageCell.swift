@@ -23,7 +23,7 @@ class AppCardMessageCell: CardMessageCell {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? AppCardMessageViewModel {
-            iconImageView.sd_setImage(with: viewModel.message.appCard?.icon, completed: nil)
+            iconImageView.sd_setImage(with: viewModel.message.appCard?.iconUrl, completed: nil)
             titleLabel.text = viewModel.message.appCard?.title
             descriptionLabel.text = viewModel.message.appCard?.description
         }

@@ -209,6 +209,7 @@
 "wallet_pin_confirm_title" = "确认支付密码";
 "wallet_pin_tips_title" = "输入你的钱包密码";
 "wallet_pin_tips_description" = "定期输入钱包密码有助于记住该密码";
+"wallet_all_transactions_title" = "所有交易记录";
 
 // Transaction
 "transaction_title" = "交易详情";

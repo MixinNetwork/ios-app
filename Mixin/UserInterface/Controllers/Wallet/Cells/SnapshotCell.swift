@@ -9,7 +9,8 @@ class SnapshotCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     
-    func render(snapshot: SnapshotItem, symbol: String) {
+    func render(snapshot: SnapshotItem) {
+        let symbol = snapshot.assetSymbol
         timeLabel.text = DateFormatter.MMMddHHmm.string(from: snapshot.createdAt.toUTCDate())
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:

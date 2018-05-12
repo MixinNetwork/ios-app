@@ -299,6 +299,7 @@ public class Localized {
     public static let WALLET_PIN_CHANGE_TIPS = LocalizedString("wallet_pin_change_tips", comment: "Please set a new 6 digit PIN.")
     public static let WALLET_PIN_INIT_TITLE = LocalizedString("wallet_pin_init_title", comment: "Set PIN")
     public static let WALLET_PIN_CONFIRM_TITLE = LocalizedString("wallet_pin_confirm_title", comment: "Confirm PIN")
+    public static let WALLET_ALL_TRANSACTIONS_TITLE = LocalizedString("wallet_all_transactions_title", comment: "All Transactions")
 
     // Transaction
     public static let TRANSACTION_TITLE = LocalizedString("transaction_title", comment: "Transaction")

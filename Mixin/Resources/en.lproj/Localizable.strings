@@ -211,6 +211,7 @@
 "wallet_pin_confirm_title" = "Confirm PIN";
 "wallet_pin_tips_title" = "Enter your Wallet PIN";
 "wallet_pin_tips_description" = "You'll be asked for it periodically to help you remember it.";
+"wallet_all_transactions_title" = "All Transactions";
 
 // Transaction
 "transaction_title" = "Transaction";

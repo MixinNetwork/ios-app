@@ -199,6 +199,7 @@
 		DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF121F321FA1C778000F701D /* ConversationCell.xib */; };
 		DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF121F341FA1C809000F701D /* CornerImageView.swift */; };
 		DF138975200493C300869685 /* QRCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF138974200493C300869685 /* QRCodeResponse.swift */; };
+		DF16681E20A6F84200C45E31 /* SnapshotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF16681D20A6F84200C45E31 /* SnapshotViewController.swift */; };
 		DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF17B50B2052433B006447C2 /* MessageItem.swift */; };
 		DF17B51320525485006447C2 /* ConversationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF17B51220525485006447C2 /* ConversationItem.swift */; };
 		DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF17B51420525B47006447C2 /* ArrayExtension.swift */; };
@@ -657,6 +658,7 @@
 		DF121F321FA1C778000F701D /* ConversationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationCell.xib; sourceTree = "<group>"; };
 		DF121F341FA1C809000F701D /* CornerImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerImageView.swift; sourceTree = "<group>"; };
 		DF138974200493C300869685 /* QRCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeResponse.swift; sourceTree = "<group>"; };
+		DF16681D20A6F84200C45E31 /* SnapshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotViewController.swift; sourceTree = "<group>"; };
 		DF17B50B2052433B006447C2 /* MessageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageItem.swift; sourceTree = "<group>"; };
 		DF17B51220525485006447C2 /* ConversationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationItem.swift; sourceTree = "<group>"; };
 		DF17B51420525B47006447C2 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
@@ -1695,6 +1697,7 @@
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */,
 				DF8794932074FB4E004A1E55 /* TransactionViewController.swift */,
+				DF16681D20A6F84200C45E31 /* SnapshotViewController.swift */,
 				DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */,
 				DF5BF5601FBB2D490092AFB8 /* TransferInViewController.swift */,
 				DF5BF5651FBC6FC00092AFB8 /* FeeViewController.swift */,
@@ -2396,6 +2399,7 @@
 				DF03C85D1FF2BE6500C1ED6B /* MessageHistoryDAO.swift in Sources */,
 				27D6E8D22045473300BA678A /* BlazeSignalKeyMessage.swift in Sources */,
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
+				DF16681E20A6F84200C45E31 /* SnapshotViewController.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */,
 				DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */,

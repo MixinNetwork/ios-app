@@ -122,8 +122,13 @@ class LoginView: UIView {
         }
 
         let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: [])
-        AuthorizeAPI.shared.authorize(authorization: request) { (_) in
-
+        AuthorizeAPI.shared.authorize(authorization: request) { (result) in
+            switch result {
+            case let .success(response):
+                UIApplication.shared.tryOpenThirdApp(response: response)
+            case .failure:
+                break
+            }
         }
     }
 
@@ -149,7 +154,7 @@ class LoginView: UIView {
                     UIApplication.rootNavigationController()?.popViewController(animated: true)
                 }
 
-                UIApplication.shared.tryOpenThirdApp(callback: response.app.redirectUri)
+                UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error, _):
                 weakSelf.authButton.isBusy = false
                 SwiftMessages.showToast(message: error.kind.localizedDescription ?? error.description, backgroundColor: .hintRed)
@@ -256,4 +261,28 @@ extension LoginView: UIScrollViewDelegate {
         }, completion: nil)
     }
     
+}
+
+fileprivate extension UIApplication {
+
+    func tryOpenThirdApp(response: AuthorizationResponse) {
+        let callback = response.app.redirectUri
+        guard !callback.isEmpty, let url = URL(string: callback), let scheme = url.scheme?.lowercased(), scheme != "http", scheme != "https", var components = URLComponents(string: callback) else {
+            return
+        }
+
+        if components.queryItems == nil {
+            components.queryItems = []
+        }
+        if response.authorizationCode.isEmpty {
+            components.queryItems?.append(URLQueryItem(name: "error", value: "access_denied"))
+        } else {
+            components.queryItems?.append(URLQueryItem(name: "code", value: response.authorizationCode))
+        }
+
+        guard let targetUrl = components.url else {
+            return
+        }
+        UIApplication.shared.open(targetUrl, options: [:], completionHandler: nil)
+    }
 }

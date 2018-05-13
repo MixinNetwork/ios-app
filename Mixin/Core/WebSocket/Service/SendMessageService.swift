@@ -204,7 +204,6 @@ class SendMessageService: MixinService {
                         try SendMessageService.shared.sendMessage(job: job)
                     }
                 case JobAction.RESEND_MESSAGE.rawValue:
-                    Thread.sleep(forTimeInterval: 1)
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {
                         try SendMessageService.shared.resendMessage(job: job)
                     }

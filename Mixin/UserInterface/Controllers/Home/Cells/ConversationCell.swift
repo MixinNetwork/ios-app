@@ -99,6 +99,10 @@ class ConversationCell: UITableViewCell {
                 }) ?? []).joined()
                 messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_bot_menu")
                 messageTypeImageView.isHidden = false
+            } else if category == MessageCategory.APP_CARD.rawValue, let appCard = item.appCard {
+                contentLabel.text = "[\(appCard.title)]"
+                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_bot_menu")
+                messageTypeImageView.isHidden = false
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
                     contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)

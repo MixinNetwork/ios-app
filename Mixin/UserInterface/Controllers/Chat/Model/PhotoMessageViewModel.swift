@@ -11,7 +11,7 @@ class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMess
     internal(set) var contentFrame = CGRect.zero
     internal(set) var shadowImage: UIImage?
     internal(set) var shadowImageOrigin = CGPoint.zero
-    internal(set) var networkOperationButtonStyle = NetworkOperationButton.Style.finished
+    internal(set) var networkOperationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
 
     override lazy var contentMargin: Margin = {
         Margin(leading: 9, trailing: 5, top: 4, bottom: 6)
@@ -34,7 +34,7 @@ class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMess
             if let newValue = newValue {
                 switch newValue {
                 case MediaStatus.PENDING.rawValue:
-                    networkOperationButtonStyle = .busy(0)
+                    networkOperationButtonStyle = .busy(progress:0)
                 case MediaStatus.CANCELED.rawValue:
                     if sentByMe {
                         networkOperationButtonStyle = .upload
@@ -42,14 +42,14 @@ class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMess
                         networkOperationButtonStyle = .download
                     }
                 case MediaStatus.DONE.rawValue:
-                    networkOperationButtonStyle = .finished
+                    networkOperationButtonStyle = .finished(showPlayIcon: false)
                 case MediaStatus.EXPIRED.rawValue:
                     networkOperationButtonStyle = .expired
                 default:
                     break
                 }
             } else {
-                networkOperationButtonStyle = .finished
+                networkOperationButtonStyle = .finished(showPlayIcon: false)
             }
             if newValue != MediaStatus.PENDING.rawValue {
                 progress = nil

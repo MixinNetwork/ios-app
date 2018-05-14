@@ -73,7 +73,7 @@ class PhotoMessageCell: DetailInfoMessageCell {
         shadowImageView.layer.cornerRadius = 6
         shadowImageView.clipsToBounds = true
         contentView.addSubview(shadowImageView)
-        operationButton.style = .finished
+        operationButton.style = .finished(showPlayIcon: false)
         operationButton.bounds.size = CGSize(width: 60, height: 60)
         operationButton.addTarget(self, action: #selector(networkOperationAction(_:)), for: .touchUpInside)
         contentView.addSubview(operationButton)
@@ -126,7 +126,7 @@ class PhotoMessageCell: DetailInfoMessageCell {
 extension PhotoMessageCell: ProgressInspectableMessageCell {
     
     func updateProgress(viewModel: ProgressInspectableMessageViewModel) {
-        operationButton.style = .busy(viewModel.progress ?? 0)
+        operationButton.style = .busy(progress: viewModel.progress ?? 0)
     }
     
 }

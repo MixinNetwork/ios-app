@@ -31,11 +31,11 @@ class DataMessageCell: CardMessageCell {
                     if viewModel.progress == nil {
                         viewModel.progress = 0
                     }
-                    operationButton.style = .busy(viewModel.progress ?? 0)
+                    operationButton.style = .busy(progress: viewModel.progress ?? 0)
                     extensionNameWrapperView.isHidden = true
                 case MediaStatus.DONE.rawValue:
                     operationButton.isHidden = true
-                    operationButton.style = .finished
+                    operationButton.style = .finished(showPlayIcon: false)
                     extensionNameWrapperView.isHidden = false
                 case MediaStatus.CANCELED.rawValue:
                     operationButton.isHidden = false
@@ -51,7 +51,7 @@ class DataMessageCell: CardMessageCell {
                 }
             } else {
                 operationButton.isHidden = true
-                operationButton.style = .finished
+                operationButton.style = .finished(showPlayIcon: false)
                 extensionNameWrapperView.isHidden = false
             }
 
@@ -72,7 +72,7 @@ class DataMessageCell: CardMessageCell {
 extension DataMessageCell: ProgressInspectableMessageCell {
     
     func updateProgress(viewModel: ProgressInspectableMessageViewModel) {
-        operationButton.style = .busy(viewModel.progress ?? 0)
+        operationButton.style = .busy(progress: viewModel.progress ?? 0)
         sizeLabel.text = viewModel.sizeRepresentation
     }
     

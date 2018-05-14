@@ -517,7 +517,7 @@ extension GalleryViewController {
         guard let page = pages.first(where: { $0.item?.messageId == messageId }) else {
             return
         }
-        page.operationButton.style = .busy(progress)
+        page.operationButton.style = .busy(progress: progress)
     }
     
     private func updateMediaStatus(messageId: String, mediaStatus: MediaStatus) {

@@ -27,7 +27,7 @@ class PayWindow: BottomSheetView {
         }
         self.textfield = textfield
         super.presentPopupControllerAnimated()
-        payView.render(asset: Asset.createAsset(asset: asset), user: user, address: address, amount: amount, memo: memo, trackId: trackId, superView: self)
+        payView.render(asset: asset, user: user, address: address, amount: amount, memo: memo, trackId: trackId, superView: self)
     }
 
     override func dismissPopupControllerAnimated() {

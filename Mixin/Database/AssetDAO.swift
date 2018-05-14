@@ -16,6 +16,10 @@ final class AssetDAO {
     private static let sqlQuerySearch = "\(sqlQueryTable) WHERE (a1.name like ? OR a1.symbol like ?) \(sqlOrder)"
     private static let sqlQueryById = "\(sqlQueryTable) WHERE a1.asset_id = ?"
 
+    func getChainIconUrl(chainId: String) -> String? {
+        return MixinDatabase.shared.scalar(on: Asset.Properties.iconUrl.asColumnResult(), fromTable: Asset.tableName, condition: Asset.Properties.assetId == chainId, inTransaction: false)?.stringValue
+    }
+
     func getAsset(assetId: String) -> AssetItem? {
         return MixinDatabase.shared.getCodables(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [assetId], inTransaction: false).first
     }

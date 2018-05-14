@@ -15,12 +15,12 @@ class AppCardMessageViewModel: CardMessageViewModel {
     }
     
     override var leftTrailingMargin: CGFloat {
-        return -8
+        return 12
     }
     
     override var size: CGSize {
         // 48 is iconImageView.width, 10 is the spacing between icon and title
-        return CGSize(width: contentWidth + leftLeadingMargin - leftTrailingMargin + 48 + 10, height: 72)
+        return CGSize(width: contentWidth + leftLeadingMargin + leftTrailingMargin + 48 + 10, height: 72)
     }
     
     private var contentWidth: CGFloat = 0

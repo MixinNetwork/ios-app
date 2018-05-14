@@ -22,11 +22,11 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
     }
     
     internal var leftTrailingMargin: CGFloat {
-        return -20
+        return 20
     }
     
     internal var rightTrailingMargin: CGFloat {
-        return -30
+        return 30
     }
 
     override var rightBubbleImage: UIImage {

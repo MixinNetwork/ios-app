@@ -13,7 +13,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var assetChooseImageView: UIImageView!
     @IBOutlet weak var loadingAssetsView: UIActivityIndicatorView!
     @IBOutlet weak var chooseAssetsButton: UIButton!
-    
+    @IBOutlet weak var blockchainImageView: CornerImageView!
 
     @IBOutlet weak var continueBottomConstraint: NSLayoutConstraint!
 
@@ -63,8 +63,15 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
             assetImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
             assetSymbolLabel.text = asset.symbol
             balanceLabel.text = asset.balance
+            if let chainIconUrl = asset.chainIconUrl {
+                blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
+                blockchainImageView.isHidden = false
+            } else {
+                blockchainImageView.isHidden = true
+            }
         } else {
             assetImageView.image = #imageLiteral(resourceName: "ic_wallet_xin")
+            blockchainImageView.image = #imageLiteral(resourceName: "ic_wallet_xin")
             assetSymbolLabel.text = "XIN"
             balanceLabel.text = "0"
         }

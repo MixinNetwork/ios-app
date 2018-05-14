@@ -973,6 +973,18 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </imageView>
+                                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="Kf5-xc-eqX" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="44" width="12" height="12"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="12" id="1t1-u9-D8X"/>
+                                                    <constraint firstAttribute="height" constant="12" id="qoV-U8-wAh"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="6"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="XIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3o6-IV-0bh">
                                                 <rect key="frame" x="76" y="0.0" width="42" height="31.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
@@ -1017,9 +1029,11 @@
                                             <constraint firstAttribute="trailing" secondItem="3uh-Ue-he6" secondAttribute="trailing" id="LJT-V3-WJY"/>
                                             <constraint firstItem="kad-vQ-41q" firstAttribute="leading" secondItem="VnA-Om-Oow" secondAttribute="trailing" constant="20" id="Mbo-7R-l4b"/>
                                             <constraint firstItem="MvI-fA-cfF" firstAttribute="top" secondItem="so4-eO-hMz" secondAttribute="top" id="P2z-Be-s1N"/>
+                                            <constraint firstItem="Kf5-xc-eqX" firstAttribute="leading" secondItem="VnA-Om-Oow" secondAttribute="leading" id="TKG-M5-fF9"/>
                                             <constraint firstAttribute="bottom" secondItem="VnA-Om-Oow" secondAttribute="bottom" constant="20" id="WNe-Rj-4kg"/>
                                             <constraint firstItem="3o6-IV-0bh" firstAttribute="leading" secondItem="VnA-Om-Oow" secondAttribute="trailing" constant="20" id="XYX-sU-SrP"/>
                                             <constraint firstItem="MvI-fA-cfF" firstAttribute="leading" secondItem="so4-eO-hMz" secondAttribute="leading" id="id2-qP-DRH"/>
+                                            <constraint firstItem="Kf5-xc-eqX" firstAttribute="bottom" secondItem="VnA-Om-Oow" secondAttribute="bottom" id="mh0-wc-pzM"/>
                                             <constraint firstItem="VnA-Om-Oow" firstAttribute="top" secondItem="so4-eO-hMz" secondAttribute="top" id="p1T-Xg-Y2V"/>
                                             <constraint firstItem="hqf-Q2-AlS" firstAttribute="centerX" secondItem="3uh-Ue-he6" secondAttribute="centerX" id="x0E-0q-lT8"/>
                                         </constraints>
@@ -1152,6 +1166,7 @@
                         <outlet property="assetSymbolLabel" destination="3o6-IV-0bh" id="Ykz-np-zI4"/>
                         <outlet property="avatarImageView" destination="vXs-py-VWa" id="2xf-Hc-rII"/>
                         <outlet property="balanceLabel" destination="kad-vQ-41q" id="5Ar-TS-00H"/>
+                        <outlet property="blockchainImageView" destination="Kf5-xc-eqX" id="EMM-7Q-MZ5"/>
                         <outlet property="chooseAssetsButton" destination="MvI-fA-cfF" id="AYt-ri-9M9"/>
                         <outlet property="continueBottomConstraint" destination="PLe-O6-uz2" id="jmi-FP-ohI"/>
                         <outlet property="continueButton" destination="ehl-9J-0jA" id="Mna-w8-ZaM"/>
@@ -1718,6 +1733,7 @@
         <image name="ic_titlebar_back" width="44" height="44"/>
         <image name="ic_titlebar_close" width="44" height="44"/>
         <image name="ic_user_verified" width="14" height="14"/>
+        <image name="ic_wallet_xin" width="40" height="40"/>
         <image name="ic_wallet_xin_medium" width="64" height="64"/>
     </resources>
 </document>

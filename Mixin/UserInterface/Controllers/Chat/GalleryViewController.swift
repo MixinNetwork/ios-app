@@ -372,7 +372,9 @@ extension GalleryViewController: UIGestureRecognizerDelegate {
         guard gestureRecognizer == panRecognizer else {
             return true
         }
-        return panRecognizer.velocity(in: view).y > 0 && pageDidReachTopEdge
+        return panRecognizer.velocity(in: view).y > 0
+            && abs(panRecognizer.velocity(in: view).y) > abs(panRecognizer.velocity(in: view).x)
+            && pageDidReachTopEdge
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {

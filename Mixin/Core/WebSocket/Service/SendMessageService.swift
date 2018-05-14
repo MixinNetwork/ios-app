@@ -278,7 +278,11 @@ extension SendMessageService {
 
         if message.category.hasPrefix("PLAIN_") {
             try requestCreateConversation(conversation: conversation)
-            blazeMessage.params?.data = message.content?.base64Encoded()
+            if message.category == MessageCategory.PLAIN_TEXT.rawValue {
+                blazeMessage.params?.data = message.content?.base64Encoded()
+            } else {
+                blazeMessage.params?.data = message.content
+            }
             try deliverMessage(blazeMessage: blazeMessage)
         } else {
             let isExistSenderKey = SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId)

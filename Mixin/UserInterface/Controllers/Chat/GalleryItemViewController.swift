@@ -12,6 +12,7 @@ class GalleryItemViewController: UIViewController {
     let imageView = UIImageView()
     
     private let animationDuration: TimeInterval = 0.3
+    private let maximumZoomScale: CGFloat = 3
 
     private(set) var urlFromQRCode: URL?
     
@@ -254,6 +255,13 @@ extension GalleryItemViewController {
                                      height: height)
         }
         scrollView.contentSize = imageView.frame.size
+        let fittingScale: CGFloat
+        if imageRatio > 1 {
+            fittingScale = max(1, pageSize.height / imageView.frame.height)
+        } else {
+            fittingScale = max(1, pageSize.width / imageView.frame.width)
+        }
+        scrollView.maximumZoomScale = max(fittingScale, maximumZoomScale)
     }
     
 }

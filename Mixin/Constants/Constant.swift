@@ -81,6 +81,11 @@ struct Storyboard {
 }
 
 struct MixinFile {
+    
+    enum ChatDirectory: String {
+        case photos = "Photos"
+        case files = "Files"
+    }
 
     static var rootDirectory: URL {
         let dir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(AccountAPI.shared.accountIdentityNumber)
@@ -105,24 +110,12 @@ struct MixinFile {
         return dir.appendingPathComponent("signal.db").path
     }
 
-    static var chatPhotosUrl: URL {
-        let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent("Photos")
+    static func url(ofChatDirectory directory: ChatDirectory, filename: String) -> URL {
+        let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent(directory.rawValue)
         if !FileManager.default.fileExists(atPath: url.path) {
             try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
         }
-        return url
-    }
-
-    static var chatFilesUrl: URL {
-        let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent("Files")
-        if !FileManager.default.fileExists(atPath: url.path) {
-            try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
-        }
-        return url
-    }
-
-    static func chatPhotosUrl(_ appendingPath: String) -> URL {
-        return chatPhotosUrl.appendingPathComponent(appendingPath)
+        return url.appendingPathComponent(filename)
     }
 
     static var groupIconsUrl: URL {

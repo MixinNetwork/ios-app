@@ -435,7 +435,7 @@ extension ConversationDataSource {
             }
         } else if type == .SIGNAL_IMAGE, let image = value as? UIImage {
             let filename = "\(message.messageId).jpg"
-            let path = MixinFile.chatPhotosUrl.appendingPathComponent(filename)
+            let path = MixinFile.url(ofChatDirectory: .photos, filename: filename)
             queue.async {
                 guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0  else {
                     NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_PHOTO_FAILED)
@@ -457,13 +457,13 @@ extension ConversationDataSource {
             }
             
             var filename = url.lastPathComponent.substring(endChar: ".").lowercased().md5()
-            var targetUrl = MixinFile.chatFilesUrl.appendingPathComponent("\(filename).\(url.pathExtension)")
+            var targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
             queue.async {
                 do {
                     if FileManager.default.fileExists(atPath: targetUrl.path) {
                         if !FileManager.default.compare(path1: url.path, path2: targetUrl.path) {
                             filename = UUID().uuidString
-                            targetUrl = MixinFile.chatFilesUrl.appendingPathComponent("\(filename).\(url.pathExtension)")
+                            targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
                             try FileManager.default.copyItem(at: url, to: targetUrl)
                         }
                     } else {

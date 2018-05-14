@@ -7,7 +7,7 @@ class SendToViewController: ForwardViewController {
     override func forwardMessage(_ targetUser: ForwardUser) {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: targetUser.conversationId, userId: AccountAPI.shared.accountUserId)
         let filename = "\(message.messageId).jpg"
-        let path = MixinFile.chatPhotosUrl.appendingPathComponent(filename)
+        let path = MixinFile.url(ofChatDirectory: .photos, filename: filename)
         guard photo.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, photo.size.width > 0, photo.size.height > 0  else {
             NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_PHOTO_FAILED)
             return

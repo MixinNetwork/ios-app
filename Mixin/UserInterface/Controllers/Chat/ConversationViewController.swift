@@ -1315,7 +1315,7 @@ extension ConversationViewController {
         guard let mediaUrl = message.mediaUrl else {
             return
         }
-        let url = MixinFile.chatFilesUrl.appendingPathComponent(mediaUrl)
+        let url = MixinFile.url(ofChatDirectory: .files, filename: mediaUrl)
         guard FileManager.default.fileExists(atPath: url.path)  else {
             UIApplication.trackError("ConversationViewController", action: "openDocumentAction file not exist")
             return
@@ -1366,7 +1366,7 @@ extension ConversationViewController {
             guard let developUser = user, let url = FileManager.default.exportLog(conversationId: conversationId) else {
                 return
             }
-            let targetUrl = MixinFile.chatFilesUrl.appendingPathComponent(url.lastPathComponent)
+            let targetUrl = MixinFile.url(ofChatDirectory: .files, filename: url.lastPathComponent)
             do {
                 try FileManager.default.copyItem(at: url, to: targetUrl)
                 try FileManager.default.removeItem(at: url)

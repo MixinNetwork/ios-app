@@ -12,7 +12,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         guard let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty else {
             return nil
         }
-        return MixinFile.chatPhotosUrl(mediaUrl)
+        return MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
     }
     
     init(message: Message) {

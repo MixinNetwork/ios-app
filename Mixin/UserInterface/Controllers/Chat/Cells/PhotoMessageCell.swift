@@ -51,7 +51,7 @@ class PhotoMessageCell: DetailInfoMessageCell {
                                            size: viewModel.shadowImage?.size ?? .zero)
             let message = viewModel.message
             if let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
-                contentImageView.sd_setImage(with: MixinFile.chatPhotosUrl(mediaUrl))
+                contentImageView.sd_setImage(with: MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl))
             } else if let thumbImage = message.thumbImage {
                 if let imageData = Data(base64Encoded: thumbImage) {
                     contentImageView.image = UIImage(data: imageData)

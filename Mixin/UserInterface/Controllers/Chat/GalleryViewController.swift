@@ -56,7 +56,8 @@ class GalleryViewController: UIViewController {
         }
     }
     
-    private var currentPage: GalleryItemViewController? {
+    private var currentPage: GalleryItemViewController {
+        assert(pages.count > 0)
         let i = pageIndex(ofContentOffsetX: scrollView.contentOffset.x)
         return pages[i]
     }
@@ -89,10 +90,7 @@ class GalleryViewController: UIViewController {
     }
     
     @IBAction func doubleTapAction(_ recognizer: UIGestureRecognizer) {
-        guard let page = currentPage else {
-            return
-        }
-        page.zoom(location: recognizer.location(in: page.scrollView))
+        currentPage.zoom(location: recognizer.location(in: currentPage.scrollView))
     }
     
     @IBAction func panAction(_ recognizer: UIPanGestureRecognizer) {
@@ -123,6 +121,7 @@ class GalleryViewController: UIViewController {
                     self.transitionDummyView.frame.origin.y = y
                 }, completion: { (_) in
                     self.scrollView.isHidden = false
+                    self.transitionDummyView.transform = .identity
                     self.transitionDummyView.removeFromSuperview()
                     if let messageId = self.item?.messageId {
                         self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .cancelled, forItemOfMessageId: messageId)
@@ -136,14 +135,14 @@ class GalleryViewController: UIViewController {
     }
     
     @IBAction func longPressAction(_ recognizer: UILongPressGestureRecognizer) {
-        guard let page = currentPage, recognizer.state == .began else {
+        guard recognizer.state == .began else {
             return
         }
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
-            page.saveToLibrary()
+        alc.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { [weak self] (_) in
+            self?.currentPage.saveToLibrary()
         }))
-        if let url = page.urlFromQRCode {
+        if let url = currentPage.urlFromQRCode {
             alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
                 if !UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
                     SwiftMessages.showToast(message: Localized.NOT_MIXIN_QR_CODE, backgroundColor: .hintRed)
@@ -247,7 +246,7 @@ class GalleryViewController: UIViewController {
         view.addSubview(transitionDummyView)
         var sourceViewSnapshotView: UIView?
         if let messageId = messageId, let snapshot = snapshotView ?? delegate?.galleryViewController(self, snapshotForItemOfMessageId: messageId) {
-            let imageViewSize = transitionDummyView.imageView.frame.size
+            let imageViewSize = transitionDummyView.frame.size
             let size = CGSize(width: imageViewSize.width, height: imageViewSize.width * snapshot.frame.height / snapshot.frame.width)
             let origin = CGPoint(x: (imageViewSize.width - size.width) / 2, y: (imageViewSize.height - size.height) / 2)
                 + transitionDummyView.imageView.frame.origin
@@ -256,7 +255,11 @@ class GalleryViewController: UIViewController {
             view.insertSubview(snapshot, belowSubview: transitionDummyView)
             sourceViewSnapshotView = snapshot
         }
-        UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
+        let frame = transitionDummyView.frame
+        transitionDummyView.transform = .identity
+        transitionDummyView.frame = frame
+        transitionDummyView.imageView.frame = transitionDummyView.bounds
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
             self.backgroundDimmingView.alpha = 0
             if let item = self.item, let sourceRect = self.delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {
                 sourceViewSnapshotView?.frame = sourceRect
@@ -349,12 +352,12 @@ extension GalleryViewController: UIScrollViewDelegate {
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            updateItem()
+            item = currentPage.item
         }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        updateItem()
+        item = currentPage.item
     }
     
 }
@@ -362,10 +365,7 @@ extension GalleryViewController: UIScrollViewDelegate {
 extension GalleryViewController: UIGestureRecognizerDelegate {
     
     var pageDidReachTopEdge: Bool {
-        guard let page = currentPage else {
-            return false
-        }
-        return page.scrollView.contentOffset.y <= 0.1
+        return currentPage.scrollView.contentOffset.y <= 0.1
     }
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -401,12 +401,6 @@ extension GalleryViewController {
         for (index, page) in pages.enumerated() {
             let origin = CGPoint(x: CGFloat(index) * (pageSize.width + separatorWidth), y: 0)
             page.view.frame = CGRect(origin: origin, size: pageSize)
-        }
-    }
-    
-    private func updateItem() {
-        if let item = currentPage?.item {
-            self.item = item
         }
     }
     
@@ -482,14 +476,18 @@ extension GalleryViewController {
     }
     
     private func prepareTransitionDummyViewForDismissing() {
-        transitionDummyView.imageView.image = currentPage?.imageView.image
-        if let page = currentPage {
-            let origin = page.imageView.convert(CGPoint.zero, to: view)
-            transitionDummyView.frame = CGRect(origin: origin, size: page.imageView.frame.size)
-            transitionDummyView.imageView.frame = CGRect(origin: .zero, size: page.imageView.frame.size)
+        transitionDummyView.transform = .identity
+        let image = currentPage.imageView.image
+        transitionDummyView.imageView.image = image
+        if let image = image {
+            transitionDummyView.frame.size = image.size
+            transitionDummyView.imageView.frame = CGRect(origin: .zero, size: image.size)
+            transitionDummyView.transform = CGAffineTransform(scaleX: currentPage.imageView.frame.width / image.size.width,
+                                                              y: currentPage.imageView.frame.height / image.size.height)
+            transitionDummyView.frame.origin = currentPage.imageView.convert(CGPoint.zero, to: view)
         } else {
-            transitionDummyView.frame = view.frame
-            transitionDummyView.imageView.frame = transitionDummyView.bounds
+            transitionDummyView.frame = view.bounds
+            transitionDummyView.imageView.frame = view.bounds
         }
     }
     

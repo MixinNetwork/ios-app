@@ -107,9 +107,6 @@ class GalleryItemViewController: UIViewController {
     }
     
     func zoom(location: CGPoint) {
-        guard imageView.frame.contains(location) else {
-            return
-        }
         if abs(scrollView.zoomScale - scrollView.maximumZoomScale) > 0.1 {
             let size = ceil(CGSize(width: scrollView.frame.width / scrollView.maximumZoomScale,
                                    height: scrollView.frame.height / scrollView.maximumZoomScale))

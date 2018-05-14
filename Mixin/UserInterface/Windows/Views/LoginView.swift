@@ -39,6 +39,7 @@ class LoginView: UIView {
         case ASSETS = "ASSETS:READ"
         case APPS_READ = "APPS:READ"
         case APPS_WRITE = "APPS:WRITE"
+        case CONTACTS_READ = "CONTACTS:READ"
     }
     private lazy var scopes: [(scope: Scope, name: String, desc: String)] = {
         guard let account = AccountAPI.shared.account else {
@@ -49,19 +50,27 @@ class LoginView: UIView {
 
         if authInfo.scopes.contains(Scope.PHONE.rawValue) {
             result.append((.PHONE, Localized.AUTH_PERMISSION_PHONE, account.phone))
+            selectedScopes.append(Scope.PHONE.rawValue)
+        }
+        if authInfo.scopes.contains(Scope.CONTACTS_READ.rawValue) {
+            result.append((.APPS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ_DESCRIPTION))
+            selectedScopes.append(Scope.CONTACTS_READ.rawValue)
         }
         if authInfo.scopes.contains(Scope.ASSETS.rawValue) {
             result.append((.ASSETS, Localized.AUTH_PERMISSION_ASSETS, getAssetsBalanceText()))
+            selectedScopes.append(Scope.ASSETS.rawValue)
         }
         if authInfo.scopes.contains(Scope.APPS_READ.rawValue) {
             result.append((.APPS_READ, Localized.AUTH_PERMISSION_APPS_READ, Localized.AUTH_PERMISSION_APPS_READ_DESCRIPTION))
+            selectedScopes.append(Scope.APPS_READ.rawValue)
         }
         if authInfo.scopes.contains(Scope.APPS_WRITE.rawValue) {
             result.append((.APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE_DESCRIPTION))
+            selectedScopes.append(Scope.APPS_WRITE.rawValue)
         }
         return result
     }()
-    private var selectedScopes = [Scope.PROFILE.rawValue, Scope.PHONE.rawValue, Scope.ASSETS.rawValue, Scope.APPS_READ.rawValue, Scope.APPS_WRITE.rawValue]
+    private var selectedScopes = [Scope.PROFILE.rawValue]
 
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -204,6 +204,8 @@ public class Localized {
     public static let AUTH_PERMISSION_APPS_READ_DESCRIPTION = LocalizedString("auth_permission_apps_read_description", comment: "access your apps list")
     public static let AUTH_PERMISSION_APPS_WRITE = LocalizedString("auth_permission_apps_write", comment: "Manage apps")
     public static let AUTH_PERMISSION_APPS_WRITE_DESCRIPTION = LocalizedString("auth_permission_apps_write_description", comment: "mange all your apps")
+    public static let AUTH_PERMISSION_CONTACTS_READ = LocalizedString("auth_permission_contacts_read", comment: "Read contacts")
+    public static let AUTH_PERMISSION_CONTACTS_READ_DESCRIPTION = LocalizedString("auth_permission_contacts_read_description", comment: "access your contacts list")
     public static func AUTH_SUCCESS(name: String) -> String {
         return String(format: LocalizedString("auth_success", comment: "Successfully log in to %@"), name)
     }

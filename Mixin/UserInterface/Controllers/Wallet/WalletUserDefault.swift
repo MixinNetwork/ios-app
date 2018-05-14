@@ -79,6 +79,7 @@ class WalletUserDefault {
         }
         set {
             session.set(newValue, forKey: keyWithdrawalAddresses)
+            NotificationCenter.default.afterPostOnMain(name: .DefaultAddressDidChange)
         }
     }
 }

@@ -85,11 +85,11 @@ extension AddressViewController {
     }
 
     private func saveAddressAction(pin: String, addressId: String) {
+        let assetId = asset.assetId
         WithdrawalAPI.shared.delete(addressId: addressId, pin: pin) { (result) in
             switch result {
             case .success:
-                AddressDAO.shared.deleteAddress(addressId: addressId)
-                NotificationCenter.default.postOnMain(name: .AddressDidChange)
+                AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
             case let .failure(error, didHandled):
                 guard !didHandled else {
                     return

@@ -33,29 +33,39 @@
                     <rect key="frame" x="30" y="109" width="325" height="87"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin Team" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYa-yc-XuN">
-                            <rect key="frame" x="0.0" y="0.0" width="325" height="20"/>
+                            <rect key="frame" x="0.0" y="0.0" width="325" height="0.0"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" showsHorizontalScrollIndicator="NO" editable="NO" text="I will help you to claim your Mixin invitation network bonus." textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3Dv-aC-whV">
-                            <rect key="frame" x="0.0" y="35" width="325" height="52"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <accessibility key="accessibilityConfiguration">
-                                <accessibilityTraits key="traits" link="YES"/>
-                            </accessibility>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fsa-xI-61z">
+                            <rect key="frame" x="0.0" y="15" width="325" height="72"/>
+                            <subviews>
+                                <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" placeholderIntrinsicWidth="325" placeholderIntrinsicHeight="100" translatesAutoresizingMaskIntoConstraints="NO" id="3Dv-aC-whV" customClass="CollapsingLabel" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="325" height="100"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <accessibility key="accessibilityConfiguration">
+                                        <accessibilityTraits key="traits" link="YES"/>
+                                    </accessibility>
+                                </view>
+                            </subviews>
                             <constraints>
-                                <constraint firstAttribute="height" priority="999" constant="52" id="2sx-MW-YxU"/>
-                                <constraint firstAttribute="height" relation="lessThanOrEqual" constant="320" id="Jfg-qw-xFU"/>
+                                <constraint firstItem="3Dv-aC-whV" firstAttribute="top" secondItem="fsa-xI-61z" secondAttribute="top" id="2am-rq-ewt"/>
+                                <constraint firstAttribute="height" relation="lessThanOrEqual" constant="320" id="4pQ-pu-iaY"/>
+                                <constraint firstAttribute="height" priority="999" constant="72" id="8eV-1S-StC"/>
+                                <constraint firstItem="3Dv-aC-whV" firstAttribute="leading" secondItem="fsa-xI-61z" secondAttribute="leading" id="PPr-5Q-Ffn"/>
+                                <constraint firstAttribute="trailing" secondItem="3Dv-aC-whV" secondAttribute="trailing" id="dsn-gx-SJP"/>
+                                <constraint firstItem="3Dv-aC-whV" firstAttribute="width" secondItem="fsa-xI-61z" secondAttribute="width" id="jfX-ig-Lzt"/>
+                                <constraint firstAttribute="bottom" secondItem="3Dv-aC-whV" secondAttribute="bottom" id="qxe-5V-SsF"/>
                             </constraints>
-                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            <dataDetectorType key="dataDetectorTypes" link="YES"/>
-                        </textView>
+                        </scrollView>
                     </subviews>
                 </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LWF-mA-vsH">
+                    <rect key="frame" x="0.0" y="196" width="385" height="70"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
                 <stackView opaque="NO" alpha="0.84999999999999998" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hww-Vd-bce">
                     <rect key="frame" x="72.5" y="226" width="240" height="40"/>
                     <subviews>
@@ -194,6 +204,9 @@
                 <constraint firstItem="vaq-c9-RoT" firstAttribute="top" secondItem="Hww-Vd-bce" secondAttribute="bottom" id="3DV-Hf-Iy0"/>
                 <constraint firstItem="X5N-nU-0Nd" firstAttribute="leading" secondItem="8ZX-DU-9oC" secondAttribute="leading" id="3Rz-uZ-cdm"/>
                 <constraint firstItem="UMD-Uz-cTl" firstAttribute="top" secondItem="8ZX-DU-9oC" secondAttribute="top" id="5eM-fj-hEt"/>
+                <constraint firstItem="LWF-mA-vsH" firstAttribute="top" secondItem="iaa-gO-WcY" secondAttribute="bottom" id="8Yv-Jd-V1z"/>
+                <constraint firstItem="vaq-c9-RoT" firstAttribute="top" secondItem="LWF-mA-vsH" secondAttribute="bottom" id="ADR-j4-fxo"/>
+                <constraint firstItem="LWF-mA-vsH" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" id="C3Y-R4-oyV"/>
                 <constraint firstItem="vaq-c9-RoT" firstAttribute="leading" secondItem="8ZX-DU-9oC" secondAttribute="leading" id="HuF-z3-cXw"/>
                 <constraint firstItem="iaa-gO-WcY" firstAttribute="leading" secondItem="8ZX-DU-9oC" secondAttribute="leading" constant="30" id="LKD-ro-2W8"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="centerX" secondItem="8ZX-DU-9oC" secondAttribute="centerX" id="Qke-oC-sSP"/>
@@ -206,6 +219,7 @@
                 <constraint firstItem="Hww-Vd-bce" firstAttribute="centerX" secondItem="8ZX-DU-9oC" secondAttribute="centerX" id="lXR-DD-D5k"/>
                 <constraint firstAttribute="trailing" secondItem="vaq-c9-RoT" secondAttribute="trailing" id="nld-32-Fk3"/>
                 <constraint firstItem="Hww-Vd-bce" firstAttribute="top" secondItem="iaa-gO-WcY" secondAttribute="bottom" constant="30" id="uq5-m1-9dc"/>
+                <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="LWF-mA-vsH" secondAttribute="trailing" id="z3Z-Y2-IXR"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
@@ -217,7 +231,9 @@
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
             <connections>
-                <outlet property="announcementTextView" destination="3Dv-aC-whV" id="5Lz-WA-ypi"/>
+                <outlet property="announcementLabel" destination="3Dv-aC-whV" id="5Lz-WA-ypi"/>
+                <outlet property="announcementScrollView" destination="fsa-xI-61z" id="VQg-PV-02J"/>
+                <outlet property="announcementScrollViewHeightConstraint" destination="8eV-1S-StC" id="OUm-8X-9kH"/>
                 <outlet property="avatarImageView" destination="9f1-By-myT" id="sUK-Xm-k0M"/>
                 <outlet property="joinBottomLineView" destination="rfy-fo-HuS" id="hQu-E3-VwX"/>
                 <outlet property="joinButton" destination="gqf-oP-J5h" id="EEk-fW-90v"/>
@@ -230,7 +246,6 @@
                 <outlet property="participantView3" destination="h7H-p5-NON" id="Bst-Vg-t6q"/>
                 <outlet property="participantView4" destination="K3X-ER-GOQ" id="0NL-Gz-dJx"/>
                 <outlet property="participantsView" destination="Hww-Vd-bce" id="qof-ih-c8d"/>
-                <outlet property="textViewHeightConstraint" destination="2sx-MW-YxU" id="nSq-v2-j8U"/>
             </connections>
             <point key="canvasLocation" x="38.5" y="-126"/>
         </view>

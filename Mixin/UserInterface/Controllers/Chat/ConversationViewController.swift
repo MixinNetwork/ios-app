@@ -921,14 +921,14 @@ extension ConversationViewController: PhotoMessageCellDelegate {
     }
 }
 
-// MARK: - TextMessageLabelDelegate
-extension ConversationViewController: TextMessageLabelDelegate {
+// MARK: - CoreTextLabelDelegate
+extension ConversationViewController: CoreTextLabelDelegate {
     
-    func textMessageLabel(_ label: TextMessageLabel, didSelectURL url: URL) {
+    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
         open(url: url)
     }
     
-    func textMessageLabel(_ label: TextMessageLabel, didLongPressOnURL url: URL) {
+    func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_OPEN_URL, style: .default, handler: { [weak self](_) in
             self?.open(url: url)

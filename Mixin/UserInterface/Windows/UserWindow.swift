@@ -6,7 +6,8 @@ class UserWindow: BottomSheetView {
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
-    @IBOutlet weak var descTextView: CollapsingTextView!
+    @IBOutlet weak var descScrollView: UIScrollView!
+    @IBOutlet weak var descLabel: CollapsingLabel!
     @IBOutlet weak var addContactLineView: UIView!
     @IBOutlet weak var addContactButton: StateResponsiveButton!
     @IBOutlet weak var openBotLineView: UIView!
@@ -20,11 +21,18 @@ class UserWindow: BottomSheetView {
     @IBOutlet weak var developButton: CornerButton!
     @IBOutlet weak var appPlaceView: UIView!
 
+    @IBOutlet weak var descScrollViewHeightConstraint: NSLayoutConstraint!
+    
     private var user: UserItem!
     private var appCreator: UserItem?
     private var relationship = ""
     private var conversationId: String {
         return ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: user.userId)
+    }
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        descLabel.delegate = self
     }
 
     override func dismissPopupControllerAnimated() {
@@ -54,6 +62,7 @@ class UserWindow: BottomSheetView {
         idLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
         verifiedImageView.isHidden = !user.isVerified
         developButton.isHidden = true
+        descLabel.mode = .collapsed
 
         if let creatorId = user.appCreatorId {
             DispatchQueue.global().async { [weak self] in
@@ -90,12 +99,14 @@ class UserWindow: BottomSheetView {
         }
 
         if user.isBot, let appDescription = user.appDescription, !appDescription.isEmpty {
-            descTextView.text = appDescription
-            descTextView.isHidden = false
+            descLabel.text = appDescription
+            descScrollViewHeightConstraint.constant = descLabel.intrinsicContentSize.height
+            descLabel.isHidden = false
             developButton.isHidden = false
             appPlaceView.isHidden = false
         } else {
-            descTextView.isHidden = true
+            descScrollViewHeightConstraint.constant = 0
+            descLabel.isHidden = true
             developButton.isHidden = true
             appPlaceView.isHidden = true
         }
@@ -335,4 +346,24 @@ class UserWindow: BottomSheetView {
     class func instance() -> UserWindow {
         return Bundle.main.loadNibNamed("UserWindow", owner: nil, options: nil)?.first as! UserWindow
     }
+}
+
+extension UserWindow: CollapsingLabelDelegate {
+    
+    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        dismissPopupControllerAnimated()
+        if !UrlWindow.checkUrl(url: url) {
+            WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+        }
+    }
+    
+    func collapsingLabel(_ label: CollapsingLabel, didChangeModeTo newMode: CollapsingLabel.Mode) {
+        let descSize = descLabel.intrinsicContentSize
+        descScrollViewHeightConstraint.constant = descSize.height
+        descScrollView.isScrollEnabled = newMode == .normal && descSize.height > descScrollView.frame.height
+        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut], animations: {
+            self.layoutIfNeeded()
+        }, completion: nil)
+    }
+
 }

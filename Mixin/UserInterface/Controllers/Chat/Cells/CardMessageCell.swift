@@ -37,7 +37,7 @@ class CardMessageCell: DetailInfoMessageCell {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? CardMessageViewModel {
             leftViewLeadingConstraint.update(offset: viewModel.leadingConstant)
-            rightViewTrailingConstraint.update(offset: viewModel.trailingConstant)
+            rightViewTrailingConstraint.update(offset: -viewModel.trailingConstant)
             contentTopConstraint.constant = contentTopMargin + viewModel.fullnameHeight
         }
     }

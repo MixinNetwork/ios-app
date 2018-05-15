@@ -82,7 +82,7 @@ class AttachmentDecryptingOutputStream: OutputStream {
         if cryptor == nil, let iv = iv {
             do {
                 cryptor = try CCCryptorRef(operation: .decrypt, algorithm: .aes128, options: .pkcs7Padding, key: encryptionKey, iv: iv)
-            } catch let error {
+            } catch {
                 self.error = error
                 status = .error
             }

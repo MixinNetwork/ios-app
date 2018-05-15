@@ -165,7 +165,7 @@ extension AttachmentEncryptingInputStream {
             contentLength = AttachmentCryptography.Length.aesCbcIv
                 + CCCryptorGetOutputLength(cryptor, plainDataSize, true)
                 + AttachmentCryptography.Length.hmac
-        } catch let error {
+        } catch {
             self.error = error
         }
     }

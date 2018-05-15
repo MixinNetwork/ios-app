@@ -74,7 +74,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                 contentLength = Int(FileManager.default.fileSize(fileUrl.path))
             }
         }
-        guard let inputStream = stream else {
+        guard let inputStream = stream, contentLength > 0 else {
             return false
         }
         

@@ -20,7 +20,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         super.message = message
     }
 
-    static func jobId(messageId: String) -> String {
+    class func jobId(messageId: String) -> String {
         return "attachment-upload-\(messageId)"
     }
     

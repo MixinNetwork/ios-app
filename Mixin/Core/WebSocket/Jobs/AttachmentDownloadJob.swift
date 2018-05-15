@@ -11,7 +11,7 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     internal lazy var fileName = "\(messageId).jpg"
     internal lazy var fileUrl = MixinFile.url(ofChatDirectory: .photos, filename: fileName)
 
-    static func jobId(messageId: String) -> String {
+    class func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"
     }
     

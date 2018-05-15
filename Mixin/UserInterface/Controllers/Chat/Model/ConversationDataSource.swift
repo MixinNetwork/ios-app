@@ -366,10 +366,8 @@ extension ConversationDataSource {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }) else {
             return
         }
-        if let viewModel = viewModel(for: indexPath) {
-            if var viewModel = viewModel as? ProgressInspectableMessageViewModel {
-                viewModel.mediaStatus = mediaStatus.rawValue
-            }
+        if let viewModel = viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel {
+            viewModel.mediaStatus = mediaStatus.rawValue
             if let cell = tableView?.cellForRow(at: indexPath) as? MessageCell {
                 cell.render(viewModel: viewModel)
             }
@@ -377,11 +375,11 @@ extension ConversationDataSource {
     }
     
     private func updateMediaProgress(messageId: String, progress: Double) {
-        guard let indexPath = indexPath(where: { $0.messageId == messageId }), var viewModel = viewModel(for: indexPath) as? ProgressInspectableMessageViewModel else {
+        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel else {
             return
         }
         viewModel.progress = progress
-        if let cell = tableView?.cellForRow(at: indexPath) as? ProgressInspectableMessageCell {
+        if let cell = tableView?.cellForRow(at: indexPath) as? AttachmentLoadingMessageCell {
             cell.updateProgress(viewModel: viewModel)
         }
     }

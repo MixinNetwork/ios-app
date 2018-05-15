@@ -2,19 +2,14 @@ import UIKit
 import SDWebImage
 import FLAnimatedImage
 
-protocol PhotoMessageCellDelegate: class {
-    func photoMessageCellDidSelectNetworkOperation(_ cell: PhotoMessageCell)
-}
-
-class PhotoMessageCell: DetailInfoMessageCell {
-
+class PhotoMessageCell: DetailInfoMessageCell, AttachmentLoadingMessageCell {
+    
+    weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
+    
     let contentImageView = FLAnimatedImageView()
     let shadowImageView = UIImageView()
-    let operationButton = NetworkOperationButton(type: .custom)
-
-    weak var photoMessageDelegate: PhotoMessageCellDelegate?
+    let operationButton: NetworkOperationButton! = NetworkOperationButton(type: .custom)
     
-    private var attachmentDownloadJobId: String?
     private let expiredHintLabel = UILabel()
 
     override var contentFrame: CGRect {
@@ -24,11 +19,6 @@ class PhotoMessageCell: DetailInfoMessageCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         contentImageView.sd_cancelCurrentImageLoad()
-        cancelPhotoLoad()
-    }
-
-    deinit {
-        cancelPhotoLoad()
     }
 
     override func render(viewModel: MessageViewModel) {
@@ -37,7 +27,7 @@ class PhotoMessageCell: DetailInfoMessageCell {
             contentImageView.frame = viewModel.contentFrame
             contentImageView.layer.mask = backgroundImageView.layer
             operationButton.center = CGPoint(x: viewModel.contentFrame.midX, y: viewModel.contentFrame.midY)
-            operationButton.style = viewModel.networkOperationButtonStyle
+            operationButton.style = viewModel.operationButtonStyle
             if viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue {
                 expiredHintLabel.isHidden = false
                 operationButton.center.y -= expiredHintLabel.frame.height
@@ -56,9 +46,6 @@ class PhotoMessageCell: DetailInfoMessageCell {
                 if let imageData = Data(base64Encoded: thumbImage) {
                     contentImageView.image = UIImage(data: imageData)
                 }
-            }
-            if message.mediaStatus == MediaStatus.PENDING.rawValue && message.userId != AccountAPI.shared.accountUserId {
-                downloadPhoto(message: message)
             }
         }
     }
@@ -88,12 +75,11 @@ class PhotoMessageCell: DetailInfoMessageCell {
     }
     
     @objc func networkOperationAction(_ sender: Any) {
-        photoMessageDelegate?.photoMessageCellDidSelectNetworkOperation(self)
+        attachmentLoadingDelegate?.attachmentLoadingCellDidSelectNetworkOperation(self)
     }
     
-    func downloadPhoto(message: MessageItem) {
-        ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: message.messageId))
-        attachmentDownloadJobId = AttachmentDownloadJob.jobId(messageId: message.messageId)
+    func updateProgress(viewModel: AttachmentLoadingViewModel) {
+        operationButton.style = .busy(progress: viewModel.progress ?? 0)
     }
 
     func contentSnapshotView(afterScreenUpdates: Bool) -> UIView {
@@ -111,22 +97,6 @@ class PhotoMessageCell: DetailInfoMessageCell {
         UIGraphicsEndImageContext()
         view.image = image
         return view
-    }
-    
-    private func cancelPhotoLoad() {
-        guard let id = attachmentDownloadJobId else {
-            return
-        }
-        ConcurrentJobQueue.shared.cancelJob(jobId: id)
-        attachmentDownloadJobId = nil
-    }
-    
-}
-
-extension PhotoMessageCell: ProgressInspectableMessageCell {
-    
-    func updateProgress(viewModel: ProgressInspectableMessageViewModel) {
-        operationButton.style = .busy(progress: viewModel.progress ?? 0)
     }
     
 }

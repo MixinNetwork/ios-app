@@ -11,12 +11,12 @@ class FileDownloadJob: AttachmentDownloadJob {
         super.message = message
     }
 
-    static func fileJobId(messageId: String) -> String {
+    override class func jobId(messageId: String) -> String {
         return "file-download-\(messageId)"
     }
 
     override func getJobId() -> String {
-        return FileDownloadJob.fileJobId(messageId: message.messageId)
+        return FileDownloadJob.jobId(messageId: message.messageId)
     }
 
 }

@@ -403,9 +403,10 @@ class ConversationViewController: UIViewController {
             toggleStickerPanel(delay: 0)
             return
         }
-        guard let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)), let cell = tableView.cellForRow(at: indexPath), let message = dataSource?.viewModel(for: indexPath)?.message else {
+        guard let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)), let cell = tableView.cellForRow(at: indexPath), let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
         }
+        let message = viewModel.message
         if message.category.hasSuffix("_IMAGE") {
             guard message.mediaStatus == MediaStatus.DONE.rawValue, let photoCell = cell as? PhotoMessageCell, photoCell.contentImageView.frame.contains(recognizer.location(in: photoCell)), let item = GalleryItem(message: message) else {
                 return
@@ -413,24 +414,13 @@ class ConversationViewController: UIViewController {
             view.bringSubview(toFront: galleryWrapperView)
             galleryViewController.show(item: item)
         } else if message.category.hasSuffix("_DATA") {
-            guard let dataCell = cell as? DataMessageCell, dataCell.contentFrame.contains(recognizer.location(in: dataCell)), let mediaStatus = message.mediaStatus else {
+            guard let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell else {
                 return
             }
-            
-            switch mediaStatus {
-            case MediaStatus.DONE.rawValue:
+            if viewModel.mediaStatus == MediaStatus.DONE.rawValue {
                 openDocumentAction(message: message)
-            case MediaStatus.CANCELED.rawValue:
-                MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-                if message.userId == me.user_id {
-                    FileJobQueue.shared.addJob(job: FileUploadJob(message: Message.createMessage(message: message)))
-                } else {
-                    FileJobQueue.shared.addJob(job: FileDownloadJob(message: Message.createMessage(message: message)))
-                }
-            case MediaStatus.PENDING.rawValue:
-                cancelMessageSending(message: message)
-            default:
-                break
+            } else {
+                attachmentLoadingCellDidSelectNetworkOperation(cell)
             }
         } else if message.category.hasSuffix("_CONTACT") {
             guard let cell = cell as? ContactMessageCell, cell.contentFrame.contains(recognizer.location(in: cell)) else {
@@ -731,16 +721,17 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
     }
     
     func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: ConversationTableView.Action, forIndexPath indexPath: IndexPath) {
-        guard let message = dataSource?.viewModel(for: indexPath)?.message else {
+        guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
         }
+        let message = viewModel.message
         switch action {
         case .copy:
             if message.category.hasSuffix("_TEXT") {
                 UIPasteboard.general.string = message.content
             }
         case .delete:
-            cancelMessageSending(message: message)
+            (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(markMediaStatusCancelled: false)
             dataSource?.queue.async { [weak self] in
                 MessageDAO.shared.deleteMessage(id: message.messageId)
                 DispatchQueue.main.sync {
@@ -817,8 +808,17 @@ extension ConversationViewController: UITableViewDelegate {
             unreadBadgeValue = 0
             dataSource.firstUnreadMessageId = nil
         }
+        if let viewModel = dataSource.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
+            viewModel.beginAttachmentLoading()
+        }
     }
     
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let viewModel = dataSource?.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
+            viewModel.cancelAttachmentLoading(markMediaStatusCancelled: false)
+        }
+    }
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return 44
@@ -876,53 +876,23 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
     
 }
 
-// MARK: - DataMessageCellDelegate
-extension ConversationViewController: DataMessageCellDelegate {
+// MARK: - AttachmentLoadingMessageCellDelegate
+extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
     
-    func dataMessageCellDidSelectNetworkOperation(_ cell: DataMessageCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) else {
+    func attachmentLoadingCellDidSelectNetworkOperation(_ cell: MessageCell & AttachmentLoadingMessageCell) {
+        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel, let mediaStatus = viewModel.mediaStatus else {
             return
         }
-        let message = viewModel.message
-        operationAction(message: message, operationButton: cell.operationButton)
-    }
-    
-}
-
-// MARK: - PhotoMessageCellDelegate
-extension ConversationViewController: PhotoMessageCellDelegate {
-    
-    func photoMessageCellDidSelectNetworkOperation(_ cell: PhotoMessageCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) else {
-            return
-        }
-        let message = viewModel.message
-        if case .download = cell.operationButton.style {
-            cell.downloadPhoto(message: message)
-        }
-        operationAction(message: message, operationButton: cell.operationButton)
-    }
-    
-    private func operationAction(message: MessageItem, operationButton: NetworkOperationButton) {
-        switch operationButton.style {
-        case .finished, .expired:
+        switch mediaStatus {
+        case MediaStatus.CANCELED.rawValue:
+            viewModel.beginAttachmentLoading()
+        case MediaStatus.PENDING.rawValue:
+            viewModel.cancelAttachmentLoading(markMediaStatusCancelled: true)
+        default:
             break
-        case .upload:
-            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-            if message.category.hasSuffix("_DATA") {
-                FileJobQueue.shared.addJob(job: FileUploadJob(message: Message.createMessage(message: message)))
-            } else if message.category.hasSuffix("_IMAGE") {
-                ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: Message.createMessage(message: message)))
-            }
-        case .download:
-            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-            if message.category.hasSuffix("_DATA") {
-                FileJobQueue.shared.addJob(job: FileDownloadJob(message: Message.createMessage(message: message)))
-            }
-        case .busy:
-            cancelMessageSending(message: message)
         }
     }
+    
 }
 
 // MARK: - TextMessageLabelDelegate
@@ -1325,29 +1295,6 @@ extension ConversationViewController {
         if !(previewDocumentController?.presentPreview(animated: true) ?? false) {
             previewDocumentController?.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
         }
-    }
-    
-    private func cancelMessageSending(message: MessageItem) {
-        let sentByMe = message.userId == me.user_id
-        let jobId: String
-        if message.category.hasSuffix("_IMAGE") {
-            if sentByMe {
-                jobId = AttachmentUploadJob.jobId(messageId: message.messageId)
-            } else {
-                jobId = AttachmentDownloadJob.jobId(messageId: message.messageId)
-            }
-            ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
-        } else if message.category.hasSuffix("_DATA") {
-            if sentByMe {
-                jobId = FileUploadJob.fileJobId(messageId: message.messageId)
-            } else {
-                jobId = FileDownloadJob.fileJobId(messageId: message.messageId)
-            }
-            FileJobQueue.shared.cancelJob(jobId: jobId)
-        } else {
-            return
-        }
-        MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
     }
     
     private func reportAction(conversationId: String) {

@@ -136,11 +136,8 @@ class ConversationTableView: UITableView {
         if let cell = cell as? DetailInfoMessageCell, cell.delegate == nil {
             cell.delegate = viewController
         }
-        if let cell = cell as? PhotoMessageCell, cell.photoMessageDelegate == nil {
-            cell.photoMessageDelegate = viewController
-        }
-        if let cell = cell as? DataMessageCell, cell.cellDelegate == nil {
-            cell.cellDelegate = viewController
+        if let cell = cell as? AttachmentLoadingMessageCell, cell.attachmentLoadingDelegate == nil {
+            cell.attachmentLoadingDelegate = viewController
         }
         if let cell = cell as? TextMessageCell, cell.contentLabel.delegate == nil {
             cell.contentLabel.delegate = viewController

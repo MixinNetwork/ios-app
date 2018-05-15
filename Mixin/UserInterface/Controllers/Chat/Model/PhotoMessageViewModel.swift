@@ -1,6 +1,6 @@
 import UIKit
 
-class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMessageViewModel {
+class PhotoMessageViewModel: DetailInfoMessageViewModel, AttachmentLoadingViewModel {
     
     static let contentWidth: CGFloat = 220
     static let maxHeight: CGFloat = UIScreen.main.bounds.height / 2
@@ -11,7 +11,7 @@ class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMess
     internal(set) var contentFrame = CGRect.zero
     internal(set) var shadowImage: UIImage?
     internal(set) var shadowImageOrigin = CGPoint.zero
-    internal(set) var networkOperationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
+    internal(set) var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
 
     override lazy var contentMargin: Margin = {
         Margin(leading: 9, trailing: 5, top: 4, bottom: 6)
@@ -21,41 +21,16 @@ class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMess
     
     var progress: Double?
 
-    override var statusNormalTintColor: UIColor {
-        return .white
+    var automaticallyLoadsAttachment: Bool {
+        return mediaStatus == MediaStatus.PENDING.rawValue && !messageIsSentByMe
     }
     
-    var mediaStatus: String? {
-        get {
-            return message.mediaStatus
-        }
-        set {
-            let sentByMe = message.userId == AccountAPI.shared.accountUserId
-            if let newValue = newValue {
-                switch newValue {
-                case MediaStatus.PENDING.rawValue:
-                    networkOperationButtonStyle = .busy(progress:0)
-                case MediaStatus.CANCELED.rawValue:
-                    if sentByMe {
-                        networkOperationButtonStyle = .upload
-                    } else {
-                        networkOperationButtonStyle = .download
-                    }
-                case MediaStatus.DONE.rawValue:
-                    networkOperationButtonStyle = .finished(showPlayIcon: false)
-                case MediaStatus.EXPIRED.rawValue:
-                    networkOperationButtonStyle = .expired
-                default:
-                    break
-                }
-            } else {
-                networkOperationButtonStyle = .finished(showPlayIcon: false)
-            }
-            if newValue != MediaStatus.PENDING.rawValue {
-                progress = nil
-            }
-            message.mediaStatus = newValue
-        }
+    var showPlayIconAfterFinished: Bool {
+        return false
+    }
+    
+    override var statusNormalTintColor: UIColor {
+        return .white
     }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
@@ -69,7 +44,7 @@ class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMess
         contentSize = CGSize(width: contentWidth,
                              height: min(PhotoMessageViewModel.maxHeight, contentWidth / ratio))
         super.init(message: message, style: style, fits: layoutWidth)
-        mediaStatus = message.mediaStatus
+        updateOperationButtonStyle()
     }
     
     override func didSetStyle() {
@@ -114,6 +89,33 @@ class PhotoMessageViewModel: DetailInfoMessageViewModel, ProgressInspectableMess
             statusFrame.origin.x = timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin
         }
         statusFrame.origin.y += fullnameHeight
+    }
+    
+    func beginAttachmentLoading() {
+        guard message.mediaStatus == MediaStatus.PENDING.rawValue || message.mediaStatus == MediaStatus.CANCELED.rawValue else {
+            return
+        }
+        MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
+        let job: UploadOrDownloadJob
+        if messageIsSentByMe {
+            job = AttachmentUploadJob(message: Message.createMessage(message: message))
+        } else {
+            job = AttachmentDownloadJob(messageId: message.messageId)
+        }
+        ConcurrentJobQueue.shared.addJob(job: job)
+    }
+    
+    func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
+        let jobId: String
+        if messageIsSentByMe {
+            jobId = AttachmentUploadJob.jobId(messageId: message.messageId)
+        } else {
+            jobId = AttachmentDownloadJob.jobId(messageId: message.messageId)
+        }
+        ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
+        if markMediaStatusCancelled {
+            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
+        }
     }
     
 }

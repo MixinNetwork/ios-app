@@ -3,10 +3,10 @@ import Bugsnag
 
 class FileDownloadJob: AttachmentDownloadJob {
 
-    private let fileName: String
-
+    override lazy var fileName: String = "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMineType ?? ""))"
+    override lazy var fileUrl = MixinFile.chatFilesUrl.appendingPathComponent(fileName)
+    
     init(message: Message) {
-        fileName = "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMineType ?? ""))"
         super.init(messageId: message.messageId)
         super.message = message
     }
@@ -19,14 +19,4 @@ class FileDownloadJob: AttachmentDownloadJob {
         return FileDownloadJob.fileJobId(messageId: message.messageId)
     }
 
-    override func downloadFinished(data: Data) {
-        let filePath = MixinFile.chatFilesUrl.appendingPathComponent(fileName)
-        do {
-            try? FileManager.default.removeItem(atPath: filePath.path)
-            try data.write(to: filePath)
-            MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: MediaStatus.DONE, conversationId: message.conversationId)
-        } catch {
-            Bugsnag.notifyError(error)
-        }
-    }
 }

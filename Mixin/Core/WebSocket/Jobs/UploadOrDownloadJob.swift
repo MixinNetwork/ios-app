@@ -7,7 +7,7 @@ class UploadOrDownloadJob: AsynchronousJob {
     internal var message: Message!
     internal var task: URLSessionTask?
 
-    internal lazy var completionHandler = { [weak self](data: Any?, response: URLResponse?, error: Error?) in
+    internal lazy var completionHandler = { [weak self] (data: Any?, response: URLResponse?, error: Error?) in
         guard let weakSelf = self else {
             return
         }
@@ -36,7 +36,7 @@ class UploadOrDownloadJob: AsynchronousJob {
             return
         }
 
-        weakSelf.taskFinished(data: data)
+        weakSelf.taskFinished()
         weakSelf.finishJob()
     }
 
@@ -95,7 +95,7 @@ class UploadOrDownloadJob: AsynchronousJob {
         return false
     }
 
-    func taskFinished(data: Any?) {
+    func taskFinished() {
 
     }
 

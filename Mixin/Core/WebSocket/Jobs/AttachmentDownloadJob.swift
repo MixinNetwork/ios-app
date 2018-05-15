@@ -4,12 +4,12 @@ import Bugsnag
 
 class AttachmentDownloadJob: UploadOrDownloadJob {
 
-    private let imageName: String
-
-    override init(messageId: String) {
-        self.imageName = "\(messageId).jpg"
-        super.init(messageId: messageId)
-    }
+    private var stream: OutputStream!
+    private var contentLength: Double?
+    private var downloadedContentLength: Double = 0
+    
+    internal lazy var fileName = "\(messageId).jpg"
+    internal lazy var fileUrl = MixinFile.chatPhotosUrl(fileName)
 
     static func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"
@@ -50,82 +50,77 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
             return false
         }
 
+        if message.category.hasPrefix("SIGNAL_") {
+            guard let key = message.mediaKey, let digest = message.mediaDigest else {
+                return false
+            }
+            stream = AttachmentDecryptingOutputStream(url: fileUrl, key: key, digest: digest)
+            if stream == nil {
+                UIApplication.trackError(String(describing: type(of: self)), action: "AttachmentDecryptingOutputStream init failed")
+                return false
+            }
+        } else {
+            stream = OutputStream(url: fileUrl, append: false)
+            if stream == nil {
+                UIApplication.trackError(String(describing: type(of: self)), action: "OutputStream init failed")
+                return false
+            }
+        }
+        
+        downloadedContentLength = 0
+        stream.open()
+        
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 30
         var request = URLRequest(url: downloadUrl)
         request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
 
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-        task = session.downloadTask(with: request)
+        task = session.dataTask(with: request)
         task?.resume()
         session.finishTasksAndInvalidate()
         return true
     }
 
-    override func taskFinished(data: Any?) {
-        guard let location = data as? URL else {
-            return
-        }
-        guard FileManager.default.fileSize(location.path) > 0, let mediaSize = message.mediaSize, let fileData = FileManager.default.contents(atPath: location.path) else {
-            return
-        }
-
-        if message.category.hasPrefix("SIGNAL_") {
-            guard let key = message.mediaKey, let digest = message.mediaDigest else {
-                return
-            }
-            var error: NSError?
-            let encryptedData = Cryptography.decryptAttachment(fileData, withKey: key, digest: digest, unpaddedSize: UInt32(mediaSize), error: &error)
-
-            if let err = error {
-                Bugsnag.notifyError(err)
-                return
-            }
-            guard !encryptedData.isEmpty else {
-                return
-            }
-
-            downloadFinished(data: encryptedData)
-        } else {
-            downloadFinished(data: fileData)
-        }
-    }
-
-    func downloadFinished(data: Data) {
-        let imagePath = MixinFile.chatPhotosUrl(imageName)
-        do {
-            try? FileManager.default.removeItem(atPath: imagePath.path)
-            try data.write(to: imagePath)
-            MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: imageName, status: MediaStatus.DONE, conversationId: message.conversationId)
-        } catch {
+    override func taskFinished() {
+        if let error = stream.streamError {
+            try? FileManager.default.removeItem(at: fileUrl)
             Bugsnag.notifyError(error)
+            MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .CANCELED, conversationId: message.conversationId)
+        } else {
+            MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .DONE, conversationId: message.conversationId)
         }
     }
-
+    
     override func downloadExpired() {
-        MessageDAO.shared.updateMediaStatus(messageId: messageId, status: MediaStatus.EXPIRED, conversationId: message.conversationId)
+        MessageDAO.shared.updateMediaStatus(messageId: messageId, status: .EXPIRED, conversationId: message.conversationId)
     }
 
 }
 
-extension AttachmentDownloadJob: URLSessionDownloadDelegate {
+extension AttachmentDownloadJob: URLSessionDataDelegate {
+    
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Swift.Void) {
+        contentLength = Double(response.expectedContentLength)
+        completionHandler(.allow)
+    }
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard !isFinished else {
-            return
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        _ = data.withUnsafeBytes {
+            stream.write($0, maxLength: data.count)
         }
-        completionHandler(nil, nil, error)
+        if let contentLength = contentLength {
+            downloadedContentLength += Double(data.count)
+            let progress = downloadedContentLength / contentLength
+            let change = ConversationChange(conversationId: message.conversationId,
+                                            action: .updateDownloadProgress(messageId: messageId, progress: progress))
+            NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
+        }
     }
-
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        completionHandler(location, downloadTask.response, nil)
-    }
-
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
-        let change = ConversationChange(conversationId: message.conversationId,
-                                        action: .updateDownloadProgress(messageId: messageId, progress: progress))
-        NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        stream.close()
+        completionHandler(nil, task.response, error)
     }
 
 }

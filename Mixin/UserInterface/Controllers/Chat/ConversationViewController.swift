@@ -3,7 +3,7 @@ import MobileCoreServices
 
 class ConversationViewController: UIViewController {
     
-    @IBOutlet weak var photoPreviewWrapperView: UIView!
+    @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var connectionHintView: ConnectionHintView!
     @IBOutlet weak var tableView: ConversationTableView!
@@ -66,11 +66,11 @@ class ConversationViewController: UIViewController {
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
     
-    private lazy var photoPreviewViewController: PhotoPreviewViewController = {
-        let controller = PhotoPreviewViewController.instance(conversationId: conversationId)
+    private lazy var galleryViewController: GalleryViewController = {
+        let controller = GalleryViewController.instance(conversationId: conversationId)
         controller.delegate = self
         addChildViewController(controller)
-        photoPreviewWrapperView.addSubview(controller.view)
+        galleryWrapperView.addSubview(controller.view)
         controller.view.snp.makeConstraints({ (make) in
             make.edges.equalToSuperview()
         })
@@ -407,11 +407,11 @@ class ConversationViewController: UIViewController {
             return
         }
         if message.category.hasSuffix("_IMAGE") {
-            guard message.mediaStatus == MediaStatus.DONE.rawValue, let photoCell = cell as? PhotoMessageCell, photoCell.contentImageView.frame.contains(recognizer.location(in: photoCell)), let photo = Photo(message: message) else {
+            guard message.mediaStatus == MediaStatus.DONE.rawValue, let photoCell = cell as? PhotoMessageCell, photoCell.contentImageView.frame.contains(recognizer.location(in: photoCell)), let item = GalleryItem(message: message) else {
                 return
             }
-            view.bringSubview(toFront: photoPreviewWrapperView)
-            photoPreviewViewController.show(photo: photo)
+            view.bringSubview(toFront: galleryWrapperView)
+            galleryViewController.show(item: item)
         } else if message.category.hasSuffix("_DATA") {
             guard let dataCell = cell as? DataMessageCell, dataCell.contentFrame.contains(recognizer.location(in: dataCell)), let mediaStatus = message.mediaStatus else {
                 return
@@ -982,10 +982,10 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
     
 }
 
-// MARK: - PhotoPreviewViewControllerDelegate
-extension ConversationViewController: PhotoPreviewViewControllerDelegate {
+// MARK: - GalleryViewControllerDelegate
+extension ConversationViewController: GalleryViewControllerDelegate {
     
-    func placeholder(forMessageId id: String) -> UIImage? {
+    func galleryViewController(_ viewController: GalleryViewController, placeholderForItemOfMessageId id: String) -> UIImage? {
         if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
             return cell.contentImageView.image
         } else {
@@ -993,7 +993,7 @@ extension ConversationViewController: PhotoPreviewViewControllerDelegate {
         }
     }
     
-    func sourceFrame(forMessageId id: String) -> CGRect? {
+    func galleryViewController(_ viewController: GalleryViewController, sourceRectForItemOfMessageId id: String) -> CGRect? {
         if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
             return cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
         } else {
@@ -1001,15 +1001,33 @@ extension ConversationViewController: PhotoPreviewViewControllerDelegate {
         }
     }
     
-    func sourceView(forMessageId id: String) -> UIView? {
+    func galleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition, stateDidChangeTo state: GalleryViewController.TransitionState, forItemOfMessageId id: String?) {
+        var contentViews = [UIView]()
         if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
-            return cell.contentView
-        } else {
-            return nil
+            contentViews = [cell.contentImageView,
+                            cell.shadowImageView,
+                            cell.operationButton,
+                            cell.timeLabel,
+                            cell.statusImageView]
+        }
+        switch state {
+        case .began:
+            contentViews.forEach {
+                $0.isHidden = true
+            }
+        case .ended:
+            if transition == .dismiss {
+                view.sendSubview(toBack: galleryWrapperView)
+            }
+            fallthrough
+        case .cancelled:
+            contentViews.forEach {
+                $0.isHidden = false
+            }
         }
     }
     
-    func snapshotView(forMessageId id: String) -> UIView? {
+    func galleryViewController(_ viewController: GalleryViewController, snapshotForItemOfMessageId id: String) -> UIView? {
         if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
             return cell.contentSnapshotView(afterScreenUpdates: false)
         } else {
@@ -1017,20 +1035,16 @@ extension ConversationViewController: PhotoPreviewViewControllerDelegate {
         }
     }
     
-    func animateAlongsideAppearance() {
-        hideStatusBar = true
+    func animateAlongsideGalleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition) {
+        switch transition {
+        case .show:
+            hideStatusBar = true
+        case .dismiss:
+            hideStatusBar = false
+        }
         setNeedsStatusBarAppearanceUpdate()
     }
     
-    func animateAlongsideDisappearance() {
-        hideStatusBar = false
-        setNeedsStatusBarAppearanceUpdate()
-    }
-    
-    func viewControllerDidDismissed(_ viewController: PhotoPreviewViewController) {
-        view.sendSubview(toBack: photoPreviewWrapperView)
-    }
-
 }
 
 // MARK: - UI Related Helpers

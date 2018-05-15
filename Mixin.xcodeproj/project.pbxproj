@@ -143,7 +143,7 @@
 		7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */; };
 		7BB470491FB1965E0059AE79 /* GroupMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
-		7BBA1CA920692C7600B2F0CE /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBA1CA820692C7600B2F0CE /* Photo.swift */; };
+		7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */; };
 		7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */; };
 		7BBF395E205A624F00390712 /* Fee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBF395D205A624F00390712 /* Fee.swift */; };
 		7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC26533207B595500EA7DFF /* ContactMessageCell.swift */; };
@@ -162,8 +162,8 @@
 		7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */; };
 		7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */; };
 		7BEFDC211FB08E9B00F66885 /* GroupUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC201FB08E9B00F66885 /* GroupUser.swift */; };
-		7BF374A72063951F008A166B /* PhotoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A52063951E008A166B /* PhotoPreviewViewController.swift */; };
-		7BF374A82063951F008A166B /* PhotoPreviewPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A62063951E008A166B /* PhotoPreviewPageViewController.swift */; };
+		7BF374A72063951F008A166B /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A52063951E008A166B /* GalleryViewController.swift */; };
+		7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A62063951E008A166B /* GalleryItemViewController.swift */; };
 		7BF4047B2048F008004C54E4 /* ChangeNumberNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */; };
 		7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPINViewController.swift */; };
 		7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5374820076BB500257D6C /* ShutterAnimationView.swift */; };
@@ -601,7 +601,7 @@
 		7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberCell.swift; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
-		7BBA1CA820692C7600B2F0CE /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItem.swift; sourceTree = "<group>"; };
 		7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPeopleViewController.swift; sourceTree = "<group>"; };
 		7BBF395D205A624F00390712 /* Fee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fee.swift; sourceTree = "<group>"; };
 		7BC26533207B595500EA7DFF /* ContactMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageCell.swift; sourceTree = "<group>"; };
@@ -620,8 +620,8 @@
 		7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameCell.swift; sourceTree = "<group>"; };
 		7BEFDC201FB08E9B00F66885 /* GroupUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupUser.swift; sourceTree = "<group>"; };
-		7BF374A52063951E008A166B /* PhotoPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPreviewViewController.swift; sourceTree = "<group>"; };
-		7BF374A62063951E008A166B /* PhotoPreviewPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPreviewPageViewController.swift; sourceTree = "<group>"; };
+		7BF374A52063951E008A166B /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
+		7BF374A62063951E008A166B /* GalleryItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryItemViewController.swift; sourceTree = "<group>"; };
 		7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberNavigationController.swift; sourceTree = "<group>"; };
 		7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPINViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPINViewController.swift; sourceTree = "<group>"; };
 		7BF5374820076BB500257D6C /* ShutterAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShutterAnimationView.swift; sourceTree = "<group>"; };
@@ -1104,7 +1104,7 @@
 				7BAECA3920401DE500AEA42F /* ProgressInspectableMessageViewModel.swift */,
 				7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */,
 				7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */,
-				7BBA1CA820692C7600B2F0CE /* Photo.swift */,
+				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1156,8 +1156,8 @@
 				7B0F851D20147EF700C02388 /* StickerPanelViewController.swift */,
 				7B0F851F201494DA00C02388 /* StickerPageViewController.swift */,
 				7B8938A42020176200C72070 /* ConversationMoreMenuViewController.swift */,
-				7BF374A52063951E008A166B /* PhotoPreviewViewController.swift */,
-				7BF374A62063951E008A166B /* PhotoPreviewPageViewController.swift */,
+				7BF374A52063951E008A166B /* GalleryViewController.swift */,
+				7BF374A62063951E008A166B /* GalleryItemViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2288,7 +2288,7 @@
 				7BBF395E205A624F00390712 /* Fee.swift in Sources */,
 				DF2A24521FC8744A003A8C1E /* ParticipantDAO.swift in Sources */,
 				273FACB5205FB9A800513327 /* crypto_provider.c in Sources */,
-				7BBA1CA920692C7600B2F0CE /* Photo.swift in Sources */,
+				7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */,
 				7B92F8251FA1A7D5000B838B /* LoginViewController.swift in Sources */,
 				7BA4A1CE1FF347130086CD56 /* GroupParticipantCell.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
@@ -2317,7 +2317,7 @@
 				DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */,
 				273FACB7205FB9A800513327 /* SignalStore.swift in Sources */,
 				DF84281E1FE92A260018B054 /* ForwardViewController.swift in Sources */,
-				7BF374A72063951F008A166B /* PhotoPreviewViewController.swift in Sources */,
+				7BF374A72063951F008A166B /* GalleryViewController.swift in Sources */,
 				DFEE215E200CAE8600D9B3F7 /* AuthorizationResponse.swift in Sources */,
 				DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */,
 				DFF3530A1FEE9E1200058453 /* TransferResponse.swift in Sources */,
@@ -2435,7 +2435,7 @@
 				7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */,
 				DF121F311FA1C767000F701D /* ConversationCell.swift in Sources */,
 				DF1A9A7E1FF2539700A95188 /* UserNotificationExtension.swift in Sources */,
-				7BF374A82063951F008A166B /* PhotoPreviewPageViewController.swift in Sources */,
+				7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */,
 				7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */,
 				DF503D451FED1D3C00C008E7 /* MixinSenderKeyStore.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,

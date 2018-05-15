@@ -2,15 +2,17 @@ import UIKit
 import Photos
 import SwiftMessages
 
-class PhotoPreviewPageViewController: UIViewController {
+class GalleryItemViewController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var mediaStatusView: UIStackView!
     @IBOutlet weak var operationButton: NetworkOperationButton!
     @IBOutlet weak var expiredHintLabel: UILabel!
     
+    let imageView = UIImageView()
+    
     private let animationDuration: TimeInterval = 0.3
+    private let maximumZoomScale: CGFloat = 3
 
     private(set) var urlFromQRCode: URL?
     
@@ -32,24 +34,24 @@ class PhotoPreviewPageViewController: UIViewController {
         }
     }
 
-    var photo: Photo? {
+    var item: GalleryItem? {
         didSet {
             scrollView.zoomScale = 1
-            guard photo != oldValue else {
+            guard item != oldValue else {
                 return
             }
             urlFromQRCode = nil
             imageView.sd_cancelCurrentImageLoad()
             imageView.image = nil
             scrollView.contentSize = pageSize
-            if let photo = photo {
-                if let url = photo.url {
-                    imageView.sd_setImage(with: url, placeholderImage: photo.thumbnail, options: [], completed: { [weak self] (image, _, _, _) in
+            if let item = item {
+                if let url = item.url {
+                    imageView.sd_setImage(with: url, placeholderImage: item.thumbnail, options: [], completed: { [weak self] (image, _, _, _) in
                         guard let image = image else {
                             return
                         }
                         DispatchQueue.global().async {
-                            guard self != nil, self?.photo?.messageId == photo.messageId, let ciImage = CIImage(image: image), let features = PhotoPreviewPageViewController.qrCodeDetector?.features(in: ciImage) else {
+                            guard self != nil, self?.item?.messageId == item.messageId, let ciImage = CIImage(image: image), let features = GalleryItemViewController.qrCodeDetector?.features(in: ciImage) else {
                                 return
                             }
                             for case let feature as CIQRCodeFeature in features {
@@ -57,7 +59,7 @@ class PhotoPreviewPageViewController: UIViewController {
                                     continue
                                 }
                                 DispatchQueue.main.async {
-                                    if self?.photo?.messageId == photo.messageId {
+                                    if self?.item?.messageId == item.messageId {
                                         self?.urlFromQRCode = url
                                     }
                                 }
@@ -66,10 +68,10 @@ class PhotoPreviewPageViewController: UIViewController {
                         }
                     })
                 } else {
-                    imageView.image = photo.thumbnail
+                    imageView.image = item.thumbnail
                 }
-                layout(mediaStatus: photo.mediaStatus)
-                if photo.mediaStatus == .PENDING {
+                layout(mediaStatus: item.mediaStatus)
+                if item.mediaStatus == .PENDING {
                     beginDownload()
                 }
                 layoutImageView()
@@ -79,6 +81,7 @@ class PhotoPreviewPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.addSubview(imageView)
         scrollView.delegate = self
     }
     
@@ -104,9 +107,6 @@ class PhotoPreviewPageViewController: UIViewController {
     }
     
     func zoom(location: CGPoint) {
-        guard imageView.frame.contains(location) else {
-            return
-        }
         if abs(scrollView.zoomScale - scrollView.maximumZoomScale) > 0.1 {
             let size = ceil(CGSize(width: scrollView.frame.width / scrollView.maximumZoomScale,
                                    height: scrollView.frame.height / scrollView.maximumZoomScale))
@@ -146,14 +146,14 @@ class PhotoPreviewPageViewController: UIViewController {
         }
     }
     
-    class func instance() -> PhotoPreviewPageViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "photo_preview_page") as! PhotoPreviewPageViewController
+    class func instance() -> GalleryItemViewController {
+        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "photo_preview_page") as! GalleryItemViewController
         return vc
     }
     
 }
 
-extension PhotoPreviewPageViewController: UIScrollViewDelegate {
+extension GalleryItemViewController: UIScrollViewDelegate {
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         let offset = CGPoint(x: max(0, (scrollView.frame.width - scrollView.contentSize.width) / 2),
@@ -168,7 +168,7 @@ extension PhotoPreviewPageViewController: UIScrollViewDelegate {
     
 }
 
-extension PhotoPreviewPageViewController {
+extension GalleryItemViewController {
     
     private func performSavingToLibrary(image: UIImage) {
         PHPhotoLibrary.shared().performChanges({
@@ -185,7 +185,7 @@ extension PhotoPreviewPageViewController {
     }
     
     private func beginDownload() {
-        guard let photo  = photo else {
+        guard let photo  = item else {
             return
         }
         layout(mediaStatus: .PENDING)
@@ -194,7 +194,7 @@ extension PhotoPreviewPageViewController {
     }
     
     private func stopDownload() {
-        guard let messageId = photo?.messageId else {
+        guard let messageId = item?.messageId else {
             return
         }
         layout(mediaStatus: .CANCELED)
@@ -230,13 +230,13 @@ extension PhotoPreviewPageViewController {
     }
     
     private func layoutImageView() {
-        guard let photo = photo, (scrollView.zoomScale - 1) < 0.1 else {
+        guard let item = item, (scrollView.zoomScale - 1) < 0.1 else {
             return
         }
         let safeAreaInsets = self.safeAreaInsets
         let safeSize = CGSize(width: pageSize.width - safeAreaInsets.horizontal,
                               height: pageSize.height - safeAreaInsets.vertical)
-        let imageRatio = photo.size.width / photo.size.height
+        let imageRatio = item.size.width / item.size.height
         let pageRatio = pageSize.width / pageSize.height
         if imageRatio <= pageRatio {
             let width = ceil(safeSize.height * imageRatio)
@@ -252,6 +252,13 @@ extension PhotoPreviewPageViewController {
                                      height: height)
         }
         scrollView.contentSize = imageView.frame.size
+        let fittingScale: CGFloat
+        if imageRatio > 1 {
+            fittingScale = max(1, pageSize.height / imageView.frame.height)
+        } else {
+            fittingScale = max(1, pageSize.width / imageView.frame.width)
+        }
+        scrollView.maximumZoomScale = max(fittingScale, maximumZoomScale)
     }
     
 }

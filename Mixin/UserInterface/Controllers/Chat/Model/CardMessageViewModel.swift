@@ -38,20 +38,20 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
     }
     
     override func didSetStyle() {
+        let backgroundSize = CGSize(width: min(size.width, layoutWidth - MessageViewModel.backgroundImageMargin.horizontal),
+                                    height: size.height)
         let backgroundOrigin: CGPoint
         if style.contains(.received) {
             backgroundOrigin = CGPoint(x: MessageViewModel.backgroundImageMargin.leading, y: fullnameHeight)
             leadingConstant = leftLeadingMargin
             trailingConstant = leftTrailingMargin
         } else {
-            backgroundOrigin = CGPoint(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - size.width, y: fullnameHeight)
+            backgroundOrigin = CGPoint(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - backgroundSize.width, y: fullnameHeight)
             leadingConstant = rightLeadingMargin
             trailingConstant = rightTrailingMargin
         }
-        let backgroundSize = CGSize(width: min(size.width, layoutWidth - MessageViewModel.backgroundImageMargin.horizontal),
-                                    height: size.height)
         backgroundImageFrame = CGRect(origin: backgroundOrigin, size: backgroundSize)
-        cellHeight = fullnameHeight + size.height + bottomSeparatorHeight
+        cellHeight = fullnameHeight + backgroundSize.height + bottomSeparatorHeight
         super.didSetStyle()
     }
     

@@ -46,3 +46,11 @@ extension AssetItem {
     }
 }
 
+extension AssetItem {
+
+    static func createAsset(asset: Asset, chainIconUrl: String?) -> AssetItem {
+        return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd)
+    }
+
+}
+

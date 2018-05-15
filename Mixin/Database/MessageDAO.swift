@@ -330,7 +330,7 @@ final class MessageDAO {
                                              condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
-    func getPhotos(conversationId: String, location: Photo, count: Int) -> [Photo] {
+    func getPhotos(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
         assert(count != 0)
         let messages: [Message]
         if count > 0 {
@@ -354,7 +354,7 @@ final class MessageDAO {
                                                         limit: -count,
                                                         inTransaction: false).reversed()
         }
-        return messages.flatMap{ Photo(message: $0) }
+        return messages.flatMap{ GalleryItem(message: $0) }
     }
 
     func insertMessage(message: Message, messageSource: String) {

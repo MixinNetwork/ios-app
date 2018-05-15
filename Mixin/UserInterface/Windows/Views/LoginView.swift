@@ -39,6 +39,7 @@ class LoginView: UIView {
         case ASSETS = "ASSETS:READ"
         case APPS_READ = "APPS:READ"
         case APPS_WRITE = "APPS:WRITE"
+        case CONTACTS_READ = "CONTACTS:READ"
     }
     private lazy var scopes: [(scope: Scope, name: String, desc: String)] = {
         guard let account = AccountAPI.shared.account else {
@@ -49,19 +50,27 @@ class LoginView: UIView {
 
         if authInfo.scopes.contains(Scope.PHONE.rawValue) {
             result.append((.PHONE, Localized.AUTH_PERMISSION_PHONE, account.phone))
+            selectedScopes.append(Scope.PHONE.rawValue)
+        }
+        if authInfo.scopes.contains(Scope.CONTACTS_READ.rawValue) {
+            result.append((.APPS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ_DESCRIPTION))
+            selectedScopes.append(Scope.CONTACTS_READ.rawValue)
         }
         if authInfo.scopes.contains(Scope.ASSETS.rawValue) {
             result.append((.ASSETS, Localized.AUTH_PERMISSION_ASSETS, getAssetsBalanceText()))
+            selectedScopes.append(Scope.ASSETS.rawValue)
         }
         if authInfo.scopes.contains(Scope.APPS_READ.rawValue) {
             result.append((.APPS_READ, Localized.AUTH_PERMISSION_APPS_READ, Localized.AUTH_PERMISSION_APPS_READ_DESCRIPTION))
+            selectedScopes.append(Scope.APPS_READ.rawValue)
         }
         if authInfo.scopes.contains(Scope.APPS_WRITE.rawValue) {
             result.append((.APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE, Localized.AUTH_PERMISSION_APPS_WRITE_DESCRIPTION))
+            selectedScopes.append(Scope.APPS_WRITE.rawValue)
         }
         return result
     }()
-    private var selectedScopes = [Scope.PROFILE.rawValue, Scope.PHONE.rawValue, Scope.ASSETS.rawValue, Scope.APPS_READ.rawValue, Scope.APPS_WRITE.rawValue]
+    private var selectedScopes = [Scope.PROFILE.rawValue]
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -122,8 +131,13 @@ class LoginView: UIView {
         }
 
         let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: [])
-        AuthorizeAPI.shared.authorize(authorization: request) { (_) in
-
+        AuthorizeAPI.shared.authorize(authorization: request) { (result) in
+            switch result {
+            case let .success(response):
+                UIApplication.shared.tryOpenThirdApp(response: response)
+            case .failure:
+                break
+            }
         }
     }
 
@@ -149,7 +163,7 @@ class LoginView: UIView {
                     UIApplication.rootNavigationController()?.popViewController(animated: true)
                 }
 
-                UIApplication.shared.tryOpenThirdApp(callback: response.app.redirectUri)
+                UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error, _):
                 weakSelf.authButton.isBusy = false
                 SwiftMessages.showToast(message: error.kind.localizedDescription ?? error.description, backgroundColor: .hintRed)
@@ -256,4 +270,28 @@ extension LoginView: UIScrollViewDelegate {
         }, completion: nil)
     }
     
+}
+
+fileprivate extension UIApplication {
+
+    func tryOpenThirdApp(response: AuthorizationResponse) {
+        let callback = response.app.redirectUri
+        guard !callback.isEmpty, let url = URL(string: callback), let scheme = url.scheme?.lowercased(), scheme != "http", scheme != "https", var components = URLComponents(string: callback) else {
+            return
+        }
+
+        if components.queryItems == nil {
+            components.queryItems = []
+        }
+        if response.authorizationCode.isEmpty {
+            components.queryItems?.append(URLQueryItem(name: "error", value: "access_denied"))
+        } else {
+            components.queryItems?.append(URLQueryItem(name: "code", value: response.authorizationCode))
+        }
+
+        guard let targetUrl = components.url else {
+            return
+        }
+        UIApplication.shared.open(targetUrl, options: [:], completionHandler: nil)
+    }
 }

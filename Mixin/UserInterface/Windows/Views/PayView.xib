@@ -54,6 +54,11 @@
                                 <constraint firstAttribute="width" constant="40" id="DSC-w1-m76"/>
                                 <constraint firstAttribute="height" constant="40" id="VEJ-pB-HFU"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yXF-Uh-Aji">
                             <rect key="frame" x="319" y="0.0" width="56" height="56"/>
@@ -232,7 +237,9 @@
             <connections>
                 <outlet property="amountExchangeLabel" destination="tKa-d7-Jox" id="o5K-3O-Gqg"/>
                 <outlet property="amountLabel" destination="gWl-Tf-cO3" id="2sn-6w-C1o"/>
+                <outlet property="assetImageView" destination="Rfz-A7-Jra" id="rG5-8G-dbY"/>
                 <outlet property="avatarImageView" destination="U7S-vg-56w" id="NDd-24-b1m"/>
+                <outlet property="blockchainImageView" destination="k07-Py-pCL" id="twG-u9-y6X"/>
                 <outlet property="dismissButton" destination="rxd-aL-AVQ" id="TQd-R2-Ddq"/>
                 <outlet property="memoLabel" destination="C02-xQ-2hI" id="UYk-cd-JkZ"/>
                 <outlet property="memoView" destination="yfc-sw-leV" id="0I6-CO-OJZ"/>

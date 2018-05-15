@@ -63,6 +63,18 @@ class WithdrawalViewController: UIViewController {
             contentViewTopConstraint.constant = 0
         }
 
+        loadDefaultAddress()
+        self.view.addSubview(addressBookView)
+        addressBookView.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+
+        NotificationCenter.default.addObserver(forName: .DefaultAddressDidChange, object: nil, queue: .main) { [weak self](_) in
+            self?.loadDefaultAddress()
+        }
+    }
+
+    private func loadDefaultAddress() {
         let assetId = self.asset.assetId
         DispatchQueue.global().async { [weak self] in
             let address = AddressDAO.shared.getLastUseAddress(assetId: assetId)
@@ -70,11 +82,6 @@ class WithdrawalViewController: UIViewController {
                 self?.address = address
             }
         }
-
-        self.view.addSubview(addressBookView)
-        addressBookView.snp.makeConstraints({ (make) in
-            make.edges.equalToSuperview()
-        })
     }
 
     override func viewDidAppear(_ animated: Bool) {

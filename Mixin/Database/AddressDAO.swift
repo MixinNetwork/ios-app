@@ -13,7 +13,7 @@ final class AddressDAO {
         if let addressId = WalletUserDefault.shared.lastWithdrawalAddress[assetId], let address = getAddress(addressId: addressId) {
             return address
         }
-        return MixinDatabase.shared.getCodables(condition: Address.Properties.assetId == assetId, limit: 1, inTransaction: false).first
+        return MixinDatabase.shared.getCodables(condition: Address.Properties.assetId == assetId, orderBy: [Address.Properties.updatedAt.asOrder(by: .descending)], limit: 1, inTransaction: false).first
     }
     
     func getAddresses(assetId: String) -> [Address] {
@@ -28,7 +28,12 @@ final class AddressDAO {
         NotificationCenter.default.afterPostOnMain(name: .AddressDidChange)
     }
 
-    func deleteAddress(addressId: String) {
+    func deleteAddress(assetId: String, addressId: String) {
         MixinDatabase.shared.delete(table: Address.tableName, condition: Address.Properties.addressId == addressId)
+        NotificationCenter.default.postOnMain(name: .AddressDidChange)
+
+        if WalletUserDefault.shared.lastWithdrawalAddress[assetId] == addressId {
+            WalletUserDefault.shared.lastWithdrawalAddress[assetId] = nil
+        }
     }
 }

@@ -178,6 +178,7 @@ class WalletPasswordViewController: UIViewController {
                     self?.nextButton.isBusy = false
                     switch result {
                     case .success(let account):
+                        WalletUserDefault.shared.checkPinInterval = WalletUserDefault.shared.checkMinInterval
                         WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                         AccountAPI.shared.account = account
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)

@@ -5,6 +5,7 @@ struct SnapshotItem: TableCodable {
     let snapshotId: String
     let type: String
     let assetId: String
+    let assetSymbol: String
     let amount: String
     let transactionHash: String?
     let sender: String?
@@ -21,6 +22,7 @@ struct SnapshotItem: TableCodable {
         case snapshotId = "snapshot_id"
         case type
         case assetId = "asset_id"
+        case assetSymbol
         case amount
         case counterUserId = "counter_user_id"
         case transactionHash = "transaction_hash"

@@ -12,6 +12,8 @@ class WebWindow: ZoomWindow {
     private let swipeToDismissByVelocityThresholdHeight: CGFloat = 250
     private let swipeToDismissByVelocityThresholdVelocity: CGFloat = 1200
 
+    private var swipeToZoomAnimator: UIViewPropertyAnimator?
+    
     private lazy var webView: MixinWebView = {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
@@ -129,6 +131,12 @@ extension WebWindow: UIScrollViewDelegate {
         }
     }
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        swipeToZoomAnimator?.stopAnimation(true)
+        swipeToZoomAnimator = nil
+        webViewWrapperHeightConstraint.constant = webViewWrapperView.frame.height
+    }
+
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let shouldDismissByPosition = webViewWrapperHeightConstraint.constant < swipeToDismissByPositionThresholdHeight
         let shouldDismissByVelocity = webViewWrapperHeightConstraint.constant < swipeToDismissByVelocityThresholdHeight
@@ -144,9 +152,15 @@ extension WebWindow: UIScrollViewDelegate {
                 }
             }
             webViewWrapperHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
-            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            setNeedsLayout()
+            let animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeOut, animations: {
                 self.layoutIfNeeded()
-            }, completion: nil)
+            })
+            animator.addCompletion({ (_) in
+                self.swipeToZoomAnimator = nil
+            })
+            animator.startAnimation()
+            swipeToZoomAnimator = animator
         }
     }
     

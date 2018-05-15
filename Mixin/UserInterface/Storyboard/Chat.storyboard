@@ -58,7 +58,7 @@
                                             <outlet property="label" destination="FBC-s8-Ynl" id="ow9-Xs-3eA"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="UnreadHintMessageCell" rowHeight="38" id="PiI-2v-hql" customClass="UnreadHintMessageCell" customModule="Mixin" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="UnreadHintMessageCell" rowHeight="38" id="PiI-2v-hql" customClass="UnreadHintMessageCell" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="98" width="375" height="38"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PiI-2v-hql" id="NEK-5e-3WM">
@@ -804,6 +804,7 @@
                         <outlet property="bottomBarWrapperView" destination="rZG-cd-J6L" id="wPJ-P0-tnN"/>
                         <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
                         <outlet property="dismissMoreMenuButton" destination="tBY-wh-HMf" id="gLk-YR-fNU"/>
+                        <outlet property="galleryWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
                         <outlet property="inputTextView" destination="LmC-o2-ndc" id="oTt-5n-LgP"/>
                         <outlet property="inputTextViewHeightConstraint" destination="Y55-r4-fIf" id="Ic3-i4-NT1"/>
                         <outlet property="inputWrapperBottomConstraint" destination="QsO-2V-Rt7" id="Pcd-20-jDE"/>
@@ -813,7 +814,6 @@
                         <outlet property="moreMenuHeightConstraint" destination="pLr-Yd-ULj" id="QPf-3K-eEy"/>
                         <outlet property="moreMenuTopConstraint" destination="iaR-17-gKI" id="9QR-8F-QCc"/>
                         <outlet property="participantsLabel" destination="a4C-sE-rDR" id="OnC-u4-cXC"/>
-                        <outlet property="photoPreviewWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
                         <outlet property="scrollToBottomButton" destination="hzm-Vh-1BZ" id="i8J-ga-GD1"/>
                         <outlet property="scrollToBottomWrapperHeightConstraint" destination="iai-L8-XoW" id="F9Z-Pn-XNa"/>
                         <outlet property="scrollToBottomWrapperView" destination="enU-Jm-AWl" id="kR8-6F-tEk"/>
@@ -973,6 +973,18 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </imageView>
+                                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="Kf5-xc-eqX" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="44" width="12" height="12"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="12" id="1t1-u9-D8X"/>
+                                                    <constraint firstAttribute="height" constant="12" id="qoV-U8-wAh"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="6"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="XIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3o6-IV-0bh">
                                                 <rect key="frame" x="76" y="0.0" width="42" height="31.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
@@ -1017,9 +1029,11 @@
                                             <constraint firstAttribute="trailing" secondItem="3uh-Ue-he6" secondAttribute="trailing" id="LJT-V3-WJY"/>
                                             <constraint firstItem="kad-vQ-41q" firstAttribute="leading" secondItem="VnA-Om-Oow" secondAttribute="trailing" constant="20" id="Mbo-7R-l4b"/>
                                             <constraint firstItem="MvI-fA-cfF" firstAttribute="top" secondItem="so4-eO-hMz" secondAttribute="top" id="P2z-Be-s1N"/>
+                                            <constraint firstItem="Kf5-xc-eqX" firstAttribute="leading" secondItem="VnA-Om-Oow" secondAttribute="leading" id="TKG-M5-fF9"/>
                                             <constraint firstAttribute="bottom" secondItem="VnA-Om-Oow" secondAttribute="bottom" constant="20" id="WNe-Rj-4kg"/>
                                             <constraint firstItem="3o6-IV-0bh" firstAttribute="leading" secondItem="VnA-Om-Oow" secondAttribute="trailing" constant="20" id="XYX-sU-SrP"/>
                                             <constraint firstItem="MvI-fA-cfF" firstAttribute="leading" secondItem="so4-eO-hMz" secondAttribute="leading" id="id2-qP-DRH"/>
+                                            <constraint firstItem="Kf5-xc-eqX" firstAttribute="bottom" secondItem="VnA-Om-Oow" secondAttribute="bottom" id="mh0-wc-pzM"/>
                                             <constraint firstItem="VnA-Om-Oow" firstAttribute="top" secondItem="so4-eO-hMz" secondAttribute="top" id="p1T-Xg-Y2V"/>
                                             <constraint firstItem="hqf-Q2-AlS" firstAttribute="centerX" secondItem="3uh-Ue-he6" secondAttribute="centerX" id="x0E-0q-lT8"/>
                                         </constraints>
@@ -1152,6 +1166,7 @@
                         <outlet property="assetSymbolLabel" destination="3o6-IV-0bh" id="Ykz-np-zI4"/>
                         <outlet property="avatarImageView" destination="vXs-py-VWa" id="2xf-Hc-rII"/>
                         <outlet property="balanceLabel" destination="kad-vQ-41q" id="5Ar-TS-00H"/>
+                        <outlet property="blockchainImageView" destination="Kf5-xc-eqX" id="EMM-7Q-MZ5"/>
                         <outlet property="chooseAssetsButton" destination="MvI-fA-cfF" id="AYt-ri-9M9"/>
                         <outlet property="continueBottomConstraint" destination="PLe-O6-uz2" id="jmi-FP-ohI"/>
                         <outlet property="continueButton" destination="ehl-9J-0jA" id="Mna-w8-ZaM"/>
@@ -1554,10 +1569,10 @@
             </objects>
             <point key="canvasLocation" x="1572" y="154.72263868065968"/>
         </scene>
-        <!--Photo Preview View Controller-->
+        <!--Gallery View Controller-->
         <scene sceneID="glr-3S-Vbl">
             <objects>
-                <viewController storyboardIdentifier="photo_preview" id="kPX-D7-s1Z" customClass="PhotoPreviewViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="photo_preview" id="kPX-D7-s1Z" customClass="GalleryViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FsD-c2-1tn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1566,21 +1581,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="J2v-44-qGd">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4kw-ec-hDM">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <gestureRecognizers/>
-                                        <connections>
-                                            <outletCollection property="gestureRecognizers" destination="niX-Fk-h8j" appends="YES" id="DBj-Qw-F52"/>
-                                            <outletCollection property="gestureRecognizers" destination="0hV-Zx-Cj2" appends="YES" id="ZUH-Cj-Adv"/>
-                                        </connections>
-                                    </view>
-                                </subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="J2v-44-qGd">
+                                <rect key="frame" x="0.0" y="0.0" width="395" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="0hV-Zx-Cj2" appends="YES" id="d9H-6N-1lo"/>
+                                    <outletCollection property="gestureRecognizers" destination="niX-Fk-h8j" appends="YES" id="hby-ua-BWG"/>
+                                </connections>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1593,7 +1600,7 @@
                             <constraint firstAttribute="bottom" secondItem="J2v-44-qGd" secondAttribute="bottom" id="MoO-hc-PfB"/>
                             <constraint firstItem="J2v-44-qGd" firstAttribute="leading" secondItem="FsD-c2-1tn" secondAttribute="leading" id="flI-Sy-EfA"/>
                             <constraint firstItem="J2v-44-qGd" firstAttribute="top" secondItem="FsD-c2-1tn" secondAttribute="top" id="gut-ck-jf0"/>
-                            <constraint firstAttribute="trailing" secondItem="J2v-44-qGd" secondAttribute="trailing" id="lVs-9q-vBa"/>
+                            <constraint firstItem="J2v-44-qGd" firstAttribute="trailing" secondItem="FsD-c2-1tn" secondAttribute="trailing" constant="20" id="lVs-9q-vBa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Uqi-VK-adB"/>
                         <connections>
@@ -1607,7 +1614,7 @@
                         <outlet property="longPressRecognizer" destination="rh9-jE-FRT" id="sFm-VE-koi"/>
                         <outlet property="panRecognizer" destination="crU-t0-hcr" id="k9U-EV-DRR"/>
                         <outlet property="scrollView" destination="J2v-44-qGd" id="7EA-q9-FQH"/>
-                        <outlet property="scrollViewContentView" destination="4kw-ec-hDM" id="dz1-r0-VQK"/>
+                        <outlet property="scrollViewTrailingConstraint" destination="lVs-9q-vBa" id="hGk-XN-tEG"/>
                         <outlet property="tapRecognizer" destination="niX-Fk-h8j" id="sdW-l1-9IL"/>
                     </connections>
                 </viewController>
@@ -1635,24 +1642,16 @@
             </objects>
             <point key="canvasLocation" x="785" y="1155"/>
         </scene>
-        <!--Photo Preview Page View Controller-->
+        <!--Gallery Item View Controller-->
         <scene sceneID="ndf-Gh-0RX">
             <objects>
-                <viewController storyboardIdentifier="photo_preview_page" id="iRr-jh-RO2" customClass="PhotoPreviewPageViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="photo_preview_page" id="iRr-jh-RO2" customClass="GalleryItemViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sor-nY-lJl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" maximumZoomScale="3" translatesAutoresizingMaskIntoConstraints="NO" id="rqR-m4-8uH">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" maximumZoomScale="3" translatesAutoresizingMaskIntoConstraints="NO" id="rqR-m4-8uH">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <subviews>
-                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aXJ-OS-UCE">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <gestureRecognizers/>
-                                    </imageView>
-                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                             </scrollView>
@@ -1694,7 +1693,6 @@
                     </view>
                     <connections>
                         <outlet property="expiredHintLabel" destination="b7w-kq-CiP" id="Idc-2W-9oT"/>
-                        <outlet property="imageView" destination="aXJ-OS-UCE" id="OVo-zu-Xte"/>
                         <outlet property="mediaStatusView" destination="N9N-4S-6M4" id="oE3-YX-TKA"/>
                         <outlet property="operationButton" destination="WYx-KT-fCA" id="p12-rr-cPV"/>
                         <outlet property="scrollView" destination="rqR-m4-8uH" id="9ti-t8-8D7"/>
@@ -1718,6 +1716,7 @@
         <image name="ic_titlebar_back" width="44" height="44"/>
         <image name="ic_titlebar_close" width="44" height="44"/>
         <image name="ic_user_verified" width="14" height="14"/>
+        <image name="ic_wallet_xin" width="40" height="40"/>
         <image name="ic_wallet_xin_medium" width="64" height="64"/>
     </resources>
 </document>

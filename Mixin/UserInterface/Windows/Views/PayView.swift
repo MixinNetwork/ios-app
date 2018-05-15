@@ -19,14 +19,15 @@ class PayView: UIStackView {
     @IBOutlet weak var paySuccessImageView: UIImageView!
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var memoView: UIView!
-    
+    @IBOutlet weak var assetImageView: AvatarImageView!
+    @IBOutlet weak var blockchainImageView: CornerImageView!
 
     private weak var superView: BottomSheetView?
 
     private let context = LAContext()
     private var user: UserItem!
     private var trackId: String!
-    private var asset: Asset!
+    private var asset: AssetItem!
     private var address: Address!
     private var amount = ""
     private var memo = ""
@@ -48,7 +49,7 @@ class PayView: UIStackView {
         NotificationCenter.default.removeObserver(self)
     }
 
-    func render(asset: Asset, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
+    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -67,6 +68,15 @@ class PayView: UIStackView {
             nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label)
             mixinIDLabel.text = address.publicKey.toSimpleKey()
             payStatusLabel.text = Localized.WALLET_WITHDRAWAL_PAY_PASSWORD
+        }
+        if let url = URL(string: asset.iconUrl) {
+            assetImageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "ic_place_holder"), options: [], completed: nil)
+        }
+        if let chainIconUrl = asset.chainIconUrl,  let chainUrl = URL(string: chainIconUrl) {
+            blockchainImageView.sd_setImage(with: chainUrl)
+            blockchainImageView.isHidden = false
+        } else {
+            blockchainImageView.isHidden = true
         }
         memoView.isHidden = memo.isEmpty
         transferLoadingView.stopAnimating()

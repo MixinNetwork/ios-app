@@ -281,6 +281,26 @@
             </objects>
             <point key="canvasLocation" x="-519" y="833"/>
         </scene>
+        <!--Snapshot View Controller-->
+        <scene sceneID="Wmp-9a-ZV7">
+            <objects>
+                <tableViewController storyboardIdentifier="snapshot" automaticallyAdjustsScrollViewInsets="NO" id="p7I-cR-tJj" customClass="SnapshotViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="D0f-r1-DN4">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="p7I-cR-tJj" id="FNy-Tj-VVA"/>
+                            <outlet property="delegate" destination="p7I-cR-tJj" id="bq6-V2-AgV"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uYK-Jb-eE7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="883" y="1551"/>
+        </scene>
         <!--Fee View Controller-->
         <scene sceneID="2y9-oB-hCS">
             <objects>

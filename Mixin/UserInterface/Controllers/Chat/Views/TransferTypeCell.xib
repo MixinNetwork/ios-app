@@ -30,6 +30,18 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </imageView>
+                    <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="3BJ-Up-3V3" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="20" y="64" width="12" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="12" id="9Mc-BI-vlQ"/>
+                            <constraint firstAttribute="width" constant="12" id="vgM-jq-ea1"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="6"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BALANCE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HNT-ku-FMF">
                         <rect key="frame" x="181.5" y="60" width="56" height="15"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -55,7 +67,9 @@
                     <constraint firstItem="ubh-mc-JYo" firstAttribute="top" secondItem="Agy-Us-sRN" secondAttribute="top" id="8RD-XK-uV5"/>
                     <constraint firstItem="HNT-ku-FMF" firstAttribute="bottom" secondItem="F2a-Dv-srU" secondAttribute="bottom" constant="-1" id="Bst-Gr-C2N"/>
                     <constraint firstItem="Agy-Us-sRN" firstAttribute="centerY" secondItem="zkf-cj-ck1" secondAttribute="centerY" id="FO4-uQ-bnm"/>
+                    <constraint firstItem="3BJ-Up-3V3" firstAttribute="bottom" secondItem="Agy-Us-sRN" secondAttribute="bottom" id="Gbq-Br-HzF"/>
                     <constraint firstItem="ubh-mc-JYo" firstAttribute="leading" secondItem="Agy-Us-sRN" secondAttribute="trailing" constant="20" id="Nuj-WV-tz0"/>
+                    <constraint firstItem="3BJ-Up-3V3" firstAttribute="leading" secondItem="Agy-Us-sRN" secondAttribute="leading" id="XDM-78-GSh"/>
                     <constraint firstItem="HNT-ku-FMF" firstAttribute="leading" secondItem="F2a-Dv-srU" secondAttribute="trailing" constant="8" id="aJd-lX-vm0"/>
                     <constraint firstItem="F2a-Dv-srU" firstAttribute="bottom" secondItem="Agy-Us-sRN" secondAttribute="bottom" id="hx4-P7-gA6"/>
                     <constraint firstItem="F2a-Dv-srU" firstAttribute="leading" secondItem="Agy-Us-sRN" secondAttribute="trailing" constant="20" id="i2U-tn-aCF"/>
@@ -65,11 +79,13 @@
             <connections>
                 <outlet property="assetIconImageView" destination="Agy-Us-sRN" id="OXK-64-1lc"/>
                 <outlet property="balanceLabel" destination="F2a-Dv-srU" id="Bfe-9c-bDc"/>
+                <outlet property="blockchainImageView" destination="3BJ-Up-3V3" id="7jT-UU-XVA"/>
                 <outlet property="symbolLabel" destination="ubh-mc-JYo" id="ont-Lb-Nnz"/>
             </connections>
         </tableViewCell>
     </objects>
     <resources>
+        <image name="ic_wallet_xin" width="40" height="40"/>
         <image name="ic_wallet_xin_medium" width="64" height="64"/>
     </resources>
 </document>

@@ -43,6 +43,13 @@ class ConversationItem: TableCodable {
         return try? JSONDecoder().decode([AppButtonData].self, from: data)
     }()
 
+    lazy var appCard: AppCardData? = {
+        guard let data = Data(base64Encoded: content) else {
+            return nil
+        }
+        return try? JSONDecoder().decode(AppCardData.self, from: data)
+    }()
+
     enum CodingKeys: String, CodingTableKey {
         typealias Root = ConversationItem
         case conversationId

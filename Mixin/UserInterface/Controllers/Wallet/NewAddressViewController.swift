@@ -91,13 +91,19 @@ extension NewAddressViewController: ContainerViewControllerDelegate {
     }
 
     private func saveAddressAction(pin: String) {
-        let request = AddressRequest(assetId: asset.assetId, publicKey: addressValue, label: label, pin: pin)
+        let assetId = asset.assetId
+        let request = AddressRequest(assetId: assetId, publicKey: addressValue, label: label, pin: pin)
         WithdrawalAPI.shared.save(address: request) { [weak self](result) in
             switch result {
             case let .success(address):
                 AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
-                self?.successCallback?(address)
-                self?.navigationController?.popViewController(animated: true)
+                if let weakSelf = self {
+                    if weakSelf.address == nil {
+                        WalletUserDefault.shared.lastWithdrawalAddress[assetId] = address.addressId
+                    }
+                    weakSelf.successCallback?(address)
+                    weakSelf.navigationController?.popViewController(animated: true)
+                }
             case let .failure(error, _):
                 self?.container?.rightButton.isBusy = false
                 self?.addressTextView.isUserInteractionEnabled = true

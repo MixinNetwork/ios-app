@@ -96,13 +96,5 @@ extension UIApplication {
             Bugsnag.notify(NSException(name: NSExceptionName(rawValue: "Unrecognized URL"), reason: nil, userInfo: ["URL": url.absoluteString]))
         }
     }
-
-    public func tryOpenThirdApp(callback: String) {
-        guard !callback.isEmpty, let url = URL(string: callback), let scheme = url.scheme?.lowercased(), scheme != "http", scheme != "https" else {
-            return
-        }
-
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-    }
     
 }

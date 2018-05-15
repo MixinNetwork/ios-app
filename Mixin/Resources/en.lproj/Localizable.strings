@@ -211,6 +211,7 @@
 "wallet_pin_confirm_title" = "Confirm PIN";
 "wallet_pin_tips_title" = "Enter your Wallet PIN";
 "wallet_pin_tips_description" = "You'll be asked for it periodically to help you remember it.";
+"wallet_all_transactions_title" = "All Transactions";
 
 // Transaction
 "transaction_title" = "Transaction";
@@ -269,6 +270,8 @@
 "auth_permission_apps_read_description" = "access your apps list";
 "auth_permission_apps_write" = "Manage apps";
 "auth_permission_apps_write_description" = "mange all your apps";
+"auth_permission_contacts_read" = "Read contacts";
+"auth_permission_contacts_read_description" = "access your contacts list";
 "auth_assets_more" = " and more";
 "auth_profile_description" = "%@, %@, profile photo";
 "auth_success" = "Successfully log in to %@";

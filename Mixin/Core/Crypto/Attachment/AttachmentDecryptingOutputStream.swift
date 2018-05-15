@@ -31,7 +31,7 @@ class AttachmentDecryptingOutputStream: OutputStream {
     }
     
     init?(url: URL, key: Data, digest: Data) {
-        guard key.count > 0, key.count >= AttachmentCryptography.Length.aesKey.value + AttachmentCryptography.Length.hmac256Key.value else {
+        guard key.count > 0, key.count >= AttachmentCryptography.Length.aesKey + AttachmentCryptography.Length.hmac256Key else {
             return nil
         }
         guard digest.count > 0 else {
@@ -45,10 +45,10 @@ class AttachmentDecryptingOutputStream: OutputStream {
         }
         self.handle = handle
         let encryptionKeyStartIndex = key.startIndex
-        let encryptionKeyEndIndex = encryptionKeyStartIndex.advanced(by: AttachmentCryptography.Length.aesKey.value)
+        let encryptionKeyEndIndex = encryptionKeyStartIndex.advanced(by: AttachmentCryptography.Length.aesKey)
         self.encryptionKey = key[encryptionKeyStartIndex..<encryptionKeyEndIndex]
         let hmacKeyStartIndex = encryptionKeyEndIndex
-        let hmacKeyEndIndex = hmacKeyStartIndex.advanced(by: AttachmentCryptography.Length.hmac256Key.value)
+        let hmacKeyEndIndex = hmacKeyStartIndex.advanced(by: AttachmentCryptography.Length.hmac256Key)
         self.hmacKey = key[hmacKeyStartIndex..<hmacKeyEndIndex]
         self.digest = digest
         super.init(url: url, append: false)
@@ -60,9 +60,9 @@ class AttachmentDecryptingOutputStream: OutputStream {
     
     override func write(_ buffer: UnsafePointer<UInt8>, maxLength len: Int) -> Int {
         inputBuffer.append(buffer, count: len)
-        if iv == nil, inputBuffer.count >= AttachmentCryptography.Length.aesCbcIv.value {
+        if iv == nil, inputBuffer.count >= AttachmentCryptography.Length.aesCbcIv {
             let ivStartIndex = inputBuffer.startIndex
-            let ivEndIndex = inputBuffer.startIndex.advanced(by: AttachmentCryptography.Length.aesCbcIv.value)
+            let ivEndIndex = inputBuffer.startIndex.advanced(by: AttachmentCryptography.Length.aesCbcIv)
             let iv = inputBuffer[ivStartIndex..<ivEndIndex]
             inputBuffer = inputBuffer[ivEndIndex...]
             
@@ -88,12 +88,12 @@ class AttachmentDecryptingOutputStream: OutputStream {
             }
         }
         // InputBuffer(dropping trailing of HMAC's size) -> bufferToDecrypt -> CCCryptor -> outputBuffer -> Write to fileHandle
-        if let cryptor = cryptor, inputBuffer.count > AttachmentCryptography.Length.hmac.value {
-            var outputSize = inputBuffer.count - AttachmentCryptography.Length.hmac.value
+        if let cryptor = cryptor, inputBuffer.count > AttachmentCryptography.Length.hmac {
+            var outputSize = inputBuffer.count - AttachmentCryptography.Length.hmac
             if outputBuffer.count < outputSize {
                 outputBuffer.count = outputSize
             }
-            let bufferToDecrypt = inputBuffer[..<inputBuffer.endIndex.advanced(by: -AttachmentCryptography.Length.hmac.value)]
+            let bufferToDecrypt = inputBuffer[..<inputBuffer.endIndex.advanced(by: -AttachmentCryptography.Length.hmac)]
             var status = outputBuffer.withUnsafeMutableBytes {
                 CCCryptorUpdate(cryptor, (bufferToDecrypt as NSData).bytes, bufferToDecrypt.count, $0, outputSize, &outputSize)
             }
@@ -111,7 +111,7 @@ class AttachmentDecryptingOutputStream: OutputStream {
                 }
                 outputBuffer.count = outputSize
                 handle.write(outputBuffer)
-                inputBuffer = inputBuffer[inputBuffer.endIndex.advanced(by: -AttachmentCryptography.Length.hmac.value)...]
+                inputBuffer = inputBuffer[inputBuffer.endIndex.advanced(by: -AttachmentCryptography.Length.hmac)...]
             } else {
                 self.error = AttachmentCryptographyError.decryptorUpdate(status)
                 self.status = .error
@@ -125,7 +125,7 @@ class AttachmentDecryptingOutputStream: OutputStream {
             self.status = .closed
             handle.closeFile()
         }
-        guard inputBuffer.count == AttachmentCryptography.Length.hmac.value else {
+        guard inputBuffer.count == AttachmentCryptography.Length.hmac else {
             self.error = AttachmentCryptographyError.unexpectedEnding
             return
         }

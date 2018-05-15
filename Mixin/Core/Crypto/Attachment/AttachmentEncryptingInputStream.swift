@@ -142,9 +142,9 @@ extension AttachmentEncryptingInputStream {
     
     private func prepare() {
         do {
-            let iv = try AttachmentCryptography.randomData(length: .aesCbcIv)
-            let encryptionKey = try AttachmentCryptography.randomData(length: .aesKey)
-            let hmacKey = try AttachmentCryptography.randomData(length: .hmac256Key)
+            let iv = try AttachmentCryptography.randomData(length: AttachmentCryptography.Length.aesCbcIv)
+            let encryptionKey = try AttachmentCryptography.randomData(length: AttachmentCryptography.Length.aesKey)
+            let hmacKey = try AttachmentCryptography.randomData(length: AttachmentCryptography.Length.hmac256Key)
             
             cryptor = try CCCryptorRef(operation: .encrypt, algorithm: .aes128, options: .pkcs7Padding, key: encryptionKey, iv: iv)
             
@@ -162,9 +162,9 @@ extension AttachmentEncryptingInputStream {
             
             key = encryptionKey + hmacKey
             outputBuffer = iv
-            contentLength = AttachmentCryptography.Length.aesCbcIv.value
+            contentLength = AttachmentCryptography.Length.aesCbcIv
                 + CCCryptorGetOutputLength(cryptor, plainDataSize, true)
-                + AttachmentCryptography.Length.hmac.value
+                + AttachmentCryptography.Length.hmac
         } catch let error {
             self.error = error
         }
@@ -188,7 +188,7 @@ extension AttachmentEncryptingInputStream {
         hmac.withUnsafeMutableBytes {
             CCHmacFinal(&hmacContext, $0)
         }
-        hmac = hmac[0..<AttachmentCryptography.Length.hmac.value]
+        hmac = hmac[0..<AttachmentCryptography.Length.hmac]
         outputBuffer.append(hmac)
         outputSize = outputBuffer.count
         _ = outputBuffer.withUnsafeBytes {

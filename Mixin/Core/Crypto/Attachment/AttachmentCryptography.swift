@@ -14,8 +14,7 @@ enum AttachmentCryptographyError: Error {
 
 struct AttachmentCryptography {
     
-    static func randomData(length: Length) throws -> Data {
-        let length = length.value
+    static func randomData(length: Int) throws -> Data {
         var data = Data(count: length)
         var status: OSStatus = errSecSuccess
         data.withUnsafeMutableBytes {
@@ -28,22 +27,12 @@ struct AttachmentCryptography {
         }
     }
     
-    enum Length {
-        case hmac256Key
-        case aesKey
-        case aesCbcIv
-        
-        case hmac
-        case digest
-
-        var value: Int {
-            switch self {
-            case .hmac256Key, .aesKey, .hmac, .digest:
-                return 32
-            case .aesCbcIv:
-                return 16
-            }
-        }
+    struct Length {
+        static let hmac256Key = 32
+        static let aesKey = 32
+        static let aesCbcIv = 16
+        static let hmac = 32
+        static let digest = 32
     }
     
 }

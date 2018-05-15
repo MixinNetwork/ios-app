@@ -58,7 +58,7 @@
                                             <outlet property="label" destination="FBC-s8-Ynl" id="ow9-Xs-3eA"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="UnreadHintMessageCell" rowHeight="38" id="PiI-2v-hql" customClass="UnreadHintMessageCell" customModule="Mixin" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="UnreadHintMessageCell" rowHeight="38" id="PiI-2v-hql" customClass="UnreadHintMessageCell" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="98" width="375" height="38"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PiI-2v-hql" id="NEK-5e-3WM">

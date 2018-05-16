@@ -87,6 +87,10 @@ class ForwardViewController: UIViewController {
             }
             let transferData = TransferStickerData(name: stickerName, albumId: albumId)
             newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+        } else if message.category.hasSuffix("_CONTACT") {
+            newMessage.sharedUserId = targetUser.userId
+            let transferData = TransferContactData(userId: targetUser.userId)
+            newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
         }
         DispatchQueue.global().async { [weak self] in
             SendMessageService.shared.sendMessage(message: newMessage, ownerUser: targetUser.toUser(), isGroupMessage: targetUser.isGroup)

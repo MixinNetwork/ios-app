@@ -2,32 +2,29 @@ import UIKit
 
 extension MessageItem {
 
-    private static let commonActions = [#selector(ConversationTableView.deleteAction(_:))]
+    private static let deleteAction = [#selector(ConversationTableView.deleteAction(_:))]
+    private static let forwardAndDeleteActions = [#selector(ConversationTableView.forwardAction(_:)),
+                                       #selector(ConversationTableView.deleteAction(_:))]
     private static let textActions = [#selector(ConversationTableView.forwardAction(_:)),
                                       #selector(ConversationTableView.copyAction(_:)),
                                       #selector(ConversationTableView.deleteAction(_:))]
-    private static let photoActions = [#selector(ConversationTableView.forwardAction(_:)),
-                                       #selector(ConversationTableView.deleteAction(_:))]
-    private static let fileFullActions = [#selector(ConversationTableView.forwardAction(_:)),
-                                      #selector(ConversationTableView.deleteAction(_:))]
-    private static let stickerActions = [#selector(ConversationTableView.forwardAction(_:)),
-                                         #selector(ConversationTableView.deleteAction(_:))]
+
     
     var allowedActions: [Selector] {
         if category.hasSuffix("_TEXT") {
             return MessageItem.textActions
         } else if category.hasSuffix("_IMAGE") {
-            return MessageItem.photoActions
+            return MessageItem.forwardAndDeleteActions
         } else if category.hasSuffix("_DATA") {
-            return mediaStatus == MediaStatus.DONE.rawValue ? MessageItem.fileFullActions : MessageItem.commonActions
+            return mediaStatus == MediaStatus.DONE.rawValue ? MessageItem.forwardAndDeleteActions : MessageItem.deleteAction
         } else if category.hasSuffix("_STICKER") {
-            return MessageItem.stickerActions
+            return MessageItem.forwardAndDeleteActions
         } else if category.hasSuffix("_CONTACT") {
-            return MessageItem.commonActions
+            return MessageItem.forwardAndDeleteActions
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-            return MessageItem.commonActions
+            return MessageItem.deleteAction
         } else if category == MessageCategory.APP_CARD.rawValue {
-            return MessageItem.commonActions
+            return MessageItem.deleteAction
         } else {
             return []
         }

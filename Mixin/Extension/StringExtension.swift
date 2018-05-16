@@ -115,11 +115,10 @@ extension String {
     }
 
     func formatSimpleBalance() -> String {
-        guard !hasPrefix("0."), let dotIdx = index(of: ".") else {
-            return self
+        let formatter = NumberFormatter(numberStyle: .decimal)
+        if !hasPrefix("0."), let dotIdx = index(of: ".") {
+            formatter.maximumFractionDigits = 8 - dotIdx.encodedOffset
         }
-        let formatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 8)
-        formatter.maximumFractionDigits = 8 - dotIdx.encodedOffset
         return formatter.string(from: NSDecimalNumber(string: self)) ?? self
     }
 

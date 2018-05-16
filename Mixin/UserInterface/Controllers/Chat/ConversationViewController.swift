@@ -602,7 +602,11 @@ class ConversationViewController: UIViewController {
         }
         navigationController?.pushViewController(viewController, animated: true)
     }
-    
+
+    func contactAction() {
+        navigationController?.pushViewController(ConversationShareContactViewController.instance(ownerUser: ownerUser, conversationId: conversationId), animated: true)
+    }
+
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
@@ -1084,9 +1088,9 @@ extension ConversationViewController {
     
     private func updateMoreMenuFixedJobs() {
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-            moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .transfer]
+            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
         } else {
-            moreMenuViewController?.fixedJobs = [.camera, .photo, .file]
+            moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
         }
     }
     

@@ -122,6 +122,7 @@
 "chat_menu_photo" = "照片";
 "chat_menu_file" = "文件";
 "chat_menu_transfer" = "转账";
+"chat_menu_contact" = "联系人";
 "chat_photo_save" = "保存到相册";
 "chat_file_expired" = "已过期";
 

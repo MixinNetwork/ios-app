@@ -5,13 +5,13 @@ class ForwardViewController: UIViewController {
     @IBOutlet weak var keywordTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
 
-    private typealias Section = [ForwardUser]
+    internal typealias Section = [ForwardUser]
     private let headerReuseId = "Header"
 
     private var isSearching: Bool {
         return !(keywordTextField.text ?? "").isEmpty
     }
-    private var sections = [Section]()
+    internal var sections = [Section]()
     private var searchResult = [ForwardUser]()
     private var message: MessageItem!
     internal var ownerUser: UserItem?
@@ -26,7 +26,7 @@ class ForwardViewController: UIViewController {
         fetchData()
     }
 
-    private func fetchData() {
+    internal func fetchData() {
         DispatchQueue.global().async { [weak self] in
             let conversations = ConversationDAO.shared.getForwardConversations()
             let contacts = UserDAO.shared.getForwardContacts()
@@ -148,6 +148,9 @@ class ForwardCell: UITableViewCell {
 extension ForwardViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard sections.count > 0 else {
+            return 0
+        }
         return isSearching ? searchResult.count : sections[section].count
     }
 

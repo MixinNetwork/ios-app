@@ -203,6 +203,7 @@
 		DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF121F341FA1C809000F701D /* CornerImageView.swift */; };
 		DF138975200493C300869685 /* QRCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF138974200493C300869685 /* QRCodeResponse.swift */; };
 		DF16681E20A6F84200C45E31 /* SnapshotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF16681D20A6F84200C45E31 /* SnapshotViewController.swift */; };
+		DF16682220AC3B5D00C45E31 /* ConversationShareContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF16682120AC3B5D00C45E31 /* ConversationShareContactViewController.swift */; };
 		DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF17B50B2052433B006447C2 /* MessageItem.swift */; };
 		DF17B51320525485006447C2 /* ConversationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF17B51220525485006447C2 /* ConversationItem.swift */; };
 		DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF17B51420525B47006447C2 /* ArrayExtension.swift */; };
@@ -663,6 +664,7 @@
 		DF121F341FA1C809000F701D /* CornerImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerImageView.swift; sourceTree = "<group>"; };
 		DF138974200493C300869685 /* QRCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeResponse.swift; sourceTree = "<group>"; };
 		DF16681D20A6F84200C45E31 /* SnapshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotViewController.swift; sourceTree = "<group>"; };
+		DF16682120AC3B5D00C45E31 /* ConversationShareContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationShareContactViewController.swift; sourceTree = "<group>"; };
 		DF17B50B2052433B006447C2 /* MessageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageItem.swift; sourceTree = "<group>"; };
 		DF17B51220525485006447C2 /* ConversationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationItem.swift; sourceTree = "<group>"; };
 		DF17B51420525B47006447C2 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
@@ -1163,6 +1165,7 @@
 				7B0F851D20147EF700C02388 /* StickerPanelViewController.swift */,
 				7B0F851F201494DA00C02388 /* StickerPageViewController.swift */,
 				7B8938A42020176200C72070 /* ConversationMoreMenuViewController.swift */,
+				DF16682120AC3B5D00C45E31 /* ConversationShareContactViewController.swift */,
 				7BF374A52063951E008A166B /* GalleryViewController.swift */,
 				7BF374A62063951E008A166B /* GalleryItemViewController.swift */,
 			);
@@ -2264,6 +2267,7 @@
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
 				DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */,
 				DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */,
+				DF16682220AC3B5D00C45E31 /* ConversationShareContactViewController.swift in Sources */,
 				DF8CECE31FC3075B00E40064 /* TransferViewController.swift in Sources */,
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
 				7B5747411FA08E18005A6BB5 /* MobileNumberViewController.swift in Sources */,

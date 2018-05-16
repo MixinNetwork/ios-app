@@ -1,16 +1,15 @@
 import UIKit
 
 extension MessageItem {
-    
+
+    private static let commonActions = [#selector(ConversationTableView.deleteAction(_:))]
     private static let textActions = [#selector(ConversationTableView.forwardAction(_:)),
                                       #selector(ConversationTableView.copyAction(_:)),
                                       #selector(ConversationTableView.deleteAction(_:))]
     private static let photoActions = [#selector(ConversationTableView.forwardAction(_:)),
                                        #selector(ConversationTableView.deleteAction(_:))]
-    private static let fileActions = [#selector(ConversationTableView.deleteAction(_:))]
     private static let fileFullActions = [#selector(ConversationTableView.forwardAction(_:)),
                                       #selector(ConversationTableView.deleteAction(_:))]
-    private static let transferActions = [#selector(ConversationTableView.deleteAction(_:))]
     private static let stickerActions = [#selector(ConversationTableView.forwardAction(_:)),
                                          #selector(ConversationTableView.deleteAction(_:))]
     
@@ -20,13 +19,15 @@ extension MessageItem {
         } else if category.hasSuffix("_IMAGE") {
             return MessageItem.photoActions
         } else if category.hasSuffix("_DATA") {
-            return mediaStatus == MediaStatus.DONE.rawValue ? MessageItem.fileFullActions : MessageItem.fileActions
+            return mediaStatus == MediaStatus.DONE.rawValue ? MessageItem.fileFullActions : MessageItem.commonActions
         } else if category.hasSuffix("_STICKER") {
             return MessageItem.stickerActions
         } else if category.hasSuffix("_CONTACT") {
-            return MessageItem.fileActions
+            return MessageItem.commonActions
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-            return MessageItem.transferActions
+            return MessageItem.commonActions
+        } else if category == MessageCategory.APP_CARD.rawValue {
+            return MessageItem.commonActions
         } else {
             return []
         }

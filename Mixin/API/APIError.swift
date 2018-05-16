@@ -73,6 +73,7 @@ extension APIError {
         case cancelled
         case notConnectedToInternet
         case timedOut
+        case networkConnectionLost
         case badResponse
         case jsonDecodingFailed
         case badRequest
@@ -105,6 +106,8 @@ extension APIError {
                 self = .notConnectedToInternet
             case NSURLErrorTimedOut:
                 self = .timedOut
+            case NSURLErrorNetworkConnectionLost:
+                self = .networkConnectionLost
             case 400:
                 self = .badRequest
             case 401:
@@ -156,6 +159,8 @@ extension APIError {
                 return Localized.TOAST_API_ERROR_NO_CONNECTION
             case .timedOut:
                 return Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
+            case .networkConnectionLost:
+                return Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST
             case .internalServerError:
                 return Localized.TOAST_SERVER_ERROR
             case .forbidden:

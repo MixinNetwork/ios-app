@@ -31,6 +31,7 @@
 "toast_api_error_forbidden" = "禁止访问";
 "toast_api_error_no_connection" = "无网络连接";
 "toast_api_error_connection_timeout" = "网络连接超时";
+"toast_api_error_network_connection_lost" = "网络连接超时，请检查网络稍后重试";
 "toast_api_error_server_data_error" = "数据解析错误";
 "toast_api_error_server_5xx" = "服务器出错";
 "toast_api_error_not_found" = "没有找到相应的信息";

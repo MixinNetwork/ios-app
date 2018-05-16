@@ -45,6 +45,7 @@ public class Localized {
     public static let TOAST_API_ERROR_FORBIDDEN = LocalizedString("toast_api_error_forbidden", comment: "Access denied")
     public static let TOAST_API_ERROR_NO_CONNECTION = LocalizedString("toast_api_error_no_connection", comment: "No network connection")
     public static let TOAST_API_ERROR_CONNECTION_TIMEOUT = LocalizedString("toast_api_error_connection_timeout", comment: "Network connection timeout")
+    public static let TOAST_API_ERROR_NETWORK_CONNECTION_LOST = LocalizedString("toast_api_error_network_connection_lost", comment: "The network connection was lost, please check your network and try again later")
     public static let TOAST_API_ERROR_SERVER_5XX = LocalizedString("toast_api_error_server_5xx", comment: "Minewave server encounters errors")
     public static let TOAST_API_ERROR_NOT_FOUND = LocalizedString("toast_api_error_not_found", comment: "Not found")
     public static let TOAST_API_ERROR_SERVER_DATA_ERROR = LocalizedString("toast_api_error_server_data_error", comment: "Data parsing error")

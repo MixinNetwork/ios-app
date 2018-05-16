@@ -31,6 +31,7 @@
 "toast_api_error_forbidden" = "Access denied";
 "toast_api_error_no_connection" = "No network connection";
 "toast_api_error_connection_timeout" = "Network connection timeout";
+"toast_api_error_network_connection_lost" = "The network connection was lost, please check your network and try again later";
 "toast_api_error_server_5xx" = "Mixin server encounters errors";
 "toast_api_error_server_data_error" = "Data parsing error";
 "toast_api_error_not_found" = "Not found";

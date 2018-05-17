@@ -445,6 +445,7 @@
 		DFF5D3F4207B7302008B9B75 /* ShareContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF5D3F3207B7302008B9B75 /* ShareContactViewController.swift */; };
 		DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */; };
 		DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF70F612079FC4900A5FA8B /* AssetItem.swift */; };
+		DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
 
@@ -912,6 +913,7 @@
 		DFF5D3F3207B7302008B9B75 /* ShareContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareContactViewController.swift; sourceTree = "<group>"; };
 		DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferContactData.swift; sourceTree = "<group>"; };
 		DFF70F612079FC4900A5FA8B /* AssetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetItem.swift; sourceTree = "<group>"; };
+		DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSendViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1167,6 +1169,7 @@
 				7B8938A42020176200C72070 /* ConversationMoreMenuViewController.swift */,
 				DF16682120AC3B5D00C45E31 /* ConversationShareContactViewController.swift */,
 				7BF374A52063951E008A166B /* GalleryViewController.swift */,
+				DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */,
 				7BF374A62063951E008A166B /* GalleryItemViewController.swift */,
 			);
 			path = Chat;
@@ -2128,6 +2131,7 @@
 				273FACBB205FB9A800513327 /* SignedPreKeyStore.swift in Sources */,
 				7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */,
 				DFF21455209A9F8D00612234 /* PhoneContactWindow.swift in Sources */,
+				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */,
 				DF191196208F186100BD415D /* SendMessageService.swift in Sources */,

@@ -968,7 +968,8 @@ extension ConversationViewController: UIDocumentPickerDelegate {
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        dataSource?.sendMessage(type: .SIGNAL_DATA, value: url)
+        let previewViewController = FileSendViewController.instance(documentUrl: url, dataSource: dataSource)
+        navigationController?.pushViewController(previewViewController, animated: true)
     }
     
 }

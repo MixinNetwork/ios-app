@@ -418,15 +418,12 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
             return
         }
 
-        guard let url = URL(string: urlString) else {
-            detectQRCode = false
+        guard let url = URL(string: urlString), UrlWindow.checkUrl(url: url) else {
+            RecognizeWindow.instance().presentWindow(text: urlString)
+            navigationController?.popViewController(animated: true)
             return
         }
 
-        guard UrlWindow.checkUrl(url: url) else {
-            detectQRCode = false
-            return
-        }
     }
     
 }

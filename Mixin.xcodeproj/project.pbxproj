@@ -447,6 +447,8 @@
 		DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF70F612079FC4900A5FA8B /* AssetItem.swift */; };
 		DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */; };
 		DFFDCF8620AD8B3300B4956E /* PhotoSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8520AD8B3300B4956E /* PhotoSendViewController.swift */; };
+		DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */; };
+		DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
 
@@ -916,6 +918,8 @@
 		DFF70F612079FC4900A5FA8B /* AssetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetItem.swift; sourceTree = "<group>"; };
 		DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSendViewController.swift; sourceTree = "<group>"; };
 		DFFDCF8520AD8B3300B4956E /* PhotoSendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSendViewController.swift; sourceTree = "<group>"; };
+		DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeWindow.swift; sourceTree = "<group>"; };
+		DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecognizeWindow.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1203,6 +1207,8 @@
 				DF8CECE61FC317BF00E40064 /* PayWindow.xib */,
 				DF8EF6AE2030679100E99CE8 /* UrlWindow.swift */,
 				DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */,
+				DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */,
+				DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */,
 				DF6DB83E20258BEA0060CF31 /* ZoomWindow.swift */,
 				DF016B282096BD0700B8FFDE /* UserWindow.swift */,
 				DF016B2A2096BDB100B8FFDE /* UserWindow.xib */,
@@ -1975,6 +1981,7 @@
 				7BB1EDC71FB1B43B000DF9E7 /* GroupMemberCell.xib in Resources */,
 				DF8CECDF1FC3053B00E40064 /* TransferTypeCell.xib in Resources */,
 				DF736F8C1FC096D4001DB063 /* WalletAssetCell.xib in Resources */,
+				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
@@ -2319,6 +2326,7 @@
 				273FACB4205FB9A800513327 /* setup.c in Sources */,
 				273FACAE205FB9A800513327 /* SignalSenderKeyName.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
+				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
 				DFF353001FEE516F00058453 /* Asset.swift in Sources */,
 				DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */,
 				273FACB7205FB9A800513327 /* SignalStore.swift in Sources */,

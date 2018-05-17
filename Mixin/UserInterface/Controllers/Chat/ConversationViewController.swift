@@ -951,7 +951,8 @@ extension ConversationViewController: TextMessageLabelDelegate {
 extension ConversationViewController: ImagePickerControllerDelegate {
     
     func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
-        dataSource?.sendMessage(type: .SIGNAL_IMAGE, value: image.scaleForUpload())
+        let previewViewController = PhotoSendViewController.instance(image: image, dataSource: dataSource)
+        navigationController?.pushViewController(previewViewController, animated: true)
     }
     
 }

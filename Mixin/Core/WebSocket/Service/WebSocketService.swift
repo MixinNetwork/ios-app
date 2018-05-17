@@ -303,11 +303,17 @@ extension WebSocketService {
                             var userInfo = UIApplication.getTrackUserInfo()
                             if let param = blazeMessage.params {
                                 userInfo["category"] = param.category ?? ""
-                                userInfo["messageId"] = param.messageId ?? ""
                                 userInfo["conversationId"] = param.conversationId ?? ""
                                 userInfo["status"] = param.status ?? ""
                                 userInfo["recipientId"] = param.recipientId ?? ""
                                 userInfo["data"] = param.data ?? ""
+                                if let messageId = param.messageId {
+                                    userInfo["messageId"] = messageId
+                                    userInfo["messageCreatedAt"] = MessageDAO.shared.getMessage(messageId: messageId)?.createdAt
+                                    if messageId != messageId.lowercased() {
+                                        MessageDAO.shared.deleteMessage(id: messageId)
+                                    }
+                                }
                             }
                             UIApplication.trackError("The request data has invalid field", action: blazeMessage.action, userInfo: userInfo)
                         }

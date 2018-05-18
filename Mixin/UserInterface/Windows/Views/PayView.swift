@@ -84,7 +84,7 @@ class PayView: UIStackView {
         pinField.isHidden = false
         pinField.clear()
         memoLabel.text = memo
-        amountLabel.text =  String(format: "%@ %@", amount, asset.symbol)
+        amountLabel.text =  String(format: "%@ %@", amount.formatSimpleBalance(), asset.symbol)
         amountExchangeLabel.text = String(format: "≈ %@ USD", (amount.toDouble() * asset.priceUsd.toDouble()).toFormatLegalTender())
         paySuccessImageView.isHidden = true
         dismissButton.isEnabled = true

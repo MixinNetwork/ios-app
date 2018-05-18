@@ -116,7 +116,9 @@ extension String {
 
     func formatSimpleBalance() -> String {
         let formatter = NumberFormatter(numberStyle: .decimal)
-        if !hasPrefix("0."), let dotIdx = index(of: ".") {
+        if hasPrefix("0.") {
+            formatter.maximumFractionDigits = 8
+        } else if let dotIdx = index(of: ".") {
             formatter.maximumFractionDigits = 8 - dotIdx.encodedOffset
         }
         return formatter.string(from: NSDecimalNumber(string: self)) ?? self

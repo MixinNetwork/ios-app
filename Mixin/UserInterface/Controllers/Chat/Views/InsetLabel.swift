@@ -2,16 +2,26 @@ import UIKit
 
 class InsetLabel: UILabel {
 
-    var contentInset = UIEdgeInsets(top: 1, left: 6, bottom: 1, right: 6)
-
-    override var intrinsicContentSize: CGSize {
-        let intrinsicContentSize = super.intrinsicContentSize
-        guard self.text?.count ?? 0 > 1 else {
-            return CGSize(width: intrinsicContentSize.width + 2,
-                          height: intrinsicContentSize.height + 2)
+    var contentInset = UIEdgeInsets(top: 1, left: 6, bottom: 1, right: 6) {
+        didSet {
+            invertedContentInset = UIEdgeInsets(top: -contentInset.top,
+                                                left: -contentInset.left,
+                                                bottom: -contentInset.bottom,
+                                                right: -contentInset.right)
+            invalidateIntrinsicContentSize()
         }
-        return CGSize(width: intrinsicContentSize.width + contentInset.left + contentInset.right,
-                      height: intrinsicContentSize.height + contentInset.top + contentInset.bottom)
     }
     
+    private var invertedContentInset = UIEdgeInsets(top: -1, left: -6, bottom: -1, right: -6)
+
+    override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
+        let layoutBounds = UIEdgeInsetsInsetRect(bounds, contentInset)
+        let textRect = super.textRect(forBounds: layoutBounds, limitedToNumberOfLines: numberOfLines)
+        return UIEdgeInsetsInsetRect(textRect, invertedContentInset)
+    }
+    
+    override func drawText(in rect: CGRect) {
+        super.drawText(in: UIEdgeInsetsInsetRect(rect, contentInset))
+    }
+
 }

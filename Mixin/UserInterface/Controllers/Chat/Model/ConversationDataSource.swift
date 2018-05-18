@@ -484,6 +484,7 @@ extension ConversationDataSource {
                         message.thumbImage = thumbnail.getBlurThumbnail().toBase64()
                     }
                     let asset = AVURLAsset(url: targetUrl)
+                    message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
                     if let track = asset.tracks(withMediaType: .video).first {
                         let size = track.naturalSize.applying(track.preferredTransform)
                         message.mediaWidth = Int(abs(size.width))

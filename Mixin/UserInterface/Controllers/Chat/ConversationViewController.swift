@@ -1004,6 +1004,9 @@ extension ConversationViewController: GalleryViewControllerDelegate {
             if let cell = cell as? AttachmentExpirationHintingMessageCell {
                 contentViews.append(cell.operationButton)
             }
+            if let cell = cell as? VideoMessageCell {
+                contentViews.append(cell.durationLabel)
+            }
         }
         switch state {
         case .began:

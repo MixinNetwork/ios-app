@@ -212,8 +212,7 @@ extension GalleryItemViewController {
             var videoViewFrame = item.size.rect(fittingSize: safeSize, byContentMode: .scaleAspectFit)
             videoViewFrame.origin.y += safeAreaInsets.top
             videoView.frame = videoViewFrame
-            videoView.loadVideo(url: url, playAfterLoaded: isFocused)
-            print("\(self) loaded video and play: \(isFocused)")
+            videoView.loadVideo(url: url, playAfterLoaded: isFocused, thumbnail: item.thumbnail)
         } else {
             scrollView.isHidden = false
             videoView.isHidden = true

@@ -13,6 +13,9 @@ class GalleryVideoView: UIView {
     
     private let player: AVQueuePlayer = AVQueuePlayer()
     private let playButton: UIButton = UIButton(type: .custom)
+    private let unplayableHintImageView = UIImageView(image: #imageLiteral(resourceName: "ic_file_expired"))
+    private let thumbnailImageView = UIImageView()
+    private let playableKey = "playable"
     
     private var url: URL?
     private var looper: AVPlayerLooper?
@@ -29,35 +32,35 @@ class GalleryVideoView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        playButton.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        playButton.center = center
+        unplayableHintImageView.center = center
+        thumbnailImageView.frame = bounds
     }
     
-    func loadVideo(url: URL, playAfterLoaded: Bool) {
+    func loadVideo(url: URL, playAfterLoaded: Bool, thumbnail: UIImage?) {
         if url != self.url {
             self.url = url
             let item = AVPlayerItem(url: url)
-            if item.asset.isPlayable {
-                player.replaceCurrentItem(with: item)
-                looper = AVPlayerLooper(player: player, templateItem: item)
-                if playAfterLoaded {
-                    player.play()
-                    playButton.isHidden = true
-                } else {
-                    playButton.isHidden = false
-                }
+            if item.asset.statusOfValue(forKey: playableKey, error: nil) == .loaded {
+                loadItem(item, playAfterLoaded: playAfterLoaded, thumbnail: thumbnail)
+            } else {
+                item.asset.loadValuesAsynchronously(forKeys: [playableKey], completionHandler: {
+                    guard url == self.url else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        guard url == self.url else {
+                            return
+                        }
+                        self.loadItem(item, playAfterLoaded: playAfterLoaded, thumbnail: thumbnail)
+                    }
+                })
             }
         } else {
-            if playAfterLoaded {
-                if player.timeControlStatus != .playing {
-                    playButton.isHidden = true
-                    if let item = player.currentItem, item.asset.isPlayable {
-                        player.play()
-                    } else {
-                        // Unable to play
-                    }
-                }
-            } else {
-                playButton.isHidden = false
+            playButton.isHidden = playAfterLoaded
+            if playAfterLoaded, player.timeControlStatus != .playing, let item = player.currentItem, item.asset.isPlayable {
+                player.play()
             }
         }
     }
@@ -86,6 +89,26 @@ class GalleryVideoView: UIView {
         playButton.isHidden = true
         playButton.bounds.size = CGSize(width: 60, height: 60)
         addSubview(playButton)
+        thumbnailImageView.isHidden = true
+        addSubview(thumbnailImageView)
+        unplayableHintImageView.isHidden = true
+        addSubview(unplayableHintImageView)
+    }
+    
+    private func loadItem(_ item: AVPlayerItem, playAfterLoaded: Bool, thumbnail: UIImage?) {
+        let isPlayable = item.asset.isPlayable
+        unplayableHintImageView.isHidden = isPlayable
+        thumbnailImageView.isHidden = isPlayable
+        playButton.isHidden = !isPlayable || playAfterLoaded
+        if isPlayable {
+            player.replaceCurrentItem(with: item)
+            looper = AVPlayerLooper(player: player, templateItem: item)
+            if playAfterLoaded {
+                player.play()
+            }
+        } else {
+            thumbnailImageView.image = thumbnail
+        }
     }
     
 }

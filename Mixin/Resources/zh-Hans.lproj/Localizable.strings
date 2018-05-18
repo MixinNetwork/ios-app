@@ -146,6 +146,7 @@
 "group_button_title_qr_code" = "二维码";
 "group_button_title_reset_link" = "重置链接";
 "group_button_title_join" = "加入群组";
+"group_button_title_view" = "查看群组";
 "group_placeholder_group_name" = "新群组名称";
 "group_create_group_fail" = "创建群组失败，请稍后重试";
 "group_clear_success" = "已清空";

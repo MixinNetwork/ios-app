@@ -141,11 +141,26 @@
                                 <constraint firstAttribute="height" constant="1" id="nKv-sF-g5N" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
                             </constraints>
                         </view>
-                        <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gqf-oP-J5h" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                        <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gqf-oP-J5h" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="31" width="385" height="56"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="56" id="SLH-SN-LLF"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="View Group"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_view"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="viewAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="E2p-Be-yNR"/>
+                            </connections>
+                        </button>
+                        <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IIN-kd-crX" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="31" width="385" height="56"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="56" id="GZN-eh-qkC"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <state key="normal" title="Join Group"/>
@@ -153,7 +168,7 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_join"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="joinAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="6LE-N1-Tr6"/>
+                                <action selector="joinAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="iFg-E2-g15"/>
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rfy-fo-HuS">
@@ -220,7 +235,7 @@
                 <outlet property="announcementTextView" destination="3Dv-aC-whV" id="5Lz-WA-ypi"/>
                 <outlet property="avatarImageView" destination="9f1-By-myT" id="sUK-Xm-k0M"/>
                 <outlet property="joinBottomLineView" destination="rfy-fo-HuS" id="hQu-E3-VwX"/>
-                <outlet property="joinButton" destination="gqf-oP-J5h" id="EEk-fW-90v"/>
+                <outlet property="joinButton" destination="IIN-kd-crX" id="p83-dL-wSN"/>
                 <outlet property="joinTopLineView" destination="nLO-51-eR7" id="2lB-ml-3NB"/>
                 <outlet property="moreButton" destination="UMD-Uz-cTl" id="QaD-8K-AjD"/>
                 <outlet property="nameLabel" destination="yYa-yc-XuN" id="dX8-YV-ciM"/>
@@ -231,6 +246,7 @@
                 <outlet property="participantView4" destination="K3X-ER-GOQ" id="0NL-Gz-dJx"/>
                 <outlet property="participantsView" destination="Hww-Vd-bce" id="qof-ih-c8d"/>
                 <outlet property="textViewHeightConstraint" destination="2sx-MW-YxU" id="nSq-v2-j8U"/>
+                <outlet property="viewButton" destination="gqf-oP-J5h" id="qm9-f6-JI7"/>
             </connections>
             <point key="canvasLocation" x="38.5" y="-126"/>
         </view>

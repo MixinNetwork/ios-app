@@ -15,6 +15,7 @@ class GroupView: CornerView {
     @IBOutlet weak var joinTopLineView: UIView!
     @IBOutlet weak var joinBottomLineView: UIView!
     @IBOutlet weak var joinButton: StateResponsiveButton!
+    @IBOutlet weak var viewButton: StateResponsiveButton!
     @IBOutlet weak var participantsView: UIStackView!
     @IBOutlet weak var moreButton: StateResponsiveButton!
 
@@ -24,6 +25,7 @@ class GroupView: CornerView {
     
     private weak var superView: BottomSheetView?
     private var conversation: ConversationItem!
+    private var conversationResponse: ConversationResponse!
     private var codeId: String?
     private var initialAnnouncementMode = CollapsingTextView.Mode.collapsed
     private var isAdmin = false
@@ -66,9 +68,10 @@ class GroupView: CornerView {
     func render(codeId: String, conversation: ConversationResponse, ownerUser: UserItem, participants: [ParticipantUser], alreadyInTheGroup: Bool, superView: BottomSheetView) {
         self.superView = superView
         self.conversation = ConversationItem.createConversation(from: conversation)
+        self.conversationResponse = conversation
         self.codeId = codeId
 
-        renderConversation(alreadyInTheGroup: alreadyInTheGroup)
+        renderConversation(alreadyInTheGroup: alreadyInTheGroup, showViewGroup: alreadyInTheGroup)
         renderParticipants(participants: participants, participantCount: conversation.participants.count)
     }
 
@@ -90,11 +93,12 @@ class GroupView: CornerView {
         }
     }
 
-    private func renderConversation(alreadyInTheGroup: Bool = true) {
+    private func renderConversation(alreadyInTheGroup: Bool = true, showViewGroup: Bool = false) {
         joinTopLineView.isHidden = alreadyInTheGroup
         joinBottomLineView.isHidden = alreadyInTheGroup
         joinButton.isHidden = alreadyInTheGroup
-        moreButton.isHidden = !alreadyInTheGroup
+        moreButton.isHidden = !alreadyInTheGroup || showViewGroup
+        viewButton.isHidden = !showViewGroup
 
         avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
         nameLabel.text = conversation.name
@@ -155,6 +159,16 @@ class GroupView: CornerView {
         UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
     }
 
+    @IBAction func viewAction(_ sender: Any) {
+        guard !viewButton.isBusy, conversationResponse != nil else {
+            return
+        }
+        viewButton.isBusy = true
+
+        saveConversation(conversation: conversationResponse)
+    }
+    
+
     @IBAction func joinAction(_ sender: Any) {
         guard !joinButton.isBusy, let codeId = self.codeId, !codeId.isEmpty else {
             return
@@ -179,8 +193,13 @@ class GroupView: CornerView {
     }
 
     private func saveConversation(conversation: ConversationResponse) {
+        guard UIApplication.currentConversationId() != conversation.conversationId else {
+            superView?.dismissPopupControllerAnimated()
+            return
+        }
+
         DispatchQueue.global().async { [weak self] in
-            guard ConversationDAO.shared.createConversation(conversation: conversation, targetStatus: .SUCCESS) else {
+            guard ConversationDAO.shared.createConversation(conversation: conversation, targetStatus: .SUCCESS), let targetConversation = ConversationDAO.shared.getConversation(conversationId: conversation.conversationId)  else {
                 self?.superView?.dismissPopupControllerAnimated()
                 return
             }
@@ -189,7 +208,7 @@ class GroupView: CornerView {
                     return
                 }
 
-                let vc = ConversationViewController.instance(conversation: ConversationItem.createConversation(from: conversation))
+                let vc = ConversationViewController.instance(conversation: targetConversation)
                 UIApplication.currentActivity()?.navigationController?.pushViewController(withBackRoot: vc)
                 weakSelf.superView?.dismissPopupControllerAnimated()
             }

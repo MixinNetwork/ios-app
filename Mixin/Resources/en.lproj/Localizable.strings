@@ -149,6 +149,7 @@
 "group_button_title_qr_code" = "QR Code";
 "group_button_title_reset_link" = "Reset Link";
 "group_button_title_join" = "Join Group";
+"group_button_title_view" = "View Group";
 "group_placeholder_group_name" = "new group name";
 "group_create_group_fail" = "Failed to create a group, please try again later";
 "group_clear_success" = "Cleared";

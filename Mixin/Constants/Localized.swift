@@ -168,6 +168,8 @@ public class Localized {
         return number + LocalizedString("group_section_title_members", comment: "PARTICIPANTS")
     }
     public static let GROUP_BUTTON_TITLE_CREATE = LocalizedString("group_button_title_create", comment: "Create")
+    public static let GROUP_BUTTON_TITLE_VIEW = LocalizedString("group_button_title_view", comment: "View Group")
+    public static let GROUP_BUTTON_TITLE_JOIN = LocalizedString("group_button_title_join", comment: "Join Group")
     public static let GROUP_CREATE_GROUP_FAIL = LocalizedString("group_create_group_fail", comment: "Failed to create a group, please try again later")
     public static let GROUP_CLEAR_SUCCESS = LocalizedString("group_clear_success", comment: "Cleared")
     public static func GROUP_REMOVE_CONFIRM(fullName: String, groupName: String) -> String {

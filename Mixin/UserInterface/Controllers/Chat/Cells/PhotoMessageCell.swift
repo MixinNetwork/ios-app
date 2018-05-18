@@ -1,5 +1,6 @@
 import UIKit
 import SDWebImage
+import FLAnimatedImage
 
 protocol PhotoMessageCellDelegate: class {
     func photoMessageCellDidSelectNetworkOperation(_ cell: PhotoMessageCell)
@@ -7,7 +8,7 @@ protocol PhotoMessageCellDelegate: class {
 
 class PhotoMessageCell: DetailInfoMessageCell {
 
-    let contentImageView = UIImageView()
+    let contentImageView = FLAnimatedImageView()
     let shadowImageView = UIImageView()
     let operationButton = NetworkOperationButton(type: .custom)
 

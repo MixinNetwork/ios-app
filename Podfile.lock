@@ -19,6 +19,7 @@ PODS:
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseInstanceID (3.0.0):
     - FirebaseCore (~> 5.0)
+  - FLAnimatedImage (1.0.12)
   - GoogleToolboxForMac/Defines (2.1.4)
   - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
     - GoogleToolboxForMac/Defines (= 2.1.4)
@@ -26,6 +27,30 @@ PODS:
   - JWT (3.0.0-beta.8):
     - Base64 (~> 1.1.2)
   - KeychainAccess (3.1.1)
+  - libwebp (0.6.1):
+    - libwebp/core (= 0.6.1)
+    - libwebp/dec (= 0.6.1)
+    - libwebp/demux (= 0.6.1)
+    - libwebp/dsp (= 0.6.1)
+    - libwebp/enc (= 0.6.1)
+    - libwebp/mux (= 0.6.1)
+    - libwebp/utils (= 0.6.1)
+    - libwebp/webp (= 0.6.1)
+  - libwebp/core (0.6.1):
+    - libwebp/webp
+  - libwebp/dec (0.6.1):
+    - libwebp/core
+  - libwebp/demux (0.6.1):
+    - libwebp/core
+  - libwebp/dsp (0.6.1):
+    - libwebp/core
+  - libwebp/enc (0.6.1):
+    - libwebp/core
+  - libwebp/mux (0.6.1):
+    - libwebp/core
+  - libwebp/utils (0.6.1):
+    - libwebp/core
+  - libwebp/webp (0.6.1)
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
     - nanopb/encode (= 0.3.8)
@@ -41,6 +66,12 @@ PODS:
   - SDWebImage (4.3.3):
     - SDWebImage/Core (= 4.3.3)
   - SDWebImage/Core (4.3.3)
+  - SDWebImage/GIF (4.3.3):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
+  - SDWebImage/WebP (4.3.3):
+    - libwebp (~> 0.5)
+    - SDWebImage/Core
   - SignalProtocolC (2.3.1)
   - SnapKit (4.0.0)
   - SocketRocket (0.5.1)
@@ -62,6 +93,8 @@ DEPENDENCIES:
   - PhoneNumberKit
   - RSKImageCropper
   - SDWebImage
+  - SDWebImage/GIF
+  - SDWebImage/WebP
   - "SignalProtocolC (from `git@github.com:crossle/SignalProtocolC.git`)"
   - SnapKit (~> 4.0.0)
   - SocketRocket
@@ -79,10 +112,12 @@ SPEC REPOS:
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseInstanceID
+    - FLAnimatedImage
     - GoogleToolboxForMac
     - GzipSwift
     - JWT
     - KeychainAccess
+    - libwebp
     - nanopb
     - PhoneNumberKit
     - RSKImageCropper
@@ -117,10 +152,12 @@ SPEC CHECKSUMS:
   FirebaseAnalytics: 19812b49fa5f283dd6b23edf8a14b5d477029ab8
   FirebaseCore: cafc814b2d84fc8733f09e653041cc2165332ad7
   FirebaseInstanceID: 83e0040351565df711a5db3d8ebe5ea21aca998a
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   GzipSwift: 1a5bc5f7827e09846b0635b5079f1224bc3b1c3a
   JWT: 6e7ec473b6febcb7498affc84f0e75d393914411
   KeychainAccess: 7bd430028059754a3debab3cfc0bd1fc7fb85df3
+  libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   PhoneNumberKit: 62003f40ff75315fd3738286558bc365365ac222
   RSKImageCropper: 50d5a3e4160f0309b14d75b89d5ae2f496d56e0d
@@ -132,6 +169,6 @@ SPEC CHECKSUMS:
   WCDB.swift: 5bb038bc5bb46067cccc7c48392e8f4c4a15def0
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 4a0a1727335d91dc0c1a6aecf220cd0af1185cd4
+PODFILE CHECKSUM: c158574c76a3978005e7ca1c971b942dab60b6fe
 
 COCOAPODS: 1.5.2

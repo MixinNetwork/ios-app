@@ -1,6 +1,7 @@
 import UIKit
 import Photos
 import SwiftMessages
+import FLAnimatedImage
 
 class GalleryItemViewController: UIViewController {
     
@@ -9,7 +10,7 @@ class GalleryItemViewController: UIViewController {
     @IBOutlet weak var operationButton: NetworkOperationButton!
     @IBOutlet weak var expiredHintLabel: UILabel!
     
-    let imageView = UIImageView()
+    let imageView = FLAnimatedImageView()
     
     private let animationDuration: TimeInterval = 0.3
     private let maximumZoomScale: CGFloat = 3

@@ -1,8 +1,9 @@
 import UIKit
+import FLAnimatedImage
 
 class StickerMessageCell: DetailInfoMessageCell {
 
-    let contentImageView = UIImageView()
+    let contentImageView = FLAnimatedImageView()
     
     override var contentFrame: CGRect {
         return contentImageView.frame

@@ -10,6 +10,8 @@ target 'Mixin' do
   pod 'Firebase/Core'
   pod 'Firebase/Analytics'
   pod 'SDWebImage'
+  pod 'SDWebImage/GIF'
+  pod 'SDWebImage/WebP'
   pod 'SnapKit', '~> 4.0.0'
   pod 'SocketRocket'
   pod 'PhoneNumberKit'

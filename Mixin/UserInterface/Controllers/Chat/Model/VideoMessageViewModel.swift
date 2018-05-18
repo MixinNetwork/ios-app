@@ -2,6 +2,8 @@ import UIKit
 
 class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadingViewModel {
 
+    let betterThumbnail: UIImage?
+    
     var progress: Double?
     
     var automaticallyLoadsAttachment: Bool {
@@ -13,6 +15,14 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+        if let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
+            let betterThumbnailFilename = filename + jpegExtensionName
+            let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos,
+                                                   filename: betterThumbnailFilename)
+            betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path)
+        } else {
+            betterThumbnail = nil
+        }
         super.init(message: message, style: style, fits: layoutWidth)
         updateOperationButtonStyle()
     }

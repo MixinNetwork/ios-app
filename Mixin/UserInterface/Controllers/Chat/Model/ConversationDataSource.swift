@@ -433,7 +433,7 @@ extension ConversationDataSource {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
         } else if type == .SIGNAL_IMAGE, let image = value as? UIImage {
-            let filename = "\(message.messageId).jpg"
+            let filename = message.messageId + jpegExtensionName
             let path = MixinFile.url(ofChatDirectory: .photos, filename: filename)
             queue.async {
                 guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0  else {
@@ -466,7 +466,7 @@ extension ConversationDataSource {
                 do {
                     if FileManager.default.fileExists(atPath: targetUrl.path) {
                         if !FileManager.default.compare(path1: url.path, path2: targetUrl.path) {
-                            filename = UUID().uuidString
+                            filename = UUID().uuidString.lowercased()
                             targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
                             try FileManager.default.moveItem(at: url, to: targetUrl)
                         }
@@ -478,8 +478,11 @@ extension ConversationDataSource {
                     return
                 }
                 if type == .SIGNAL_VIDEO {
-                    let thumbnail = UIImage(withFirstFrameOfVideoAtURL: targetUrl)
-                    message.thumbImage = thumbnail?.getBlurThumbnail().toBase64()
+                    if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: targetUrl) {
+                        let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: filename + jpegExtensionName)
+                        thumbnail.saveToFile(path: thumbnailURL)
+                        message.thumbImage = thumbnail.getBlurThumbnail().toBase64()
+                    }
                     let asset = AVURLAsset(url: targetUrl)
                     if let track = asset.tracks(withMediaType: .video).first {
                         let size = track.naturalSize.applying(track.preferredTransform)

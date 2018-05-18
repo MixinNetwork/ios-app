@@ -2,10 +2,13 @@ import UIKit
 import CoreGraphics
 import AVFoundation
 
+let jpegCompressionQuality: CGFloat = 0.75
+let jpegExtensionName = ".jpg"
+
 extension UIImage {
     
     var base64: String? {
-        let data = UIImageJPEGRepresentation(self, 0.75)
+        let data = UIImageJPEGRepresentation(self, jpegCompressionQuality)
         return data?.base64EncodedString()
     }
 
@@ -124,7 +127,8 @@ extension UIImage {
         return scaledToSize(newSize: CGSize(width: targetWidth, height: targetHeight))
     }
 
-    func saveToFile(path: URL, quality: CGFloat = 0.75) -> Bool {
+    @discardableResult
+    func saveToFile(path: URL, quality: CGFloat = jpegCompressionQuality) -> Bool {
         guard let data = UIImageJPEGRepresentation(self, quality) else {
             return false
         }

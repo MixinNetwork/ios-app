@@ -17,7 +17,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? VideoMessageViewModel {
             renderOperationButtonAndExpiredHintLabel(viewModel: viewModel)
-            contentImageView.image = viewModel.thumbnail
+            contentImageView.image = viewModel.betterThumbnail ?? viewModel.thumbnail
         }
     }
     

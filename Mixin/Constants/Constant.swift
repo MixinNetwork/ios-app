@@ -85,6 +85,7 @@ struct MixinFile {
     enum ChatDirectory: String {
         case photos = "Photos"
         case files = "Files"
+        case videos = "Videos"
     }
 
     static var rootDirectory: URL {

@@ -17,7 +17,13 @@ class SendMessageService: MixinService {
                 if message.userId == AccountAPI.shared.accountUserId {
                     FileJobQueue.shared.addJob(job: FileUploadJob(message: message))
                 } else {
-                    FileJobQueue.shared.addJob(job: FileDownloadJob(message: message))
+                    FileJobQueue.shared.addJob(job: FileDownloadJob(messageId: message.messageId))
+                }
+            } else if message.category.hasSuffix("_VIDEO") {
+                if message.userId == AccountAPI.shared.accountUserId {
+                    FileJobQueue.shared.addJob(job: VideoUploadJob(message: message))
+                } else {
+                    FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId))
                 }
             }
         }
@@ -80,6 +86,8 @@ class SendMessageService: MixinService {
             ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: msg))
         } else if msg.category.hasSuffix("_DATA") {
             FileJobQueue.shared.addJob(job: FileUploadJob(message: msg))
+        } else if msg.category.hasSuffix("_VIDEO") {
+            FileJobQueue.shared.addJob(job: VideoUploadJob(message: msg))
         }
     }
 

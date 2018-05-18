@@ -67,6 +67,12 @@ extension UNUserNotificationCenter {
             } else {
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_PHOTO
             }
+        } else if message.category.hasSuffix("_VIDEO") {
+            if conversation.isGroup() {
+                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_VIDEO)"
+            } else {
+                notificationContent.body = Localized.NOTIFICATION_CONTENT_VIDEO
+            }
         } else if message.category.hasSuffix("_DATA") {
             if conversation.isGroup() {
                 notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_FILE)"

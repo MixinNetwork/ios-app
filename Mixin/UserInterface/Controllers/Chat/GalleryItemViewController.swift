@@ -5,11 +5,14 @@ import FLAnimatedImage
 
 class GalleryItemViewController: UIViewController {
     
+    @IBOutlet weak var videoView: GalleryVideoView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var mediaStatusView: UIStackView!
     @IBOutlet weak var operationButton: NetworkOperationButton!
     @IBOutlet weak var expiredHintLabel: UILabel!
     
+    private static let qrCodeDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
+
     let imageView = FLAnimatedImageView()
     
     private let animationDuration: TimeInterval = 0.3
@@ -17,7 +20,25 @@ class GalleryItemViewController: UIViewController {
 
     private(set) var urlFromQRCode: URL?
     
-    private static let qrCodeDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
+    var item: GalleryItem? {
+        didSet {
+            guard item != oldValue else {
+                return
+            }
+            loadItem(item)
+        }
+    }
+    
+    var isFocused = false {
+        didSet {
+            guard isFocused != oldValue else {
+                return
+            }
+            if !isFocused, item?.category == .video {
+                videoView.pause(hidePlayButton: false)
+            }
+        }
+    }
     
     private var pageSize: CGSize {
         return UIScreen.main.bounds.size
@@ -35,49 +56,10 @@ class GalleryItemViewController: UIViewController {
         }
     }
 
-    var item: GalleryItem? {
-        didSet {
-            scrollView.zoomScale = 1
-            guard item != oldValue else {
-                return
-            }
-            urlFromQRCode = nil
-            imageView.sd_cancelCurrentImageLoad()
-            imageView.image = nil
-            scrollView.contentSize = pageSize
-            if let item = item {
-                if let url = item.url {
-                    imageView.sd_setImage(with: url, placeholderImage: item.thumbnail, options: [], completed: { [weak self] (image, _, _, _) in
-                        guard let image = image else {
-                            return
-                        }
-                        DispatchQueue.global().async {
-                            guard self != nil, self?.item?.messageId == item.messageId, let ciImage = CIImage(image: image), let features = GalleryItemViewController.qrCodeDetector?.features(in: ciImage) else {
-                                return
-                            }
-                            for case let feature as CIQRCodeFeature in features {
-                                guard let messageString = feature.messageString, let url = URL(string: messageString) else {
-                                    continue
-                                }
-                                DispatchQueue.main.async {
-                                    if self?.item?.messageId == item.messageId {
-                                        self?.urlFromQRCode = url
-                                    }
-                                }
-                                break
-                            }
-                        }
-                    })
-                } else {
-                    imageView.image = item.thumbnail
-                }
-                layout(mediaStatus: item.mediaStatus)
-                if item.mediaStatus == .PENDING {
-                    beginDownload()
-                }
-                layoutImageView()
-            }
-        }
+    private var safeSize: CGSize {
+        let safeAreaInsets = self.safeAreaInsets
+        return CGSize(width: pageSize.width - safeAreaInsets.horizontal,
+                      height: pageSize.height - safeAreaInsets.vertical)
     }
     
     override func viewDidLoad() {
@@ -123,17 +105,14 @@ class GalleryItemViewController: UIViewController {
     }
     
     func saveToLibrary() {
-        guard let image = imageView.image else {
-            return
-        }
         switch PHPhotoLibrary.authorizationStatus() {
         case .authorized:
-            performSavingToLibrary(image: image)
+            performSavingToLibrary()
         case .notDetermined:
             PHPhotoLibrary.requestAuthorization { [weak self] (status) in
                 switch status {
                 case .authorized:
-                    self?.performSavingToLibrary(image: image)
+                    self?.performSavingToLibrary()
                 case .denied, .notDetermined, .restricted:
                     DispatchQueue.main.async {
                         SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_FAILED, backgroundColor: .hintRed)
@@ -171,18 +150,104 @@ extension GalleryItemViewController: UIScrollViewDelegate {
 
 extension GalleryItemViewController {
     
-    private func performSavingToLibrary(image: UIImage) {
-        PHPhotoLibrary.shared().performChanges({
-            PHAssetChangeRequest.creationRequestForAsset(from: image)
-        }, completionHandler: { (success: Bool, error: Error?) in
-            DispatchQueue.main.async {
-                if success {
-                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_SUCCESS, backgroundColor: .hintGreen)
-                } else {
-                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_FAILED, backgroundColor: .hintRed)
+    private func prepareForReuse() {
+        scrollView.zoomScale = 1
+        urlFromQRCode = nil
+        imageView.sd_cancelCurrentImageLoad()
+        scrollView.contentSize = pageSize
+        videoView.pause(hidePlayButton: false)
+    }
+    
+    private func loadItem(_ item: GalleryItem?) {
+        prepareForReuse()
+        imageView.image = item?.thumbnail
+        if let item = item {
+            switch item.category {
+            case .image:
+                loadImage(item: item)
+            case .video:
+                loadVideo(item: item)
+            }
+            layout(mediaStatus: item.mediaStatus)
+            if item.mediaStatus == .PENDING {
+                beginDownload()
+            }
+            layoutImageView()
+        }
+    }
+    
+    private func loadImage(item: GalleryItem) {
+        scrollView.isHidden = false
+        videoView.isHidden = true
+        guard let url = item.url else {
+            return
+        }
+        imageView.sd_setImage(with: url, placeholderImage: nil, options: [], completed: { [weak self] (image, _, _, _) in
+            guard let image = image else {
+                return
+            }
+            DispatchQueue.global().async {
+                guard self != nil, self?.item?.messageId == item.messageId, let ciImage = CIImage(image: image), let features = GalleryItemViewController.qrCodeDetector?.features(in: ciImage) else {
+                    return
+                }
+                for case let feature as CIQRCodeFeature in features {
+                    guard let messageString = feature.messageString, let url = URL(string: messageString) else {
+                        continue
+                    }
+                    DispatchQueue.main.async {
+                        if self?.item?.messageId == item.messageId {
+                            self?.urlFromQRCode = url
+                        }
+                    }
+                    break
                 }
             }
         })
+    }
+    
+    private func loadVideo(item: GalleryItem) {
+        if let url = item.url {
+            scrollView.isHidden = true
+            videoView.isHidden = false
+            var videoViewFrame = item.size.rect(fittingSize: safeSize, byContentMode: .scaleAspectFit)
+            videoViewFrame.origin.y += safeAreaInsets.top
+            videoView.frame = videoViewFrame
+            videoView.loadVideo(url: url, playAfterLoaded: isFocused)
+            print("\(self) loaded video and play: \(isFocused)")
+        } else {
+            scrollView.isHidden = false
+            videoView.isHidden = true
+            imageView.image = item.thumbnail
+        }
+    }
+    
+    private func performSavingToLibrary() {
+        guard let url = item?.url else {
+            return
+        }
+        if item?.category == .image {
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: url)
+            }, completionHandler: { (success, error) in
+                DispatchQueue.main.async {
+                    if success {
+                        SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_SUCCESS, backgroundColor: .hintGreen)
+                    } else {
+                        SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_FAILED, backgroundColor: .hintRed)
+                    }
+                }
+            })
+        } else if item?.category == .video {
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            }, completionHandler: { (success, error) in
+                if success {
+                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_VIDEO_SUCCESS, backgroundColor: .hintGreen)
+                } else {
+                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_VIDEO_FAILED, backgroundColor: .hintRed)
+                }
+            })
+        }
     }
     
     private func beginDownload() {
@@ -191,7 +256,11 @@ extension GalleryItemViewController {
         }
         layout(mediaStatus: .PENDING)
         imageView.image = photo.thumbnail
-        ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: photo.messageId))
+        if item?.category == .image {
+            ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: photo.messageId))
+        } else {
+            FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: photo.messageId))
+        }
     }
     
     private func stopDownload() {
@@ -199,8 +268,13 @@ extension GalleryItemViewController {
             return
         }
         layout(mediaStatus: .CANCELED)
-        let jobId = AttachmentDownloadJob.jobId(messageId: messageId)
-        ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
+        if item?.category == .image {
+            let jobId = AttachmentDownloadJob.jobId(messageId: messageId)
+            ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
+        } else {
+            let jobId = VideoDownloadJob.jobId(messageId: messageId)
+            FileJobQueue.shared.cancelJob(jobId: jobId)
+        }
     }
     
     private func layout(mediaStatus: MediaStatus?) {
@@ -234,9 +308,6 @@ extension GalleryItemViewController {
         guard let item = item, (scrollView.zoomScale - 1) < 0.1 else {
             return
         }
-        let safeAreaInsets = self.safeAreaInsets
-        let safeSize = CGSize(width: pageSize.width - safeAreaInsets.horizontal,
-                              height: pageSize.height - safeAreaInsets.vertical)
         let imageRatio = item.size.width / item.size.height
         let pageRatio = pageSize.width / pageSize.height
         if imageRatio <= pageRatio {

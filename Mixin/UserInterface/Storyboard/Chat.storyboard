@@ -1838,6 +1838,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2V5-Rc-6pe" customClass="GalleryVideoView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" maximumZoomScale="3" translatesAutoresizingMaskIntoConstraints="NO" id="rqR-m4-8uH">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1871,11 +1875,15 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="N9N-4S-6M4" firstAttribute="centerX" secondItem="sor-nY-lJl" secondAttribute="centerX" id="6lb-JH-TFR"/>
+                            <constraint firstItem="CXK-Zj-vQv" firstAttribute="trailing" secondItem="2V5-Rc-6pe" secondAttribute="trailing" placeholder="YES" id="AK3-pJ-URG"/>
                             <constraint firstItem="rqR-m4-8uH" firstAttribute="top" secondItem="sor-nY-lJl" secondAttribute="top" id="Bzg-RL-Ybp"/>
                             <constraint firstAttribute="trailing" secondItem="rqR-m4-8uH" secondAttribute="trailing" id="C9C-dj-Rwi"/>
                             <constraint firstItem="rqR-m4-8uH" firstAttribute="leading" secondItem="sor-nY-lJl" secondAttribute="leading" id="KtQ-BK-wQ0"/>
                             <constraint firstItem="N9N-4S-6M4" firstAttribute="centerY" secondItem="sor-nY-lJl" secondAttribute="centerY" id="g11-15-5ud"/>
+                            <constraint firstItem="CXK-Zj-vQv" firstAttribute="bottom" secondItem="2V5-Rc-6pe" secondAttribute="bottom" placeholder="YES" id="g43-RG-Gun"/>
                             <constraint firstAttribute="bottom" secondItem="rqR-m4-8uH" secondAttribute="bottom" id="sQQ-ck-eM9"/>
+                            <constraint firstItem="2V5-Rc-6pe" firstAttribute="leading" secondItem="CXK-Zj-vQv" secondAttribute="leading" placeholder="YES" id="wMR-2O-1un"/>
+                            <constraint firstItem="2V5-Rc-6pe" firstAttribute="top" secondItem="CXK-Zj-vQv" secondAttribute="top" placeholder="YES" id="zyg-xP-7K0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="CXK-Zj-vQv"/>
                     </view>
@@ -1884,6 +1892,7 @@
                         <outlet property="mediaStatusView" destination="N9N-4S-6M4" id="oE3-YX-TKA"/>
                         <outlet property="operationButton" destination="WYx-KT-fCA" id="p12-rr-cPV"/>
                         <outlet property="scrollView" destination="rqR-m4-8uH" id="9ti-t8-8D7"/>
+                        <outlet property="videoView" destination="2V5-Rc-6pe" id="tK1-lX-xUx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JnW-4O-SEw" userLabel="First Responder" sceneMemberID="firstResponder"/>

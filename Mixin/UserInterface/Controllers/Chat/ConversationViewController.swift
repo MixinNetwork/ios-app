@@ -1,7 +1,9 @@
 import UIKit
 import MobileCoreServices
+import AVKit
+import Photos
 
-class ConversationViewController: UIViewController {
+class ConversationViewController: UIViewController, UINavigationControllerDelegate {
     
     @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -84,7 +86,15 @@ class ConversationViewController: UIViewController {
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
     }()
-    
+    private lazy var videoPickerController: UIImagePickerController = {
+        let picker = UIImagePickerController()
+        picker.mediaTypes = [kUTTypeMovie as String]
+        picker.videoQuality = .type640x480
+        picker.allowsEditing = false
+        picker.delegate = self
+        return picker
+    }()
+
     private var bottomSafeAreaInset: CGFloat {
         if #available(iOS 11.0, *) {
             return view.safeAreaInsets.bottom
@@ -407,8 +417,8 @@ class ConversationViewController: UIViewController {
             return
         }
         let message = viewModel.message
-        if message.category.hasSuffix("_IMAGE") {
-            guard message.mediaStatus == MediaStatus.DONE.rawValue, let photoCell = cell as? PhotoMessageCell, photoCell.contentImageView.frame.contains(recognizer.location(in: photoCell)), let item = GalleryItem(message: message) else {
+        if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO") {
+            guard message.mediaStatus == MediaStatus.DONE.rawValue, let cell = cell as? PhotoRepresentableMessageCell, cell.contentImageView.frame.contains(recognizer.location(in: cell)), let item = GalleryItem(message: message) else {
                 return
             }
             view.bringSubview(toFront: galleryWrapperView)
@@ -597,6 +607,10 @@ class ConversationViewController: UIViewController {
         navigationController?.pushViewController(ConversationShareContactViewController.instance(ownerUser: ownerUser, conversationId: conversationId), animated: true)
     }
 
+    func pickVideoAction() {
+        present(videoPickerController, animated: true, completion: nil)
+    }
+    
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
@@ -962,7 +976,7 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
 extension ConversationViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, placeholderForItemOfMessageId id: String) -> UIImage? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
             return cell.contentImageView.image
         } else {
             return nil
@@ -970,7 +984,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, sourceRectForItemOfMessageId id: String) -> CGRect? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
             return cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
         } else {
             return nil
@@ -979,12 +993,17 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition, stateDidChangeTo state: GalleryViewController.TransitionState, forItemOfMessageId id: String?) {
         var contentViews = [UIView]()
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
-            contentViews = [cell.contentImageView,
-                            cell.shadowImageView,
-                            cell.operationButton,
-                            cell.timeLabel,
-                            cell.statusImageView]
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }) {
+            let cell = tableView.cellForRow(at: indexPath)
+            if let cell = cell as? PhotoRepresentableMessageCell {
+                contentViews = [cell.contentImageView,
+                                cell.shadowImageView,
+                                cell.timeLabel,
+                                cell.statusImageView]
+            }
+            if let cell = cell as? AttachmentExpirationHintingMessageCell {
+                contentViews.append(cell.operationButton)
+            }
         }
         switch state {
         case .began:
@@ -1004,7 +1023,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, snapshotForItemOfMessageId id: String) -> UIView? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
             return cell.contentSnapshotView(afterScreenUpdates: false)
         } else {
             return nil
@@ -1019,6 +1038,42 @@ extension ConversationViewController: GalleryViewControllerDelegate {
             hideStatusBar = false
         }
         setNeedsStatusBarAppearanceUpdate()
+    }
+    
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension ConversationViewController: UIImagePickerControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        dismiss(animated: true, completion: nil)
+        if let url = info[UIImagePickerControllerMediaURL] {
+            dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: url)
+        } else if let url = info[UIImagePickerControllerReferenceURL] as? URL {
+//            if let asset = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil).firstObject {
+//                PHImageManager.default().requestExportSession(forVideo: asset, options: nil, exportPreset: AVAssetExportPreset640x480, resultHandler: { [weak self] (session, nil) in
+//                    guard let session = session else {
+//                        UIApplication.trackError("ConversationViewController", action: "Export session failed", userInfo: info)
+//                        return
+//                    }
+//                    let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).mp4")
+//                    session.outputURL = outputURL
+//                    session.outputFileType = .mp4
+//                    session.shouldOptimizeForNetworkUse = true
+//                    session.exportAsynchronously {
+//                        print(session.status)
+//                        print(session.error)
+//                        self?.dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: outputURL)
+//                    }
+//                })
+//            } else {
+//                UIApplication.trackError("ConversationViewController", action: "PHAsset fetched empty asset", userInfo: info)
+//            }
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
 }
@@ -1060,9 +1115,9 @@ extension ConversationViewController {
     
     private func updateMoreMenuFixedJobs() {
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
+            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .video, .file, .contact]
         } else {
-            moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
+            moreMenuViewController?.fixedJobs = [.camera, .photo, .video, .file, .contact]
         }
     }
     

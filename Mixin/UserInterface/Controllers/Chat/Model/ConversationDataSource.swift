@@ -1,4 +1,5 @@
 import UIKit
+import AVKit
 
 extension Notification.Name {
     
@@ -448,28 +449,46 @@ extension ConversationDataSource {
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
-        } else if type == .SIGNAL_DATA, let url = value as? URL {
+        } else if type == .SIGNAL_DATA || type == .SIGNAL_VIDEO, let url = value as? URL {
             guard FileManager.default.fileSize(url.path) > 0 else {
                 NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
                 return
             }
             
             var filename = url.lastPathComponent.substring(endChar: ".").lowercased().md5()
-            var targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
+            var targetUrl: URL
+            if type == .SIGNAL_DATA {
+                targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
+            } else {
+                targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
+            }
             queue.async {
                 do {
                     if FileManager.default.fileExists(atPath: targetUrl.path) {
                         if !FileManager.default.compare(path1: url.path, path2: targetUrl.path) {
                             filename = UUID().uuidString
                             targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
-                            try FileManager.default.copyItem(at: url, to: targetUrl)
+                            try FileManager.default.moveItem(at: url, to: targetUrl)
                         }
                     } else {
-                        try FileManager.default.copyItem(at: url, to: targetUrl)
+                        try FileManager.default.moveItem(at: url, to: targetUrl)
                     }
                 } catch {
                     NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
                     return
+                }
+                if type == .SIGNAL_VIDEO {
+                    let thumbnail = UIImage(withFirstFrameOfVideoAtURL: targetUrl)
+                    message.thumbImage = thumbnail?.getBlurThumbnail().toBase64()
+                    let asset = AVURLAsset(url: targetUrl)
+                    if let track = asset.tracks(withMediaType: .video).first {
+                        let size = track.naturalSize.applying(track.preferredTransform)
+                        message.mediaWidth = Int(abs(size.width))
+                        message.mediaHeight = Int(abs(size.height))
+                    } else {
+                        message.mediaWidth = 1
+                        message.mediaHeight = 1
+                    }
                 }
                 message.name = url.lastPathComponent
                 message.mediaSize = FileManager.default.fileSize(targetUrl.path)
@@ -681,6 +700,8 @@ extension ConversationDataSource {
                 viewModel = StickerMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_DATA") {
                 viewModel = DataMessageViewModel(message: message, style: style, fits: layoutWidth)
+            } else if message.category.hasSuffix("_VIDEO") {
+                viewModel = VideoMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_CONTACT") {
                 viewModel = ContactMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

@@ -1,17 +1,15 @@
 import UIKit
 
-class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
+class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadingViewModel {
 
     var progress: Double?
-    var showPlayIconAfterFinished: Bool = false
-    var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
-    
-    override var size: CGSize {
-        return CGSize(width: 280, height: 72)
-    }
     
     var automaticallyLoadsAttachment: Bool {
         return false
+    }
+    
+    var showPlayIconAfterFinished: Bool {
+        return true
     }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
@@ -26,9 +24,9 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
         let job: UploadOrDownloadJob
         if messageIsSentByMe {
-            job = FileUploadJob(message: Message.createMessage(message: message))
+            job = VideoUploadJob(message: Message.createMessage(message: message))
         } else {
-            job = FileDownloadJob(messageId: message.messageId)
+            job = VideoDownloadJob(messageId: message.messageId)
         }
         FileJobQueue.shared.addJob(job: job)
     }
@@ -36,9 +34,9 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
         let jobId: String
         if messageIsSentByMe {
-            jobId = FileUploadJob.jobId(messageId: message.messageId)
+            jobId = VideoUploadJob.jobId(messageId: message.messageId)
         } else {
-            jobId = FileDownloadJob.jobId(messageId: message.messageId)
+            jobId = VideoDownloadJob.jobId(messageId: message.messageId)
         }
         FileJobQueue.shared.cancelJob(jobId: jobId)
         if markMediaStatusCancelled {

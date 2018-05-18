@@ -4,18 +4,17 @@ extension MessageItem {
 
     private static let deleteAction = [#selector(ConversationTableView.deleteAction(_:))]
     private static let forwardAndDeleteActions = [#selector(ConversationTableView.forwardAction(_:)),
-                                       #selector(ConversationTableView.deleteAction(_:))]
+                                                  #selector(ConversationTableView.deleteAction(_:))]
     private static let textActions = [#selector(ConversationTableView.forwardAction(_:)),
                                       #selector(ConversationTableView.copyAction(_:)),
                                       #selector(ConversationTableView.deleteAction(_:))]
 
-    
     var allowedActions: [Selector] {
         if category.hasSuffix("_TEXT") {
             return MessageItem.textActions
         } else if category.hasSuffix("_IMAGE") {
             return MessageItem.forwardAndDeleteActions
-        } else if category.hasSuffix("_DATA") {
+        } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") {
             return mediaStatus == MediaStatus.DONE.rawValue ? MessageItem.forwardAndDeleteActions : MessageItem.deleteAction
         } else if category.hasSuffix("_STICKER") {
             return MessageItem.forwardAndDeleteActions
@@ -184,6 +183,7 @@ class ConversationTableView: UITableView {
         register(StickerMessageCell.self, forCellReuseIdentifier: ReuseId.sticker.rawValue)
         register(UnknownMessageCell.self, forCellReuseIdentifier: ReuseId.unknown.rawValue)
         register(AppButtonGroupMessageCell.self, forCellReuseIdentifier: ReuseId.appButtonGroup.rawValue)
+        register(VideoMessageCell.self, forCellReuseIdentifier: ReuseId.video.rawValue)
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
         addGestureRecognizer(longPressRecognizer)
@@ -216,6 +216,7 @@ extension ConversationTableView {
         case unreadHint = "UnreadHintMessageCell"
         case appButtonGroup = "AppButtonGroupCell"
         case contact = "ContactMessageCell"
+        case video = "VideoMessageCell"
         case appCard = "AppCardMessageCell"
         case header = "DateHeader"
 
@@ -230,6 +231,8 @@ extension ConversationTableView {
                 self = .data
             } else if category.hasSuffix("_CONTACT") {
                 self = .contact
+            } else if category.hasSuffix("_VIDEO") {
+                self = .video
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 self = .transfer
             } else if category == MessageCategory.EXT_UNREAD.rawValue {

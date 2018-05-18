@@ -1,18 +1,12 @@
 import UIKit
-import SDWebImage
 
-class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHintingMessageCell {
+class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHintingMessageCell {
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
-
+    
     let operationButton = NetworkOperationButton(type: .custom)
     let expiredHintLabel = UILabel()
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        contentImageView.sd_cancelCurrentImageLoad()
-    }
-
     override func prepare() {
         super.prepare()
         prepareOperationButtonAndExpiredHintLabel()
@@ -21,13 +15,9 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
-        if let viewModel = viewModel as? PhotoMessageViewModel {
+        if let viewModel = viewModel as? VideoMessageViewModel {
             renderOperationButtonAndExpiredHintLabel(viewModel: viewModel)
-            if let mediaUrl = viewModel.message.mediaUrl, !mediaUrl.isEmpty {
-                contentImageView.sd_setImage(with: MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl))
-            } else if let thumbnail = viewModel.thumbnail {
-                contentImageView.image = thumbnail
-            }
+            contentImageView.image = viewModel.thumbnail
         }
     }
     
@@ -40,3 +30,4 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     }
     
 }
+

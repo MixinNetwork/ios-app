@@ -80,6 +80,7 @@
 		7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */; };
 		7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */; };
 		7B481A022020712000843B1D /* HorizontalSingleLineFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B481A012020712000843B1D /* HorizontalSingleLineFlowLayout.swift */; };
+		7B4A430620AC9ABA007D6936 /* GalleryVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */; };
 		7B4D1122205A9EF80074BF60 /* AddressBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1121205A9EF80074BF60 /* AddressBookView.swift */; };
 		7B4D1124205A9F170074BF60 /* AddressBookView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B4D1123205A9F170074BF60 /* AddressBookView.xib */; };
 		7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1125205B8D380074BF60 /* AddressCell.swift */; };
@@ -97,6 +98,8 @@
 		7B61EB8F20978856001C1985 /* AttachmentEncryptingInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61EB8C20978855001C1985 /* AttachmentEncryptingInputStream.swift */; };
 		7B61EB9020978856001C1985 /* AttachmentDecryptingOutputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61EB8D20978855001C1985 /* AttachmentDecryptingOutputStream.swift */; };
 		7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */; };
+		7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */; };
+		7B6EC8FE20A91579009A7020 /* VideoDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FD20A91579009A7020 /* VideoDownloadJob.swift */; };
 		7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */; };
 		7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B78B2451FF2170400371632 /* InviteLinkViewController.swift */; };
 		7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
@@ -108,6 +111,8 @@
 		7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B869C6F202D7DA8009930BA /* NumberPadView.swift */; };
 		7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B869C71202D7FC8009930BA /* NumberPadButton.swift */; };
 		7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B869C73202D8206009930BA /* NumberPadButton.xib */; };
+		7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */; };
+		7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B88655A20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift */; };
 		7B8938A52020176200C72070 /* ConversationMoreMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8938A42020176200C72070 /* ConversationMoreMenuViewController.swift */; };
 		7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF2205BF8660065A1B8 /* AddressViewController.swift */; };
 		7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */; };
@@ -129,6 +134,8 @@
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
 		7B9B8F3D205A27E700DC81AF /* WithdrawalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */; };
 		7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */; };
+		7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */; };
+		7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C720A985E70095A51B /* VideoMessageCell.swift */; };
 		7BA4193C209AF7E600DFCD39 /* AppCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193B209AF7E600DFCD39 /* AppCardData.swift */; };
 		7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */; };
 		7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */; };
@@ -543,6 +550,7 @@
 		7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginContinueButton.swift; sourceTree = "<group>"; };
 		7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAnnouncementViewController.swift; sourceTree = "<group>"; };
 		7B481A012020712000843B1D /* HorizontalSingleLineFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalSingleLineFlowLayout.swift; sourceTree = "<group>"; };
+		7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryVideoView.swift; sourceTree = "<group>"; };
 		7B4D1121205A9EF80074BF60 /* AddressBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookView.swift; sourceTree = "<group>"; };
 		7B4D1123205A9F170074BF60 /* AddressBookView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressBookView.xib; sourceTree = "<group>"; };
 		7B4D1125205B8D380074BF60 /* AddressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressCell.swift; sourceTree = "<group>"; };
@@ -560,6 +568,8 @@
 		7B61EB8C20978855001C1985 /* AttachmentEncryptingInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentEncryptingInputStream.swift; sourceTree = "<group>"; };
 		7B61EB8D20978855001C1985 /* AttachmentDecryptingOutputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentDecryptingOutputStream.swift; sourceTree = "<group>"; };
 		7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationButton.swift; sourceTree = "<group>"; };
+		7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoUploadJob.swift; sourceTree = "<group>"; };
+		7B6EC8FD20A91579009A7020 /* VideoDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloadJob.swift; sourceTree = "<group>"; };
 		7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabel.swift; sourceTree = "<group>"; };
 		7B78B2451FF2170400371632 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
 		7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarImageView.swift; sourceTree = "<group>"; };
@@ -571,6 +581,8 @@
 		7B869C6F202D7DA8009930BA /* NumberPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadView.swift; sourceTree = "<group>"; };
 		7B869C71202D7FC8009930BA /* NumberPadButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadButton.swift; sourceTree = "<group>"; };
 		7B869C73202D8206009930BA /* NumberPadButton.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NumberPadButton.xib; sourceTree = "<group>"; };
+		7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRepresentableMessageViewModel.swift; sourceTree = "<group>"; };
+		7B88655A20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRepresentableMessageCell.swift; sourceTree = "<group>"; };
 		7B8938A42020176200C72070 /* ConversationMoreMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationMoreMenuViewController.swift; sourceTree = "<group>"; };
 		7B894AF2205BF8660065A1B8 /* AddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressViewController.swift; sourceTree = "<group>"; };
 		7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAddressViewController.swift; sourceTree = "<group>"; };
@@ -592,6 +604,8 @@
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
 		7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalViewController.swift; sourceTree = "<group>"; };
 		7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
+		7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageViewModel.swift; sourceTree = "<group>"; };
+		7B9F06C720A985E70095A51B /* VideoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageCell.swift; sourceTree = "<group>"; };
 		7BA4193B209AF7E600DFCD39 /* AppCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardData.swift; sourceTree = "<group>"; };
 		7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageCell.swift; sourceTree = "<group>"; };
 		7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1097,6 +1111,7 @@
 				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
 				7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */,
 				7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */,
+				7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */,
 				7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */,
 				7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */,
 				7B09E55D1FD15BAA002E45D3 /* TransferMessageViewModel.swift */,
@@ -1109,6 +1124,7 @@
 				7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */,
 				7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */,
 				7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */,
+				7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */,
 				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
 			);
 			path = Model;
@@ -1616,6 +1632,7 @@
 				7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */,
 				7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */,
 				7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */,
+				7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1639,6 +1656,8 @@
 				DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */,
 				DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */,
 				DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */,
+				7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */,
+				7B6EC8FD20A91579009A7020 /* VideoDownloadJob.swift */,
 				DF05F0111FE5598300F98479 /* ExitConversationJob.swift */,
 				DF1A9A7F1FF25DB600A95188 /* ShowNotificationJob.swift */,
 				DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */,
@@ -1776,6 +1795,7 @@
 				7BAD2E54207DE046006D7887 /* UnreadHintMessageCell.swift */,
 				7B7F7E381FD43F2500A1C91F /* DetailInfoMessageCell.swift */,
 				7BA931F41FC08DF4005DF478 /* TextMessageCell.swift */,
+				7B88655A20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift */,
 				7BA722801FC1F2A100132FF4 /* PhotoMessageCell.swift */,
 				7B84218C2011A214000EF99C /* CardMessageCell.swift */,
 				DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */,
@@ -1790,6 +1810,7 @@
 				7B8E01E9202069C600D2C05E /* ConversationExtensionCell.xib */,
 				7BC26533207B595500EA7DFF /* ContactMessageCell.swift */,
 				7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */,
+				7B9F06C720A985E70095A51B /* VideoMessageCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2137,6 +2158,7 @@
 				DF8EF6B120315D2A00E99CE8 /* LoginView.swift in Sources */,
 				7B481A022020712000843B1D /* HorizontalSingleLineFlowLayout.swift in Sources */,
 				DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */,
+				7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */,
 				DFDC7E431FAC8D50003233EE /* ContactAPI.swift in Sources */,
 				DFB9B3A11FAB2B3E009503CE /* BaseViewController.swift in Sources */,
 				273FACBB205FB9A800513327 /* SignedPreKeyStore.swift in Sources */,
@@ -2165,6 +2187,7 @@
 				DFF353021FEE532300058453 /* AssetDAO.swift in Sources */,
 				7B61EB8F20978856001C1985 /* AttachmentEncryptingInputStream.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
+				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
 				DF503D411FED162300C008E7 /* MixinPreKeyStore.swift in Sources */,
 				273FACBA205FB9A800513327 /* SenderKeyStore.swift in Sources */,
 				DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */,
@@ -2173,6 +2196,7 @@
 				DF65AAF3205122A3004E3459 /* MessageBlaze.swift in Sources */,
 				DFF3530E1FEEA3DC00058453 /* SnapshotDAO.swift in Sources */,
 				DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */,
+				7B6EC8FE20A91579009A7020 /* VideoDownloadJob.swift in Sources */,
 				DF2209301FFFE96500D470EF /* SessionRequest.swift in Sources */,
 				DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerCollectionViewCell.swift in Sources */,
@@ -2340,6 +2364,7 @@
 				DF114B062020551900EA8F9C /* AppDAO.swift in Sources */,
 				DFD659C620501858000696B0 /* BaseDatabase.swift in Sources */,
 				DFD2943D1FA706E100FADAAD /* ContactMeCell.swift in Sources */,
+				7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */,
 				DF30D7481FA2BDD200683C1A /* CodableExtension.swift in Sources */,
 				7B8E01EA202069C600D2C05E /* ConversationExtensionCell.swift in Sources */,
 				DFD87C891FDBE07600BBCFFC /* ParticipantRequest.swift in Sources */,
@@ -2391,6 +2416,7 @@
 				7BB470491FB1965E0059AE79 /* GroupMemberCell.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
+				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
 				DFBC04A1200397B0008CA56A /* SentSenderKey.swift in Sources */,
 				DF8794942074FB4E004A1E55 /* TransactionViewController.swift in Sources */,
 				7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */,
@@ -2416,6 +2442,7 @@
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */,
 				7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */,
+				7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */,
 				DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */,
@@ -2481,6 +2508,7 @@
 				DF503D321FECF71400C008E7 /* SenderKey.swift in Sources */,
 				DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */,
 				DFE356271FB40C4700E0E3A8 /* NotificationCenterExtension.swift in Sources */,
+				7B4A430620AC9ABA007D6936 /* GalleryVideoView.swift in Sources */,
 				DF68F18C201567D6001C4225 /* StickerAlbumDAO.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
 				DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */,

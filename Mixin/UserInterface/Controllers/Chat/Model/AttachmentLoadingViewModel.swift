@@ -36,10 +36,6 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
     var messageIsSentByMe: Bool {
         return message.userId == AccountAPI.shared.accountUserId
     }
-
-    var automaticallyLoadsAttachment: Bool {
-        return mediaStatus == MediaStatus.PENDING.rawValue && !messageIsSentByMe
-    }
     
     var mediaStatus: String? {
         get {

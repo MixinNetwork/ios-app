@@ -330,12 +330,16 @@ final class MessageDAO {
                                              condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
-    func getPhotos(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
+    func getGalleryItems(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
         assert(count != 0)
         let messages: [Message]
+        let isGalleryItem = Message.Properties.category == MessageCategory.SIGNAL_IMAGE.rawValue
+            || Message.Properties.category == MessageCategory.PLAIN_IMAGE.rawValue
+            || Message.Properties.category == MessageCategory.SIGNAL_VIDEO.rawValue
+            || Message.Properties.category == MessageCategory.PLAIN_VIDEO.rawValue
         if count > 0 {
             let condition = Message.Properties.conversationId == conversationId
-                && (Message.Properties.category == MessageCategory.SIGNAL_IMAGE.rawValue || Message.Properties.category == MessageCategory.PLAIN_IMAGE.rawValue)
+                && isGalleryItem
                 && Message.Properties.status != MessageStatus.FAILED.rawValue
                 && !(Message.Properties.userId == AccountAPI.shared.accountUserId && Message.Properties.mediaStatus != MediaStatus.DONE.rawValue)
                 && Message.Properties.createdAt > location.createdAt
@@ -345,7 +349,7 @@ final class MessageDAO {
                                                         inTransaction: false)
         } else {
             let condition = Message.Properties.conversationId == conversationId
-                && (Message.Properties.category == MessageCategory.SIGNAL_IMAGE.rawValue || Message.Properties.category == MessageCategory.PLAIN_IMAGE.rawValue)
+                && isGalleryItem
                 && Message.Properties.status != MessageStatus.FAILED.rawValue
                 && !(Message.Properties.userId == AccountAPI.shared.accountUserId && Message.Properties.mediaStatus != MediaStatus.DONE.rawValue)
                 && Message.Properties.createdAt < location.createdAt

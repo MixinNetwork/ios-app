@@ -120,6 +120,7 @@
 "chat_send_file_failed" = "发送文件失败，请稍后重试";
 "chat_menu_camera" = "相机";
 "chat_menu_photo" = "照片";
+"chat_menu_video" = "视频";
 "chat_menu_file" = "文件";
 "chat_menu_transfer" = "转账";
 "chat_menu_contact" = "联系人";
@@ -130,6 +131,8 @@
 "camera_save_photo_success" = "图片已成功保存在相册";
 "camera_save_photo_failed" = "保存图片失败";
 "camera_send_to_title" = "发送至";
+"camera_save_video_success" = "视频已成功保存在相册";
+"camera_save_video_failed" = "保存视频失败";
 
 // Group
 "group_navigation_title_add_member" = "添加成员";
@@ -356,6 +359,7 @@
 "notification_content_fee" = "[手续费]";
 "notification_content_withdrawal" = "[提现]";
 "notification_content_rebate" = "[退款]";
+"notification_content_video" = "[视频]";
 "alert_key_group_message" = "%@发来一条信息";
 "alert_key_group_text_message" = "%@发来一条信息";
 "alert_key_group_image_message" = "%@发来一张图片";

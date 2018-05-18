@@ -123,6 +123,7 @@
 "chat_send_file_failed" = "Failed to send file";
 "chat_menu_camera" = "Camera";
 "chat_menu_photo" = "Photo";
+"chat_menu_video" = "Video";
 "chat_menu_file" = "File";
 "chat_menu_transfer" = "Transfer";
 "chat_menu_contact" = "Contact";
@@ -133,6 +134,8 @@
 "camera_save_photo_success" = "Photo saved.";
 "camera_save_photo_failed" = "Unable to save photo.";
 "camera_send_to_title" = "Send To";
+"camera_save_video_success" = "Video saved.";
+"camera_save_video_failed" = "Unable to save video.";
 
 // Group
 "group_navigation_title_add_member" = "Add Participants";
@@ -355,6 +358,7 @@
 "notification_content_fee" = "[Fee]";
 "notification_content_withdrawal" = "[Withdrawal]";
 "notification_content_rebate" = "[Rebate]";
+"notification_content_video" = "[Video]";
 "alert_key_group_message" = "%@ send a message";
 "alert_key_group_text_message" = "%@ send a message";
 "alert_key_group_image_message" = "%@ send a photo";

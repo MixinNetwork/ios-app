@@ -1459,7 +1459,7 @@
                                     <constraint firstAttribute="width" constant="56" id="D1m-1k-Fxy"/>
                                     <constraint firstAttribute="height" constant="56" id="ObS-eK-Nnd"/>
                                 </constraints>
-                                <state key="normal" image="ic_close_shdow"/>
+                                <state key="normal" image="ic_close_shadow"/>
                                 <connections>
                                     <action selector="closeAction:" destination="n44-eU-obg" eventType="touchUpInside" id="qAV-r2-qXG"/>
                                 </connections>
@@ -1908,7 +1908,7 @@
         <image name="ic_chat_more" width="44" height="44"/>
         <image name="ic_chat_send" width="44" height="44"/>
         <image name="ic_chat_sticker" width="44" height="44"/>
-        <image name="ic_close_shdow" width="44" height="44"/>
+        <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_down" width="44" height="44"/>
         <image name="ic_eth" width="40" height="40"/>
         <image name="ic_search" width="12" height="12"/>

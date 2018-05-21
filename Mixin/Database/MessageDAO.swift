@@ -32,7 +32,7 @@ final class MessageDAO {
     """
     private static let sqlQueryLastNMessages = """
         SELECT * FROM (
-        SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
+        SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.album_id, m.created_at,
@@ -55,7 +55,7 @@ final class MessageDAO {
         ORDER BY created_at ASC
     """
     private static let sqlQueryMessagesByOffset = """
-        SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
+        SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.album_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
@@ -91,7 +91,7 @@ final class MessageDAO {
         WHERE conversation_id = ? AND status == 'DELIVERED' AND user_id != ? AND created_at <= ?
     """
     static let sqlQueryFullMessageById = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
+    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.album_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
@@ -108,7 +108,7 @@ final class MessageDAO {
     WHERE m.id = ?
     """
     private static let sqlQueryMessageSync = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
+    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.album_id, m.created_at FROM messages m
@@ -117,7 +117,7 @@ final class MessageDAO {
     ORDER BY m.created_at ASC
     """
     private static let sqlQueryPendingMessages = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
+    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.album_id, m.created_at FROM messages m
@@ -173,7 +173,7 @@ final class MessageDAO {
     func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, conversationId: String, mediaStatus: MediaStatus) {
         guard MixinDatabase.shared.update(maps: [
             (Message.Properties.content, mediaData.attachmentId),
-            (Message.Properties.mediaMineType, mediaData.mineType),
+            (Message.Properties.mediaMimeType, mediaData.getMimeType()),
             (Message.Properties.mediaSize, mediaData.size),
             (Message.Properties.mediaWidth, mediaData.width),
             (Message.Properties.mediaHeight, mediaData.height),

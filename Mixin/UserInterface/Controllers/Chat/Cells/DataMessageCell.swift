@@ -55,8 +55,8 @@ class DataMessageCell: CardMessageCell {
                 extensionNameWrapperView.isHidden = false
             }
 
-            if let mediaMineType = viewModel.message.mediaMineType {
-                extensionNameLabel.text = FileManager.default.pathExtension(mimeType: mediaMineType)
+            if let mediaMimeType = viewModel.message.mediaMimeType {
+                extensionNameLabel.text = FileManager.default.pathExtension(mimeType: mediaMimeType)
             }
             filenameLabel.text = viewModel.message.name
             sizeLabel.text =  mediaExpired ? Localized.CHAT_FILE_EXPIRED : viewModel.sizeRepresentation

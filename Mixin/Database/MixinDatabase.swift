@@ -3,7 +3,7 @@ import Bugsnag
 
 class MixinDatabase: BaseDatabase {
 
-    private static let databaseVersion: Int = 2
+    private static let databaseVersion: Int = 3
 
     static let shared = MixinDatabase()
 
@@ -14,7 +14,13 @@ class MixinDatabase: BaseDatabase {
     }
 
     private func upgrade(database: Database) throws {
-        
+        guard DatabaseUserDefault.shared.mixinDatabaseVersion < 3 && DatabaseUserDefault.shared.mixinDatabaseVersion > 0 else {
+            return
+        }
+
+        if try database.isColumnExist(tableName: Message.tableName, columnName: "media_mine_type") {
+            try database.prepareUpdateSQL(sql: "UPDATE messages SET media_mime_type = media_mine_type WHERE ifnull(media_mine_type, '') <> ''").execute()
+        }
     }
 
     override func configure(reset: Bool = false) {

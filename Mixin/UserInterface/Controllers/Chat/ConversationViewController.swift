@@ -1381,7 +1381,7 @@ extension ConversationViewController {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_DATA.rawValue, conversationId: developConversationId, userId: AccountAPI.shared.accountUserId)
             message.name = url.lastPathComponent
             message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-            message.mediaMineType = FileManager.default.mimeType(ext: url.pathExtension)
+            message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
             message.mediaUrl = url.lastPathComponent
             message.mediaStatus = MediaStatus.PENDING.rawValue
             

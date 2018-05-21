@@ -445,7 +445,7 @@ extension ConversationDataSource {
                 message.mediaSize = FileManager.default.fileSize(path.path)
                 message.mediaWidth = Int(image.size.width)
                 message.mediaHeight = Int(image.size.height)
-                message.mediaMineType = "image/jpeg"
+                message.mediaMimeType = "image/jpeg"
                 message.mediaUrl = filename
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
@@ -475,7 +475,7 @@ extension ConversationDataSource {
                 }
                 message.name = url.lastPathComponent
                 message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                message.mediaMineType = FileManager.default.mimeType(ext: url.pathExtension)
+                message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
                 message.mediaUrl = "\(filename).\(url.pathExtension)"
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)

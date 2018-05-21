@@ -16,7 +16,7 @@ class SendToViewController: ForwardViewController {
         message.mediaSize = FileManager.default.fileSize(path.path)
         message.mediaWidth = Int(photo.size.width)
         message.mediaHeight = Int(photo.size.height)
-        message.mediaMineType = "image/jpeg"
+        message.mediaMimeType = "image/jpeg"
         message.mediaUrl = filename
         message.mediaStatus = MediaStatus.PENDING.rawValue
 

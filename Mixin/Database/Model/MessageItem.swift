@@ -10,9 +10,9 @@ class MessageItem: TableCodable {
     var category: String = ""
     var content = ""
     var mediaUrl: String? = nil
-    var mediaMineType: String? = nil
+    var mediaMimeType: String? = nil
     var mediaSize: Int64? = nil
-    var mediaDuration: Int? = nil
+    var mediaDuration: Int64? = nil
     var mediaWidth: Int? = nil
     var mediaHeight: Int? = nil
     var mediaHash: String? = nil
@@ -92,7 +92,7 @@ class MessageItem: TableCodable {
         case category
         case content
         case mediaUrl = "media_url"
-        case mediaMineType = "media_mine_type"
+        case mediaMimeType = "media_mime_type"
         case mediaSize = "media_size"
         case mediaDuration = "media_duration"
         case mediaWidth = "media_width"

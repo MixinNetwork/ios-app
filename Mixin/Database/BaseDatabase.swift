@@ -49,13 +49,6 @@ class BaseDatabase {
         })
     }
 
-    func isColumnExist(tableName: String, columnName: String) -> Bool {
-        guard let sql = scalar(on: Master.Properties.sql, fromTable: Master.builtinTableName, condition: Master.Properties.tableName == tableName && Master.Properties.type == "table", inTransaction: false)?.stringValue else {
-            return false
-        }
-        return sql.contains(columnName)
-    }
-
     func getStringValues(column: ColumnResultConvertible, tableName: String, isDistinct: Bool = false, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, inTransaction: Bool = true) -> [String] {
         if inTransaction {
             var result = [String]()
@@ -297,6 +290,14 @@ internal extension Database {
 
     internal func create<T: BaseCodable>(of rootType: T.Type) throws{
         try create(table: T.tableName, of: rootType)
+    }
+
+}
+
+internal extension Database {
+
+    func isColumnExist(tableName: String, columnName: String) throws -> Bool {
+        return try getValue(on: Master.Properties.sql, fromTable: Master.builtinTableName, where: Master.Properties.tableName == tableName && Master.Properties.type == "table").stringValue.contains(columnName)
     }
 
 }

@@ -108,7 +108,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
     }
 
     internal func getMediaDataText(attachmentId: String, key: Data?, digest: Data?) -> String {
-        let transferMediaData = TransferAttachmentData(key: key, digest: digest, attachmentId: attachmentId, mineType: message.mediaMineType!, width: message.mediaWidth, height: message.mediaHeight, size:message.mediaSize!, thumbnail: message.thumbImage, name: message.name)
+        let transferMediaData = TransferAttachmentData(key: key, digest: digest, attachmentId: attachmentId, mineType: message.mediaMimeType!, mimeType: message.mediaMimeType!, width: message.mediaWidth, height: message.mediaHeight, size:message.mediaSize!, thumbnail: message.thumbImage, name: message.name)
         return (try? jsonEncoder.encode(transferMediaData).base64EncodedString()) ?? ""
     }
 }

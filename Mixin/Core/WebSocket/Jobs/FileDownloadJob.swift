@@ -3,7 +3,7 @@ import Bugsnag
 
 class FileDownloadJob: AttachmentDownloadJob {
 
-    override lazy var fileName: String = "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMineType ?? ""))"
+    override lazy var fileName: String = "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))"
     override lazy var fileUrl = MixinFile.chatFilesUrl.appendingPathComponent(fileName)
     
     init(message: Message) {

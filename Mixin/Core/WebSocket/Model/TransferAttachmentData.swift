@@ -13,6 +13,7 @@ struct TransferAttachmentData: Codable {
     let size: Int64
     let thumbnail: String?
     let name: String?
+    let duration: Int64?
 
     enum CodingKeys: String, CodingKey {
         case key
@@ -25,6 +26,7 @@ struct TransferAttachmentData: Codable {
         case size
         case thumbnail
         case name
+        case duration
     }
 
 }

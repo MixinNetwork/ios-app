@@ -5,6 +5,8 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     let betterThumbnail: UIImage?
     let duration: String?
     
+    private(set) var durationLabelOrigin = CGPoint.zero
+    
     var progress: Double?
     
     var automaticallyLoadsAttachment: Bool {
@@ -31,6 +33,13 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         }
         super.init(message: message, style: style, fits: layoutWidth)
         updateOperationButtonStyle()
+        if style.contains(.received) {
+            durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 16,
+                                          y: contentFrame.origin.y + 8)
+        } else {
+            durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 10,
+                                          y: contentFrame.origin.y + 8)
+        }
     }
     
     func beginAttachmentLoading() {

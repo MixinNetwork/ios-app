@@ -21,14 +21,13 @@ class GalleryItemViewController: UIViewController {
     @IBOutlet var tapRecognizer: UITapGestureRecognizer!
     
     private static let qrCodeDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
-    private static let nanoSecondsPerSecond: CMTimeScale = 1000000000
     
     let imageView = FLAnimatedImageView()
     
     private let animationDuration: TimeInterval = 0.3
     private let maximumZoomScale: CGFloat = 3
-    private let sliderObserverInterval = CMTime(seconds: 0.1, preferredTimescale: GalleryItemViewController.nanoSecondsPerSecond)
-    private let timeLabelObserverInterval = CMTime(seconds: 1, preferredTimescale: GalleryItemViewController.nanoSecondsPerSecond)
+    private let sliderObserverInterval = CMTime(seconds: 0.1, preferredTimescale: nanosecondsPerSecond)
+    private let timeLabelObserverInterval = CMTime(seconds: 1, preferredTimescale: nanosecondsPerSecond)
     private let rateKey = "rate"
     
     private(set) var urlFromQRCode: URL?
@@ -167,7 +166,7 @@ class GalleryItemViewController: UIViewController {
             let max = slider.maximumValue
             let value = slider.value
             let seconds = duration * Double(value - min) / Double(max - min)
-            let time = CMTime(seconds: seconds, preferredTimescale: GalleryItemViewController.nanoSecondsPerSecond)
+            let time = CMTime(seconds: seconds, preferredTimescale: nanosecondsPerSecond)
             videoView.player.seek(to: time, completionHandler: { (_) in
                 DispatchQueue.main.async {
                     self.isSeeking = false
@@ -180,7 +179,7 @@ class GalleryItemViewController: UIViewController {
         if sliderObserver == nil, let playerItemDuration = playerItemDuration {
             let seconds = CMTimeGetSeconds(playerItemDuration)
             let tolerance = 0.5 * seconds / Double(slider.bounds.width)
-            let time = CMTime(seconds: tolerance, preferredTimescale: GalleryItemViewController.nanoSecondsPerSecond)
+            let time = CMTime(seconds: tolerance, preferredTimescale: nanosecondsPerSecond)
             sliderObserver = videoView.player.addPeriodicTimeObserver(forInterval: time, queue: .main, using: { [weak self] (_) in
                 self?.syncScrubberPosition()
             })

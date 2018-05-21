@@ -1,4 +1,5 @@
 import UIKit
+import CoreMedia
 
 extension DateFormatter {
 
@@ -106,3 +107,4 @@ let mmssComponentsFormatter: DateComponentsFormatter = {
 }()
 
 let millisecondsPerSecond: Double = 1000
+let nanosecondsPerSecond: CMTimeScale = 1000000000

@@ -38,7 +38,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
             if let duration = viewModel.duration {
                 durationLabel.text = duration
                 durationLabel.sizeToFit()
-                durationLabel.frame.origin = contentImageView.frame.origin + CGPoint(x: 9, y: 8)
+                durationLabel.frame.origin = viewModel.durationLabelOrigin
                 durationLabel.isHidden = false
             } else {
                 durationLabel.isHidden = true

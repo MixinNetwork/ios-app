@@ -95,7 +95,7 @@ DEPENDENCIES:
   - SDWebImage
   - SDWebImage/GIF
   - SDWebImage/WebP
-  - "SignalProtocolC (from `git@github.com:crossle/SignalProtocolC.git`)"
+  - "SignalProtocolC (from `git@github.com:MixinMessenger/SignalProtocolC.git`)"
   - SnapKit (~> 4.0.0)
   - SocketRocket
   - SwiftMessages
@@ -129,7 +129,7 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   SignalProtocolC:
-    :git: "git@github.com:crossle/SignalProtocolC.git"
+    :git: "git@github.com:MixinMessenger/SignalProtocolC.git"
     :submodules: true
   WCDB.swift:
     :git: "git@github.com:over140/wcdb.git"
@@ -137,7 +137,7 @@ EXTERNAL SOURCES:
 CHECKOUT OPTIONS:
   SignalProtocolC:
     :commit: 31f5f56a03b54ecba250040e1c5cd8acf44ed50e
-    :git: "git@github.com:crossle/SignalProtocolC.git"
+    :git: "git@github.com:MixinMessenger/SignalProtocolC.git"
     :submodules: true
   WCDB.swift:
     :commit: bb13d3e560173c37352207e08c3de4653d8da920
@@ -169,6 +169,6 @@ SPEC CHECKSUMS:
   WCDB.swift: 5bb038bc5bb46067cccc7c48392e8f4c4a15def0
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: c158574c76a3978005e7ca1c971b942dab60b6fe
+PODFILE CHECKSUM: 3da767661e883491923e537bd77547ac92d7c8e1
 
 COCOAPODS: 1.5.2

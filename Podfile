@@ -22,7 +22,7 @@ target 'Mixin' do
   pod 'JWT', '~> 3.0.0-beta.7'
   pod 'SwiftMessages'
   pod 'Zip', '~> 1.1'
-  pod 'SignalProtocolC', :git => 'git@github.com:crossle/SignalProtocolC.git', :submodules => true
+  pod 'SignalProtocolC', :git => 'git@github.com:MixinMessenger/SignalProtocolC.git', :submodules => true
   pod 'WCDB.swift', :git => 'git@github.com:over140/wcdb.git'
 
 end

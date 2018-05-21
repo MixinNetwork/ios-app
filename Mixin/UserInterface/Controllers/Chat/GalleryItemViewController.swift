@@ -200,7 +200,9 @@ class GalleryItemViewController: UIViewController {
     }
     
     @objc func playerItemDidReachEnd(_ notification: Notification) {
-        videoView.player.rate = 0
+        guard let item = notification.object as? AVPlayerItem, item == videoView.player.currentItem else {
+            return
+        }
         seekToZeroBeforePlaying = true
     }
     

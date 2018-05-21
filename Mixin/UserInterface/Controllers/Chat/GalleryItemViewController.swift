@@ -2,6 +2,7 @@ import UIKit
 import Photos
 import SwiftMessages
 import FLAnimatedImage
+import SnapKit
 
 class GalleryItemViewController: UIViewController {
     
@@ -32,6 +33,7 @@ class GalleryItemViewController: UIViewController {
     
     private(set) var urlFromQRCode: URL?
     
+    private var videoControlPanelEdgesConstraint: Constraint!
     private var sliderObserver: Any?
     private var timeLabelObserver: Any?
     private var isSeeking = false
@@ -74,6 +76,14 @@ class GalleryItemViewController: UIViewController {
         scrollView.addSubview(imageView)
         scrollView.delegate = self
         tapRecognizer.delegate = self
+        videoControlPanelView.translatesAutoresizingMaskIntoConstraints = false
+        videoControlPanelView.snp.makeConstraints { (make) in
+            videoControlPanelEdgesConstraint = make.edges.equalToSuperview().inset(fullScreenSafeAreaInsets).constraint
+        }
+        mediaStatusView.translatesAutoresizingMaskIntoConstraints = false
+        mediaStatusView.snp.makeConstraints { (make) in
+            make.center.equalTo(videoControlPanelView)
+        }
         for label in timeLabels {
             label.layer.shadowRadius = 4
             label.layer.shadowOpacity = 0.6
@@ -85,6 +95,7 @@ class GalleryItemViewController: UIViewController {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         layoutImageView()
+        videoControlPanelEdgesConstraint.update(inset: fullScreenSafeAreaInsets)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -265,7 +276,7 @@ extension GalleryItemViewController: UIScrollViewDelegate {
 
 extension GalleryItemViewController {
     
-    var galleryViewController: GalleryViewController? {
+    private var galleryViewController: GalleryViewController? {
         return parent as? GalleryViewController
     }
 
@@ -273,22 +284,10 @@ extension GalleryItemViewController {
         return UIScreen.main.bounds.size
     }
     
-    private var safeAreaInsets: UIEdgeInsets {
-        if #available(iOS 11.0, *) {
-            var insets = view.safeAreaInsets
-            if abs(insets.top - 20) < 0.1 {
-                insets.top = max(0, insets.top - 20)
-            }
-            return insets
-        } else {
-            return .zero
-        }
-    }
-    
-    private var safeSize: CGSize {
-        let safeAreaInsets = self.safeAreaInsets
-        return CGSize(width: pageSize.width - safeAreaInsets.horizontal,
-                      height: pageSize.height - safeAreaInsets.vertical)
+    private var contentSize: CGSize {
+        let insets = self.fullScreenSafeAreaInsets
+        return CGSize(width: pageSize.width - insets.horizontal,
+                      height: pageSize.height - insets.vertical)
     }
     
     private var playerItemDuration: CMTime? {
@@ -329,10 +328,10 @@ extension GalleryItemViewController {
             switch item.category {
             case .image:
                 loadImage(item: item)
-                layoutImageView()
             case .video:
                 loadVideo(item: item)
             }
+            layoutImageView()
             layout(mediaStatus: item.mediaStatus)
             if item.mediaStatus == .PENDING {
                 beginDownload()
@@ -375,7 +374,7 @@ extension GalleryItemViewController {
             scrollView.isHidden = true
             videoView.isHidden = false
             videoControlPanelView.isHidden = false
-            videoView.frame = view.bounds
+            videoView.frame = UIEdgeInsetsInsetRect(view.bounds, fullScreenSafeAreaInsets)
             let playAfterLoaded = isFocused
             playButton.setImage(playAfterLoaded ? #imageLiteral(resourceName: "ic_pause") : #imageLiteral(resourceName: "ic_play"), for: .normal)
             if playAfterLoaded {
@@ -507,24 +506,13 @@ extension GalleryItemViewController {
         guard let item = item, (scrollView.zoomScale - 1) < 0.1 else {
             return
         }
-        let imageRatio = item.size.width / item.size.height
-        let pageRatio = pageSize.width / pageSize.height
-        if imageRatio <= pageRatio {
-            let width = ceil(safeSize.height * imageRatio)
-            imageView.frame = CGRect(x: safeAreaInsets.left + (safeSize.width - width) / 2,
-                                     y: safeAreaInsets.top,
-                                     width: width,
-                                     height: safeSize.height)
-        } else {
-            let height = ceil(safeSize.width / imageRatio)
-            imageView.frame = CGRect(x: safeAreaInsets.left,
-                                     y: safeAreaInsets.top + (safeSize.height - height) / 2,
-                                     width: safeSize.width,
-                                     height: height)
-        }
+        var imageRect = item.size.rect(fittingSize: contentSize, byContentMode: .scaleAspectFit)
+        imageRect.origin = CGPoint(x: imageRect.origin.x + fullScreenSafeAreaInsets.left,
+                                   y: imageRect.origin.y + fullScreenSafeAreaInsets.top)
+        imageView.frame = imageRect
         scrollView.contentSize = imageView.frame.size
         let fittingScale: CGFloat
-        if imageRatio > 1 {
+        if item.size.width / item.size.height > 1 {
             fittingScale = max(1, pageSize.height / imageView.frame.height)
         } else {
             fittingScale = max(1, pageSize.width / imageView.frame.width)

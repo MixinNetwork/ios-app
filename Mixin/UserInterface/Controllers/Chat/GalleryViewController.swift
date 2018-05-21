@@ -489,7 +489,7 @@ extension GalleryViewController {
     }
     
     private func prepareTransitionViewForDismissing() {
-        if item?.category == .image {
+        if item?.category == .image || item?.url == nil {
             imageClippingTransitionView.transform = .identity
             let image = currentPage.imageView.image
             imageClippingTransitionView.imageView.image = image

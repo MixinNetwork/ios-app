@@ -230,14 +230,14 @@ extension BaseAPI {
 
     @discardableResult
     func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> Result<T> {
-        guard AccountAPI.shared.didLogin else {
-            return .failure(JobError.clientError(code: 401))
-        }
+        return dispatchQueue.sync {
+            guard AccountAPI.shared.didLogin else {
+                return .failure(JobError.clientError(code: 401))
+            }
 
-        var result: Result<T>?
-        var errorCode: Int?
+            var result: Result<T>?
+            var errorCode: Int?
 
-        dispatchQueue.sync {
             let semaphore = DispatchSemaphore(value: 0)
             var errorMsg = ""
 
@@ -275,21 +275,26 @@ extension BaseAPI {
             if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut {
                 result = .failure(JobError.timeoutError)
             }
-            if errorCode == 401 {
-                var userInfo = UIApplication.getTrackUserInfo()
-                userInfo["request"] = req.debugDescription
-                userInfo["errorMsg"] = errorMsg
-                UIApplication.trackError("BaseAPI", action: "401", userInfo: userInfo)
-                AccountAPI.shared.logout()
-            }
-        }
 
-        if let result = result {
-            return result
-        } else if let errorCode = errorCode {
-            return .failure(JobError.instance(code: errorCode))
-        } else {
-            return .failure(JobError.networkError)
+            if let result = result {
+                return result
+            } else if let errorCode = errorCode {
+                if errorCode == 401 {
+                    var userInfo = UIApplication.getTrackUserInfo()
+                    userInfo["request"] = req.debugDescription
+                    userInfo["errorMsg"] = errorMsg
+                    if let headers = req.request?.allHTTPHeaderFields {
+                        for key in headers.keys {
+                            userInfo[key] = headers[key]
+                        }
+                    }
+                    UIApplication.trackError("BaseAPI", action: "401", userInfo: userInfo)
+                    AccountAPI.shared.logout()
+                }
+                return .failure(JobError.instance(code: errorCode))
+            } else {
+                return .failure(JobError.networkError)
+            }
         }
     }
 }

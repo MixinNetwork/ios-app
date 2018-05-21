@@ -11,14 +11,12 @@ class GalleryVideoView: UIView {
         return super.layer as! AVPlayerLayer
     }
     
-    private let player: AVQueuePlayer = AVQueuePlayer()
-    private let playButton: UIButton = UIButton(type: .custom)
+    let player = AVPlayer()
     private let unplayableHintImageView = UIImageView(image: #imageLiteral(resourceName: "ic_file_expired"))
     private let thumbnailImageView = UIImageView()
     private let playableKey = "playable"
     
     private var url: URL?
-    private var looper: AVPlayerLooper?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -33,7 +31,6 @@ class GalleryVideoView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
-        playButton.center = center
         unplayableHintImageView.center = center
         thumbnailImageView.frame = bounds
     }
@@ -58,38 +55,14 @@ class GalleryVideoView: UIView {
                 })
             }
         } else {
-            playButton.isHidden = playAfterLoaded
             if playAfterLoaded, player.timeControlStatus != .playing, let item = player.currentItem, item.asset.isPlayable {
                 player.play()
             }
         }
     }
     
-    func pause(hidePlayButton: Bool) {
-        playButton.isHidden = hidePlayButton
-        if player.timeControlStatus == .playing {
-            player.pause()
-        }
-    }
-    
-    @objc func playAction(_ sender: Any) {
-        switch player.timeControlStatus {
-        case .paused:
-            playButton.isHidden = true
-            player.play()
-        case .playing, .waitingToPlayAtSpecifiedRate:
-            break
-        }
-    }
-    
     private func prepare() {
         layer.player = player
-        playButton.setImage(#imageLiteral(resourceName: "ic_play"), for: .normal)
-        playButton.addTarget(self, action: #selector(playAction(_:)), for: .touchUpInside)
-        playButton.isHidden = true
-        playButton.bounds.size = CGSize(width: 60, height: 60)
-        addSubview(playButton)
-        thumbnailImageView.isHidden = true
         addSubview(thumbnailImageView)
         unplayableHintImageView.isHidden = true
         addSubview(unplayableHintImageView)
@@ -99,10 +72,8 @@ class GalleryVideoView: UIView {
         let isPlayable = item.asset.isPlayable
         unplayableHintImageView.isHidden = isPlayable
         thumbnailImageView.isHidden = isPlayable
-        playButton.isHidden = !isPlayable || playAfterLoaded
         if isPlayable {
             player.replaceCurrentItem(with: item)
-            looper = AVPlayerLooper(player: player, templateItem: item)
             if playAfterLoaded {
                 player.play()
             }

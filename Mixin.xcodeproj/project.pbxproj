@@ -93,6 +93,8 @@
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5E5D971FCE9CAA00F6048D /* InputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E5D961FCE9CAA00F6048D /* InputTextView.swift */; };
+		7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */; };
+		7B5EA41420B2791F00940D1A /* GalleryScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5EA41320B2791F00940D1A /* GalleryScrollView.swift */; };
 		7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B60A374206537FE00673CA1 /* GeometryExtension.swift */; };
 		7B61EB8E20978856001C1985 /* AttachmentCryptography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61EB8B20978855001C1985 /* AttachmentCryptography.swift */; };
 		7B61EB8F20978856001C1985 /* AttachmentEncryptingInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61EB8C20978855001C1985 /* AttachmentEncryptingInputStream.swift */; };
@@ -563,6 +565,8 @@
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5E5D961FCE9CAA00F6048D /* InputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTextView.swift; sourceTree = "<group>"; };
+		7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryVideoSlider.swift; sourceTree = "<group>"; };
+		7B5EA41320B2791F00940D1A /* GalleryScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryScrollView.swift; sourceTree = "<group>"; };
 		7B60A374206537FE00673CA1 /* GeometryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtension.swift; sourceTree = "<group>"; };
 		7B61EB8B20978855001C1985 /* AttachmentCryptography.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentCryptography.swift; sourceTree = "<group>"; };
 		7B61EB8C20978855001C1985 /* AttachmentEncryptingInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentEncryptingInputStream.swift; sourceTree = "<group>"; };
@@ -1632,7 +1636,9 @@
 				7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */,
 				7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */,
 				7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */,
+				7B5EA41320B2791F00940D1A /* GalleryScrollView.swift */,
 				7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */,
+				7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2167,6 +2173,7 @@
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */,
+				7B5EA41420B2791F00940D1A /* GalleryScrollView.swift in Sources */,
 				DF191196208F186100BD415D /* SendMessageService.swift in Sources */,
 				7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
@@ -2259,6 +2266,7 @@
 				DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */,
 				DF3FF05B20123BD6000A0C0A /* FileDownloadJob.swift in Sources */,
 				7B2E3E521FA07F7B00DDDDEB /* CountryCell.swift in Sources */,
+				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
 				DFF353161FEEBC4700058453 /* SnapshotCell.swift in Sources */,
 				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
 				DF3FF05D20134C4C000A0C0A /* DatabaseUserDefault.swift in Sources */,

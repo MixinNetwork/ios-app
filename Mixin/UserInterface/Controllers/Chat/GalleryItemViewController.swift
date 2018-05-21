@@ -6,19 +6,42 @@ import FLAnimatedImage
 class GalleryItemViewController: UIViewController {
     
     @IBOutlet weak var videoView: GalleryVideoView!
+    @IBOutlet weak var videoControlPanelView: UIView!
+    @IBOutlet weak var playedTimeLabel: UILabel!
+    @IBOutlet weak var slider: GalleryVideoSlider!
+    @IBOutlet weak var remainingTimeLabel: UILabel!
+    @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var mediaStatusView: UIStackView!
     @IBOutlet weak var operationButton: NetworkOperationButton!
     @IBOutlet weak var expiredHintLabel: UILabel!
+    @IBOutlet var timeLabels: [UILabel]!
+    
+    @IBOutlet var tapRecognizer: UITapGestureRecognizer!
     
     private static let qrCodeDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
-
+    private static let nanoSecondsPerSecond: CMTimeScale = 1000000000
+    
     let imageView = FLAnimatedImageView()
     
     private let animationDuration: TimeInterval = 0.3
     private let maximumZoomScale: CGFloat = 3
-
+    private let sliderObserverInterval = CMTime(seconds: 0.1, preferredTimescale: GalleryItemViewController.nanoSecondsPerSecond)
+    private let timeLabelObserverInterval = CMTime(seconds: 1, preferredTimescale: GalleryItemViewController.nanoSecondsPerSecond)
+    private let rateKey = "rate"
+    
     private(set) var urlFromQRCode: URL?
+    
+    private var sliderObserver: Any?
+    private var timeLabelObserver: Any?
+    private var isSeeking = false
+    private var rateBeforeScrubbing: Float = 0
+    private var seekToZeroBeforePlaying = false
+    private var isObservingRate = false
+    
+    struct ObserveContext {
+        static var rateObservingContext = 0
+    }
     
     var item: GalleryItem? {
         didSet {
@@ -35,37 +58,27 @@ class GalleryItemViewController: UIViewController {
                 return
             }
             if !isFocused, item?.category == .video {
-                videoView.pause(hidePlayButton: false)
+                videoView.player.rate = 0
+                videoView.player.seek(to: kCMTimeZero)
+                videoControlPanelView.alpha = 1
             }
         }
     }
     
-    private var pageSize: CGSize {
-        return UIScreen.main.bounds.size
-    }
-    
-    private var safeAreaInsets: UIEdgeInsets {
-        if #available(iOS 11.0, *) {
-            var insets = view.safeAreaInsets
-            if abs(insets.top - 20) < 0.1 {
-                insets.top = max(0, insets.top - 20)
-            }
-            return insets
-        } else {
-            return .zero
-        }
+    var isPlayingVideo: Bool {
+        return rateBeforeScrubbing > 0 || videoView.player.rate > 0
     }
 
-    private var safeSize: CGSize {
-        let safeAreaInsets = self.safeAreaInsets
-        return CGSize(width: pageSize.width - safeAreaInsets.horizontal,
-                      height: pageSize.height - safeAreaInsets.vertical)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.addSubview(imageView)
         scrollView.delegate = self
+        tapRecognizer.delegate = self
+        for label in timeLabels {
+            label.layer.shadowRadius = 4
+            label.layer.shadowOpacity = 0.6
+            label.layer.shadowOffset = .zero
+        }
     }
     
     @available(iOS 11.0, *)
@@ -74,8 +87,42 @@ class GalleryItemViewController: UIViewController {
         layoutImageView()
     }
     
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if context == &ObserveContext.rateObservingContext {
+            let image = isPlayingVideo ? #imageLiteral(resourceName: "ic_pause") : #imageLiteral(resourceName: "ic_play")
+            playButton.setImage(image, for: .normal)
+            if isPlayingVideo && !isSeeking {
+                UIView.animate(withDuration: animationDuration) {
+                    self.videoControlPanelView.alpha = 0
+                }
+            } else if !isPlayingVideo {
+                UIView.animate(withDuration: animationDuration) {
+                    self.videoControlPanelView.alpha = 1
+                }
+            }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
+    
     deinit {
+        NotificationCenter.default.removeObserver(self)
+        if isObservingRate {
+            videoView.player.removeObserver(self, forKeyPath: rateKey)
+        }
         stopDownload()
+    }
+    
+    @IBAction func dismissAction(_ sender: Any) {
+        galleryViewController?.dismiss()
+    }
+    
+    @IBAction func playAction(_ sender: Any) {
+        if seekToZeroBeforePlaying {
+            videoView.player.seek(to: kCMTimeZero)
+            seekToZeroBeforePlaying = false
+        }
+        videoView.player.rate = round(abs(1 - videoView.player.rate))
     }
     
     @IBAction func photoDownloadAction(_ sender: Any) {
@@ -87,6 +134,63 @@ class GalleryItemViewController: UIViewController {
         default:
             break
         }
+    }
+    
+    @IBAction func beginScrubbingAction(_ sender: Any) {
+        rateBeforeScrubbing = videoView.player.rate
+        videoView.player.rate = 0
+        if let observer = sliderObserver {
+            videoView.player.removeTimeObserver(observer)
+            sliderObserver = nil
+        }
+    }
+    
+    @IBAction func scrubAction(_ sender: Any) {
+        guard !isSeeking, let playerItemDuration = playerItemDuration else {
+            return
+        }
+        isSeeking = true
+        let duration = CMTimeGetSeconds(playerItemDuration)
+        if duration.isFinite {
+            let min = slider.minimumValue
+            let max = slider.maximumValue
+            let value = slider.value
+            let seconds = duration * Double(value - min) / Double(max - min)
+            let time = CMTime(seconds: seconds, preferredTimescale: GalleryItemViewController.nanoSecondsPerSecond)
+            videoView.player.seek(to: time, completionHandler: { (_) in
+                DispatchQueue.main.async {
+                    self.isSeeking = false
+                }
+            })
+        }
+    }
+    
+    @IBAction func endScrubbingAction(_ sender: Any) {
+        if sliderObserver == nil, let playerItemDuration = playerItemDuration {
+            let seconds = CMTimeGetSeconds(playerItemDuration)
+            let tolerance = 0.5 * seconds / Double(slider.bounds.width)
+            let time = CMTime(seconds: tolerance, preferredTimescale: GalleryItemViewController.nanoSecondsPerSecond)
+            sliderObserver = videoView.player.addPeriodicTimeObserver(forInterval: time, queue: .main, using: { [weak self] (_) in
+                self?.syncScrubberPosition()
+            })
+        }
+        videoView.player.rate = rateBeforeScrubbing
+        rateBeforeScrubbing = 0
+    }
+    
+    @IBAction func tapAction(_ sender: Any) {
+        guard item?.category == .video else {
+            return
+        }
+        let newAlpha = abs(round(1 - videoControlPanelView.alpha))
+        UIView.animate(withDuration: animationDuration) {
+            self.videoControlPanelView.alpha = newAlpha
+        }
+    }
+    
+    @objc func playerItemDidReachEnd(_ notification: Notification) {
+        videoView.player.rate = 0
+        seekToZeroBeforePlaying = true
     }
     
     func zoom(location: CGPoint) {
@@ -133,6 +237,17 @@ class GalleryItemViewController: UIViewController {
     
 }
 
+extension GalleryItemViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer == tapRecognizer else {
+            return true
+        }
+        return !slider.bounds.contains(gestureRecognizer.location(in: slider))
+    }
+    
+}
+
 extension GalleryItemViewController: UIScrollViewDelegate {
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
@@ -150,12 +265,61 @@ extension GalleryItemViewController: UIScrollViewDelegate {
 
 extension GalleryItemViewController {
     
+    var galleryViewController: GalleryViewController? {
+        return parent as? GalleryViewController
+    }
+
+    private var pageSize: CGSize {
+        return UIScreen.main.bounds.size
+    }
+    
+    private var safeAreaInsets: UIEdgeInsets {
+        if #available(iOS 11.0, *) {
+            var insets = view.safeAreaInsets
+            if abs(insets.top - 20) < 0.1 {
+                insets.top = max(0, insets.top - 20)
+            }
+            return insets
+        } else {
+            return .zero
+        }
+    }
+    
+    private var safeSize: CGSize {
+        let safeAreaInsets = self.safeAreaInsets
+        return CGSize(width: pageSize.width - safeAreaInsets.horizontal,
+                      height: pageSize.height - safeAreaInsets.vertical)
+    }
+    
+    private var playerItemDuration: CMTime? {
+        guard let item = videoView.player.currentItem else {
+            return nil
+        }
+        if item.status == .readyToPlay {
+            let duration = item.duration
+            if duration.isValid {
+                return duration
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
     private func prepareForReuse() {
         scrollView.zoomScale = 1
         urlFromQRCode = nil
         imageView.sd_cancelCurrentImageLoad()
         scrollView.contentSize = pageSize
-        videoView.pause(hidePlayButton: false)
+        videoView.player.rate = 0
+        videoView.player.seek(to: kCMTimeZero)
+        videoControlPanelView.alpha = 1
+        NotificationCenter.default.removeObserver(self)
+        if isObservingRate {
+            videoView.player.removeObserver(self, forKeyPath: rateKey)
+            isObservingRate = false
+        }
     }
     
     private func loadItem(_ item: GalleryItem?) {
@@ -165,6 +329,7 @@ extension GalleryItemViewController {
             switch item.category {
             case .image:
                 loadImage(item: item)
+                layoutImageView()
             case .video:
                 loadVideo(item: item)
             }
@@ -172,13 +337,13 @@ extension GalleryItemViewController {
             if item.mediaStatus == .PENDING {
                 beginDownload()
             }
-            layoutImageView()
         }
     }
     
     private func loadImage(item: GalleryItem) {
         scrollView.isHidden = false
         videoView.isHidden = true
+        videoControlPanelView.isHidden = true
         guard let url = item.url else {
             return
         }
@@ -209,10 +374,45 @@ extension GalleryItemViewController {
         if let url = item.url {
             scrollView.isHidden = true
             videoView.isHidden = false
-            var videoViewFrame = item.size.rect(fittingSize: safeSize, byContentMode: .scaleAspectFit)
-            videoViewFrame.origin.y += safeAreaInsets.top
-            videoView.frame = videoViewFrame
-            videoView.loadVideo(url: url, playAfterLoaded: isFocused, thumbnail: item.thumbnail)
+            videoControlPanelView.isHidden = false
+            videoView.frame = view.bounds
+            let playAfterLoaded = isFocused
+            playButton.setImage(playAfterLoaded ? #imageLiteral(resourceName: "ic_pause") : #imageLiteral(resourceName: "ic_play"), for: .normal)
+            if playAfterLoaded {
+                videoControlPanelView.alpha = 0
+            }
+            if let observer = sliderObserver {
+                videoView.player.removeTimeObserver(observer)
+            }
+            sliderObserver = videoView.player.addPeriodicTimeObserver(forInterval: sliderObserverInterval, queue: .main, using: { [weak self] (_) in
+                self?.syncScrubberPosition()
+            })
+            if let observer = timeLabelObserver {
+                videoView.player.removeTimeObserver(observer)
+            }
+            timeLabelObserver = videoView.player.addPeriodicTimeObserver(forInterval: timeLabelObserverInterval, queue: .main, using: { [weak self] (_) in
+                guard let weakSelf = self else {
+                    return
+                }
+                if let item = weakSelf.videoView.player.currentItem, item.status == .readyToPlay {
+                    let duration = CMTimeGetSeconds(item.duration)
+                    if duration.isFinite {
+                        let time = CMTimeGetSeconds(weakSelf.videoView.player.currentTime())
+                        weakSelf.playedTimeLabel.text = mmssComponentsFormatter.string(from: time)
+                        weakSelf.remainingTimeLabel.text = mmssComponentsFormatter.string(from: duration - time)
+                    }
+                }
+            })
+            videoView.player.addObserver(self, forKeyPath: rateKey, options: [.initial, .new], context: &ObserveContext.rateObservingContext)
+            isObservingRate = true
+            videoView.loadVideo(url: url, playAfterLoaded: playAfterLoaded, thumbnail: item.thumbnail)
+            if let item = videoView.player.currentItem {
+                let duration = CMTimeGetSeconds(item.asset.duration)
+                if duration.isFinite {
+                    remainingTimeLabel.text = mmssComponentsFormatter.string(from: duration)
+                }
+            }
+            NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(_:)), name: .AVPlayerItemDidPlayToEndTime, object: videoView.player.currentItem)
         } else {
             scrollView.isHidden = false
             videoView.isHidden = true
@@ -330,6 +530,19 @@ extension GalleryItemViewController {
             fittingScale = max(1, pageSize.width / imageView.frame.width)
         }
         scrollView.maximumZoomScale = max(fittingScale, maximumZoomScale)
+    }
+    
+    private func syncScrubberPosition() {
+        guard let itemDuration = playerItemDuration else {
+            return
+        }
+        let duration = CMTimeGetSeconds(itemDuration)
+        if duration.isFinite {
+            let max = slider.maximumValue
+            let min = slider.minimumValue
+            let time = CMTimeGetSeconds(videoView.player.currentTime())
+            slider.value = Float(Double(max - min) * time / duration + Double(min))
+        }
     }
     
 }

@@ -17,7 +17,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         if let mediaDuration = message.mediaDuration {
-            duration = hhmmssComponentsFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
+            duration = mmssComponentsFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
         } else {
             duration = nil
         }

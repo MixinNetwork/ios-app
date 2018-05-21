@@ -124,7 +124,7 @@ class GalleryViewController: UIViewController {
                     self.scrollView.isHidden = false
                     self.transitionView.removeFromSuperview()
                     if let videoView = self.transitionView as? GalleryVideoView {
-                        self.currentPage.view.addSubview(videoView)
+                        self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
                     }
                     if let messageId = self.item?.messageId {
                         self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .cancelled, forItemOfMessageId: messageId)
@@ -226,7 +226,7 @@ class GalleryViewController: UIViewController {
     
     func dismiss() {
         if currentPage.item?.category == .video {
-            currentPage.videoView.pause(hidePlayButton: true)
+            currentPage.videoView.player.rate = 0
         }
         scrollView.isHidden = true
         let messageId = item?.messageId
@@ -273,7 +273,7 @@ class GalleryViewController: UIViewController {
             sourceViewSnapshotView?.removeFromSuperview()
             self.transitionView.removeFromSuperview()
             if let videoView = self.transitionView as? GalleryVideoView {
-                self.currentPage.view.addSubview(videoView)
+                self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
             }
             self.scrollView.isHidden = false
             self.transitionView.alpha = 1
@@ -497,7 +497,7 @@ extension GalleryViewController {
                 imageClippingTransitionView.frame.size = image.size
                 imageClippingTransitionView.imageView.frame = CGRect(origin: .zero, size: image.size)
                 imageClippingTransitionView.transform = CGAffineTransform(scaleX: currentPage.imageView.frame.width / image.size.width,
-                                                                  y: currentPage.imageView.frame.height / image.size.height)
+                                                                          y: currentPage.imageView.frame.height / image.size.height)
                 imageClippingTransitionView.frame.origin = currentPage.imageView.convert(CGPoint.zero, to: view)
             } else {
                 imageClippingTransitionView.frame = view.bounds

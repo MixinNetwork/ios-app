@@ -294,7 +294,6 @@
 		DF5D9F3B1F9C9A400036D5FD /* AccountAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F3A1F9C9A400036D5FD /* AccountAPI.swift */; };
 		DF5D9F3D1F9CA3160036D5FD /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F3C1F9CA3160036D5FD /* UserAPI.swift */; };
 		DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DF5D9F461F9CD29A0036D5FD /* Localizable.strings */; };
-		DF65AAF12051219D004E3459 /* MessageAck.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF02051219D004E3459 /* MessageAck.swift */; };
 		DF65AAF3205122A3004E3459 /* MessageBlaze.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF2205122A3004E3459 /* MessageBlaze.swift */; };
 		DF65AAF520514B3B004E3459 /* ParticipantUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF420514B3B004E3459 /* ParticipantUser.swift */; };
 		DF68F1842014CEAB001C4225 /* RefreshStickerJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */; };
@@ -358,7 +357,6 @@
 		DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8EF6B62032D3D700E99CE8 /* PayView.swift */; };
 		DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */; };
 		DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6BB2034737F00E99CE8 /* payment_success.caf */; };
-		DF8F3F23207F52F9007DFDB4 /* MessageJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8F3F22207F52F9007DFDB4 /* MessageJob.swift */; };
 		DF92A51D20A5BBAF00427B80 /* ResendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */; };
 		DF92A51F20A5BDAD00427B80 /* ResendMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92A51E20A5BDAD00427B80 /* ResendMessageDAO.swift */; };
 		DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */; };
@@ -762,7 +760,6 @@
 		DF5D9F401F9CD1620036D5FD /* CountryCode.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CountryCode.xcassets; sourceTree = "<group>"; };
 		DF5D9F411F9CD1630036D5FD /* CountryCode.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CountryCode.plist; sourceTree = "<group>"; };
 		DF5D9F451F9CD29A0036D5FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		DF65AAF02051219D004E3459 /* MessageAck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAck.swift; sourceTree = "<group>"; };
 		DF65AAF2205122A3004E3459 /* MessageBlaze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlaze.swift; sourceTree = "<group>"; };
 		DF65AAF420514B3B004E3459 /* ParticipantUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantUser.swift; sourceTree = "<group>"; };
 		DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshStickerJob.swift; sourceTree = "<group>"; };
@@ -828,7 +825,6 @@
 		DF8EF6B42032D1D700E99CE8 /* PayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayView.xib; sourceTree = "<group>"; };
 		DF8EF6B62032D3D700E99CE8 /* PayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayView.swift; sourceTree = "<group>"; };
 		DF8EF6BB2034737F00E99CE8 /* payment_success.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = payment_success.caf; sourceTree = "<group>"; };
-		DF8F3F22207F52F9007DFDB4 /* MessageJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageJob.swift; sourceTree = "<group>"; };
 		DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendMessage.swift; sourceTree = "<group>"; };
 		DF92A51E20A5BDAD00427B80 /* ResendMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendMessageDAO.swift; sourceTree = "<group>"; };
 		DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenAssetViewController.swift; sourceTree = "<group>"; };
@@ -1828,12 +1824,10 @@
 				DFF352FF1FEE516F00058453 /* Asset.swift */,
 				DFF70F612079FC4900A5FA8B /* AssetItem.swift */,
 				DF3C474F1FA18EE900A07C71 /* Message.swift */,
-				DF65AAF02051219D004E3459 /* MessageAck.swift */,
 				DF65AAF2205122A3004E3459 /* MessageBlaze.swift */,
 				DF03C85E1FF2C01B00C1ED6B /* MessageHistory.swift */,
 				DF17B50B2052433B006447C2 /* MessageItem.swift */,
 				DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */,
-				DF8F3F22207F52F9007DFDB4 /* MessageJob.swift */,
 				DFBC04A0200397B0008CA56A /* SentSenderKey.swift */,
 				DF2A244D1FC84E3F003A8C1E /* Conversation.swift */,
 				DF17B51220525485006447C2 /* ConversationItem.swift */,
@@ -2207,7 +2201,6 @@
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
 				DFAA4B392010ADF800C696D3 /* PinTipsView.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
-				DF65AAF12051219D004E3459 /* MessageAck.swift in Sources */,
 				DF191194208F104800BD415D /* Job.swift in Sources */,
 				DF8CED021FC6790400E40064 /* MessageAPI.swift in Sources */,
 				DF17B51720526050006447C2 /* SnapshotItem.swift in Sources */,
@@ -2346,7 +2339,6 @@
 				DFD2943D1FA706E100FADAAD /* ContactMeCell.swift in Sources */,
 				DF30D7481FA2BDD200683C1A /* CodableExtension.swift in Sources */,
 				7B8E01EA202069C600D2C05E /* ConversationExtensionCell.swift in Sources */,
-				DF8F3F23207F52F9007DFDB4 /* MessageJob.swift in Sources */,
 				DFD87C891FDBE07600BBCFFC /* ParticipantRequest.swift in Sources */,
 				DF8CECEF1FC4240500E40064 /* BlockUserViewController.swift in Sources */,
 				7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */,

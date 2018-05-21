@@ -14,32 +14,7 @@ class MixinDatabase: BaseDatabase {
     }
 
     private func upgrade(database: Database) throws {
-        guard try database.isTableExists(MessageJob.tableName) else {
-            return
-        }
-
-        let messageJobs: [MessageJob] = try database.getObjects(on: MessageJob.Properties.all, fromTable: MessageJob.tableName)
-        var jobs = [Job]()
-        if messageJobs.count > 0 {
-            jobs = messageJobs.flatMap { Job(job: $0) }
-            try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
-        }
-        try database.drop(table: MessageJob.tableName)
-
-        let sendMessages: [Message] = try database.getObjects(on: Message.Properties.all, fromTable: Message.tableName, where: Message.Properties.status == MessageStatus.SENDING.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)]).filter { $0.category.hasSuffix("_TEXT") || $0.category.hasSuffix("_STICKER") || $0.category.hasSuffix("_CONTACT") || $0.mediaStatus == MediaStatus.DONE.rawValue }
-        if sendMessages.count > 0 {
-            jobs = sendMessages.flatMap { Job(message: $0) }
-            try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
-        }
-
-        let ackMessages: [MessageAck] = try database.getObjects(on: MessageAck.Properties.all, fromTable: MessageAck.tableName)
-        if ackMessages.count > 0 {
-            jobs = ackMessages.flatMap { Job(ack: $0) }
-            try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
-        }
-        try database.drop(table: MessageAck.tableName)
-
-        print("======MixinDatabase...upgrade...messageJobs:\(messageJobs.count)...sendMessages:\(jobs.count)...ackMessages:\(ackMessages.count)")
+        
     }
 
     override func configure(reset: Bool = false) {

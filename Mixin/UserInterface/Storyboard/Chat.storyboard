@@ -1999,6 +1999,10 @@
                         <outlet property="videoView" destination="2V5-Rc-6pe" id="tK1-lX-xUx"/>
                         <outletCollection property="timeLabels" destination="6xO-1f-dPI" collectionClass="NSMutableArray" id="0F6-Bc-x25"/>
                         <outletCollection property="timeLabels" destination="kpe-PX-A2e" collectionClass="NSMutableArray" id="vBX-kW-yVz"/>
+                        <outletCollection property="videoControlViews" destination="sEo-yr-3mQ" collectionClass="NSMutableArray" id="4Cd-qa-wRV"/>
+                        <outletCollection property="videoControlViews" destination="8on-hs-t0O" collectionClass="NSMutableArray" id="Ak9-y4-val"/>
+                        <outletCollection property="videoControlViews" destination="bV0-6C-cRS" collectionClass="NSMutableArray" id="rn3-n6-cxi"/>
+                        <outletCollection property="videoControlViews" destination="bNV-e4-xqH" collectionClass="NSMutableArray" id="8BB-Kb-Mss"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JnW-4O-SEw" userLabel="First Responder" sceneMemberID="firstResponder"/>

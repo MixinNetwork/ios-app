@@ -17,6 +17,7 @@ class GalleryItemViewController: UIViewController {
     @IBOutlet weak var operationButton: NetworkOperationButton!
     @IBOutlet weak var expiredHintLabel: UILabel!
     @IBOutlet var timeLabels: [UILabel]!
+    @IBOutlet var videoControlViews: [UIView]!
     
     @IBOutlet var tapRecognizer: UITapGestureRecognizer!
     
@@ -61,7 +62,7 @@ class GalleryItemViewController: UIViewController {
             if !isFocused, item?.category == .video {
                 videoView.player.rate = 0
                 videoView.player.seek(to: kCMTimeZero)
-                videoControlPanelView.alpha = 1
+                setPlayButtonHidden(false, otherControlsHidden: true, animated: false)
             }
         }
     }
@@ -103,13 +104,9 @@ class GalleryItemViewController: UIViewController {
             let image = isPlayingVideo ? #imageLiteral(resourceName: "ic_pause") : #imageLiteral(resourceName: "ic_play")
             playButton.setImage(image, for: .normal)
             if isPlayingVideo && !isSeeking {
-                UIView.animate(withDuration: animationDuration) {
-                    self.videoControlPanelView.alpha = 0
-                }
+                setPlayButtonHidden(true, otherControlsHidden: true, animated: true)
             } else if !isPlayingVideo {
-                UIView.animate(withDuration: animationDuration) {
-                    self.videoControlPanelView.alpha = 1
-                }
+                setPlayButtonHidden(false, otherControlsHidden: true, animated: true)
             }
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -197,9 +194,9 @@ class GalleryItemViewController: UIViewController {
         guard item?.category == .video else {
             return
         }
-        let newAlpha = abs(round(1 - videoControlPanelView.alpha))
-        UIView.animate(withDuration: animationDuration) {
-            self.videoControlPanelView.alpha = newAlpha
+        if item?.url != nil, videoView.player.status == .readyToPlay {
+            let isShowingControls = videoControlViews[0].alpha > 0
+            setPlayButtonHidden(isShowingControls, otherControlsHidden: isShowingControls, animated: true)
         }
     }
     
@@ -319,7 +316,6 @@ extension GalleryItemViewController {
         scrollView.contentSize = pageSize
         videoView.player.rate = 0
         videoView.player.seek(to: kCMTimeZero)
-        videoControlPanelView.alpha = 1
         if let item = videoView.player.currentItem {
             NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: item)
         }
@@ -385,9 +381,7 @@ extension GalleryItemViewController {
             videoView.frame = UIEdgeInsetsInsetRect(view.bounds, fullScreenSafeAreaInsets)
             let playAfterLoaded = isFocused
             playButton.setImage(playAfterLoaded ? #imageLiteral(resourceName: "ic_pause") : #imageLiteral(resourceName: "ic_play"), for: .normal)
-            if playAfterLoaded {
-                videoControlPanelView.alpha = 0
-            }
+            setPlayButtonHidden(playAfterLoaded, otherControlsHidden: true, animated: false)
             if let observer = sliderObserver {
                 videoView.player.removeTimeObserver(observer)
             }
@@ -421,6 +415,7 @@ extension GalleryItemViewController {
             }
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(_:)), name: .AVPlayerItemDidPlayToEndTime, object: videoView.player.currentItem)
         } else {
+            setPlayButtonHidden(true, otherControlsHidden: true, animated: false)
             scrollView.isHidden = false
             videoView.isHidden = true
             imageView.image = item.thumbnail
@@ -538,6 +533,20 @@ extension GalleryItemViewController {
             let min = slider.minimumValue
             let time = CMTimeGetSeconds(videoView.player.currentTime())
             slider.value = Float(Double(max - min) * time / duration + Double(min))
+        }
+    }
+    
+    private func setPlayButtonHidden(_ playButtonHidden: Bool, otherControlsHidden: Bool, animated: Bool) {
+        if animated {
+            UIView.beginAnimations(nil, context: nil)
+            UIView.setAnimationDuration(animationDuration)
+        }
+        playButton.alpha = playButtonHidden ? 0 : 1
+        videoControlViews.forEach {
+            $0.alpha = otherControlsHidden ? 0 : 1
+        }
+        if animated {
+            UIView.commitAnimations()
         }
     }
     

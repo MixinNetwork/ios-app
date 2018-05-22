@@ -1052,27 +1052,8 @@ extension ConversationViewController: UIImagePickerControllerDelegate {
         dismiss(animated: true, completion: nil)
         if let url = info[UIImagePickerControllerMediaURL] {
             dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: url)
-        } else if let url = info[UIImagePickerControllerReferenceURL] as? URL {
-//            if let asset = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil).firstObject {
-//                PHImageManager.default().requestExportSession(forVideo: asset, options: nil, exportPreset: AVAssetExportPreset640x480, resultHandler: { [weak self] (session, nil) in
-//                    guard let session = session else {
-//                        UIApplication.trackError("ConversationViewController", action: "Export session failed", userInfo: info)
-//                        return
-//                    }
-//                    let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).mp4")
-//                    session.outputURL = outputURL
-//                    session.outputFileType = .mp4
-//                    session.shouldOptimizeForNetworkUse = true
-//                    session.exportAsynchronously {
-//                        print(session.status)
-//                        print(session.error)
-//                        self?.dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: outputURL)
-//                    }
-//                })
-//            } else {
-//                UIApplication.trackError("ConversationViewController", action: "PHAsset fetched empty asset", userInfo: info)
-//            }
         }
+        // TODO: Do something with UIImagePickerControllerReferenceURL if failed
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

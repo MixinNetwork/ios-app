@@ -76,6 +76,16 @@ class ForwardViewController: UIViewController {
             newMessage.mediaMimeType = message.mediaMimeType
             newMessage.mediaUrl = message.mediaUrl
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
+        } else if message.category.hasSuffix("_VIDEO") {
+            newMessage.thumbImage = message.thumbImage
+            newMessage.name = message.name
+            newMessage.mediaSize = message.mediaSize
+            newMessage.mediaWidth = message.mediaWidth
+            newMessage.mediaHeight = message.mediaHeight
+            newMessage.mediaMimeType = message.mediaMimeType
+            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaStatus = MediaStatus.PENDING.rawValue
+            newMessage.mediaDuration = message.mediaDuration
         } else if message.category.hasSuffix("_STICKER") {
             newMessage.name = message.name
             newMessage.mediaUrl = message.mediaUrl

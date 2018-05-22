@@ -4,14 +4,15 @@ import Bugsnag
 
 class AttachmentDownloadJob: UploadOrDownloadJob {
 
-    private var stream: OutputStream!
+    private(set) var stream: OutputStream!
+    
     private var contentLength: Double?
     private var downloadedContentLength: Double = 0
     
-    internal lazy var fileName = "\(messageId).jpg"
-    internal lazy var fileUrl = MixinFile.chatPhotosUrl(fileName)
+    internal lazy var fileName = messageId + jpegExtensionName
+    internal lazy var fileUrl = MixinFile.url(ofChatDirectory: .photos, filename: fileName)
 
-    static func jobId(messageId: String) -> String {
+    class func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"
     }
     

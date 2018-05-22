@@ -4,19 +4,14 @@ import Bugsnag
 class FileDownloadJob: AttachmentDownloadJob {
 
     override lazy var fileName: String = "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))"
-    override lazy var fileUrl = MixinFile.chatFilesUrl.appendingPathComponent(fileName)
-    
-    init(message: Message) {
-        super.init(messageId: message.messageId)
-        super.message = message
-    }
+    override lazy var fileUrl = MixinFile.url(ofChatDirectory: .files, filename: fileName)
 
-    static func fileJobId(messageId: String) -> String {
+    override class func jobId(messageId: String) -> String {
         return "file-download-\(messageId)"
     }
 
     override func getJobId() -> String {
-        return FileDownloadJob.fileJobId(messageId: message.messageId)
+        return FileDownloadJob.jobId(messageId: messageId)
     }
 
 }

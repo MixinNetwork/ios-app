@@ -1,4 +1,5 @@
 import UIKit
+import AVKit
 
 extension Notification.Name {
     
@@ -366,10 +367,8 @@ extension ConversationDataSource {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }) else {
             return
         }
-        if let viewModel = viewModel(for: indexPath) {
-            if var viewModel = viewModel as? ProgressInspectableMessageViewModel {
-                viewModel.mediaStatus = mediaStatus.rawValue
-            }
+        if let viewModel = viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel {
+            viewModel.mediaStatus = mediaStatus.rawValue
             if let cell = tableView?.cellForRow(at: indexPath) as? MessageCell {
                 cell.render(viewModel: viewModel)
             }
@@ -377,11 +376,11 @@ extension ConversationDataSource {
     }
     
     private func updateMediaProgress(messageId: String, progress: Double) {
-        guard let indexPath = indexPath(where: { $0.messageId == messageId }), var viewModel = viewModel(for: indexPath) as? ProgressInspectableMessageViewModel else {
+        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel else {
             return
         }
         viewModel.progress = progress
-        if let cell = tableView?.cellForRow(at: indexPath) as? ProgressInspectableMessageCell {
+        if let cell = tableView?.cellForRow(at: indexPath) as? AttachmentLoadingMessageCell {
             cell.updateProgress(viewModel: viewModel)
         }
     }
@@ -434,8 +433,8 @@ extension ConversationDataSource {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
         } else if type == .SIGNAL_IMAGE, let image = value as? UIImage {
-            let filename = "\(message.messageId).jpg"
-            let path = MixinFile.chatPhotosUrl.appendingPathComponent(filename)
+            let filename = message.messageId + jpegExtensionName
+            let path = MixinFile.url(ofChatDirectory: .photos, filename: filename)
             queue.async {
                 guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0  else {
                     NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_PHOTO_FAILED)
@@ -450,28 +449,62 @@ extension ConversationDataSource {
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
-        } else if type == .SIGNAL_DATA, let url = value as? URL {
-            guard FileManager.default.fileSize(url.path) > 0 else {
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
-                return
-            }
-            
-            var filename = url.lastPathComponent.substring(endChar: ".").lowercased().md5()
-            var targetUrl = MixinFile.chatFilesUrl.appendingPathComponent("\(filename).\(url.pathExtension)")
+        } else if type == .SIGNAL_DATA || type == .SIGNAL_VIDEO, let url = value as? URL {
             queue.async {
+                let errorMessage = type == .SIGNAL_DATA ? Localized.CHAT_SEND_FILE_FAILED : Localized.CHAT_SEND_VIDEO_FAILED
+                guard FileManager.default.fileSize(url.path) > 0 else {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object:errorMessage)
+                    return
+                }
+                var filename = url.lastPathComponent.substring(endChar: ".").lowercased().md5()
+                var targetUrl: URL
+                if type == .SIGNAL_DATA {
+                    targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
+                } else {
+                    targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
+                }
                 do {
                     if FileManager.default.fileExists(atPath: targetUrl.path) {
                         if !FileManager.default.compare(path1: url.path, path2: targetUrl.path) {
-                            filename = UUID().uuidString
-                            targetUrl = MixinFile.chatFilesUrl.appendingPathComponent("\(filename).\(url.pathExtension)")
-                            try FileManager.default.copyItem(at: url, to: targetUrl)
+                            filename = UUID().uuidString.lowercased()
+                            if type == .SIGNAL_DATA {
+                                targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
+                            } else {
+                                targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
+                            }
+                            try FileManager.default.moveItem(at: url, to: targetUrl)
                         }
                     } else {
-                        try FileManager.default.copyItem(at: url, to: targetUrl)
+                        try FileManager.default.moveItem(at: url, to: targetUrl)
                     }
                 } catch {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
                     return
+                }
+                if type == .SIGNAL_VIDEO {
+                    if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: targetUrl) {
+                        let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: filename + jpegExtensionName)
+                        thumbnail.saveToFile(path: thumbnailURL)
+                        message.thumbImage = thumbnail.getBlurThumbnail().toBase64()
+                    } else {
+                        NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
+                        return
+                    }
+                    let asset = AVURLAsset(url: targetUrl)
+                    if asset.duration.isValid {
+                        message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
+                        if let track = asset.tracks(withMediaType: .video).first {
+                            let size = track.naturalSize.applying(track.preferredTransform)
+                            message.mediaWidth = Int(abs(size.width))
+                            message.mediaHeight = Int(abs(size.height))
+                        } else {
+                            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
+                            return
+                        }
+                    } else {
+                        NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
+                        return
+                    }
                 }
                 message.name = url.lastPathComponent
                 message.mediaSize = FileManager.default.fileSize(targetUrl.path)
@@ -683,6 +716,8 @@ extension ConversationDataSource {
                 viewModel = StickerMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_DATA") {
                 viewModel = DataMessageViewModel(message: message, style: style, fits: layoutWidth)
+            } else if message.category.hasSuffix("_VIDEO") {
+                viewModel = VideoMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_CONTACT") {
                 viewModel = ContactMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

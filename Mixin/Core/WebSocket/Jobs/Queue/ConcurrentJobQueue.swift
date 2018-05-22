@@ -50,7 +50,7 @@ class ConcurrentJobQueue: JobQueue {
             guard message.conversationId != UIApplication.currentConversationId() else {
                 return
             }
-            guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_DATA") || message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue else {
+            guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_DATA") || message.category.hasSuffix("_VIDEO") || message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue else {
                 return
             }
 

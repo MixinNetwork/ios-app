@@ -1,7 +1,9 @@
 import UIKit
 import MobileCoreServices
+import AVKit
+import Photos
 
-class ConversationViewController: UIViewController {
+class ConversationViewController: UIViewController, UINavigationControllerDelegate {
     
     @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -84,7 +86,15 @@ class ConversationViewController: UIViewController {
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
     }()
-    
+    private lazy var videoPickerController: UIImagePickerController = {
+        let picker = UIImagePickerController()
+        picker.mediaTypes = [kUTTypeMovie as String]
+        picker.videoQuality = .type640x480
+        picker.allowsEditing = false
+        picker.delegate = self
+        return picker
+    }()
+
     private var bottomSafeAreaInset: CGFloat {
         if #available(iOS 11.0, *) {
             return view.safeAreaInsets.bottom
@@ -403,34 +413,24 @@ class ConversationViewController: UIViewController {
             toggleStickerPanel(delay: 0)
             return
         }
-        guard let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)), let cell = tableView.cellForRow(at: indexPath), let message = dataSource?.viewModel(for: indexPath)?.message else {
+        guard let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)), let cell = tableView.cellForRow(at: indexPath), let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
         }
-        if message.category.hasSuffix("_IMAGE") {
-            guard message.mediaStatus == MediaStatus.DONE.rawValue, let photoCell = cell as? PhotoMessageCell, photoCell.contentImageView.frame.contains(recognizer.location(in: photoCell)), let item = GalleryItem(message: message) else {
+        let message = viewModel.message
+        if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO") {
+            guard message.mediaStatus == MediaStatus.DONE.rawValue, let cell = cell as? PhotoRepresentableMessageCell, cell.contentImageView.frame.contains(recognizer.location(in: cell)), let item = GalleryItem(message: message) else {
                 return
             }
             view.bringSubview(toFront: galleryWrapperView)
             galleryViewController.show(item: item)
         } else if message.category.hasSuffix("_DATA") {
-            guard let dataCell = cell as? DataMessageCell, dataCell.contentFrame.contains(recognizer.location(in: dataCell)), let mediaStatus = message.mediaStatus else {
+            guard let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell else {
                 return
             }
-            
-            switch mediaStatus {
-            case MediaStatus.DONE.rawValue:
+            if viewModel.mediaStatus == MediaStatus.DONE.rawValue {
                 openDocumentAction(message: message)
-            case MediaStatus.CANCELED.rawValue:
-                MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-                if message.userId == me.user_id {
-                    FileJobQueue.shared.addJob(job: FileUploadJob(message: Message.createMessage(message: message)))
-                } else {
-                    FileJobQueue.shared.addJob(job: FileDownloadJob(message: Message.createMessage(message: message)))
-                }
-            case MediaStatus.PENDING.rawValue:
-                cancelMessageSending(message: message)
-            default:
-                break
+            } else {
+                attachmentLoadingCellDidSelectNetworkOperation(cell)
             }
         } else if message.category.hasSuffix("_CONTACT") {
             guard let cell = cell as? ContactMessageCell, cell.contentFrame.contains(recognizer.location(in: cell)) else {
@@ -607,6 +607,10 @@ class ConversationViewController: UIViewController {
         navigationController?.pushViewController(ConversationShareContactViewController.instance(ownerUser: ownerUser, conversationId: conversationId), animated: true)
     }
 
+    func pickVideoAction() {
+        present(videoPickerController, animated: true, completion: nil)
+    }
+    
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
@@ -731,16 +735,17 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
     }
     
     func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: ConversationTableView.Action, forIndexPath indexPath: IndexPath) {
-        guard let message = dataSource?.viewModel(for: indexPath)?.message else {
+        guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
         }
+        let message = viewModel.message
         switch action {
         case .copy:
             if message.category.hasSuffix("_TEXT") {
                 UIPasteboard.general.string = message.content
             }
         case .delete:
-            cancelMessageSending(message: message)
+            (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(markMediaStatusCancelled: false)
             dataSource?.queue.async { [weak self] in
                 MessageDAO.shared.deleteMessage(id: message.messageId)
                 DispatchQueue.main.sync {
@@ -817,8 +822,17 @@ extension ConversationViewController: UITableViewDelegate {
             unreadBadgeValue = 0
             dataSource.firstUnreadMessageId = nil
         }
+        if let viewModel = dataSource.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
+            viewModel.beginAttachmentLoading()
+        }
     }
     
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let viewModel = dataSource?.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
+            viewModel.cancelAttachmentLoading(markMediaStatusCancelled: false)
+        }
+    }
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return 44
@@ -876,53 +890,23 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
     
 }
 
-// MARK: - DataMessageCellDelegate
-extension ConversationViewController: DataMessageCellDelegate {
+// MARK: - AttachmentLoadingMessageCellDelegate
+extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
     
-    func dataMessageCellDidSelectNetworkOperation(_ cell: DataMessageCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) else {
+    func attachmentLoadingCellDidSelectNetworkOperation(_ cell: MessageCell & AttachmentLoadingMessageCell) {
+        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel, let mediaStatus = viewModel.mediaStatus else {
             return
         }
-        let message = viewModel.message
-        operationAction(message: message, operationButton: cell.operationButton)
-    }
-    
-}
-
-// MARK: - PhotoMessageCellDelegate
-extension ConversationViewController: PhotoMessageCellDelegate {
-    
-    func photoMessageCellDidSelectNetworkOperation(_ cell: PhotoMessageCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) else {
-            return
-        }
-        let message = viewModel.message
-        if case .download = cell.operationButton.style {
-            cell.downloadPhoto(message: message)
-        }
-        operationAction(message: message, operationButton: cell.operationButton)
-    }
-    
-    private func operationAction(message: MessageItem, operationButton: NetworkOperationButton) {
-        switch operationButton.style {
-        case .finished, .expired:
+        switch mediaStatus {
+        case MediaStatus.CANCELED.rawValue:
+            viewModel.beginAttachmentLoading()
+        case MediaStatus.PENDING.rawValue:
+            viewModel.cancelAttachmentLoading(markMediaStatusCancelled: true)
+        default:
             break
-        case .upload:
-            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-            if message.category.hasSuffix("_DATA") {
-                FileJobQueue.shared.addJob(job: FileUploadJob(message: Message.createMessage(message: message)))
-            } else if message.category.hasSuffix("_IMAGE") {
-                ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: Message.createMessage(message: message)))
-            }
-        case .download:
-            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-            if message.category.hasSuffix("_DATA") {
-                FileJobQueue.shared.addJob(job: FileDownloadJob(message: Message.createMessage(message: message)))
-            }
-        case .busy:
-            cancelMessageSending(message: message)
         }
     }
+    
 }
 
 // MARK: - TextMessageLabelDelegate
@@ -992,7 +976,7 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
 extension ConversationViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, placeholderForItemOfMessageId id: String) -> UIImage? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
             return cell.contentImageView.image
         } else {
             return nil
@@ -1000,7 +984,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, sourceRectForItemOfMessageId id: String) -> CGRect? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
             return cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
         } else {
             return nil
@@ -1009,12 +993,20 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition, stateDidChangeTo state: GalleryViewController.TransitionState, forItemOfMessageId id: String?) {
         var contentViews = [UIView]()
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
-            contentViews = [cell.contentImageView,
-                            cell.shadowImageView,
-                            cell.operationButton,
-                            cell.timeLabel,
-                            cell.statusImageView]
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }) {
+            let cell = tableView.cellForRow(at: indexPath)
+            if let cell = cell as? PhotoRepresentableMessageCell {
+                contentViews = [cell.contentImageView,
+                                cell.shadowImageView,
+                                cell.timeLabel,
+                                cell.statusImageView]
+            }
+            if let cell = cell as? AttachmentExpirationHintingMessageCell {
+                contentViews.append(cell.operationButton)
+            }
+            if let cell = cell as? VideoMessageCell {
+                contentViews.append(cell.durationLabel)
+            }
         }
         switch state {
         case .began:
@@ -1034,7 +1026,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, snapshotForItemOfMessageId id: String) -> UIView? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoMessageCell {
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
             return cell.contentSnapshotView(afterScreenUpdates: false)
         } else {
             return nil
@@ -1049,6 +1041,42 @@ extension ConversationViewController: GalleryViewControllerDelegate {
             hideStatusBar = false
         }
         setNeedsStatusBarAppearanceUpdate()
+    }
+    
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension ConversationViewController: UIImagePickerControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        dismiss(animated: true, completion: nil)
+        if let url = info[UIImagePickerControllerMediaURL] {
+            dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: url)
+        } else if let url = info[UIImagePickerControllerReferenceURL] as? URL {
+//            if let asset = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil).firstObject {
+//                PHImageManager.default().requestExportSession(forVideo: asset, options: nil, exportPreset: AVAssetExportPreset640x480, resultHandler: { [weak self] (session, nil) in
+//                    guard let session = session else {
+//                        UIApplication.trackError("ConversationViewController", action: "Export session failed", userInfo: info)
+//                        return
+//                    }
+//                    let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).mp4")
+//                    session.outputURL = outputURL
+//                    session.outputFileType = .mp4
+//                    session.shouldOptimizeForNetworkUse = true
+//                    session.exportAsynchronously {
+//                        print(session.status)
+//                        print(session.error)
+//                        self?.dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: outputURL)
+//                    }
+//                })
+//            } else {
+//                UIApplication.trackError("ConversationViewController", action: "PHAsset fetched empty asset", userInfo: info)
+//            }
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
 }
@@ -1090,9 +1118,9 @@ extension ConversationViewController {
     
     private func updateMoreMenuFixedJobs() {
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
+            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .video, .file, .contact]
         } else {
-            moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
+            moreMenuViewController?.fixedJobs = [.camera, .photo, .video, .file, .contact]
         }
     }
     
@@ -1315,7 +1343,7 @@ extension ConversationViewController {
         guard let mediaUrl = message.mediaUrl else {
             return
         }
-        let url = MixinFile.chatFilesUrl.appendingPathComponent(mediaUrl)
+        let url = MixinFile.url(ofChatDirectory: .files, filename: mediaUrl)
         guard FileManager.default.fileExists(atPath: url.path)  else {
             UIApplication.trackError("ConversationViewController", action: "openDocumentAction file not exist")
             return
@@ -1325,29 +1353,6 @@ extension ConversationViewController {
         if !(previewDocumentController?.presentPreview(animated: true) ?? false) {
             previewDocumentController?.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
         }
-    }
-    
-    private func cancelMessageSending(message: MessageItem) {
-        let sentByMe = message.userId == me.user_id
-        let jobId: String
-        if message.category.hasSuffix("_IMAGE") {
-            if sentByMe {
-                jobId = AttachmentUploadJob.jobId(messageId: message.messageId)
-            } else {
-                jobId = AttachmentDownloadJob.jobId(messageId: message.messageId)
-            }
-            ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
-        } else if message.category.hasSuffix("_DATA") {
-            if sentByMe {
-                jobId = FileUploadJob.fileJobId(messageId: message.messageId)
-            } else {
-                jobId = FileDownloadJob.fileJobId(messageId: message.messageId)
-            }
-            FileJobQueue.shared.cancelJob(jobId: jobId)
-        } else {
-            return
-        }
-        MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
     }
     
     private func reportAction(conversationId: String) {
@@ -1366,7 +1371,7 @@ extension ConversationViewController {
             guard let developUser = user, let url = FileManager.default.exportLog(conversationId: conversationId) else {
                 return
             }
-            let targetUrl = MixinFile.chatFilesUrl.appendingPathComponent(url.lastPathComponent)
+            let targetUrl = MixinFile.url(ofChatDirectory: .files, filename: url.lastPathComponent)
             do {
                 try FileManager.default.copyItem(at: url, to: targetUrl)
                 try FileManager.default.removeItem(at: url)

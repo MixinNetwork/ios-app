@@ -89,6 +89,14 @@ class ConversationCell: UITableViewCell {
                 }
                 messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_file")
                 messageTypeImageView.isHidden = false
+            } else if category.hasSuffix("_VIDEO") {
+                if item.isGroup() {
+                    contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_VIDEO)"
+                } else {
+                    contentLabel.text = Localized.NOTIFICATION_CONTENT_VIDEO
+                }
+                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_video")
+                messageTypeImageView.isHidden = false
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 contentLabel.text = Localized.NOTIFICATION_CONTENT_TRANSFER
                 messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_transfer")

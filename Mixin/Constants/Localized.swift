@@ -144,8 +144,10 @@ public class Localized {
     public static let CHAT_DECRYPTION_FAILED_LINK = LocalizedString("chat_decryption_failed_link", comment: "learn more.")
     public static let CHAT_SEND_PHOTO_FAILED = LocalizedString("chat_send_photo_failed", comment: "Failed to send photo")
     public static let CHAT_SEND_FILE_FAILED = LocalizedString("chat_send_file_failed", comment: "Failed to send file")
+    public static let CHAT_SEND_VIDEO_FAILED = LocalizedString("chat_send_video_failed", comment: "Failed to send video")
     public static let CHAT_MENU_CAMERA = LocalizedString("chat_menu_camera", comment: "Camera")
     public static let CHAT_MENU_PHOTO = LocalizedString("chat_menu_photo", comment: "Photo")
+    public static let CHAT_MENU_VIDEO = LocalizedString("chat_menu_video", comment: "Video")
     public static let CHAT_MENU_FILE = LocalizedString("chat_menu_file", comment: "File")
     public static let CHAT_MENU_TRANSFER = LocalizedString("chat_menu_transfer", comment: "Transfer")
     public static let CHAT_MENU_CONTACT = LocalizedString("chat_menu_contact", comment: "Contact")
@@ -156,6 +158,8 @@ public class Localized {
     public static let CAMERA_SAVE_PHOTO_SUCCESS = LocalizedString("camera_save_photo_success", comment: "Photo saved.")
     public static let CAMERA_SAVE_PHOTO_FAILED = LocalizedString("camera_save_photo_failed", comment: "Unable to save photo.")
     public static let CAMERA_SEND_TO_TITLE = LocalizedString("camera_send_to_title", comment: "Send To")
+    public static let CAMERA_SAVE_VIDEO_SUCCESS = LocalizedString("camera_save_video_success", comment: "Video saved.")
+    public static let CAMERA_SAVE_VIDEO_FAILED = LocalizedString("camera_save_video_failed", comment: "Unable to save video.")
 
     // Group
     public static let GROUP_NAVIGATION_TITLE_ADD_MEMBER = LocalizedString("group_navigation_title_add_member", comment: "Add Participants")
@@ -386,6 +390,7 @@ public class Localized {
     public static let NOTIFICATION_CONTENT_FEE = LocalizedString("notification_content_fee", comment: "[Fee]")
     public static let NOTIFICATION_CONTENT_WITHDRAWAL = LocalizedString("notification_content_withdrawal", comment: "[Withdrawal]")
     public static let NOTIFICATION_CONTENT_REBATE = LocalizedString("notification_content_rebate", comment: "[Rebate]")
+    public static let NOTIFICATION_CONTENT_VIDEO = LocalizedString("notification_content_video", comment: "[Video]")
 
     // About
     public static let ABOUT_LOGOUT_TITLE = LocalizedString("about_logout_title", comment: "Do you want to log out?")

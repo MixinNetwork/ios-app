@@ -6,15 +6,15 @@ class FileUploadJob: AttachmentUploadJob {
         guard let mediaUrl = message.mediaUrl else {
             return nil
         }
-        return MixinFile.chatFilesUrl.appendingPathComponent(mediaUrl)
+        return MixinFile.url(ofChatDirectory: .files, filename: mediaUrl)
     }
     
-    static func fileJobId(messageId: String) -> String {
+    override class func jobId(messageId: String) -> String {
         return "file-upload-\(messageId)"
     }
 
     override func getJobId() -> String {
-        return FileUploadJob.fileJobId(messageId: message.messageId)
+        return FileUploadJob.jobId(messageId: messageId)
     }
 
 }

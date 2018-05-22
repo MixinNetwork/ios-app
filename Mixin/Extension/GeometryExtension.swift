@@ -27,3 +27,26 @@ extension UIEdgeInsets {
     }
     
 }
+
+extension CGSize {
+    
+    func rect(fittingSize containerSize: CGSize, byContentMode contentMode: UIViewContentMode) -> CGRect {
+        switch contentMode {
+        case .scaleAspectFit:
+            let containerRatio = containerSize.width / containerSize.height
+            let myRatio = width / height
+            let size: CGSize, origin: CGPoint
+            if myRatio > containerRatio {
+                size = CGSize(width: containerSize.width, height: ceil(containerSize.width / myRatio))
+                origin = CGPoint(x: 0, y: (containerSize.height - size.height) / 2)
+            } else {
+                size = CGSize(width: ceil(containerSize.height * myRatio), height: containerSize.height)
+                origin = CGPoint(x: (containerSize.width - size.width) / 2, y: 0)
+            }
+            return CGRect(origin: origin, size: size)
+        default:
+            fatalError("Unimplemented")
+        }
+    }
+    
+}

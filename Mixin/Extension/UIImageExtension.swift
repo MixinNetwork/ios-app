@@ -1,10 +1,14 @@
 import UIKit
 import CoreGraphics
+import AVFoundation
+
+let jpegCompressionQuality: CGFloat = 0.75
+let jpegExtensionName = ".jpg"
 
 extension UIImage {
     
     var base64: String? {
-        let data = UIImageJPEGRepresentation(self, 0.75)
+        let data = UIImageJPEGRepresentation(self, jpegCompressionQuality)
         return data?.base64EncodedString()
     }
 
@@ -41,6 +45,18 @@ extension UIImage {
             }
         }
         return nil
+    }
+    
+    convenience init?(withFirstFrameOfVideoAtURL url: URL) {
+        let asset = AVURLAsset(url: url)
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        do {
+            let cgImage = try generator.copyCGImage(at: CMTime(value: 0, timescale: 1), actualTime: nil)
+            self.init(cgImage: cgImage)
+        } catch {
+            return nil
+        }
     }
 
     func drawText(text: String, offset: CGPoint, fontSize: CGFloat) -> UIImage {
@@ -111,7 +127,8 @@ extension UIImage {
         return scaledToSize(newSize: CGSize(width: targetWidth, height: targetHeight))
     }
 
-    func saveToFile(path: URL, quality: CGFloat = 0.75) -> Bool {
+    @discardableResult
+    func saveToFile(path: URL, quality: CGFloat = jpegCompressionQuality) -> Bool {
         guard let data = UIImageJPEGRepresentation(self, quality) else {
             return false
         }

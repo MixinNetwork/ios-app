@@ -12,7 +12,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         guard let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty else {
             return nil
         }
-        return MixinFile.chatPhotosUrl(mediaUrl)
+        return MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
     }
     
     init(message: Message) {
@@ -20,7 +20,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         super.message = message
     }
 
-    static func jobId(messageId: String) -> String {
+    class func jobId(messageId: String) -> String {
         return "attachment-upload-\(messageId)"
     }
     
@@ -108,7 +108,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
     }
 
     internal func getMediaDataText(attachmentId: String, key: Data?, digest: Data?) -> String {
-        let transferMediaData = TransferAttachmentData(key: key, digest: digest, attachmentId: attachmentId, mineType: message.mediaMimeType!, mimeType: message.mediaMimeType!, width: message.mediaWidth, height: message.mediaHeight, size:message.mediaSize!, thumbnail: message.thumbImage, name: message.name)
+        let transferMediaData = TransferAttachmentData(key: key, digest: digest, attachmentId: attachmentId, mineType: message.mediaMimeType!, mimeType: message.mediaMimeType!, width: message.mediaWidth, height: message.mediaHeight, size:message.mediaSize!, thumbnail: message.thumbImage, name: message.name, duration: message.mediaDuration)
         return (try? jsonEncoder.encode(transferMediaData).base64EncodedString()) ?? ""
     }
 }

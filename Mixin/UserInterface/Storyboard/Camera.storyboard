@@ -33,7 +33,7 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qa4-MC-Qq2" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
-                                        <state key="normal" image="ic_close_shdow"/>
+                                        <state key="normal" image="ic_close_shadow"/>
                                         <connections>
                                             <action selector="backAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="AM9-ZR-wwm"/>
                                         </connections>
@@ -293,7 +293,7 @@
         <image name="ic_camera_send" width="36" height="36"/>
         <image name="ic_camera_swap" width="44" height="44"/>
         <image name="ic_camera_white" width="64" height="64"/>
-        <image name="ic_close_shdow" width="44" height="44"/>
+        <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_search" width="12" height="12"/>
     </resources>
 </document>

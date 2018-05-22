@@ -8,6 +8,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     let message: MessageItem
     let time: String
     let layoutWidth: CGFloat
+    let thumbnail: UIImage?
     
     internal(set) var backgroundImage: UIImage?
     internal(set) var backgroundImageFrame = CGRect.zero
@@ -42,6 +43,11 @@ class MessageViewModel: CustomDebugStringConvertible {
         self.style = style
         self.time = message.createdAt.toUTCDate().timeHoursAndMinutes()
         self.layoutWidth = layoutWidth
+        if let thumbImage = message.thumbImage, let imageData = Data(base64Encoded: thumbImage)  {
+            thumbnail = UIImage(data: imageData)
+        } else {
+            thumbnail = nil
+        }
         didSetStyle()
     }
     

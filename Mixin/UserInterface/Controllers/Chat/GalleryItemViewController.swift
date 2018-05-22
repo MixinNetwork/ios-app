@@ -106,7 +106,7 @@ class GalleryItemViewController: UIViewController {
             if isPlayingVideo && !isSeeking {
                 setPlayButtonHidden(true, otherControlsHidden: true, animated: true)
             } else if !isPlayingVideo {
-                setPlayButtonHidden(false, otherControlsHidden: true, animated: true)
+                setPlayButtonHidden(false, otherControlsHidden: seekToZeroBeforePlaying, animated: true)
             }
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -347,6 +347,7 @@ extension GalleryItemViewController {
         scrollView.isHidden = false
         videoView.isHidden = true
         videoControlPanelView.isHidden = true
+        tapRecognizer.isEnabled = false
         guard let url = item.url else {
             return
         }
@@ -378,6 +379,7 @@ extension GalleryItemViewController {
             scrollView.isHidden = true
             videoView.isHidden = false
             videoControlPanelView.isHidden = false
+            tapRecognizer.isEnabled = true
             videoView.frame = UIEdgeInsetsInsetRect(view.bounds, fullScreenSafeAreaInsets)
             let playAfterLoaded = isFocused
             playButton.setImage(playAfterLoaded ? #imageLiteral(resourceName: "ic_pause") : #imageLiteral(resourceName: "ic_play"), for: .normal)

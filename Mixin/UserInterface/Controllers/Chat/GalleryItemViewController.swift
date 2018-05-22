@@ -88,6 +88,7 @@ class GalleryItemViewController: UIViewController {
             label.layer.shadowOpacity = 0.6
             label.layer.shadowOffset = .zero
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive(_:)), name: .UIApplicationWillResignActive, object: nil)
     }
     
     @available(iOS 11.0, *)
@@ -121,6 +122,10 @@ class GalleryItemViewController: UIViewController {
             videoView.player.removeObserver(self, forKeyPath: rateKey)
         }
         stopDownload()
+    }
+    
+    @objc func applicationWillResignActive(_ notification: Notification) {
+        videoView.player.rate = 0
     }
     
     @IBAction func dismissAction(_ sender: Any) {
@@ -315,7 +320,9 @@ extension GalleryItemViewController {
         videoView.player.rate = 0
         videoView.player.seek(to: kCMTimeZero)
         videoControlPanelView.alpha = 1
-        NotificationCenter.default.removeObserver(self)
+        if let item = videoView.player.currentItem {
+            NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: item)
+        }
         if isObservingRate {
             videoView.player.removeObserver(self, forKeyPath: rateKey)
             isObservingRate = false

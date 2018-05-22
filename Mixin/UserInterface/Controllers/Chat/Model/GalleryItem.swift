@@ -19,7 +19,9 @@ struct GalleryItem: Equatable {
         } else {
             self.url = nil
         }
-        self.size = CGSize(width: message.mediaWidth ?? 1, height: message.mediaHeight ?? 1)
+        let width = max(1, message.mediaWidth ?? 1)
+        let height = max(1, message.mediaHeight ?? 1)
+        self.size = CGSize(width: width, height: height)
         if let thumbImage = message.thumbImage, let data = Data(base64Encoded: thumbImage) {
             self.thumbnail = UIImage(data: data)
         } else {
@@ -39,7 +41,9 @@ struct GalleryItem: Equatable {
         } else {
             self.url = nil
         }
-        self.size = CGSize(width: message.mediaWidth ?? 1, height: message.mediaHeight ?? 1)
+        let width = max(1, message.mediaWidth ?? 1)
+        let height = max(1, message.mediaHeight ?? 1)
+        self.size = CGSize(width: width, height: height)
         if let thumbImage = message.thumbImage, let data = Data(base64Encoded: thumbImage) {
             self.thumbnail = UIImage(data: data)
         } else {

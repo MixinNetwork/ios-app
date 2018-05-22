@@ -105,8 +105,6 @@ class GalleryItemViewController: UIViewController {
             playButton.setImage(image, for: .normal)
             if isPlayingVideo && !isSeeking {
                 setPlayButtonHidden(true, otherControlsHidden: true, animated: true)
-            } else if !isPlayingVideo {
-                setPlayButtonHidden(false, otherControlsHidden: seekToZeroBeforePlaying, animated: true)
             }
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -205,6 +203,7 @@ class GalleryItemViewController: UIViewController {
             return
         }
         seekToZeroBeforePlaying = true
+        setPlayButtonHidden(false, otherControlsHidden: true, animated: true)
     }
     
     func zoom(location: CGPoint) {

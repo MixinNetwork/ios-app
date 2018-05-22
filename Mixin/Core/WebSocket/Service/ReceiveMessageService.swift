@@ -270,13 +270,10 @@ class ReceiveMessageService: MixinService {
             }
             let mediaStatus: MediaStatus
             switch data.category {
-            case MessageCategory.SIGNAL_DATA.rawValue:
-                mediaStatus = MediaStatus.CANCELED
-            default:
+            case MessageCategory.SIGNAL_IMAGE.rawValue:
                 mediaStatus = MediaStatus.PENDING
-            }
-
-            if (data.category == MessageCategory.SIGNAL_IMAGE.rawValue || data.category == MessageCategory.SIGNAL_DATA.rawValue || data.category == MessageCategory.SIGNAL_VIDEO.rawValue) && transferMediaData.size == 0 {
+            default:
+                mediaStatus = MediaStatus.CANCELED
             }
             MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId, mediaStatus: mediaStatus)
         case MessageCategory.SIGNAL_STICKER.rawValue:

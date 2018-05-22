@@ -450,31 +450,35 @@ extension ConversationDataSource {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
         } else if type == .SIGNAL_DATA || type == .SIGNAL_VIDEO, let url = value as? URL {
-            guard FileManager.default.fileSize(url.path) > 0 else {
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
-                return
-            }
-            
-            var filename = url.lastPathComponent.substring(endChar: ".").lowercased().md5()
-            var targetUrl: URL
-            if type == .SIGNAL_DATA {
-                targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
-            } else {
-                targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
-            }
             queue.async {
+                let errorMessage = type == .SIGNAL_DATA ? Localized.CHAT_SEND_FILE_FAILED : Localized.CHAT_SEND_VIDEO_FAILED
+                guard FileManager.default.fileSize(url.path) > 0 else {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object:errorMessage)
+                    return
+                }
+                var filename = url.lastPathComponent.substring(endChar: ".").lowercased().md5()
+                var targetUrl: URL
+                if type == .SIGNAL_DATA {
+                    targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
+                } else {
+                    targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
+                }
                 do {
                     if FileManager.default.fileExists(atPath: targetUrl.path) {
                         if !FileManager.default.compare(path1: url.path, path2: targetUrl.path) {
                             filename = UUID().uuidString.lowercased()
-                            targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
+                            if type == .SIGNAL_DATA {
+                                targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
+                            } else {
+                                targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
+                            }
                             try FileManager.default.moveItem(at: url, to: targetUrl)
                         }
                     } else {
                         try FileManager.default.moveItem(at: url, to: targetUrl)
                     }
                 } catch {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
                     return
                 }
                 if type == .SIGNAL_VIDEO {
@@ -482,16 +486,24 @@ extension ConversationDataSource {
                         let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: filename + jpegExtensionName)
                         thumbnail.saveToFile(path: thumbnailURL)
                         message.thumbImage = thumbnail.getBlurThumbnail().toBase64()
+                    } else {
+                        NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
+                        return
                     }
                     let asset = AVURLAsset(url: targetUrl)
-                    message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
-                    if let track = asset.tracks(withMediaType: .video).first {
-                        let size = track.naturalSize.applying(track.preferredTransform)
-                        message.mediaWidth = Int(abs(size.width))
-                        message.mediaHeight = Int(abs(size.height))
+                    if asset.duration.isValid {
+                        message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
+                        if let track = asset.tracks(withMediaType: .video).first {
+                            let size = track.naturalSize.applying(track.preferredTransform)
+                            message.mediaWidth = Int(abs(size.width))
+                            message.mediaHeight = Int(abs(size.height))
+                        } else {
+                            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
+                            return
+                        }
                     } else {
-                        message.mediaWidth = 1
-                        message.mediaHeight = 1
+                        NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
+                        return
                     }
                 }
                 message.name = url.lastPathComponent

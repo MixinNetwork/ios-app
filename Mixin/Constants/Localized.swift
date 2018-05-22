@@ -144,6 +144,7 @@ public class Localized {
     public static let CHAT_DECRYPTION_FAILED_LINK = LocalizedString("chat_decryption_failed_link", comment: "learn more.")
     public static let CHAT_SEND_PHOTO_FAILED = LocalizedString("chat_send_photo_failed", comment: "Failed to send photo")
     public static let CHAT_SEND_FILE_FAILED = LocalizedString("chat_send_file_failed", comment: "Failed to send file")
+    public static let CHAT_SEND_VIDEO_FAILED = LocalizedString("chat_send_video_failed", comment: "Failed to send video")
     public static let CHAT_MENU_CAMERA = LocalizedString("chat_menu_camera", comment: "Camera")
     public static let CHAT_MENU_PHOTO = LocalizedString("chat_menu_photo", comment: "Photo")
     public static let CHAT_MENU_VIDEO = LocalizedString("chat_menu_video", comment: "Video")

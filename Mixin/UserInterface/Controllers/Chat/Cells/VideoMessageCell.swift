@@ -6,28 +6,28 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     let operationButton = NetworkOperationButton(type: .custom)
     let expiredHintLabel = UILabel()
-    let durationLabel = InsetLabel()
+    let lengthLabel = InsetLabel()
     
     override lazy var contentSnapshotViews = [
         contentImageView,
         shadowImageView,
         timeLabel,
         statusImageView,
-        durationLabel
+        lengthLabel
     ]
     
     override func prepare() {
         super.prepare()
         prepareOperationButtonAndExpiredHintLabel()
         operationButton.addTarget(self, action: #selector(networkOperationAction(_:)), for: .touchUpInside)
-        durationLabel.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        durationLabel.textColor = .white
-        durationLabel.font = .systemFont(ofSize: 12)
-        durationLabel.numberOfLines = 1
-        durationLabel.layer.cornerRadius = 4
-        durationLabel.clipsToBounds = true
-        durationLabel.contentInset = UIEdgeInsetsMake(1, 4, 1, 4)
-        addSubview(durationLabel)
+        lengthLabel.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        lengthLabel.textColor = .white
+        lengthLabel.font = .systemFont(ofSize: 12)
+        lengthLabel.numberOfLines = 1
+        lengthLabel.layer.cornerRadius = 4
+        lengthLabel.clipsToBounds = true
+        lengthLabel.contentInset = UIEdgeInsetsMake(1, 4, 1, 4)
+        addSubview(lengthLabel)
     }
     
     override func render(viewModel: MessageViewModel) {
@@ -35,13 +35,13 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         if let viewModel = viewModel as? VideoMessageViewModel {
             renderOperationButtonAndExpiredHintLabel(viewModel: viewModel)
             contentImageView.image = viewModel.betterThumbnail ?? viewModel.thumbnail
-            if let duration = viewModel.duration {
-                durationLabel.text = duration
-                durationLabel.sizeToFit()
-                durationLabel.frame.origin = viewModel.durationLabelOrigin
-                durationLabel.isHidden = false
+            if viewModel.duration != nil || viewModel.fileSize != nil {
+                lengthLabel.text = viewModel.duration ?? viewModel.fileSize
+                lengthLabel.sizeToFit()
+                lengthLabel.frame.origin = viewModel.durationLabelOrigin
+                lengthLabel.isHidden = false
             } else {
-                durationLabel.isHidden = true
+                lengthLabel.isHidden = true
             }
         }
     }

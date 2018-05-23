@@ -1005,7 +1005,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
                 contentViews.append(cell.operationButton)
             }
             if let cell = cell as? VideoMessageCell {
-                contentViews.append(cell.durationLabel)
+                contentViews.append(cell.lengthLabel)
             }
         }
         switch state {

@@ -2,9 +2,12 @@ import UIKit
 
 class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadingViewModel {
 
-    let betterThumbnail: UIImage?
-    let duration: String?
+    static let byteCountFormatter = ByteCountFormatter()
     
+    let betterThumbnail: UIImage?
+    
+    private(set) var duration: String?
+    private(set) var fileSize: String?
     private(set) var durationLabelOrigin = CGPoint.zero
     
     var progress: Double?
@@ -17,12 +20,22 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         return true
     }
     
-    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        if let mediaDuration = message.mediaDuration {
-            duration = mmssComponentsFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
-        } else {
-            duration = nil
+    var mediaStatus: String? {
+        get {
+            return message.mediaStatus
         }
+        set {
+            message.mediaStatus = newValue
+            if newValue != MediaStatus.PENDING.rawValue {
+                progress = nil
+            }
+            updateOperationButtonStyle()
+            (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
+        }
+    }
+    
+    override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
+        (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
         if let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
             let betterThumbnailFilename = filename + jpegExtensionName
             let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos,
@@ -66,6 +79,22 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         FileJobQueue.shared.cancelJob(jobId: jobId)
         if markMediaStatusCancelled {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
+        }
+    }
+    
+    private static func durationAndFileSizeRepresentation(ofMessage message: MessageItem) -> (String?, String?) {
+        if message.mediaStatus == MediaStatus.DONE.rawValue {
+            var duration: String?
+            if let mediaDuration = message.mediaDuration {
+                duration = mmssComponentsFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
+            }
+            return (duration, nil)
+        } else {
+            var fileSize: String?
+            if let mediaSize = message.mediaSize {
+                fileSize = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
+            }
+            return (nil, fileSize)
         }
     }
     

@@ -106,6 +106,7 @@ class GalleryItemViewController: UIViewController {
             if isPlayingVideo && !isSeeking {
                 setPlayButtonHidden(true, otherControlsHidden: true, animated: true)
             }
+            UIApplication.shared.isIdleTimerDisabled = isPlayingVideo
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }

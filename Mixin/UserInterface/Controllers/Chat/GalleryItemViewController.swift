@@ -106,6 +106,7 @@ class GalleryItemViewController: UIViewController {
             if isPlayingVideo && !isSeeking {
                 setPlayButtonHidden(true, otherControlsHidden: true, animated: true)
             }
+            UIApplication.shared.isIdleTimerDisabled = isPlayingVideo
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
@@ -116,6 +117,14 @@ class GalleryItemViewController: UIViewController {
         if isObservingRate {
             videoView.player.removeObserver(self, forKeyPath: rateKey)
         }
+        if let observer = timeLabelObserver {
+            videoView.player.removeTimeObserver(observer)
+        }
+        timeLabelObserver = nil
+        if let observer = sliderObserver {
+            videoView.player.removeTimeObserver(observer)
+        }
+        sliderObserver = nil
         stopDownload()
     }
     

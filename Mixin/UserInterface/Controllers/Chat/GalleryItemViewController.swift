@@ -117,6 +117,14 @@ class GalleryItemViewController: UIViewController {
         if isObservingRate {
             videoView.player.removeObserver(self, forKeyPath: rateKey)
         }
+        if let observer = timeLabelObserver {
+            videoView.player.removeTimeObserver(observer)
+        }
+        timeLabelObserver = nil
+        if let observer = sliderObserver {
+            videoView.player.removeTimeObserver(observer)
+        }
+        sliderObserver = nil
         stopDownload()
     }
     

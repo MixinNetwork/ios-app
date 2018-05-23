@@ -131,21 +131,44 @@ struct MixinFile {
 
 enum MixinURL {
     
+    static let scheme = "mixin"
     static let host = "mixin.one"
     
+    struct Path {
+        static let codes = "codes"
+        static let pay = "pay"
+        static let users = "users"
+    }
+    typealias Host = Path
+    
     case codes(String)
+    case users(String)
     case pay
     case unknown
     
-    init(url: URL) {
-        if url.host == "mixin.one" && url.pathComponents.count == 3 && url.pathComponents[1] == "codes" {
-            self = .codes(url.pathComponents[2])
-        } else if url.scheme == "mixin" && url.pathComponents.count == 2 && url.host == "codes" {
-            self = .codes(url.pathComponents[1])
-        } else if (url.host == "mixin.one" && url.pathComponents.count > 1 && url.pathComponents[1] == "pay") || (url.scheme == "mixin" && url.host == "pay") {
-            self = .pay
+    init?(url: URL) {
+        if url.scheme == MixinURL.scheme {
+            if url.host == Host.codes && url.pathComponents.count == 2 {
+                self = .codes(url.pathComponents[1])
+            } else if url.host == Host.pay {
+                self = .pay
+            } else if url.host == Host.users && url.pathComponents.count == 2 {
+                self = .users(url.pathComponents[1])
+            } else {
+                self = .unknown
+            }
+        } else if url.host == MixinURL.host {
+            if url.pathComponents.count == 3 && url.pathComponents[1] == Path.codes {
+                self = .codes(url.pathComponents[2])
+            } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.pay {
+                self = .pay
+            } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.users {
+                self = .users(url.pathComponents[2])
+            } else {
+                self = .unknown
+            }
         } else {
-            self = .unknown
+            return nil
         }
     }
     

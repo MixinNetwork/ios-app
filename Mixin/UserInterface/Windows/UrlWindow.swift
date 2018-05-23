@@ -29,11 +29,16 @@ class UrlWindow: BottomSheetView {
         if checkLastWindow && UIApplication.shared.keyWindow?.subviews.last is UrlWindow {
             return false
         }
-        switch MixinURL(url: url) {
+        guard let mixinURL = MixinURL(url: url) else {
+            return false
+        }
+        switch mixinURL {
         case let .codes(code):
             return checkCodesUrl(code, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case .pay:
             return checkPayUrl(url: url, fromWeb: fromWeb)
+        case let .users(id):
+            return checkUsersUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case .unknown:
             return false
         }
@@ -94,6 +99,15 @@ extension UrlWindow {
         return true
     }
 
+    class func checkUsersUrl(_ userId: String, fromWeb: Bool = false, clearNavigationStack: Bool) -> Bool {
+        guard !userId.isEmpty, UUID(uuidString: userId) != nil else {
+            return false
+        }
+        
+        UrlWindow.instance().presentPopupControllerAnimated(userId: userId, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
+        return true
+    }
+    
     private func presentPopupControllerAnimated(codeId: String, fromWeb: Bool = false, clearNavigationStack: Bool) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
@@ -106,18 +120,7 @@ extension UrlWindow {
             switch result {
             case let .success(code):
                 if let user = code.user {
-                    UserDAO.shared.updateUsers(users: [user])
-                    weakSelf.dismissPopupControllerAnimated()
-                    if user.userId == AccountAPI.shared.account?.user_id {
-                        let vc = MyProfileViewController.instance()
-                        if clearNavigationStack {
-                            UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
-                        } else {
-                            UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
-                        }
-                    } else {
-                        UserWindow.instance().updateUser(user: UserItem.createUser(from: user)).presentView()
-                    }
+                    weakSelf.presentUser(userResponse: user, clearNavigationStack: clearNavigationStack)
                 } else if let authorization = code.authorization {
                     weakSelf.load(authorization: authorization)
                 } else if let conversation = code.conversation {
@@ -132,7 +135,42 @@ extension UrlWindow {
             }
         }
     }
+    
+    private func presentPopupControllerAnimated(userId: String, fromWeb: Bool = false, clearNavigationStack: Bool) {
+        self.fromWeb = fromWeb
+        presentPopupControllerAnimated()
+        UserAPI.shared.showUser(userId: userId) { [weak self] (result) in
+            guard let weakSelf = self, weakSelf.isShowing else {
+                return
+            }
+            switch result {
+            case let .success(response):
+                weakSelf.presentUser(userResponse: response, clearNavigationStack: clearNavigationStack)
+            case let .failure(error, _):
+                if error.code == 404 {
+                    weakSelf.failedHandler(Localized.CODE_RECOGNITION_FAIL_TITLE)
+                } else {
+                    weakSelf.failedHandler(error.kind.localizedDescription ?? error.description)
+                }
+            }
+        }
+    }
 
+    private func presentUser(userResponse: UserResponse, clearNavigationStack: Bool) {
+        UserDAO.shared.updateUsers(users: [userResponse])
+        dismissPopupControllerAnimated()
+        if userResponse.userId == AccountAPI.shared.account?.user_id {
+            let vc = MyProfileViewController.instance()
+            if clearNavigationStack {
+                UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
+            } else {
+                UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+            }
+        } else {
+            UserWindow.instance().updateUser(user: UserItem.createUser(from: userResponse)).presentView()
+        }
+    }
+    
     private func autoDismissWindow() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let weakSelf = self, weakSelf.isShowing else {

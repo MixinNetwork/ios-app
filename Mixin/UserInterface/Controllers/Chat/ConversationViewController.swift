@@ -15,6 +15,7 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
     @IBOutlet weak var unreadBadgeLabel: UILabel!
     @IBOutlet weak var bottomBarWrapperView: UIView!
     @IBOutlet weak var moreButton: UIButton!
+    @IBOutlet weak var botButton: UIButton!
     @IBOutlet weak var inputTextView: InputTextView!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var toggleStickerPanelButton: UIButton!
@@ -297,6 +298,16 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
             delay = animationDuration
         }
         toggleStickerPanel(delay: delay)
+    }
+
+    @IBAction func botAction(_ sender: Any) {
+        guard let user = ownerUser, user.isBot, let app = moreMenuViewController?.apps.first else {
+            return
+        }
+        guard let url = URL(string: app.homeUri), !conversationId.isEmpty else {
+            return
+        }
+        WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
     }
     
     @IBAction func sendTextMessageAction(_ sender: Any) {
@@ -1095,6 +1106,7 @@ extension ConversationViewController {
             return
         }
         unblockButton.isHidden = user.relationship != Relationship.BLOCKING.rawValue
+        botButton.isHidden = !user.isBot
     }
     
     private func updateMoreMenuFixedJobs() {

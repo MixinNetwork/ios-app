@@ -18,6 +18,7 @@ class ForwardViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(UINib(nibName: "ContactCell", bundle: nil), forCellReuseIdentifier: ContactCell.cellIdentifier)
         tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
@@ -136,28 +137,6 @@ class ForwardViewController: UIViewController {
     }
 }
 
-class ForwardCell: UITableViewCell {
-    static let cellIdentifier = "ForwardCell"
-    @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        separatorInset.left = nameLabel.convert(.zero, to: self).x
-    }
-
-    func render(user: ForwardUser) {
-        switch user.category {
-        case ConversationCategory.GROUP.rawValue:
-            avatarImageView.setGroupImage(with: user.iconUrl, conversationId: user.conversationId)
-            nameLabel.text = user.name
-        default:
-            avatarImageView.setImage(with: user.ownerAvatarUrl, identityNumber: user.identityNumber, name: user.fullName)
-            nameLabel.text = user.fullName
-        }
-    }
-}
-
 extension ForwardViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -168,7 +147,7 @@ extension ForwardViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ForwardCell.cellIdentifier) as! ForwardCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ContactCell.cellIdentifier) as! ContactCell
         let user: ForwardUser
         if isSearching {
             user = searchResult[indexPath.row]
@@ -233,10 +212,18 @@ struct ForwardUser {
     let identityNumber: String
     let fullName: String
     let ownerAvatarUrl: String
+    let ownerAppId: String?
+    let ownerIsVerified: Bool
     let category: String
     let conversationId: String
     var isGroup: Bool {
         return category == ConversationCategory.GROUP.rawValue
+    }
+    var isBot: Bool {
+        guard let ownerAppId = self.ownerAppId else {
+            return false
+        }
+        return !ownerAppId.isEmpty
     }
 
     func toConversation() -> ConversationItem {
@@ -250,6 +237,8 @@ struct ForwardUser {
         conversation.ownerIdentityNumber = identityNumber
         conversation.ownerAvatarUrl = ownerAvatarUrl
         conversation.ownerId = userId
+        conversation.ownerIsVerified = ownerIsVerified
+        conversation.appId = ownerAppId
         conversation.status = ConversationStatus.SUCCESS.rawValue
         return conversation
     }

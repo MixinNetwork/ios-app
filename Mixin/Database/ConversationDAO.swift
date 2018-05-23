@@ -65,11 +65,14 @@ final class ConversationDAO {
             let categoryColumn = Conversation.Properties.category.in(table: Conversation.tableName)
             let ownerUserIdColumn = Conversation.Properties.ownerId.in(table: Conversation.tableName)
             let lastMessageCreatedAtColumn = Conversation.Properties.lastMessageCreatedAt.in(table: Conversation.tableName)
+            let pinTimeColumn = Conversation.Properties.pinTime.in(table: Conversation.tableName)
             let ownerIdentityNumberColumn = User.Properties.identityNumber.in(table: User.tableName)
             let ownerAvatarUrlColumn = User.Properties.avatarUrl.in(table: User.tableName)
             let ownerFullName = User.Properties.fullName.in(table: User.tableName)
+            let ownerIsVerified = User.Properties.isVerified.in(table: User.tableName)
+            let ownerAppId = User.Properties.appId.in(table: User.tableName)
 
-            let columns = [conversationIdColumn, nameColumn, iconUrlColumn, categoryColumn, ownerUserIdColumn, ownerIdentityNumberColumn, ownerAvatarUrlColumn, ownerFullName]
+            let columns = [conversationIdColumn, nameColumn, iconUrlColumn, categoryColumn, ownerUserIdColumn, ownerIdentityNumberColumn, ownerAvatarUrlColumn, ownerFullName, ownerIsVerified, ownerAppId]
 
             let userIdColumn = User.Properties.userId.in(table: User.tableName)
             let statusColumn = Conversation.Properties.status.in(table: Conversation.tableName)
@@ -77,7 +80,7 @@ final class ConversationDAO {
                 .join(User.tableName, with: .left)
                 .on(userIdColumn == ownerUserIdColumn)
 
-            let statementSelect = StatementSelect().select(columns).from(joinClause).where(categoryColumn.isNotNull() && statusColumn != ConversationStatus.QUIT.rawValue).order(by: lastMessageCreatedAtColumn.asOrder(by: .descending))
+            let statementSelect = StatementSelect().select(columns).from(joinClause).where(categoryColumn.isNotNull() && statusColumn != ConversationStatus.QUIT.rawValue).order(by: [pinTimeColumn.asOrder(by: .descending), lastMessageCreatedAtColumn.asOrder(by: .descending)])
             let coreStatement = try db.prepare(statementSelect)
 
             var conversations = [ForwardUser]()
@@ -90,7 +93,9 @@ final class ConversationDAO {
                 let identityNumber = coreStatement.value(atIndex: 5).stringValue
                 let avatarUrl = coreStatement.value(atIndex: 6).stringValue
                 let fullName = coreStatement.value(atIndex: 7).stringValue
-                conversations.append(ForwardUser(name: name, iconUrl: iconUrl, userId: userId, identityNumber: identityNumber, fullName: fullName, ownerAvatarUrl: avatarUrl, category: category, conversationId: conversationId))
+                let isVerified = coreStatement.value(atIndex: 8).int32Value == 1
+                let appId = coreStatement.value(atIndex: 9).stringValue
+                conversations.append(ForwardUser(name: name, iconUrl: iconUrl, userId: userId, identityNumber: identityNumber, fullName: fullName, ownerAvatarUrl: avatarUrl, ownerAppId: appId, ownerIsVerified: isVerified, category: category, conversationId: conversationId))
             }
             return conversations
         }

@@ -20,7 +20,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         super.prepare()
         prepareOperationButtonAndExpiredHintLabel()
         operationButton.addTarget(self, action: #selector(networkOperationAction(_:)), for: .touchUpInside)
-        lengthLabel.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        lengthLabel.layer.backgroundColor = UIColor.black.withAlphaComponent(0.4).cgColor
         lengthLabel.textColor = .white
         lengthLabel.font = .systemFont(ofSize: 12)
         lengthLabel.numberOfLines = 1

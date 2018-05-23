@@ -105,6 +105,7 @@
 		7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */; };
 		7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B78B2451FF2170400371632 /* InviteLinkViewController.swift */; };
 		7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */; };
+		7B7F759520B53D46006CF698 /* UsernameLinkDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7F759420B53D46006CF698 /* UsernameLinkDetector.swift */; };
 		7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7F7E381FD43F2500A1C91F /* DetailInfoMessageCell.swift */; };
 		7B8144631FDD62B900404431 /* SystemMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8144621FDD62B900404431 /* SystemMessageViewModel.swift */; };
 		7B836C7E1FD17D6100529754 /* DetailInfoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */; };
@@ -577,6 +578,7 @@
 		7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabel.swift; sourceTree = "<group>"; };
 		7B78B2451FF2170400371632 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
 		7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarImageView.swift; sourceTree = "<group>"; };
+		7B7F759420B53D46006CF698 /* UsernameLinkDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameLinkDetector.swift; sourceTree = "<group>"; };
 		7B7F7E381FD43F2500A1C91F /* DetailInfoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoMessageCell.swift; sourceTree = "<group>"; };
 		7B8144621FDD62B900404431 /* SystemMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageViewModel.swift; sourceTree = "<group>"; };
 		7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1130,6 +1132,7 @@
 				7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */,
 				7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */,
 				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
+				7B7F759420B53D46006CF698 /* UsernameLinkDetector.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2314,6 +2317,7 @@
 				DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */,
 				DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */,
 				DF16682220AC3B5D00C45E31 /* ConversationShareContactViewController.swift in Sources */,
+				7B7F759520B53D46006CF698 /* UsernameLinkDetector.swift in Sources */,
 				DF8CECE31FC3075B00E40064 /* TransferViewController.swift in Sources */,
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
 				7B5747411FA08E18005A6BB5 /* MobileNumberViewController.swift in Sources */,

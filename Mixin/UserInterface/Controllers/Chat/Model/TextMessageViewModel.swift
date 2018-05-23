@@ -45,17 +45,36 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         super.init(message: message, style: style, fits: layoutWidth)
-        let text = message.content
-        let fullRange = NSRange(location: 0, length: (text as NSString).length)
+        let text: String
         // Detect links
-        var links = [NSRange: URL]()
+        var links = [NSRange: (url: URL, color: UIColor?)]()
         if let fixedLinks = fixedLinks {
-            links = fixedLinks
-        } else if let matches = TextMessageViewModel.linkDetector?.matches(in: text, options: [], range: fullRange) {
-            for match in matches {
-                links[match.range] = match.url
+            text = message.content
+            for (key, value) in fixedLinks {
+                links[key] = (value, nil)
+            }
+        } else {
+            let (usernameExractedText, username) = EmbeddedUsernameDetector.stringByExtractingEmbeddedUsername(in: message.content)
+            text = usernameExractedText
+            let textLength = (text as NSString).length
+            let linkDetectionRange: NSRange
+            if let username = username {
+                links[username.range] = (url: username.url, color: username.color)
+                let location = NSMaxRange(username.range)
+                linkDetectionRange = NSRange(location: min(textLength, location), length: max(0, textLength - location))
+            } else {
+                linkDetectionRange = NSRange(location: 0, length: textLength)
+            }
+            if let matches = TextMessageViewModel.linkDetector?.matches(in: text, options: [], range: linkDetectionRange) {
+                for match in matches {
+                    guard let url = match.url else {
+                        continue
+                    }
+                    links[match.range] = (url: url, color: nil)
+                }
             }
         }
+        let fullRange = NSRange(location: 0, length: (text as NSString).length)
         // Set attributes
         let str = NSMutableAttributedString(string: text)
         let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
@@ -77,8 +96,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             .ctForegroundColor: textColor.cgColor
         ]
         str.setAttributes(attr, range: fullRange)
-        for range in links.keys {
-            str.setColor(linkColor, for: range)
+        for link in links {
+            str.setColor(link.value.color ?? linkColor, for: link.key)
         }
         // Make CTLine and Origins
         let maxLabelWidth = layoutWidth - MessageViewModel.backgroundImageMargin.horizontal - contentMargin.horizontal
@@ -117,7 +136,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             }
             if let path = path {
                 let links = linkRects.map {
-                    Link(hitFrame: $0, backgroundPath: path, url: link.value)
+                    Link(hitFrame: $0, backgroundPath: path, url: link.value.url)
                 }
                 self.links.append(contentsOf: links)
             }

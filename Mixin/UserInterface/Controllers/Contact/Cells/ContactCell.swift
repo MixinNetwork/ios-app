@@ -24,11 +24,18 @@ class ContactCell: UITableViewCell {
     }
 
     func render(user: ForwardUser) {
-        render(avatarUrl: user.ownerAvatarUrl, identityNumber: user.identityNumber, fullName: user.fullName, isVerified: user.ownerIsVerified, isBot: user.isBot)
+        if user.isGroup {
+            avatarImageView.setGroupImage(with: user.iconUrl, conversationId: user.conversationId)
+            render(avatarUrl: "", identityNumber: "", fullName: user.name, isVerified: false, isBot: false, isGroup: true)
+        } else {
+            render(avatarUrl: user.ownerAvatarUrl, identityNumber: user.identityNumber, fullName: user.fullName, isVerified: user.ownerIsVerified, isBot: user.isBot)
+        }
     }
 
-    private func render(avatarUrl: String, identityNumber: String, fullName: String, isVerified: Bool, isBot: Bool) {
-        avatarImageView.setImage(with: avatarUrl, identityNumber: identityNumber, name: fullName)
+    private func render(avatarUrl: String, identityNumber: String, fullName: String, isVerified: Bool, isBot: Bool, isGroup: Bool = false) {
+        if !isGroup {
+            avatarImageView.setImage(with: avatarUrl, identityNumber: identityNumber, name: fullName)
+        }
         nameLabel.text = fullName
         if isVerified {
             verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")

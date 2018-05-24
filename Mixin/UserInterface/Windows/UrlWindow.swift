@@ -121,7 +121,8 @@ extension UrlWindow {
             switch result {
             case let .success(code):
                 if let user = code.user {
-                    weakSelf.presentUser(userResponse: user, clearNavigationStack: clearNavigationStack)
+                    UserDAO.shared.updateUsers(users: [user])
+                    weakSelf.presentUser(user: UserItem.createUser(from: user), clearNavigationStack: clearNavigationStack, refreshUser: false)
                 } else if let authorization = code.authorization {
                     weakSelf.load(authorization: authorization)
                 } else if let conversation = code.conversation {
@@ -164,25 +165,14 @@ extension UrlWindow {
                 guard let weakSelf = self, weakSelf.isShowing, let user = user else {
                     return
                 }
-
-                weakSelf.containerView.addSubview(weakSelf.userView)
-                weakSelf.userView.snp.makeConstraints({ (make) in
-                    make.edges.equalToSuperview()
-                })
-                weakSelf.userView.updateUser(user: user, refreshUser: refreshUser, superView: weakSelf)
-                weakSelf.successHandler()
-                weakSelf.contentHeightConstraint.constant = 0
-                UIView.animate(withDuration: 0.15, animations: {
-                    weakSelf.layoutIfNeeded()
-                })
+                weakSelf.presentUser(user: user, clearNavigationStack: clearNavigationStack, refreshUser: refreshUser)
             }
         }
     }
 
-    private func presentUser(userResponse: UserResponse, clearNavigationStack: Bool) {
-        UserDAO.shared.updateUsers(users: [userResponse])
-        dismissPopupControllerAnimated()
-        if userResponse.userId == AccountAPI.shared.account?.user_id {
+    private func presentUser(user: UserItem, clearNavigationStack: Bool, refreshUser: Bool = true) {
+        if user.userId == AccountAPI.shared.accountUserId {
+            dismissPopupControllerAnimated()
             let vc = MyProfileViewController.instance()
             if clearNavigationStack {
                 UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
@@ -190,7 +180,16 @@ extension UrlWindow {
                 UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
             }
         } else {
-            UserWindow.instance().updateUser(user: UserItem.createUser(from: userResponse)).presentView()
+            containerView.addSubview(userView)
+            userView.snp.makeConstraints({ (make) in
+                make.edges.equalToSuperview()
+            })
+            userView.updateUser(user: user, refreshUser: refreshUser, superView: self)
+            successHandler()
+            contentHeightConstraint.constant = 0
+            UIView.animate(withDuration: 0.15, animations: {
+                self.layoutIfNeeded()
+            })
         }
     }
     

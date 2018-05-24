@@ -312,6 +312,7 @@ extension WebSocketService {
                                     userInfo["messageCreatedAt"] = MessageDAO.shared.getMessage(messageId: messageId)?.createdAt
                                     if messageId != messageId.lowercased() {
                                         MessageDAO.shared.deleteMessage(id: messageId)
+                                        JobDAO.shared.removeJob(jobId: blazeMessage.id)
                                     }
                                 }
                             }

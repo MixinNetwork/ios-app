@@ -20,6 +20,7 @@ class UrlWindow: BottomSheetView {
     private lazy var groupView = GroupView.instance()
     private lazy var loginView = LoginView.instance()
     private lazy var payView = PayView.instance()
+    private lazy var userView = UserView.instance()
 
     private(set) var fromWeb = false
     private var showLoginView = false
@@ -139,19 +140,41 @@ extension UrlWindow {
     private func presentPopupControllerAnimated(userId: String, fromWeb: Bool = false, clearNavigationStack: Bool) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
-        UserAPI.shared.showUser(userId: userId) { [weak self] (result) in
-            guard let weakSelf = self, weakSelf.isShowing else {
-                return
-            }
-            switch result {
-            case let .success(response):
-                weakSelf.presentUser(userResponse: response, clearNavigationStack: clearNavigationStack)
-            case let .failure(error, _):
-                if error.code == 404 {
-                    weakSelf.failedHandler(Localized.CODE_RECOGNITION_FAIL_TITLE)
-                } else {
-                    weakSelf.failedHandler(error.kind.localizedDescription ?? error.description)
+        DispatchQueue.global().async { [weak self] in
+            var user = UserDAO.shared.getUser(userId: userId)
+            var refreshUser = true
+            if user == nil {
+                switch UserAPI.shared.showUser(userId: userId) {
+                case let .success(response):
+                    refreshUser = false
+                    user = UserItem.createUser(from: response)
+                    UserDAO.shared.updateUsers(users: [response])
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        if let err = error as? JobError, case let .clientError(code) = err, code == 404 {
+                            self?.failedHandler(Localized.CONTACT_SEARCH_NOT_FOUND)
+                        } else {
+                            self?.failedHandler(error.localizedDescription)
+                        }
+                    }
+                    return
                 }
+            }
+            DispatchQueue.main.async {
+                guard let weakSelf = self, weakSelf.isShowing, let user = user else {
+                    return
+                }
+
+                weakSelf.containerView.addSubview(weakSelf.userView)
+                weakSelf.userView.snp.makeConstraints({ (make) in
+                    make.edges.equalToSuperview()
+                })
+                weakSelf.userView.updateUser(user: user, refreshUser: refreshUser, superView: weakSelf)
+                weakSelf.successHandler()
+                weakSelf.contentHeightConstraint.constant = 0
+                UIView.animate(withDuration: 0.15, animations: {
+                    weakSelf.layoutIfNeeded()
+                })
             }
         }
     }
@@ -244,7 +267,7 @@ extension UrlWindow {
                 weakSelf.groupView.render(codeId: codeId, conversation: conversation, ownerUser: ownerUser, participants: participants, alreadyInTheGroup: alreadyInTheGroup, superView: weakSelf)
                 weakSelf.successHandler()
 
-                weakSelf.contentHeightConstraint.constant = 369
+                weakSelf.contentHeightConstraint.constant = 0
                 UIView.animate(withDuration: 0.15, animations: {
                     weakSelf.layoutIfNeeded()
                 })

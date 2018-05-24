@@ -243,6 +243,8 @@
 		DF2A3CD62016DB1E0095F024 /* StickerDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A3CD52016DB1E0095F024 /* StickerDAO.swift */; };
 		DF2A3CD82016DC860095F024 /* Sticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A3CD72016DC860095F024 /* Sticker.swift */; };
 		DF2A3CDA20173F2D0095F024 /* TransferStickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A3CD920173F2D0095F024 /* TransferStickerData.swift */; };
+		DF2F089320B68872005786CB /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2F089220B68872005786CB /* UserView.swift */; };
+		DF2F089520B688DB005786CB /* UserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF2F089420B688DB005786CB /* UserView.xib */; };
 		DF30D7441FA22D4E00683C1A /* WebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7431FA22D4E00683C1A /* WebSocketService.swift */; };
 		DF30D7461FA2BB8C00683C1A /* KeychainExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7451FA2BB8C00683C1A /* KeychainExtension.swift */; };
 		DF30D7481FA2BDD200683C1A /* CodableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7471FA2BDD200683C1A /* CodableExtension.swift */; };
@@ -717,6 +719,8 @@
 		DF2A3CD52016DB1E0095F024 /* StickerDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerDAO.swift; sourceTree = "<group>"; };
 		DF2A3CD72016DC860095F024 /* Sticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sticker.swift; sourceTree = "<group>"; };
 		DF2A3CD920173F2D0095F024 /* TransferStickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferStickerData.swift; sourceTree = "<group>"; };
+		DF2F089220B68872005786CB /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
+		DF2F089420B688DB005786CB /* UserView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserView.xib; sourceTree = "<group>"; };
 		DF30D7431FA22D4E00683C1A /* WebSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketService.swift; sourceTree = "<group>"; };
 		DF30D7451FA2BB8C00683C1A /* KeychainExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainExtension.swift; sourceTree = "<group>"; };
 		DF30D7471FA2BDD200683C1A /* CodableExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableExtension.swift; sourceTree = "<group>"; };
@@ -1354,6 +1358,8 @@
 				DF8EF6B22031614700E99CE8 /* LoginView.xib */,
 				DF8EF6B62032D3D700E99CE8 /* PayView.swift */,
 				DF8EF6B42032D1D700E99CE8 /* PayView.xib */,
+				DF2F089220B68872005786CB /* UserView.swift */,
+				DF2F089420B688DB005786CB /* UserView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2047,6 +2053,7 @@
 				DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
+				DF2F089520B688DB005786CB /* UserView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2219,6 +2226,7 @@
 				7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */,
 				7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */,
 				DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */,
+				DF2F089320B68872005786CB /* UserView.swift in Sources */,
 				DFF353061FEE6A3400058453 /* RefreshAssetsJob.swift in Sources */,
 				DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */,
 				7B4D1122205A9EF80074BF60 /* AddressBookView.swift in Sources */,

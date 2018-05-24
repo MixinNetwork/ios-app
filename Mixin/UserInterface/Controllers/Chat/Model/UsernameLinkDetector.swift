@@ -12,7 +12,7 @@ struct EmbeddedUsernameDetector {
     static let colorRegex = try? NSRegularExpression(pattern: "color=\"#([0-9a-fA-F]{6})\"", options: .caseInsensitive)
     
     static func stringByExtractingEmbeddedUsername(in str: String) -> (String, Username?) {
-        guard let usernameRegex = usernameRegex else {
+        guard str.hasPrefix("<a"), let usernameRegex = usernameRegex else {
             return (str, nil)
         }
         let mutableStr = NSMutableString(string: str)

@@ -54,8 +54,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 links[key] = (value, nil)
             }
         } else {
-            let (usernameExractedText, username) = EmbeddedUsernameDetector.stringByExtractingEmbeddedUsername(in: message.content)
-            text = usernameExractedText
+            let (usernameExtractedText, username) = EmbeddedUsernameDetector.stringByExtractingEmbeddedUsername(in: message.content)
+            text = usernameExtractedText
             let textLength = (text as NSString).length
             let linkDetectionRange: NSRange
             if let username = username {

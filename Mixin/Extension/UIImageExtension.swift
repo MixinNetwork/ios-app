@@ -3,7 +3,6 @@ import CoreGraphics
 import AVFoundation
 
 let jpegCompressionQuality: CGFloat = 0.75
-let jpegExtensionName = ".jpg"
 
 extension UIImage {
     

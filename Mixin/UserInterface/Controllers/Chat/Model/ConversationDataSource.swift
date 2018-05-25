@@ -1,5 +1,6 @@
 import UIKit
 import AVKit
+import Photos
 
 extension Notification.Name {
     
@@ -10,6 +11,14 @@ extension Notification.Name {
 }
 
 class ConversationDataSource {
+    
+    private static let videoRequestOptions: PHVideoRequestOptions = {
+        let options = PHVideoRequestOptions()
+        options.isNetworkAccessAllowed = false
+        options.version = .current
+        options.deliveryMode = .fastFormat
+        return options
+    }()
     
     let queue = DispatchQueue(label: "one.mixin.ios.message.processing")
     
@@ -433,7 +442,7 @@ extension ConversationDataSource {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
         } else if type == .SIGNAL_IMAGE, let image = value as? UIImage {
-            let filename = message.messageId + jpegExtensionName
+            let filename = message.messageId + ExtensionName.jpeg.withDot
             let path = MixinFile.url(ofChatDirectory: .photos, filename: filename)
             queue.async {
                 guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0  else {
@@ -449,67 +458,92 @@ extension ConversationDataSource {
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
-        } else if type == .SIGNAL_DATA || type == .SIGNAL_VIDEO, let url = value as? URL {
+        } else if type == .SIGNAL_DATA, let url = value as? URL {
             queue.async {
-                let errorMessage = type == .SIGNAL_DATA ? Localized.CHAT_SEND_FILE_FAILED : Localized.CHAT_SEND_VIDEO_FAILED
                 guard FileManager.default.fileSize(url.path) > 0 else {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object:errorMessage)
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
                     return
                 }
                 var filename = url.lastPathComponent.substring(endChar: ".").lowercased().md5()
-                var targetUrl: URL
-                if type == .SIGNAL_DATA {
-                    targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
-                } else {
-                    targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
-                }
+                var targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
                 do {
                     if FileManager.default.fileExists(atPath: targetUrl.path) {
                         if !FileManager.default.compare(path1: url.path, path2: targetUrl.path) {
                             filename = UUID().uuidString.lowercased()
-                            if type == .SIGNAL_DATA {
-                                targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
-                            } else {
-                                targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
-                            }
+                            targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
                             try FileManager.default.moveItem(at: url, to: targetUrl)
                         }
                     } else {
                         try FileManager.default.moveItem(at: url, to: targetUrl)
                     }
                 } catch {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
                     return
-                }
-                if type == .SIGNAL_VIDEO {
-                    if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: targetUrl) {
-                        let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: filename + jpegExtensionName)
-                        thumbnail.saveToFile(path: thumbnailURL)
-                        message.thumbImage = thumbnail.getBlurThumbnail().toBase64()
-                    } else {
-                        NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
-                        return
-                    }
-                    let asset = AVURLAsset(url: targetUrl)
-                    if asset.duration.isValid {
-                        message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
-                        if let track = asset.tracks(withMediaType: .video).first {
-                            let size = track.naturalSize.applying(track.preferredTransform)
-                            message.mediaWidth = Int(abs(size.width))
-                            message.mediaHeight = Int(abs(size.height))
-                        } else {
-                            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
-                            return
-                        }
-                    } else {
-                        NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: errorMessage)
-                        return
-                    }
                 }
                 message.name = url.lastPathComponent
                 message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
-                message.mediaUrl = "\(filename).\(url.pathExtension)"
+                message.mediaMimeType = FileManager.default.mimeType(ext: targetUrl.pathExtension)
+                message.mediaUrl = "\(filename).\(targetUrl.pathExtension)"
+                message.mediaStatus = MediaStatus.PENDING.rawValue
+                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+            }
+        } else if type == .SIGNAL_VIDEO, let url = value as? URL {
+            queue.async {
+                guard let asset = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil).firstObject else {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
+                    return
+                }
+                let filename = message.messageId
+                let videoFilename = filename + ExtensionName.mp4.withDot
+                let thumbnailFilename = filename + ExtensionName.jpeg.withDot
+                let outputURL = MixinFile.url(ofChatDirectory: .videos, filename: videoFilename)
+                var exportSession: AVAssetExportSession?
+                PHImageManager.default().requestExportSession(forVideo: asset, options: ConversationDataSource.videoRequestOptions, exportPreset: AVAssetExportPreset640x480
+                    , resultHandler: { (session, info) in
+                        exportSession = session
+                        self.semaphore.signal()
+                        self.semaphore.signal()
+                })
+                self.semaphore.wait()
+                self.semaphore.wait()
+                guard let session = exportSession else {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
+                    return
+                }
+                session.outputFileType = .mp4
+                session.outputURL = outputURL
+                session.shouldOptimizeForNetworkUse = true
+                session.exportAsynchronously {
+                    self.semaphore.signal()
+                    self.semaphore.signal()
+                }
+                self.semaphore.wait()
+                self.semaphore.wait()
+                guard session.status == .completed else {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
+                    return
+                }
+                if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: outputURL) {
+                    let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: thumbnailFilename)
+                    thumbnail.saveToFile(path: thumbnailURL)
+                    message.thumbImage = thumbnail.getBlurThumbnail().toBase64()
+                } else {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
+                    return
+                }
+                let outputAsset = AVURLAsset(url: outputURL)
+                if outputAsset.duration.isValid, let track = outputAsset.tracks(withMediaType: .video).first {
+                    message.mediaDuration = Int64(outputAsset.duration.seconds * millisecondsPerSecond)
+                    let size = track.naturalSize.applying(track.preferredTransform)
+                    message.mediaWidth = Int(abs(size.width))
+                    message.mediaHeight = Int(abs(size.height))
+                } else {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
+                    return
+                }
+                message.mediaSize = FileManager.default.fileSize(outputURL.path)
+                message.mediaMimeType = FileManager.default.mimeType(ext: outputURL.pathExtension)
+                message.mediaUrl = videoFilename
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }

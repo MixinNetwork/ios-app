@@ -79,7 +79,6 @@ class ForwardViewController: UIViewController {
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_VIDEO") {
             newMessage.thumbImage = message.thumbImage
-            newMessage.name = message.name
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaWidth = message.mediaWidth
             newMessage.mediaHeight = message.mediaHeight

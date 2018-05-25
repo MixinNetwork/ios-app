@@ -6,7 +6,7 @@ class VideoDownloadJob: AttachmentDownloadJob {
     override lazy var fileName = "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))"
     override lazy var fileUrl = MixinFile.url(ofChatDirectory: .videos, filename: fileName)
     
-    private lazy var thumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: messageId + jpegExtensionName)
+    private lazy var thumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: messageId + ExtensionName.jpeg.withDot)
 
     override class func jobId(messageId: String) -> String {
         return "video-download-\(messageId)"

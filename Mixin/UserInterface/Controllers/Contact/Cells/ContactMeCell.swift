@@ -17,5 +17,9 @@ class ContactMeCell: UITableViewCell {
         mixinIDLabel.text = Localized.CONTACT_IDENTITY_NUMBER(identityNumber: account.identity_number)
         mobileLabel.text = Localized.CONTACT_MOBILE(mobile: account.phone)
     }
-    
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        separatorInset.left = 0
+    }
 }

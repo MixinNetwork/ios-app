@@ -8,12 +8,15 @@ class ContactViewController: UITableViewController {
     private var phoneContactSections = [[PhoneContact]]()
     private var sectionIndexTitles = [String]()
     private lazy var phoneContactWindow = PhoneContactWindow.instance()
+    private lazy var myQRCodeWindow = MyQRCodeWindow.instance()
+    private lazy var receiveMoneyWindow = ReceiveMoneyWindow.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.register(UINib(nibName: "PhoneContactHeaderFooter", bundle: nil), forHeaderFooterViewReuseIdentifier: PhoneContactHeaderFooter.cellIdentifier)
         tableView.register(UINib(nibName: "ContactMeCell", bundle: nil), forCellReuseIdentifier: ContactMeCell.cellIdentifier)
+        tableView.register(UINib(nibName: "ContactQRCodeCell", bundle: nil), forCellReuseIdentifier: ContactQRCodeCell.cellIdentifier)
         tableView.register(UINib(nibName: "ContactNavCell", bundle: nil), forCellReuseIdentifier: ContactNavCell.cellIdentifier)
         tableView.register(UINib(nibName: "ContactCell", bundle: nil), forCellReuseIdentifier: ContactCell.cellIdentifier)
         tableView.register(UINib(nibName: "PhoneContactCell", bundle: nil), forCellReuseIdentifier: PhoneContactCell.cellIdentifier)
@@ -183,7 +186,7 @@ extension ContactViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 1
+            return 2
         case 1:
             return 2
         case 2:
@@ -196,7 +199,7 @@ extension ContactViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return ContactMeCell.cellHeight
+            return indexPath.row == 0 ? ContactMeCell.cellHeight : ContactQRCodeCell.cellHeight
         case 1:
             return ContactNavCell.cellHeight
         case 2:
@@ -209,11 +212,20 @@ extension ContactViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ContactMeCell.cellIdentifier) as! ContactMeCell
-            if let account = AccountAPI.shared.account {
-                cell.render(account: account)
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: ContactMeCell.cellIdentifier) as! ContactMeCell
+                if let account = AccountAPI.shared.account {
+                    cell.render(account: account)
+                }
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: ContactQRCodeCell.cellIdentifier) as! ContactQRCodeCell
+                cell.render(separatorColor: tableView.separatorColor!)
+                if cell.delegate == nil {
+                    cell.delegate = self
+                }
+                return cell
             }
-            return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: ContactNavCell.cellIdentifier) as! ContactNavCell
             cell.render(row: indexPath.row)
@@ -243,7 +255,9 @@ extension ContactViewController {
         
         switch indexPath.section {
         case 0:
-            navigationController?.pushViewController(MyProfileViewController.instance(), animated: true)
+            if indexPath.row == 0 {
+                navigationController?.pushViewController(MyProfileViewController.instance(), animated: true)
+            }
         case 1:
             switch indexPath.row {
             case 0:
@@ -265,4 +279,16 @@ extension ContactViewController {
             break
         }
     }
+}
+
+extension ContactViewController: ContactQRCodeCellDelegate {
+
+    func receiveMoneyAction() {
+        receiveMoneyWindow.presentView()
+    }
+
+    func myQRCodeAction() {
+        myQRCodeWindow.presentView()
+    }
+
 }

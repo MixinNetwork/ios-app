@@ -64,6 +64,7 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
     private var stickerPanelViewController: StickerPanelViewController?
     private var moreMenuViewController: ConversationMoreMenuViewController?
     private var previewDocumentController: UIDocumentInteractionController?
+    private var userBot: App?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
     private lazy var userWindow = UserWindow.instance()
@@ -301,7 +302,7 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
     }
 
     @IBAction func botAction(_ sender: Any) {
-        guard let user = ownerUser, user.isBot, let app = moreMenuViewController?.apps.first else {
+        guard let user = ownerUser, user.isBot, let app = self.userBot else {
             return
         }
         guard let url = URL(string: app.homeUri), !conversationId.isEmpty else {
@@ -1137,7 +1138,7 @@ extension ConversationViewController {
                 guard let ownerId = ownerUser?.userId, let userBot = AppDAO.shared.getUserBot(userId: ownerId) else {
                     return
                 }
-                moreMenuViewController?.apps = [userBot]
+                self.userBot = userBot
             }
         }
     }

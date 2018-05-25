@@ -177,3 +177,14 @@ enum MixinURL {
 let muteDuration8H: Int64 = 8 * 60 * 60
 let muteDuration1Week: Int64 = 7 * 24 * 60 * 60
 let muteDuration1Year: Int64 = 365 * 24 * 60 * 60
+
+enum ExtensionName: String {
+    
+    case jpeg = "jpg"
+    case mp4 = "mp4"
+    
+    var withDot: String {
+        return "." + rawValue
+    }
+    
+}

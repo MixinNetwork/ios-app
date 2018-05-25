@@ -90,7 +90,7 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
     private lazy var videoPickerController: UIImagePickerController = {
         let picker = UIImagePickerController()
         picker.mediaTypes = [kUTTypeMovie as String]
-        picker.videoQuality = .type640x480
+        picker.videoQuality = .typeHigh
         picker.allowsEditing = false
         picker.delegate = self
         return picker
@@ -1061,7 +1061,7 @@ extension ConversationViewController: UIImagePickerControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         dismiss(animated: true, completion: nil)
-        if let url = info[UIImagePickerControllerMediaURL] {
+        if let url = info[UIImagePickerControllerReferenceURL] {
             dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: url)
         }
         // TODO: Do something with UIImagePickerControllerReferenceURL if failed

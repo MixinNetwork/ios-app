@@ -37,7 +37,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
         if let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
-            let betterThumbnailFilename = filename + jpegExtensionName
+            let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
             let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos,
                                                    filename: betterThumbnailFilename)
             betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path)

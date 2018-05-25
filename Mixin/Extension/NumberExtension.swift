@@ -4,6 +4,7 @@ extension NumberFormatter {
 
     static let balanceFormatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 8)
     static let legalTenderFormatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 2)
+    static let decimal = NumberFormatter(numberStyle: .decimal)
 
     convenience init(numberStyle: NumberFormatter.Style) {
         self.init()

@@ -61,8 +61,9 @@ extension String {
         return String(self[startIndex ..< endIndex])
     }
 
-    func isNumeric() -> Bool {
-        return Double(self) != nil
+    var isNumeric: Bool {
+        let number = NumberFormatter.decimal.number(from: self)
+        return number != nil
     }
 
     public func toInt() -> Int {

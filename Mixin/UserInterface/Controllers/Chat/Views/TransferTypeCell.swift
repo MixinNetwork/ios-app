@@ -13,7 +13,7 @@ class TransferTypeCell: UITableViewCell {
     func render(asset: AssetItem) {
         assetIconImageView.sd_setImage(with: URL(string :asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
         symbolLabel.text = asset.symbol
-        balanceLabel.text = asset.balance
+        balanceLabel.text = asset.localizedBalance
         if let chainIconUrl = asset.chainIconUrl {
             blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
             blockchainImageView.isHidden = false

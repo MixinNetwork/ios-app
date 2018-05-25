@@ -57,7 +57,7 @@ class WithdrawalViewController: UIViewController {
         super.viewDidLoad()
         amountTextField.delegate = self
         reloadTransactionFeeHint()
-        assetBalanceLabel.text = asset.balance
+        assetBalanceLabel.text = asset.localizedBalance
         assetSymbolLabel.text = asset.symbol
         subtitleLabel.text = asset.name
         if abs(UIScreen.main.bounds.width - 320) < 1 {
@@ -184,7 +184,7 @@ extension WithdrawalViewController {
     
     private func transactionFeeHint(fee: Fee) -> NSAttributedString {
         let symbol = AssetDAO.shared.getAsset(assetId: fee.assetId)?.symbol ?? ""
-        let feeRepresentation = fee.amount + " " + symbol
+        let feeRepresentation = fee.localizedAmount + " " + symbol
         let hint = Localized.WALLET_HINT_TRANSACTION_FEE(feeRepresentation: feeRepresentation, symbol: asset.symbol)
         let attributedHint = NSMutableAttributedString(string: hint, attributes: transactionLabelAttribute)
         let feeRepresentationRange = (hint as NSString).range(of: feeRepresentation)

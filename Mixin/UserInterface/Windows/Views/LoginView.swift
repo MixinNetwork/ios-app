@@ -175,9 +175,9 @@ class LoginView: UIView {
         guard assets.count > 0 else {
             return "0"
         }
-        var result = "\(assets[0].balance) \(assets[0].symbol)"
+        var result = "\(assets[0].localizedBalance) \(assets[0].symbol)"
         if assets.count > 1 {
-            result += ", \(assets[1].balance) \(assets[1].symbol)"
+            result += ", \(assets[1].localizedBalance) \(assets[1].symbol)"
         }
         if assets.count > 2 {
             result += Localized.AUTH_ASSETS_MORE

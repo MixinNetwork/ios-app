@@ -61,7 +61,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         if let asset = self.asset {
             assetImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
             assetSymbolLabel.text = asset.symbol
-            balanceLabel.text = asset.balance
+            balanceLabel.text = asset.localizedBalance
             if let chainIconUrl = asset.chainIconUrl {
                 blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
                 blockchainImageView.isHidden = false

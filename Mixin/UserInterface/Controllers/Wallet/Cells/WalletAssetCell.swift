@@ -27,7 +27,7 @@ class WalletAssetCell: UITableViewCell {
         }
 
         if asset.priceUsd.toDouble() > 0 {
-            priceLabel.text = "$\(asset.priceUsd)"
+            priceLabel.text = "$\(asset.localizedPriceUsd)"
             priceChangeLabel.text = "\(asset.getUsdChange())%"
             if asset.changeUsd.toDouble() > 0 {
                  priceChangeLabel.textColor = greenColor

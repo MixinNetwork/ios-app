@@ -619,7 +619,15 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
     }
 
     func pickVideoAction() {
-        present(videoPickerController, animated: true, completion: nil)
+        if PHPhotoLibrary.authorizationStatus() == .authorized {
+            present(videoPickerController, animated: true, completion: nil)
+        } else {
+            PHPhotoLibrary.requestAuthorization({ [weak self] (status) in
+                if status == .authorized, let weakSelf = self {
+                    weakSelf.present(weakSelf.videoPickerController, animated: true, completion: nil)
+                }
+            })
+        }
     }
     
     // MARK: - Class func

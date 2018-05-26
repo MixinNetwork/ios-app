@@ -40,13 +40,15 @@ class MyProfileViewController: UITableViewController {
     }
 
     @objc func updateUI() {
-        guard let account = AccountAPI.shared.account else {
-            return
+        DispatchQueue.main.async { [weak self] in
+            guard let weakSelf = self, let account = AccountAPI.shared.account else {
+                return
+            }
+            weakSelf.avatarImageView.setImage(with: account)
+            weakSelf.fullnameLabel.text = account.full_name
+            weakSelf.phoneNumberLabel.text = account.phone
+            weakSelf.tableView.reloadData()
         }
-        avatarImageView.setImage(with: account)
-        fullnameLabel.text = account.full_name
-        phoneNumberLabel.text = account.phone
-        tableView.reloadData()
     }
     
     private func changeName() {
@@ -96,7 +98,7 @@ extension MyProfileViewController {
                     present(changeNameController, animated: true, completion: nil)
                 }
             default:
-                navigationController?.pushViewController(QRCodeViewController.instance(content: .me), animated: true)
+                break
             }
         case 1:
             let controller = UIAlertController(title: nil, message: Localized.PROFILE_CHANGE_NUMBER_CONFIRMATION, preferredStyle: .alert)

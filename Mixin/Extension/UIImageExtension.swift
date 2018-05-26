@@ -11,7 +11,7 @@ extension UIImage {
         return data?.base64EncodedString()
     }
 
-    convenience init?(qrcode: String, size: CGFloat) {
+    convenience init?(qrcode: String, size: CGFloat, foregroundColor: UIColor? = nil) {
         guard let filter = CIFilter(name: "CIQRCodeGenerator"), !qrcode.isEmpty else {
             return nil
         }
@@ -21,7 +21,20 @@ extension UIImage {
         let data = qrcode.data(using: String.Encoding.isoLatin1)
         filter.setValue(data, forKey: "inputMessage")
 
-        if let outputImage = filter.outputImage {
+        var outputImage: CIImage?
+        if let foregroundColor = foregroundColor {
+            guard let colorFilter = CIFilter(name: "CIFalseColor") else {
+                return nil
+            }
+            colorFilter.setValue(filter.outputImage, forKey: "inputImage")
+            colorFilter.setValue(CIColor(red: 1, green: 1, blue: 1), forKey: "inputColor1")
+            colorFilter.setValue(CIColor(color: foregroundColor), forKey: "inputColor0")
+            outputImage = colorFilter.outputImage
+        } else {
+            outputImage = filter.outputImage
+        }
+
+        if let outputImage = outputImage {
             let extent = outputImage.extent
             let scale = min(size / extent.width, size / extent.height)
             let width = size_t(size)

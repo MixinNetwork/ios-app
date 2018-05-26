@@ -40,6 +40,8 @@ class UrlWindow: BottomSheetView {
             return checkPayUrl(url: url, fromWeb: fromWeb)
         case let .users(id):
             return checkUsersUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
+        case let .transfer(id):
+            return checkTransferUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case .unknown:
             return false
         }
@@ -108,7 +110,16 @@ extension UrlWindow {
         UrlWindow.instance().presentPopupControllerAnimated(userId: userId, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         return true
     }
-    
+
+    class func checkTransferUrl(_ userId: String, fromWeb: Bool = false, clearNavigationStack: Bool) -> Bool {
+        guard !userId.isEmpty, UUID(uuidString: userId) != nil, userId != AccountAPI.shared.accountUserId else {
+            return false
+        }
+
+        UrlWindow.instance().presentPopupControllerAnimated(userId: userId, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack, transfer: true)
+        return true
+    }
+
     private func presentPopupControllerAnimated(codeId: String, fromWeb: Bool = false, clearNavigationStack: Bool) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
@@ -138,10 +149,14 @@ extension UrlWindow {
         }
     }
     
-    private func presentPopupControllerAnimated(userId: String, fromWeb: Bool = false, clearNavigationStack: Bool) {
+    private func presentPopupControllerAnimated(userId: String, fromWeb: Bool = false, clearNavigationStack: Bool, transfer: Bool = false) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
         DispatchQueue.global().async { [weak self] in
+            var asset: AssetItem?
+            if transfer {
+                asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
+            }
             var user = UserDAO.shared.getUser(userId: userId)
             var refreshUser = true
             if user == nil {
@@ -165,7 +180,18 @@ extension UrlWindow {
                 guard let weakSelf = self, weakSelf.isShowing, let user = user else {
                     return
                 }
-                weakSelf.presentUser(user: user, clearNavigationStack: clearNavigationStack, refreshUser: refreshUser)
+                if transfer {
+                    weakSelf.dismissPopupControllerAnimated()
+                    let conversationId = ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: AccountAPI.shared.accountUserId)
+                    let vc = TransferViewController.instance(user: user, conversationId: conversationId, asset: asset)
+                    if clearNavigationStack {
+                        UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
+                    } else {
+                        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+                    }
+                } else {
+                    weakSelf.presentUser(user: user, clearNavigationStack: clearNavigationStack, refreshUser: refreshUser)
+                }
             }
         }
     }

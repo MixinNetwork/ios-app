@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="56" id="QH8-4I-NXU" customClass="ContactQRCodeCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QH8-4I-NXU" id="mVF-Jf-di1">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="55.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Axr-xA-GaW">
+                        <rect key="frame" x="24" y="16" width="140" height="24"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_money" translatesAutoresizingMaskIntoConstraints="NO" id="yAU-u9-Ibk">
+                                <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive Money" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dOX-aa-7eT">
+                                <rect key="frame" x="30" y="2.5" width="110" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_receive_money"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="g4m-Vh-aGg">
+                        <rect key="frame" x="221" y="16" width="121.5" height="24"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_my_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="8O1-qA-hR1">
+                                <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My QR Code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kHo-Vz-smr">
+                                <rect key="frame" x="30" y="2.5" width="91.5" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_my_qr_code"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uy9-Xs-81N">
+                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="55.5"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                        <state key="normal">
+                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </state>
+                        <connections>
+                            <action selector="receiveMoneyAction:" destination="QH8-4I-NXU" eventType="touchUpInside" id="4Rf-7a-YPS"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ubY-dZ-f1i">
+                        <rect key="frame" x="187.5" y="0.0" width="187.5" height="55.5"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                        <state key="normal">
+                            <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </state>
+                        <connections>
+                            <action selector="myQRCodeAction:" destination="QH8-4I-NXU" eventType="touchUpInside" id="yZ3-LK-T9N"/>
+                        </connections>
+                    </button>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Aa3-xp-1Hu">
+                        <rect key="frame" x="187" y="0.0" width="1" height="55.5"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="1" id="xOn-WJ-MZP" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="ubY-dZ-f1i" firstAttribute="top" secondItem="mVF-Jf-di1" secondAttribute="top" id="7sH-kd-V8B"/>
+                    <constraint firstItem="ubY-dZ-f1i" firstAttribute="height" secondItem="mVF-Jf-di1" secondAttribute="height" id="F57-dB-lYl"/>
+                    <constraint firstItem="Axr-xA-GaW" firstAttribute="centerY" secondItem="Uy9-Xs-81N" secondAttribute="centerY" id="OEn-IJ-ZmU"/>
+                    <constraint firstItem="Aa3-xp-1Hu" firstAttribute="centerX" secondItem="mVF-Jf-di1" secondAttribute="centerX" id="SAI-VD-2Ut"/>
+                    <constraint firstItem="g4m-Vh-aGg" firstAttribute="centerY" secondItem="ubY-dZ-f1i" secondAttribute="centerY" id="SsX-Il-dfa"/>
+                    <constraint firstItem="Uy9-Xs-81N" firstAttribute="width" secondItem="mVF-Jf-di1" secondAttribute="width" multiplier="0.5" id="TvE-vQ-L82"/>
+                    <constraint firstItem="Uy9-Xs-81N" firstAttribute="top" secondItem="mVF-Jf-di1" secondAttribute="top" id="WZu-Je-VtI"/>
+                    <constraint firstAttribute="bottom" secondItem="Aa3-xp-1Hu" secondAttribute="bottom" id="XdD-3m-XoG"/>
+                    <constraint firstItem="ubY-dZ-f1i" firstAttribute="width" secondItem="mVF-Jf-di1" secondAttribute="width" multiplier="0.5" id="a7O-Vp-7lw"/>
+                    <constraint firstAttribute="trailing" secondItem="ubY-dZ-f1i" secondAttribute="trailing" id="eAM-0v-bS8"/>
+                    <constraint firstItem="Uy9-Xs-81N" firstAttribute="leading" secondItem="mVF-Jf-di1" secondAttribute="leading" id="eEX-DH-l2V"/>
+                    <constraint firstItem="Aa3-xp-1Hu" firstAttribute="top" secondItem="mVF-Jf-di1" secondAttribute="top" id="fXs-FE-1hq"/>
+                    <constraint firstItem="Uy9-Xs-81N" firstAttribute="height" secondItem="mVF-Jf-di1" secondAttribute="height" id="lcK-64-w4z"/>
+                    <constraint firstItem="g4m-Vh-aGg" firstAttribute="centerX" secondItem="ubY-dZ-f1i" secondAttribute="centerX" id="o0T-3h-FUc"/>
+                    <constraint firstItem="Axr-xA-GaW" firstAttribute="centerX" secondItem="Uy9-Xs-81N" secondAttribute="centerX" id="uyU-sx-Uhx"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="separatorView" destination="Aa3-xp-1Hu" id="84X-wa-OWS"/>
+            </connections>
+            <point key="canvasLocation" x="25.5" y="72"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="ic_contact_money" width="24" height="24"/>
+        <image name="ic_contact_my_qrcode" width="24" height="24"/>
+    </resources>
+</document>

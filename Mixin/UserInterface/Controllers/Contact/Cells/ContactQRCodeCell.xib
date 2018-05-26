@@ -19,31 +19,37 @@
                 <rect key="frame" x="0.0" y="0.0" width="375" height="55.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Axr-xA-GaW">
-                        <rect key="frame" x="28" y="18" width="132" height="19.5"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Axr-xA-GaW">
+                        <rect key="frame" x="24" y="16" width="140" height="24"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_message_photo" translatesAutoresizingMaskIntoConstraints="NO" id="yAU-u9-Ibk">
-                                <rect key="frame" x="0.0" y="4" width="14" height="12"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_money" translatesAutoresizingMaskIntoConstraints="NO" id="yAU-u9-Ibk">
+                                <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive Money" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dOX-aa-7eT">
-                                <rect key="frame" x="22" y="0.0" width="110" height="19.5"/>
+                                <rect key="frame" x="30" y="2.5" width="110" height="19.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_receive_money"/>
+                                </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>
                     </stackView>
-                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="g4m-Vh-aGg">
-                        <rect key="frame" x="225" y="18" width="113.5" height="19.5"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="g4m-Vh-aGg">
+                        <rect key="frame" x="221" y="16" width="121.5" height="24"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_message_photo" translatesAutoresizingMaskIntoConstraints="NO" id="8O1-qA-hR1">
-                                <rect key="frame" x="0.0" y="4" width="14" height="12"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_my_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="8O1-qA-hR1">
+                                <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My QR Code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kHo-Vz-smr">
-                                <rect key="frame" x="22" y="0.0" width="91.5" height="19.5"/>
+                                <rect key="frame" x="30" y="2.5" width="91.5" height="19.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_my_qr_code"/>
+                                </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>
                     </stackView>
@@ -100,6 +106,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="ic_message_photo" width="14" height="12"/>
+        <image name="ic_contact_money" width="24" height="24"/>
+        <image name="ic_contact_my_qrcode" width="24" height="24"/>
     </resources>
 </document>

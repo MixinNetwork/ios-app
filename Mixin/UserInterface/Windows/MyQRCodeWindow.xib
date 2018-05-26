@@ -38,6 +38,9 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_my_qr_code"/>
+                                    </userDefinedRuntimeAttributes>
                                 </label>
                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qwX-MC-dqx">
                                     <rect key="frame" x="319" y="0.0" width="56" height="56"/>
@@ -137,8 +140,8 @@
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="j90-jr-8ZU" secondAttribute="bottom" constant="-8" id="8cG-Yo-tOX"/>
                 <constraint firstItem="j90-jr-8ZU" firstAttribute="leading" secondItem="xE0-JS-MYN" secondAttribute="leading" id="Oxu-Ur-0uD"/>
-                <constraint firstItem="j90-jr-8ZU" firstAttribute="bottom" secondItem="xE0-JS-MYN" secondAttribute="bottom" constant="8" id="U2p-N0-O7Q"/>
                 <constraint firstItem="xE0-JS-MYN" firstAttribute="trailing" secondItem="j90-jr-8ZU" secondAttribute="trailing" id="p93-mC-iLL"/>
                 <constraint firstItem="xE0-JS-MYN" firstAttribute="bottom" secondItem="lB5-GS-qJH" secondAttribute="bottom" id="qWk-bM-tMc"/>
             </constraints>

@@ -29,8 +29,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-
-        amountTextField.addTarget(self, action: #selector(amountValueChangedAction), for: .editingChanged)
+        amountTextField.delegate = self
         avatarImageView.setImage(with: user)
         transferToLabel.text = Localized.TRANSFER_TITLE_TO(fullName: user.fullName)
         updateUI()
@@ -62,7 +61,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         if let asset = self.asset {
             assetImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
             assetSymbolLabel.text = asset.symbol
-            balanceLabel.text = asset.balance
+            balanceLabel.text = asset.localizedBalance
             if let chainIconUrl = asset.chainIconUrl {
                 blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
                 blockchainImageView.isHidden = false
@@ -77,7 +76,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         }
         amountTextField.text = ""
         memoTextField.text = ""
-        amountValueChangedAction()
+        amountEditingChangedAction(self)
     }
 
     deinit {
@@ -122,12 +121,12 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
     }
 
     
-    @objc func amountValueChangedAction() {
+    @IBAction func amountEditingChangedAction(_ sender: Any) {
         guard let transferAmount = amountTextField.text else {
             return
         }
         amountTextField.font = transferAmount.isEmpty ? placeHolderFont : amountFont
-        continueButton.isHidden = !transferAmount.isNumeric()
+        continueButton.isHidden = !transferAmount.isNumeric
     }
 
     class func instance(user: UserItem, conversationId: String, asset: AssetItem?) -> UIViewController {
@@ -137,6 +136,23 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         vc.asset = asset
         return vc
     }
+}
+
+extension TransferViewController: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
+        if newText.isEmpty {
+            return true
+        } else if newText.isNumeric {
+            let decimalSeparator = Locale.current.decimalSeparator ?? "."
+            let components = newText.components(separatedBy: decimalSeparator)
+            return components.count == 1 || components[1].count <= 8
+        } else {
+            return false
+        }
+    }
+    
 }
 
 extension TransferViewController {

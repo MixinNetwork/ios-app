@@ -216,10 +216,16 @@ extension PayView: PinFieldDelegate {
             }
         }
 
-        if avatarImageView.isHidden {
-            WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: amount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+        let generalizedAmount: String
+        if let decimalSeparator = Locale.current.decimalSeparator {
+            generalizedAmount = amount.replacingOccurrences(of: decimalSeparator, with: ".")
         } else {
-            AssetAPI.shared.transfer(assetId: assetId, counterUserId: user.userId, amount: amount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+            generalizedAmount = amount
+        }
+        if avatarImageView.isHidden {
+            WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+        } else {
+            AssetAPI.shared.transfer(assetId: assetId, counterUserId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         }
     }
 

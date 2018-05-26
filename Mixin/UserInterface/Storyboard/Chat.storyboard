@@ -1070,6 +1070,9 @@
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="transfer_transfer_amount"/>
                                                 </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="amountEditingChangedAction:" destination="UEd-Bc-sAY" eventType="editingChanged" id="uoC-bM-TFp"/>
+                                                </connections>
                                             </textField>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5W8-pF-Rs7">
                                                 <rect key="frame" x="0.0" y="69" width="285" height="1"/>

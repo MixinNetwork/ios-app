@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-struct AssetItem: TableCodable {
+struct AssetItem: TableCodable, NumberStringLocalizable {
 
     let assetId: String
     let type: String
@@ -36,6 +36,14 @@ struct AssetItem: TableCodable {
 }
 
 extension AssetItem {
+    
+    var localizedPriceUsd: String {
+        return localizedNumberString(priceUsd)
+    }
+    
+    var localizedBalance: String {
+        return localizedNumberString(balance)
+    }
 
     func getUSDBalance() -> String {
         return String(format: "≈ %@ USD", (balance.toDouble() * priceUsd.toDouble()).toFormatLegalTender())

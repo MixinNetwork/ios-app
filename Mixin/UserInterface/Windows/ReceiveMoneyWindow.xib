@@ -30,7 +30,7 @@
                                     </constraints>
                                     <state key="normal" image="ic_titlebar_close"/>
                                     <connections>
-                                        <action selector="dismissAction:" destination="FSI-jn-Bdp" eventType="touchUpInside" id="ztF-2j-b5X"/>
+                                        <action selector="dismissAction:" destination="FSI-jn-Bdp" eventType="touchUpInside" id="bAP-Y2-NLm"/>
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Receive Money" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eNh-iu-bul">
@@ -42,7 +42,7 @@
                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_receive_money"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
-                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gel-wA-KXq">
+                                <button contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gel-wA-KXq">
                                     <rect key="frame" x="319" y="0.0" width="56" height="56"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="gel-wA-KXq" secondAttribute="height" multiplier="1:1" id="FWU-bQ-06M"/>
@@ -52,7 +52,7 @@
                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
-                                        <action selector="moreAction:" destination="FSI-jn-Bdp" eventType="touchUpInside" id="xfX-6J-tF8"/>
+                                        <action selector="moreAction:" destination="FSI-jn-Bdp" eventType="touchUpInside" id="Fer-lm-c2m"/>
                                     </connections>
                                 </button>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O8z-vo-zE8">
@@ -109,6 +109,9 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="transfer_qrcode_prompt"/>
+                                    </userDefinedRuntimeAttributes>
                                 </label>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -154,6 +157,7 @@
                 <outlet property="popupView" destination="BxV-n5-1e3" id="MmG-KS-P1G"/>
                 <outlet property="qrcodeAvatarImageView" destination="zNU-T5-U0Q" id="mZw-Qa-DrI"/>
                 <outlet property="qrcodeImageView" destination="lED-8v-Zru" id="OS7-MY-R5T"/>
+                <outlet property="qrcodeView" destination="rDT-IL-uTH" id="w6q-X6-21N"/>
             </connections>
             <point key="canvasLocation" x="25.5" y="52.5"/>
         </view>

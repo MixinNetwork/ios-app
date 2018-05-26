@@ -39,6 +39,8 @@
 "toast_api_error_unavailable_phone_number" = "此手机号已被使用";
 "permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
 "toast_copied" = "已复制到剪贴板";
+"permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
+
 
 // Login
 "navigation_title_select_country" = "选择一个国家";
@@ -86,6 +88,7 @@
 "contact_change_name_fail" = "修改名称失败，请稍后重试";
 "contact_my_qr_code" = "我的二维码";
 "contact_receive_money" = "我的收款码";
+"contact_qr_code_save" = "Save Image";
 
 "button_title_search" = "搜索";
 "placeholder_mixin_id_or_phone" = "Mixin ID 或手机号";
@@ -268,6 +271,7 @@
 // QRCode
 "myqrcode_title" = "我的二维码";
 "myqrcode_prompt" = "用 Mixin 扫描二维码加我为联系人";
+"transfer_qrcode_prompt" = "用 Mixin 扫描二维码给我转账";
 "group_qr_code" = "群组二维码";
 "group_qr_code_prompt" = "扫描二维码加入群组";
 "not_mixin_qr_code" = "无法识别该二维码";

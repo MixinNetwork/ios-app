@@ -40,6 +40,8 @@
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
 "toast_operation_failed" = "The operation failed, please try again later";
 "toast_copied" = "Successfully copied to clipboard";
+"permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
+
 
 // Login
 "navigation_title_select_country" = "Select a Country";
@@ -87,6 +89,7 @@
 "contact_change_name_fail" = "Failed to change your name";
 "contact_my_qr_code" = "My QR Code";
 "contact_receive_money" = "Receive Money";
+"contact_qr_code_save" = "Save Image";
 
 "button_title_search" = "Search";
 "placeholder_mixin_id_or_phone" = "Mixin ID or Phone number";
@@ -269,6 +272,7 @@
 // QRCode
 "myqrcode_title" = "My QR Code";
 "myqrcode_prompt" = "Scan the QR Code to add me on Mixin";
+"transfer_qrcode_prompt" = "Scan the QR Code to transfer me on Mixin";
 "not_mixin_qr_code" = "Not Mixin QR Code";
 "group_qr_code" = "Group QR Code";
 "group_qr_code_prompt" = "Scan the QR Code to join this group";

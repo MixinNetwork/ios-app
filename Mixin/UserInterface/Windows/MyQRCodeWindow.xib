@@ -42,7 +42,7 @@
                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_my_qr_code"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
-                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qwX-MC-dqx">
+                                <button contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qwX-MC-dqx">
                                     <rect key="frame" x="319" y="0.0" width="56" height="56"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="qwX-MC-dqx" secondAttribute="height" multiplier="1:1" id="TNe-Ly-CAa"/>
@@ -53,7 +53,6 @@
                                     </state>
                                     <connections>
                                         <action selector="moreAction:" destination="sty-Td-lRx" eventType="touchUpInside" id="Bay-nj-Vnu"/>
-                                        <action selector="zoomAction:" destination="sty-Td-lRx" eventType="touchUpInside" id="c6X-K3-e7t"/>
                                     </connections>
                                 </button>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fMF-a1-nfV">
@@ -107,6 +106,9 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="myqrcode_prompt"/>
+                                    </userDefinedRuntimeAttributes>
                                 </label>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -150,6 +152,7 @@
                 <outlet property="popupView" destination="j90-jr-8ZU" id="DxU-aE-dcN"/>
                 <outlet property="qrcodeAvatarImageView" destination="YaD-Ic-9xz" id="Pkl-YZ-lPq"/>
                 <outlet property="qrcodeImageView" destination="YGt-rI-yDl" id="0zj-A8-WbE"/>
+                <outlet property="qrcodeView" destination="lB5-GS-qJH" id="GjK-Ad-uIk"/>
             </connections>
             <point key="canvasLocation" x="25.5" y="52.5"/>
         </view>

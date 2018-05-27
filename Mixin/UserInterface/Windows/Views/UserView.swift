@@ -1,12 +1,14 @@
 import Foundation
 import SDWebImage
+import SwiftMessages
 
 class UserView: CornerView {
 
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
-    @IBOutlet weak var descTextView: CollapsingTextView!
+    @IBOutlet weak var descriptionScrollView: UIScrollView!
+    @IBOutlet weak var descriptionLabel: CollapsingLabel!
     @IBOutlet weak var addContactLineView: UIView!
     @IBOutlet weak var addContactButton: StateResponsiveButton!
     @IBOutlet weak var openBotLineView: UIView!
@@ -20,6 +22,8 @@ class UserView: CornerView {
     @IBOutlet weak var developButton: CornerButton!
     @IBOutlet weak var appPlaceView: UIView!
 
+    @IBOutlet weak var descriptionScrollViewHeightConstraint: NSLayoutConstraint!
+    
     private weak var superView: BottomSheetView?
     private var user: UserItem!
     private var appCreator: UserItem?
@@ -36,6 +40,11 @@ class UserView: CornerView {
         return vc
     }()
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        descriptionLabel.delegate = self
+    }
+    
     @objc func alertInputChangedAction(_ sender: Any) {
         guard let text = editAliasNameController.textFields?.first?.text else {
             return
@@ -86,13 +95,16 @@ class UserView: CornerView {
             verifiedImageView.isHidden = true
         }
 
+        layoutIfNeeded()
         if user.isBot, let appDescription = user.appDescription, !appDescription.isEmpty {
-            descTextView.text = appDescription
-            descTextView.isHidden = false
+            descriptionLabel.text = appDescription
+            descriptionScrollViewHeightConstraint.constant = descriptionLabel.intrinsicContentSize.height
+            descriptionLabel.isHidden = false
             developButton.isHidden = false
             appPlaceView.isHidden = false
         } else {
-            descTextView.isHidden = true
+            descriptionScrollViewHeightConstraint.constant = 0
+            descriptionLabel.isHidden = true
             developButton.isHidden = true
             appPlaceView.isHidden = true
         }
@@ -331,4 +343,22 @@ class UserView: CornerView {
     class func instance() -> UserView {
         return Bundle.main.loadNibNamed("UserView", owner: nil, options: nil)?.first as! UserView
     }
+}
+
+extension UserView: CollapsingLabelDelegate {
+    
+    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        dismissAction(self)
+        if !UrlWindow.checkUrl(url: url) {
+            WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+        }
+    }
+    
+    func collapsingLabel(_ label: CollapsingLabel, didChangeModeTo newMode: CollapsingLabel.Mode) {
+        let textSize = descriptionLabel.intrinsicContentSize
+        descriptionScrollViewHeightConstraint.constant = textSize.height
+        descriptionScrollView.isScrollEnabled = newMode == .normal && textSize.height > descriptionScrollView.frame.height
+        layoutIfNeeded()
+    }
+    
 }

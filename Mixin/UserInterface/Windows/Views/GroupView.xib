@@ -29,33 +29,31 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </imageView>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="iaa-gO-WcY">
-                    <rect key="frame" x="30" y="109" width="325" height="87"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin Team" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYa-yc-XuN">
+                    <rect key="frame" x="30" y="109" width="325" height="21.5"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z1B-ee-Nrm">
+                    <rect key="frame" x="30" y="145.5" width="325" height="50.5"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin Team" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYa-yc-XuN">
-                            <rect key="frame" x="0.0" y="0.0" width="325" height="20"/>
+                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="f3U-ow-eCY" customClass="CollapsingLabel" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="325" height="128"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" showsHorizontalScrollIndicator="NO" editable="NO" text="I will help you to claim your Mixin invitation network bonus." textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3Dv-aC-whV">
-                            <rect key="frame" x="0.0" y="35" width="325" height="52"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <accessibility key="accessibilityConfiguration">
-                                <accessibilityTraits key="traits" link="YES"/>
-                            </accessibility>
-                            <constraints>
-                                <constraint firstAttribute="height" priority="999" constant="52" id="2sx-MW-YxU"/>
-                                <constraint firstAttribute="height" relation="lessThanOrEqual" constant="320" id="Jfg-qw-xFU"/>
-                            </constraints>
-                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            <dataDetectorType key="dataDetectorTypes" link="YES"/>
-                        </textView>
+                        </view>
                     </subviews>
-                </stackView>
+                    <constraints>
+                        <constraint firstItem="f3U-ow-eCY" firstAttribute="top" secondItem="Z1B-ee-Nrm" secondAttribute="top" id="7lZ-wh-2md"/>
+                        <constraint firstAttribute="bottom" secondItem="f3U-ow-eCY" secondAttribute="bottom" id="Zb4-i6-qs2"/>
+                        <constraint firstAttribute="height" priority="750" constant="60" id="egz-w2-F17"/>
+                        <constraint firstAttribute="trailing" secondItem="f3U-ow-eCY" secondAttribute="trailing" id="fqi-xF-to0"/>
+                        <constraint firstItem="f3U-ow-eCY" firstAttribute="width" secondItem="Z1B-ee-Nrm" secondAttribute="width" id="kzE-n4-7yp"/>
+                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="320" id="qjq-S0-KGD"/>
+                        <constraint firstItem="f3U-ow-eCY" firstAttribute="leading" secondItem="Z1B-ee-Nrm" secondAttribute="leading" id="udM-CY-0jP"/>
+                    </constraints>
+                </scrollView>
                 <stackView opaque="NO" alpha="0.84999999999999998" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hww-Vd-bce">
                     <rect key="frame" x="72.5" y="226" width="240" height="40"/>
                     <subviews>
@@ -205,22 +203,24 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="iaa-gO-WcY" secondAttribute="trailing" constant="30" id="2nW-tD-XBm"/>
+                <constraint firstItem="yYa-yc-XuN" firstAttribute="top" secondItem="9f1-By-myT" secondAttribute="bottom" constant="15" id="0Mc-Sj-eSM"/>
                 <constraint firstItem="vaq-c9-RoT" firstAttribute="top" secondItem="Hww-Vd-bce" secondAttribute="bottom" id="3DV-Hf-Iy0"/>
                 <constraint firstItem="X5N-nU-0Nd" firstAttribute="leading" secondItem="8ZX-DU-9oC" secondAttribute="leading" id="3Rz-uZ-cdm"/>
                 <constraint firstItem="UMD-Uz-cTl" firstAttribute="top" secondItem="8ZX-DU-9oC" secondAttribute="top" id="5eM-fj-hEt"/>
+                <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="yYa-yc-XuN" secondAttribute="trailing" constant="30" id="9q6-7g-yXf"/>
+                <constraint firstItem="yYa-yc-XuN" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="30" id="GuV-1O-lHW"/>
                 <constraint firstItem="vaq-c9-RoT" firstAttribute="leading" secondItem="8ZX-DU-9oC" secondAttribute="leading" id="HuF-z3-cXw"/>
-                <constraint firstItem="iaa-gO-WcY" firstAttribute="leading" secondItem="8ZX-DU-9oC" secondAttribute="leading" constant="30" id="LKD-ro-2W8"/>
+                <constraint firstItem="Z1B-ee-Nrm" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="30" id="Oe1-nc-g2q"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="centerX" secondItem="8ZX-DU-9oC" secondAttribute="centerX" id="Qke-oC-sSP"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="bottom" secondItem="vaq-c9-RoT" secondAttribute="bottom" id="Qzq-Bm-DrI"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="top" secondItem="8ZX-DU-9oC" secondAttribute="top" constant="30" id="URV-eq-6C8"/>
                 <constraint firstItem="X5N-nU-0Nd" firstAttribute="top" secondItem="Zlp-75-Ixx" secondAttribute="top" id="aLU-C3-Lwg"/>
                 <constraint firstAttribute="trailing" secondItem="UMD-Uz-cTl" secondAttribute="trailing" id="bwm-ZC-sc9"/>
-                <constraint firstItem="iaa-gO-WcY" firstAttribute="centerX" secondItem="8ZX-DU-9oC" secondAttribute="centerX" id="dZO-YN-MjP"/>
-                <constraint firstItem="iaa-gO-WcY" firstAttribute="top" secondItem="9f1-By-myT" secondAttribute="bottom" constant="15" id="heN-Zc-3de"/>
+                <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="Z1B-ee-Nrm" secondAttribute="trailing" constant="30" id="h7K-uj-Wua"/>
+                <constraint firstItem="Z1B-ee-Nrm" firstAttribute="top" secondItem="yYa-yc-XuN" secondAttribute="bottom" constant="15" id="ikw-jx-7A2"/>
                 <constraint firstItem="Hww-Vd-bce" firstAttribute="centerX" secondItem="8ZX-DU-9oC" secondAttribute="centerX" id="lXR-DD-D5k"/>
                 <constraint firstAttribute="trailing" secondItem="vaq-c9-RoT" secondAttribute="trailing" id="nld-32-Fk3"/>
-                <constraint firstItem="Hww-Vd-bce" firstAttribute="top" secondItem="iaa-gO-WcY" secondAttribute="bottom" constant="30" id="uq5-m1-9dc"/>
+                <constraint firstItem="Hww-Vd-bce" firstAttribute="top" secondItem="Z1B-ee-Nrm" secondAttribute="bottom" constant="30" id="zBN-RX-SgO"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
@@ -232,7 +232,10 @@
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
             <connections>
-                <outlet property="announcementTextView" destination="3Dv-aC-whV" id="5Lz-WA-ypi"/>
+                <outlet property="announcementLabel" destination="f3U-ow-eCY" id="Fpl-3i-dPe"/>
+                <outlet property="announcementScrollView" destination="Z1B-ee-Nrm" id="Paa-Ap-Te2"/>
+                <outlet property="announcementScrollViewBottomConstraint" destination="zBN-RX-SgO" id="sye-B7-xln"/>
+                <outlet property="announcementScrollViewHeightConstraint" destination="egz-w2-F17" id="wgF-xq-Yn1"/>
                 <outlet property="avatarImageView" destination="9f1-By-myT" id="sUK-Xm-k0M"/>
                 <outlet property="joinBottomLineView" destination="rfy-fo-HuS" id="hQu-E3-VwX"/>
                 <outlet property="joinButton" destination="IIN-kd-crX" id="p83-dL-wSN"/>
@@ -245,7 +248,6 @@
                 <outlet property="participantView3" destination="h7H-p5-NON" id="Bst-Vg-t6q"/>
                 <outlet property="participantView4" destination="K3X-ER-GOQ" id="0NL-Gz-dJx"/>
                 <outlet property="participantsView" destination="Hww-Vd-bce" id="qof-ih-c8d"/>
-                <outlet property="textViewHeightConstraint" destination="2sx-MW-YxU" id="nSq-v2-j8U"/>
                 <outlet property="viewButton" destination="gqf-oP-J5h" id="qm9-f6-JI7"/>
             </connections>
             <point key="canvasLocation" x="38.5" y="-126"/>

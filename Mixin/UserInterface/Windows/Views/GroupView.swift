@@ -6,7 +6,8 @@ class GroupView: CornerView {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var announcementTextView: UITextView!
+    @IBOutlet weak var announcementScrollView: UIScrollView!
+    @IBOutlet weak var announcementLabel: CollapsingLabel!
     @IBOutlet weak var participantView1: AvatarImageView!
     @IBOutlet weak var participantView2: AvatarImageView!
     @IBOutlet weak var participantView3: AvatarImageView!
@@ -19,15 +20,14 @@ class GroupView: CornerView {
     @IBOutlet weak var participantsView: UIStackView!
     @IBOutlet weak var moreButton: StateResponsiveButton!
 
-    @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
-
-    private let contentSizeKeyPath = "contentSize"
+    @IBOutlet weak var announcementScrollViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var announcementScrollViewBottomConstraint: NSLayoutConstraint!
     
     private weak var superView: BottomSheetView?
     private var conversation: ConversationItem!
     private var conversationResponse: ConversationResponse!
     private var codeId: String?
-    private var initialAnnouncementMode = CollapsingTextView.Mode.collapsed
+    private var initialAnnouncementMode = CollapsingLabel.Mode.collapsed
     private var isAdmin = false
 
     private lazy var participantViews = [participantView1, participantView2, participantView3, participantView4]
@@ -44,27 +44,12 @@ class GroupView: CornerView {
         return changeNameController.textFields?.first?.text ?? ""
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if (object as? NSObject) == announcementTextView, keyPath == contentSizeKeyPath {
-            textViewHeightConstraint.constant = announcementTextView.contentSize.height
-            layoutIfNeeded()
-            announcementTextView.contentOffset = .zero
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
-    }
-
     override func awakeFromNib() {
         super.awakeFromNib()
-        announcementTextView.delegate = self
-        announcementTextView.addObserver(self, forKeyPath: contentSizeKeyPath, options: [.initial, .new], context: nil)
+        announcementLabel.delegate = self
         participantsView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(participentsAction(_:))))
     }
     
-    deinit {
-        announcementTextView.removeObserver(self, forKeyPath: contentSizeKeyPath)
-    }
-
     func render(codeId: String, conversation: ConversationResponse, ownerUser: UserItem, participants: [ParticipantUser], alreadyInTheGroup: Bool, superView: BottomSheetView) {
         self.superView = superView
         self.conversation = ConversationItem.createConversation(from: conversation)
@@ -75,7 +60,7 @@ class GroupView: CornerView {
         renderParticipants(participants: participants, participantCount: conversation.participants.count)
     }
 
-    func render(conversation: ConversationItem, superView: BottomSheetView, initialAnnouncementMode: CollapsingTextView.Mode) {
+    func render(conversation: ConversationItem, superView: BottomSheetView, initialAnnouncementMode: CollapsingLabel.Mode) {
         self.superView = superView
         self.conversation = conversation
         self.initialAnnouncementMode = initialAnnouncementMode
@@ -102,9 +87,11 @@ class GroupView: CornerView {
 
         avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
         nameLabel.text = conversation.name
-//        announcementTextView.mode = initialAnnouncementMode
-        announcementTextView.isHidden = conversation.announcement.isEmpty
-        announcementTextView.text = conversation.announcement
+        announcementLabel.mode = initialAnnouncementMode
+        announcementLabel.isHidden = conversation.announcement.isEmpty
+        announcementLabel.text = conversation.announcement
+        announcementScrollViewHeightConstraint.constant = announcementLabel.intrinsicContentSize.height
+        announcementScrollViewBottomConstraint.constant = conversation.announcement.isEmpty ? 15 : 30
     }
 
     private func renderParticipants(participants: [ParticipantUser], participantCount: Int) {
@@ -326,12 +313,22 @@ extension GroupView {
     }
 }
 
-extension GroupView: UITextViewDelegate {
+extension GroupView: CollapsingLabelDelegate {
     
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
         superView?.dismissPopupControllerAnimated()
-        _ = UrlWindow.checkUrl(url: URL, checkLastWindow: false)
-        return false
+        if !UrlWindow.checkUrl(url: url) {
+            WebWindow.instance(conversationId: "").presentPopupControllerAnimated(url: url)
+        }
+    }
+    
+    func collapsingLabel(_ label: CollapsingLabel, didChangeModeTo newMode: CollapsingLabel.Mode) {
+        let announcementSize = announcementLabel.intrinsicContentSize
+        announcementScrollViewHeightConstraint.constant = announcementSize.height
+        announcementScrollView.isScrollEnabled = newMode == .normal && announcementSize.height > announcementScrollView.frame.height
+        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut], animations: {
+            self.superView?.layoutIfNeeded()
+        }, completion: nil)
     }
 
 }

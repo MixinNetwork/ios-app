@@ -4,6 +4,14 @@ func ceil(_ size: CGSize) -> CGSize {
     return CGSize(width: ceil(size.width), height: ceil(size.height))
 }
 
+func round(_ point: CGPoint) -> CGPoint {
+    return CGPoint(x: round(point.x), y: round(point.y))
+}
+
+func floor(_ point: CGPoint) -> CGPoint {
+    return CGPoint(x: floor(point.x), y: floor(point.y))
+}
+
 extension CGPoint {
     
     static prefix func -(point: CGPoint) -> CGPoint {

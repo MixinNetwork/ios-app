@@ -12,10 +12,8 @@ class TextMessageCell: DetailInfoMessageCell {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? TextMessageViewModel {
             contentLabel.frame = viewModel.contentLabelFrame
-            contentLabel.lines = viewModel.lines
-            contentLabel.lineOrigins = viewModel.lineOrigins
+            contentLabel.content = viewModel.content
             contentLabel.highlightPaths = viewModel.highlightPaths
-            contentLabel.links = viewModel.links
             contentLabel.setNeedsDisplay()
         }
     }

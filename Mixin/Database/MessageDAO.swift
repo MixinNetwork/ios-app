@@ -175,6 +175,7 @@ final class MessageDAO {
             (Message.Properties.content, mediaData.attachmentId),
             (Message.Properties.mediaMimeType, mediaData.getMimeType()),
             (Message.Properties.mediaSize, mediaData.size),
+            (Message.Properties.mediaDuration, mediaData.duration),
             (Message.Properties.mediaWidth, mediaData.width),
             (Message.Properties.mediaHeight, mediaData.height),
             (Message.Properties.thumbImage, mediaData.thumbnail),

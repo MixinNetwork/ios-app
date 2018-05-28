@@ -100,10 +100,10 @@ class CollapsingLabel: CoreTextLabel {
     
     private let linkBackgroundCornerRadius: CGFloat =  4
     
-    private lazy var seeMoreButtonHeight = #imageLiteral(resourceName: "profile_mask_white").size.height
     private lazy var seeMoreButton: UIButton = {
         let button = UIButton(type: .custom)
         button.contentHorizontalAlignment = .fill
+        button.contentVerticalAlignment = .bottom
         button.adjustsImageWhenHighlighted = false
         button.setImage(#imageLiteral(resourceName: "profile_mask_white"), for: .normal)
         button.addTarget(self, action: #selector(seeMoreAction(_:)), for: .touchUpInside)
@@ -251,10 +251,7 @@ extension CollapsingLabel {
                     .map{ CGPoint(x: $0.x, y: $0.y + (collapsedTextSize.height - normalTextSize.height))}
                 let collapsedLinks = links(fromLinksMap: linksMap, forLines: collapsedLines, lineOrigins: collapsedOrigins)
                 collapsedContent = Content(lines: collapsedLines, lineOrigins: collapsedOrigins, links: collapsedLinks)
-                seeMoreButton.frame = CGRect(x: 0,
-                                             y: collapsedTextSize.height - seeMoreButtonHeight,
-                                             width: collapsedTextSize.width,
-                                             height: seeMoreButtonHeight)
+                seeMoreButton.frame = CGRect(origin: .zero, size: collapsedTextSize)
                 seeMoreButton.isHidden = mode == .normal
             }
         }

@@ -37,10 +37,10 @@ class CoreTextLabel: UIView {
         return CGAffineTransform(translationX: 0, y: bounds.height).scaledBy(x: 1, y: -1)
     }
     
-    private let longPressDuration: TimeInterval = 0.5
+    internal let longPressDuration: TimeInterval = 0.5
     
-    private var selectedLink: Link?
-    private var stopRespondingTouches = false
+    internal var selectedLink: Link?
+    internal var stopRespondingTouches = false
     
     override func draw(_ rect: CGRect) {
         guard let ctx = UIGraphicsGetCurrentContext(), let content = content else {
@@ -127,7 +127,7 @@ class CoreTextLabel: UIView {
         
     }
     
-    @objc func invokeLongPressAction() {
+    @objc private func invokeLongPressAction() {
         guard let url = selectedLink?.url else {
             return
         }

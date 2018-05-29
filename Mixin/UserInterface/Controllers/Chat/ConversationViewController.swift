@@ -347,11 +347,8 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
             switch result {
             case .success(let userResponse):
                 weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
-            case let .failure(error, didHandled):
-                guard !didHandled else {
-                    return
-                }
-                weakSelf.alert(error.kind.localizedDescription ?? Localized.TOAST_OPERATION_FAILED)
+            case .failure:
+               break
             }
         }
     }
@@ -380,11 +377,8 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
                 switch result {
                 case .success(let userResponse):
                     weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
-                case let .failure(error, didHandled):
-                    guard !didHandled else {
-                        return
-                    }
-                    weakSelf.alert(error.kind.localizedDescription ?? Localized.TOAST_OPERATION_FAILED)
+                case .failure:
+                    break
                 }
             }
         }
@@ -403,11 +397,8 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
             switch result {
             case .success(let userResponse):
                 weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
-            case let .failure(error, didHandled):
-                guard !didHandled else {
-                    return
-                }
-                weakSelf.alert(error.kind.localizedDescription ?? Localized.TOAST_OPERATION_FAILED)
+            case .failure:
+                break
             }
         }
     }

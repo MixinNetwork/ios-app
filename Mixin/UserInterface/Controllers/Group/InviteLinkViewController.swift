@@ -66,11 +66,8 @@ class InviteLinkViewController: UIViewController {
                         weakSelf.updateUI()
                     }
                 }
-            case let .failure(_, didHandled):
-                guard !didHandled else {
-                    return
-                }
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_OPERATION_FAILED)
+            case .failure:
+                break
             }
         }
     }

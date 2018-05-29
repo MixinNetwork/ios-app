@@ -40,7 +40,7 @@ class SignalLoadingView: BottomSheetView {
                     }
                     return
                 case let .failure(error):
-                    guard error.errorCode != 401 else {
+                    guard error.code != 401 else {
                         return
                     }
                     while AccountAPI.shared.didLogin && !NetworkManager.shared.isReachable {

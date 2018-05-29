@@ -43,10 +43,8 @@ class ChangeNumberNewNumberViewController: ChangeNumberViewController {
                 weakSelf.context.verificationId = verification.id
                 let vc = ChangeNumberVerificationCodeViewController.instance(context: weakSelf.context)
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
-            case .failure(let error, let didHandled):
-                if !didHandled {
-                    weakSelf.alert(error.kind.localizedDescription ?? error.description)
-                }
+            case let .failure(error):
+                weakSelf.alert(error.localizedDescription)
             }
         }
     }

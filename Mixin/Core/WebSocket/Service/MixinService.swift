@@ -150,10 +150,10 @@ class MixinService {
                 } else {
                     FileManager.default.writeLog(log: "[DeliverKeys][\(blazeMessage.action)]...error\(error)")
                 }
-                if let err = error as? JobError, case let .clientError(code) = err {
-                    if code == 401 {
+                if let err = error as? APIError {
+                    if err.code == 401 {
                         return nil
-                    } else if code == 403 {
+                    } else if err.code == 403 {
                         return nil
                     }
                 }
@@ -169,13 +169,12 @@ class MixinService {
     internal func deliverNoThrow(blazeMessage: BlazeMessage) -> Bool {
         repeat {
             do {
-                _ = try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage)
-                return true
+                return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
             } catch {
-                if let err = error as? JobError, case let .clientError(code) = err {
-                    if code == 403 {
+                if let err = error as? APIError {
+                    if err.code == 403 {
                         return true
-                    } else if code == 401 {
+                    } else if err.code == 401 {
                         return false
                     }
                 }
@@ -190,25 +189,24 @@ class MixinService {
     internal func deliver(blazeMessage: BlazeMessage) throws -> Bool {
         repeat {
             do {
-                _ = try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage)
-                return true
+                return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
             } catch {
-                if let err = error as? JobError, case let .clientError(code) = err {
-                    if code == 403 {
-                        return true
-                    } else if code == 401 {
-                        return false
-                    }
+                guard let err = error as? APIError else {
+                    Thread.sleep(forTimeInterval: 2)
+                    return false
                 }
+
+                if err.code == 403 {
+                    return true
+                } else if err.code == 401 {
+                    return false
+                }
+
                 checkNetworkAndWebSocket()
-                if let err = error as? JobError {
-                    switch err {
-                    case .networkError, .timeoutError:
-                        Thread.sleep(forTimeInterval: 2)
-                        continue
-                    default:
-                        break
-                    }
+
+                if err.isClientError {
+                    Thread.sleep(forTimeInterval: 2)
+                    continue
                 }
                 throw error
             }

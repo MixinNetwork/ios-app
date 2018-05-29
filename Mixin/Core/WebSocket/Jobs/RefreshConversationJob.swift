@@ -69,7 +69,7 @@ class RefreshConversationJob: BaseJob {
                 ConversationDAO.shared.updateConversation(conversation: response)
             }
         case let .failure(error):
-            if (error.errorCode == 404 || error.errorCode == 403) && status == ConversationStatus.QUIT.rawValue {
+            if (error.code == 404 || error.code == 403) && status == ConversationStatus.QUIT.rawValue {
                 ConversationDAO.shared.deleteAndExitConversation(conversationId: conversationId, autoNotification: false)
             } else {
                 throw error

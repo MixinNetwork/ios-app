@@ -354,10 +354,10 @@ class ReceiveMessageService: MixinService {
             UserDAO.shared.updateUsers(users: [response])
             return .SUCCESS
         case let .failure(error):
-            if tryAgain && error.errorCode != 404 {
+            if tryAgain && error.code != 404 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [userId]))
             }
-            return error.errorCode == 404 ? .ERROR : .START
+            return error.code == 404 ? .ERROR : .START
         }
     }
 
@@ -375,7 +375,7 @@ class ReceiveMessageService: MixinService {
                 UserDAO.shared.updateUsers(users: [response])
                 return true
             case let .failure(error):
-                guard error.errorCode != 404 else {
+                guard error.code != 404 else {
                     return false
                 }
                 checkNetworkAndWebSocket()

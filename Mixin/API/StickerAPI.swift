@@ -10,11 +10,11 @@ class StickerAPI : BaseAPI {
         }
     }
 
-    func albums()  -> Result<[StickerAlbum]> {
+    func albums()  -> APIResult<[StickerAlbum]> {
         return request(method: .get, url: url.albums)
     }
 
-    func stickers(albumId: String)  -> Result<[Sticker]> {
+    func stickers(albumId: String)  -> APIResult<[Sticker]> {
         return request(method: .get, url: url.albums(id: albumId))
     }
 }

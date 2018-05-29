@@ -109,8 +109,8 @@ extension PinTipsView: PinFieldDelegate {
                 WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                 weakSelf.successCallback?(pin)
                 weakSelf.pinField.resignFirstResponder()
-            case let .failure(error, _):
-                if error.kind == .tooManyRequests {
+            case let .failure(error):
+                if error.code == 429 {
                     weakSelf.pinField.clear()
                     weakSelf.passwordView.isHidden = true
                     weakSelf.descriptionLabel.isHidden = true
@@ -121,7 +121,7 @@ extension PinTipsView: PinFieldDelegate {
                     weakSelf.pinField.clear()
                     weakSelf.pinField.isHidden = false
                     weakSelf.descriptionLabel.textColor = UIColor.red
-                    weakSelf.descriptionLabel.text = error.kind.localizedDescription ?? error.description
+                    weakSelf.descriptionLabel.text = error.localizedDescription
                 }
             }
         }

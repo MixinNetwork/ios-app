@@ -34,7 +34,7 @@ class WithdrawalAPI: BaseAPI {
         KeyUtil.aesEncrypt(pin: withdrawal.pin, completion: completion) { [weak self](encryptedPin) in
             var withdrawal = withdrawal
             withdrawal.pin = encryptedPin
-            self?.request(method: .post, url: url.withdrawals, parameters: withdrawal.toParameters(), encoding: EncodableParameterEncoding<WithdrawalRequest>(), completion: completion)
+            self?.request(method: .post, url: url.withdrawals, parameters: withdrawal.toParameters(), encoding: EncodableParameterEncoding<WithdrawalRequest>(), toastError: false, completion: completion)
         }
     }
 

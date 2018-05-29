@@ -201,17 +201,16 @@ extension PayView: PinFieldDelegate {
                 weakSelf.payStatusLabel.text = Localized.ACTION_DONE
                 weakSelf.playSuccessSound()
                 weakSelf.delayDismissWindow()
-            case let .failure(error, _):
+            case let .failure(error):
                 weakSelf.processing = false
                 weakSelf.superView?.dismissPopupControllerAnimated()
-                guard error.kind != .cancelled else {
+                guard error.status != NSURLErrorCancelled else {
                     return
                 }
-                let errorMsg = error.kind.localizedDescription ?? error.description
                 if (weakSelf.superView as? UrlWindow)?.fromWeb ?? false {
-                    SwiftMessages.showToast(message: errorMsg, backgroundColor: .hintRed)
+                    SwiftMessages.showToast(message: error.localizedDescription, backgroundColor: .hintRed)
                 } else {
-                    UIApplication.currentActivity()?.alert(errorMsg, message: nil)
+                    UIApplication.currentActivity()?.alert(error.localizedDescription, message: nil)
                 }
             }
         }

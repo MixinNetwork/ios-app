@@ -52,17 +52,17 @@ final class AccountAPI: BaseAPI {
         }
     }
 
-    func me() -> Result<Account> {
+    func me() -> APIResult<Account> {
         return request(method: .get, url: url.me)
     }
 
     func sendCode(to phoneNumber: String, purpose: VerificationPurpose, completion: @escaping (APIResult<VerificationResponse>) -> Void) {
         let param = ["phone": phoneNumber, "purpose": purpose.rawValue]
-        request(method: .post, url: url.verifications, parameters: param, checkLogin: false, completion: completion)
+        request(method: .post, url: url.verifications, parameters: param, checkLogin: false, toastError: false, completion: completion)
     }
     
     func login(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<Account>) -> Void) {
-        request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), checkLogin: false, completion: completion)
+        request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), checkLogin: false, toastError: false, completion: completion)
     }
     
     func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
@@ -70,7 +70,7 @@ final class AccountAPI: BaseAPI {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             var parameters = accountRequest
             parameters.pin = encryptedPin
-            self?.request(method: .post, url: url.verifications(id: verificationId), parameters: parameters.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), completion: completion)
+            self?.request(method: .post, url: url.verifications(id: verificationId), parameters: parameters.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), toastError: false, completion: completion)
         }
     }
     
@@ -102,30 +102,30 @@ final class AccountAPI: BaseAPI {
 
     func verify(pin: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
-            self?.request(method: .post, url: url.verifyPin, parameters: ["pin": encryptedPin], completion: completion)
+            self?.request(method: .post, url: url.verifyPin, parameters: ["pin": encryptedPin], toastError: false, completion: completion)
         }
     }
     
     func updatePin(old: String?, new: String, completion: @escaping (APIResult<Account>) -> Void) {
         AccountUserDefault.shared.getPinToken { [weak self](pinToken: String?) in
             guard let pinToken = pinToken else {
-                completion(.failure(error: APIError(code: 400, status: 200, description: Localized.TOAST_OPERATION_FAILED), didHandled: false))
+                completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
                 return
             }
             var param: [String: String] = [:]
             if let old = old {
                 guard let encryptedOldPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: old) else {
-                    completion(.failure(error: APIError(code: 400, status: 200, description: Localized.TOAST_OPERATION_FAILED), didHandled: false))
+                    completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
                     return
                 }
                 param["old_pin"] = encryptedOldPin
             }
             guard let encryptedNewPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: new) else {
-                completion(.failure(error: APIError(code: 400, status: 200, description: Localized.TOAST_OPERATION_FAILED), didHandled: false))
+                completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
                 return
             }
             param["pin"] = encryptedNewPin
-            self?.request(method: .post, url: url.updatePin, parameters: param, completion: completion)
+            self?.request(method: .post, url: url.updatePin, parameters: param, toastError: false, completion: completion)
         }
     }
 

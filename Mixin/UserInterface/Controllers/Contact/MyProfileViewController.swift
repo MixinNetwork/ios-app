@@ -65,12 +65,8 @@ class MyProfileViewController: UITableViewController {
                 DispatchQueue.global().async {
                     UserDAO.shared.updateAccount(account: account)
                 }
-            case let .failure(_, didHandled):
-                guard !didHandled else {
-                    return
-                }
-
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CONTACT_CHANGE_NAME_FAIL)
+            case .failure:
+                break
             }
         }
     }
@@ -130,12 +126,8 @@ extension MyProfileViewController: ImagePickerControllerDelegate {
                     DispatchQueue.global().async {
                         UserDAO.shared.updateAccount(account: account)
                     }
-                case let .failure(_, didHandled):
-                    guard !didHandled else {
-                        return
-                    }
-
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CONTACT_AVATAR_PICKING_FAIL)
+                case .failure:
+                    break
                 }
             })
         } else {

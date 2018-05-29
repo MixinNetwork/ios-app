@@ -139,11 +139,11 @@ extension UrlWindow {
                 } else if let conversation = code.conversation {
                     weakSelf.load(conversation: conversation, codeId: codeId)
                 }
-            case let .failure(error, _):
+            case let .failure(error):
                 if error.code == 404 {
                     weakSelf.failedHandler(Localized.CODE_RECOGNITION_FAIL_TITLE)
                 } else {
-                    weakSelf.failedHandler(error.kind.localizedDescription ?? error.description)
+                    weakSelf.failedHandler(error.localizedDescription)
                 }
             }
         }
@@ -167,7 +167,7 @@ extension UrlWindow {
                     UserDAO.shared.updateUsers(users: [response])
                 case let .failure(error):
                     DispatchQueue.main.async {
-                        if let err = error as? JobError, case let .clientError(code) = err, code == 404 {
+                        if error.code == 404 {
                             self?.failedHandler(Localized.CONTACT_SEARCH_NOT_FOUND)
                         } else {
                             self?.failedHandler(error.localizedDescription)
@@ -343,8 +343,8 @@ extension UrlWindow {
                 let chainIconUrl = AssetDAO.shared.getChainIconUrl(chainId: payment.asset.chainId)
                 weakSelf.payView.render(asset: AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainIconUrl), user: UserItem.createUser(from: payment.recipient), amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
                 weakSelf.successHandler()
-            case let .failure(error, _):
-                weakSelf.failedHandler(error.kind.localizedDescription ?? error.description)
+            case let .failure(error):
+                weakSelf.failedHandler(error.localizedDescription)
             }
         }
     }

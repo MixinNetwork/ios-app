@@ -1,0 +1,85 @@
+import Foundation
+
+struct APIError: Error, Codable {
+
+    let status: Int
+    let code: Int
+    var description: String
+
+}
+
+extension APIError {
+
+    static func createError(error: Error, status: Int) -> APIError {
+        let err = error as NSError
+        return APIError(status: status, code: err.errorCode, description: err.localizedDescription)
+    }
+
+    static func createAuthenticationError() -> APIError {
+        return APIError(status: 401, code: 401, description: "")
+    }
+
+    static func createTimeoutError() -> APIError {
+        return APIError(status: NSURLErrorTimedOut, code: NSURLErrorTimedOut, description: "")
+    }
+
+    var localizedDescription: String {
+        switch code {
+        case 403:
+            return Localized.TOAST_API_ERROR_FORBIDDEN
+        case 429:
+            return Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS
+        case 500:
+            return Localized.TOAST_API_ERROR_SERVER_5XX
+        case 20117:
+            return Localized.TRANSFER_ERROR_BALANCE_INSUFFICIENT
+        case 20118:
+            return Localized.TRANSFER_ERROR_PIN_INCORRECT
+        case 20119:
+            return Localized.TRANSFER_ERROR_PIN_INCORRECT
+        case 20120:
+            return Localized.TRANSFER_ERROR_AMOUNT_TOO_SMALL
+        case 20116:
+            return Localized.GROUP_JOIN_FAIL_FULL
+        case 20124:
+            return Localized.TRANSFER_ERROR_FEE_INSUFFICIENT
+        case 20122:
+            return Localized.TOAST_API_ERROR_UNAVAILABLE_PHONE_NUMBER
+        case 30100:
+            return Localized.WALLET_BLOCKCHIAN_NOT_IN_SYNC
+        case 30102:
+            return Localized.ADDRESS_FORMAT_ERROR
+        default:
+            switch status {
+            case NSURLErrorNotConnectedToInternet:
+                return Localized.TOAST_API_ERROR_NO_CONNECTION
+            case NSURLErrorTimedOut:
+                return Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
+            case NSURLErrorNetworkConnectionLost:
+                return Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST
+            case 403:
+                return Localized.TOAST_API_ERROR_FORBIDDEN
+            case 429:
+                return Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS
+            case 500:
+                return Localized.TOAST_API_ERROR_SERVER_5XX
+            default:
+                return description
+            }
+        }
+    }
+
+    var isClientError: Bool {
+        switch status {
+        case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorNetworkConnectionLost:
+            return true
+        default:
+            return status >= 400 && status < 500
+        }
+    }
+
+    var isServerError: Bool {
+        return status >= 500 && status < 600
+    }
+
+}

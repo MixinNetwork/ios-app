@@ -174,7 +174,7 @@ extension WithdrawalViewController {
                 weakSelf.transactionFeeHintLabel.attributedText = weakSelf.transactionFeeHint(fee: fee)
                 weakSelf.transactionFeeHintLabel.isHidden = false
                 weakSelf.requestingFeeIndicator.stopAnimating()
-            case .failure(_, _):
+            case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: {
                     weakSelf.reloadTransactionFeeHint()
                 })

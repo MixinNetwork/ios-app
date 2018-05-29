@@ -33,8 +33,8 @@ class UsernameViewController: LoginViewController {
                     UserDAO.shared.updateAccount(account: account)
                 }
                 AppDelegate.current.window?.rootViewController = HomeViewController.instance()
-            case let .failure(error, _):
-                weakSelf.alert(error.kind.localizedDescription ?? error.description)
+            case .failure:
+                break
             }
         }
     }

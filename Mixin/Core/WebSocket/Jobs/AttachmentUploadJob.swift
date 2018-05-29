@@ -32,19 +32,24 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         guard !self.message.messageId.isEmpty else {
             return false
         }
-
-        switch MessageAPI.shared.requestAttachment() {
-        case let .success(attachResponse):
-            self.attachResponse = attachResponse
-            guard uploadAttachment(attachResponse: attachResponse) else {
-                return false
+        
+        repeat {
+            switch MessageAPI.shared.requestAttachment() {
+            case let .success(attachResponse):
+                self.attachResponse = attachResponse
+                guard uploadAttachment(attachResponse: attachResponse) else {
+                    return false
+                }
+                return true
+            case let .failure(error):
+                guard error.isClientError || error.isServerError else {
+                    return false
+                }
+                checkNetworkAndWebSocket()
+                Thread.sleep(forTimeInterval: 2)
             }
-        case let .failure(error):
-            guard retry(error) else {
-                return false
-            }
-        }
-        return true
+        } while AccountAPI.shared.didLogin && !isCancelled
+        return false
     }
 
     private func uploadAttachment(attachResponse: AttachmentResponse) -> Bool {

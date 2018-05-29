@@ -235,11 +235,8 @@ class UserView: CornerView {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
                 NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: toastMessage)
-            case let .failure(error, didHandled):
-                guard !didHandled else {
-                    return
-                }
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.kind.localizedDescription ?? error.description)
+            case .failure:
+                break
             }
         }
     }
@@ -262,11 +259,8 @@ class UserView: CornerView {
             UserDAO.shared.updateUsers(users: [user], notifyContact: notifyContact)
             updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false, superView: superView)
             successBlock?()
-        case let .failure(error, didHandled):
-            guard !didHandled else {
-                return
-            }
-            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.kind.localizedDescription ?? error.description)
+        case .failure:
+            break
         }
     }
 

@@ -11,16 +11,23 @@ class UploadOrDownloadJob: AsynchronousJob {
         guard let weakSelf = self else {
             return
         }
-        if weakSelf.isCancelled {
+        if weakSelf.isCancelled || !AccountAPI.shared.didLogin {
             weakSelf.finishJob()
             return
         } else if let err = error {
-            if weakSelf.retry(err) {
+            switch err.errorCode {
+            case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorNetworkConnectionLost:
+                if weakSelf.retry() {
+                    return
+                }
+                weakSelf.finishJob()
+                return
+            default:
+                weakSelf.finishJob()
                 return
             }
-            weakSelf.finishJob()
-            return
         }
+
         let statusCode = (response as? HTTPURLResponse)?.statusCode
         guard statusCode != 404 else {
             weakSelf.downloadExpired()
@@ -53,36 +60,7 @@ class UploadOrDownloadJob: AsynchronousJob {
 
     }
 
-    internal func retry(_ error: Error) -> Bool {
-        guard !isCancelled else {
-            finishJob()
-            return false
-        }
-        guard (error.errorCode != 404 && error.errorCode != 401) else {
-            finishJob()
-            return false
-        }
-        guard canTryAgain(error: error) else {
-            if error.errorCode != NSURLErrorTimedOut {
-                Bugsnag.notifyError(error)
-            }
-            finishJob()
-            return false
-        }
-
-        checkNetworkAndWebSocket()
-
-        Thread.sleep(forTimeInterval: 2)
-        if !isCancelled {
-            if !execute() {
-                finishJob()
-            }
-            return true
-        }
-        return false
-    }
-
-    internal func retry() -> Bool {
+    private func retry() -> Bool {
         checkNetworkAndWebSocket()
 
         Thread.sleep(forTimeInterval: 2)

@@ -104,12 +104,11 @@ extension NewAddressViewController: ContainerViewControllerDelegate {
                     weakSelf.successCallback?(address)
                     weakSelf.navigationController?.popViewController(animated: true)
                 }
-            case let .failure(error, _):
+            case .failure:
                 self?.container?.rightButton.isBusy = false
                 self?.addressTextView.isUserInteractionEnabled = true
                 self?.labelTextField.isEnabled = true
                 self?.addressTextView.becomeFirstResponder()
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.kind.localizedDescription ?? error.description)
             }
         }
     }

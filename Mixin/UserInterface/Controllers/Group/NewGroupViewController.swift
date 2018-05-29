@@ -72,11 +72,8 @@ class NewGroupViewController: UIViewController {
             switch result {
             case let .success(response):
                 weakSelf.saveConversation(conversation: response)
-            case let .failure(_, didHandled):
+            case .failure:
                 weakSelf.rightButton?.isBusy = false
-                guard !didHandled else {
-                    return
-                }
             }
         }
     }

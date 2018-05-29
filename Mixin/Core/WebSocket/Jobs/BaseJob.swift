@@ -17,22 +17,20 @@ class BaseJob: Operation {
     }
 
     override func main() {
-        guard AccountAPI.shared.didLogin else {
-            return
-        }
-        if canCancel() && isCancelled {
+        guard AccountAPI.shared.didLogin, !isCancelled else {
             return
         }
         
         do {
             try run()
         } catch {
-            #if DEBUG
-                print("======BaseJob...error:\(error)...\(getJobId())")
-            #endif
+            guard !isCancelled else {
+                return
+            }
+
             checkNetworkAndWebSocket()
 
-            guard canTryAgain(error: error) else {
+            guard let err = error as? APIError, err.isClientError || err.isServerError else {
                 return
             }
 
@@ -58,23 +56,6 @@ class BaseJob: Operation {
 
     }
 
-    internal func canTryAgain(error: Error) -> Bool {
-        let err = (error as? JobError) ?? JobError.instance(code: error.errorCode)
-        guard shouldRetry(error: err) else {
-            return false
-        }
-        return true
-    }
-
-    func shouldRetry(error: JobError) -> Bool {
-        switch error {
-        case .networkError, .timeoutError, .serverError(_):
-            return true
-        case .clientError(_):
-            return false
-        }
-    }
-
     func requireWebSocket() -> Bool {
         return false
     }
@@ -82,26 +63,5 @@ class BaseJob: Operation {
     func requireNetwork() -> Bool {
         return true
     }
-
-    func canCancel() -> Bool {
-        return true
-    }
 }
 
-enum JobError: Error {
-    case networkError
-    case serverError(code: Int)
-    case clientError(code: Int)
-    case timeoutError
-
-    static func instance(code: Int) -> JobError {
-        switch code {
-        case 400..<500:
-            return .clientError(code: code)
-        case 500..<600:
-            return .serverError(code: code)
-        default:
-            return .networkError
-        }
-    }
-}

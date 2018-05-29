@@ -317,7 +317,11 @@ extension SendMessageService {
                         ConversationDAO.shared.updateConversation(conversation: response)
                         try sendGroupSenderKey(conversationId: conversation.conversationId)
                     case let .failure(error):
-                        guard !(error.errorCode == 404 || error.errorCode == 403) else {
+                        if error.code == 404 && conversation.status == ConversationStatus.START.rawValue {
+                            try requestCreateConversation(conversation: conversation)
+                            try sendGroupSenderKey(conversationId: conversation.conversationId)
+                            return
+                        } else if error.code == 404 || error.code == 403 {
                             ParticipantDAO.shared.removeParticipant(conversationId: message.conversationId)
                             return
                         }
@@ -339,7 +343,7 @@ extension SendMessageService {
         do {
             try deliver(blazeMessage: blazeMessage)
         } catch {
-            guard error.errorCode != 403 else {
+            if let err = error as? APIError, err.code == 403 {
                 return
             }
             throw error

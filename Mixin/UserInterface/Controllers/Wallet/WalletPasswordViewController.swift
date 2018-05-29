@@ -136,11 +136,8 @@ class WalletPasswordViewController: UIViewController {
                         WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                         AccountAPI.shared.account = account
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_SET_PASSWORD_SUCCESS)
-                    case let .failure(error, didHandled):
-                        guard !didHandled else {
-                            return
-                        }
-                        self?.alert(error.kind.localizedDescription ?? error.description)
+                    case let .failure(error):
+                        self?.alert(error.localizedDescription)
                     }
                 })
             } else {
@@ -160,12 +157,9 @@ class WalletPasswordViewController: UIViewController {
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                     let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep2(old: pin), transferData: weakSelf.transferData)
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
-                case let .failure(error, didHandled):
+                case let .failure(error):
                     weakSelf.pinField.clear()
-                    guard !didHandled else {
-                        return
-                    }
-                    weakSelf.alert(error.kind.localizedDescription ?? error.description)
+                    weakSelf.alert(error.localizedDescription)
                 }
             })
         case .changePinStep2(let old):
@@ -182,12 +176,8 @@ class WalletPasswordViewController: UIViewController {
                         WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                         AccountAPI.shared.account = account
                         self?.updatePasswordSuccessfully(alertTitle: Localized.WALLET_CHANGE_PASSWORD_SUCCESS)
-                    case let .failure(error, didHandled):
-                        guard !didHandled else {
-                            return
-                        }
-
-                        self?.alert(error.kind.localizedDescription ?? error.description)
+                    case let .failure(error):
+                        self?.alert(error.localizedDescription)
                     }
                 })
             } else {

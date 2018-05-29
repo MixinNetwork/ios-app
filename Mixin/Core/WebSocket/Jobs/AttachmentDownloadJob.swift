@@ -33,17 +33,22 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
 
 
         self.message = message
-        switch MessageAPI.shared.getAttachment(id: attachmentId) {
-        case let .success(attachmentResponse):
-            guard downloadAttachment(attachResponse: attachmentResponse) else {
-                return false
+        repeat {
+            switch MessageAPI.shared.getAttachment(id: attachmentId) {
+            case let .success(attachmentResponse):
+                guard downloadAttachment(attachResponse: attachmentResponse) else {
+                    return false
+                }
+                return true
+            case let .failure(error):
+                guard error.isClientError || error.isServerError else {
+                    return false
+                }
+                checkNetworkAndWebSocket()
+                Thread.sleep(forTimeInterval: 2)
             }
-        case let .failure(error):
-            guard retry(error) else {
-                return false
-            }
-        }
-        return true
+        } while AccountAPI.shared.didLogin && !isCancelled
+        return false
     }
 
     private func downloadAttachment(attachResponse: AttachmentResponse) -> Bool {

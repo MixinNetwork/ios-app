@@ -181,9 +181,9 @@ class GroupView: CornerView {
             switch result {
             case .success(let response):
                 weakSelf.saveConversation(conversation: response)
-            case let .failure(error, _):
+            case let .failure(error):
                 weakSelf.joinButton.isBusy = false
-                SwiftMessages.showToast(message: error.kind.localizedDescription ?? Localized.TOAST_OPERATION_FAILED, backgroundColor: .hintRed)
+                SwiftMessages.showToast(message: error.localizedDescription, backgroundColor: .hintRed)
             }
         }
     }
@@ -294,11 +294,8 @@ extension GroupView {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
                 NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: toastMessage)
-            case let .failure(error, didHandled):
-                guard !didHandled else {
-                    return
-                }
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.kind.localizedDescription ?? error.description)
+            case .failure:
+                break
             }
         }
     }
@@ -312,11 +309,8 @@ extension GroupView {
             switch result {
             case .success:
                 weakSelf.conversation.name = weakSelf.newName
-            case let .failure(_, didHandled):
-                guard !didHandled else {
-                    return
-                }
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_OPERATION_FAILED)
+            case .failure:
+                break
             }
         }
     }

@@ -229,16 +229,11 @@ extension GroupParticipentViewController {
             guard self != nil else {
                 return
             }
-            
             switch result {
             case .success:
                 break
-            case let .failure(_, didHandled):
+            case .failure:
                 cell.stopLoading()
-                guard !didHandled else {
-                    return
-                }
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_OPERATION_FAILED)
             }
         }
     }
@@ -252,11 +247,8 @@ extension GroupParticipentViewController {
             switch result {
             case .success:
                 break
-            case let .failure(_, didHandled):
-                guard !didHandled else {
-                    return
-                }
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_OPERATION_FAILED)
+            case .failure:
+                break
             }
         }
     }

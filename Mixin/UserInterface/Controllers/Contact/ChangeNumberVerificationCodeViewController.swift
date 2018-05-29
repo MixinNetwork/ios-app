@@ -61,15 +61,13 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
                     weakSelf.alert(nil, message: Localized.PROFILE_CHANGE_NUMBER_SUCCEEDED, handler: { (_) in
                         weakSelf.navigationController?.dismiss(animated: true, completion: nil)
                     })
-                case .failure(let error, let didHandled):
+                case let .failure(error):
                     weakSelf.bottomWrapperView.continueButton.isBusy = false
                     weakSelf.verificationCodeField.clear()
-                    if !didHandled {
-                        if error.kind == .invalidVerificationCode {
-                            weakSelf.invalidCodeLabel.isHidden = false
-                        } else {
-                            weakSelf.alert(error.kind.localizedDescription ?? error.description)
-                        }
+                    if error.code == 20113 {
+                        weakSelf.invalidCodeLabel.isHidden = false
+                    } else {
+                        weakSelf.alert(error.localizedDescription)
                     }
                 }
             })
@@ -83,14 +81,12 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
                 return
             }
             weakSelf.resendButton.isBusy = false
+            weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
             switch result {
             case .success(let verification):
-                weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
                 weakSelf.context.verificationId = verification.id
-            case .failure(let error, let didHandled):
-                if !didHandled {
-                    weakSelf.alert(error.kind.localizedDescription ?? error.description)
-                }
+            case let.failure(error):
+                weakSelf.alert(error.localizedDescription)
             }
         }
     }

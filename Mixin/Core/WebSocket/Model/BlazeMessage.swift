@@ -6,7 +6,7 @@ struct BlazeMessage: Encodable {
     let action: String
     var params: BlazeMessageParam?
     let data: String?
-    let error: ResponseError?
+    let error: APIError?
 
     var fromPush: Bool? = nil
 

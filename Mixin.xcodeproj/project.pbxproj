@@ -302,7 +302,6 @@
 		DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F151F9C5BBB0036D5FD /* UIApplicationExtension.swift */; };
 		DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F161F9C5E6A0036D5FD /* UIColorExtension.swift */; };
 		DF5D9F2A1F9C79E10036D5FD /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F181F9C61530036D5FD /* UIViewControllerExtension.swift */; };
-		DF5D9F2C1F9C7A9D0036D5FD /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F2B1F9C7A9D0036D5FD /* APIError.swift */; };
 		DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F301F9C95410036D5FD /* CountryCodeLibrary.swift */; };
 		DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5D9F321F9C95570036D5FD /* CoreTelephony.framework */; };
 		DF5D9F391F9C998F0036D5FD /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F381F9C998F0036D5FD /* Account.swift */; };
@@ -330,7 +329,7 @@
 		DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768562200647CC0055F3FF /* BouncingButton.swift */; };
 		DF76856620065E8E0055F3FF /* SendToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF76856520065E8E0055F3FF /* SendToViewController.swift */; };
 		DF768569200687010055F3FF /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF768568200687010055F3FF /* PreviewView.swift */; };
-		DF7A40292086EF2F0073E43C /* ResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A40282086EF2F0073E43C /* ResponseError.swift */; };
+		DF7A40292086EF2F0073E43C /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A40282086EF2F0073E43C /* APIError.swift */; };
 		DF7A4B461FCDA6A000F21BCB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A4B451FCDA6A000F21BCB /* User.swift */; };
 		DF7A4B481FCDA6ED00F21BCB /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A4B471FCDA6ED00F21BCB /* UserResponse.swift */; };
 		DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A4B491FCE6EE200F21BCB /* UIViewExtension.swift */; };
@@ -785,7 +784,6 @@
 		DF5D9F1A1F9C62200036D5FD /* Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localized.swift; sourceTree = "<group>"; };
 		DF5D9F1B1F9C62990036D5FD /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		DF5D9F211F9C79660036D5FD /* BaseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAPI.swift; sourceTree = "<group>"; };
-		DF5D9F2B1F9C7A9D0036D5FD /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		DF5D9F2D1F9C941D0036D5FD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DF5D9F301F9C95410036D5FD /* CountryCodeLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodeLibrary.swift; sourceTree = "<group>"; };
 		DF5D9F321F9C95570036D5FD /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -816,7 +814,7 @@
 		DF768562200647CC0055F3FF /* BouncingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BouncingButton.swift; sourceTree = "<group>"; };
 		DF76856520065E8E0055F3FF /* SendToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendToViewController.swift; sourceTree = "<group>"; };
 		DF768568200687010055F3FF /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
-		DF7A40282086EF2F0073E43C /* ResponseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseError.swift; sourceTree = "<group>"; };
+		DF7A40282086EF2F0073E43C /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		DF7A4B451FCDA6A000F21BCB /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		DF7A4B471FCDA6ED00F21BCB /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
 		DF7A4B491FCE6EE200F21BCB /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
@@ -1545,7 +1543,6 @@
 				DFE63C981FC6B14B00D6E028 /* Response */,
 				DF5D9F371F9C997F0036D5FD /* Model */,
 				DF5D9F211F9C79660036D5FD /* BaseAPI.swift */,
-				DF5D9F2B1F9C7A9D0036D5FD /* APIError.swift */,
 				DFEE2159200CACB300D9B3F7 /* AuthorizeAPI.swift */,
 				DF5D9F3A1F9C9A400036D5FD /* AccountAPI.swift */,
 				DF5D9F3C1F9CA3160036D5FD /* UserAPI.swift */,
@@ -1713,7 +1710,6 @@
 				DF6DB8402028C1A60060CF31 /* AppButtonData.swift */,
 				7BA4193B209AF7E600DFCD39 /* AppCardData.swift */,
 				DFB37D941FF7C2B6000875BD /* ResendData.swift */,
-				DF7A40282086EF2F0073E43C /* ResponseError.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1925,6 +1921,7 @@
 		DFE63C981FC6B14B00D6E028 /* Response */ = {
 			isa = PBXGroup;
 			children = (
+				DF7A40282086EF2F0073E43C /* APIError.swift */,
 				DFE63C9B1FC6B18900D6E028 /* SignalKeyResponse.swift */,
 				DFE63C9D1FC6B1C600D6E028 /* EmptyResponse.swift */,
 				DFE63CA51FC6B7D700D6E028 /* ConversationResponse.swift */,
@@ -2444,7 +2441,7 @@
 				DF8DA1981FD5301200425CEC /* Participant.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
-				DF7A40292086EF2F0073E43C /* ResponseError.swift in Sources */,
+				DF7A40292086EF2F0073E43C /* APIError.swift in Sources */,
 				DFCC433E206B53A5006F50BE /* AccountRequest.swift in Sources */,
 				DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */,
 				DFB961441FA85F4B00F0922E /* MyProfileViewController.swift in Sources */,
@@ -2496,7 +2493,6 @@
 				DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */,
 				DF3C474A1FA0BECA00A07C71 /* DataExtension.swift in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
-				DF5D9F2C1F9C7A9D0036D5FD /* APIError.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,
 				DFF353191FEEC83100058453 /* WalletUserDefault.swift in Sources */,
 				DF6DB83D2024EAD10060CF31 /* PaymentResponse.swift in Sources */,

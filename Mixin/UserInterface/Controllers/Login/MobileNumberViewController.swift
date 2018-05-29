@@ -101,8 +101,8 @@ class MobileNumberViewController: LoginViewController {
                 loginInfo.verificationId = verification.id
                 let vc = VerificationCodeViewController.instance(loginInfo: loginInfo)
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
-            case let .failure(error, _):
-                weakSelf.alert(error.kind.localizedDescription ?? error.description)
+            case let .failure(error):
+                weakSelf.alert(error.localizedDescription)
             }
         }
     }

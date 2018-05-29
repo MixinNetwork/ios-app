@@ -164,9 +164,9 @@ class LoginView: UIView {
                 }
 
                 UIApplication.shared.tryOpenThirdApp(response: response)
-            case let .failure(error, _):
+            case let .failure(error):
                 weakSelf.authButton.isBusy = false
-                SwiftMessages.showToast(message: error.kind.localizedDescription ?? error.description, backgroundColor: .hintRed)
+                SwiftMessages.showToast(message: error.localizedDescription, backgroundColor: .hintRed)
             }
         })
     }

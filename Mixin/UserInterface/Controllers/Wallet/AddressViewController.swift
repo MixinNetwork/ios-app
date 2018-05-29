@@ -90,12 +90,8 @@ extension AddressViewController {
             switch result {
             case .success:
                 AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
-            case let .failure(error, didHandled):
-                guard !didHandled else {
-                    return
-                }
-
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.description)
+            case .failure:
+                break
             }
         }
     }

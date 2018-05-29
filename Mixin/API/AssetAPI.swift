@@ -27,7 +27,7 @@ final class AssetAPI: BaseAPI {
         request(method: .get, url: url.assets, completion: completion)
     }
 
-    func assets() -> Result<[Asset]> {
+    func assets() -> APIResult<[Asset]> {
         return request(method: .get, url: url.assets)
     }
 
@@ -35,27 +35,27 @@ final class AssetAPI: BaseAPI {
         request(method: .get, url: url.assets(assetId: assetId), completion: completion)
     }
 
-    func asset(assetId: String) -> Result<Asset> {
+    func asset(assetId: String) -> APIResult<Asset> {
         return request(method: .get, url: url.assets(assetId: assetId))
     }
 
     func transfer(assetId: String, counterUserId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             let param: [String : Any] = ["asset_id": assetId, "counter_user_id": counterUserId, "amount": amount, "memo": memo, "pin": encryptedPin, "trace_id": traceId]
-            self?.request(method: .post, url: url.transfers, parameters: param, completion: completion)
+            self?.request(method: .post, url: url.transfers, parameters: param, toastError: false, completion: completion)
         }
     }
 
     func payments(assetId: String, counterUserId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
         let param: [String : Any] = ["asset_id": assetId, "counter_user_id": counterUserId, "amount": amount, "trace_id": traceId]
-        request(method: .post, url: url.payments, parameters: param, completion: completion)
+        request(method: .post, url: url.payments, parameters: param, toastError: false, completion: completion)
     }
 
     func snapshots(assetId: String, completion: @escaping (APIResult<[Snapshot]>) -> Void) {
         request(method: .get, url: url.snapshots(assetId: assetId), completion: completion)
     }
 
-    func snapshots(assetId: String) -> Result<[Snapshot]> {
+    func snapshots(assetId: String) -> APIResult<[Snapshot]> {
         return request(method: .get, url: url.snapshots(assetId: assetId))
     }
     

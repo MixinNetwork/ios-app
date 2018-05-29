@@ -40,11 +40,9 @@ class ChangeNumberVerifyPINViewController: ChangeNumberViewController {
             case .success:
                 let vc = ChangeNumberNewNumberViewController.instance(context: weakSelf.context)
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
-            case .failure(let error, let didHandled):
+            case let .failure(error):
                 weakSelf.pinField.clear()
-                if !didHandled {
-                    weakSelf.alert(error.kind.localizedDescription ?? error.description)
-                }
+                weakSelf.alert(error.localizedDescription)
             }
         }
     }

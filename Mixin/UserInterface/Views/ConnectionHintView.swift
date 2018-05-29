@@ -16,7 +16,6 @@ class ConnectionHintView: UIView, XibDesignable {
     
     private enum Style {
         case connecting
-        case waiting
         case error
         case toast
     }
@@ -27,9 +26,6 @@ class ConnectionHintView: UIView, XibDesignable {
             case .connecting:
                 activityIndicator.isHidden = false
                 label.text = Localized.CONNECTION_HINT_CONNECTING
-            case .waiting:
-                activityIndicator.isHidden = false
-                label.text = Localized.CONNECTION_HINT_WAITING
             case .error:
                 activityIndicator.isHidden = true
                 label.text = errorMsg
@@ -67,7 +63,7 @@ class ConnectionHintView: UIView, XibDesignable {
 
     private func setConnectionHintHidden(_ hidden: Bool, animated: Bool = true) {
         switch style {
-        case .connecting, .waiting:
+        case .connecting:
             backgroundView.backgroundColor = UIColor.hintBlue
         case .error:
             backgroundView.backgroundColor = UIColor.hintRed
@@ -121,6 +117,9 @@ class ConnectionHintView: UIView, XibDesignable {
     }
 
     @objc func updateConnectionHint() {
+        if !WebSocketService.shared.connected {
+            style = .connecting
+        }
         setConnectionHintHidden(WebSocketService.shared.connected)
     }
     

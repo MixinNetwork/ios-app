@@ -74,12 +74,12 @@ extension APIError {
         case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorNetworkConnectionLost:
             return true
         default:
-            return status >= 400 && status < 500
+            return (code >= 400 && code < 500) || (status >= 400 && status < 500)
         }
     }
 
     var isServerError: Bool {
-        return status >= 500 && status < 600
+        return (code >= 500 && code < 600) || (status >= 500 && status < 600)
     }
 
 }

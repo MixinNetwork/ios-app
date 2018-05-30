@@ -320,7 +320,7 @@ extension SendMessageService {
                         if error.code == 404 && conversation.status == ConversationStatus.START.rawValue {
                             try requestCreateConversation(conversation: conversation)
                             try sendGroupSenderKey(conversationId: conversation.conversationId)
-                            return
+                            break
                         } else if error.code == 404 || error.code == 403 {
                             ParticipantDAO.shared.removeParticipant(conversationId: message.conversationId)
                             return

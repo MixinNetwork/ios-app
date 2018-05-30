@@ -211,7 +211,7 @@ class ReceiveMessageService: MixinService {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
             }
-            guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0, let thumbnail = transferMediaData.thumbnail, !thumbnail.isEmpty, !transferMediaData.getMimeType().isEmpty else {
+            guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0, !transferMediaData.getMimeType().isEmpty else {
                 return
             }
             MessageDAO.shared.insertMessage(message: Message.createMessage(mediaData: transferMediaData, data: data), messageSource: data.source)

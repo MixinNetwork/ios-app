@@ -430,6 +430,9 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
         guard urlString.hasPrefix("iban:XE") || urlString.hasPrefix("IBAN:XE") else {
             return urlString
         }
+        guard urlString.count >= 20 else {
+            return nil
+        }
 
         let endIndex = urlString.index(of: "?") ?? urlString.endIndex
         let accountIdentifier = urlString[urlString.index(urlString.startIndex, offsetBy: 9)..<endIndex]

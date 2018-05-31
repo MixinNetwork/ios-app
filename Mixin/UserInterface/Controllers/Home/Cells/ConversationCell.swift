@@ -71,7 +71,7 @@ class ConversationCell: UITableViewCell {
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_STICKER
                 }
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_photo")
+                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_sticker")
                 messageTypeImageView.isHidden = false
             } else if category.hasSuffix("_CONTACT") {
                 if item.isGroup() {

@@ -596,13 +596,15 @@ class ConversationViewController: UIViewController {
             navigationController?.pushViewController(videoPickerController, animated: true)
         } else {
             PHPhotoLibrary.requestAuthorization({ [weak self] (status) in
-                guard let weakSelf = self else {
-                    return
-                }
-                if status == .authorized {
-                    weakSelf.navigationController?.pushViewController(weakSelf.videoPickerController, animated: true)
-                } else {
-                    weakSelf.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
+                DispatchQueue.main.async {
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    if status == .authorized {
+                        weakSelf.navigationController?.pushViewController(weakSelf.videoPickerController, animated: true)
+                    } else {
+                        weakSelf.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
+                    }
                 }
             })
         }

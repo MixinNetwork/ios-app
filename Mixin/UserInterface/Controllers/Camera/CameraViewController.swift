@@ -412,8 +412,8 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
             return
         }
 
-        if fromWithdrawal {
-            addressCallback?(urlString)
+        if fromWithdrawal, let address = filterAddress(urlString: urlString) {
+            addressCallback?(address)
             navigationController?.popViewController(animated: true)
             return
         }
@@ -425,5 +425,55 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
         }
 
     }
+
+    private func filterAddress(urlString: String) -> String? {
+        guard urlString.hasPrefix("iban:XE") || urlString.hasPrefix("IBAN:XE") else {
+            return urlString
+        }
+
+        let endIndex = urlString.index(of: "?") ?? urlString.endIndex
+        let accountIdentifier = urlString[urlString.index(urlString.startIndex, offsetBy: 9)..<endIndex]
+
+        guard let address = accountIdentifier.lowercased().base36to16() else {
+            return nil
+        }
+        return "0x\(address)"
+    }
     
+}
+
+fileprivate extension String {
+
+    static let base36Alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
+
+    static var base36AlphabetMap: [Character: Int] = {
+        var reverseLookup = [Character: Int]()
+        for characterIndex in 0..<String.base36Alphabet.count {
+            let character = base36Alphabet[base36Alphabet.index(base36Alphabet.startIndex, offsetBy: characterIndex)]
+            reverseLookup[character] = characterIndex
+        }
+        return reverseLookup
+    }()
+
+    func base36to16() -> String? {
+        var bytes = [Int]()
+        for character in self {
+            guard var carry = String.base36AlphabetMap[character] else {
+                return nil
+            }
+
+            for byteIndex in 0..<bytes.count {
+                carry += bytes[byteIndex] * 36
+                bytes[byteIndex] = carry & 0xff
+                carry >>= 8
+            }
+
+            while carry > 0 {
+                bytes.append(carry & 0xff)
+                carry >>= 8
+            }
+        }
+        return bytes.reversed().map { String(format: "%02hhx", $0) }.joined()
+    }
+
 }

@@ -147,8 +147,7 @@ public class Localized {
     public static let CHAT_SEND_FILE_FAILED = LocalizedString("chat_send_file_failed", comment: "Failed to send file")
     public static let CHAT_SEND_VIDEO_FAILED = LocalizedString("chat_send_video_failed", comment: "Failed to send video")
     public static let CHAT_MENU_CAMERA = LocalizedString("chat_menu_camera", comment: "Camera")
-    public static let CHAT_MENU_PHOTO = LocalizedString("chat_menu_photo", comment: "Photo")
-    public static let CHAT_MENU_VIDEO = LocalizedString("chat_menu_video", comment: "Video")
+    public static let CHAT_MENU_PHOTO = LocalizedString("chat_menu_photo", comment: "Photo & Video")
     public static let CHAT_MENU_FILE = LocalizedString("chat_menu_file", comment: "File")
     public static let CHAT_MENU_TRANSFER = LocalizedString("chat_menu_transfer", comment: "Transfer")
     public static let CHAT_MENU_CONTACT = LocalizedString("chat_menu_contact", comment: "Contact")
@@ -161,6 +160,8 @@ public class Localized {
     public static let CAMERA_SEND_TO_TITLE = LocalizedString("camera_send_to_title", comment: "Send To")
     public static let CAMERA_SAVE_VIDEO_SUCCESS = LocalizedString("camera_save_video_success", comment: "Video saved.")
     public static let CAMERA_SAVE_VIDEO_FAILED = LocalizedString("camera_save_video_failed", comment: "Unable to save video.")
+    public static let IMAGE_PICKER_TITLE_CAMERA_ROLL = LocalizedString("image_picker_title_camera_roll", comment: "Camera Roll")
+    public static let IMAGE_PICKER_TITLE_ALBUMS = LocalizedString("image_picker_title_albums", comment: "Albums")
 
     // Group
     public static let GROUP_NAVIGATION_TITLE_ADD_MEMBER = LocalizedString("group_navigation_title_add_member", comment: "Add Participants")

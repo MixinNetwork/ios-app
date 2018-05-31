@@ -90,9 +90,7 @@ extension ConversationMoreMenuViewController: UICollectionViewDelegate {
             case .camera:
                 conversationViewController?.imagePickerController.presentCamera()
             case .photo:
-                conversationViewController?.imagePickerController.presentPhoto()
-            case .video:
-                conversationViewController?.pickVideoAction()
+                conversationViewController?.pickPhotoOrVideoAction()
             case .file:
                 conversationViewController?.documentAction()
             case .transfer:
@@ -116,7 +114,6 @@ extension ConversationMoreMenuViewController {
     enum Job {
         case camera
         case photo
-        case video
         case file
         case transfer
         case contact
@@ -127,8 +124,6 @@ extension ConversationMoreMenuViewController {
                 return #imageLiteral(resourceName: "ic_conversation_camera")
             case .photo:
                 return #imageLiteral(resourceName: "ic_conversation_photo")
-            case .video:
-                return #imageLiteral(resourceName: "ic_conversation_video")
             case .file:
                 return #imageLiteral(resourceName: "ic_conversation_file")
             case .transfer:
@@ -144,8 +139,6 @@ extension ConversationMoreMenuViewController {
                 return Localized.CHAT_MENU_CAMERA
             case .photo:
                 return Localized.CHAT_MENU_PHOTO
-            case .video:
-                return Localized.CHAT_MENU_VIDEO
             case .file:
                 return Localized.CHAT_MENU_FILE
             case .transfer:

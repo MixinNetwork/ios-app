@@ -3,7 +3,7 @@ import MobileCoreServices
 import AVKit
 import Photos
 
-class ConversationViewController: UIViewController, UINavigationControllerDelegate {
+class ConversationViewController: UIViewController {
     
     @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -88,14 +88,11 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
     }()
-    private lazy var videoPickerController: UIImagePickerController = {
-        let picker = UIImagePickerController()
-        picker.mediaTypes = [kUTTypeMovie as String]
-        picker.videoQuality = .typeHigh
-        picker.allowsEditing = false
+    private var videoPickerController: UIViewController {
+        let picker = PickerViewController.instance()
         picker.delegate = self
-        return picker
-    }()
+        return ContainerViewController.instance(viewController: picker, title: Localized.IMAGE_PICKER_TITLE_CAMERA_ROLL)
+    }
 
     private var bottomSafeAreaInset: CGFloat {
         if #available(iOS 11.0, *) {
@@ -610,18 +607,23 @@ class ConversationViewController: UIViewController, UINavigationControllerDelega
         navigationController?.pushViewController(ConversationShareContactViewController.instance(ownerUser: ownerUser, conversationId: conversationId), animated: true)
     }
 
-    func pickVideoAction() {
+    func pickPhotoOrVideoAction() {
         if PHPhotoLibrary.authorizationStatus() == .authorized {
-            present(videoPickerController, animated: true, completion: nil)
+            navigationController?.pushViewController(videoPickerController, animated: true)
         } else {
             PHPhotoLibrary.requestAuthorization({ [weak self] (status) in
-                if status == .authorized, let weakSelf = self {
-                    weakSelf.present(weakSelf.videoPickerController, animated: true, completion: nil)
+                guard let weakSelf = self else {
+                    return
+                }
+                if status == .authorized {
+                    weakSelf.navigationController?.pushViewController(weakSelf.videoPickerController, animated: true)
+                } else {
+                    weakSelf.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
                 }
             })
         }
     }
-    
+
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
@@ -946,7 +948,7 @@ extension ConversationViewController: TextMessageLabelDelegate {
 extension ConversationViewController: ImagePickerControllerDelegate {
     
     func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
-        let previewViewController = PhotoSendViewController.instance(image: image, dataSource: dataSource)
+        let previewViewController = AssetSendViewController.instance(image: image, dataSource: dataSource)
         navigationController?.pushViewController(previewViewController, animated: true)
     }
     
@@ -1056,21 +1058,11 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
 }
 
-// MARK: - UIImagePickerControllerDelegate
-extension ConversationViewController: UIImagePickerControllerDelegate {
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        dismiss(animated: true, completion: nil)
-        if let url = info[UIImagePickerControllerReferenceURL] {
-            dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: url)
-        }
-        // TODO: Do something with UIImagePickerControllerReferenceURL if failed
+extension ConversationViewController: PickerViewControllerDelegate {
+
+    func pickerController(_ picker: PickerViewController, didFinishPickingMediaWithAsset asset: PHAsset) {
+        navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, dataSource: dataSource), animated: true)
     }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
-    
 }
 
 // MARK: - UI Related Helpers
@@ -1111,9 +1103,9 @@ extension ConversationViewController {
     
     private func updateMoreMenuFixedJobs() {
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .video, .file, .contact]
+            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
         } else {
-            moreMenuViewController?.fixedJobs = [.camera, .photo, .video, .file, .contact]
+            moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
         }
     }
     

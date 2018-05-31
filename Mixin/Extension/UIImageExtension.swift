@@ -58,7 +58,18 @@ extension UIImage {
         }
         return nil
     }
-    
+
+    convenience init?(withFirstFrameOfVideoAtAsset asset: AVAsset) {
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        do {
+            let cgImage = try generator.copyCGImage(at: CMTime(value: 0, timescale: 1), actualTime: nil)
+            self.init(cgImage: cgImage)
+        } catch {
+            return nil
+        }
+    }
+
     convenience init?(withFirstFrameOfVideoAtURL url: URL) {
         let asset = AVURLAsset(url: url)
         let generator = AVAssetImageGenerator(asset: asset)

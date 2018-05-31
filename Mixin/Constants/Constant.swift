@@ -78,6 +78,7 @@ struct Storyboard {
     static let group = UIStoryboard(name: "Group", bundle: Bundle.main)
     static let wallet = UIStoryboard(name: "Wallet", bundle: Bundle.main)
     static let setting = UIStoryboard(name: "Setting", bundle: Bundle.main)
+    static let photo = UIStoryboard(name: "Photo", bundle: Bundle.main)
 }
 
 struct MixinFile {

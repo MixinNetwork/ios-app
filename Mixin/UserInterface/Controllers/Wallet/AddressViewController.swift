@@ -55,7 +55,7 @@ extension AddressViewController: ContainerViewControllerDelegate {
     }
 
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_chat_more")
+        return #imageLiteral(resourceName: "ic_titlebar_add")
     }
 
 }

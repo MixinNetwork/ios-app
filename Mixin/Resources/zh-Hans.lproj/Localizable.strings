@@ -125,8 +125,7 @@
 "chat_send_file_failed" = "发送文件失败，请稍后重试";
 "chat_send_video_failed" = "发送视频失败，请稍后重试";
 "chat_menu_camera" = "相机";
-"chat_menu_photo" = "照片";
-"chat_menu_video" = "视频";
+"chat_menu_photo" = "照片 & 视频";
 "chat_menu_file" = "文件";
 "chat_menu_transfer" = "转账";
 "chat_menu_contact" = "联系人";
@@ -139,6 +138,8 @@
 "camera_send_to_title" = "发送至";
 "camera_save_video_success" = "视频已成功保存在相册";
 "camera_save_video_failed" = "保存视频失败";
+"image_picker_title_camera_roll" = "相机胶卷";
+"image_picker_title_albums" = "相册";
 
 // Group
 "group_navigation_title_add_member" = "添加成员";

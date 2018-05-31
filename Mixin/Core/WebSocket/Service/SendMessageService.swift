@@ -243,7 +243,6 @@ class SendMessageService: MixinService {
                     ReceiveMessageService.shared.messageDispatchQueue.sync {
                         let blazeMessage = job.toBlazeMessage()
                         deliverNoThrow(blazeMessage: blazeMessage)
-                        FileManager.default.writeLog(conversationId: job.conversationId!, log: "[SendMessageService][REQUEST_RESEND_KEY]...messageId:\(blazeMessage.params?.messageId ?? "")")
                     }
                 case JobAction.REQUEST_RESEND_MESSAGES.rawValue:
                     deliverNoThrow(blazeMessage: job.toBlazeMessage())
@@ -252,11 +251,6 @@ class SendMessageService: MixinService {
                 default:
                     break
                 }
-
-                if let conversationId = job.conversationId, let userId = job.userId {
-                    FileManager.default.writeLog(conversationId: conversationId, log: "[SendMessageService][\(job.action)]...ended...userId:\(userId)...runCount:\(job.runCount)...orderId:\(job.orderId ?? 0)...priority:\(job.priority)")
-                }
-
                 return true
             } catch {
                 checkNetworkAndWebSocket()
@@ -282,8 +276,6 @@ extension SendMessageService {
         blazeMessage.params?.messageId = resendMessageId
         blazeMessage.params?.data = try SignalProtocol.shared.encryptSessionMessageData(conversationId: message.conversationId, recipientId: recipientId, content: message.content ?? "", resendMessageId: messageId)
         try deliverMessage(blazeMessage: blazeMessage)
-
-        FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][ResendMessage]...messageId:\(messageId)...resendMessageId:\(resendMessageId)...resendUserId:\(recipientId)")
     }
 
     private func sendMessage(job: Job) throws {
@@ -292,7 +284,6 @@ extension SendMessageService {
             return
         }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId) else {
-            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage]...conversation not exist")
             return
         }
 
@@ -335,7 +326,6 @@ extension SendMessageService {
 
             blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: message.content ?? "")
             try deliverMessage(blazeMessage: blazeMessage)
-            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isExistSenderKey:\(isExistSenderKey)...messageId:\(messageId)...messageStatus:\(message.status)...orderId:\(job.orderId ?? 0)")
         }
     }
 

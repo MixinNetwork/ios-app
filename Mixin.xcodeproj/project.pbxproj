@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		270842392069F8C300B0A53F /* PrintLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270842382069F8C300B0A53F /* PrintLog.swift */; };
 		27382EC61FECDF0D00437A1B /* PreKeyUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27382EC51FECDF0D00437A1B /* PreKeyUtil.swift */; };
 		273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 273A5E0B1F95EA4500AE802F /* Contacts.framework */; };
 		273FACAD205FB9A800513327 /* KeyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273FAC8B205FB9A800513327 /* KeyPair.swift */; };
@@ -491,7 +490,6 @@
 
 /* Begin PBXFileReference section */
 		23987C4F141F7C6E533A683D /* Pods_Mixin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mixin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		270842382069F8C300B0A53F /* PrintLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintLog.swift; sourceTree = "<group>"; };
 		27382EC51FECDF0D00437A1B /* PreKeyUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreKeyUtil.swift; sourceTree = "<group>"; };
 		273A5E0B1F95EA4500AE802F /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		273FAC8B205FB9A800513327 /* KeyPair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyPair.swift; sourceTree = "<group>"; };
@@ -1336,7 +1334,6 @@
 				DF19119B209028FF00BD415D /* Service */,
 				DF8DA19E1FD64B6F00425CEC /* Model */,
 				DF8DA1831FD1B39E00425CEC /* Jobs */,
-				270842382069F8C300B0A53F /* PrintLog.swift */,
 			);
 			path = WebSocket;
 			sourceTree = "<group>";
@@ -2305,7 +2302,6 @@
 				DF7A4B461FCDA6A000F21BCB /* User.swift in Sources */,
 				DF8EF6AF2030679100E99CE8 /* UrlWindow.swift in Sources */,
 				DFD294411FA7075300FADAAD /* ContactCell.swift in Sources */,
-				270842392069F8C300B0A53F /* PrintLog.swift in Sources */,
 				273FACC7205FB9A800513327 /* SignedPreKeyStoreWrapper.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */,

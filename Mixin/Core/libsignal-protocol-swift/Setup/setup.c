@@ -69,7 +69,6 @@ int set_locking(signal_context *global_context) {
 
     return signal_context_set_locking_functions(global_context, test_lock, test_unlock);
 }
-extern void printSignalLog(const char *message);
 
 void test_log(int level, const char *message, size_t len, void *user_data) {
     switch(level) {
@@ -92,5 +91,4 @@ void test_log(int level, const char *message, size_t len, void *user_data) {
             fprintf(stderr, "[%d] %s\n", level, message);
             break;
     }
-    printSignalLog(message);
 }

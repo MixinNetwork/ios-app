@@ -106,7 +106,6 @@ extension WebSocketService: SRWebSocketDelegate {
         guard client != nil else {
             return
         }
-        FileManager.default.writeLog(log: "WebSocketService...webSocketDidOpen")
         connected = true
         NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: true)
 
@@ -181,7 +180,6 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     func reconnect(didClose: Bool, afterReconnect: Bool = false) {
-        FileManager.default.writeLog(log: "WebSocketService...reconnect")
         connected = false
         NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: false)
         ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()
@@ -268,8 +266,6 @@ extension WebSocketService {
                 })
                 return
             }
-
-            FileManager.default.writeLog(log: "WebSocketService...sendPendingMessage...success")
 
             if !WebSocketService.shared.recoverJobs {
                 WebSocketService.shared.recoverJobs = true

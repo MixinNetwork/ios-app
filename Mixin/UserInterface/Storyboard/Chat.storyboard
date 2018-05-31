@@ -669,6 +669,9 @@
                                                                 </connections>
                                                             </button>
                                                         </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="55" id="kiM-Cb-lgd"/>
+                                                        </constraints>
                                                     </stackView>
                                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="LmC-o2-ndc" customClass="InputTextView" customModule="Mixin" customModuleProvider="target">
                                                         <rect key="frame" x="55" y="9.5" width="265" height="36.5"/>
@@ -732,7 +735,6 @@
                                                     <constraint firstItem="hVh-Hy-zRR" firstAttribute="leading" secondItem="LmC-o2-ndc" secondAttribute="trailing" id="Kln-h1-RVq"/>
                                                     <constraint firstAttribute="bottom" secondItem="hVh-Hy-zRR" secondAttribute="bottom" id="Pfj-ly-gLZ"/>
                                                     <constraint firstAttribute="bottom" secondItem="LmC-o2-ndc" secondAttribute="bottom" constant="9.3000000000000007" id="ZHP-TB-S3P"/>
-                                                    <constraint firstItem="L03-lG-dB6" firstAttribute="top" secondItem="IAk-sA-T54" secondAttribute="top" id="aE8-hO-tu3"/>
                                                     <constraint firstItem="Kz9-vn-J0b" firstAttribute="top" secondItem="IAk-sA-T54" secondAttribute="top" id="bqt-RE-cHo"/>
                                                 </constraints>
                                             </view>

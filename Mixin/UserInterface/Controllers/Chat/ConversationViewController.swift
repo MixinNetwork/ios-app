@@ -1090,6 +1090,8 @@ extension ConversationViewController {
     private func updateMoreMenuFixedJobs() {
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
             moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
+        } else if let userBot = userBot, userBot.creatorId == me.user_id {
+            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
         } else {
             moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
         }

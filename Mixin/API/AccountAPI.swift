@@ -56,8 +56,10 @@ final class AccountAPI: BaseAPI {
         return request(method: .get, url: url.me)
     }
 
-    func sendCode(to phoneNumber: String, purpose: VerificationPurpose, completion: @escaping (APIResult<VerificationResponse>) -> Void) {
-        let param = ["phone": phoneNumber, "purpose": purpose.rawValue]
+    func sendCode(to phoneNumber: String, reCaptchaToken: String, purpose: VerificationPurpose, completion: @escaping (APIResult<VerificationResponse>) -> Void) {
+        let param = ["phone": phoneNumber,
+                     "purpose": purpose.rawValue,
+                     "g-recaptcha-response": reCaptchaToken]
         request(method: .post, url: url.verifications, parameters: param, checkLogin: false, toastError: false, completion: completion)
     }
     

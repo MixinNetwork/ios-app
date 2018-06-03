@@ -63,6 +63,7 @@
 "placeholder_search_bar" = "Search for a country";
 "placeholder_mobile_number" = "Phone number";
 "init_signal" = "Initializing";
+"toast_recaptcha_timed_out" = "Validation timed out";
 
 // Contacts
 "contact_title" = "Contacts";

@@ -32,6 +32,10 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
         resendButton.releaseTimer()
     }
     
+    deinit {
+        ReCaptchaManager.shared.clean()
+    }
+    
     override func continueAction(_ sender: Any) {
         checkVerificationCodeAction(sender)
     }
@@ -76,7 +80,18 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
 
     @objc func resendAction(_ sender: Any) {
         resendButton.isBusy = true
-        AccountAPI.shared.sendCode(to: context.newNumber, purpose: .phone) { [weak self] (result) in
+        ReCaptchaManager.shared.validate(onViewController: self) { [weak self] (result) in
+            switch result {
+            case .success(let token):
+                self?.sendCode(reCaptchaToken: token)
+            default:
+                self?.resendButton.isBusy = false
+            }
+        }
+    }
+    
+    private func sendCode(reCaptchaToken token: String) {
+        AccountAPI.shared.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

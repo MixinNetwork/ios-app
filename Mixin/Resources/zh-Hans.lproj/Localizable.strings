@@ -62,6 +62,7 @@
 "placeholder_search_bar" = "搜索国家";
 "placeholder_mobile_number" = "手机号码";
 "init_signal" = "正在初始化";
+"toast_recaptcha_timed_out" = "验证超时";
 
 // Contacts
 "contact_title" = "联系人";

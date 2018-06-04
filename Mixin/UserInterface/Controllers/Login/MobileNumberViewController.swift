@@ -91,33 +91,38 @@ class MobileNumberViewController: LoginViewController {
     
     private func checkMobileNumber() {
         continueButton.isBusy = true
-        ReCaptchaManager.shared.validate(onViewController: self, completion: { [weak self] (result) in
-            switch result {
-            case .success(let token):
-                self?.sendCode(reCaptchaToken: token)
-            default:
-                self?.continueButton.isBusy = false
-            }
-        })
+        sendCode(reCaptchaToken: nil)
     }
     
-    private func sendCode(reCaptchaToken: String) {
-        AccountAPI.shared.sendCode(to: fullNumber(withSpacing: false), reCaptchaToken: reCaptchaToken, purpose: .session) { [weak self] (result) in
+    private func sendCode(reCaptchaToken token: String?) {
+        var loginInfo = LoginInfo(callingCode: country.callingCode,
+                                  mobileNumber: mobileNumber,
+                                  fullNumber: fullNumber(withSpacing: false),
+                                  verificationId: nil)
+        AccountAPI.shared.sendCode(to: fullNumber(withSpacing: false), reCaptchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.continueButton.isBusy = false
-            var loginInfo = LoginInfo(callingCode: weakSelf.country.callingCode,
-                                      mobileNumber: weakSelf.mobileNumber,
-                                      fullNumber: weakSelf.fullNumber(withSpacing: false),
-                                      verificationId: nil)
             switch result {
             case let .success(verification):
                 loginInfo.verificationId = verification.id
                 let vc = VerificationCodeViewController.instance(loginInfo: loginInfo)
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
+                weakSelf.continueButton.isBusy = false
             case let .failure(error):
-                weakSelf.alert(error.localizedDescription)
+                if error.code == 10005 {
+                    ReCaptchaManager.shared.validate(onViewController: weakSelf, completion: { (result) in
+                        switch result {
+                        case .success(let token):
+                            self?.sendCode(reCaptchaToken: token)
+                        default:
+                            self?.continueButton.isBusy = false
+                        }
+                    })
+                } else {
+                    weakSelf.alert(error.localizedDescription)
+                    weakSelf.continueButton.isBusy = false
+                }
             }
         }
     }

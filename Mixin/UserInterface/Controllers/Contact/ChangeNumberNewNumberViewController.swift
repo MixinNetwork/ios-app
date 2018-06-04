@@ -38,14 +38,7 @@ class ChangeNumberNewNumberViewController: ChangeNumberViewController {
         let phoneNumber = fullNumber(withSpacing: false)
         context.newNumber = phoneNumber
         context.newNumberRepresentation = fullNumber(withSpacing: true)
-        ReCaptchaManager.shared.validate(onViewController: self) { [weak self] (result) in
-            switch result {
-            case .success(let token):
-                self?.sendCode(phoneNumber: phoneNumber, reCaptchaToken: token)
-            default:
-                self?.bottomWrapperView.continueButton?.isBusy = false
-            }
-        }
+        sendCode(phoneNumber: phoneNumber, reCaptchaToken: nil)
     }
     
     @IBAction func selectCountryAction(_ sender: Any) {
@@ -90,19 +83,31 @@ class ChangeNumberNewNumberViewController: ChangeNumberViewController {
         callingCodeButton.setTitle("+\(country.callingCode)", for: .normal)
     }
     
-    private func sendCode(phoneNumber: String, reCaptchaToken token: String) {
+    private func sendCode(phoneNumber: String, reCaptchaToken token: String?) {
         AccountAPI.shared.sendCode(to: phoneNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.bottomWrapperView.continueButton?.isBusy = false
             switch result {
             case .success(let verification):
                 weakSelf.context.verificationId = verification.id
                 let vc = ChangeNumberVerificationCodeViewController.instance(context: weakSelf.context)
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
+                weakSelf.bottomWrapperView.continueButton?.isBusy = false
             case let .failure(error):
-                weakSelf.alert(error.localizedDescription)
+                if error.code == 10005 {
+                    ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+                        switch result {
+                        case .success(let token):
+                            self?.sendCode(phoneNumber: phoneNumber, reCaptchaToken: token)
+                        default:
+                            self?.bottomWrapperView.continueButton?.isBusy = false
+                        }
+                    }
+                } else {
+                    weakSelf.alert(error.localizedDescription)
+                    weakSelf.bottomWrapperView.continueButton?.isBusy = false
+                }
             }
         }
     }

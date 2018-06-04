@@ -80,28 +80,33 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
 
     @objc func resendAction(_ sender: Any) {
         resendButton.isBusy = true
-        ReCaptchaManager.shared.validate(onViewController: self) { [weak self] (result) in
-            switch result {
-            case .success(let token):
-                self?.sendCode(reCaptchaToken: token)
-            default:
-                self?.resendButton.isBusy = false
-            }
-        }
+        sendCode(reCaptchaToken: nil)
     }
     
-    private func sendCode(reCaptchaToken token: String) {
+    private func sendCode(reCaptchaToken token: String?) {
         AccountAPI.shared.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.resendButton.isBusy = false
-            weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
             switch result {
             case .success(let verification):
                 weakSelf.context.verificationId = verification.id
+                weakSelf.resendButton.isBusy = false
+                weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
             case let.failure(error):
-                weakSelf.alert(error.localizedDescription)
+                if error.code == 10005 {
+                    ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+                        switch result {
+                        case .success(let token):
+                            self?.sendCode(reCaptchaToken: token)
+                        default:
+                            self?.resendButton.isBusy = false
+                        }
+                    }
+                } else {
+                    weakSelf.alert(error.localizedDescription)
+                    weakSelf.resendButton.isBusy = false
+                }
             }
         }
     }

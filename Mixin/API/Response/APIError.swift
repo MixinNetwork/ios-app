@@ -31,6 +31,8 @@ extension APIError {
             return Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS
         case 500:
             return Localized.TOAST_API_ERROR_SERVER_5XX
+        case 10004:
+            return Localized.TOAST_RECAPTCHA_INVALID
         case 20117:
             return Localized.TRANSFER_ERROR_BALANCE_INSUFFICIENT
         case 20118:

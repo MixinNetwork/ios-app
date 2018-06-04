@@ -64,6 +64,7 @@
 "placeholder_mobile_number" = "Phone number";
 "init_signal" = "Initializing";
 "toast_recaptcha_timed_out" = "Validation timed out";
+"toast_recaptcha_invalid" = "Recaptcha is invalid.";
 
 // Contacts
 "contact_title" = "Contacts";

@@ -77,7 +77,6 @@
 		7B2E3E571FA0815B00DDDDEB /* LoginIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E551FA0815B00DDDDEB /* LoginIntroViewController.swift */; };
 		7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */; };
 		7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */; };
-		7B3936CD20C159410075A97A /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7B3936CC20C159410075A97A /* Mixin-Keys.plist */; };
 		7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3936CE20C15BA00075A97A /* MixinKeys.swift */; };
 		7B3936D120C1722C0075A97A /* ReCaptchaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3936D020C1722C0075A97A /* ReCaptchaViewController.swift */; };
 		7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */; };
@@ -570,7 +569,6 @@
 		7B2E3E551FA0815B00DDDDEB /* LoginIntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginIntroViewController.swift; sourceTree = "<group>"; };
 		7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
 		7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginContinueButton.swift; sourceTree = "<group>"; };
-		7B3936CC20C159410075A97A /* Mixin-Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Mixin-Keys.plist"; sourceTree = "<group>"; };
 		7B3936CE20C15BA00075A97A /* MixinKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinKeys.swift; sourceTree = "<group>"; };
 		7B3936D020C1722C0075A97A /* ReCaptchaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCaptchaViewController.swift; sourceTree = "<group>"; };
 		7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAnnouncementViewController.swift; sourceTree = "<group>"; };
@@ -1133,7 +1131,6 @@
 				DF5D9F341F9C95F20036D5FD /* Resources */,
 				DF5D9F481F9CDBDE0036D5FD /* Supporting Files */,
 				277FF7021F909A1200DBB2EB /* AppDelegate.swift */,
-				7B3936CC20C159410075A97A /* Mixin-Keys.plist */,
 				277FF70B1F909A1200DBB2EB /* Assets.xcassets */,
 			);
 			path = Mixin;
@@ -2084,7 +2081,6 @@
 				7B8E01EB202069C600D2C05E /* ConversationExtensionCell.xib in Resources */,
 				7BD51DDA1FB4230800865CB8 /* ConnectionHintView.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
-				7B3936CD20C159410075A97A /* Mixin-Keys.plist in Resources */,
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */,
 				DFD294431FA7076600FADAAD /* ContactMeCell.xib in Resources */,

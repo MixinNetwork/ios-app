@@ -37,6 +37,7 @@ class ChangeNumberViewController: UIViewController {
                 bottomWrapperBottomConstraint = make.bottom.equalTo(self.view.snp.bottomMargin).offset(-bottomWrapperViewInset.bottom).constraint
             }
         }
+        updateBottomWrapperViewPosition(keyboardFrame: ChangeNumberViewController.lastKeyboardFrame)
         bottomWrapperView.continueButton.addTarget(self, action: #selector(continueAction(_:)), for: .touchUpInside)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillChangeFrame(notification:)),
@@ -49,20 +50,24 @@ class ChangeNumberViewController: UIViewController {
     }
     
     @objc func keyboardWillChangeFrame(notification: Notification) {
-        guard let currentOffset = bottomWrapperBottomConstraint.layoutConstraints.first?.constant else {
-            return
-        }
         let endFrame: CGRect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         ChangeNumberViewController.lastKeyboardFrame = endFrame
-        let offset = -(UIScreen.main.bounds.height - endFrame.origin.y + bottomWrapperViewInset.bottom)
-        if abs(currentOffset - offset) > 60 || offset < currentOffset {
-            bottomWrapperBottomConstraint.update(offset: offset)
-        }
-        view.layoutIfNeeded()
+        updateBottomWrapperViewPosition(keyboardFrame: endFrame)
     }
     
     @objc func continueAction(_ sender: Any) {
         
+    }
+
+    private func updateBottomWrapperViewPosition(keyboardFrame: CGRect) {
+        guard let currentOffset = bottomWrapperBottomConstraint.layoutConstraints.first?.constant else {
+            return
+        }
+        let offset = -(UIScreen.main.bounds.height - keyboardFrame.origin.y + bottomWrapperViewInset.bottom)
+        if abs(currentOffset - offset) > 60 || offset < currentOffset {
+            bottomWrapperBottomConstraint.update(offset: offset)
+        }
+        view.layoutIfNeeded()
     }
     
 }

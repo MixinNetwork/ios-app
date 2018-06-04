@@ -88,6 +88,9 @@ class BaseAPI {
     
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()
+    static let rootURLString = "https://api.mixin.one/"
+    static let rootURL = URL(string: rootURLString)!
+    
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")
 
     static func getJwtHeaders(request: URLRequest, uri: String) -> HTTPHeaders {
@@ -135,7 +138,6 @@ class BaseAPI {
         "Mixin-Device-Id": Keychain.getDeviceId(),
         "User-Agent": "Mixin/\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) (iOS \(UIDevice.current.systemVersion); \(DeviceGuru().hardware()); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
     ]
-    private static let rootURL = "https://api.mixin.one/"
     private static let jsonEncoding = JSONEncoding()
     
     private struct ResponseObject<ResultType: Codable>: Codable {
@@ -155,13 +157,13 @@ class BaseAPI {
         }
         var originalRequest: URLRequest?
         do {
-            originalRequest = try URLRequest(url: BaseAPI.rootURL + url, method: method)
+            originalRequest = try URLRequest(url: BaseAPI.rootURLString + url, method: method)
             var encodedURLRequest = try encoding.encode(originalRequest!, with: parameters)
             encodedURLRequest.allHTTPHeaderFields = BaseAPI.getJwtHeaders(request: encodedURLRequest, uri: url)
             return BaseAPI.sharedSessionManager.request(encodedURLRequest)
         } catch {
             Bugsnag.notifyError(error)
-            return BaseAPI.sharedSessionManager.request(BaseAPI.rootURL + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
+            return BaseAPI.sharedSessionManager.request(BaseAPI.rootURLString + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
         }
     }
 
@@ -183,7 +185,7 @@ class BaseAPI {
                         AccountAPI.shared.logout()
                         return
                     case 429:
-                        if url != AccountAPI.url.verifyPin {
+                        if url != AccountAPI.url.verifyPin && !url.contains(AccountAPI.url.verifications) {
                             UIApplication.currentActivity()?.alert(Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS)
                             return
                         }

@@ -68,4 +68,4 @@ fastlane/screenshots
 fastlane/test_output
 
 GoogleService-Info.plist
-Mixin-Info.plist
+Mixin-Keys.plist

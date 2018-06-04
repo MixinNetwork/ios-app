@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func initBugsnag() {
-        guard let path = Bundle.main.path(forResource: "Mixin-Info", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject], let apiKey = dict["BugsnagKey"] as? String else {
+        guard let apiKey = MixinKeys.bugsnag else {
             return
         }
         Bugsnag.start(withApiKey: apiKey)

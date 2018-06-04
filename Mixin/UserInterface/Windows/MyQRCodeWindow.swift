@@ -37,25 +37,14 @@ class MyQRCodeWindow: BottomSheetView {
     }
 
     private func saveToLibrary() {
-        switch PHPhotoLibrary.authorizationStatus() {
-        case .authorized:
-            performSavingToLibrary()
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization { [weak self] (status) in
-                switch status {
-                case .authorized:
-                    self?.performSavingToLibrary()
-                case .denied, .notDetermined, .restricted:
-                    DispatchQueue.main.async { [weak self] in
-                        self?.dismissPopupControllerAnimated()
-                        UIApplication.currentActivity()?.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
-                    }
-                }
+        PHPhotoLibrary.checkAuthorization { [weak self](authorized) in
+            guard let weakSelf = self else {
+                return
             }
-        case .denied, .restricted:
-            DispatchQueue.main.async { [weak self] in
-                self?.dismissPopupControllerAnimated()
-                UIApplication.currentActivity()?.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
+            if authorized {
+                weakSelf.performSavingToLibrary()
+            } else {
+                weakSelf.dismissPopupControllerAnimated()
             }
         }
     }

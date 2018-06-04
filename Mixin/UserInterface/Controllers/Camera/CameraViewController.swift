@@ -79,11 +79,11 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
 
         saveButton.isEnabled = false
         sendButton.isEnabled = false
-        checkPhotoLibrary { [weak self](success) in
+        PHPhotoLibrary.checkAuthorization { [weak self](authorized) in
             guard let weakSelf = self else {
                 return
             }
-            guard success else {
+            guard authorized else {
                 weakSelf.saveButton.isEnabled = true
                 weakSelf.sendButton.isEnabled = true
                 return
@@ -336,24 +336,6 @@ extension CameraViewController {
                 self.shutterAnimationView.removeFromSuperview()
             })
             backButton.setImage(#imageLiteral(resourceName: "ic_close_shadow"), for: .normal)
-        }
-    }
-
-    private func checkPhotoLibrary(callback: @escaping (Bool) -> Void) {
-        switch PHPhotoLibrary.authorizationStatus() {
-        case .authorized:
-            callback(true)
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization { (status) in
-                switch status {
-                case .authorized:
-                    callback(true)
-                case .denied, .notDetermined, .restricted:
-                    callback(false)
-                }
-            }
-        case .denied, .restricted:
-            callback(false)
         }
     }
     

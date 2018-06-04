@@ -22,12 +22,12 @@ class SignalLoadingView: BottomSheetView {
                 case .success:
                     CryptoUserDefault.shared.isLoaded = true
                     MixinDatabase.shared.deleteAll(table: SentSenderKey.tableName)
-                    MixinWebView.clearCookies()
 
                     DispatchQueue.main.async {
                         guard let weakSelf = self else {
                             return
                         }
+                        MixinWebView.clearCookies()
                         WebSocketService.shared.connect()
                         let time = Date().timeIntervalSince(startTime)
                         if time < 2 {

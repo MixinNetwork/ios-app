@@ -70,6 +70,14 @@ class WebWindow: ZoomWindow {
         UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
     }
 
+    override func toggleZoomAction() {
+        windowMaximum = !windowMaximum
+        let targetHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        UIView.animate(withDuration: 0.25) {
+            self.zoomAnimation(targetHeight: targetHeight)
+        }
+    }
+
     func presentPopupControllerAnimated(url: URL) {
         presentView()
         webView.load(URLRequest(url: url))

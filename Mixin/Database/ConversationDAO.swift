@@ -32,7 +32,7 @@ final class ConversationDAO {
     LEFT JOIN users u ON u.user_id = m.user_id
     INNER JOIN users u1 ON u1.user_id = c.owner_id
     LEFT JOIN users u2 ON u2.user_id = m.participant_id
-    WHERE (m.category = 'SIGNAL_TEXT' AND m.content LIKE ?) OR (m.category = 'SIGNAL_DATA' AND m.name LIKE ?)
+    WHERE (m.category LIKE '%_TEXT' AND m.content LIKE ?) OR (m.category LIKE '%_DATA' AND m.name LIKE ?)
     ORDER BY c.pin_time DESC, m.created_at DESC
     """
     private static let sqlQueryConversationList = String(format: sqlQueryConversation, "")

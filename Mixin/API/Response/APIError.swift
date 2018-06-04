@@ -53,7 +53,7 @@ extension APIError {
             return Localized.ADDRESS_FORMAT_ERROR
         default:
             switch status {
-            case NSURLErrorNotConnectedToInternet:
+            case NSURLErrorNotConnectedToInternet, NSURLErrorCannotConnectToHost:
                 return Localized.TOAST_API_ERROR_NO_CONNECTION
             case NSURLErrorTimedOut:
                 return Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT

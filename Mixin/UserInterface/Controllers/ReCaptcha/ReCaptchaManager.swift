@@ -6,20 +6,18 @@ class ReCaptchaManager: NSObject {
     
     static let shared = ReCaptchaManager()
     
-    private static let timeOutInterval = DispatchTimeInterval.seconds(10)
-    
     var webView: WKWebView?
     var reCaptchaViewController: ReCaptchaViewController?
     
     private let messageHandlerName = "recaptcha"
     private let executeReCaptchaJS = "gReCaptchaExecute();"
     private let scriptURL = "https://www.recaptcha.net/recaptcha/api.js"
-    private let queue = DispatchQueue(label: "one.mixin.messenger.queue.recaptcha")
-    private var semaphore = DispatchSemaphore(value: 0)
+    private let timeoutInterval: TimeInterval = 10
     
     private lazy var htmlFilePath = Bundle.main.path(forResource: "recaptcha", ofType: ExtensionName.html.rawValue)
     private weak var requestingViewController: UIViewController?
     private var completion: CompletionCallback?
+    private var timer: Timer?
     
     func validate(onViewController viewController: UIViewController, completion: @escaping CompletionCallback) {
         guard let htmlFilePath = htmlFilePath, let htmlString = try? String(contentsOfFile: htmlFilePath), let key = MixinKeys.reCaptcha else {
@@ -35,24 +33,13 @@ class ReCaptchaManager: NSObject {
             .replacingOccurrences(of: Replacement.scriptURL, with: scriptURL)
         webView.loadHTMLString(keyReplacedHTMLString, baseURL: BaseAPI.rootURL)
         self.webView = webView
-        queue.async { [weak viewController] in
-            let result = self.semaphore.wait(timeout: .now() + ReCaptchaManager.timeOutInterval)
-            if result == .timedOut {
-                DispatchQueue.main.async {
-                    if viewController != nil {
-                        SwiftMessages.showToast(message: Localized.TOAST_RECAPTCHA_TIMED_OUT, backgroundColor: .hintRed)
-                        completion(.timedOut)
-                    }
-                    self.clean()
-                }
-            } else {
-                if let viewController = viewController {
-                    self.requestingViewController = viewController
-                    self.completion = completion
-                    self.executeRecaptcha()
-                }
-            }
-        }
+        self.requestingViewController = viewController
+        self.completion = completion
+        timer = Timer.scheduledTimer(withTimeInterval: timeoutInterval, repeats: false, block: { (_) in
+            SwiftMessages.showToast(message: Localized.TOAST_RECAPTCHA_TIMED_OUT, backgroundColor: .hintRed)
+            completion(.timedOut)
+            self.clean()
+        })
     }
     
     func cancel() {
@@ -61,23 +48,14 @@ class ReCaptchaManager: NSObject {
     }
     
     func clean() {
+        timer?.invalidate()
+        timer = nil
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: messageHandlerName)
         webView?.removeFromSuperview()
         webView = nil
         reCaptchaViewController = nil
         requestingViewController = nil
         completion = nil
-        semaphore.signal()
-        semaphore = DispatchSemaphore(value: 0)
-    }
-    
-    private func executeRecaptcha() {
-        webView?.evaluateJavaScript(executeReCaptchaJS, completionHandler: { [weak self] (_, error) in
-            if let error = error {
-                self?.completion?(.failed(error))
-                self?.clean()
-            }
-        })
     }
     
     private func challengeChanged() {
@@ -95,7 +73,6 @@ class ReCaptchaManager: NSObject {
     
 }
 
-
 extension ReCaptchaManager: WKScriptMessageHandler {
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -105,7 +82,14 @@ extension ReCaptchaManager: WKScriptMessageHandler {
         }
         switch msg {
         case .didLoad:
-            semaphore.signal()
+            timer?.invalidate()
+            timer = nil
+            webView?.evaluateJavaScript(executeReCaptchaJS, completionHandler: { [weak self] (_, error) in
+                if let error = error {
+                    self?.completion?(.failed(error))
+                    self?.clean()
+                }
+            })
         case .challengeChange:
             challengeChanged()
         case .token(let token):

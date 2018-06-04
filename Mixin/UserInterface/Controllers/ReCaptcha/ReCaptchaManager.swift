@@ -35,10 +35,13 @@ class ReCaptchaManager: NSObject {
         self.webView = webView
         self.requestingViewController = viewController
         self.completion = completion
-        timer = Timer.scheduledTimer(withTimeInterval: timeoutInterval, repeats: false, block: { (_) in
+        timer = Timer.scheduledTimer(withTimeInterval: timeoutInterval, repeats: false, block: { [weak self](_) in
             SwiftMessages.showToast(message: Localized.TOAST_RECAPTCHA_TIMED_OUT, backgroundColor: .hintRed)
-            completion(.timedOut)
-            self.clean()
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.completion?(.timedOut)
+            weakSelf.clean()
         })
     }
     
@@ -85,10 +88,11 @@ extension ReCaptchaManager: WKScriptMessageHandler {
             timer?.invalidate()
             timer = nil
             webView?.evaluateJavaScript(executeReCaptchaJS, completionHandler: { [weak self] (_, error) in
-                if let error = error {
-                    self?.completion?(.failed(error))
-                    self?.clean()
+                guard let error = error else {
+                    return
                 }
+                self?.completion?(.failed(error))
+                self?.clean()
             })
         case .challengeChange:
             challengeChanged()

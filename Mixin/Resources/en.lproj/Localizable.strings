@@ -19,6 +19,8 @@
 "action_done" = "Done";
 "action_save" = "Save";
 "action_see_more" = "See more";
+"action_open_safari" = "Open in Safari";
+"action_refresh" = "Refresh";
 "menu_delete" = "Delete";
 
 "date_format_day" = "hh:mm a";

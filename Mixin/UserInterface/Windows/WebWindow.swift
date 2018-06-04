@@ -53,8 +53,24 @@ class WebWindow: ZoomWindow {
         super.zoomAnimation(targetHeight: targetHeight)
     }
 
+    override func zoomAction(_ sender: Any) {
+        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { [weak self](_) in
+            self?.webView.reload()
+        }))
+        alc.addAction(UIAlertAction(title: Localized.ACTION_OPEN_SAFARI, style: .default, handler: { [weak self](_) in
+            guard let weakSelf = self, let requestUrl = weakSelf.webView.url else {
+                return
+            }
+            UIApplication.shared.open(requestUrl, options: [:], completionHandler: nil)
+            weakSelf.dismissPopupControllerAnimated()
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
+    }
+
     func presentPopupControllerAnimated(url: URL) {
-        super.presentPopupControllerAnimated()
+        presentView()
         webView.load(URLRequest(url: url))
         loadingView.startAnimating()
         loadingView.isHidden = false
@@ -63,7 +79,7 @@ class WebWindow: ZoomWindow {
     override func dismissPopupControllerAnimated() {
         webView.stopLoading()
         userContentController.removeScriptMessageHandler(forName: "MixinContext")
-        super.dismissPopupControllerAnimated()
+        dismissView()
     }
 
     @IBAction func backAction(_ sender: Any) {
@@ -126,7 +142,6 @@ extension WebWindow: UIScrollViewDelegate {
             let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
             if windowMaximum != shouldMaximizeWindow {
                 windowMaximum = shouldMaximizeWindow
-                zoomButton.setImage(shouldMaximizeWindow ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
             }
         }
     }
@@ -148,7 +163,6 @@ extension WebWindow: UIScrollViewDelegate {
                 let suggestedWindowMaximum = velocity.y > 0
                 if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
                     windowMaximum = suggestedWindowMaximum
-                    zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
                 }
             }
             webViewWrapperHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight

@@ -185,7 +185,7 @@ class BaseAPI {
                         AccountAPI.shared.logout()
                         return
                     case 429:
-                        if url != AccountAPI.url.verifyPin {
+                        if url != AccountAPI.url.verifyPin && !url.contains(AccountAPI.url.verifications) {
                             UIApplication.currentActivity()?.alert(Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS)
                             return
                         }

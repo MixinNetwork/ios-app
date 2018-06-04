@@ -33,13 +33,21 @@
                                         <action selector="backAction:" destination="Qmy-MR-oXV" eventType="touchUpInside" id="9Zb-ah-xGi"/>
                                     </connections>
                                 </button>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mJv-BF-6up">
+                                    <rect key="frame" x="56" y="0.0" width="263" height="56"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <gestureRecognizers/>
+                                    <connections>
+                                        <outletCollection property="gestureRecognizers" destination="Lkj-kY-rfF" appends="YES" id="ZkV-9U-ASv"/>
+                                    </connections>
+                                </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k5S-YR-Z3Z">
                                     <rect key="frame" x="56" y="28.5" width="263" height="0.0"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="AbR-VA-i5f">
+                                <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="AbR-VA-i5f">
                                     <rect key="frame" x="177" y="18" width="20" height="20"/>
                                     <color key="color" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 </activityIndicatorView>
@@ -73,10 +81,14 @@
                                 <constraint firstAttribute="height" constant="56" id="Ewj-cl-Uzr"/>
                                 <constraint firstItem="40E-Gy-rhn" firstAttribute="leading" secondItem="Rr0-ei-B13" secondAttribute="leading" id="FhL-mX-I9M"/>
                                 <constraint firstItem="BdC-R9-TIr" firstAttribute="height" secondItem="Rr0-ei-B13" secondAttribute="height" id="K7N-hf-95t"/>
+                                <constraint firstItem="BdC-R9-TIr" firstAttribute="leading" secondItem="mJv-BF-6up" secondAttribute="trailing" id="KWr-nf-h7Z"/>
                                 <constraint firstItem="k5S-YR-Z3Z" firstAttribute="centerY" secondItem="Rr0-ei-B13" secondAttribute="centerY" id="PgU-g9-iRZ"/>
                                 <constraint firstItem="uvk-a8-USK" firstAttribute="leading" secondItem="Rr0-ei-B13" secondAttribute="leading" id="WbM-Jg-THO"/>
                                 <constraint firstItem="BdC-R9-TIr" firstAttribute="centerY" secondItem="Rr0-ei-B13" secondAttribute="centerY" id="Zfg-24-YAB"/>
                                 <constraint firstAttribute="trailing" secondItem="BdC-R9-TIr" secondAttribute="trailing" id="cND-qh-Lss"/>
+                                <constraint firstAttribute="bottom" secondItem="mJv-BF-6up" secondAttribute="bottom" id="fAO-hG-ZAA"/>
+                                <constraint firstItem="mJv-BF-6up" firstAttribute="leading" secondItem="uvk-a8-USK" secondAttribute="trailing" id="gMf-x2-Ovj"/>
+                                <constraint firstItem="mJv-BF-6up" firstAttribute="top" secondItem="Rr0-ei-B13" secondAttribute="top" id="ibP-iW-seH"/>
                                 <constraint firstAttribute="trailing" secondItem="40E-Gy-rhn" secondAttribute="trailing" id="j6e-XT-eUz"/>
                                 <constraint firstAttribute="bottom" secondItem="40E-Gy-rhn" secondAttribute="bottom" id="ja1-f3-dSf"/>
                                 <constraint firstItem="uvk-a8-USK" firstAttribute="centerY" secondItem="Rr0-ei-B13" secondAttribute="centerY" id="rCv-K5-IKt"/>
@@ -131,6 +143,11 @@
             </connections>
             <point key="canvasLocation" x="25.5" y="52.5"/>
         </view>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="Lkj-kY-rfF">
+            <connections>
+                <action selector="panAction:" destination="Qmy-MR-oXV" id="COv-pL-1Xd"/>
+            </connections>
+        </panGestureRecognizer>
     </objects>
     <resources>
         <image name="ic_titlebar_close" width="44" height="44"/>

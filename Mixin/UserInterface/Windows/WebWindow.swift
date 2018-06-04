@@ -11,6 +11,7 @@ class WebWindow: ZoomWindow {
     private let swipeToDismissByPositionThresholdHeight: CGFloat = 180
     private let swipeToDismissByVelocityThresholdHeight: CGFloat = 250
     private let swipeToDismissByVelocityThresholdVelocity: CGFloat = 1200
+    private let swipeToZoomVelocityThreshold: CGFloat = 800
 
     private var swipeToZoomAnimator: UIViewPropertyAnimator?
     
@@ -86,6 +87,36 @@ class WebWindow: ZoomWindow {
         dismissPopupControllerAnimated()
     }
 
+    @IBAction func panAction(_ recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case.began:
+            webView.endEditing(true)
+            recognizer.setTranslation(.zero, in: self)
+        case .changed:
+            let targetHeight = webViewWrapperHeightConstraint.constant - recognizer.translation(in: self).y
+            zoomAnimation(targetHeight: targetHeight)
+            recognizer.setTranslation(.zero, in: self)
+        case .ended, .cancelled, .failed:
+            let shouldDismissByPosition = webViewWrapperHeightConstraint.constant < swipeToDismissByPositionThresholdHeight
+            let shouldDismissByVelocity = webViewWrapperHeightConstraint.constant < swipeToDismissByVelocityThresholdHeight
+                && recognizer.velocity(in: self).y > swipeToDismissByVelocityThresholdVelocity
+            if shouldDismissByPosition || shouldDismissByVelocity {
+                dismissPopupControllerAnimated()
+            } else {
+                if recognizer.velocity(in: self).y > swipeToZoomVelocityThreshold {
+                    windowMaximum = true
+                } else if recognizer.velocity(in: self).y < -swipeToZoomVelocityThreshold {
+                    windowMaximum = false
+                } else {
+                    windowMaximum = !(webViewWrapperHeightConstraint.constant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2)
+                }
+                toggleZoomAction()
+            }
+        default:
+            break
+        }
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
         webView.removeObserver(self, forKeyPath: "title")

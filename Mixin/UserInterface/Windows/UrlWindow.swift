@@ -42,6 +42,8 @@ class UrlWindow: BottomSheetView {
             return checkUsersUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case let .transfer(id):
             return checkTransferUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
+        case let .send:
+            return checkSendUrl(url: url, fromWeb: fromWeb)
         case .unknown:
             return false
         }
@@ -365,6 +367,22 @@ extension UrlWindow {
             memo = urlDecodeMemo
         }
         UrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, counterUserId: recipientId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
+
+        return true
+    }
+
+    class func checkSendUrl(url: URL, fromWeb: Bool = false) -> Bool {
+        guard let query = url.getKeyVals() else {
+            return false
+        }
+        guard let text = query["text"] else {
+            return false
+        }
+        guard !text.isEmpty else {
+            return false
+        }
+
+        UIApplication.rootNavigationController()?.pushViewController(SendToViewController.instance(text: text), animated: true)
 
         return true
     }

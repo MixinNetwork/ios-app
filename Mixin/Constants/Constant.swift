@@ -140,6 +140,7 @@ enum MixinURL {
         static let pay = "pay"
         static let users = "users"
         static let transfer = "transfer"
+        static let send = "send"
     }
     typealias Host = Path
     
@@ -147,6 +148,7 @@ enum MixinURL {
     case users(String)
     case pay
     case transfer(String)
+    case send
     case unknown
     
     init?(url: URL) {
@@ -159,6 +161,8 @@ enum MixinURL {
                 self = .users(url.pathComponents[1])
             } else if url.host == Host.transfer && url.pathComponents.count == 2 {
                 self = .transfer(url.pathComponents[1])
+            } else if url.host == Host.send {
+                self = .send
             } else {
                 self = .unknown
             }

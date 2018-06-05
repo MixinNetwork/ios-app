@@ -59,7 +59,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="B5X-IH-Iyy"/>
                                         </constraints>
-                                        <state key="normal" image="ic_titlebar_right_back"/>
+                                        <state key="normal" image="ic_titlebar_chat"/>
                                         <connections>
                                             <action selector="backAction:" destination="7b5-hR-M5c" eventType="touchUpInside" id="YJ0-ZF-iov"/>
                                         </connections>
@@ -1238,9 +1238,9 @@
         <image name="ic_member_selected" width="20" height="20"/>
         <image name="ic_scan_address" width="44" height="44"/>
         <image name="ic_titlebar_back" width="44" height="44"/>
+        <image name="ic_titlebar_chat" width="44" height="44"/>
         <image name="ic_titlebar_close" width="44" height="44"/>
         <image name="ic_titlebar_more" width="44" height="44"/>
-        <image name="ic_titlebar_right_back" width="44" height="44"/>
         <image name="ic_wallet_xin" width="40" height="40"/>
         <image name="ic_wallet_xin_medium" width="64" height="64"/>
     </resources>

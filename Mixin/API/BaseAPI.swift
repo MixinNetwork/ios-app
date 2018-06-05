@@ -265,9 +265,11 @@ extension BaseAPI {
             }
 
             if !result.isSuccess, case let .failure(error) = result, error.code == 401 {
-                var userInfo = UIApplication.getTrackUserInfo()
-                userInfo["request"] = debugDescription
-                UIApplication.trackError("BaseAPI sync request", action: "401", userInfo: userInfo)
+                if AccountAPI.shared.didLogin {
+                    var userInfo = UIApplication.getTrackUserInfo()
+                    userInfo["request"] = debugDescription
+                    UIApplication.trackError("BaseAPI sync request", action: "401", userInfo: userInfo)
+                }
                 AccountAPI.shared.logout()
             }
             return result

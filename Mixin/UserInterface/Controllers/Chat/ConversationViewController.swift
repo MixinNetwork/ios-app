@@ -44,7 +44,6 @@ class ConversationViewController: UIViewController {
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.25
-    private let me = AccountAPI.shared.account!
     private let keyboardAnimationCurve = UIViewAnimationCurve(rawValue: 7) ?? .easeOut
     private let stickerPanelSegueId = "StickerPanelSegueId"
     private let moreMenuSegueId = "MoreMenuSegueId"
@@ -1080,7 +1079,7 @@ extension ConversationViewController {
     private func updateMoreMenuFixedJobs() {
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
             moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
-        } else if let userBot = userBot, userBot.creatorId == me.user_id {
+        } else if let userBot = userBot, userBot.creatorId == AccountAPI.shared.accountUserId {
             moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
         } else {
             moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]

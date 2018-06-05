@@ -274,6 +274,8 @@
 		DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */; };
 		DF3FF05B20123BD6000A0C0A /* FileDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */; };
 		DF3FF05D20134C4C000A0C0A /* DatabaseUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */; };
+		DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44B0CB20C6897000A099B6 /* EmptyView.swift */; };
+		DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF44B0CD20C6897D00A099B6 /* EmptyView.xib */; };
 		DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4041FA9B48500243A8B /* ContactsManager.swift */; };
 		DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */; };
 		DF46B4091FA9E79700243A8B /* PhoneContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF46B4081FA9E79700243A8B /* PhoneContactCell.xib */; };
@@ -767,6 +769,8 @@
 		DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAttachmentData.swift; sourceTree = "<group>"; };
 		DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloadJob.swift; sourceTree = "<group>"; };
 		DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUserDefault.swift; sourceTree = "<group>"; };
+		DF44B0CB20C6897000A099B6 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
+		DF44B0CD20C6897D00A099B6 /* EmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyView.xib; sourceTree = "<group>"; };
 		DF46B4041FA9B48500243A8B /* ContactsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsManager.swift; sourceTree = "<group>"; };
 		DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactCell.swift; sourceTree = "<group>"; };
 		DF46B4081FA9E79700243A8B /* PhoneContactCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactCell.xib; sourceTree = "<group>"; };
@@ -1574,6 +1578,8 @@
 				7B869C71202D7FC8009930BA /* NumberPadButton.swift */,
 				7B869C73202D8206009930BA /* NumberPadButton.xib */,
 				7B7264F4209C5B1A00F234BE /* CoreTextLabel.swift */,
+				DF44B0CB20C6897000A099B6 /* EmptyView.swift */,
+				DF44B0CD20C6897D00A099B6 /* EmptyView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2064,6 +2070,7 @@
 				DFEECF591FF6804E00B177B1 /* SignalLoadingView.xib in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				DFD294471FA7092800FADAAD /* ContactCell.xib in Resources */,
+				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				DF8EF6AD203055DD00E99CE8 /* UrlWindow.xib in Resources */,
@@ -2416,6 +2423,7 @@
 				7BBF395E205A624F00390712 /* Fee.swift in Sources */,
 				DF2A24521FC8744A003A8C1E /* ParticipantDAO.swift in Sources */,
 				273FACB5205FB9A800513327 /* crypto_provider.c in Sources */,
+				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
 				7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */,
 				7B92F8251FA1A7D5000B838B /* LoginViewController.swift in Sources */,
 				7BA4A1CE1FF347130086CD56 /* GroupParticipantCell.swift in Sources */,

@@ -369,6 +369,7 @@ public class Localized {
     public static let SETTING_NOTIFICATION = LocalizedString("setting_notification", comment: "Notifications")
     public static let SETTING_CONVERSATION = LocalizedString("setting_conversation", comment: "Conversation")
     public static let SETTING_BLOCKED = LocalizedString("setting_blocked", comment: "Blocked Users")
+    public static let SETTING_BLOCKED_EMPTY = LocalizedString("setting_blocked_empty", comment: "No blocked users")
     public static let SETTING_PRIVACY_AND_SECURITY = LocalizedString("setting_privacy_and_security", comment: "Privacy and Security")
 
     public static let SETTING_NOTIFICATION_MESSAGE = LocalizedString("setting_notification_message", comment: "MESSAGE NOTIFICATIONS")

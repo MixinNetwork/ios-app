@@ -353,6 +353,7 @@
 "setting_blocked_user_count_none" = "无";
 "setting_about" = "关于";
 "setting_blocked" = "屏蔽名单";
+"setting_blocked_empty" = "没有人被屏蔽";
 "setting_blocked_summary" = "被屏蔽的用户不能给你发消息也不能邀请你入群。";
 "setting_conversation" = "会话";
 "setting_conversation_summary" = "你可以限制谁可以给你发消息或邀请你加入群聊。";

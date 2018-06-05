@@ -24,13 +24,19 @@ class BlockUserViewController: UIViewController {
             let users = UserDAO.shared.getBlockUsers()
             self?.users = users
             DispatchQueue.main.async {
-                self?.tableView.reloadData()
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.tableView.reloadData()
+                weakSelf.tableView.checkEmpty(dataCount: users.count, text: Localized.SETTING_BLOCKED_EMPTY, photo: #imageLiteral(resourceName: "ic_empty_blocked_users"))
             }
         }
     }
 
     class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: Storyboard.setting.instantiateViewController(withIdentifier: "block"), title: Localized.SETTING_BLOCKED)
+        let container = ContainerViewController.instance(viewController: Storyboard.setting.instantiateViewController(withIdentifier: "block"), title: Localized.SETTING_BLOCKED)
+        container.automaticallyAdjustsScrollViewInsets = false
+        return container
     }
     
 }

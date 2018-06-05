@@ -66,6 +66,7 @@
 "init_signal" = "正在初始化";
 "toast_recaptcha_timed_out" = "验证超时";
 "toast_recaptcha_invalid" = "验证失败";
+"toast_update_tips" = "请从 App Store 更新 Mixin 至最新版";
 
 // Contacts
 "contact_title" = "联系人";

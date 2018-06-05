@@ -76,6 +76,7 @@ public class Localized {
     public static let HEADER_TITLE_CURRENT_LOCATION = LocalizedString("header_title_current_location", comment: "Current Location")
     public static let TOAST_RECAPTCHA_TIMED_OUT = LocalizedString("toast_recaptcha_timed_out", comment: "Validation timed out")
     public static let TOAST_RECAPTCHA_INVALID = LocalizedString("toast_recaptcha_invalid", comment: "Recaptcha is invalid.")
+    public static let TOAST_UPDATE_TIPS = LocalizedString("toast_update_tips", comment: "Please update Mixin from App Store to continue use the service.")
 
     // Contacts
     public static let CONTACT_TITLE_CHANGE_NAME = LocalizedString("contact_title_change_name", comment: "Change name")

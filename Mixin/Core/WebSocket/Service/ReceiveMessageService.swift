@@ -188,7 +188,7 @@ class ReceiveMessageService: MixinService {
         UIApplication.trackError("ReceiveMessageService", action: "signal key decrypt failed \(errorInfo)", userInfo: userInfo)
     }
     
-    private func processDecryptSuccess(data: BlazeMessageData, plainText: String) {
+    private func processDecryptSuccess(data: BlazeMessageData, plainText: String, representativeId: String? = nil) {
         if data.category.hasSuffix("_TEXT") {
             var content = plainText
             if data.category == MessageCategory.PLAIN_TEXT.rawValue {
@@ -412,7 +412,10 @@ class ReceiveMessageService: MixinService {
                 break
             }
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
-            processDecryptSuccess(data: data, plainText: data.data)
+            if let representativeId = data.representativeId {
+                _ = syncUser(userId: representativeId)
+            }
+            processDecryptSuccess(data: data, plainText: data.data, representativeId: data.representativeId)
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED, createdAt: data.createdAt)
         default:
             break

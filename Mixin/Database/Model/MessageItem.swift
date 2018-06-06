@@ -153,3 +153,19 @@ extension MessageItem {
     }
 
 }
+
+extension MessageItem {
+
+    func isShowSenderName(conversation: ConversationItem, ownerUser: UserItem?) -> Bool {
+        guard userId != AccountAPI.shared.accountUserId else {
+            return false
+        }
+        guard conversation.category != ConversationCategory.GROUP.rawValue else {
+            return true
+        }
+        guard let ownerUser = ownerUser else {
+            return false
+        }
+        return ownerUser.userId != userId && conversation.category == ConversationCategory.CONTACT.rawValue
+    }
+}

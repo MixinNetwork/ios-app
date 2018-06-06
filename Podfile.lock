@@ -1,21 +1,21 @@
 PODS:
   - Alamofire (4.7.2)
   - Base64 (1.1.2)
-  - Bugsnag (5.15.5)
-  - DeviceGuru (4.0.0)
-  - Firebase/Analytics (5.0.1):
+  - Bugsnag (5.15.6)
+  - DeviceGuru (4.0.4)
+  - Firebase/Analytics (5.1.0):
     - Firebase/Core
-  - Firebase/Core (5.0.1):
+  - Firebase/Core (5.1.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.0.0)
-  - Firebase/CoreOnly (5.0.1):
-    - FirebaseCore (= 5.0.1)
-  - FirebaseAnalytics (5.0.0):
+    - FirebaseAnalytics (= 5.0.1)
+  - Firebase/CoreOnly (5.1.0):
+    - FirebaseCore (= 5.0.2)
+  - FirebaseAnalytics (5.0.1):
     - FirebaseCore (~> 5.0)
     - FirebaseInstanceID (~> 3.0)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - nanopb (~> 0.3)
-  - FirebaseCore (5.0.1):
+  - FirebaseCore (5.0.2):
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseInstanceID (3.0.0):
     - FirebaseCore (~> 5.0)
@@ -63,19 +63,21 @@ PODS:
   - PhoneNumberKit/UIKit (2.1.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - RSKImageCropper (2.0.1)
-  - SDWebImage (4.3.3):
-    - SDWebImage/Core (= 4.3.3)
-  - SDWebImage/Core (4.3.3)
-  - SDWebImage/GIF (4.3.3):
+  - SDWebImage (4.4.0):
+    - SDWebImage/Core (= 4.4.0)
+  - SDWebImage/Core (4.4.0)
+  - SDWebImage/GIF (4.4.0):
     - FLAnimatedImage (~> 1.0)
     - SDWebImage/Core
-  - SDWebImage/WebP (4.3.3):
+  - SDWebImage/WebP (4.4.0):
     - libwebp (~> 0.5)
     - SDWebImage/Core
   - SignalProtocolC (2.3.1)
   - SnapKit (4.0.0)
   - SocketRocket (0.5.1)
-  - SwiftMessages (4.1.2)
+  - SwiftMessages (4.1.4):
+    - SwiftMessages/App (= 4.1.4)
+  - SwiftMessages/App (4.1.4)
   - WCDB.swift (1.0.6):
     - WCDB.swift/sqlcipher (= 1.0.6)
   - WCDB.swift/sqlcipher (1.0.6)
@@ -146,11 +148,11 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
-  Bugsnag: 82788750cec86630828bb7dd250943f8356c53ea
-  DeviceGuru: ad93600b4ce895a48ae2931e32513b5673f69707
-  Firebase: d6861c2059d8c32d1e6dd8932e22ada346d90a3a
-  FirebaseAnalytics: 19812b49fa5f283dd6b23edf8a14b5d477029ab8
-  FirebaseCore: cafc814b2d84fc8733f09e653041cc2165332ad7
+  Bugsnag: 7382eb9b85b46e369be536bf08267a91a56d2753
+  DeviceGuru: 7b66c69ad373db7d8288993e4b8aacc6eb625265
+  Firebase: e08fb0795f35707aeb1d8a715c731c45bdf6fd56
+  FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
+  FirebaseCore: b81044df1044c0857a0737c6324678b72d4f7f00
   FirebaseInstanceID: 83e0040351565df711a5db3d8ebe5ea21aca998a
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
@@ -161,14 +163,14 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   PhoneNumberKit: 62003f40ff75315fd3738286558bc365365ac222
   RSKImageCropper: 50d5a3e4160f0309b14d75b89d5ae2f496d56e0d
-  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
+  SDWebImage: b534502786e43dde36dfcaee89356fe6df30e203
   SignalProtocolC: d46237ab35954a8d1213faabf4baa783591c49ab
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
-  SwiftMessages: d81f48c1f8b6bc1dbebdfffe11226f0344f937ca
+  SwiftMessages: 2c33fdee8b8f38dfc7e1036684456b505891da8c
   WCDB.swift: 5bb038bc5bb46067cccc7c48392e8f4c4a15def0
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
 PODFILE CHECKSUM: 3da767661e883491923e537bd77547ac92d7c8e1
 
-COCOAPODS: 1.5.2
+COCOAPODS: 1.5.3

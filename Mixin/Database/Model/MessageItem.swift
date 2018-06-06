@@ -153,3 +153,16 @@ extension MessageItem {
     }
 
 }
+
+extension MessageItem {
+
+    func isRepresentativeMessage(conversation: ConversationItem) -> Bool {
+        guard userId != AccountAPI.shared.accountUserId else {
+            return false
+        }
+        guard conversation.category != ConversationCategory.GROUP.rawValue else {
+            return true
+        }
+        return conversation.ownerId != userId && conversation.category == ConversationCategory.CONTACT.rawValue
+    }
+}

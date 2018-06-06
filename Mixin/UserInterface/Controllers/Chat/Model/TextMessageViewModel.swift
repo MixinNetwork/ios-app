@@ -44,17 +44,9 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 linksMap[key] = (value, nil)
             }
         } else {
-            let (usernameExtractedText, username) = EmbeddedUsernameDetector.stringByExtractingEmbeddedUsername(in: message.content)
-            text = usernameExtractedText
+            text = message.content
             let textLength = (text as NSString).length
-            let linkDetectionRange: NSRange
-            if let username = username {
-                linksMap[username.range] = (url: username.url, color: username.color)
-                let location = NSMaxRange(username.range)
-                linkDetectionRange = NSRange(location: min(textLength, location), length: max(0, textLength - location))
-            } else {
-                linkDetectionRange = NSRange(location: 0, length: textLength)
-            }
+            let linkDetectionRange = NSRange(location: 0, length: textLength)
             if let matches = Link.detector?.matches(in: text, options: [], range: linkDetectionRange) {
                 for match in matches {
                     guard let url = match.url else {

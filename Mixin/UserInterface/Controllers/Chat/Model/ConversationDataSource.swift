@@ -764,7 +764,7 @@ extension ConversationDataSource {
             || messages[index + 1].isExtensionMessage) {
             style.insert(.hasBottomSeparator)
         }
-        if message.isShowSenderName(conversation: conversation, ownerUser: ownerUser) {
+        if message.isRepresentativeMessage(conversation: conversation) {
             if (isFirstMessage && !message.isExtensionMessage && !message.isSystemMessage)
                 || (!isFirstMessage && (messages[index - 1].userId != message.userId || messages[index - 1].isExtensionMessage || messages[index - 1].isSystemMessage)) {
                 style.insert(.showFullname)
@@ -811,7 +811,7 @@ extension ConversationDataSource {
                     previousViewModel.style.remove(.hasBottomSeparator)
                     previousViewModel.style.remove(.hasTail)
                 }
-                if message.isShowSenderName(conversation: conversation, ownerUser: ownerUser) && style.contains(.received) && previousViewModelIsFromDifferentUser {
+                if message.isRepresentativeMessage(conversation: conversation) && style.contains(.received) && previousViewModelIsFromDifferentUser {
                     style.insert(.showFullname)
                 }
                 DispatchQueue.main.async {
@@ -829,7 +829,7 @@ extension ConversationDataSource {
                 if viewModel.message.userId != nextViewModel.message.userId {
                     viewModel.style.insert(.hasTail)
                     viewModel.style.insert(.hasBottomSeparator)
-                    if nextViewModel.message.isShowSenderName(conversation: conversation, ownerUser: ownerUser) && nextViewModel.style.contains(.received) {
+                    if nextViewModel.message.isRepresentativeMessage(conversation: conversation) && nextViewModel.style.contains(.received) {
                         nextViewModel.style.insert(.showFullname)
                     }
                 } else {
@@ -852,7 +852,7 @@ extension ConversationDataSource {
             section = dates.index(where: { $0 > date }) ?? dates.count
             row = 0
             isLastCell = section == dates.count
-            if style.contains(.received) && message.isShowSenderName(conversation: conversation, ownerUser: ownerUser) {
+            if style.contains(.received) && message.isRepresentativeMessage(conversation: conversation) {
                 style.insert(.showFullname)
             }
             viewModel = self.viewModel(withMessage: message, style: style, fits: layoutWidth)

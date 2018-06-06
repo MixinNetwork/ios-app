@@ -49,44 +49,47 @@ extension UNUserNotificationCenter {
 
     func sendMessageNotification(message: MessageItem, ownerUser: UserItem?, conversation: ConversationItem) {
         let notificationContent = UNMutableNotificationContent()
+        let isRepresentativeMessage = message.isRepresentativeMessage(conversation: conversation)
         if conversation.isGroup() {
             notificationContent.title = conversation.name
+        } else if isRepresentativeMessage {
+            notificationContent.title = conversation.ownerFullName
         } else {
             notificationContent.title = message.userFullName
         }
 
         if message.category.hasSuffix("_TEXT") {
-            if conversation.isGroup() {
+            if conversation.isGroup() || isRepresentativeMessage {
                 notificationContent.body = "\(message.userFullName): \(message.content)"
             } else {
                 notificationContent.body = message.content
             }
         } else if message.category.hasSuffix("_IMAGE") {
-            if conversation.isGroup() {
+            if conversation.isGroup() || isRepresentativeMessage {
                 notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_PHOTO)"
             } else {
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_PHOTO
             }
         } else if message.category.hasSuffix("_VIDEO") {
-            if conversation.isGroup() {
+            if conversation.isGroup() || isRepresentativeMessage {
                 notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_VIDEO)"
             } else {
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_VIDEO
             }
         } else if message.category.hasSuffix("_DATA") {
-            if conversation.isGroup() {
+            if conversation.isGroup() || isRepresentativeMessage {
                 notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_FILE)"
             } else {
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_FILE
             }
         } else if message.category.hasSuffix("_STICKER") {
-            if conversation.isGroup() {
+            if conversation.isGroup() || isRepresentativeMessage {
                 notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_STICKER)"
             } else {
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_STICKER
             }
         } else if message.category.hasSuffix("_CONTACT") {
-            if conversation.isGroup() {
+            if conversation.isGroup() || isRepresentativeMessage {
                 notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_CONTACT)"
             } else {
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_CONTACT

@@ -243,6 +243,6 @@ struct ForwardUser {
     }
 
     func toUser() -> UserItem {
-        return UserItem.createUser(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: ownerAvatarUrl)
+        return UserItem.createUser(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: ownerAvatarUrl, appId: ownerAppId)
     }
 }

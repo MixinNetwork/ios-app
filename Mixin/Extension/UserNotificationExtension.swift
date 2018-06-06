@@ -120,6 +120,7 @@ extension UNUserNotificationCenter {
             userInfo["userFullName"] = user.fullName
             userInfo["userAvatarUrl"] = user.avatarUrl
             userInfo["userIdentityNumber"] = user.identityNumber
+            userInfo["userAppId"] = user.appId
         }
         notificationContent.userInfo = userInfo
         notificationContent.sound = UNNotificationSound(named: "mixin.caf")

@@ -455,9 +455,9 @@ extension GalleryItemViewController {
         layout(mediaStatus: .PENDING)
         imageView.image = photo.thumbnail
         if item?.category == .image {
-            ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: photo.messageId))
+            ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: photo.messageId, mediaMimeType: photo.mediaMimeType))
         } else {
-            FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: photo.messageId))
+            FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: photo.messageId, mediaMimeType: photo.mediaMimeType))
         }
     }
     

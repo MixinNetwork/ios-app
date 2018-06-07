@@ -28,7 +28,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         if messageIsSentByMe {
             job = FileUploadJob(message: Message.createMessage(message: message))
         } else {
-            job = FileDownloadJob(messageId: message.messageId)
+            job = FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
         FileJobQueue.shared.addJob(job: job)
     }

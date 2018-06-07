@@ -17,13 +17,13 @@ class SendMessageService: MixinService {
                 if message.userId == AccountAPI.shared.accountUserId {
                     FileJobQueue.shared.addJob(job: FileUploadJob(message: message))
                 } else {
-                    FileJobQueue.shared.addJob(job: FileDownloadJob(messageId: message.messageId))
+                    FileJobQueue.shared.addJob(job: FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
                 }
             } else if message.category.hasSuffix("_VIDEO") {
                 if message.userId == AccountAPI.shared.accountUserId {
                     FileJobQueue.shared.addJob(job: VideoUploadJob(message: message))
                 } else {
-                    FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId))
+                    FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
                 }
             }
         }

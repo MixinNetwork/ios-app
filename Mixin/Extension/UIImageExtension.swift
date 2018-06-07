@@ -138,7 +138,7 @@ extension UIImage {
     }
 
     func scaleForUpload() -> UIImage {
-        let maxWH: CGFloat = 1080
+        let maxWH: CGFloat = 1920
 
         if size.width < maxWH && size.height < maxWH {
             return self

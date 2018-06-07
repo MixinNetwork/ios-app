@@ -1,10 +1,11 @@
 import UIKit
 import WebKit
 import Photos
+import FLAnimatedImage
 
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
-    @IBOutlet weak var photoImageView: UIImageView!
+    @IBOutlet weak var photoImageView: FLAnimatedImageView!
     @IBOutlet weak var videoView: GalleryVideoView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var sendButton: StateResponsiveButton!
@@ -16,6 +17,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
     private var image: UIImage?
     private var asset: PHAsset?
+    private var animateURL: URL?
     private var videoAsset: AVAsset?
     private var isObservingRate = false
     private var seekToZero = false
@@ -40,17 +42,37 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     }
                 }
             } else {
-                let requestOptions = PHImageRequestOptions()
-                requestOptions.version = .unadjusted
-                requestOptions.isSynchronous = true
-                requestOptions.deliveryMode = .highQualityFormat
-                requestOptions.isNetworkAccessAllowed = true
-                PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self](image, _) in
-                    self?.image = image
-                    self?.photoImageView.image = image
-                })
+                if let filename = PHAssetResource.assetResources(for: asset).first?.originalFilename.lowercased(), let startIndex = filename.index(of: "."), startIndex < filename.endIndex {
+                    let fileExtension = String(filename[startIndex..<filename.endIndex])
+                    if fileExtension.hasSuffix(".webp") || fileExtension.hasSuffix(".gif") {
+                        PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { [weak self](data, _, _, _) in
+                            let filename = "\(UUID().uuidString.lowercased())\(fileExtension)"
+                            let tempUrl = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
+                            do {
+                                try data?.write(to: tempUrl)
+                                self?.animateURL = tempUrl
+                                self?.photoImageView.sd_setImage(with: tempUrl)
+                            } catch {
+                                self?.requestAssetImage(asset: asset)
+                            }
+                        })
+                        return
+                    }
+                }
+                requestAssetImage(asset: asset)
             }
         }
+    }
+
+    private func requestAssetImage(asset: PHAsset) {
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.version = .unadjusted
+        requestOptions.isSynchronous = true
+        requestOptions.deliveryMode = .highQualityFormat
+        requestOptions.isNetworkAccessAllowed = true
+        PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self](image, _) in
+            self?.photoImageView.image = image
+        })
     }
 
     @IBAction func playAction(_ sender: Any) {
@@ -100,16 +122,14 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
 
     @IBAction func sendAction(_ sender: Any) {
-        if let image = self.image {
-            dataSource?.sendMessage(type: .SIGNAL_IMAGE, value: image.scaleForUpload())
-            navigationController?.popViewController(animated: true)
-        } else if let asset = self.videoAsset {
-            guard !sendButton.isBusy else {
-                return
-            }
-            sendButton.isBusy = true
+        guard !sendButton.isBusy else {
+            return
+        }
+        sendButton.isBusy = true
+        if let asset = self.videoAsset {
             guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPreset640x480) else {
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
+                sendButton.isBusy = false
+                alert(Localized.CHAT_SEND_VIDEO_FAILED)
                 return
             }
             let filename = UUID().uuidString.lowercased()
@@ -118,15 +138,72 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             exportSession.outputURL = outputURL
             exportSession.shouldOptimizeForNetworkUse = true
             exportSession.exportAsynchronously(completionHandler: { [weak self] in
-                guard exportSession.status == .completed else {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
-                    return
-                }
                 DispatchQueue.main.async {
+                    guard exportSession.status == .completed else {
+                        self?.sendButton.isBusy = false
+                        self?.alert(Localized.CHAT_SEND_VIDEO_FAILED)
+                        return
+                    }
                     self?.dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: outputURL, asset: asset)
                     self?.navigationController?.popViewController(animated: true)
                 }
             })
+        } else if let image = photoImageView.image, let dataSource = dataSource {
+            var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: dataSource.conversationId, userId: AccountAPI.shared.accountUserId)
+            message.mediaStatus = MediaStatus.PENDING.rawValue
+
+            DispatchQueue.global().async { [weak self] in
+                if let assetUrl = self?.animateURL {
+                    guard FileManager.default.fileSize(assetUrl.path) > 0 else {
+                        DispatchQueue.main.async {
+                            self?.sendButton.isBusy = false
+                            self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
+                        }
+                        return
+                    }
+                    let fileExtension = assetUrl.pathExtension.lowercased()
+                    let filename = "\(message.messageId).\(fileExtension)"
+                    let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                    do {
+                        try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
+
+                        message.thumbImage = image.getBlurThumbnail().toBase64()
+                        message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+                        message.mediaWidth = Int(image.size.width)
+                        message.mediaHeight = Int(image.size.height)
+                        message.mediaMimeType = FileManager.default.mimeType(ext: fileExtension)
+                        message.mediaUrl = filename
+                    } catch {
+                        DispatchQueue.main.async {
+                            self?.sendButton.isBusy = false
+                            self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
+                        }
+                        return
+                    }
+                } else {
+                    let filename = "\(message.messageId).\(ExtensionName.jpeg)"
+                    let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                    let targetPhoto = image.scaleForUpload()
+                    if targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
+                        message.thumbImage = targetPhoto.getBlurThumbnail().toBase64()
+                        message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+                        message.mediaWidth = Int(targetPhoto.size.width)
+                        message.mediaHeight = Int(targetPhoto.size.height)
+                        message.mediaMimeType = "image/jpeg"
+                        message.mediaUrl = filename
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.sendButton.isBusy = false
+                            self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
+                        }
+                        return
+                    }
+                }
+                SendMessageService.shared.sendMessage(message: message, ownerUser: dataSource.ownerUser, isGroupMessage: dataSource.category == .group)
+                DispatchQueue.main.async {
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
         }
     }
     

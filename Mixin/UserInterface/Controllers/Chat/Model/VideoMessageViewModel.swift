@@ -64,7 +64,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if messageIsSentByMe {
             job = VideoUploadJob(message: Message.createMessage(message: message))
         } else {
-            job = VideoDownloadJob(messageId: message.messageId)
+            job = VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
         FileJobQueue.shared.addJob(job: job)
     }

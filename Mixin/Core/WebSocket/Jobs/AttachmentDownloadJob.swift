@@ -8,9 +8,15 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     
     private var contentLength: Double?
     private var downloadedContentLength: Double = 0
-    
-    internal lazy var fileName = messageId + ExtensionName.jpeg.withDot
+    private var mediaMimeType: String?
+
+    internal lazy var fileName = "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ExtensionName.jpeg.rawValue))"
     internal lazy var fileUrl = MixinFile.url(ofChatDirectory: .photos, filename: fileName)
+
+    init(messageId: String, mediaMimeType: String?) {
+        super.init(messageId: messageId)
+        self.mediaMimeType = mediaMimeType
+    }
 
     class func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"

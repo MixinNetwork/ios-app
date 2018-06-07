@@ -4,6 +4,7 @@ protocol GalleryItemRepresentable {
     var messageId: String { get }
     var category: String { get }
     var mediaUrl: String? { get }
+    var mediaMimeType: String? { get }
     var mediaWidth: Int? { get }
     var mediaHeight: Int? { get }
     var mediaStatus: String? { get }
@@ -36,6 +37,7 @@ struct GalleryItem: Equatable {
     let url: URL?
     let size: CGSize
     let thumbnail: UIImage?
+    let mediaMimeType: String?
     let createdAt: String
     var mediaStatus: MediaStatus?
     
@@ -57,6 +59,7 @@ struct GalleryItem: Equatable {
         } else {
             return nil
         }
+        mediaMimeType = message.mediaMimeType
         messageId = message.messageId
         let width = max(1, message.mediaWidth ?? 1)
         let height = max(1, message.mediaHeight ?? 1)

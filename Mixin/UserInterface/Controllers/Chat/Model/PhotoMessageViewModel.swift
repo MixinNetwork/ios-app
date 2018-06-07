@@ -26,7 +26,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if messageIsSentByMe {
             job = AttachmentUploadJob(message: Message.createMessage(message: message))
         } else {
-            job = AttachmentDownloadJob(messageId: message.messageId)
+            job = AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
         ConcurrentJobQueue.shared.addJob(job: job)
     }

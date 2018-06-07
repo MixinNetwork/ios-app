@@ -441,23 +441,6 @@ extension ConversationDataSource {
             queue.async {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
-        } else if type == .SIGNAL_IMAGE, let image = value as? UIImage {
-            let filename = message.messageId + ExtensionName.jpeg.withDot
-            let path = MixinFile.url(ofChatDirectory: .photos, filename: filename)
-            queue.async {
-                guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0  else {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_PHOTO_FAILED)
-                    return
-                }
-                message.thumbImage = image.getBlurThumbnail().toBase64()
-                message.mediaSize = FileManager.default.fileSize(path.path)
-                message.mediaWidth = Int(image.size.width)
-                message.mediaHeight = Int(image.size.height)
-                message.mediaMimeType = "image/jpeg"
-                message.mediaUrl = filename
-                message.mediaStatus = MediaStatus.PENDING.rawValue
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
-            }
         } else if type == .SIGNAL_DATA, let url = value as? URL {
             queue.async {
                 guard FileManager.default.fileSize(url.path) > 0 else {

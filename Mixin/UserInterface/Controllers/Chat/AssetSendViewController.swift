@@ -66,7 +66,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
     private func requestAssetImage(asset: PHAsset) {
         let requestOptions = PHImageRequestOptions()
-        requestOptions.version = .unadjusted
+        requestOptions.version = .current
         requestOptions.isSynchronous = true
         requestOptions.deliveryMode = .highQualityFormat
         requestOptions.isNetworkAccessAllowed = true

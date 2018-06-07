@@ -146,6 +146,13 @@ class UserView: CornerView {
         guard let creator = appCreator else {
             return
         }
+
+        guard user.appCreatorId != AccountAPI.shared.accountUserId else {
+            superView?.dismissPopupControllerAnimated()
+            UIApplication.rootNavigationController()?.pushViewController(MyProfileViewController.instance(), animated: true)
+            return
+        }
+
         updateUser(user: creator, animated: true, superView: superView)
     }
 

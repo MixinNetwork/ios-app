@@ -42,7 +42,7 @@ class UrlWindow: BottomSheetView {
             return checkUsersUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case let .transfer(id):
             return checkTransferUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
-        case let .send:
+        case .send:
             return checkSendUrl(url: url, fromWeb: fromWeb)
         case .unknown:
             return false

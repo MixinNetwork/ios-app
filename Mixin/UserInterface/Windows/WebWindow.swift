@@ -57,7 +57,10 @@ class WebWindow: ZoomWindow {
     override func zoomAction(_ sender: Any) {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.ACTION_REFRESH, style: .default, handler: { [weak self](_) in
-            self?.webView.reload()
+            guard let weakSelf = self, let url = weakSelf.webView.url else {
+                return
+            }
+            weakSelf.webView.load(URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10))
         }))
         alc.addAction(UIAlertAction(title: Localized.ACTION_OPEN_SAFARI, style: .default, handler: { [weak self](_) in
             guard let weakSelf = self, let requestUrl = weakSelf.webView.url else {

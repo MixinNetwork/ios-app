@@ -76,6 +76,12 @@ extension UNUserNotificationCenter {
             } else {
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_VIDEO
             }
+        } else if message.category.hasSuffix("_AUDIO") {
+            if conversation.isGroup() {
+                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_AUDIO)"
+            } else {
+                notificationContent.body = Localized.NOTIFICATION_CONTENT_AUDIO
+            }
         } else if message.category.hasSuffix("_DATA") {
             if conversation.isGroup() || isRepresentativeMessage {
                 notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_FILE)"

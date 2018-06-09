@@ -66,6 +66,8 @@
 	<string>Allow Mixin to access your contacts</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow Mixin to access your photos</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow Mixin to access your microphone</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

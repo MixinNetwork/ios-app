@@ -97,6 +97,14 @@ class ConversationCell: UITableViewCell {
                 }
                 messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_video")
                 messageTypeImageView.isHidden = false
+            } else if category.hasSuffix("_AUDIO") {
+                if item.isGroup() {
+                    contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_AUDIO)"
+                } else {
+                    contentLabel.text = Localized.NOTIFICATION_CONTENT_AUDIO
+                }
+                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_video") // FIXME
+                messageTypeImageView.isHidden = false
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 contentLabel.text = Localized.NOTIFICATION_CONTENT_TRANSFER
                 messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_transfer")

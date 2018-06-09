@@ -27,6 +27,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var dismissMoreMenuButton: UIButton!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
+    @IBOutlet weak var audioInputContainerView: UIView!
     
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
@@ -234,11 +235,13 @@ class ConversationViewController: UIViewController {
         }
         if parent == nil {
             dataSource?.cancelMessageProcessing()
+            MXNAudioPlayer.shared().stop()
         }
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        MXNAudioPlayer.shared().removeObserver(self)
     }
     
     // MARK: - Actions
@@ -644,9 +647,11 @@ extension ConversationViewController: UITextViewDelegate {
         if trimmedMessageDraft.isEmpty {
             sendButton.isHidden = true
             toggleStickerPanelButton.isHidden = false
+            audioInputContainerView.isHidden = false
         } else {
             sendButton.isHidden = false
             toggleStickerPanelButton.isHidden = true
+            audioInputContainerView.isHidden = true
         }
         let newHeight = min(contentSize.height, maxHeight)
         if abs(newHeight - inputTextViewHeightConstraint.constant) > 0.1 {
@@ -892,6 +897,46 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
             viewModel.cancelAttachmentLoading(markMediaStatusCancelled: true)
         default:
             break
+        }
+    }
+    
+}
+
+// MARK: - AudioMessageCellDelegate
+extension ConversationViewController: AudioMessageCellDelegate {
+    
+    func audioMessageCellDidTogglePlaying(_ cell: AudioMessageCell) {
+        if cell.isPlaying {
+            MXNAudioPlayer.shared().stop()
+        } else {
+            if let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? AudioMessageViewModel, let mediaUrl = viewModel.message.mediaUrl {
+                let path = MixinFile.url(ofChatDirectory: .audios, filename: mediaUrl).path
+                MXNAudioPlayer.shared().loadFile(atPath: path) { [weak self] (success, error) in
+                    if self == nil {
+                        return
+                    }
+                    DispatchQueue.main.sync {
+                        if let cell = self?.tableView.cellForRow(at: indexPath) as? AudioMessageCell {
+                            cell.isPlaying = true
+                        }
+                    }
+                    MXNAudioPlayer.shared().play()
+                }
+            }
+        }
+    }
+}
+
+// MARK: - AudioMessageCellDelegate
+extension ConversationViewController: MXNAudioPlayerObserver {
+    
+    func mxnAudioPlayer(_ player: MXNAudioPlayer, playbackStateDidChangeTo state: MXNAudioPlaybackState) {
+        if state == .stopped {
+            DispatchQueue.main.async { [weak tableView] in
+                tableView?.visibleCells.forEach({ (cell) in
+                    (cell as? AudioMessageCell)?.isPlaying = false
+                })
+            }
         }
     }
     
@@ -1234,6 +1279,7 @@ extension ConversationViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddedMessagesOutsideVisibleBounds(_:)), name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
+        MXNAudioPlayer.shared().addObserver(self)
     }
     
     private func saveDraft() {

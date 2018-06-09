@@ -24,6 +24,8 @@ extension MessageItem {
             return MessageItem.deleteAction
         } else if category == MessageCategory.APP_CARD.rawValue {
             return MessageItem.deleteAction
+        } else if category.hasSuffix("_AUDIO") {
+            return MessageItem.deleteAction
         } else {
             return []
         }
@@ -144,6 +146,9 @@ class ConversationTableView: UITableView {
         if let cell = cell as? AppButtonGroupMessageCell, cell.appButtonDelegate == nil {
             cell.appButtonDelegate = viewController
         }
+        if let cell = cell as? AudioMessageCell, cell.audioPlaybackDelegate == nil {
+            cell.audioPlaybackDelegate = viewController
+        }
         return cell
     }
 
@@ -218,6 +223,7 @@ extension ConversationTableView {
         case contact = "ContactMessageCell"
         case video = "VideoMessageCell"
         case appCard = "AppCardMessageCell"
+        case audio = "AudioMessageCell"
         case header = "DateHeader"
 
         init(category: String) {
@@ -233,6 +239,8 @@ extension ConversationTableView {
                 self = .contact
             } else if category.hasSuffix("_VIDEO") {
                 self = .video
+            } else if category.hasSuffix("_AUDIO") {
+                self = .audio
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 self = .transfer
             } else if category == MessageCategory.EXT_UNREAD.rawValue {

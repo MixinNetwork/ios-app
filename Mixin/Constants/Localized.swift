@@ -59,6 +59,7 @@ public class Localized {
     public static let TOAST_API_ERROR_UNAVAILABLE_PHONE_NUMBER = LocalizedString("toast_api_error_unavailable_phone_number", comment: "This phone number is already associated with another account")
     public static let PERMISSION_DENIED_CAMERA = LocalizedString("permission_denied_camera", comment: "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.")
     public static let PERMISSION_DENIED_PHOTO_LIBRARY = LocalizedString("permission_denied_photo_library", comment: "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.")
+    public static let PERMISSION_DENIED_MICROPHONE = LocalizedString("permission_denied_microphone", comment: "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.")
     public static let TOAST_OPERATION_FAILED = LocalizedString("toast_operation_failed", comment: "The operation failed, please try again later")
 
     // Login
@@ -151,6 +152,7 @@ public class Localized {
     public static let CHAT_SEND_PHOTO_FAILED = LocalizedString("chat_send_photo_failed", comment: "Failed to send photo")
     public static let CHAT_SEND_FILE_FAILED = LocalizedString("chat_send_file_failed", comment: "Failed to send file")
     public static let CHAT_SEND_VIDEO_FAILED = LocalizedString("chat_send_video_failed", comment: "Failed to send video")
+    public static let CHAT_SEND_AUDIO_FAILED = LocalizedString("chat_send_audio_failed", comment: "Failed to send audio")
     public static let CHAT_MENU_CAMERA = LocalizedString("chat_menu_camera", comment: "Camera")
     public static let CHAT_MENU_PHOTO = LocalizedString("chat_menu_photo", comment: "Photo & Video")
     public static let CHAT_MENU_FILE = LocalizedString("chat_menu_file", comment: "File")
@@ -401,6 +403,7 @@ public class Localized {
     public static let NOTIFICATION_CONTENT_WITHDRAWAL = LocalizedString("notification_content_withdrawal", comment: "[Withdrawal]")
     public static let NOTIFICATION_CONTENT_REBATE = LocalizedString("notification_content_rebate", comment: "[Rebate]")
     public static let NOTIFICATION_CONTENT_VIDEO = LocalizedString("notification_content_video", comment: "[Video]")
+    public static let NOTIFICATION_CONTENT_AUDIO = LocalizedString("notification_content_audio", comment: "[Audio]")
 
     // About
     public static let ABOUT_LOGOUT_TITLE = LocalizedString("about_logout_title", comment: "Do you want to log out?")

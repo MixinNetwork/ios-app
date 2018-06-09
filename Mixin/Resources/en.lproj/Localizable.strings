@@ -148,6 +148,13 @@
 "camera_save_video_failed" = "Unable to save video.";
 "image_picker_title_camera_roll" = "Camera Roll";
 "image_picker_title_albums" = "Albums";
+"camera_qrcode_title" = "TEXT QR CODE";
+"camera_qrcode_codes" = "Detected a Mixin QR code, tap to recognize";
+"camera_qrcode_pay" = "Detected a pay QR code, tap to pay";
+"camera_qrcode_users" = "Detected a user QR code, tap to view user";
+"camera_qrcode_transfer" = "Detected a transfer QR code, tap to transfer";
+"camera_qrcode_tips_title" = "QR Code Camera";
+"camera_qrcode_tips_summary" = "Use the built-in Camera to scan any QR Code. When a code is detected, tap the notification to view more information.";
 
 // Group
 "group_navigation_title_add_member" = "Add Participants";

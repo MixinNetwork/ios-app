@@ -167,6 +167,10 @@ public class Localized {
     public static let CAMERA_SAVE_VIDEO_FAILED = LocalizedString("camera_save_video_failed", comment: "Unable to save video.")
     public static let IMAGE_PICKER_TITLE_CAMERA_ROLL = LocalizedString("image_picker_title_camera_roll", comment: "Camera Roll")
     public static let IMAGE_PICKER_TITLE_ALBUMS = LocalizedString("image_picker_title_albums", comment: "Albums")
+    public static let CAMERA_QRCODE_CODES = LocalizedString("camera_qrcode_codes", comment: "Detected a Mixin QR code, tap to recognize")
+    public static let CAMERA_QRCODE_PAY = LocalizedString("camera_qrcode_pay", comment: "Detected a pay QR code, tap to pay")
+    public static let CAMERA_QRCODE_USERS = LocalizedString("camera_qrcode_users", comment: "Detected a user QR code, tap to view user")
+    public static let CAMERA_QRCODE_TRANSFER = LocalizedString("camera_qrcode_transfer", comment: "Detected a transfer QR code, tap to transfer")
 
     // Group
     public static let GROUP_NAVIGATION_TITLE_ADD_MEMBER = LocalizedString("group_navigation_title_add_member", comment: "Add Participants")

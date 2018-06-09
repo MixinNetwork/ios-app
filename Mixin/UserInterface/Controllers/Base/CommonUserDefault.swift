@@ -16,8 +16,21 @@ class CommonUserDefault {
     private var keyHasUnreadAnnouncement: String {
         return "default_unread_announcement_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyCameraQRCodeTips: String {
+        return "default_camera_qrcode_tips_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
+
+    var isCameraQRCodeTips: Bool {
+        get {
+            return session.bool(forKey: keyCameraQRCodeTips)
+        }
+        set {
+            session.set(newValue, forKey: keyCameraQRCodeTips)
+            session.synchronize()
+        }
+    }
 
     private var conversationDraft: [String: Any] {
         get {

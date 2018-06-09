@@ -75,9 +75,6 @@ class UrlWindow: BottomSheetView {
             loginView.onWindowWillDismiss()
         }
         super.dismissPopupControllerAnimated()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            NotificationCenter.default.postOnMain(name: .WindowDidDisappear)
-        }
     }
 
     override func getAnimationStartPoint() -> CGPoint {

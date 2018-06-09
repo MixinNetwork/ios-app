@@ -25,8 +25,6 @@ extension NSNotification.Name {
 
     static let SnapshotDidChange = NSNotification.Name("one.mixin.ios.snapshot.changed")
 
-    static let WindowDidDisappear = NSNotification.Name("one.mixin.ios.window.disappear")
-
     static let AddressDidChange = NSNotification.Name("one.mixin.ios.addresses.changed")
 
     static let DefaultAddressDidChange = NSNotification.Name("one.mixin.ios.addresses.default.changed")

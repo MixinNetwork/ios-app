@@ -151,7 +151,6 @@ extension PayView {
                 superView.popupView.center = superView.getAnimationStartPoint()
             }, completion: { (_) in
                 superView.isShowing = false
-                NotificationCenter.default.postOnMain(name: .WindowDidDisappear)
                 superView.removeFromSuperview()
             })
         } else {

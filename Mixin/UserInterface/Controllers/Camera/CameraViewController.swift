@@ -19,6 +19,11 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var cameraSwapButton: BouncingButton!
     @IBOutlet weak var cameraFlashButton: BouncingButton!
     @IBOutlet weak var snapshotImageView: UIImageView!
+    @IBOutlet weak var qrcodeContentLabel: UILabel!
+    @IBOutlet weak var qrcodeView: UIVisualEffectView!
+    @IBOutlet weak var qrcodeTipsView: UIView!
+
+    @IBOutlet weak var qrcodeNotificationTopConstraint: NSLayoutConstraint!
 
     private let sessionQueue = DispatchQueue(label: "one.mixin.messenger.queue.camera")
     private let metadataOutput = AVCaptureMetadataOutput()
@@ -26,7 +31,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var capturePhotoOutput = AVCapturePhotoOutput()
     private var videoDeviceInput: AVCaptureDeviceInput!
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
-    private var detectQRCode = false
     private var didTakePhoto = false
     private var photoCaptureProcessor: PhotoCaptureProcessor?
     private var cameraPosition = AVCaptureDevice.Position.unspecified
@@ -34,6 +38,9 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var fromWithdrawal = false
     private var flashOn = false
     private var addressCallback: ((String) -> Void)?
+    private var detectQRCodes = [String]()
+    private var detectLock = NSLock()
+    private var detectText = ""
 
     private lazy var videoDeviceDiscoverySession: AVCaptureDevice.DiscoverySession = {
         if #available(iOS 10.2, *) {
@@ -47,13 +54,14 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        prepareNotification()
         previewView.session = session
         sessionQueue.async {
             self.configureSession()
         }
 
-        NotificationCenter.default.addObserver(forName: .WindowDidDisappear, object: nil, queue: .main) { [weak self] (_) in
-            self?.detectQRCode = false
+        if !CommonUserDefault.shared.isCameraQRCodeTips {
+            qrcodeTipsView.isHidden = false
         }
     }
 
@@ -68,9 +76,14 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         session.stopRunning()
-        detectQRCode = false
         loadingView.stopAnimating()
     }
+
+    @IBAction func hideTipsAction(_ sender: Any) {
+        CommonUserDefault.shared.isCameraQRCodeTips = true
+        qrcodeTipsView.isHidden = true
+    }
+
 
     @IBAction func savePhotoAction(_ sender: Any) {
         guard didTakePhoto, let photo = photoCaptureProcessor?.photo else {
@@ -171,7 +184,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     }
 
     @IBAction func takeAction(_ sender: Any) {
-        guard !didTakePhoto, !detectQRCode else {
+        guard !didTakePhoto else {
             return
         }
         didTakePhoto = true
@@ -379,18 +392,50 @@ extension CameraViewController {
 }
 
 extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
-    
-    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard !detectQRCode, !didTakePhoto else {
+
+    private func prepareNotification() {
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction))
+        qrcodeView.addGestureRecognizer(panRecognizer)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        qrcodeView.addGestureRecognizer(tapRecognizer)
+    }
+
+    @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            recognizer.setTranslation(.zero, in: qrcodeView)
+        case .changed:
+            qrcodeNotificationTopConstraint.constant = qrcodeNotificationTopConstraint.constant + recognizer.translation(in: qrcodeView).y
+            recognizer.setTranslation(.zero, in: qrcodeView)
+        default:
+            if qrcodeNotificationTopConstraint.constant > 6 && qrcodeNotificationTopConstraint.constant < 18 {
+                qrcodeNotificationTopConstraint.constant = 12
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.view.layoutIfNeeded()
+                })
+            } else {
+                hideNotification()
+            }
+        }
+    }
+
+    @objc func tapAction(_ recognizer: UIPanGestureRecognizer) {
+        hideNotification()
+
+        if let url = URL(string: detectText), UrlWindow.checkUrl(url: url) {
             return
         }
-        detectQRCode = true
+        RecognizeWindow.instance().presentWindow(text: detectText)
+    }
+
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        guard !didTakePhoto, qrcodeTipsView.isHidden else {
+            return
+        }
         guard metadataObjects.count > 0, let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject else {
-            detectQRCode = false
             return
         }
         guard let urlString = object.stringValue?.trimmingCharacters(in: .whitespacesAndNewlines), !urlString.isEmpty else {
-            detectQRCode = false
             return
         }
 
@@ -400,12 +445,68 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
             return
         }
 
-        guard let url = URL(string: urlString), UrlWindow.checkUrl(url: url) else {
-            RecognizeWindow.instance().presentWindow(text: urlString)
-            navigationController?.popViewController(animated: true)
+        detectLock.lock()
+        guard !detectQRCodes.contains(urlString) else {
+            detectLock.unlock()
             return
         }
+        detectQRCodes.append(urlString)
+        detectLock.unlock()
 
+        detectText = urlString
+
+        if let url = URL(string: urlString), let mixinURL = MixinURL(url: url) {
+            switch mixinURL {
+            case .codes:
+                showNotification(text: Localized.CAMERA_QRCODE_CODES)
+            case .pay:
+                showNotification(text: Localized.CAMERA_QRCODE_PAY)
+            case .users:
+                showNotification(text: Localized.CAMERA_QRCODE_USERS)
+            case .transfer:
+                showNotification(text: Localized.CAMERA_QRCODE_TRANSFER)
+            case .send:
+                showNotification(text: urlString)
+            case .unknown:
+                showNotification(text: urlString)
+            }
+        } else {
+            showNotification(text: urlString)
+        }
+    }
+
+    private func showNotification(text: String) {
+        let animateBlock = {
+            self.qrcodeContentLabel.text = text
+            self.qrcodeView.isHidden = false
+            self.qrcodeNotificationTopConstraint.constant = 12
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 5, options: [], animations: {
+                self.view.layoutIfNeeded()
+            }) { (_) in
+
+            }
+        }
+        if !qrcodeView.isHidden {
+            UIView.animate(withDuration: 0.15, animations: {
+                self.qrcodeView.transform = CGAffineTransform(translationX: 0, y: 10)
+            }, completion: { (finished) in
+                self.qrcodeContentLabel.text = text
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.qrcodeView.transform = .identity
+                })
+            })
+        } else {
+            animateBlock()
+        }
+    }
+
+    private func hideNotification() {
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            self.qrcodeNotificationTopConstraint.constant = -86
+            self.view.layoutIfNeeded()
+        }) { (_) in
+            self.qrcodeView.isHidden = true
+        }
     }
 
     private func filterAddress(urlString: String) -> String? {

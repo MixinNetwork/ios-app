@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -111,28 +112,139 @@
                                     <action selector="savePhotoAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="vcf-xX-1Ne"/>
                                 </connections>
                             </button>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WNM-S5-JoA">
+                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="2X6-GY-egt">
+                                        <rect key="frame" x="30.5" y="147.5" width="260" height="193.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code Camera" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VMD-0x-hnr">
+                                                <rect key="frame" x="0.0" y="0.0" width="260" height="29"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="camera_qrcode_tips_title"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use the built-in Camera to scan any QR Code. When a code is detected, tap the notification to view more options." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tm2-EX-DbT">
+                                                <rect key="frame" x="0.0" y="39" width="260" height="50.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="camera_qrcode_tips_summary"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TO7-zt-85u">
+                                                <rect key="frame" x="0.0" y="99.5" width="260" height="50"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="sZT-g2-URY"/>
+                                                </constraints>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ki-tE-NJ2">
+                                                <rect key="frame" x="0.0" y="159.5" width="260" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <state key="normal" title="Continue"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="hideTipsAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="bBC-TG-YTC"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="260" id="YGl-ek-4oo"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="2X6-GY-egt" firstAttribute="centerX" secondItem="WNM-S5-JoA" secondAttribute="centerX" id="pov-Oh-r4o"/>
+                                    <constraint firstItem="2X6-GY-egt" firstAttribute="centerY" secondItem="WNM-S5-JoA" secondAttribute="centerY" constant="-30" id="xuv-EY-AKt"/>
+                                </constraints>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_shadow_bg" translatesAutoresizingMaskIntoConstraints="NO" id="ttZ-bh-mpu">
+                                <rect key="frame" x="6" y="-72" width="308" height="76"/>
+                            </imageView>
+                            <visualEffectView hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ene-l2-qnH">
+                                <rect key="frame" x="12" y="-66" width="296" height="64"/>
+                                <view key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="2OZ-eV-Kbr">
+                                    <rect key="frame" x="0.0" y="0.0" width="296" height="64"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_notification_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="WcN-1e-q3G">
+                                            <rect key="frame" x="8" y="8" width="18" height="18"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TEXT QR CODE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1O2-fn-vXH">
+                                            <rect key="frame" x="34" y="10" width="88.5" height="14.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="camera_qrcode_title"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search Web in Safari" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FOK-LK-ThD">
+                                            <rect key="frame" x="10" y="34" width="276" height="18"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="FOK-LK-ThD" firstAttribute="leading" secondItem="2OZ-eV-Kbr" secondAttribute="leading" constant="10" id="0vD-0S-IlM"/>
+                                        <constraint firstItem="WcN-1e-q3G" firstAttribute="leading" secondItem="2OZ-eV-Kbr" secondAttribute="leading" constant="8" id="4t3-cr-gKg"/>
+                                        <constraint firstItem="1O2-fn-vXH" firstAttribute="leading" secondItem="WcN-1e-q3G" secondAttribute="trailing" constant="8" id="7XG-m1-T7a"/>
+                                        <constraint firstAttribute="trailing" secondItem="FOK-LK-ThD" secondAttribute="trailing" constant="10" id="P0T-Jc-fEr"/>
+                                        <constraint firstAttribute="bottom" secondItem="FOK-LK-ThD" secondAttribute="bottom" constant="12" id="dF5-l4-cJp"/>
+                                        <constraint firstItem="1O2-fn-vXH" firstAttribute="centerY" secondItem="WcN-1e-q3G" secondAttribute="centerY" id="m6N-VW-7W7"/>
+                                        <constraint firstItem="FOK-LK-ThD" firstAttribute="top" secondItem="WcN-1e-q3G" secondAttribute="bottom" constant="8" id="teZ-yV-nnY"/>
+                                        <constraint firstItem="WcN-1e-q3G" firstAttribute="top" secondItem="2OZ-eV-Kbr" secondAttribute="top" constant="8" id="vol-Os-cX7"/>
+                                    </constraints>
+                                </view>
+                                <blurEffect style="extraLight"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="LBJ-RT-mbD" firstAttribute="top" secondItem="pLM-9e-9z0" secondAttribute="top" id="0ZW-LT-9fS"/>
+                            <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="Ene-l2-qnH" secondAttribute="trailing" constant="12" id="2WF-8z-EBL"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="leading" secondItem="LBJ-RT-mbD" secondAttribute="leading" id="4PU-8s-ypb"/>
+                            <constraint firstItem="ttZ-bh-mpu" firstAttribute="top" secondItem="Ene-l2-qnH" secondAttribute="top" constant="-6" id="6KT-Tv-nz3"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="5sm-8G-Krj" secondAttribute="trailing" id="7PC-Qa-UVF"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="Hft-XM-7mq" secondAttribute="trailing" id="FfG-Ec-0v7"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="top" secondItem="LBJ-RT-mbD" secondAttribute="top" id="MEx-aV-YLO"/>
+                            <constraint firstItem="ttZ-bh-mpu" firstAttribute="leading" secondItem="Ene-l2-qnH" secondAttribute="leading" constant="-6" id="NGH-pa-W1B"/>
+                            <constraint firstItem="Ene-l2-qnH" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" constant="12" id="OLk-hz-DBM"/>
                             <constraint firstItem="5sm-8G-Krj" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="Ogw-Vy-yTn"/>
+                            <constraint firstItem="WNM-S5-JoA" firstAttribute="top" secondItem="pLM-9e-9z0" secondAttribute="topMargin" id="QGn-rU-Ods"/>
+                            <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="WNM-S5-JoA" secondAttribute="trailing" id="SId-qr-ESJ"/>
                             <constraint firstItem="LBJ-RT-mbD" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="W89-ez-v1g"/>
+                            <constraint firstItem="ttZ-bh-mpu" firstAttribute="trailing" secondItem="Ene-l2-qnH" secondAttribute="trailing" constant="6" id="WR8-ba-nre"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="WNM-S5-JoA" secondAttribute="bottom" id="Z6y-i2-bLB"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="trailing" secondItem="LBJ-RT-mbD" secondAttribute="trailing" id="ZJy-mI-7RA"/>
                             <constraint firstItem="5sm-8G-Krj" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" id="aVK-Ir-3VC"/>
                             <constraint firstItem="o5Y-dL-Imf" firstAttribute="centerY" secondItem="ADJ-U9-E6n" secondAttribute="centerY" id="bmo-jI-9FY"/>
+                            <constraint firstItem="Ene-l2-qnH" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" constant="-86" id="bqz-Ml-LT4"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="9hJ-zq-Afw" secondAttribute="bottom" id="caf-qy-Pe9"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="bottom" secondItem="LBJ-RT-mbD" secondAttribute="bottom" id="egT-Tv-W4L"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="Hft-XM-7mq" secondAttribute="bottom" id="g6Y-Dj-hpg"/>
+                            <constraint firstItem="ttZ-bh-mpu" firstAttribute="bottom" secondItem="Ene-l2-qnH" secondAttribute="bottom" constant="6" id="iej-TH-fTb"/>
                             <constraint firstAttribute="bottom" secondItem="LBJ-RT-mbD" secondAttribute="bottom" id="iy5-DL-r54"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="B8L-Tp-H0W" secondAttribute="bottom" constant="30" id="lBe-yt-pwA"/>
                             <constraint firstItem="o5Y-dL-Imf" firstAttribute="centerX" secondItem="ADJ-U9-E6n" secondAttribute="centerX" id="rYb-Gb-qvj"/>
                             <constraint firstItem="9hJ-zq-Afw" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="t5V-Le-5Wv"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="LBJ-RT-mbD" secondAttribute="trailing" id="uiw-uA-lt7"/>
                             <constraint firstItem="B8L-Tp-H0W" firstAttribute="centerX" secondItem="ADJ-U9-E6n" secondAttribute="centerX" id="wsJ-tW-neu"/>
+                            <constraint firstItem="WNM-S5-JoA" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="zO7-IP-0Vx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ADJ-U9-E6n"/>
                     </view>
@@ -144,6 +256,10 @@
                         <outlet property="cameraSwapButton" destination="jHd-gi-a9Q" id="kSL-4U-uWZ"/>
                         <outlet property="loadingView" destination="o5Y-dL-Imf" id="EUb-EZ-MAk"/>
                         <outlet property="previewView" destination="LBJ-RT-mbD" id="fOG-82-anz"/>
+                        <outlet property="qrcodeContentLabel" destination="FOK-LK-ThD" id="f5F-eX-lmk"/>
+                        <outlet property="qrcodeNotificationTopConstraint" destination="bqz-Ml-LT4" id="q7e-av-bV4"/>
+                        <outlet property="qrcodeTipsView" destination="WNM-S5-JoA" id="Jtv-zA-4Cs"/>
+                        <outlet property="qrcodeView" destination="Ene-l2-qnH" id="Sjc-ny-tmn"/>
                         <outlet property="saveButton" destination="9hJ-zq-Afw" id="grt-U5-Jdp"/>
                         <outlet property="sendButton" destination="Hft-XM-7mq" id="tox-WQ-Ivj"/>
                         <outlet property="snapshotImageView" destination="Lks-aY-qYz" id="yyp-b9-zGn"/>
@@ -252,6 +368,8 @@
         <image name="ic_camera_swap" width="44" height="44"/>
         <image name="ic_camera_white" width="64" height="64"/>
         <image name="ic_close_shadow" width="44" height="44"/>
+        <image name="ic_notification_qrcode" width="18" height="18"/>
         <image name="ic_search" width="12" height="12"/>
+        <image name="ic_shadow_bg" width="177" height="49"/>
     </resources>
 </document>

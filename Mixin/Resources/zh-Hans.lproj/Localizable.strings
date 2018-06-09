@@ -145,6 +145,14 @@
 "camera_save_video_failed" = "保存视频失败";
 "image_picker_title_camera_roll" = "相机胶卷";
 "image_picker_title_albums" = "相册";
+"camera_qrcode_title" = "文本二维码";
+"camera_qrcode_codes" = "检测到一个 Mixin 二维码，点击识别";
+"camera_qrcode_pay" = "检测到一个 Mixin 支付二维码，点击支付";
+"camera_qrcode_users" = "检测到一个 Mixin 用户二维码，点击查看";
+"camera_qrcode_transfer" = "检测到一个 Mixin 转账二维码，点击转账";
+"camera_qrcode_tips_title" = "自动识别二维码";
+"camera_qrcode_tips_summary" = "打开相机会默认开启二维码识别，当二维码被检测到时会显示一个通知，点击通知识别二维码。";
+
 
 // Group
 "group_navigation_title_add_member" = "添加成员";

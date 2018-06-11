@@ -123,7 +123,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
             return;
         }
         NSData *waveform = [self waveform];
-        NSUInteger duration = self->_numberOfEncodedSamples / recordingSampleRate * millisecondsPerSecond;
+        NSUInteger duration = self->_numberOfEncodedSamples * millisecondsPerSecond / recordingSampleRate;
         MXNAudioMetadata *metadata = [MXNAudioMetadata metadataWithDuration:duration waveform:waveform];
         [self cleanUp];
         dispatch_sync(dispatch_get_main_queue(), ^{

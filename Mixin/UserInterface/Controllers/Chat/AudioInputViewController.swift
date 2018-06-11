@@ -135,11 +135,12 @@ extension AudioInputViewController {
                 case .waitingForActivation:
                     break
                 case .started:
-                    self.timer = Timer.scheduledTimer(timeInterval: self.updateTimeLabelInterval,
-                                                      target: self,
-                                                      selector: #selector(AudioInputViewController.updateTimeLabelAction(_:)),
-                                                      userInfo: nil,
-                                                      repeats: true)
+                    let timer = Timer(timeInterval: self.updateTimeLabelInterval,
+                                      target: self,
+                                      selector: #selector(AudioInputViewController.updateTimeLabelAction(_:)),
+                                      userInfo: nil,
+                                      repeats: true)
+                    RunLoop.main.add(timer, forMode: .commonModes)
                     self.startRedDotAnimation()
                 case .interrupted:
                     self.recorder?.cancel()
@@ -151,7 +152,11 @@ extension AudioInputViewController {
                 case .failed:
                     break
                 case .finished:
-                    self.conversationDataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (url, metadata))
+                    if let duration = metadata?.duration, Double(duration) > millisecondsPerSecond {
+                        self.conversationDataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (url, metadata))
+                    } else {
+                        try? FileManager.default.removeItem(at: url)
+                    }
                 case .cancelled:
                     break
                 }

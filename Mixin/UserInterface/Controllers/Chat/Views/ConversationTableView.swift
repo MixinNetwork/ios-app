@@ -25,7 +25,7 @@ extension MessageItem {
         } else if category == MessageCategory.APP_CARD.rawValue {
             return MessageItem.deleteAction
         } else if category.hasSuffix("_AUDIO") {
-            return MessageItem.deleteAction
+            return MessageItem.forwardAndDeleteActions
         } else {
             return []
         }

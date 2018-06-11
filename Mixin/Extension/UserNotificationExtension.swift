@@ -77,7 +77,7 @@ extension UNUserNotificationCenter {
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_VIDEO
             }
         } else if message.category.hasSuffix("_AUDIO") {
-            if conversation.isGroup() {
+            if conversation.isGroup() || isRepresentativeMessage {
                 notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_AUDIO)"
             } else {
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_AUDIO

@@ -14,6 +14,8 @@ typedef NS_ENUM(NSUInteger, MXNAudioPlaybackState) {
     MXNAudioPlaybackStateDisposed
 };
 
+FOUNDATION_EXTERN NSString* NSStringFromMXNAudioPlaybackState(MXNAudioPlaybackState state);
+
 @protocol MXNAudioPlayerObserver
 
 - (void)mxnAudioPlayer:(MXNAudioPlayer *)player playbackStateDidChangeTo:(MXNAudioPlaybackState)state;
@@ -27,6 +29,7 @@ typedef NS_ENUM(NSUInteger, MXNAudioPlayerErrorCode) {
     MXNAudioPlayerErrorCodeAllocateBuffers,
     MXNAudioPlayerErrorCodeAddPropertyListener,
     MXNAudioPlayerErrorCodeStop,
+    MXNAudioPlayerErrorCodeCancelled
 };
 
 typedef void (^MXNAudioPlayerLoadFileCompletionCallback)(BOOL success, NSError* _Nullable error);
@@ -39,10 +42,10 @@ typedef void (^MXNAudioPlayerLoadFileCompletionCallback)(BOOL success, NSError* 
 
 + (instancetype)sharedPlayer;
 
-- (void)loadFileAtPath:(NSString *)path completion:(MXNAudioPlayerLoadFileCompletionCallback)completion;
+- (void)playFileAtPath:(NSString *)path completion:(MXNAudioPlayerLoadFileCompletionCallback)completion;
 - (void)play;
 - (void)pause;
-- (void)stop;
+- (void)stopWithAudioSessionDeactivated:(BOOL)shouldDeactivate;
 - (void)addObserver:(id<MXNAudioPlayerObserver>)observer NS_SWIFT_NAME(addObserver(_:));
 - (void)removeObserver:(id<MXNAudioPlayerObserver>)observer NS_SWIFT_NAME(removeObserver(_:));
 

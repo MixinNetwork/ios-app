@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        MXNAudioPlayer.shared().stop()
+        MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {

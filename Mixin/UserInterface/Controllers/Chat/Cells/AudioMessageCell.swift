@@ -41,6 +41,11 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
             }
         }
     }
+        
+    deinit {
+        timer?.invalidate()
+        timer = nil
+    }
     
     override var contentTopMargin: CGFloat {
         return 10

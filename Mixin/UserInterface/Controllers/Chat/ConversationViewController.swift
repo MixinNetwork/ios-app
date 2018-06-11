@@ -241,7 +241,6 @@ class ConversationViewController: UIViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-        MXNAudioPlayer.shared().removeObserver(self)
     }
     
     // MARK: - Actions
@@ -925,20 +924,6 @@ extension ConversationViewController: AudioMessageCellDelegate {
             }
         }
     }
-}
-
-// MARK: - AudioMessageCellDelegate
-extension ConversationViewController: MXNAudioPlayerObserver {
-    
-    func mxnAudioPlayer(_ player: MXNAudioPlayer, playbackStateDidChangeTo state: MXNAudioPlaybackState) {
-        if state == .stopped {
-            DispatchQueue.main.async { [weak tableView] in
-                tableView?.visibleCells.forEach({ (cell) in
-                    (cell as? AudioMessageCell)?.isPlaying = false
-                })
-            }
-        }
-    }
     
 }
 
@@ -1279,7 +1264,6 @@ extension ConversationViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddedMessagesOutsideVisibleBounds(_:)), name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
-        MXNAudioPlayer.shared().addObserver(self)
     }
     
     private func saveDraft() {

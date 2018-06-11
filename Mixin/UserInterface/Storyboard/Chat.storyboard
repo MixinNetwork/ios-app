@@ -486,10 +486,31 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tzQ-Ot-LBE">
                                                     <rect key="frame" x="208" y="12" width="99" height="44"/>
                                                     <subviews>
-                                                        <view opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="qVn-Ti-QpG" customClass="WaveformView" customModule="Mixin" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xK6-xv-RR4">
                                                             <rect key="frame" x="0.0" y="0.0" width="99" height="23"/>
+                                                            <subviews>
+                                                                <view opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="qVn-Ti-QpG" customClass="WaveformView" customModule="Mixin" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="99" height="23"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="tintColor" red="0.8666666666666667" green="0.8666666666666667" blue="0.8666666666666667" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </view>
+                                                                <view opaque="NO" userInteractionEnabled="NO" contentMode="left" translatesAutoresizingMaskIntoConstraints="NO" id="IP2-uL-lad" customClass="WaveformView" customModule="Mixin" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="99" height="23"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="tintColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </view>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="23" id="rwe-LD-eMp"/>
+                                                                <constraint firstAttribute="bottom" secondItem="IP2-uL-lad" secondAttribute="bottom" id="GEi-xE-4XG"/>
+                                                                <constraint firstItem="IP2-uL-lad" firstAttribute="top" secondItem="xK6-xv-RR4" secondAttribute="top" id="PmQ-tR-mYv"/>
+                                                                <constraint firstAttribute="height" constant="23" id="Pvm-er-9Mm"/>
+                                                                <constraint firstItem="qVn-Ti-QpG" firstAttribute="top" secondItem="xK6-xv-RR4" secondAttribute="top" id="TQI-CU-H1v"/>
+                                                                <constraint firstAttribute="trailing" secondItem="qVn-Ti-QpG" secondAttribute="trailing" id="aTU-c6-G1i"/>
+                                                                <constraint firstAttribute="bottom" secondItem="qVn-Ti-QpG" secondAttribute="bottom" id="an0-nB-PC6"/>
+                                                                <constraint firstItem="IP2-uL-lad" firstAttribute="leading" secondItem="xK6-xv-RR4" secondAttribute="leading" id="lOV-4L-R3l"/>
+                                                                <constraint firstItem="qVn-Ti-QpG" firstAttribute="leading" secondItem="xK6-xv-RR4" secondAttribute="leading" id="nPo-Ei-bHU"/>
+                                                                <constraint firstAttribute="trailing" secondItem="IP2-uL-lad" secondAttribute="trailing" id="o53-bJ-THb"/>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20'" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUb-hH-eY8">
@@ -501,13 +522,13 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstItem="qVn-Ti-QpG" firstAttribute="top" secondItem="tzQ-Ot-LBE" secondAttribute="top" id="2cL-Hw-i10"/>
-                                                        <constraint firstItem="qVn-Ti-QpG" firstAttribute="leading" secondItem="tzQ-Ot-LBE" secondAttribute="leading" id="66U-g0-KgQ"/>
                                                         <constraint firstAttribute="bottom" secondItem="ZUb-hH-eY8" secondAttribute="bottom" id="88j-gy-OJB"/>
                                                         <constraint firstItem="ZUb-hH-eY8" firstAttribute="leading" secondItem="tzQ-Ot-LBE" secondAttribute="leading" id="FQs-Ir-srh"/>
                                                         <constraint firstAttribute="trailing" secondItem="ZUb-hH-eY8" secondAttribute="trailing" id="IKx-Aa-yLa"/>
-                                                        <constraint firstItem="ZUb-hH-eY8" firstAttribute="top" secondItem="qVn-Ti-QpG" secondAttribute="bottom" constant="4" id="OgZ-ua-8zO"/>
-                                                        <constraint firstAttribute="trailing" secondItem="qVn-Ti-QpG" secondAttribute="trailing" id="hmV-dn-Ary"/>
+                                                        <constraint firstItem="ZUb-hH-eY8" firstAttribute="top" secondItem="xK6-xv-RR4" secondAttribute="bottom" constant="4" id="PNW-GR-Z1o"/>
+                                                        <constraint firstItem="xK6-xv-RR4" firstAttribute="top" secondItem="tzQ-Ot-LBE" secondAttribute="top" id="esz-wi-JyY"/>
+                                                        <constraint firstAttribute="trailing" secondItem="xK6-xv-RR4" secondAttribute="trailing" id="f3V-g0-2qq"/>
+                                                        <constraint firstItem="xK6-xv-RR4" firstAttribute="leading" secondItem="tzQ-Ot-LBE" secondAttribute="leading" id="fvp-Lb-9qv"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -523,6 +544,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="contentTopConstraint" destination="apv-3f-1hM" id="pLT-CD-Lqo"/>
+                                            <outlet property="highlightedWaveformView" destination="IP2-uL-lad" id="iDx-uN-fNf"/>
                                             <outlet property="leftView" destination="wlc-hc-7sd" id="gUC-ns-egg"/>
                                             <outlet property="lengthLabel" destination="ZUb-hH-eY8" id="O4q-jD-B8r"/>
                                             <outlet property="operationButton" destination="JyQ-fz-ccK" id="quo-vR-KZQ"/>

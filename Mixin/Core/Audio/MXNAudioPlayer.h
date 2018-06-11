@@ -34,6 +34,7 @@ typedef void (^MXNAudioPlayerLoadFileCompletionCallback)(BOOL success, NSError* 
 @interface MXNAudioPlayer : NSObject
 
 @property (nonatomic, assign, readonly) MXNAudioPlaybackState state;
+@property (nonatomic, assign, readonly) Float64 currentTime;
 @property (nonatomic, copy, readonly) NSString *path;
 
 + (instancetype)sharedPlayer;

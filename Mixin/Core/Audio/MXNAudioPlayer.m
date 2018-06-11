@@ -5,6 +5,7 @@
 
 const NSErrorDomain MXNAudioPlayerErrorDomain = @"MXNAudioRecorderErrorDomain";
 
+static const Float64 sampleRate = 48000;
 static const int numberOfAudioQueueBuffers = 3;
 static const UInt32 audioQueueBufferSize = 65536;
 
@@ -15,6 +16,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     dispatch_queue_t _processingQueue;
     AudioQueueRef _audioQueue;
     AudioQueueBufferRef _buffers[numberOfAudioQueueBuffers];
+    AudioQueueTimelineRef _timeline;
     MXNOggOpusReader *_reader;
     NSHashTable<id<MXNAudioPlayerObserver>> *_observers;
 }
@@ -37,6 +39,15 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         _state = MXNAudioPlaybackStatePreparing;
     }
     return self;
+}
+
+- (Float64)currentTime {
+    if (_state != MXNAudioPlaybackStatePlaying) {
+        return 0;
+    }
+    AudioTimeStamp timeStamp;
+    AudioQueueGetCurrentTime(_audioQueue, _timeline, &timeStamp, NULL);
+    return timeStamp.mSampleTime / sampleRate;
 }
 
 - (void)loadFileAtPath:(NSString *)path
@@ -135,6 +146,8 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
             completion(NO, error);
         }
         
+        AudioQueueCreateTimeline(self->_audioQueue, &self->_timeline);
+        
         AudioQueueSetParameter(self->_audioQueue, kAudioQueueParam_Volume, 1.0);
         
         [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateReadyToPlay];
@@ -183,6 +196,10 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 - (void)dispose {
     if (_state != MXNAudioPlaybackStateStopped) {
         [self stop];
+    }
+    if (_timeline) {
+        AudioQueueDisposeTimeline(_audioQueue, _timeline);
+        _timeline = nil;
     }
     if (_audioQueue) {
         AudioQueueDispose(_audioQueue, TRUE);
@@ -291,7 +308,7 @@ NS_INLINE NSError* ErrorWithCodeAndOSStatus(MXNAudioPlayerErrorCode code, OSStat
 NS_INLINE AudioStreamBasicDescription CreateFormat(void) {
     AudioStreamBasicDescription format;
     memset(&format, 0, sizeof(format));
-    format.mSampleRate = 48000;
+    format.mSampleRate = sampleRate;
     format.mChannelsPerFrame = 1;
     format.mFormatID = kAudioFormatLinearPCM;
     format.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
@@ -300,3 +317,21 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void) {
     format.mFramesPerPacket = 1;
     return format;
 }
+
+NSString* NSStringFromMXNAudioPlaybackState(MXNAudioPlaybackState state) {
+    switch (state) {
+        case MXNAudioPlaybackStatePreparing:
+            return @"Preparing";
+        case MXNAudioPlaybackStateReadyToPlay:
+            return @"ReadyToPlay";
+        case MXNAudioPlaybackStatePlaying:
+            return @"Playing";
+        case MXNAudioPlaybackStatePaused:
+            return @"Paused";
+        case MXNAudioPlaybackStateStopped:
+            return @"Stopped";
+        case MXNAudioPlaybackStateDisposed:
+            return @"Disposed";
+    }
+}
+

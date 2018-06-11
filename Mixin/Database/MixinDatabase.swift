@@ -17,10 +17,6 @@ class MixinDatabase: BaseDatabase {
         guard DatabaseUserDefault.shared.mixinDatabaseVersion < 3 && DatabaseUserDefault.shared.mixinDatabaseVersion > 0 else {
             return
         }
-
-        if try database.isColumnExist(tableName: Message.tableName, columnName: "media_mine_type") {
-            try database.prepareUpdateSQL(sql: "UPDATE messages SET media_mime_type = media_mine_type WHERE ifnull(media_mine_type, '') <> ''").execute()
-        }
     }
 
     override func configure(reset: Bool = false) {

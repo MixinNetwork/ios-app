@@ -36,7 +36,7 @@ class WaveformView: UIView {
                           cornerWidth: WaveformView.barCornerRadius,
                           cornerHeight: WaveformView.barCornerRadius,
                           transform: nil)
-        layer.fillColor = UIColor.lightGray.cgColor
+        layer.fillColor = tintColor.cgColor
         layer.path = path
         return layer
     }

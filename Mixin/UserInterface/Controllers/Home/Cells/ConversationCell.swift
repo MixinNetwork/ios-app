@@ -103,7 +103,7 @@ class ConversationCell: UITableViewCell {
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_AUDIO
                 }
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_video") // FIXME
+                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_audio")
                 messageTypeImageView.isHidden = false
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 contentLabel.text = Localized.NOTIFICATION_CONTENT_TRANSFER

@@ -7,7 +7,6 @@
 #import "opusenc.h"
 
 static const int numberOfChannels = 1;
-static const int outputSampleRate = 16000;
 static const int outputBitRate = 16 * 1024;
 
 @implementation MXNOggOpusWriter {
@@ -16,16 +15,22 @@ static const int outputBitRate = 16 * 1024;
     OggOpusComments *_comments;
 }
 
-+ (instancetype)writerWithPath:(NSString *)path error:(NSError **)outError {
-    return [[MXNOggOpusWriter alloc] initWithPath:path error:outError];
++ (instancetype)writerWithPath:(NSString *)path
+               inputSampleRate:(int32_t)inputSampleRate
+                         error:(NSError * _Nullable *)outError {
+    return [[MXNOggOpusWriter alloc] initWithPath:path
+                                  inputSampleRate:inputSampleRate
+                                            error:outError];
 }
 
-- (nullable instancetype)initWithPath:(NSString *)path error:(NSError **)outError {
+- (nullable instancetype)initWithPath:(NSString *)path
+                      inputSampleRate:(int32_t)inputSampleRate
+                                error:(NSError * _Nullable *)outError {
     self = [super init];
     if (self) {
         _comments = ope_comments_create();
         int result = OPE_OK;
-        _encoder = ope_encoder_create_file([path UTF8String], _comments, outputSampleRate, numberOfChannels, 0, &result);
+        _encoder = ope_encoder_create_file([path UTF8String], _comments, inputSampleRate, numberOfChannels, 0, &result);
         if (result != OPE_OK) {
             if (outError) {
                 *outError = [NSError errorWithDomain:MXNOggOpusErrorDomain

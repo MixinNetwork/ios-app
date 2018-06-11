@@ -41,7 +41,9 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     if (self) {
         _processingQueue = dispatch_queue_create("one.mixin.queue.audio_recorder", DISPATCH_QUEUE_SERIAL);
         _audioQueue = NULL;
-        _writer = [MXNOggOpusWriter writerWithPath:path error:outError];
+        _writer = [MXNOggOpusWriter writerWithPath:path
+                                   inputSampleRate:recordingSampleRate
+                                             error:outError];
         if (!_writer) {
             return nil;
         }

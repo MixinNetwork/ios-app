@@ -58,6 +58,7 @@
 		7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01931FEA281E000EEE4F /* URLExtension.swift */; };
 		7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */; };
 		7B0B01981FEA63FA000EEE4F /* StrangerTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */; };
+		7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */; };
 		7B0F851E20147EF700C02388 /* StickerPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0F851D20147EF700C02388 /* StickerPanelViewController.swift */; };
 		7B0F8520201494DA00C02388 /* StickerPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0F851F201494DA00C02388 /* StickerPageViewController.swift */; };
 		7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */; };
@@ -567,6 +568,7 @@
 		7B0B01931FEA281E000EEE4F /* URLExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtension.swift; sourceTree = "<group>"; };
 		7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StrangerTipsView.xib; sourceTree = "<group>"; };
 		7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrangerTipsView.swift; sourceTree = "<group>"; };
+		7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MXNAudioPlayerError.swift; sourceTree = "<group>"; };
 		7B0F851D20147EF700C02388 /* StickerPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPanelViewController.swift; sourceTree = "<group>"; };
 		7B0F851F201494DA00C02388 /* StickerPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPageViewController.swift; sourceTree = "<group>"; };
 		7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1282,6 +1284,7 @@
 				7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */,
 				7BC8502820CBA69A00A57B83 /* MXNAudioPlayer.h */,
 				7BC8502B20CBA69A00A57B83 /* MXNAudioPlayer.m */,
+				7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -2598,6 +2601,7 @@
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				DF8DA1981FD5301200425CEC /* Participant.swift in Sources */,
+				7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
 				DF7A40292086EF2F0073E43C /* APIError.swift in Sources */,

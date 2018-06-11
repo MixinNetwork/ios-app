@@ -235,7 +235,7 @@ class ConversationViewController: UIViewController {
         }
         if parent == nil {
             dataSource?.cancelMessageProcessing()
-            MXNAudioPlayer.shared().stop()
+            MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
         }
     }
     
@@ -905,21 +905,21 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
 extension ConversationViewController: AudioMessageCellDelegate {
     
     func audioMessageCellDidTogglePlaying(_ cell: AudioMessageCell) {
-        if cell.isPlaying {
-            MXNAudioPlayer.shared().stop()
-        } else {
-            if let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? AudioMessageViewModel, let mediaUrl = viewModel.message.mediaUrl {
-                let path = MixinFile.url(ofChatDirectory: .audios, filename: mediaUrl).path
-                MXNAudioPlayer.shared().loadFile(atPath: path) { [weak self] (success, error) in
-                    if self == nil {
-                        return
+        let cellIsPlaying = cell.isPlaying
+        MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: cellIsPlaying)
+        guard !cellIsPlaying else {
+            return
+        }
+        cell.isPlaying = true
+        if let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? AudioMessageViewModel, let mediaUrl = viewModel.message.mediaUrl {
+            let path = MixinFile.url(ofChatDirectory: .audios, filename: mediaUrl).path
+            MXNAudioPlayer.shared().playFile(atPath: path) { [weak cell] (success, error) in
+                if let error = error as? MXNAudioPlayerError, error == .cancelled {
+                    DispatchQueue.main.async {
+                        cell?.isPlaying = false
                     }
-                    DispatchQueue.main.sync {
-                        if let cell = self?.tableView.cellForRow(at: indexPath) as? AudioMessageCell {
-                            cell.isPlaying = true
-                        }
-                    }
-                    MXNAudioPlayer.shared().play()
+                } else if let error = error {
+                    UIApplication.trackError("ConversationViewController", action: "Play audio", userInfo: ["error": error])
                 }
             }
         }

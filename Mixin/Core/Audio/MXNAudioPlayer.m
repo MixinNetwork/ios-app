@@ -50,40 +50,49 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     return timeStamp.mSampleTime / sampleRate;
 }
 
-- (void)loadFileAtPath:(NSString *)path
-            completion:(MXNAudioPlayerLoadFileCompletionCallback)completion {
-    dispatch_async(_processingQueue, ^{
-        if ([path isEqualToString:self->_path]) {
-            switch (self->_state) {
-                case MXNAudioPlaybackStatePreparing: {
-                    // Not expected to happend
-                    return;
-                }
-                case MXNAudioPlaybackStateReadyToPlay:
-                case MXNAudioPlaybackStatePlaying:
-                case MXNAudioPlaybackStatePaused:
-                case MXNAudioPlaybackStateStopped: {
-                    completion(YES, nil);
-                    return;
-                }
-                case MXNAudioPlaybackStateDisposed: {
-                    break;
-                }
+- (void)playFileAtPath:(NSString *)path completion:(MXNAudioPlayerLoadFileCompletionCallback)completion {
+    if ([path isEqualToString:_path]) {
+        switch (_state) {
+            case MXNAudioPlaybackStatePreparing: {
+                // Not expected to happend
+                return;
             }
-        } else {
-            [self dispose];
+            case MXNAudioPlaybackStateReadyToPlay:
+            case MXNAudioPlaybackStatePlaying:
+            case MXNAudioPlaybackStatePaused:
+            case MXNAudioPlaybackStateStopped: {
+                [self play];
+                completion(YES, nil);
+                return;
+            }
+            case MXNAudioPlaybackStateDisposed: {
+                break;
+            }
+        }
+    } else {
+        [self stopWithAudioSessionDeactivated:NO];
+        [self dispose];
+        _path = path;
+    }
+    dispatch_async(_processingQueue, ^{
+        NSError *error = nil;
+
+        if (_path != path) {
+            error = [NSError errorWithDomain:MXNAudioPlayerErrorDomain
+                                        code:MXNAudioPlayerErrorCodeCancelled
+                                    userInfo:nil];
+            completion(NO, error);
+            return;
         }
         
         [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStatePreparing];
         
-        NSError *error = nil;
         MXNOggOpusReader *reader = [MXNOggOpusReader readerWithFileAtPath:path error:&error];
         if (!reader) {
             completion(NO, error);
             return;
         }
 
-        self->_path = path;
         self->_reader = reader;
         
         AVAudioSession *session = [AVAudioSession sharedInstance];
@@ -151,6 +160,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         AudioQueueSetParameter(self->_audioQueue, kAudioQueueParam_Volume, 1.0);
         
         [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateReadyToPlay];
+        [self play];
         completion(YES, nil);
     });
 }
@@ -178,24 +188,28 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStatePaused];
 }
 
-- (void)stop {
+- (void)stopWithAudioSessionDeactivated:(BOOL)shouldDeactivate {
     if (_state == MXNAudioPlaybackStateStopped || _state == MXNAudioPlaybackStateDisposed) {
         return;
     }
+    [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateStopped];
     AudioQueueStop(_audioQueue, TRUE);
-    dispatch_async(_processingQueue, ^{
-        BOOL shouldDeactivate = self->_state == MXNAudioPlaybackStatePaused || self->_state == MXNAudioPlaybackStateStopped || self->_state == MXNAudioPlaybackStateDisposed;
-        if (shouldDeactivate) {
-            [[AVAudioSession sharedInstance] setActive:NO
-                                           withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
-                                                 error:nil];
-        }
-    });
+    if (shouldDeactivate) {
+        dispatch_async(_processingQueue, ^{
+            BOOL shouldDeactivate = self->_state == MXNAudioPlaybackStateStopped || self->_state == MXNAudioPlaybackStateDisposed;
+            if (shouldDeactivate) {
+                AudioQueueStop(self->_audioQueue, TRUE);
+                [[AVAudioSession sharedInstance] setActive:NO
+                                               withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
+                                                     error:nil];
+            }
+        });
+    }
 }
 
 - (void)dispose {
     if (_state != MXNAudioPlaybackStateStopped) {
-        [self stop];
+        [self stopWithAudioSessionDeactivated:YES];
     }
     if (_timeline) {
         AudioQueueDisposeTimeline(_audioQueue, _timeline);
@@ -222,16 +236,14 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 
 - (void)setPlaybackStateAndNotifyObservers:(MXNAudioPlaybackState)state {
     _state = state;
-    NSEnumerator *enumerator = _observers.objectEnumerator;
-    id<MXNAudioPlayerObserver> observer = enumerator.nextObject;
-    while (observer) {
+    NSArray *observers = _observers.allObjects;
+    for (id<MXNAudioPlayerObserver> observer in observers) {
         [observer mxnAudioPlayer:self playbackStateDidChangeTo:state];
-        observer = enumerator.nextObject;
     }
 }
 
 - (void)audioSessionInterruption:(NSNotification *)notification {
-    [self stop];
+    [self stopWithAudioSessionDeactivated:YES];
 }
 
 - (void)audioSessionRouteChange:(NSNotification *)notification {
@@ -245,7 +257,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
             NSString *newCategory = [[AVAudioSession sharedInstance] category];
             BOOL canContinue = [newCategory isEqualToString:AVAudioSessionCategoryRecord] || [newCategory isEqualToString:AVAudioSessionCategoryPlayAndRecord];
             if (!canContinue) {
-                [self stop];
+                [self stopWithAudioSessionDeactivated:YES];
             }
             break;
         }
@@ -254,7 +266,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         case AVAudioSessionRouteChangeReasonWakeFromSleep:
         case AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory:
         case AVAudioSessionRouteChangeReasonRouteConfigurationChange: {
-            [self stop];
+            [self stopWithAudioSessionDeactivated:YES];
             break;
         }
     }
@@ -281,7 +293,7 @@ void AQBufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRef 
         AudioQueueEnqueueBuffer(player->_audioQueue, inBuffer, 0, NULL);
     } else {
         if (player->_state == MXNAudioPlaybackStatePlaying) {
-            [player stop];
+            [player stopWithAudioSessionDeactivated:YES];
         }
     }
 }
@@ -291,7 +303,8 @@ void isRunningChanged(void * __nullable inUserData, AudioQueueRef inAQ, AudioQue
     UInt32 isRunning;
     UInt32 size = sizeof(isRunning);
     OSStatus result = AudioQueueGetProperty(inAQ, kAudioQueueProperty_IsRunning, &isRunning, &size);
-    if (result == noErr && !isRunning) {
+    if (result == noErr && !isRunning && player->_state != MXNAudioPlaybackStateStopped) {
+        NSLog(@"isRunningChanged post stoped. previous: %@", NSStringFromMXNAudioPlaybackState(player->_state));
         [player setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateStopped];
     }
 }
@@ -334,4 +347,3 @@ NSString* NSStringFromMXNAudioPlaybackState(MXNAudioPlaybackState state) {
             return @"Disposed";
     }
 }
-

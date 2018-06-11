@@ -4,21 +4,12 @@
 
 #import <Foundation/Foundation.h>
 
-#define ReturnNilIfOpusError(result, code) if (result != OPUS_OK) { \
-                                                if (outError) { \
-                                                    *outError = ErrorWithCodeAndOpusErrorCode(code, result); \
-                                                } \
-                                                return nil; \
-                                           }
-
 FOUNDATION_EXTERN const NSErrorDomain MXNOggOpusErrorDomain;
 
 typedef NS_ENUM(NSUInteger, MXNOggOpusErrorCode) {
     MXNOggOpusErrorCodeCreateEncoder,
     MXNOggOpusErrorCodeSetBitrate,
     MXNOggOpusErrorCodeEncodingFailed,
-    MXNOggOpusErrorCodeTestFile,
-    MXNOggOpusErrorCodeTestOpen,
     MXNOggOpusErrorCodeOpenFile,
     MXNOggOpusErrorCodeRead
 };

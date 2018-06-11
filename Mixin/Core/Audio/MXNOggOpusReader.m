@@ -9,24 +9,22 @@
     NSMutableData *_outputBuffer;
 }
 
-+ (nullable instancetype)readerWithFileAtPath:(NSString *)path error:(NSError **)outError {
++ (nullable instancetype)readerWithFileAtPath:(NSString *)path error:(NSError * _Nullable *)outError {
     return [[MXNOggOpusReader alloc] initWithFileAtPath:path error:outError];
 }
 
-- (nullable instancetype)initWithFileAtPath:(NSString *)path error:(NSError **)outError {
+- (nullable instancetype)initWithFileAtPath:(NSString *)path error:(NSError * _Nullable *)outError {
     self = [super init];
     if (self) {
         _path = path;
-        _file = NULL;
-        
         int result = OPUS_OK;
-        _file = op_test_file([_path UTF8String], &result);
-        ReturnNilIfOpusError(result, MXNOggOpusErrorCodeTestFile);
-        result = op_test_open(_file);
-        op_free(_file);
-        ReturnNilIfOpusError(result, MXNOggOpusErrorCodeTestOpen);
         _file = op_open_file([_path UTF8String], &result);
-        ReturnNilIfOpusError(result, MXNOggOpusErrorCodeOpenFile);
+        if (result != OPUS_OK) {
+            if (outError) {
+                *outError = ErrorWithCodeAndOpusErrorCode(result, result);
+            }
+            return nil;
+        }
     }
     return self;
 }
@@ -37,7 +35,7 @@
 }
 
 - (NSData * _Nullable)pcmDataWithMaxLength:(NSUInteger)maxLength
-                                     error:(NSError **)outError {
+                                     error:(NSError * _Nullable *)outError {
     if (!_outputBuffer) {
         _outputBuffer = [NSMutableData dataWithLength:maxLength];
     }

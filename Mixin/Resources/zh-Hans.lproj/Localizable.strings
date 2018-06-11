@@ -147,9 +147,6 @@
 "image_picker_title_albums" = "相册";
 "camera_qrcode_title" = "文本二维码";
 "camera_qrcode_codes" = "检测到一个 Mixin 二维码，点击识别";
-"camera_qrcode_pay" = "检测到一个 Mixin 支付二维码，点击支付";
-"camera_qrcode_users" = "检测到一个 Mixin 用户二维码，点击查看";
-"camera_qrcode_transfer" = "检测到一个 Mixin 转账二维码，点击转账";
 "camera_qrcode_tips_title" = "自动识别二维码";
 "camera_qrcode_tips_summary" = "打开相机会默认开启二维码识别，当二维码被检测到时会显示一个通知，点击通知识别二维码。";
 
@@ -224,6 +221,8 @@
 "wallet_blockchian_not_in_sync" = "区块链同步异常";
 "wallet_no_price" = "暂无价格";
 "wallet_pin_init_title" = "设置支付密码";
+"wallet_pin_confirm_title" = "确认支付密码";
+"wallet_pin_new_title" = "设置新的支付密码";
 "wallet_pin_init_tips1" = "设置 6 位数字支付密码";
 "wallet_pin_init_tips2" = "确认 6 位数字支付密码并牢记它。如果忘记，你的钱包将无法找回。";
 "wallet_pin_init_tips3" = "请再次确认您的 6 位数字密码。 很少看到第三次确认吧！所以请牢记，支付密码丢失是无法找回的。";
@@ -232,7 +231,6 @@
 "wallet_pin_verify_tips" = "输入钱包当前 6 位数字支付密码";
 "wallet_pin_inconsistency" = "密码不一致，请重新设置";
 "wallet_pin_too_simple" = "支付密码过于简单不安全";
-"wallet_pin_confirm_title" = "确认支付密码";
 "wallet_pin_tips_title" = "输入你的钱包密码";
 "wallet_pin_tips_description" = "定期输入钱包密码有助于记住该密码";
 "wallet_all_transactions_title" = "所有交易记录";

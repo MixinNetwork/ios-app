@@ -42,7 +42,7 @@ extension AssetItem {
     }
     
     var localizedBalance: String {
-        return localizedNumberString(balance)
+        return localizedNumberString(balance.formatBalance())
     }
 
     func getUSDBalance() -> String {

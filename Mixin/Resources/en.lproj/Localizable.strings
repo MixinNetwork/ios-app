@@ -150,9 +150,6 @@
 "image_picker_title_albums" = "Albums";
 "camera_qrcode_title" = "TEXT QR CODE";
 "camera_qrcode_codes" = "Detected a Mixin QR code, tap to recognize";
-"camera_qrcode_pay" = "Detected a pay QR code, tap to pay";
-"camera_qrcode_users" = "Detected a user QR code, tap to view user";
-"camera_qrcode_transfer" = "Detected a transfer QR code, tap to transfer";
 "camera_qrcode_tips_title" = "QR Code Camera";
 "camera_qrcode_tips_summary" = "Use the built-in Camera to scan any QR Code. When a code is detected, tap the notification to view more information.";
 
@@ -225,6 +222,8 @@
 "wallet_blockchian_not_in_sync" = "Blockchain not in sync.";
 "wallet_no_price" = "N/A";
 "wallet_pin_init_title" = "Set PIN";
+"wallet_pin_confirm_title" = "Confirm PIN";
+"wallet_pin_new_title" = "Set a new PIN";
 "wallet_pin_init_tips1" = "Please set a 6 digit PIN.";
 "wallet_pin_init_tips2" = "Please confirm the 6 digit PIN and remember it. If lost, there is no way to recover your wallet.";
 "wallet_pin_init_tips3" = "Please confirm your 6 digit PIN again. It's rare to see a third confirmation somewhere else, so please remember the PIN is unrecoverable if lost.";
@@ -233,7 +232,6 @@
 "wallet_pin_verify_tips" = "Please enter the 6 digit PIN to verify.";
 "wallet_pin_inconsistency" = "The PIN is not the same twice, please reset it";
 "wallet_pin_too_simple" = "The PIN is too simple and insecure.";
-"wallet_pin_confirm_title" = "Confirm PIN";
 "wallet_pin_tips_title" = "Enter your Wallet PIN";
 "wallet_pin_tips_description" = "You'll be asked for it periodically to help you remember it.";
 "wallet_all_transactions_title" = "All Transactions";

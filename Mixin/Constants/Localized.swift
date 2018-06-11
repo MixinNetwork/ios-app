@@ -168,9 +168,6 @@ public class Localized {
     public static let IMAGE_PICKER_TITLE_CAMERA_ROLL = LocalizedString("image_picker_title_camera_roll", comment: "Camera Roll")
     public static let IMAGE_PICKER_TITLE_ALBUMS = LocalizedString("image_picker_title_albums", comment: "Albums")
     public static let CAMERA_QRCODE_CODES = LocalizedString("camera_qrcode_codes", comment: "Detected a Mixin QR code, tap to recognize")
-    public static let CAMERA_QRCODE_PAY = LocalizedString("camera_qrcode_pay", comment: "Detected a pay QR code, tap to pay")
-    public static let CAMERA_QRCODE_USERS = LocalizedString("camera_qrcode_users", comment: "Detected a user QR code, tap to view user")
-    public static let CAMERA_QRCODE_TRANSFER = LocalizedString("camera_qrcode_transfer", comment: "Detected a transfer QR code, tap to transfer")
 
     // Group
     public static let GROUP_NAVIGATION_TITLE_ADD_MEMBER = LocalizedString("group_navigation_title_add_member", comment: "Add Participants")
@@ -320,6 +317,7 @@ public class Localized {
     public static let WALLET_PIN_CHANGE_TIPS = LocalizedString("wallet_pin_change_tips", comment: "Please set a new 6 digit PIN.")
     public static let WALLET_PIN_INIT_TITLE = LocalizedString("wallet_pin_init_title", comment: "Set PIN")
     public static let WALLET_PIN_CONFIRM_TITLE = LocalizedString("wallet_pin_confirm_title", comment: "Confirm PIN")
+    public static let WALLET_PIN_NEW_TITLE = LocalizedString("wallet_pin_new_title", comment: "Set a new PIN")
     public static let WALLET_ALL_TRANSACTIONS_TITLE = LocalizedString("wallet_all_transactions_title", comment: "All Transactions")
 
     // Transaction

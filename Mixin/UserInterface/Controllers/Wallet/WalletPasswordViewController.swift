@@ -18,6 +18,8 @@ class WalletPasswordViewController: UIViewController {
         case changePinStep1
         case changePinStep2(old: String)
         case changePinStep3(old: String, previous: String)
+        case changePinStep4(old: String, previous: String)
+        case changePinStep5(old: String, previous: String)
     }
 
     private var transferData: PasswordTransferData?
@@ -29,47 +31,59 @@ class WalletPasswordViewController: UIViewController {
 
         switch walletPasswordType {
         case .initPinStep1:
-            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS1
             titleLabel.text = Localized.WALLET_PIN_INIT_TITLE
+            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS1
             backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_close"), for: .normal)
             nextButton.setTitle(Localized.ACTION_NEXT, for: .normal)
             subtitleLabel.text = "1/4"
         case .initPinStep2:
-            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS2
             titleLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS2
             backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
             nextButton.setTitle(Localized.ACTION_NEXT, for: .normal)
             subtitleLabel.text = "2/4"
         case .initPinStep3:
-            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS3
             titleLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS3
             backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
             nextButton.setTitle(Localized.ACTION_NEXT, for: .normal)
             subtitleLabel.text = "3/4"
         case .initPinStep4:
-            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS4
             titleLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS4
             backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
             nextButton.setTitle(Localized.ACTION_DONE, for: .normal)
             subtitleLabel.text = "4/4"
         case .changePinStep1:
-            tipsLabel.text = Localized.WALLET_PIN_VERIFY_TIPS
             titleLabel.text = Localized.WALLET_PASSWORD_VERIFY_TITLE
+            tipsLabel.text = Localized.WALLET_PIN_VERIFY_TIPS
             backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_close"), for: .normal)
             nextButton.setTitle(Localized.ACTION_NEXT, for: .normal)
-            subtitleLabel.text = "1/3"
+            subtitleLabel.text = "1/5"
         case .changePinStep2:
-            tipsLabel.text = Localized.WALLET_PIN_CHANGE_TIPS
-            titleLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            titleLabel.text = Localized.WALLET_PIN_NEW_TITLE
+            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS1
             backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
             nextButton.setTitle(Localized.ACTION_NEXT, for: .normal)
-            subtitleLabel.text = "2/3"
+            subtitleLabel.text = "2/5"
         case .changePinStep3:
-            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS2
             titleLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS2
+            backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
+            nextButton.setTitle(Localized.ACTION_NEXT, for: .normal)
+            subtitleLabel.text = "3/5"
+        case .changePinStep4:
+            titleLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS3
+            backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
+            nextButton.setTitle(Localized.ACTION_NEXT, for: .normal)
+            subtitleLabel.text = "4/5"
+        case .changePinStep5:
+            titleLabel.text = Localized.WALLET_PIN_CONFIRM_TITLE
+            tipsLabel.text = Localized.WALLET_PIN_INIT_TIPS4
             backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
             nextButton.setTitle(Localized.ACTION_DONE, for: .normal)
-            subtitleLabel.text = "3/3"
+            subtitleLabel.text = "5/5"
         }
     }
     
@@ -166,6 +180,24 @@ class WalletPasswordViewController: UIViewController {
             let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep3(old: old, previous: pin), transferData: transferData)
             navigationController?.pushViewController(vc, animated: true)
         case .changePinStep3(let old, let previous):
+            if previous == pin {
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep4(old: old, previous: pin), transferData: transferData)
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                    self?.popToFirstInitController()
+                })
+            }
+        case .changePinStep4(let old, let previous):
+            if previous == pin {
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep5(old: old, previous: pin), transferData: transferData)
+                navigationController?.pushViewController(vc, animated: true)
+            } else {
+                alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
+                    self?.popToFirstInitController()
+                })
+            }
+        case .changePinStep5(let old, let previous):
             if previous == pin {
                 nextButton.isBusy = true
                 AccountAPI.shared.updatePin(old: old, new: pin, completion: { [weak self] (result) in

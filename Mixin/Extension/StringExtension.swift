@@ -126,6 +126,10 @@ extension String {
         return formatter.string(from: NSDecimalNumber(string: self)) ?? self
     }
 
+    func formatBalance() -> String {
+        return NumberFormatter(numberStyle: .decimal).string(from: NSDecimalNumber(string: self)) ?? self
+    }
+
     func formatFullBalance() -> String {
         return NumberFormatter.balanceFormatter.string(from: NSDecimalNumber(string: self)) ?? self
     }

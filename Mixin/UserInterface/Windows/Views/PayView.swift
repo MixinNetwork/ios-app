@@ -95,15 +95,6 @@ class PayView: UIStackView {
         superView?.dismissPopupControllerAnimated()
     }
 
-    @IBAction func profileAction(_ sender: Any) {
-        guard let user = self.user, !avatarImageView.isHidden, !processing else {
-            return
-        }
-        superView?.dismissPopupControllerAnimated()
-        userWindow.updateUser(user: user).presentView()
-    }
-    
-
     class func instance() -> PayView {
         return Bundle.main.loadNibNamed("PayView", owner: nil, options: nil)?.first as! PayView
     }

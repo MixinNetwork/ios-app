@@ -229,6 +229,7 @@ class ConversationViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         saveDraft()
+        MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath) {
                 ConversationViewController.positions[conversationId] = nil
@@ -246,7 +247,6 @@ class ConversationViewController: UIViewController {
         }
         if parent == nil {
             dataSource?.cancelMessageProcessing()
-            MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
         }
     }
     

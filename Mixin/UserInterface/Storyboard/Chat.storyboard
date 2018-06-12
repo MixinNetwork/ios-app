@@ -2229,7 +2229,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5up-h5-PJN" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="288-Q6-395">
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.29999999999999999" id="288-Q6-395">
                     <connections>
                         <action selector="recordGestureRecognizingAction:" destination="HUi-An-hzm" id="Oph-Ze-xt8"/>
                     </connections>

@@ -684,6 +684,13 @@ class ConversationViewController: UIViewController {
         }
     }
 
+    func reduceStickerPanelHeightIfMaximized() {
+        guard isStickerPanelMax else {
+            return
+        }
+        toggleStickerPanelSizeAction(self)
+    }
+    
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController

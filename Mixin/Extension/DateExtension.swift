@@ -98,7 +98,7 @@ extension Date {
     }
 }
 
-let mmssComponentsFormatter: DateComponentsFormatter = {
+let mediaDurationFormatter: DateComponentsFormatter = {
     let formatter = DateComponentsFormatter()
     formatter.allowedUnits = [.minute, .second]
     formatter.zeroFormattingBehavior = [.pad]

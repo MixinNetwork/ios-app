@@ -431,7 +431,7 @@ extension ConversationDataSource {
 // MARK: - Send Message
 extension ConversationDataSource {
     
-    func sendMessage(type: MessageCategory, value: Any, asset: AVAsset? = nil) {
+    func sendMessage(type: MessageCategory, value: Any) {
         let isGroupMessage = category == .group
         let ownerUser = self.ownerUser
         var message = Message.createMessage(category: type.rawValue, conversationId: conversationId, userId: me.user_id)
@@ -470,9 +470,11 @@ extension ConversationDataSource {
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
-        } else if type == .SIGNAL_VIDEO, let url = value as? URL {
+        } else if type == .SIGNAL_VIDEO, let value = value as? (URL, AVAsset) {
             queue.async {
-                guard let asset = asset, asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
+                let url = value.0
+                let asset = value.1
+                guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
                     NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
                     return
                 }
@@ -495,6 +497,26 @@ extension ConversationDataSource {
                 message.mediaUrl = url.lastPathComponent
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+            }
+        } else if type == .SIGNAL_AUDIO, let value = value as? (tempUrl: URL, metadata: MXNAudioMetadata) {
+            queue.async {
+                guard FileManager.default.fileSize(value.tempUrl.path) > 0 else {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_AUDIO_FAILED)
+                    return
+                }
+                let url = MixinFile.url(ofChatDirectory: .audios, filename: UUID().uuidString.lowercased() + ExtensionName.ogg.withDot)
+                do {
+                    try FileManager.default.moveItem(at: value.tempUrl, to: url)
+                    message.mediaSize = FileManager.default.fileSize(url.path)
+                    message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+                    message.mediaUrl = url.lastPathComponent
+                    message.mediaStatus = MediaStatus.PENDING.rawValue
+                    message.mediaWaveform = value.metadata.waveform
+                    message.mediaDuration = Int64(value.metadata.duration)
+                    SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                } catch {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_AUDIO_FAILED)
+                }
             }
         } else if type == .SIGNAL_STICKER, let sticker = value as? Sticker {
             message.name = sticker.name
@@ -701,6 +723,8 @@ extension ConversationDataSource {
                 viewModel = DataMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_VIDEO") {
                 viewModel = VideoMessageViewModel(message: message, style: style, fits: layoutWidth)
+            } else if message.category.hasSuffix("_AUDIO") {
+                viewModel = AudioMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_CONTACT") {
                 viewModel = ContactMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

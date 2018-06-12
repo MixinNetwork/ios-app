@@ -396,8 +396,8 @@ extension GalleryItemViewController {
                     let duration = CMTimeGetSeconds(item.duration)
                     if duration.isFinite {
                         let time = CMTimeGetSeconds(weakSelf.videoView.player.currentTime())
-                        weakSelf.playedTimeLabel.text = mmssComponentsFormatter.string(from: time)
-                        weakSelf.remainingTimeLabel.text = mmssComponentsFormatter.string(from: duration - time)
+                        weakSelf.playedTimeLabel.text = mediaDurationFormatter.string(from: time)
+                        weakSelf.remainingTimeLabel.text = mediaDurationFormatter.string(from: duration - time)
                     }
                 }
             })
@@ -407,7 +407,7 @@ extension GalleryItemViewController {
             if let item = videoView.player.currentItem {
                 let duration = CMTimeGetSeconds(item.asset.duration)
                 if duration.isFinite {
-                    remainingTimeLabel.text = mmssComponentsFormatter.string(from: duration)
+                    remainingTimeLabel.text = mediaDurationFormatter.string(from: duration)
                 }
             }
             NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(_:)), name: .AVPlayerItemDidPlayToEndTime, object: videoView.player.currentItem)

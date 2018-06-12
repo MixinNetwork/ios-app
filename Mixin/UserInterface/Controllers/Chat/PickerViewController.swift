@@ -115,7 +115,7 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
         }
         if asset.mediaType == .video {
             cell.videoTypeView.isHidden = false
-            cell.durationLabel.text = mmssComponentsFormatter.string(from: asset.duration)
+            cell.durationLabel.text = mediaDurationFormatter.string(from: asset.duration)
         } else {
             cell.videoTypeView.isHidden = true
         }

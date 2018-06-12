@@ -731,7 +731,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
-                                    <action selector="dismissMoreMenuAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="hPQ-3Q-58c"/>
+                                    <action selector="dismissPanelsAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="hPQ-3Q-58c"/>
                                 </connections>
                             </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wvG-ds-JD9">
@@ -793,9 +793,13 @@
                                                     </textView>
                                                     <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JTL-Jf-Smd">
                                                         <rect key="frame" x="276" y="5" width="44" height="44"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="44" id="5ld-OZ-fSv"/>
+                                                            <constraint firstAttribute="height" constant="44" id="KBS-5m-feC"/>
+                                                        </constraints>
                                                         <state key="normal" image="ic_chat_sticker"/>
                                                         <connections>
-                                                            <action selector="toggleStickerPanelAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="AZl-nW-yLk"/>
+                                                            <action selector="stickerKeyboardSwitchAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="AZl-nW-yLk"/>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hVh-Hy-zRR">
@@ -808,13 +812,24 @@
                                                                     <action selector="sendTextMessageAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="qpV-Q0-kiy"/>
                                                                 </connections>
                                                             </button>
+                                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ctk-K4-UkK">
+                                                                <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                                                <state key="normal" image="ic_chat_panel_max"/>
+                                                                <connections>
+                                                                    <action selector="toggleStickerPanelSizeAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="ocu-0e-lBe"/>
+                                                                </connections>
+                                                            </button>
                                                         </subviews>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="Ctk-K4-UkK" secondAttribute="trailing" id="4iN-xv-zcz"/>
                                                             <constraint firstAttribute="width" constant="55" id="GVS-oV-MUi"/>
                                                             <constraint firstAttribute="bottom" secondItem="4sU-2a-lMZ" secondAttribute="bottom" id="J45-6m-Zsl"/>
                                                             <constraint firstAttribute="height" constant="55" id="MNI-Ge-4dn"/>
+                                                            <constraint firstAttribute="bottom" secondItem="Ctk-K4-UkK" secondAttribute="bottom" id="MfM-u1-J9h"/>
                                                             <constraint firstItem="4sU-2a-lMZ" firstAttribute="top" secondItem="hVh-Hy-zRR" secondAttribute="top" id="Vyu-2t-15p"/>
+                                                            <constraint firstItem="Ctk-K4-UkK" firstAttribute="top" secondItem="hVh-Hy-zRR" secondAttribute="top" id="iaC-0X-gUt"/>
+                                                            <constraint firstItem="Ctk-K4-UkK" firstAttribute="leading" secondItem="hVh-Hy-zRR" secondAttribute="leading" id="lee-qD-PW9"/>
                                                             <constraint firstItem="4sU-2a-lMZ" firstAttribute="leading" secondItem="hVh-Hy-zRR" secondAttribute="leading" id="qaq-OA-BTh"/>
                                                             <constraint firstAttribute="trailing" secondItem="4sU-2a-lMZ" secondAttribute="trailing" id="qiT-X1-k6D"/>
                                                         </constraints>
@@ -891,7 +906,7 @@
                                     <constraint firstAttribute="height" constant="55" id="I2n-FW-dph"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="HUi-An-hzm" kind="embed" id="2Ze-5t-sHg"/>
+                                    <segue destination="HUi-An-hzm" kind="embed" identifier="AudioSegueId" id="2Ze-5t-sHg"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -945,7 +960,7 @@
                         <outlet property="botButton" destination="Lc3-ZI-RQf" id="A9x-oK-w1g"/>
                         <outlet property="bottomBarWrapperView" destination="rZG-cd-J6L" id="wPJ-P0-tnN"/>
                         <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
-                        <outlet property="dismissMoreMenuButton" destination="tBY-wh-HMf" id="gLk-YR-fNU"/>
+                        <outlet property="dismissPanelsButton" destination="tBY-wh-HMf" id="gLk-YR-fNU"/>
                         <outlet property="galleryWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
                         <outlet property="inputTextView" destination="LmC-o2-ndc" id="oTt-5n-LgP"/>
                         <outlet property="inputTextViewHeightConstraint" destination="Y55-r4-fIf" id="Ic3-i4-NT1"/>
@@ -960,12 +975,13 @@
                         <outlet property="scrollToBottomWrapperHeightConstraint" destination="iai-L8-XoW" id="F9Z-Pn-XNa"/>
                         <outlet property="scrollToBottomWrapperView" destination="enU-Jm-AWl" id="kR8-6F-tEk"/>
                         <outlet property="sendButton" destination="4sU-2a-lMZ" id="gkB-0g-9ur"/>
+                        <outlet property="stickerKeyboardSwitcherButton" destination="JTL-Jf-Smd" id="ZXj-Dl-yTy"/>
                         <outlet property="stickerPanelContainerHeightConstraint" destination="fUe-nX-Ano" id="e5w-7t-FQm"/>
                         <outlet property="stickerPanelContainerView" destination="OCN-L0-tlY" id="qw6-7P-w3t"/>
                         <outlet property="tableView" destination="v0e-5f-Xnl" id="vhP-ha-ee7"/>
                         <outlet property="titleLabel" destination="6GB-fs-Cdu" id="Gzl-mK-sF2"/>
                         <outlet property="titleStackView" destination="eFB-Ny-P1V" id="LqH-oj-Pg0"/>
-                        <outlet property="toggleStickerPanelButton" destination="JTL-Jf-Smd" id="ZXj-Dl-yTy"/>
+                        <outlet property="toggleStickerPanelSizeButton" destination="Ctk-K4-UkK" id="WHs-fY-HMx"/>
                         <outlet property="unblockButton" destination="bTL-3p-VYH" id="buh-za-KfW"/>
                         <outlet property="unreadBadgeLabel" destination="x2d-vg-jlV" id="M0W-3d-aPa"/>
                     </connections>
@@ -2206,7 +2222,7 @@
                     <connections>
                         <outlet property="bottomWrapperViewHeightConstraint" destination="zsA-t8-xFc" id="twV-mR-s56"/>
                         <outlet property="recordGestureRecognizer" destination="288-Q6-395" id="Axj-vW-lEk"/>
-                        <outlet property="recordImageView" destination="Zt0-eZ-yAA" id="F0D-0Z-hwb"/>
+                        <outlet property="recordImageView" destination="Zt0-eZ-yAA" id="lVd-iA-AkZ"/>
                         <outlet property="recordingIndicatorView" destination="tMG-4F-9D7" id="oJf-nE-Zhf"/>
                         <outlet property="recordingRedDotView" destination="Fnf-oR-rOV" id="K0j-eC-gJn"/>
                         <outlet property="slideToCancelView" destination="qFv-UZ-fiq" id="vNO-pC-VTn"/>
@@ -2235,6 +2251,7 @@
         <image name="ic_chat_bot" width="44" height="44"/>
         <image name="ic_chat_microphone" width="44" height="44"/>
         <image name="ic_chat_more" width="44" height="44"/>
+        <image name="ic_chat_panel_max" width="44" height="44"/>
         <image name="ic_chat_send" width="44" height="44"/>
         <image name="ic_chat_sticker" width="44" height="44"/>
         <image name="ic_close_shadow" width="44" height="44"/>

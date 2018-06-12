@@ -46,15 +46,6 @@ class AudioInputViewController: UIViewController {
         return (parent as? ConversationViewController)?.dataSource
     }
     
-    private lazy var requestPermissionController: UIAlertController = {
-        let controller = UIAlertController(title: Localized.PERMISSION_DENIED_MICROPHONE, message: nil, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        controller.addAction(UIAlertAction(title: Localized.SETTING_TITLE, style: .default, handler: { (_) in
-            UIApplication.openAppSettings()
-        }))
-        return controller
-    }()
-    
     override func didMove(toParentViewController parent: UIViewController?) {
         super.didMove(toParentViewController: parent)
         if let container = view.superview as? AudioInputContainerView {
@@ -108,7 +99,7 @@ extension AudioInputViewController {
     private func startRecordingIfGranted() {
         switch AVAudioSession.sharedInstance().recordPermission() {
         case .denied:
-            present(requestPermissionController, animated: true, completion: nil)
+            alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
         case .granted:
             startRecording()
         case .undetermined:

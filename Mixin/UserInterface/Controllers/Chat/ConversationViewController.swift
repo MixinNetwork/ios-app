@@ -1293,6 +1293,7 @@ extension ConversationViewController {
             var stickers = albums.map{ StickerDAO.shared.getStickers(albumId: $0.albumId) }
             let limit = StickerPageViewController.numberOfRecentStickers(forLayoutWidth: containerWidth)
             stickers.insert(StickerDAO.shared.recentUsedStickers(limit: limit), at: 0)
+            stickers.insert(StickerDAO.shared.getFavoriteStickers(), at: 1)
             DispatchQueue.main.async {
                 self?.stickerPanelViewController?.reload(albums: albums, stickers: stickers)
             }

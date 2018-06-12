@@ -5,7 +5,8 @@ final class StickerAlbumDAO {
     static let shared = StickerAlbumDAO()
     
     func getAlbums() -> [StickerAlbum] {
-        return MixinDatabase.shared.getCodables(inTransaction: false)
+
+        return MixinDatabase.shared.getCodables(condition: StickerAlbum.Properties.category.isNull() || StickerAlbum.Properties.category == AlbumCategory.SYSTEM.rawValue, inTransaction: false)
     }
 
     func getAblumsUpdateAt() -> [String: String] {

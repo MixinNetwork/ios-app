@@ -16,6 +16,7 @@ class StickerPageViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
     var isRecentPage = false
+    var isFavoritePage = false
     
     private let stickerCellReuseId = "StickerCell"
     
@@ -64,13 +65,23 @@ class StickerPageViewController: UIViewController {
 extension StickerPageViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return stickers.count
+        return isFavoritePage ? stickers.count + 1 : stickers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: stickerCellReuseId, for: indexPath) as! StickerCollectionViewCell
-        if let url = URL(string: stickers[indexPath.row].assetUrl) {
-            cell.imageView.sd_setImage(with: url, completed: nil)
+        if isFavoritePage {
+            if indexPath.row == 0 {
+                cell.imageView.image = #imageLiteral(resourceName: "ic_sticker_add")
+            } else {
+                if let url = URL(string: stickers[indexPath.row - 1].assetUrl) {
+                    cell.imageView.sd_setImage(with: url, completed: nil)
+                }
+            }
+        } else {
+            if let url = URL(string: stickers[indexPath.row].assetUrl) {
+                cell.imageView.sd_setImage(with: url, completed: nil)
+            }
         }
         return cell
     }
@@ -80,7 +91,15 @@ extension StickerPageViewController: UICollectionViewDataSource {
 extension StickerPageViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let sticker = stickers[indexPath.row]
+        var idx = indexPath.row
+        if isFavoritePage {
+            guard idx != 0 else {
+                navigationController?.pushViewController(StickerManagerViewController.instance(), animated: true)
+                return
+            }
+            idx = idx - 1
+        }
+        let sticker = stickers[idx]
         conversationViewController?.dataSource?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
         if !isRecentPage {
             DispatchQueue.global().async { [weak self] in

@@ -12,6 +12,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+        </array>
         <array key="HelveticaNeueLights.ttc">
             <string>HelveticaNeue-Light</string>
         </array>
@@ -513,7 +516,7 @@
                                                                 <constraint firstAttribute="trailing" secondItem="IP2-uL-lad" secondAttribute="trailing" id="o53-bJ-THb"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20'" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUb-hH-eY8">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUb-hH-eY8">
                                                             <rect key="frame" x="0.0" y="27" width="99" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2126,7 +2129,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="54.5"/>
                                 <subviews>
                                     <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tMG-4F-9D7">
-                                        <rect key="frame" x="0.0" y="0.0" width="55" height="54.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="68" height="54.5"/>
                                         <subviews>
                                             <view clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fnf-oR-rOV">
                                                 <rect key="frame" x="12" y="23" width="8" height="8"/>
@@ -2141,9 +2144,9 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rcw-bi-HEj">
-                                                <rect key="frame" x="32" y="0.0" width="23" height="55"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="0:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rcw-bi-HEj">
+                                                <rect key="frame" x="32" y="0.0" width="36" height="55"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -2151,7 +2154,6 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="Rcw-bi-HEj" secondAttribute="bottom" id="SMR-ZP-NRH"/>
-                                            <constraint firstAttribute="width" constant="55" id="Zfe-IC-aU9"/>
                                             <constraint firstAttribute="trailing" secondItem="Rcw-bi-HEj" secondAttribute="trailing" id="bl8-d7-4Mw"/>
                                             <constraint firstItem="Rcw-bi-HEj" firstAttribute="top" secondItem="tMG-4F-9D7" secondAttribute="top" id="lod-05-u3I"/>
                                             <constraint firstItem="Fnf-oR-rOV" firstAttribute="leading" secondItem="tMG-4F-9D7" secondAttribute="leading" constant="12" id="yQM-h5-QrT"/>
@@ -2159,11 +2161,11 @@
                                             <constraint firstItem="Rcw-bi-HEj" firstAttribute="leading" secondItem="Fnf-oR-rOV" secondAttribute="trailing" constant="12" id="zgd-tz-Br9"/>
                                         </constraints>
                                     </view>
-                                    <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qFv-UZ-fiq">
-                                        <rect key="frame" x="55" y="0.0" width="265" height="54.5"/>
+                                    <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="qFv-UZ-fiq">
+                                        <rect key="frame" x="68" y="0.0" width="252" height="54.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1Ne-86-OPG">
-                                                <rect key="frame" x="72.5" y="18" width="120" height="19.5"/>
+                                                <rect key="frame" x="66" y="18" width="120" height="19.5"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_chat_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="p8K-Ir-WJM">
                                                         <rect key="frame" x="0.0" y="4.5" width="6" height="11"/>
@@ -2186,7 +2188,7 @@
                                             <constraint firstItem="1Ne-86-OPG" firstAttribute="centerY" secondItem="qFv-UZ-fiq" secondAttribute="centerY" id="JnZ-tl-bSN"/>
                                         </constraints>
                                     </view>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_chat_microphone" translatesAutoresizingMaskIntoConstraints="NO" id="Zt0-eZ-yAA">
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_chat_microphone" translatesAutoresizingMaskIntoConstraints="NO" id="Zt0-eZ-yAA">
                                         <rect key="frame" x="320" y="0.0" width="55" height="54.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="FjM-c5-ZIB"/>

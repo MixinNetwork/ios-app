@@ -39,7 +39,7 @@ class AudioInputViewController: UIViewController {
     
     private var beganPoint = CGPoint.zero
     private var timer: Timer?
-    private var time = 0
+    private var time: TimeInterval = 0
     private var recorder: MXNAudioRecorder?
     
     private var conversationDataSource: ConversationDataSource? {
@@ -134,6 +134,7 @@ extension AudioInputViewController {
                                       userInfo: nil,
                                       repeats: true)
                     RunLoop.main.add(timer, forMode: .commonModes)
+                    self.timer = timer
                     self.startRedDotAnimation()
                 case .interrupted:
                     self.recorder?.cancel()
@@ -185,8 +186,8 @@ extension AudioInputViewController {
         recordingRedDotView.alpha = 0
     }
     
-    private func setTimeLabelValue(_ value: Int) {
-        timeLabel.text = String(value)
+    private func setTimeLabelValue(_ value: TimeInterval) {
+        timeLabel.text = mediaDurationFormatter.string(from: value)
     }
     
 }

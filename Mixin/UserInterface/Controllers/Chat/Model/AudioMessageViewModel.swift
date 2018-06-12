@@ -38,7 +38,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         let duration = Int(message.mediaDuration ?? 0)
         let seconds = Int(Double(duration) / millisecondsPerSecond)
-        length = "\(seconds)'"
+        length = mediaDurationFormatter.string(from: TimeInterval(seconds)) ?? ""
         contentWidth = WaveformView.estimatedWidth(forDurationInSeconds: seconds)
         self.waveform = Waveform(data: message.mediaWaveform ?? Data(), valuesCount: seconds)
         super.init(message: message, style: style, fits: layoutWidth)

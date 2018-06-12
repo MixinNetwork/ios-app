@@ -111,9 +111,9 @@ extension AudioInputViewController {
         layout(isRecording: true)
         time = 0
         setTimeLabelValue(0)
-        let url = MixinFile.url(ofChatDirectory: .audios, filename: UUID().uuidString.lowercased() + ExtensionName.ogg.withDot)
+        let tempUrl = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString.lowercased() + ExtensionName.ogg.withDot)
         do {
-            recorder = try MXNAudioRecorder(path: url.path)
+            recorder = try MXNAudioRecorder(path: tempUrl.path)
             recorder!.record(forDuration: AudioInputViewController.maxRecordDuration, progress: { (progress) in
                 switch progress {
                 case .waitingForActivation:
@@ -138,9 +138,9 @@ extension AudioInputViewController {
                     break
                 case .finished:
                     if let duration = metadata?.duration, Double(duration) > millisecondsPerSecond {
-                        self.conversationDataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (url, metadata))
+                        self.conversationDataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (tempUrl, metadata))
                     } else {
-                        try? FileManager.default.removeItem(at: url)
+                        try? FileManager.default.removeItem(at: tempUrl)
                     }
                 case .cancelled:
                     break

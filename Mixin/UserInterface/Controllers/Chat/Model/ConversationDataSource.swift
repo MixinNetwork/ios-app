@@ -498,20 +498,25 @@ extension ConversationDataSource {
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
-        } else if type == .SIGNAL_AUDIO, let value = value as? (url: URL, metadata: MXNAudioMetadata) {
+        } else if type == .SIGNAL_AUDIO, let value = value as? (tempUrl: URL, metadata: MXNAudioMetadata) {
             queue.async {
-                let url = value.url
-                guard FileManager.default.fileSize(url.path) > 0 else {
+                guard FileManager.default.fileSize(value.tempUrl.path) > 0 else {
                     NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_AUDIO_FAILED)
                     return
                 }
-                message.mediaSize = FileManager.default.fileSize(url.path)
-                message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
-                message.mediaUrl = url.lastPathComponent
-                message.mediaStatus = MediaStatus.PENDING.rawValue
-                message.mediaWaveform = value.metadata.waveform
-                message.mediaDuration = Int64(value.metadata.duration)
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                let url = MixinFile.url(ofChatDirectory: .audios, filename: UUID().uuidString.lowercased() + ExtensionName.ogg.withDot)
+                do {
+                    try FileManager.default.moveItem(at: value.tempUrl, to: url)
+                    message.mediaSize = FileManager.default.fileSize(url.path)
+                    message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+                    message.mediaUrl = url.lastPathComponent
+                    message.mediaStatus = MediaStatus.PENDING.rawValue
+                    message.mediaWaveform = value.metadata.waveform
+                    message.mediaDuration = Int64(value.metadata.duration)
+                    SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                } catch {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_AUDIO_FAILED)
+                }
             }
         } else if type == .SIGNAL_STICKER, let sticker = value as? Sticker {
             message.name = sticker.name

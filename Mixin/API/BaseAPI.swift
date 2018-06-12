@@ -231,6 +231,8 @@ extension BaseAPI {
         return dispatchQueue.sync {
             var result: APIResult<T> = .failure(APIError.createAuthenticationError())
             var debugDescription = ""
+            let requestTime = DateFormatter.filename.string(from: Date())
+            var errorMsg = ""
             if AccountAPI.shared.didLogin {
                 let semaphore = DispatchSemaphore(value: 0)
                 let req = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
@@ -250,9 +252,11 @@ extension BaseAPI {
                                     result = .success(model)
                                 }
                             } catch {
+                                errorMsg = "\(error)"
                                 result = .failure(APIError.createError(error: error, status: httpStatusCode))
                             }
                         case let .failure(error):
+                            errorMsg = "\(error)"
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                         semaphore.signal()
@@ -268,6 +272,8 @@ extension BaseAPI {
                 if AccountAPI.shared.didLogin {
                     var userInfo = UIApplication.getTrackUserInfo()
                     userInfo["request"] = debugDescription
+                    userInfo["startRequestTime"] = requestTime
+                    userInfo["errorMsg"] = errorMsg
                     UIApplication.trackError("BaseAPI sync request", action: "401", userInfo: userInfo)
                 }
                 AccountAPI.shared.logout()

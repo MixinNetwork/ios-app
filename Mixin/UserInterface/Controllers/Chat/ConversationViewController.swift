@@ -456,6 +456,7 @@ class ConversationViewController: UIViewController {
             guard message.mediaStatus == MediaStatus.DONE.rawValue, let cell = cell as? PhotoRepresentableMessageCell, cell.contentImageView.frame.contains(recognizer.location(in: cell)), let item = GalleryItem(message: message) else {
                 return
             }
+            MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
             view.bringSubview(toFront: galleryWrapperView)
             galleryViewController.show(item: item)
         } else if message.category.hasSuffix("_DATA") {

@@ -146,9 +146,6 @@ class ConversationTableView: UITableView {
         if let cell = cell as? AppButtonGroupMessageCell, cell.appButtonDelegate == nil {
             cell.appButtonDelegate = viewController
         }
-        if let cell = cell as? AudioMessageCell, cell.audioPlaybackDelegate == nil {
-            cell.audioPlaybackDelegate = viewController
-        }
         return cell
     }
 

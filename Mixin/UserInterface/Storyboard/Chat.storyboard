@@ -464,25 +464,21 @@
                                                                 <action selector="operationAction:" destination="czT-Am-Bj2" eventType="touchUpInside" id="kVX-AI-nYl"/>
                                                             </connections>
                                                         </button>
-                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCq-YF-Qof">
+                                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_play" translatesAutoresizingMaskIntoConstraints="NO" id="REs-5L-qBG">
                                                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                                                            <state key="normal" image="ic_play"/>
-                                                            <connections>
-                                                                <action selector="playAction:" destination="czT-Am-Bj2" eventType="touchUpInside" id="dWc-l2-7Vi"/>
-                                                            </connections>
-                                                        </button>
+                                                        </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="JyQ-fz-ccK" firstAttribute="top" secondItem="wlc-hc-7sd" secondAttribute="top" id="E9Z-3k-zHE"/>
-                                                        <constraint firstAttribute="trailing" secondItem="OCq-YF-Qof" secondAttribute="trailing" id="JgS-ln-UK8"/>
+                                                        <constraint firstItem="REs-5L-qBG" firstAttribute="top" secondItem="wlc-hc-7sd" secondAttribute="top" id="LcG-qG-Gtm"/>
                                                         <constraint firstAttribute="bottom" secondItem="JyQ-fz-ccK" secondAttribute="bottom" id="N5P-EU-zSA"/>
                                                         <constraint firstItem="JyQ-fz-ccK" firstAttribute="leading" secondItem="wlc-hc-7sd" secondAttribute="leading" id="Vh2-Jm-0dx"/>
-                                                        <constraint firstItem="OCq-YF-Qof" firstAttribute="leading" secondItem="wlc-hc-7sd" secondAttribute="leading" id="dr4-27-ROp"/>
-                                                        <constraint firstAttribute="bottom" secondItem="OCq-YF-Qof" secondAttribute="bottom" id="fP5-AC-pHo"/>
+                                                        <constraint firstItem="REs-5L-qBG" firstAttribute="leading" secondItem="wlc-hc-7sd" secondAttribute="leading" id="ceI-xj-lWW"/>
+                                                        <constraint firstAttribute="trailing" secondItem="REs-5L-qBG" secondAttribute="trailing" id="eTK-FF-MUu"/>
                                                         <constraint firstAttribute="trailing" secondItem="JyQ-fz-ccK" secondAttribute="trailing" id="lYF-ES-BUI"/>
                                                         <constraint firstAttribute="height" constant="48" id="nvj-mY-ZCX"/>
-                                                        <constraint firstItem="OCq-YF-Qof" firstAttribute="top" secondItem="wlc-hc-7sd" secondAttribute="top" id="snS-TL-5Zj"/>
+                                                        <constraint firstAttribute="bottom" secondItem="REs-5L-qBG" secondAttribute="bottom" id="olt-ia-0OV"/>
                                                         <constraint firstAttribute="width" constant="48" id="wmn-Yp-LMj"/>
                                                     </constraints>
                                                 </view>
@@ -551,7 +547,7 @@
                                             <outlet property="leftView" destination="wlc-hc-7sd" id="gUC-ns-egg"/>
                                             <outlet property="lengthLabel" destination="ZUb-hH-eY8" id="O4q-jD-B8r"/>
                                             <outlet property="operationButton" destination="JyQ-fz-ccK" id="quo-vR-KZQ"/>
-                                            <outlet property="playButton" destination="OCq-YF-Qof" id="7l6-Gi-G3f"/>
+                                            <outlet property="playbackStateImageView" destination="REs-5L-qBG" id="p47-km-MeD"/>
                                             <outlet property="rightView" destination="tzQ-Ot-LBE" id="GET-cE-Sfs"/>
                                             <outlet property="waveformView" destination="qVn-Ti-QpG" id="ker-Vx-e76"/>
                                         </connections>

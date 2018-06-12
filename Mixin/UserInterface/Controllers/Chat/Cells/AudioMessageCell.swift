@@ -1,19 +1,14 @@
 import UIKit
 
-protocol AudioMessageCellDelegate: class {
-    func audioMessageCellDidTogglePlaying(_ cell: AudioMessageCell)
-}
-
 class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     
     @IBOutlet weak var operationButton: NetworkOperationButton!
-    @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var playbackStateImageView: UIImageView!
     @IBOutlet weak var waveformView: WaveformView!
     @IBOutlet weak var highlightedWaveformView: WaveformView!
     @IBOutlet weak var lengthLabel: UILabel!
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
-    weak var audioPlaybackDelegate: AudioMessageCellDelegate?
     
     private let waveformMaskView = UIView()
     private let waveformUpdateInterval: TimeInterval = 0.1
@@ -27,7 +22,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
                 return
             }
             let image = isPlaying ? #imageLiteral(resourceName: "ic_file_cancel") : #imageLiteral(resourceName: "ic_play")
-            playButton.setImage(image, for: .normal)
+            playbackStateImageView.image = image
             if isPlaying {
                 MXNAudioPlayer.shared().addObserver(self)
                 timer = Timer(timeInterval: waveformUpdateInterval, repeats: true, block: { [weak self] (_) in
@@ -75,7 +70,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
             highlightedWaveformView.waveform = viewModel.waveform
             operationButton.style = viewModel.operationButtonStyle
             operationButton.isHidden = viewModel.operationButtonIsHidden
-            playButton.isHidden = viewModel.playButtonIsHidden
+            playbackStateImageView.isHidden = viewModel.playbackStateIsHidden
             duration = Float64(viewModel.message.mediaDuration ?? 0)
             let player = MXNAudioPlayer.shared()
             if player.state == .playing, let mediaUrl = viewModel.message.mediaUrl, player.path.contains(mediaUrl) {
@@ -86,10 +81,6 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     
     @IBAction func operationAction(_ sender: Any) {
         attachmentLoadingDelegate?.attachmentLoadingCellDidSelectNetworkOperation(self)
-    }
-    
-    @IBAction func playAction(_ sender: Any) {
-        audioPlaybackDelegate?.audioMessageCellDidTogglePlaying(self)
     }
     
     func updateProgress(viewModel: AttachmentLoadingViewModel) {

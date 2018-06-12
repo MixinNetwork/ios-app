@@ -9,7 +9,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     var showPlayIconAfterFinished: Bool = true
     var operationButtonStyle: NetworkOperationButton.Style = .expired
     var operationButtonIsHidden = false
-    var playButtonIsHidden = true
+    var playbackStateIsHidden = true
     
     var automaticallyLoadsAttachment: Bool {
         return true
@@ -76,10 +76,10 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     private func updateButtonsHidden() {
         if case .finished = operationButtonStyle {
             operationButtonIsHidden = true
-            playButtonIsHidden = false
+            playbackStateIsHidden = false
         } else {
             operationButtonIsHidden = false
-            playButtonIsHidden = true
+            playbackStateIsHidden = true
         }
     }
 

@@ -459,6 +459,27 @@ class ConversationViewController: UIViewController {
             MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
             view.bringSubview(toFront: galleryWrapperView)
             galleryViewController.show(item: item)
+        } else if message.category.hasSuffix("_AUDIO") {
+            guard message.mediaStatus == MediaStatus.DONE.rawValue, let cell = cell as? AudioMessageCell else {
+                return
+            }
+            let cellIsPlaying = cell.isPlaying
+            MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: cellIsPlaying)
+            if !cellIsPlaying {
+                cell.isPlaying = true
+                if let mediaUrl = viewModel.message.mediaUrl {
+                    let path = MixinFile.url(ofChatDirectory: .audios, filename: mediaUrl).path
+                    MXNAudioPlayer.shared().playFile(atPath: path) { [weak cell] (success, error) in
+                        if let error = error as? MXNAudioPlayerError, error == .cancelled {
+                            DispatchQueue.main.async {
+                                cell?.isPlaying = false
+                            }
+                        } else if let error = error {
+                            UIApplication.trackError("ConversationViewController", action: "Play audio", userInfo: ["error": error])
+                        }
+                    }
+                }
+            }
         } else if message.category.hasSuffix("_DATA") {
             guard let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell else {
                 return
@@ -958,32 +979,6 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
             viewModel.cancelAttachmentLoading(markMediaStatusCancelled: true)
         default:
             break
-        }
-    }
-    
-}
-
-// MARK: - AudioMessageCellDelegate
-extension ConversationViewController: AudioMessageCellDelegate {
-    
-    func audioMessageCellDidTogglePlaying(_ cell: AudioMessageCell) {
-        let cellIsPlaying = cell.isPlaying
-        MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: cellIsPlaying)
-        guard !cellIsPlaying else {
-            return
-        }
-        cell.isPlaying = true
-        if let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? AudioMessageViewModel, let mediaUrl = viewModel.message.mediaUrl {
-            let path = MixinFile.url(ofChatDirectory: .audios, filename: mediaUrl).path
-            MXNAudioPlayer.shared().playFile(atPath: path) { [weak cell] (success, error) in
-                if let error = error as? MXNAudioPlayerError, error == .cancelled {
-                    DispatchQueue.main.async {
-                        cell?.isPlaying = false
-                    }
-                } else if let error = error {
-                    UIApplication.trackError("ConversationViewController", action: "Play audio", userInfo: ["error": error])
-                }
-            }
         }
     }
     

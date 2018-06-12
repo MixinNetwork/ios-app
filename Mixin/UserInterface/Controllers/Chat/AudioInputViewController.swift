@@ -70,6 +70,7 @@ class AudioInputViewController: UIViewController {
         case .possible:
             break
         case .began:
+            recordImageView.image = #imageLiteral(resourceName: "ic_chat_microphone_highlighted")
             startRecordingIfGranted()
             beganPoint = recordGestureRecognizer.location(in: view)
         case .changed:
@@ -81,10 +82,12 @@ class AudioInputViewController: UIViewController {
                 slideViewCenterXConstraint.constant = location.x - beganPoint.x
             }
         case .ended:
+            recordImageView.image = #imageLiteral(resourceName: "ic_chat_microphone")
             layout(isRecording: false)
             recorder?.stop()
             recorder = nil
         case .cancelled:
+            recordImageView.image = #imageLiteral(resourceName: "ic_chat_microphone")
             layout(isRecording: false)
             recorder?.cancel()
             recorder = nil
@@ -109,17 +112,7 @@ extension AudioInputViewController {
         case .granted:
             startRecording()
         case .undetermined:
-            AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
-                if granted {
-                    if Thread.isMainThread {
-                        self.startRecording()
-                    } else {
-                        DispatchQueue.main.async {
-                            self.startRecording()
-                        }
-                    }
-                }
-            })
+            AVAudioSession.sharedInstance().requestRecordPermission({ (_) in })
         }
     }
     

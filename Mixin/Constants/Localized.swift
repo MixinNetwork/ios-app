@@ -116,6 +116,7 @@ public class Localized {
     public static let CHAT_MESSAGE_MENU_FORWARD = LocalizedString("chat_message_menu_forward", comment: "Forward")
     public static let CHAT_MESSAGE_MENU_COPY = LocalizedString("chat_message_menu_copy", comment: "Copy")
     public static let CHAT_MESSAGE_OPEN_URL = LocalizedString("chat_message_open_url", comment: "Open URL")
+    public static let CHAT_MESSAGE_ADD = LocalizedString("chat_message_sticker", comment: "Add to Stickers")
     public static let CHAT_TIME_TODAY = LocalizedString("chat_time_today", comment: "Today")
     public static let CHAT_MESSAGE_YOU = LocalizedString("chat_message_you", comment: "You")
     public static func CHAT_MESSAGE_CREATED(fullName: String) -> String {
@@ -158,6 +159,11 @@ public class Localized {
     public static let CHAT_MENU_CONTACT = LocalizedString("chat_menu_contact", comment: "Contact")
     public static let CHAT_PHOTO_SAVE = LocalizedString("chat_photo_save", comment: "Save to Camera Roll")
     public static let CHAT_FILE_EXPIRED = LocalizedString("chat_file_expired", comment: "Expired")
+
+    // Sticker
+    public static let STICKER_MANAGER_TITLE = LocalizedString("sticker_manager_title", comment: "My Stickers")
+    public static let STICKER_ADD_TITLE = LocalizedString("sticker_add_title", comment: "Add Sticker")
+    public static let STICKER_REMOVE_TITLE = LocalizedString("sticker_remove_title", comment: "Delete Stickers")
 
     // Camera
     public static let CAMERA_SAVE_PHOTO_SUCCESS = LocalizedString("camera_save_photo_success", comment: "Photo saved.")

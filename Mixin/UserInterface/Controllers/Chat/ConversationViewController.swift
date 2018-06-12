@@ -754,6 +754,8 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             navigationController?.pushViewController(ForwardViewController.instance(message: message, ownerUser: ownerUser), animated: true)
         case .reply:
             break
+        case .add:
+            navigationController?.pushViewController(StickerAddViewController.instance(message: message), animated: true)
         }
     }
 }

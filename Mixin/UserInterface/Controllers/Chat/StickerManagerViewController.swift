@@ -5,8 +5,9 @@ class StickerManagerViewController: UICollectionViewController {
 
     private var stickers = [Sticker]()
     private lazy var itemSize: CGSize = {
-        let rowCount = floor(UIScreen.main.bounds.size.width / 90)
-        let itemWidth = (UIScreen.main.bounds.size.width - rowCount * 8) / rowCount
+        let minWidth: CGFloat = UIScreen.main.bounds.width > 400 ? 120 : 100
+        let rowCount = floor(UIScreen.main.bounds.size.width / minWidth)
+        let itemWidth = (UIScreen.main.bounds.size.width - (rowCount + 1) * 8) / rowCount
         return CGSize(width: itemWidth, height: itemWidth)
     }()
     private var isDeleteStickers = false
@@ -29,7 +30,19 @@ class StickerManagerViewController: UICollectionViewController {
     class func instance() -> UIViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "sticker_manager") as! StickerManagerViewController
 
-        return ContainerViewController.instance(viewController: vc, title: "Favorite Stickers")
+        return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_MANAGER_TITLE)
+    }
+
+}
+
+extension StickerManagerViewController: ContainerViewControllerDelegate {
+
+    func barRightButtonTappedAction() {
+
+    }
+
+    func textBarRightButton() -> String? {
+        return Localized.ACTION_SAVE
     }
 
 }

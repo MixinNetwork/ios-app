@@ -109,6 +109,7 @@
 "chat_message_menu_forward" = "转发";
 "chat_message_menu_copy" = "复制";
 "chat_message_open_url" = "打开链接";
+"chat_message_sticker" = "添加贴纸";
 "chat_time_today" = "今天";
 "chat_cell_title_unread_messages" = "未读消息";
 "chat_message_you" = "你";
@@ -136,6 +137,11 @@
 "chat_menu_contact" = "联系人";
 "chat_photo_save" = "保存到相册";
 "chat_file_expired" = "已过期";
+
+// Sticker
+"sticker_manager_title" = "我收藏的贴纸";
+"sticker_add_title" = "添加贴纸";
+"sticker_remove_title" = "删除贴纸";
 
 // Camera
 "camera_save_photo_success" = "图片已成功保存在相册";

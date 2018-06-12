@@ -8,6 +8,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1987,14 +1988,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PQr-Ce-vua">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_sticker_frame" translatesAutoresizingMaskIntoConstraints="NO" id="PQr-Ce-vua">
                                 <rect key="frame" x="30" y="140" width="315" height="315"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="PQr-Ce-vua" secondAttribute="height" multiplier="1:1" id="k8J-Kg-D2w"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QN5-aJ-aoA" customClass="FLAnimatedImageView">
-                                <rect key="frame" x="30" y="140" width="315" height="315"/>
+                                <rect key="frame" x="61.5" y="171.5" width="252" height="252"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="QN5-aJ-aoA" secondAttribute="height" multiplier="1:1" id="kgO-u5-yJf"/>
                                 </constraints>
@@ -2003,12 +2004,12 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="PQr-Ce-vua" firstAttribute="leading" secondItem="4KM-0w-wtB" secondAttribute="leading" constant="30" id="3gf-aY-Wsh"/>
-                            <constraint firstItem="QN5-aJ-aoA" firstAttribute="height" secondItem="PQr-Ce-vua" secondAttribute="height" id="JfB-yN-Xcs"/>
+                            <constraint firstItem="QN5-aJ-aoA" firstAttribute="height" secondItem="PQr-Ce-vua" secondAttribute="height" multiplier="0.8:1" id="JfB-yN-Xcs"/>
                             <constraint firstItem="QN5-aJ-aoA" firstAttribute="centerX" secondItem="PQr-Ce-vua" secondAttribute="centerX" id="LTh-Cw-G1a"/>
                             <constraint firstItem="4KM-0w-wtB" firstAttribute="trailing" secondItem="PQr-Ce-vua" secondAttribute="trailing" constant="30" id="U6R-V2-x9K"/>
                             <constraint firstItem="PQr-Ce-vua" firstAttribute="top" secondItem="4KM-0w-wtB" secondAttribute="top" constant="120" id="dyw-ZV-e2p"/>
                             <constraint firstItem="QN5-aJ-aoA" firstAttribute="centerY" secondItem="PQr-Ce-vua" secondAttribute="centerY" id="jEy-bd-ALI"/>
-                            <constraint firstItem="QN5-aJ-aoA" firstAttribute="width" secondItem="PQr-Ce-vua" secondAttribute="width" id="jtg-uT-5JW"/>
+                            <constraint firstItem="QN5-aJ-aoA" firstAttribute="width" secondItem="PQr-Ce-vua" secondAttribute="width" multiplier="0.8:1" id="jtg-uT-5JW"/>
                             <constraint firstItem="QN5-aJ-aoA" firstAttribute="width" secondItem="QN5-aJ-aoA" secondAttribute="height" multiplier="1:1" id="wQl-gz-oyd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="4KM-0w-wtB"/>
@@ -2033,11 +2034,11 @@
                             <size key="itemSize" width="50" height="50"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="sectionInset" minX="8" minY="8" maxX="8" maxY="8"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell_identifier_favorite_sticker" id="WqR-XS-89k" customClass="FavoriteStickerCell" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                <rect key="frame" x="8" y="8" width="100" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
@@ -2094,6 +2095,7 @@
         <image name="ic_member_not_selected" width="20" height="20"/>
         <image name="ic_play" width="38" height="38"/>
         <image name="ic_search" width="12" height="12"/>
+        <image name="ic_sticker_frame" width="325" height="325"/>
         <image name="ic_titlebar_back" width="44" height="44"/>
         <image name="ic_titlebar_close" width="44" height="44"/>
         <image name="ic_user_verified" width="14" height="14"/>

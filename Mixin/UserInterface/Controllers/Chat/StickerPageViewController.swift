@@ -72,7 +72,7 @@ extension StickerPageViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: stickerCellReuseId, for: indexPath) as! StickerCollectionViewCell
         if isFavoritePage {
             if indexPath.row == 0 {
-                cell.imageView.image = #imageLiteral(resourceName: "ic_sticker_add")
+                cell.imageView.image = #imageLiteral(resourceName: "ic_sticker_setting")
             } else {
                 if let url = URL(string: stickers[indexPath.row - 1].assetUrl) {
                     cell.imageView.sd_setImage(with: url, completed: nil)

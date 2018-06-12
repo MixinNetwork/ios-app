@@ -16,6 +16,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     weak var audioPlaybackDelegate: AudioMessageCellDelegate?
     
     private let waveformMaskView = UIView()
+    private let waveformUpdateInterval: TimeInterval = 0.1
     
     private var timer: Timer?
     private var duration: Float64 = 0
@@ -29,7 +30,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
             playButton.setImage(image, for: .normal)
             if isPlaying {
                 MXNAudioPlayer.shared().addObserver(self)
-                timer = Timer(timeInterval: 0.1, repeats: true, block: { [weak self] (_) in
+                timer = Timer(timeInterval: waveformUpdateInterval, repeats: true, block: { [weak self] (_) in
                     self?.updateWaveformProgress()
                 })
                 RunLoop.main.add(timer!, forMode: .commonModes)
@@ -96,10 +97,15 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     }
     
     private func updateWaveformProgress() {
-        let progress = MXNAudioPlayer.shared().currentTime * millisecondsPerSecond / duration
-        let size = CGSize(width: highlightedWaveformView.frame.width * CGFloat(progress),
-                          height: highlightedWaveformView.frame.height)
-        waveformMaskView.frame = CGRect(origin: .zero, size: size)
+        let progress = MXNAudioPlayer.shared().currentTime * millisecondsPerSecond / (duration - waveformUpdateInterval * millisecondsPerSecond)
+        let oldWidth = waveformMaskView.frame.width
+        let newWidth = highlightedWaveformView.frame.width * CGFloat(progress)
+        if abs(oldWidth - newWidth) > 0.3 {
+            let size = CGSize(width: newWidth, height: highlightedWaveformView.frame.height)
+            UIView.animate(withDuration: waveformUpdateInterval) {
+                self.waveformMaskView.frame = CGRect(origin: .zero, size: size)
+            }
+        }
     }
 
 }

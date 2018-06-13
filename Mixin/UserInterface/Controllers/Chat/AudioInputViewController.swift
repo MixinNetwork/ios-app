@@ -142,6 +142,7 @@ extension AudioInputViewController {
                 case .failed:
                     break
                 case .finished:
+                    self.layout(isRecording: false)
                     if let duration = metadata?.duration, Double(duration) > millisecondsPerSecond {
                         self.conversationDataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (tempUrl, metadata))
                     } else {

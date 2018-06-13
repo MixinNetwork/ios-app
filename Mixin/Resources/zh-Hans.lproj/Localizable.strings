@@ -391,6 +391,7 @@
 "alert_key_group_data_message" = "%@发来了一个文件";
 "alert_key_group_sticker_message" = "%@发来了一个贴纸";
 "alert_key_group_contact_message" = "%@分享了一个联系人";
+"alert_key_group_audio_message" = "%@发来了一个语音";
 "alert_key_contact_message" = "发来一条信息";
 "alert_key_contact_text_message" = "发来一条信息";
 "alert_key_contact_image_message" = "发来一张图片";
@@ -399,6 +400,7 @@
 "alert_key_contact_data_message" = "发来了一个文件";
 "alert_key_contact_sticker_message" = "发来了一个贴纸";
 "alert_key_contact_contact_message" = "发来了一个联系人";
+"alert_key_contact_audio_message" = "发来了一个语音";
 
 // About
 "about_twitter" = "关注我们的 Twitter";

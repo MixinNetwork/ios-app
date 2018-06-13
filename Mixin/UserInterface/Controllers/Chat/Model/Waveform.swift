@@ -2,7 +2,7 @@ import UIKit
 
 struct Waveform {
     
-    static let minCount = 25
+    static let minCount = 30
     static let maxCount: Int = UIScreen.main.bounds.width > 320.1 ? 63 : 50
     static let minDuration = 1
     static let maxDuration = 60
@@ -11,8 +11,9 @@ struct Waveform {
     
     let values: [UInt8]
     
-    init(data: Data?, duration: Int) {
-        let numberOfValues = Waveform.numberOfValues(forDuration: duration)
+    init(data: Data?, durationInSeconds duration: Int) {
+        let duration = max(Waveform.minDuration, min(Waveform.maxDuration, duration))
+        let numberOfValues = Waveform.numberOfValues(forDurationInSeconds: duration)
         var values = [UInt8](repeating: 0, count: numberOfValues)
         if let data = data {
             for (i, value) in data.enumerated() {
@@ -23,7 +24,7 @@ struct Waveform {
         self.values = values
     }
     
-    static func numberOfValues(forDuration duration: Int) -> Int {
+    static func numberOfValues(forDurationInSeconds duration: Int) -> Int {
         return Int(round(Waveform.slope * Float(duration) + Waveform.intercept))
     }
     

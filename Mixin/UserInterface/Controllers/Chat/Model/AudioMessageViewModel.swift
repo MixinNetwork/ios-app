@@ -40,7 +40,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         let seconds = Int(round(Double(duration) / millisecondsPerSecond))
         length = mediaDurationFormatter.string(from: TimeInterval(seconds)) ?? ""
         contentWidth = WaveformView.estimatedWidth(forDurationInSeconds: seconds)
-        self.waveform = Waveform(data: message.mediaWaveform, duration: seconds)
+        self.waveform = Waveform(data: message.mediaWaveform, durationInSeconds: seconds)
         super.init(message: message, style: style, fits: layoutWidth)
         updateOperationButtonStyle()
         updateButtonsHidden()

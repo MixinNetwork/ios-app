@@ -899,7 +899,7 @@
                                     <constraint firstAttribute="trailing" secondItem="OCN-L0-tlY" secondAttribute="trailing" id="y3c-YI-8Sd"/>
                                 </constraints>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b5P-d4-dTD" customClass="AudioInputContainerView" customModule="Mixin" customModuleProvider="target">
+                            <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b5P-d4-dTD" customClass="AudioInputContainerView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="612" width="375" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="I2n-FW-dph"/>

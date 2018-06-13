@@ -1326,6 +1326,7 @@ extension ConversationViewController {
         updateStrangerTipsView()
         updateBottomView()
         bottomBarWrapperView.isHidden = false
+        audioInputContainerView.isHidden = false
         updateNavigationBar()
         reloadParticipants()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)

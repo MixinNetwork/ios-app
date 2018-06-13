@@ -35,6 +35,7 @@ typedef void (^MXNAudioRecorderCompletionCallback)(MXNAudioRecorderCompletion co
 
 @interface MXNAudioRecorder : NSObject
 
+@property (nonatomic, assign, readwrite) BOOL vibratesAtBeginning;
 @property (nonatomic, assign, readonly, getter=isRecording) BOOL recording;
 
 - (instancetype)init NS_UNAVAILABLE;

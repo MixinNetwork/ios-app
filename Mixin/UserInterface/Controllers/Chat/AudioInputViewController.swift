@@ -25,6 +25,7 @@ class AudioInputViewController: UIViewController {
     @IBOutlet weak var recordingRedDotView: UIView!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var slideToCancelView: UIView!
+    @IBOutlet weak var slideToCancelContentView: UIStackView!
     @IBOutlet weak var recordImageView: UIImageView!
 
     @IBOutlet weak var bottomWrapperViewHeightConstraint: NSLayoutConstraint!
@@ -36,6 +37,7 @@ class AudioInputViewController: UIViewController {
 
     private let animationDuration: TimeInterval = 0.2
     private let updateTimeLabelInterval: TimeInterval = 1
+    private let slideToCancelDistance: CGFloat = 80
     
     private var beganPoint = CGPoint.zero
     private var timer: Timer?
@@ -64,9 +66,12 @@ class AudioInputViewController: UIViewController {
             recordImageView.image = #imageLiteral(resourceName: "ic_chat_microphone_highlighted")
             startRecordingIfGranted()
             beganPoint = recordGestureRecognizer.location(in: view)
+            slideToCancelContentView.alpha = 1
         case .changed:
             let location = recordGestureRecognizer.location(in: view)
-            if location.x - beganPoint.x < -80 {
+            let distance = beganPoint.x - location.x
+            slideToCancelContentView.alpha = 1 - distance / slideToCancelDistance
+            if distance > slideToCancelDistance {
                 recordGestureRecognizer.isEnabled = false
                 recordGestureRecognizer.isEnabled = true
             } else {

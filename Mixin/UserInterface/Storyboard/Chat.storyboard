@@ -2223,6 +2223,7 @@
                         <outlet property="recordImageView" destination="Zt0-eZ-yAA" id="lVd-iA-AkZ"/>
                         <outlet property="recordingIndicatorView" destination="tMG-4F-9D7" id="oJf-nE-Zhf"/>
                         <outlet property="recordingRedDotView" destination="Fnf-oR-rOV" id="K0j-eC-gJn"/>
+                        <outlet property="slideToCancelContentView" destination="1Ne-86-OPG" id="Pnx-j3-1d1"/>
                         <outlet property="slideToCancelView" destination="qFv-UZ-fiq" id="vNO-pC-VTn"/>
                         <outlet property="slideViewCenterXConstraint" destination="5Me-Gt-6Gk" id="Rmx-Se-gCt"/>
                         <outlet property="timeLabel" destination="Rcw-bi-HEj" id="k7b-05-8Io"/>

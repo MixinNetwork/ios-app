@@ -39,6 +39,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 - (nullable instancetype)initWithPath:(NSString *)path error:(NSError * _Nullable *)outError {
     self = [super init];
     if (self) {
+        _vibratesAtBeginning = YES;
         _processingQueue = dispatch_queue_create("one.mixin.queue.audio_recorder", DISPATCH_QUEUE_SERIAL);
         _audioQueue = NULL;
         _writer = [MXNOggOpusWriter writerWithPath:path
@@ -70,7 +71,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         
         NSError *error = nil;
         AVAudioSession *session = [AVAudioSession sharedInstance];
-        BOOL success = [session setCategory:AVAudioSessionCategoryRecord
+        BOOL success = [session setCategory:AVAudioSessionCategoryPlayAndRecord
                                        mode:AVAudioSessionModeDefault
                                     options:AVAudioSessionCategoryOptionAllowBluetooth
                                       error:&error];
@@ -89,6 +90,10 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
             return;
         }
 
+        if (_vibratesAtBeginning) {
+            AudioServicesPlaySystemSound(1519);
+        }
+        
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         [center addObserver:self
                    selector:@selector(audioSessionInterruption:)

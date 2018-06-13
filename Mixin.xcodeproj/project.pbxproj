@@ -59,6 +59,7 @@
 		7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */; };
 		7B0B01981FEA63FA000EEE4F /* StrangerTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */; };
 		7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */; };
+		7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */; };
 		7B0F851E20147EF700C02388 /* StickerPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0F851D20147EF700C02388 /* StickerPanelViewController.swift */; };
 		7B0F8520201494DA00C02388 /* StickerPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0F851F201494DA00C02388 /* StickerPageViewController.swift */; };
 		7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */; };
@@ -569,6 +570,7 @@
 		7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StrangerTipsView.xib; sourceTree = "<group>"; };
 		7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrangerTipsView.swift; sourceTree = "<group>"; };
 		7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MXNAudioPlayerError.swift; sourceTree = "<group>"; };
+		7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HittestBypassWrapperView.swift; sourceTree = "<group>"; };
 		7B0F851D20147EF700C02388 /* StickerPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPanelViewController.swift; sourceTree = "<group>"; };
 		7B0F851F201494DA00C02388 /* StickerPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerPageViewController.swift; sourceTree = "<group>"; };
 		7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1804,6 +1806,7 @@
 				7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */,
 				7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */,
 				7BD38B5F20BEA03200D06E5C /* WaveformView.swift */,
+				7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2711,6 +2714,7 @@
 				7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */,
 				273FACC9205FB9A800513327 /* SenderKeyStoreWrapper.swift in Sources */,
 				7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */,
+				7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				DF92A51F20A5BDAD00427B80 /* ResendMessageDAO.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,

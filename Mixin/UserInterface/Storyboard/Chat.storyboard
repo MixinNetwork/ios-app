@@ -905,7 +905,7 @@
                                     <constraint firstAttribute="height" constant="55" id="I2n-FW-dph"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="HUi-An-hzm" kind="embed" identifier="AudioSegueId" id="2Ze-5t-sHg"/>
+                                    <segue destination="HUi-An-hzm" kind="embed" identifier="AudioInputSegueId" id="2Ze-5t-sHg"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -2186,9 +2186,13 @@
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_chat_microphone" translatesAutoresizingMaskIntoConstraints="NO" id="Zt0-eZ-yAA">
                                         <rect key="frame" x="320" y="0.0" width="55" height="54.5"/>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="FjM-c5-ZIB"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="lPA-XX-rls" appends="YES" id="Fgx-ye-gUo"/>
+                                        </connections>
                                     </imageView>
                                 </subviews>
                                 <constraints>
@@ -2226,6 +2230,7 @@
                         <outlet property="slideToCancelContentView" destination="1Ne-86-OPG" id="Pnx-j3-1d1"/>
                         <outlet property="slideToCancelView" destination="qFv-UZ-fiq" id="vNO-pC-VTn"/>
                         <outlet property="slideViewCenterXConstraint" destination="5Me-Gt-6Gk" id="Rmx-Se-gCt"/>
+                        <outlet property="tapGestureRecognizer" destination="lPA-XX-rls" id="PYh-Nh-4pH"/>
                         <outlet property="timeLabel" destination="Rcw-bi-HEj" id="k7b-05-8Io"/>
                     </connections>
                 </viewController>
@@ -2235,6 +2240,11 @@
                         <action selector="recordGestureRecognizingAction:" destination="HUi-An-hzm" id="Oph-Ze-xt8"/>
                     </connections>
                 </pongPressGestureRecognizer>
+                <tapGestureRecognizer id="lPA-XX-rls">
+                    <connections>
+                        <action selector="tapAction:" destination="HUi-An-hzm" id="R66-H6-Yo7"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1572" y="289"/>
         </scene>

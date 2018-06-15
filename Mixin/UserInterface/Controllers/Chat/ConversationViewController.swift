@@ -48,6 +48,7 @@ class ConversationViewController: UIViewController {
     private let animationDuration: TimeInterval = 0.25
     private let stickerPanelSegueId = "StickerPanelSegueId"
     private let moreMenuSegueId = "MoreMenuSegueId"
+    private let audioInputSegueId = "AudioInputSegueId"
     
     private var ownerUser: UserItem?
     private var participants = [Participant]()
@@ -65,6 +66,7 @@ class ConversationViewController: UIViewController {
     private var tapRecognizer: UITapGestureRecognizer!
     private var stickerPanelViewController: StickerPanelViewController?
     private var moreMenuViewController: ConversationMoreMenuViewController?
+    private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     private var userBot: App?
     
@@ -198,6 +200,8 @@ class ConversationViewController: UIViewController {
             stickerPanelViewController = destination
         } else if segue.identifier == moreMenuSegueId, let destination = segue.destination as? ConversationMoreMenuViewController {
             moreMenuViewController = destination
+        } else if segue.identifier == audioInputSegueId, let destination = segue.destination as? AudioInputViewController {
+            audioInputViewController = destination
         }
     }
     
@@ -435,6 +439,10 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {
+        if let audioInputViewController = audioInputViewController, audioInputViewController.isShowingLongPressHint {
+            audioInputViewController.animateHideLongPressHint()
+            return
+        }
         guard !isShowingMenu else {
             dismissMenu(animated: true)
             return

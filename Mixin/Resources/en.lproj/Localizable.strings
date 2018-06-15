@@ -142,6 +142,7 @@
 "chat_photo_save" = "Save to Camera Roll";
 "chat_file_expired" = "Expired";
 "chat_voice_record_cancel" = "Slide to cancel";
+"chat_voice_record_longpress_hint" = "Hold to record, release to send.";
 
 // Camera
 "camera_save_photo_success" = "Photo saved.";

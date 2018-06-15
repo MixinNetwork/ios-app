@@ -139,6 +139,7 @@
 "chat_photo_save" = "保存到相册";
 "chat_file_expired" = "已过期";
 "chat_voice_record_cancel" = "滑动取消";
+"chat_voice_record_longpress_hint" = "长按说话，松手发送";
 
 // Camera
 "camera_save_photo_success" = "图片已成功保存在相册";

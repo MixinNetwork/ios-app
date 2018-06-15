@@ -13,7 +13,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var scrollToBottomWrapperView: UIView!
     @IBOutlet weak var scrollToBottomButton: UIButton!
     @IBOutlet weak var unreadBadgeLabel: UILabel!
-    @IBOutlet weak var bottomBarWrapperView: UIView!
+    @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var botButton: UIButton!
     @IBOutlet weak var inputTextView: InputTextView!
@@ -36,6 +36,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var stickerPanelContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var moreMenuHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var moreMenuTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     
     static var positions = [String: Position]()
     
@@ -48,6 +49,7 @@ class ConversationViewController: UIViewController {
     private let animationDuration: TimeInterval = 0.25
     private let stickerPanelSegueId = "StickerPanelSegueId"
     private let moreMenuSegueId = "MoreMenuSegueId"
+    private let audioInputSegueId = "AudioInputSegueId"
     
     private var ownerUser: UserItem?
     private var participants = [Participant]()
@@ -65,6 +67,7 @@ class ConversationViewController: UIViewController {
     private var tapRecognizer: UITapGestureRecognizer!
     private var stickerPanelViewController: StickerPanelViewController?
     private var moreMenuViewController: ConversationMoreMenuViewController?
+    private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     private var userBot: App?
     
@@ -144,6 +147,7 @@ class ConversationViewController: UIViewController {
         } else if let ownerUser = ownerUser {
             titleLabel.text = ownerUser.fullName
         }
+        audioInputContainerWidthConstraint.constant = 55
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
@@ -198,6 +202,8 @@ class ConversationViewController: UIViewController {
             stickerPanelViewController = destination
         } else if segue.identifier == moreMenuSegueId, let destination = segue.destination as? ConversationMoreMenuViewController {
             moreMenuViewController = destination
+        } else if segue.identifier == audioInputSegueId, let destination = segue.destination as? AudioInputViewController {
+            audioInputViewController = destination
         }
     }
     
@@ -206,6 +212,21 @@ class ConversationViewController: UIViewController {
         super.viewSafeAreaInsetsDidChange()
         if inputWrapperBottomConstraint.constant == 0 {
             inputWrapperBottomConstraint.constant = bottomSafeAreaInset
+        }
+    }
+    
+    override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        super.preferredContentSizeDidChange(forChildContentContainer: container)
+        if (container as? UIViewController) == audioInputViewController {
+            let isExpanding = container.preferredContentSize.width > audioInputContainerWidthConstraint.constant
+            audioInputContainerWidthConstraint.constant = container.preferredContentSize.width
+            if isExpanding {
+                UIView.animate(withDuration: animationDuration, animations: {
+                    self.view.layoutIfNeeded()
+                })
+            } else {
+                view.layoutIfNeeded()
+            }
         }
     }
     
@@ -435,6 +456,10 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {
+        if let audioInputViewController = audioInputViewController, audioInputViewController.isShowingLongPressHint {
+            audioInputViewController.animateHideLongPressHint()
+            return
+        }
         guard !isShowingMenu else {
             dismissMenu(animated: true)
             return
@@ -688,6 +713,12 @@ class ConversationViewController: UIViewController {
             return
         }
         toggleStickerPanelSizeAction(self)
+    }
+    
+    func setInputWrapperHidden(_ hidden: Bool) {
+        UIView.animate(withDuration: animationDuration) {
+            self.inputWrapperView.alpha = hidden ? 0 : 1
+        }
     }
     
     // MARK: - Class func
@@ -1324,7 +1355,7 @@ extension ConversationViewController {
         updateMoreMenuApps()
         updateStrangerTipsView()
         updateBottomView()
-        bottomBarWrapperView.isHidden = false
+        inputWrapperView.isHidden = false
         audioInputContainerView.isHidden = false
         loadDraft()
         updateNavigationBar()

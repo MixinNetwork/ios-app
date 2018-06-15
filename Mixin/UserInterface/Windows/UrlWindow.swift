@@ -372,14 +372,12 @@ extension UrlWindow {
         guard let query = url.getKeyVals() else {
             return false
         }
-        guard let text = query["text"] else {
-            return false
-        }
-        guard !text.isEmpty else {
+        guard let text = query["text"], !text.isEmpty else {
             return false
         }
 
-        UIApplication.rootNavigationController()?.pushViewController(SendToViewController.instance(text: text), animated: true)
+        let shareText = text.removingPercentEncoding ?? text
+        UIApplication.rootNavigationController()?.pushViewController(SendToViewController.instance(text: shareText), animated: true)
 
         return true
     }

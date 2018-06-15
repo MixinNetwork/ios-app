@@ -156,7 +156,6 @@ class ConversationViewController: UIViewController {
         inputTextView.layer.cornerRadius = inputTextViewHeightConstraint.constant / 2
         connectionHintView.delegate = self
         loadStickerAndAsset()
-        loadDraft()
         DispatchQueue.global().async { [weak self] in
             var conversation: ConversationItem?
             if let dataSource = self?.dataSource {
@@ -1327,6 +1326,7 @@ extension ConversationViewController {
         updateBottomView()
         bottomBarWrapperView.isHidden = false
         audioInputContainerView.isHidden = false
+        loadDraft()
         updateNavigationBar()
         reloadParticipants()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)

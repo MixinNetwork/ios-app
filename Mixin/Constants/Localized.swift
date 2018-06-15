@@ -10,6 +10,7 @@ public class Localized {
     public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
     public static let CONNECTION_HINT_WAITING = LocalizedString("connection_hint_waiting", comment: "Waiting to reconnect")
     public static let ACTION_NEXT = LocalizedString("action_next", comment: "Next")
+    public static let ACTION_REMOVE = LocalizedString("action_remove", comment: "Remove")
     public static let ACTION_CAMERA = LocalizedString("action_camera", comment: "Camera")
     public static let ACTION_DONE = LocalizedString("action_done", comment: "Done")
     public static let ACTION_CHOOSE_PHOTO = LocalizedString("action_choose_photo", comment: "Choose Photo")
@@ -60,6 +61,7 @@ public class Localized {
     public static let PERMISSION_DENIED_CAMERA = LocalizedString("permission_denied_camera", comment: "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.")
     public static let PERMISSION_DENIED_PHOTO_LIBRARY = LocalizedString("permission_denied_photo_library", comment: "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.")
     public static let TOAST_OPERATION_FAILED = LocalizedString("toast_operation_failed", comment: "The operation failed, please try again later")
+    public static let TOAST_ADDED = LocalizedString("toast_added", comment: "Added")
 
     // Login
     public static func NAVIGATION_TITLE_ENTER_VERIFICATION_CODE(mobileNumber: String) -> String {
@@ -164,6 +166,8 @@ public class Localized {
     public static let STICKER_MANAGER_TITLE = LocalizedString("sticker_manager_title", comment: "My Stickers")
     public static let STICKER_ADD_TITLE = LocalizedString("sticker_add_title", comment: "Add Sticker")
     public static let STICKER_REMOVE_TITLE = LocalizedString("sticker_remove_title", comment: "Delete Stickers")
+    public static let STICKER_ADD_FAILED = LocalizedString("sticker_add_failed", comment: "Failed to add sticker")
+    public static let STICKER_REMOVE_FAILED = LocalizedString("sticker_remove_failed", comment: "Failed to delete stickers")
 
     // Camera
     public static let CAMERA_SAVE_PHOTO_SUCCESS = LocalizedString("camera_save_photo_success", comment: "Photo saved.")

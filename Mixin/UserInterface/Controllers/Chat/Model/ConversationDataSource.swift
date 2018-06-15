@@ -501,7 +501,7 @@ extension ConversationDataSource {
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = sticker.assetUrl
             message.albumId = sticker.albumId
-            let transferData = TransferStickerData(name: sticker.name, albumId: sticker.albumId)
+            let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: sticker.albumId)
             message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
             queue.async {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)

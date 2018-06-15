@@ -3,7 +3,7 @@ import Bugsnag
 
 class MixinDatabase: BaseDatabase {
 
-    private static let databaseVersion: Int = 3
+    private static let databaseVersion: Int = 4
 
     static let shared = MixinDatabase()
 
@@ -14,13 +14,11 @@ class MixinDatabase: BaseDatabase {
     }
 
     private func upgrade(database: Database) throws {
-        guard DatabaseUserDefault.shared.mixinDatabaseVersion < 3 && DatabaseUserDefault.shared.mixinDatabaseVersion > 0 else {
+        guard DatabaseUserDefault.shared.mixinDatabaseVersion < 4 && DatabaseUserDefault.shared.mixinDatabaseVersion > 0 else {
             return
         }
-
-        if try database.isColumnExist(tableName: Message.tableName, columnName: "media_mine_type") {
-            try database.prepareUpdateSQL(sql: "UPDATE messages SET media_mime_type = media_mine_type WHERE ifnull(media_mine_type, '') <> ''").execute()
-        }
+        
+        try database.drop(table: Sticker.tableName)
     }
 
     override func configure(reset: Bool = false) {
@@ -30,6 +28,8 @@ class MixinDatabase: BaseDatabase {
         }
         do {
             try database.run(transaction: {
+                try self.upgrade(database: database)
+
                 try database.create(of: Asset.self)
                 try database.create(of: Snapshot.self)
                 try database.create(of: Sticker.self)
@@ -47,8 +47,6 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Address.self)
                 try database.create(of: Job.self)
                 try database.create(of: ResendMessage.self)
-
-                try self.upgrade(database: database)
 
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()

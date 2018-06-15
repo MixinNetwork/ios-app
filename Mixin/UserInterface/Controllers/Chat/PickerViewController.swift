@@ -10,6 +10,7 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
 
     private var type: PHAssetCollectionType!
     private var subtype: PHAssetCollectionSubtype!
+    private var mediaType: PHAssetMediaType!
     private var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
         options.deliveryMode = .opportunistic
@@ -52,14 +53,18 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
             return
         }
         let options = PHFetchOptions()
+        if mediaType != .unknown {
+            options.predicate = NSPredicate(format: "mediaType = %d", mediaType.rawValue)
+        }
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         self.assets = PHAsset.fetchAssets(in: collection, options: options)
     }
 
-    class func instance() -> PickerViewController {
+    class func instance(filterMediaType: PHAssetMediaType = .unknown) -> PickerViewController {
         let vc = Storyboard.photo.instantiateViewController(withIdentifier: "picker") as! PickerViewController
         vc.type = .smartAlbum
         vc.subtype = .smartAlbumUserLibrary
+        vc.mediaType = filterMediaType
         return vc
     }
 

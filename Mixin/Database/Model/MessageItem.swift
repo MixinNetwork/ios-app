@@ -25,6 +25,7 @@ class MessageItem: TableCodable {
     var snapshotId: String? = nil
     var name: String? = nil
     var albumId: String? = nil
+    var stickerId: String? = nil
     var createdAt: String = ""
 
     var actionName: String? = nil
@@ -107,6 +108,7 @@ class MessageItem: TableCodable {
         case snapshotId = "snapshot_id"
         case name
         case albumId = "album_id"
+        case stickerId = "sticker_id"
         case createdAt = "created_at"
 
         case userFullName

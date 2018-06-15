@@ -5,6 +5,7 @@ struct Sticker: BaseCodable {
 
     static var tableName: String = "stickers"
 
+    let stickerId: String
     let albumId: String
     let name: String
     let assetUrl: String
@@ -15,6 +16,7 @@ struct Sticker: BaseCodable {
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Sticker
+        case stickerId = "sticker_id"
         case albumId = "album_id"
         case name
         case assetUrl = "asset_url"
@@ -24,9 +26,9 @@ struct Sticker: BaseCodable {
         case lastUseAt = "last_used_at"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
-        static var tableConstraintBindings: [TableConstraintBinding.Name: TableConstraintBinding]? {
-            return  [
-                "_multi_primary": MultiPrimaryBinding(indexesBy: albumId, name)
+        static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
+            return [
+                stickerId: ColumnConstraintBinding(isPrimary: true)
             ]
         }
     }

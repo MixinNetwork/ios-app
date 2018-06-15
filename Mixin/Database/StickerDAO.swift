@@ -4,6 +4,10 @@ final class StickerDAO {
 
     static let shared = StickerDAO()
 
+    func isExist(stickerId: String) -> Bool {
+        return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.stickerId == stickerId, inTransaction: false)
+    }
+
     func isExist(albumId: String, name: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.albumId == albumId && Sticker.Properties.name == name, inTransaction: false)
     }

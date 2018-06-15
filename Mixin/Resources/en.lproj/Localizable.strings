@@ -43,6 +43,7 @@
 "toast_operation_failed" = "The operation failed, please try again later";
 "toast_copied" = "Successfully copied to clipboard";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
+"toast_added" = "Added";
 
 
 // Login
@@ -145,6 +146,8 @@
 "sticker_manager_title" = "My Stickers";
 "sticker_add_title" = "Add Sticker";
 "sticker_remove_title" = "Delete Stickers";
+"sticker_add_failed" = "Failed to add sticker";
+"sticker_remove_failed" = "Failed to delete stickers";
 
 // Camera
 "camera_save_photo_success" = "Photo saved.";

@@ -91,12 +91,12 @@ class ForwardViewController: UIViewController {
             newMessage.mediaUrl = message.mediaUrl
             newMessage.albumId = message.albumId
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
-            guard let stickerName = message.name, let albumId = message.albumId else {
-                UIApplication.trackError("ForwardViewController", action: "forward sticker failed")
+            let transferData = TransferStickerData(stickerId: message.stickerId, name: message.name, albumId: message.albumId)
+            if let content = try? JSONEncoder().encode(transferData).base64EncodedString() {
+                newMessage.content = content
+            } else {
                 return
             }
-            let transferData = TransferStickerData(name: stickerName, albumId: albumId)
-            newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
         } else if message.category.hasSuffix("_CONTACT") {
             guard let sharedUserId = message.sharedUserId else {
                 return

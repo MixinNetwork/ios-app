@@ -77,6 +77,13 @@ class ForwardViewController: UIViewController {
             newMessage.mediaMimeType = message.mediaMimeType
             newMessage.mediaUrl = message.mediaUrl
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
+        } else if message.category.hasSuffix("_AUDIO") {
+            newMessage.mediaSize = message.mediaSize
+            newMessage.mediaMimeType = message.mediaMimeType
+            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaWaveform = message.mediaWaveform
+            newMessage.mediaDuration = message.mediaDuration
+            newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_VIDEO") {
             newMessage.thumbImage = message.thumbImage
             newMessage.mediaSize = message.mediaSize

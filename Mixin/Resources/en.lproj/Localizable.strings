@@ -40,6 +40,7 @@
 "toast_api_error_too_many_requests" = "Rate limit exceeded";
 "toast_api_error_unavailable_phone_number" = "This phone number is already associated with another account";
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
+"permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "toast_operation_failed" = "The operation failed, please try again later";
 "toast_copied" = "Successfully copied to clipboard";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
@@ -134,6 +135,7 @@
 "chat_send_photo_failed" = "Failed to send photo";
 "chat_send_file_failed" = "Failed to send file";
 "chat_send_video_failed" = "Failed to send video";
+"chat_send_audio_failed" = "Failed to send audio";
 "chat_menu_camera" = "Camera";
 "chat_menu_photo" = "Photo & Video";
 "chat_menu_file" = "File";
@@ -141,6 +143,7 @@
 "chat_menu_contact" = "Contact";
 "chat_photo_save" = "Save to Camera Roll";
 "chat_file_expired" = "Expired";
+"chat_voice_record_cancel" = "Slide to cancel";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";
@@ -387,6 +390,7 @@
 "notification_content_withdrawal" = "[Withdrawal]";
 "notification_content_rebate" = "[Rebate]";
 "notification_content_video" = "[Video]";
+"notification_content_audio" = "[Audio]";
 "alert_key_group_message" = "%@ send a message";
 "alert_key_group_text_message" = "%@ send a message";
 "alert_key_group_image_message" = "%@ send a photo";
@@ -394,6 +398,7 @@
 "alert_key_group_data_message" = "%@ send a file";
 "alert_key_group_sticker_message" = "%@ send a sticker";
 "alert_key_group_contact_message" = "%@ send a contact";
+"alert_key_group_audio_message" = "%@ send a audio";
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";
@@ -402,6 +407,8 @@
 "alert_key_contact_data_message" = "send you a file";
 "alert_key_contact_sticker_message" = "send you a sticker";
 "alert_key_contact_contact_message" = "send you a contact";
+"alert_key_contact_audio_message" = "send you a audio";
+
 
 // About
 "about_twitter" = "Follow us on Twitter";

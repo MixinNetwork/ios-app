@@ -86,7 +86,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if message.mediaStatus == MediaStatus.DONE.rawValue {
             var duration: String?
             if let mediaDuration = message.mediaDuration {
-                duration = mmssComponentsFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
+                duration = mediaDurationFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
             }
             return (duration, nil)
         } else {

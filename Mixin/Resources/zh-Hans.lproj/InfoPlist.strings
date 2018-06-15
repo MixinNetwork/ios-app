@@ -2,3 +2,4 @@
 "NSContactsUsageDescription" = "Mixin 通过电话通讯录来帮助你和朋友建立联系";
 "NSCameraUsageDescription" = "Mixin 需要访问摄像头的权限来设置头像或在聊天室里给你的联系人发送照片";
 "NSPhotoLibraryUsageDescription" = "Mixin 需要访问相册的权限来设置头像或在聊天室里给你的联系人发送照片";
+"NSMicrophoneUsageDescription" = "Mixin 使用你的麦克风录制语音消息发给你的联系人";

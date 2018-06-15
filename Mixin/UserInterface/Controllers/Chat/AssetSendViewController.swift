@@ -144,7 +144,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                         self?.alert(Localized.CHAT_SEND_VIDEO_FAILED)
                         return
                     }
-                    self?.dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: outputURL, asset: asset)
+                    self?.dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: (outputURL, asset))
                     self?.navigationController?.popViewController(animated: true)
                 }
             })

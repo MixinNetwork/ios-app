@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.4.2</string>
+	<string>0.5.0</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -26,7 +26,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>103</string>
+	<string>109</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -64,6 +64,8 @@
 	<string>Allow Mixin to use your camera</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Allow Mixin to access your contacts</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow Mixin to access your microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow Mixin to access your photos</string>
 	<key>UIBackgroundModes</key>

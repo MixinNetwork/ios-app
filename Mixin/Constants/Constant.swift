@@ -85,6 +85,7 @@ struct MixinFile {
         case photos = "Photos"
         case files = "Files"
         case videos = "Videos"
+        case audios = "Audios"
     }
 
     static var rootDirectory: URL {
@@ -192,6 +193,7 @@ enum ExtensionName: String {
     case jpeg = "jpg"
     case mp4 = "mp4"
     case html = "html"
+    case ogg = "ogg"
     
     var withDot: String {
         return "." + rawValue

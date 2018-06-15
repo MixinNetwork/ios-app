@@ -25,6 +25,12 @@ class SendMessageService: MixinService {
                 } else {
                     FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
                 }
+            } else if message.category.hasSuffix("_AUDIO") {
+                if message.userId == AccountAPI.shared.accountUserId {
+                    FileJobQueue.shared.addJob(job: AudioUploadJob(message: message))
+                } else {
+                    FileJobQueue.shared.addJob(job: AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+                }
             }
         }
 
@@ -56,6 +62,8 @@ class SendMessageService: MixinService {
                         msg.category = MessageCategory.PLAIN_CONTACT.rawValue
                     case MessageCategory.SIGNAL_VIDEO.rawValue:
                         msg.category = MessageCategory.PLAIN_VIDEO.rawValue
+                    case MessageCategory.SIGNAL_AUDIO.rawValue:
+                        msg.category = MessageCategory.PLAIN_AUDIO.rawValue
                     default:
                         break
                     }
@@ -88,6 +96,8 @@ class SendMessageService: MixinService {
             FileJobQueue.shared.addJob(job: FileUploadJob(message: msg))
         } else if msg.category.hasSuffix("_VIDEO") {
             FileJobQueue.shared.addJob(job: VideoUploadJob(message: msg))
+        } else if msg.category.hasSuffix("_AUDIO") {
+            FileJobQueue.shared.addJob(job: AudioUploadJob(message: msg))
         }
     }
 

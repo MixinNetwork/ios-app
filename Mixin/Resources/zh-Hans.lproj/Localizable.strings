@@ -40,6 +40,7 @@
 "toast_api_error_too_many_requests" = "请求太快啦";
 "toast_api_error_unavailable_phone_number" = "此手机号已被使用";
 "permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
+"permission_denied_microphone" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
 "toast_copied" = "已复制到剪贴板";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "toast_added" = "已添加";
@@ -130,6 +131,7 @@
 "chat_send_photo_failed" = "发送图片失败，请稍后重试";
 "chat_send_file_failed" = "发送文件失败，请稍后重试";
 "chat_send_video_failed" = "发送视频失败，请稍后重试";
+"chat_send_audio_failed" = "发送语音失败，请稍后重试";
 "chat_menu_camera" = "相机";
 "chat_menu_photo" = "照片 & 视频";
 "chat_menu_file" = "文件";
@@ -137,6 +139,7 @@
 "chat_menu_contact" = "联系人";
 "chat_photo_save" = "保存到相册";
 "chat_file_expired" = "已过期";
+"chat_voice_record_cancel" = "滑动取消";
 
 // Sticker
 "sticker_manager_title" = "我收藏的贴纸";
@@ -388,6 +391,7 @@
 "notification_content_withdrawal" = "[提现]";
 "notification_content_rebate" = "[退款]";
 "notification_content_video" = "[视频]";
+"notification_content_audio" = "[语音]";
 "alert_key_group_message" = "%@发来一条信息";
 "alert_key_group_text_message" = "%@发来一条信息";
 "alert_key_group_image_message" = "%@发来一张图片";
@@ -395,6 +399,7 @@
 "alert_key_group_data_message" = "%@发来了一个文件";
 "alert_key_group_sticker_message" = "%@发来了一个贴纸";
 "alert_key_group_contact_message" = "%@分享了一个联系人";
+"alert_key_group_audio_message" = "%@发来了一个语音";
 "alert_key_contact_message" = "发来一条信息";
 "alert_key_contact_text_message" = "发来一条信息";
 "alert_key_contact_image_message" = "发来一张图片";
@@ -403,6 +408,7 @@
 "alert_key_contact_data_message" = "发来了一个文件";
 "alert_key_contact_sticker_message" = "发来了一个贴纸";
 "alert_key_contact_contact_message" = "发来了一个联系人";
+"alert_key_contact_audio_message" = "发来了一个语音";
 
 // About
 "about_twitter" = "关注我们的 Twitter";

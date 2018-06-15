@@ -66,40 +66,46 @@ extension UNUserNotificationCenter {
             }
         } else if message.category.hasSuffix("_IMAGE") {
             if conversation.isGroup() || isRepresentativeMessage {
-                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_PHOTO)"
+                notificationContent.body = Localized.ALERT_KEY_GROUP_IMAGE_MESSAGE(fullname: message.userFullName)
             } else {
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_PHOTO
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_IMAGE_MESSAGE
             }
         } else if message.category.hasSuffix("_VIDEO") {
             if conversation.isGroup() || isRepresentativeMessage {
-                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_VIDEO)"
+                notificationContent.body = Localized.ALERT_KEY_GROUP_VIDEO_MESSAGE(fullname: message.userFullName)
             } else {
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_VIDEO
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_VIDEO_MESSAGE
+            }
+        } else if message.category.hasSuffix("_AUDIO") {
+            if conversation.isGroup() || isRepresentativeMessage {
+                notificationContent.body = Localized.ALERT_KEY_GROUP_AUDIO_MESSAGE(fullname: message.userFullName)
+            } else {
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_AUDIO_MESSAGE
             }
         } else if message.category.hasSuffix("_DATA") {
             if conversation.isGroup() || isRepresentativeMessage {
-                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_FILE)"
+                notificationContent.body = Localized.ALERT_KEY_GROUP_DATA_MESSAGE(fullname: message.userFullName)
             } else {
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_FILE
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_DATA_MESSAGE
             }
         } else if message.category.hasSuffix("_STICKER") {
             if conversation.isGroup() || isRepresentativeMessage {
-                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_STICKER)"
+                notificationContent.body = Localized.ALERT_KEY_GROUP_STICKER_MESSAGE(fullname: message.userFullName)
             } else {
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_STICKER
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_STICKER_MESSAGE
             }
         } else if message.category.hasSuffix("_CONTACT") {
             if conversation.isGroup() || isRepresentativeMessage {
-                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_CONTACT)"
+                notificationContent.body = Localized.ALERT_KEY_GROUP_CONTACT_MESSAGE(fullname: message.userFullName)
             } else {
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_CONTACT
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_CONTACT_MESSAGE
             }
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_DEPOSIT
             case SnapshotType.transfer.rawValue:
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_TRANSFER
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_TRANSFER_MESSAGE
             case SnapshotType.withdrawal.rawValue:
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_WITHDRAWAL
             case SnapshotType.fee.rawValue:

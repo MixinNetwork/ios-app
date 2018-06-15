@@ -101,6 +101,7 @@ extension StickerPageViewController: UICollectionViewDelegate {
         }
         let sticker = stickers[idx]
         conversationViewController?.dataSource?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
+        conversationViewController?.reduceStickerPanelHeightIfMaximized()
         if !isRecentPage {
             DispatchQueue.global().async { [weak self] in
                 StickerDAO.shared.updateUsedAt(albumId: sticker.albumId, name: sticker.name, usedAt: Date().toUTCString())

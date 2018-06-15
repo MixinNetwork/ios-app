@@ -3,7 +3,7 @@ import UIKit
 class RecorderLongPressHintView: UIImageView {
 
     static let labelHorizontalMargin: CGFloat = 8
-    static let labelFont = UIFont.systemFont(ofSize: 16)
+    static let labelFont = UIFont.systemFont(ofSize: 15)
     static let contentSize: CGSize = {
         let textSize = (Localized.CHAT_VOICE_RECORD_LONGPRESS_HINT as NSString)
             .size(withAttributes: [.font: RecorderLongPressHintView.labelFont])

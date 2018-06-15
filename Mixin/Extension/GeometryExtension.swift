@@ -22,21 +22,37 @@ extension CGPoint {
         return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
     }
     
-}
-
-extension UIEdgeInsets {
-    
-    var horizontal: CGFloat {
-        return left + right
+    static func -(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+        return CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
     }
     
-    var vertical: CGFloat {
-        return top + bottom
+    static func *(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+        return CGPoint(x: lhs.x * rhs, y: lhs.y * rhs)
+    }
+    
+    static func /(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+        return CGPoint(x: lhs.x / rhs, y: lhs.y / rhs)
     }
     
 }
 
 extension CGSize {
+    
+    static func +(lhs: CGSize, rhs: CGSize) -> CGSize {
+        return CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
+    }
+    
+    static func -(lhs: CGSize, rhs: CGSize) -> CGSize {
+        return CGSize(width: lhs.width - rhs.width, height: lhs.height - rhs.height)
+    }
+    
+    static func *(lhs: CGSize, rhs: CGFloat) -> CGSize {
+        return CGSize(width: lhs.width * rhs, height: lhs.height * rhs)
+    }
+    
+    static func /(lhs: CGSize, rhs: CGFloat) -> CGSize {
+        return CGSize(width: lhs.width / rhs, height: lhs.height / rhs)
+    }
     
     func rect(fittingSize containerSize: CGSize, byContentMode contentMode: UIViewContentMode) -> CGRect {
         switch contentMode {
@@ -55,6 +71,18 @@ extension CGSize {
         default:
             fatalError("Unimplemented")
         }
+    }
+    
+}
+
+extension UIEdgeInsets {
+    
+    var horizontal: CGFloat {
+        return left + right
+    }
+    
+    var vertical: CGFloat {
+        return top + bottom
     }
     
 }

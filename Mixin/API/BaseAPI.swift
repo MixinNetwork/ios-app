@@ -262,7 +262,7 @@ extension BaseAPI {
                         semaphore.signal()
                     })
 
-                if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut, !result.isSuccess {
+                if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut {
                     result = .failure(APIError(status: NSURLErrorTimedOut, code: -1, description: Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT))
                 }
                 debugDescription = req.debugDescription

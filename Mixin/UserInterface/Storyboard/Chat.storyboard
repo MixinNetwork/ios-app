@@ -2202,11 +2202,11 @@
                                     <outletCollection property="gestureRecognizers" destination="lPA-XX-rls" appends="YES" id="zGa-Fh-AgB"/>
                                 </connections>
                             </imageView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="unk-Os-zQq">
+                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="unk-Os-zQq">
                                 <rect key="frame" x="65.5" y="0.0" width="309.5" height="55"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eyz-oe-6bw">
-                                        <rect key="frame" x="0.0" y="0.0" width="254.5" height="55"/>
+                                        <rect key="frame" x="-65.5" y="0.0" width="375" height="55"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Cancel"/>
                                         <userDefinedRuntimeAttributes>
@@ -2234,14 +2234,13 @@
                                     <constraint firstAttribute="trailing" secondItem="FST-iG-OaY" secondAttribute="trailing" id="cJA-BW-teO"/>
                                     <constraint firstAttribute="bottom" secondItem="eyz-oe-6bw" secondAttribute="bottom" id="ekJ-uF-yb2"/>
                                     <constraint firstAttribute="bottom" secondItem="FST-iG-OaY" secondAttribute="bottom" id="mMQ-rx-8IJ"/>
-                                    <constraint firstItem="FST-iG-OaY" firstAttribute="leading" secondItem="eyz-oe-6bw" secondAttribute="trailing" id="pbT-8Y-viN"/>
-                                    <constraint firstItem="eyz-oe-6bw" firstAttribute="leading" secondItem="unk-Os-zQq" secondAttribute="leading" id="wCB-0A-mXx"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Zt0-eZ-yAA" firstAttribute="leading" secondItem="r1K-Cs-6xD" secondAttribute="trailing" id="7Js-H5-6dp"/>
+                            <constraint firstAttribute="trailing" secondItem="eyz-oe-6bw" secondAttribute="trailing" id="7t7-Ze-lf0"/>
                             <constraint firstAttribute="bottom" secondItem="r1K-Cs-6xD" secondAttribute="bottom" id="GgV-v1-zuM"/>
                             <constraint firstItem="U7v-cP-WyC" firstAttribute="trailing" secondItem="Zt0-eZ-yAA" secondAttribute="trailing" id="Jhk-3k-9hK"/>
                             <constraint firstAttribute="bottom" secondItem="I2m-Ir-vYO" secondAttribute="bottom" priority="250" id="Ku2-hA-4b7"/>
@@ -2254,6 +2253,7 @@
                             <constraint firstItem="Zt0-eZ-yAA" firstAttribute="top" secondItem="U7v-cP-WyC" secondAttribute="top" id="dnM-U3-j4W"/>
                             <constraint firstItem="r1K-Cs-6xD" firstAttribute="top" secondItem="GGT-9f-mbQ" secondAttribute="top" id="fab-Wv-38p"/>
                             <constraint firstItem="unk-Os-zQq" firstAttribute="top" secondItem="GGT-9f-mbQ" secondAttribute="top" id="oNk-Mi-7Ht"/>
+                            <constraint firstItem="eyz-oe-6bw" firstAttribute="leading" secondItem="GGT-9f-mbQ" secondAttribute="leading" id="u0H-8k-7ef"/>
                             <constraint firstItem="r1K-Cs-6xD" firstAttribute="leading" secondItem="U7v-cP-WyC" secondAttribute="leading" id="xoI-WU-klJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="U7v-cP-WyC"/>

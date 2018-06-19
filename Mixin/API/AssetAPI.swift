@@ -6,21 +6,22 @@ final class AssetAPI: BaseAPI {
     static let shared = AssetAPI()
 
     private enum url {
+
+        static let assets = "assets"
         static func assets(assetId: String) -> String {
             return "assets/" + assetId
         }
-        static let assets = "assets"
+        static func fee(assetId: String) -> String {
+            return "assets/\(assetId)/fee"
+        }
 
+        static let snapshots = "snapshots"
         static func snapshots(assetId: String) -> String {
             return "assets/\(assetId)/snapshots"
         }
 
         static let transfers = "transfers"
         static let payments = "payments"
-        
-        static func fee(assetId: String) -> String {
-            return "assets/\(assetId)/fee"
-        }
     }
 
     func assets(completion: @escaping (APIResult<[Asset]>) -> Void) {
@@ -49,6 +50,10 @@ final class AssetAPI: BaseAPI {
     func payments(assetId: String, counterUserId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
         let param: [String : Any] = ["asset_id": assetId, "counter_user_id": counterUserId, "amount": amount, "trace_id": traceId]
         request(method: .post, url: url.payments, parameters: param, toastError: false, completion: completion)
+    }
+
+    func snapshots(completion: @escaping (APIResult<[Snapshot]>) -> Void) {
+        request(method: .get, url: url.snapshots, completion: completion)
     }
 
     func snapshots(assetId: String, completion: @escaping (APIResult<[Snapshot]>) -> Void) {

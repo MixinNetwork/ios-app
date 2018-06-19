@@ -34,6 +34,10 @@ final class SnapshotDAO {
         updateSnapshots(assetId: snapshot.assetId, snapshots: [snapshot])
     }
 
+    func insertOrUpdateSnapshots(snapshots: [Snapshot]) {
+        MixinDatabase.shared.insertOrReplace(objects: snapshots)
+    }
+
     func updateSnapshots(assetId: String, snapshots: [Snapshot]) {
         MixinDatabase.shared.insertOrReplace(objects: snapshots)
         NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: assetId)

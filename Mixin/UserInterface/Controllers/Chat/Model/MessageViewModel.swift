@@ -31,7 +31,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     }
     
     internal var bottomSeparatorHeight: CGFloat {
-        if style.contains(.hasBottomSeparator) {
+        if style.contains(.bottomSeparator) {
             return MessageViewModel.bottomSeparatorHeight
         } else {
             return 0
@@ -62,10 +62,9 @@ extension MessageViewModel {
     struct Style: OptionSet {
         let rawValue: Int
         static let received = Style(rawValue: 1 << 0)
-        static let sent = Style(rawValue: 1 << 1)
-        static let hasTail = Style(rawValue: 1 << 2)
-        static let hasBottomSeparator = Style(rawValue: 1 << 3)
-        static let showFullname = Style(rawValue: 1 << 4)
+        static let tail = Style(rawValue: 1 << 1)
+        static let bottomSeparator = Style(rawValue: 1 << 2)
+        static let fullname = Style(rawValue: 1 << 3)
     }
     
     struct Margin {

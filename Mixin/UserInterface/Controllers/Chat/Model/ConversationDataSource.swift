@@ -129,7 +129,7 @@ class ConversationDataSource {
             var (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
             if shouldInsertEncryptionHint, let firstDate = dates.first {
                 let hint = MessageItem.encryptionHintMessage(conversationId: conversationId)
-                let encryptionHintViewModel = self.viewModel(withMessage: hint, style: .hasBottomSeparator, fits: layoutWidth)
+                let encryptionHintViewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
                 viewModels[firstDate]?.insert(encryptionHintViewModel, at: 0)
             }
             if let lastDate = dates.last, let viewModelsBeforeInsertion = self.viewModels[lastDate] {
@@ -576,7 +576,7 @@ extension ConversationDataSource {
                 dates.append(date)
             }
             let hint = MessageItem.encryptionHintMessage(conversationId: self.conversationId)
-            let viewModel = self.viewModel(withMessage: hint, style: .hasBottomSeparator, fits: layoutWidth)
+            let viewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
             if viewModels[date] != nil {
                 viewModels[date]?.insert(viewModel, at: 0)
             } else {
@@ -723,30 +723,28 @@ extension ConversationDataSource {
         let message = messages[index]
         let isFirstMessage = (index == 0)
         let isLastMessage = (index == messages.count - 1)
-        var style: MessageViewModel.Style
-        if message.userId == me.user_id {
-            style = .sent
-        } else {
+        var style: MessageViewModel.Style = []
+        if message.userId != me.user_id {
             style = .received
         }
         if isLastMessage
             || messages[index + 1].userId != message.userId
             || messages[index + 1].isExtensionMessage
             || messages[index + 1].isSystemMessage {
-            style.insert(.hasTail)
+            style.insert(.tail)
         }
         if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-            style.insert(.hasBottomSeparator)
+            style.insert(.bottomSeparator)
         } else if !isLastMessage && (message.isSystemMessage
             || messages[index + 1].userId != message.userId
             || messages[index + 1].isSystemMessage
             || messages[index + 1].isExtensionMessage) {
-            style.insert(.hasBottomSeparator)
+            style.insert(.bottomSeparator)
         }
         if message.isRepresentativeMessage(conversation: conversation) {
             if (isFirstMessage && !message.isExtensionMessage && !message.isSystemMessage)
                 || (!isFirstMessage && (messages[index - 1].userId != message.userId || messages[index - 1].isExtensionMessage || messages[index - 1].isSystemMessage)) {
-                style.insert(.showFullname)
+                style.insert(.fullname)
             }
         }
         return style
@@ -758,7 +756,10 @@ extension ConversationDataSource {
         let messageIsSentByMe = message.userId == me.user_id
         let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
         let lastIndexPathBeforeInsertion = lastIndexPath
-        var style: MessageViewModel.Style = (messageIsSentByMe ? .sent : .received)
+        var style: MessageViewModel.Style = []
+        if !messageIsSentByMe {
+            style.insert(.received)
+        }
         let needsInsertNewSection: Bool
         let section: Int
         let row: Int
@@ -773,25 +774,25 @@ extension ConversationDataSource {
             } else {
                 isLastCell = true
                 row = viewModels.count
-                style.insert(.hasTail)
+                style.insert(.tail)
             }
             if row - 1 >= 0 {
                 let previousViewModel = viewModels[row - 1]
                 let previousViewModelIsFromDifferentUser = previousViewModel.message.userId != message.userId
                 if previousViewModel.message.isSystemMessage || message.isSystemMessage || message.isExtensionMessage {
                     if !messageIsSentByMe {
-                        style.insert(.showFullname)
+                        style.insert(.fullname)
                     }
-                    previousViewModel.style.insert(.hasBottomSeparator)
+                    previousViewModel.style.insert(.bottomSeparator)
                 } else if previousViewModelIsFromDifferentUser {
-                    previousViewModel.style.insert(.hasBottomSeparator)
-                    previousViewModel.style.insert(.hasTail)
+                    previousViewModel.style.insert(.bottomSeparator)
+                    previousViewModel.style.insert(.tail)
                 } else {
-                    previousViewModel.style.remove(.hasBottomSeparator)
-                    previousViewModel.style.remove(.hasTail)
+                    previousViewModel.style.remove(.bottomSeparator)
+                    previousViewModel.style.remove(.tail)
                 }
                 if message.isRepresentativeMessage(conversation: conversation) && style.contains(.received) && previousViewModelIsFromDifferentUser {
-                    style.insert(.showFullname)
+                    style.insert(.fullname)
                 }
                 DispatchQueue.main.async {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
@@ -806,15 +807,15 @@ extension ConversationDataSource {
             if !isLastCell {
                 let nextViewModel = viewModels[row]
                 if viewModel.message.userId != nextViewModel.message.userId {
-                    viewModel.style.insert(.hasTail)
-                    viewModel.style.insert(.hasBottomSeparator)
+                    viewModel.style.insert(.tail)
+                    viewModel.style.insert(.bottomSeparator)
                     if nextViewModel.message.isRepresentativeMessage(conversation: conversation) && nextViewModel.style.contains(.received) {
-                        nextViewModel.style.insert(.showFullname)
+                        nextViewModel.style.insert(.fullname)
                     }
                 } else {
-                    viewModel.style.remove(.hasTail)
-                    viewModel.style.remove(.hasBottomSeparator)
-                    nextViewModel.style.remove(.showFullname)
+                    viewModel.style.remove(.tail)
+                    viewModel.style.remove(.bottomSeparator)
+                    nextViewModel.style.remove(.fullname)
                 }
                 DispatchQueue.main.async {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
@@ -832,7 +833,7 @@ extension ConversationDataSource {
             row = 0
             isLastCell = section == dates.count
             if style.contains(.received) && message.isRepresentativeMessage(conversation: conversation) {
-                style.insert(.showFullname)
+                style.insert(.fullname)
             }
             viewModel = self.viewModel(withMessage: message, style: style, fits: layoutWidth)
         }

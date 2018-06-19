@@ -124,7 +124,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         // Make content
         content = CoreTextLabel.Content(lines: lines, lineOrigins: lineOrigins, links: links)
         // Calculate content size
-        let hasStatusImage = style.contains(.sent)
+        let hasStatusImage = !style.contains(.received)
         let statusImageWidth = hasStatusImage ? DetailInfoMessageViewModel.statusImageSize.width : 0
         let additionalTrailingSize = CGSize(width: timeLeftMargin + timeSize.width + statusImageWidth + DetailInfoMessageViewModel.statusLeftMargin, height: 16)
         var contentSize = textSize
@@ -139,7 +139,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 contentSize.width = max(contentSize.width, lastLineWithTrailingWidth)
             }
         }
-        if style.contains(.showFullname) {
+        if style.contains(.fullname) {
             if message.userIsBot {
                 let identityIconWidth = DetailInfoMessageViewModel.identityIconLeftMargin + DetailInfoMessageViewModel.identityIconSize.width
                 contentSize.width = min(layoutSize.width, max(contentSize.width, fullnameWidth + identityIconWidth))
@@ -152,18 +152,18 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     override func didSetStyle() {
-        let fullnameHeight = style.contains(.showFullname) ? fullnameFrame.height : 0
-        let backgroundHeightAdjustment = style.contains(.showFullname) ? fullnameHeight + contentMargin.bottom : contentMargin.vertical
+        let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
+        let backgroundHeightAdjustment = style.contains(.fullname) ? fullnameHeight + contentMargin.bottom : contentMargin.vertical
         if style.contains(.received) {
             backgroundImageFrame = CGRect(x: MessageViewModel.backgroundImageMargin.leading,
                                           y: 0,
                                           width: contentSize.width + contentMargin.horizontal,
                                           height: contentSize.height + backgroundHeightAdjustment)
             contentLabelFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.leading),
-                                       y: ceil(style.contains(.showFullname) ? fullnameHeight : contentMargin.top),
+                                       y: ceil(style.contains(.fullname) ? fullnameHeight : contentMargin.top),
                                        width: textSize.width,
                                        height: textSize.height)
-        } else if style.contains(.sent) {
+        } else {
             backgroundImageFrame = CGRect(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - contentMargin.horizontal - contentSize.width,
                                           y: 0,
                                           width: contentSize.width + contentMargin.horizontal,

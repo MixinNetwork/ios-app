@@ -17,7 +17,7 @@ class UnknownMessageViewModel: TextMessageViewModel {
     
     override func didSetStyle() {
         super.didSetStyle()
-        if style.contains(.hasTail) {
+        if style.contains(.tail) {
             backgroundImage = UnknownMessageViewModel.leftWithTailBubbleImage
         } else {
             backgroundImage = UnknownMessageViewModel.leftWithTailBubbleImage

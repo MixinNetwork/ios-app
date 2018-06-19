@@ -38,16 +38,16 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
     
     override func didSetStyle() {
         let backgroundImageMargin = MessageViewModel.backgroundImageMargin
-        let bottomSeparatorHeight = style.contains(.hasBottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
-        let fullnameHeight = style.contains(.showFullname) ? fullnameFrame.height : 0
-        if style.contains(.sent) {
-            if style.contains(.hasTail) {
+        let bottomSeparatorHeight = style.contains(.bottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
+        let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
+        if style.contains(.received) {
+            shadowImage = PhotoRepresentableMessageViewModel.leftShadowImage
+        } else {
+            if style.contains(.tail) {
                 shadowImage = PhotoRepresentableMessageViewModel.rightWithTailShadowImage
             } else {
                 shadowImage = PhotoRepresentableMessageViewModel.rightShadowImage
             }
-        } else {
-            shadowImage = PhotoRepresentableMessageViewModel.leftShadowImage
         }
         let shadowImageSize = shadowImage?.size ?? .zero
         if style.contains(.received) {
@@ -57,11 +57,11 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
                                   height: contentSize.height)
             shadowImageOrigin = CGPoint(x: contentFrame.maxX - shadowImageSize.width,
                                         y: contentFrame.maxY - shadowImageSize.height)
-            if style.contains(.showFullname) {
+            if style.contains(.fullname) {
                 contentFrame.origin.y += fullnameHeight
                 shadowImageOrigin.y += fullnameHeight
             }
-        } else if style.contains(.sent) {
+        } else {
             contentFrame = CGRect(x: layoutWidth - backgroundImageMargin.leading - contentSize.width,
                                   y: backgroundImageMargin.top,
                                   width: contentSize.width,
@@ -74,7 +74,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         super.didSetStyle()
         timeFrame.origin.x += contentFrame.origin.x
         timeFrame.origin.y += fullnameHeight
-        if style.contains(.sent) {
+        if !style.contains(.received) {
             statusFrame.origin.x = timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin
         }
         statusFrame.origin.y += fullnameHeight

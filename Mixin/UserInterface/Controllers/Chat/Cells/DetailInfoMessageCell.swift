@@ -18,7 +18,7 @@ class DetailInfoMessageCell: MessageCell {
         if let viewModel = viewModel as? DetailInfoMessageViewModel {
             backgroundImageView.frame = viewModel.backgroundImageFrame
             backgroundImageView.image = viewModel.backgroundImage
-            if viewModel.style.contains(.showFullname) {
+            if viewModel.style.contains(.fullname) {
                 fullnameButton.frame = viewModel.fullnameFrame
                 fullnameButton.setTitle(viewModel.message.userFullName, for: .normal)
                 fullnameButton.setTitleColor(viewModel.fullnameColor, for: .normal)

@@ -6,7 +6,7 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
     internal(set) var trailingConstant: CGFloat = 0
     
     var fullnameHeight: CGFloat {
-        return style.contains(.showFullname) ? fullnameFrame.height : 0
+        return style.contains(.fullname) ? fullnameFrame.height : 0
     }
     
     internal var size: CGSize {

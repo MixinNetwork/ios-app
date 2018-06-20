@@ -5,7 +5,7 @@ final class AssetDAO {
     static let shared = AssetDAO()
 
     private static let sqlQueryTable = """
-    SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.public_key, a1.price_btc, a1.price_usd, a1.change_usd, a1.chain_id, a2.icon_url as chain_icon_url
+    SELECT a1.asset_id, a1.type, a1.symbol, a1.name, a1.icon_url, a1.balance, a1.public_key, a1.price_btc, a1.price_usd, a1.change_usd, a1.chain_id, a2.icon_url as chain_icon_url, a1.confirmations
     FROM assets a1
     LEFT JOIN assets a2 ON a1.chain_id = a2.asset_id
     """

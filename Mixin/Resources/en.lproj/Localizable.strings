@@ -211,6 +211,7 @@
 "wallet_snapshot_from" = "From %@";
 "wallet_snapshot_to" = "To %@";
 "wallet_deposit" = "Deposit";
+"wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";
@@ -223,6 +224,7 @@
 "wallet_password_address_tips" = "Confirm PIN to protect your address security.";
 "wallet_withdrawal_asset" = "%@ Withdrawal";
 "wallet_withdrawal_pay_password" = "Withdrawal with PIN";
+"wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";
 "wallet_blockchian_not_in_sync" = "Blockchain not in sync.";
 "wallet_no_price" = "N/A";
 "wallet_pin_init_title" = "Set PIN";

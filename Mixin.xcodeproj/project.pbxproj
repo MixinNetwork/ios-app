@@ -320,7 +320,6 @@
 		DF56966F1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift */; };
 		DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */; };
 		DF5BF5611FBB2D490092AFB8 /* TransferInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* TransferInViewController.swift */; };
-		DF5BF5661FBC6FC00092AFB8 /* FeeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5651FBC6FC00092AFB8 /* FeeViewController.swift */; };
 		DF5CDA74204FEBA1004A52BA /* BaseCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */; };
 		DF5CDA77204FF9A0004A52BA /* SignalDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5CDA76204FF9A0004A52BA /* SignalDAO.swift */; };
 		DF5D9F221F9C79E10036D5FD /* BaseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F211F9C79660036D5FD /* BaseAPI.swift */; };
@@ -846,7 +845,6 @@
 		DF56966E1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactHeaderFooter.swift; sourceTree = "<group>"; };
 		DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewController.swift; sourceTree = "<group>"; };
 		DF5BF5601FBB2D490092AFB8 /* TransferInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferInViewController.swift; sourceTree = "<group>"; };
-		DF5BF5651FBC6FC00092AFB8 /* FeeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeViewController.swift; sourceTree = "<group>"; };
 		DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCodable.swift; sourceTree = "<group>"; };
 		DF5CDA76204FF9A0004A52BA /* SignalDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalDAO.swift; sourceTree = "<group>"; };
 		DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedExtension.swift; sourceTree = "<group>"; };
@@ -1904,7 +1902,6 @@
 				DF16681D20A6F84200C45E31 /* SnapshotViewController.swift */,
 				DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */,
 				DF5BF5601FBB2D490092AFB8 /* TransferInViewController.swift */,
-				DF5BF5651FBC6FC00092AFB8 /* FeeViewController.swift */,
 				DF754CB71FBC7F1200F2F2E5 /* WalletPasswordViewController.swift */,
 				7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */,
 				7B894AF2205BF8660065A1B8 /* AddressViewController.swift */,
@@ -2573,7 +2570,6 @@
 				DFF3530A1FEE9E1200058453 /* TransferResponse.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				DFF21459209ABA6500612234 /* GroupWindow.swift in Sources */,
-				DF5BF5661FBC6FC00092AFB8 /* FeeViewController.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
 				DF114B062020551900EA8F9C /* AppDAO.swift in Sources */,
 				DFD659C620501858000696B0 /* BaseDatabase.swift in Sources */,

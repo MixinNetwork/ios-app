@@ -297,13 +297,16 @@ public class Localized {
         return String(format: LocalizedString("wallet_snapshot_to", comment: "To %@"), fullName)
     }
     public static let WALLET_DEPOSIT = LocalizedString("wallet_deposit", comment: "Deposit")
+    public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {
+        return String(format: LocalizedString("wallet_deposit_confirmations", comment: "Deposit will arrive after at least %@ block confirmations."), "\(confirmations)")
+    }
     public static let WALLET_MENU_SHOW_HIDDEN_ASSETS = LocalizedString("wallet_menu_show_hidden_assets", comment: "Hidden assets")
     public static let WALLET_MENU_SHOW_ASSET = LocalizedString("wallet_menu_show_asset", comment: "Show asset")
     public static let WALLET_MENU_HIDE_ASSET = LocalizedString("wallet_menu_hide_asset", comment: "Hide asset")
     public static let WALLET_HIDE_ASSET_EMPTY = LocalizedString("wallet_hide_asset_empty", comment: "No hidden assets")
     public static let WALLET_MENU_WITHDRAW = LocalizedString("wallet_menu_withdraw", comment: "Withdraw")
-    public static func WALLET_HINT_TRANSACTION_FEE(feeRepresentation: String, symbol: String) -> String {
-        return String(format: LocalizedString("wallet_hint_transaction_fee", comment: "A transaction fee of %@ is required for withdrawing %@."), feeRepresentation, symbol)
+    public static func WALLET_HINT_TRANSACTION_FEE(feeRepresentation: String, name: String) -> String {
+        return String(format: LocalizedString("wallet_hint_transaction_fee", comment: "A transaction fee of %@ is required for withdrawing %@."), feeRepresentation, name)
     }
     public static let WALLET_PIN_TIPS_DESCRIPTION = LocalizedString("wallet_pin_tips_description", comment: "You'll be asked for it periodically to help you remember it.")
     public static let WALLET_PASSWORD_ADDRESS_TIPS = LocalizedString("wallet_password_address_tips", comment: "Confirm PIN to protect your address security.")
@@ -311,6 +314,9 @@ public class Localized {
         return String(format: LocalizedString("wallet_withdrawal_asset", comment: "%@ Withdrawal"), assetName)
     }
     public static let WALLET_WITHDRAWAL_PAY_PASSWORD = LocalizedString("wallet_withdrawal_pay_password", comment: "Withdrawal with PIN")
+    public static func WALLET_WITHDRAWAL_RESERVE(reserveRepresentation: String, name: String) -> String {
+        return String(format: LocalizedString("wallet_withdrawal_reserve", comment: " %@ has a minimum %@ reserve requirement."), name, reserveRepresentation)
+    }
     public static let WALLET_BLOCKCHIAN_NOT_IN_SYNC = LocalizedString("wallet_blockchian_not_in_sync", comment: "Blockchain not in sync.")
     public static let WALLET_NO_PRICE = LocalizedString("wallet_no_price", comment: "N/A")
     public static let WALLET_PIN_INIT_TIPS1 = LocalizedString("wallet_pin_init_tips1", comment: "Please set a 6 digit PIN.")

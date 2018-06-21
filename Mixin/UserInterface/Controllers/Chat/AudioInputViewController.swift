@@ -178,7 +178,7 @@ extension AudioInputViewController {
         layoutForRecording()
         recordDuration = 0
         setTimeLabelValue(0)
-        let tempUrl = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString.lowercased() + ExtensionName.ogg.withDot)
+        let tempUrl = URL.createTempUrl(fileExtension: ExtensionName.ogg.rawValue)
         do {
             recorder = try MXNAudioRecorder(path: tempUrl.path)
             recorder!.record(forDuration: AudioInputViewController.maxRecordDuration, progress: { (progress) in

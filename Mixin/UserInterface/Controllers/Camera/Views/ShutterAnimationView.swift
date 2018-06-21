@@ -2,7 +2,7 @@ import UIKit
 
 class ShutterAnimationView: UIView {
     
-    static let shutterSize = CGSize(width: 63, height: 63)
+    static let shutterSize = CGSize(width: 72, height: 72)
     static let sendSize = #imageLiteral(resourceName: "ic_camera_send").size
     static let shutterLineWidth: CGFloat = 3
     static let animationDuration: TimeInterval = 0.3

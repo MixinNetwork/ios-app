@@ -2,6 +2,7 @@ import UIKit
 import AVFoundation
 import Photos
 import SwiftMessages
+import AVKit
 
 enum DetechStatus {
     case detecting
@@ -13,7 +14,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var previewView: PreviewView!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var sendButton: BouncingButton!
-    @IBOutlet weak var takeButton: UIButton!
+    @IBOutlet weak var takeButton: RecordButton!
     @IBOutlet weak var saveButton: BouncingButton!
     @IBOutlet weak var backButton: BouncingButton!
     @IBOutlet weak var cameraSwapButton: BouncingButton!
@@ -22,14 +23,20 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var qrcodeContentLabel: UILabel!
     @IBOutlet weak var qrcodeView: UIVisualEffectView!
     @IBOutlet weak var qrcodeTipsView: UIView!
+    @IBOutlet weak var toolbarView: UIView!
+    @IBOutlet weak var timeView: UIView!
+    @IBOutlet weak var recordingRedDotView: UIView!
+    @IBOutlet weak var timeLabel: UILabel!
 
     @IBOutlet weak var qrcodeNotificationTopConstraint: NSLayoutConstraint!
 
     private let sessionQueue = DispatchQueue(label: "one.mixin.messenger.queue.camera")
     private let metadataOutput = AVCaptureMetadataOutput()
     private let session = AVCaptureSession()
+    private let captureVideoOutput = AVCaptureMovieFileOutput()
     private var capturePhotoOutput = AVCapturePhotoOutput()
     private var videoDeviceInput: AVCaptureDeviceInput!
+    private var audioDeviceInput: AVCaptureDeviceInput!
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     private var didTakePhoto = false
     private var photoCaptureProcessor: PhotoCaptureProcessor?
@@ -41,6 +48,8 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var detectQRCodes = [String]()
     private var detectLock = NSLock()
     private var detectText = ""
+    private var recordTimer: Timer?
+    private var isGrantedAudioRecordPermission = false
 
     private lazy var videoDeviceDiscoverySession: AVCaptureDevice.DiscoverySession = {
         if #available(iOS 10.2, *) {
@@ -49,7 +58,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDuoCamera], mediaType: AVMediaType.video, position: .unspecified)
         }
     }()
-
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,6 +71,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         if !CommonUserDefault.shared.isCameraQRCodeTips {
             qrcodeTipsView.isHidden = false
         }
+        prepareRecord()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -288,16 +297,136 @@ class PhotoCaptureProcessor: NSObject, AVCapturePhotoCaptureDelegate {
     }
 }
 
+extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
+
+    func prepareRecord() {
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(recordViewAction))
+        longPressRecognizer.minimumPressDuration = 0.15
+        takeButton.addGestureRecognizer(longPressRecognizer)
+        takeButton.longPressRecognizer = longPressRecognizer
+
+        timeLabel.shadowColor = UIColor.black
+        timeLabel.shadowOffset = CGSize(width: 0.3, height: 0.3)
+    }
+
+    @objc func recordViewAction(gestureRecognizer: UILongPressGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .began:
+            startRecordingIfGranted()
+            takeButton.startAnimation { [weak self] in
+                self?.startRecord()
+            }
+            timeLabel.text = mediaDurationFormatter.string(from: 0)
+            displayMainUI(false)
+            self.recordTimer?.invalidate()
+            let timer = Timer(timeInterval: 0.5,
+                              target: self,
+                              selector: #selector(updateTimeLabelAction(_:)),
+                              userInfo: nil,
+                              repeats: true)
+            RunLoop.main.add(timer, forMode: .commonModes)
+            recordTimer = timer
+            startRedDotAnimation()
+        case .ended, .cancelled, .failed:
+            takeButton.resetAnimation { [weak self] in
+                self?.stopRecord()
+            }
+            displayMainUI(true)
+            stopRedDotAnimation()
+            recordTimer?.invalidate()
+            recordTimer = nil
+        default:
+            break
+        }
+    }
+
+    private func startRecordingIfGranted() {
+        isGrantedAudioRecordPermission = false
+        switch AVAudioSession.sharedInstance().recordPermission() {
+        case .denied:
+            alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
+        case .granted:
+            isGrantedAudioRecordPermission = true
+        case .undetermined:
+            AVAudioSession.sharedInstance().requestRecordPermission({ (_) in })
+        }
+    }
+
+    private func startRecord() {
+        guard captureVideoOutput.connection(with: .video)?.isActive ?? false else {
+            return
+        }
+
+        captureVideoOutput.startRecording(to: URL.createTempUrl(fileExtension: "mov"), recordingDelegate: self)
+    }
+
+    private func stopRecord() {
+        guard captureVideoOutput.isRecording else {
+            return
+        }
+        captureVideoOutput.stopRecording()
+    }
+
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        defer {
+            takeButton.autoStopAction()
+        }
+        guard error == nil, isGrantedAudioRecordPermission else {
+            try? FileManager.default.removeItem(at: outputFileURL)
+            return
+        }
+        let asset = AVAsset(url: outputFileURL)
+        guard asset.duration.isValid, asset.duration.seconds >= 1 else {
+            try? FileManager.default.removeItem(at: outputFileURL)
+            return
+        }
+
+        navigationController?.pushViewController(AssetSendViewController.instance(videoAsset: asset, dataSource: nil), animated: true)
+    }
+
+    private func displayMainUI(_ display: Bool) {
+        UIView.animate(withDuration: 0.15) {
+            self.toolbarView.alpha = display ? 1 : 0
+            self.timeView.alpha = display ? 0 : 1
+        }
+    }
+
+    private func startRedDotAnimation() {
+        UIView.animate(withDuration: 1, delay: 0, options: [.repeat, .autoreverse], animations: {
+            self.recordingRedDotView.alpha = 1
+        }, completion: nil)
+    }
+
+    private func stopRedDotAnimation() {
+        recordingRedDotView.layer.removeAllAnimations()
+        recordingRedDotView.alpha = 0
+    }
+
+    @objc func updateTimeLabelAction(_ sender: Any) {
+        guard captureVideoOutput.isRecording, captureVideoOutput.recordedDuration.isValid else {
+            return
+        }
+        timeLabel.text = mediaDurationFormatter.string(from: captureVideoOutput.recordedDuration.seconds)
+    }
+}
+
 extension CameraViewController {
 
     private func configureSession() {
         session.beginConfiguration()
-        session.sessionPreset = .photo
+        session.sessionPreset = .high
 
         if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .unspecified), let deviceInput = try? AVCaptureDeviceInput(device: device) {
             if session.canAddInput(deviceInput) {
                 session.addInput(deviceInput)
                 videoDeviceInput = deviceInput
+            }
+        }
+
+        if let device = AVCaptureDevice.default(for: .audio), let deviceInput = try? AVCaptureDeviceInput(device: device) {
+            if session.canAddInput(deviceInput) {
+                session.addInput(deviceInput)
+                audioDeviceInput = deviceInput
             }
         }
 
@@ -314,6 +443,11 @@ extension CameraViewController {
         capturePhotoOutput.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey : AVVideoCodecJPEG])], completionHandler: nil)
         if session.canAddOutput(capturePhotoOutput) {
             session.addOutput(capturePhotoOutput)
+        }
+
+        captureVideoOutput.maxRecordedDuration = CMTime(seconds: 60, preferredTimescale: 30)
+        if session.canAddOutput(captureVideoOutput) {
+            session.addOutput(captureVideoOutput)
         }
 
         session.commitConfiguration()

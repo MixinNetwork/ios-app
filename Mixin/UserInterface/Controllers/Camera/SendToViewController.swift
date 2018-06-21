@@ -1,12 +1,23 @@
 import UIKit
+import AVKit
 
 class SendToViewController: ForwardViewController {
 
     private var photo: UIImage!
     private var text: String!
+    private var videoUrl: URL!
 
     override func forwardMessage(_ targetUser: ForwardUser) {
-        guard let message = photo == nil ? createTextMessage(targetUser) : createPhotoMessage(targetUser) else {
+        var msg: Message?
+        if text != nil {
+            msg = createTextMessage(targetUser)
+        } else if photo != nil {
+            msg = createPhotoMessage(targetUser)
+        } else if videoUrl != nil {
+            msg = createVideoMessage(targetUser)
+        }
+
+        guard let message = msg else {
             return
         }
         DispatchQueue.global().async { [weak self] in
@@ -16,6 +27,17 @@ class SendToViewController: ForwardViewController {
             }
         }
     }
+
+    class func instance(photo: UIImage? = nil, text: String? = nil, videoUrl: URL? = nil) -> UIViewController {
+        let vc = Storyboard.camera.instantiateViewController(withIdentifier: "sendto") as! SendToViewController
+        vc.photo = photo
+        vc.text = text
+        vc.videoUrl = videoUrl
+        return ContainerViewController.instance(viewController: vc, title: Localized.CAMERA_SEND_TO_TITLE)
+    }
+}
+
+extension SendToViewController {
 
     private func createPhotoMessage(_ targetUser: ForwardUser) -> Message? {
         guard photo != nil else {
@@ -47,15 +69,33 @@ class SendToViewController: ForwardViewController {
         return message
     }
 
-    class func instance(photo: UIImage) -> UIViewController {
-        let vc = Storyboard.camera.instantiateViewController(withIdentifier: "sendto") as! SendToViewController
-        vc.photo = photo
-        return ContainerViewController.instance(viewController: vc, title: Localized.CAMERA_SEND_TO_TITLE)
+    private func createVideoMessage(_ targetUser: ForwardUser) -> Message? {
+        guard let url = self.videoUrl else {
+            return nil
+        }
+        let asset = AVAsset(url: videoUrl)
+        guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
+            return nil
+        }
+        var message = Message.createMessage(category: MessageCategory.SIGNAL_VIDEO.rawValue, conversationId: targetUser.conversationId, userId: AccountAPI.shared.accountUserId)
+        let filename = url.lastPathComponent.substring(endChar: ".")
+        let thumbnailFilename = filename + ExtensionName.jpeg.withDot
+        if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
+            let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: thumbnailFilename)
+            thumbnail.saveToFile(path: thumbnailURL)
+            message.thumbImage = thumbnail.getBlurThumbnail().toBase64()
+        } else {
+            return nil
+        }
+        message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
+        let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
+        message.mediaWidth = Int(abs(size.width))
+        message.mediaHeight = Int(abs(size.height))
+        message.mediaSize = FileManager.default.fileSize(url.path)
+        message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+        message.mediaUrl = url.lastPathComponent
+        message.mediaStatus = MediaStatus.PENDING.rawValue
+        return message
     }
 
-    class func instance(text: String) -> UIViewController {
-        let vc = Storyboard.camera.instantiateViewController(withIdentifier: "sendto") as! SendToViewController
-        vc.text = text
-        return ContainerViewController.instance(viewController: vc, title: Localized.CAMERA_SEND_TO_TITLE)
-    }
 }

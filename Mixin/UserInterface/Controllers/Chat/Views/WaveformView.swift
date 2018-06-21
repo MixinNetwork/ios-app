@@ -56,6 +56,7 @@ class WaveformView: UIView {
     }
     
     static func estimatedWidth(forDurationInSeconds duration: Int) -> CGFloat {
+        let duration = max(Waveform.minDuration, min(Waveform.maxDuration, duration))
         let numberOfBars = Waveform.numberOfValues(forDurationInSeconds: duration)
         return 1.5 * barWidth * CGFloat(numberOfBars)
     }

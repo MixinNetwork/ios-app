@@ -76,7 +76,6 @@ class AudioInputViewController: UIViewController {
             startRecordingIfGranted()
             recordGestureBeganPoint = recordGestureRecognizer.location(in: view)
             slideToCancelContentView.alpha = 1
-            animateShowLockView()
         case .changed:
             let location = recordGestureRecognizer.location(in: view)
             let horizontalDistance = max(0, recordGestureBeganPoint.x - location.x)
@@ -229,6 +228,7 @@ extension AudioInputViewController {
         if isShowingLongPressHint {
             animateHideLongPressHint()
         }
+        animateShowLockView()
         conversationViewController?.setInputWrapperHidden(true)
         slideViewCenterXConstraint.constant = 0
         preferredContentSize.width = UIScreen.main.bounds.width

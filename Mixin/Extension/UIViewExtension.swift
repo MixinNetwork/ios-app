@@ -46,3 +46,9 @@ extension UIViewAnimationCurve {
     static let overdamped = UIViewAnimationCurve(rawValue: 7) ?? .easeOut
     
 }
+
+extension UILayoutPriority {
+    
+    static let almostRequired = UILayoutPriority(999)
+
+}

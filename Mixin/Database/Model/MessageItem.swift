@@ -56,7 +56,7 @@ class MessageItem: TableCodable {
     var sharedUserIsVerified: Bool = false
 
     var quoteMessageId: String? = nil
-    var quoteContent: String? = nil
+    var quoteContent: Data? = nil
 
     var userIsBot: Bool {
         return !(appId?.isEmpty ?? true)
@@ -74,6 +74,32 @@ class MessageItem: TableCodable {
             return nil
         }
         return try? MessageItem.jsonDecoder.decode(AppCardData.self, from: data)
+    }()
+    
+    lazy var quoteSubtitle: String = {
+        if category.hasSuffix("_TEXT") {
+            return content
+        } else if category.hasSuffix("_STICKER") {
+            return Localized.CHAT_QUOTE_TYPE_STICKER
+        } else if category.hasSuffix("_IMAGE") {
+            return Localized.CHAT_QUOTE_TYPE_PHOTO
+        } else if category.hasSuffix("_VIDEO") {
+            return Localized.CHAT_QUOTE_TYPE_VIDEO
+        } else if category.hasSuffix("_AUDIO") {
+            if let duration = mediaDuration {
+                return mediaDurationFormatter.string(from: TimeInterval(Double(duration) / millisecondsPerSecond)) ?? ""
+            } else {
+                return ""
+            }
+        } else if category.hasSuffix("_DATA") {
+            return name ?? ""
+        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+            return (snapshotAmount ?? "0") + " " + (assetSymbol ?? "")
+        } else if category.hasSuffix("_CONTACT") {
+            return sharedUserIdentityNumber
+        } else {
+            return ""
+        }
     }()
 
     var isExtensionMessage: Bool {

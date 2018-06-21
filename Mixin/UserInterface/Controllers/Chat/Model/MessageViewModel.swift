@@ -6,6 +6,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     static let bottomSeparatorHeight: CGFloat = 10
 
     let message: MessageItem
+    let quote: Quote?
     let time: String
     let layoutWidth: CGFloat
     
@@ -47,6 +48,11 @@ class MessageViewModel: CustomDebugStringConvertible {
             thumbnail = UIImage(data: imageData)
         } else {
             thumbnail = nil
+        }
+        if let quoteContent = message.quoteContent {
+            self.quote = Quote(quoteContent: quoteContent)
+        } else {
+            self.quote = nil
         }
         didSetStyle()
     }

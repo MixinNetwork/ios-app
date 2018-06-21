@@ -133,7 +133,7 @@ final class MessageDAO {
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
 
-    func updateMessageQuoteContent(quoteMessageId: String, quoteContent: String) {
+    func updateMessageQuoteContent(quoteMessageId: String, quoteContent: Data) {
         MixinDatabase.shared.update(maps: [(Message.Properties.quoteContent, quoteContent)], tableName: Message.tableName, condition: Message.Properties.quoteMessageId == quoteContent)
     }
 
@@ -404,14 +404,11 @@ final class MessageDAO {
         return MixinDatabase.shared.isExist(type: Message.self, condition: condition, inTransaction: false)
     }
 
-    func getQuoteMessage(messageId: String?) -> String? {
+    func getQuoteMessage(messageId: String?) -> Data? {
         guard let quoteMessageId = messageId, let quoteMessage: MessageItem = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [quoteMessageId], inTransaction: false).first else {
             return nil
         }
-        guard let encoder = try? JSONEncoder().encode(quoteMessage), let quoteContent = String(data: encoder, encoding: .utf8) else {
-            return nil
-        }
-        return quoteContent
+        return try? JSONEncoder().encode(quoteMessage)
     }
 
 }

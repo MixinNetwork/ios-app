@@ -423,7 +423,7 @@ extension ConversationDataSource {
 // MARK: - Send Message
 extension ConversationDataSource {
     
-    func sendMessage(type: MessageCategory, value: Any, quoteMessageId: String? = nil) {
+    func sendMessage(type: MessageCategory, quoteMessageId: String? = nil , value: Any) {
         let isGroupMessage = category == .group
         let ownerUser = self.ownerUser
         var message = Message.createMessage(category: type.rawValue, conversationId: conversationId, userId: me.user_id)
@@ -681,7 +681,9 @@ extension ConversationDataSource {
         if message.status == MessageStatus.FAILED.rawValue {
             viewModel = DecryptionFailedMessageViewModel(message: message, style: style, fits: layoutWidth)
         } else {
-            if message.category.hasSuffix("_TEXT") {
+            if message.quoteMessageId != nil && message.quoteContent != nil {
+                viewModel = QuoteTextMessageViewModel(message: message, style: style, fits: layoutWidth)
+            } else if message.category.hasSuffix("_TEXT") {
                 let textViewModel = TextMessageViewModel(message: message, style: style, fits: layoutWidth)
                 if let keyword = highlight?.keyword {
                     textViewModel.highlight(keyword: keyword)

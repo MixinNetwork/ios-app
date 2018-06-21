@@ -147,6 +147,9 @@
 "chat_file_expired" = "Expired";
 "chat_voice_record_cancel" = "Slide to cancel";
 "chat_voice_record_longpress_hint" = "Hold to record, release to send.";
+"chat_quote_type_sticker" = "Sticker";
+"chat_quote_type_photo" = "Photo";
+"chat_quote_type_video" = "Video";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";

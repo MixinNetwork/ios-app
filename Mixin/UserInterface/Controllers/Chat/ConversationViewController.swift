@@ -30,14 +30,20 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var audioInputContainerView: UIView!
+    @IBOutlet weak var quoteView: QuotePreviewView!
     
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var inputTextViewLeadingShrinkConstraint: NSLayoutConstraint!
+    @IBOutlet weak var inputTextViewLeadingExpandedConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var stickerPanelContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var moreMenuHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var moreMenuTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var quoteViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var quoteViewHiddenConstraint: NSLayoutConstraint!
+    @IBOutlet weak var quoteViewShowConstraint: NSLayoutConstraint!
     
     static var positions = [String: Position]()
     
@@ -62,6 +68,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var role = ""
     private var asset: AssetItem?
     private var lastInputWrapperBottomConstant: CGFloat = 0
+    private var quoteMessageId: String?
     private var isShowingMenu = false
     private var isShowingStickerPanel = false
     private var isAppearanceAnimating = true
@@ -69,6 +76,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var hideStatusBar = false
     private var inputWrapperShouldFollowKeyboardPosition = true
     private var stickerPanelHalfsizedHeight: CGFloat = 320
+    private var isShowingQuoteView: Bool {
+        return quoteMessageId != nil
+    }
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
@@ -160,6 +170,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         titleLabel.addGestureRecognizer(reportRecognizer)
 
         audioInputContainerWidthConstraint.constant = 55
+        quoteView.dismissButton.addTarget(self, action: #selector(dismissQuoteView(_:)), for: .touchUpInside)
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
@@ -442,7 +453,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         guard !trimmedMessageDraft.isEmpty else {
             return
         }
-        dataSource?.sendMessage(type: .SIGNAL_TEXT, value: trimmedMessageDraft)
+        setQuoteViewHidden(true)
+        dataSource?.sendMessage(type: .SIGNAL_TEXT, quoteMessageId: quoteMessageId , value: trimmedMessageDraft)
         inputTextView.text = ""
         textViewDidChange(inputTextView)
     }
@@ -676,7 +688,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             shouldHideStickerPanel = true
         }
         if keyboardIsMovingUp {
-            if inputTextView.hasText {
+            if inputTextView.hasText || isShowingQuoteView {
                 sendButton.isHidden = false
             } else {
                 audioInputContainerView.isHidden = false
@@ -685,13 +697,15 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         if isShowingMoreMenu {
             toggleMoreMenu(delay: 0)
         }
-        let y = max(0, tableView.contentOffset.y - inputWrapperDisplacement)
         lastInputWrapperBottomConstant = inputWrapperBottomConstraint.constant
         UIView.animate(withDuration: duration) {
+            UIView.setAnimationCurve(.overdamped)
             if shouldHideStickerPanel {
                 self.stickerPanelContainerView.alpha = 0
             }
-            self.tableView.contentOffset.y = y
+            if !self.isShowingQuoteView {
+                self.tableView.contentOffset.y = max(0, self.tableView.contentOffset.y - inputWrapperDisplacement)
+            }
             self.view.layoutIfNeeded()
         }
     }
@@ -728,6 +742,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     @objc func applicationWillTerminate(_ notification: Notification) {
         saveDraft()
+    }
+    
+    @objc func dismissQuoteView(_ sender: Any) {
+        quoteMessageId = nil
+        setQuoteViewHidden(true)
     }
     
     // MARK: - Interface
@@ -836,14 +855,14 @@ extension ConversationViewController: UITextViewDelegate {
         let maxHeight = ceil(lineHeight * CGFloat(maxInputRow) + textView.textContainerInset.top + textView.textContainerInset.bottom)
         let contentSize = textView.sizeThatFits(CGSize(width: textView.bounds.width, height: UILayoutFittingExpandedSize.height))
         inputTextView.isScrollEnabled = contentSize.height > maxHeight
-        if trimmedMessageDraft.isEmpty {
-            sendButton.isHidden = true
-            audioInputContainerView.isHidden = false
-            stickerKeyboardSwitcherButton.isHidden = false
-        } else {
+        if !trimmedMessageDraft.isEmpty || isShowingQuoteView {
             sendButton.isHidden = false
             audioInputContainerView.isHidden = true
             stickerKeyboardSwitcherButton.isHidden = true
+        } else {
+            sendButton.isHidden = true
+            audioInputContainerView.isHidden = false
+            stickerKeyboardSwitcherButton.isHidden = false
         }
         let newHeight = min(contentSize.height, maxHeight)
         if abs(newHeight - inputTextViewHeightConstraint.constant) > 0.1 {
@@ -877,7 +896,7 @@ extension ConversationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
-            return self.tableView.dequeueReusableCell(withMessageCategory: MessageCategory.UNKNOWN.rawValue, for: indexPath)
+            return self.tableView.dequeueReusableCell(withReuseId: .unknown, for: indexPath)
         }
         let cell = self.tableView.dequeueReusableCell(withMessage: viewModel.message, for: indexPath)
         if let cell = cell as? MessageCell {
@@ -950,7 +969,14 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         case .forward:
             navigationController?.pushViewController(ForwardViewController.instance(message: message, ownerUser: ownerUser), animated: true)
         case .reply:
-            break
+            quoteMessageId = message.messageId
+            setQuoteViewHidden(false)
+            quoteView.render(message: message, contentImageThumbnail: viewModel.thumbnail)
+            inputTextView?.becomeFirstResponder()
+            UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
+            self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+            })
         case .add:
             if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
                 StickerAPI.shared.addSticker(stickerId: stickerId, completion: { (result) in
@@ -1423,6 +1449,18 @@ extension ConversationViewController {
                     self?.tableView.tableFooterView = nil
                 }
             }
+        }
+    }
+    
+    private func setQuoteViewHidden(_ hidden: Bool) {
+        quoteViewShowConstraint.priority = hidden ? .defaultLow : .defaultHigh
+        quoteViewHiddenConstraint.priority = hidden ? .defaultHigh : .defaultLow
+        inputTextViewLeadingShrinkConstraint.priority = hidden ? .almostRequired : .defaultLow
+        inputTextViewLeadingExpandedConstraint.priority = hidden ? .defaultLow : .almostRequired
+        audioInputContainerView.isHidden = !hidden
+        stickerKeyboardSwitcherButton.isHidden = !hidden
+        UIView.animate(withDuration: animationDuration) {
+            self.view.layoutIfNeeded()
         }
     }
     

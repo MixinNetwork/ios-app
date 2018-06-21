@@ -30,7 +30,7 @@ struct Message: BaseCodable {
     var stickerId: String? = nil
     var sharedUserId: String? = nil
     var quoteMessageId: String? = nil
-    var quoteContent: String? = nil
+    var quoteContent: Data? = nil
     var createdAt: String
 
     enum CodingKeys: String, CodingTableKey {
@@ -87,7 +87,7 @@ struct Message: BaseCodable {
 
 extension Message {
 
-    static func createMessage(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, thumbImage: String? = nil, status: String, action: String? = nil, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, sharedUserId: String? = nil, quoteMessageId: String? = nil, quoteContent: String? = nil, createdAt: String) -> Message {
+    static func createMessage(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, thumbImage: String? = nil, status: String, action: String? = nil, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, sharedUserId: String? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, createdAt: String) -> Message {
         return Message(messageId: messageId, conversationId: conversationId, userId: userId, category: category, content: content, mediaUrl: mediaUrl, mediaMimeType: mediaMimeType, mediaSize: mediaSize, mediaDuration: mediaDuration, mediaWidth: mediaWidth, mediaHeight: mediaHeight, mediaHash: mediaHash, mediaKey: mediaKey, mediaDigest: mediaDigest, mediaStatus: mediaStatus, mediaWaveform: mediaWaveform, thumbImage: thumbImage, status: status, action: action, participantId: participantId, snapshotId: snapshotId, name: name, stickerId: stickerId, sharedUserId: sharedUserId, quoteMessageId: quoteMessageId, quoteContent: quoteContent, createdAt: createdAt)
     }
 
@@ -154,6 +154,40 @@ enum MessageCategory: String {
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN
+    
+    static let maxIconSize: CGSize = {
+        let maxLength = max(#imageLiteral(resourceName: "ic_message_photo").size.width, #imageLiteral(resourceName: "ic_message_photo").size.height,
+                            #imageLiteral(resourceName: "ic_message_sticker").size.width, #imageLiteral(resourceName: "ic_message_sticker").size.height,
+                            #imageLiteral(resourceName: "ic_message_contact").size.width, #imageLiteral(resourceName: "ic_message_contact").size.height,
+                            #imageLiteral(resourceName: "ic_message_file").size.width, #imageLiteral(resourceName: "ic_message_file").size.height,
+                            #imageLiteral(resourceName: "ic_message_video").size.width, #imageLiteral(resourceName: "ic_message_video").size.height,
+                            #imageLiteral(resourceName: "ic_message_audio").size.width, #imageLiteral(resourceName: "ic_message_audio").size.height,
+                            #imageLiteral(resourceName: "ic_message_transfer").size.width, #imageLiteral(resourceName: "ic_message_transfer").size.height,
+                            #imageLiteral(resourceName: "ic_message_bot_menu").size.width, #imageLiteral(resourceName: "ic_message_bot_menu").size.height)
+        return CGSize(width: maxLength, height: maxLength)
+    }()
+    
+    static func iconImage(forMessageCategoryString category: String) -> UIImage? {
+        if category.hasSuffix("_IMAGE") {
+            return #imageLiteral(resourceName: "ic_message_photo")
+        } else if category.hasSuffix("_STICKER") {
+            return #imageLiteral(resourceName: "ic_message_sticker")
+        } else if category.hasSuffix("_CONTACT") {
+            return #imageLiteral(resourceName: "ic_message_contact")
+        } else if category.hasSuffix("_DATA") {
+            return #imageLiteral(resourceName: "ic_message_file")
+        } else if category.hasSuffix("_VIDEO") {
+            return #imageLiteral(resourceName: "ic_message_video")
+        } else if category.hasSuffix("_AUDIO") {
+            return #imageLiteral(resourceName: "ic_message_audio")
+        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+            return #imageLiteral(resourceName: "ic_message_transfer")
+        } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue || category == MessageCategory.APP_CARD.rawValue {
+            return #imageLiteral(resourceName: "ic_message_bot_menu")
+        } else {
+            return nil
+        }
+    }
 }
 
 enum MessageStatus: String, Codable {

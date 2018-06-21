@@ -161,7 +161,8 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     AVAudioSessionRouteChangeReason reason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
     switch (reason) {
         case AVAudioSessionRouteChangeReasonOverride:
-        case AVAudioSessionRouteChangeReasonNewDeviceAvailable: {
+        case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
+        case AVAudioSessionRouteChangeReasonRouteConfigurationChange: {
             break;
         }
         case AVAudioSessionRouteChangeReasonCategoryChange: {
@@ -175,8 +176,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         case AVAudioSessionRouteChangeReasonUnknown:
         case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
         case AVAudioSessionRouteChangeReasonWakeFromSleep:
-        case AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory:
-        case AVAudioSessionRouteChangeReasonRouteConfigurationChange: {
+        case AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory: {
             [self cancel];
             break;
         }

@@ -16,6 +16,7 @@ struct Asset: BaseCodable {
     let priceUsd: String
     let changeUsd: String
     let chainId: String
+    let confirmations: Int
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Asset
@@ -30,6 +31,7 @@ struct Asset: BaseCodable {
         case priceUsd = "price_usd"
         case changeUsd = "change_usd"
         case chainId = "chain_id"
+        case confirmations
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
@@ -43,7 +45,7 @@ struct Asset: BaseCodable {
 extension Asset {
 
     static func createAsset(asset: AssetItem) -> Asset {
-        return Asset(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, changeUsd: asset.changeUsd, chainId: asset.chainId)
+        return Asset(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, changeUsd: asset.changeUsd, chainId: asset.chainId, confirmations: asset.confirmations)
     }
 
 }

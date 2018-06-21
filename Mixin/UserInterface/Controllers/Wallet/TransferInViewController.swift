@@ -8,7 +8,8 @@ class TransferInViewController: UIViewController {
     @IBOutlet weak var fullNameLabel: UILabel!
     @IBOutlet weak var identifyNumberLabel: UILabel!
     @IBOutlet weak var addressButton: UIButton!
-    
+    @IBOutlet weak var confirmationLabel: UILabel!
+
     private var asset: AssetItem!
 
     override func viewDidLoad() {
@@ -20,6 +21,7 @@ class TransferInViewController: UIViewController {
             qrcodeImageView.image = UIImage(qrcode: asset.publicKey, size: qrcodeImageView.frame.width)
             addressButton.setTitle(asset.publicKey, for: .normal)
         }
+        confirmationLabel.text = Localized.WALLET_DEPOSIT_CONFIRMATIONS(confirmations: asset.confirmations)
         avatarImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
         qrcodeAvatarImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
         qrcodeAvatarImageView.layer.borderColor = UIColor.white.cgColor

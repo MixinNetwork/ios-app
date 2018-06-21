@@ -15,6 +15,7 @@ struct AssetItem: TableCodable, NumberStringLocalizable {
     let chainId: String
     let chainIconUrl: String?
     let changeUsd: String
+    let confirmations: Int
 
     enum CodingKeys: String, CodingTableKey {
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -32,6 +33,7 @@ struct AssetItem: TableCodable, NumberStringLocalizable {
         case changeUsd = "change_usd"
         case chainId = "chain_id"
         case chainIconUrl = "chain_icon_url"
+        case confirmations
     }
 }
 
@@ -57,7 +59,7 @@ extension AssetItem {
 extension AssetItem {
 
     static func createAsset(asset: Asset, chainIconUrl: String?) -> AssetItem {
-        return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd)
+        return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd, confirmations: asset.confirmations)
     }
 
 }

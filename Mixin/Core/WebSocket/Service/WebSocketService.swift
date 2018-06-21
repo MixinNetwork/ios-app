@@ -155,8 +155,8 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     @objc func writePingFrame() {
-        let failedPing = awaitingPong ? sentPingCount : -1;
-        sentPingCount += 1;
+        let failedPing = awaitingPong ? sentPingCount : -1
+        sentPingCount += 1
         awaitingPong = true
         if failedPing != -1 {
             #if DEBUG

@@ -8,8 +8,8 @@ class MessageViewModel: CustomDebugStringConvertible {
     let message: MessageItem
     let time: String
     let layoutWidth: CGFloat
-    let thumbnail: UIImage?
     
+    internal(set) var thumbnail: UIImage?
     internal(set) var backgroundImage: UIImage?
     internal(set) var backgroundImageFrame = CGRect.zero
     internal(set) var cellHeight: CGFloat = 44

@@ -34,7 +34,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? VideoMessageViewModel {
             renderOperationButtonAndExpiredHintLabel(viewModel: viewModel)
-            contentImageView.image = viewModel.betterThumbnail ?? viewModel.thumbnail
+            contentImageView.image = viewModel.thumbnail
             if viewModel.duration != nil || viewModel.fileSize != nil {
                 lengthLabel.text = viewModel.duration ?? viewModel.fileSize
                 lengthLabel.sizeToFit()

@@ -4,8 +4,6 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
 
     static let byteCountFormatter = ByteCountFormatter()
     
-    let betterThumbnail: UIImage?
-    
     private(set) var duration: String?
     private(set) var fileSize: String?
     private(set) var durationLabelOrigin = CGPoint.zero
@@ -36,15 +34,14 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
+        super.init(message: message, style: style, fits: layoutWidth)
         if let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
             let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
-            let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos,
-                                                   filename: betterThumbnailFilename)
-            betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path)
-        } else {
-            betterThumbnail = nil
+            let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
+            if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
+                thumbnail = betterThumbnail
+            }
         }
-        super.init(message: message, style: style, fits: layoutWidth)
         updateOperationButtonStyle()
         if style.contains(.received) {
             durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 16,

@@ -196,16 +196,16 @@ extension WithdrawalViewController {
     
     private func fillFeeHint(address: Address) {
         DispatchQueue.global().async { [weak self] in
-            guard let asset = AssetDAO.shared.getAsset(assetId: address.assetId) else {
+            guard let asset = AssetDAO.shared.getAsset(assetId: address.assetId), let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId) else {
                 self?.transactionFeeHintLabel.text = ""
                 self?.displayFeeHint(loading: false)
                 return
             }
 
-            let feeRepresentation = address.fee + " " + asset.symbol
+            let feeRepresentation = address.fee + " " + chainAsset.symbol
             var hint = Localized.WALLET_HINT_TRANSACTION_FEE(feeRepresentation: feeRepresentation, name: asset.name)
             var ranges = [(hint as NSString).range(of: feeRepresentation)]
-            if address.reserve.toDouble() > 0, let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId) {
+            if address.reserve.toDouble() > 0 {
                 let reserveRepresentation = address.reserve + " " + chainAsset.symbol
                 let reserveHint = Localized.WALLET_WITHDRAWAL_RESERVE(reserveRepresentation: reserveRepresentation, name: chainAsset.name)
                 let reserveRange = (reserveHint as NSString).range(of: reserveRepresentation)

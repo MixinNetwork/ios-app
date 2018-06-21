@@ -219,7 +219,7 @@
 "wallet_withdraw_amount" = "提现金额";
 "wallet_withdraw_memo" = "备注 (可选)";
 "wallet_button_add_address" = "点击添加地址";
-"wallet_hint_transaction_fee" = "需要 %@ 作为 %@ 提现手续费";
+"wallet_hint_transaction_fee" = "需要 %@ 作为 %@ 提现手续费。";
 "wallet_password_address_tips" = "确认钱包密码保护地址簿安全";
 "wallet_withdrawal_asset" = "%@ 提现";
 "wallet_withdrawal_pay_password" = "通过密码提现";

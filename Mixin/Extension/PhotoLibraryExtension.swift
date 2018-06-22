@@ -1,4 +1,5 @@
 import Photos
+import SwiftMessages
 
 extension PHPhotoLibrary {
 
@@ -29,4 +30,17 @@ extension PHPhotoLibrary {
         }
     }
 
+    static func saveImageToLibrary(image: UIImage) {
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetChangeRequest.creationRequestForAsset(from: image)
+        }, completionHandler: { (success, error) in
+            DispatchQueue.main.async {
+                if success {
+                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_SUCCESS, backgroundColor: .hintGreen)
+                } else {
+                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_FAILED, backgroundColor: .hintRed)
+                }
+            }
+        })
+    }
 }

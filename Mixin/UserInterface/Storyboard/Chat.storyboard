@@ -36,8 +36,8 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_chat_bg" translatesAutoresizingMaskIntoConstraints="NO" id="MYg-f9-MjM">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="39" sectionHeaderHeight="44" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0e-5f-Xnl" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="76" width="375" height="535.5"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="39" sectionHeaderHeight="44" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0e-5f-Xnl" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="76" width="375" height="591"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SystemMessageCell" rowHeight="54" id="GWS-fe-4Pv" customClass="SystemMessageCell" customModule="Mixin" customModuleProvider="target">
@@ -939,6 +939,7 @@
                             <constraint firstItem="6MP-pq-xci" firstAttribute="top" secondItem="y0l-2x-7bv" secondAttribute="top" priority="750" id="2nN-2w-Rhr"/>
                             <constraint firstItem="y0l-2x-7bv" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="55g-K5-CBF"/>
                             <constraint firstAttribute="bottom" secondItem="NcT-8c-Rhc" secondAttribute="bottom" id="6A0-SN-RzV"/>
+                            <constraint firstAttribute="bottom" secondItem="v0e-5f-Xnl" secondAttribute="bottom" id="7AD-Ab-ka0"/>
                             <constraint firstItem="Zve-bN-jsA" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="8Ra-zT-gjT"/>
                             <constraint firstItem="b5P-d4-dTD" firstAttribute="trailing" secondItem="6MP-pq-xci" secondAttribute="trailing" id="Avh-vb-EGW"/>
                             <constraint firstItem="MYg-f9-MjM" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" id="CQr-Zn-bzE"/>
@@ -949,7 +950,6 @@
                             <constraint firstItem="6MP-pq-xci" firstAttribute="top" secondItem="y0l-2x-7bv" secondAttribute="bottom" priority="250" id="Gru-pw-vyc"/>
                             <constraint firstItem="MYg-f9-MjM" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="HAb-RN-Wep"/>
                             <constraint firstAttribute="trailing" secondItem="MYg-f9-MjM" secondAttribute="trailing" id="Kun-1N-huo"/>
-                            <constraint firstItem="y0l-2x-7bv" firstAttribute="top" secondItem="v0e-5f-Xnl" secondAttribute="bottom" id="LaA-gs-vby"/>
                             <constraint firstAttribute="bottom" secondItem="6MP-pq-xci" secondAttribute="bottom" id="Ln1-Gg-Xdj"/>
                             <constraint firstItem="v0e-5f-Xnl" firstAttribute="top" secondItem="dsN-LV-cKL" secondAttribute="bottom" id="OwV-Gt-fkn"/>
                             <constraint firstAttribute="bottom" secondItem="rZG-cd-J6L" secondAttribute="bottom" id="QsO-2V-Rt7"/>
@@ -986,6 +986,7 @@
                         <outlet property="audioInputContainerWidthConstraint" destination="Rxf-D8-RRS" id="RVY-kA-voc"/>
                         <outlet property="avatarImageView" destination="tCB-t3-VXy" id="tSV-HN-6ST"/>
                         <outlet property="botButton" destination="Lc3-ZI-RQf" id="A9x-oK-w1g"/>
+                        <outlet property="bottomOutsideWrapperView" destination="6MP-pq-xci" id="6rZ-Vb-0CM"/>
                         <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
                         <outlet property="deleteConversationButton" destination="7To-Ye-Nmg" id="ddX-6h-ZWv"/>
                         <outlet property="dismissPanelsButton" destination="tBY-wh-HMf" id="gLk-YR-fNU"/>

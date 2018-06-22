@@ -13,6 +13,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var scrollToBottomWrapperView: UIView!
     @IBOutlet weak var scrollToBottomButton: UIButton!
     @IBOutlet weak var unreadBadgeLabel: UILabel!
+    @IBOutlet weak var bottomOutsideWrapperView: UIView!
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var botButton: UIButton!
@@ -59,6 +60,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.25
+    private let minStickerPanelHeight: CGFloat = 320
     private let stickerPanelSegueId = "StickerPanelSegueId"
     private let moreMenuSegueId = "MoreMenuSegueId"
     private let audioInputSegueId = "AudioInputSegueId"
@@ -67,7 +69,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var participants = [Participant]()
     private var role = ""
     private var asset: AssetItem?
-    private var lastInputWrapperBottomConstant: CGFloat = 0
     private var quoteMessageId: String?
     private var isShowingMenu = false
     private var isShowingStickerPanel = false
@@ -75,8 +76,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var isStickerPanelMax = false
     private var hideStatusBar = false
     private var inputWrapperShouldFollowKeyboardPosition = true
-    private var stickerPanelHalfsizedHeight: CGFloat = 320
-    private var isShowingQuoteView: Bool {
+    private var isShowingQuotePreviewView: Bool {
         return quoteMessageId != nil
     }
     
@@ -91,6 +91,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
+    private lazy var lastInputWrapperBottomConstant = bottomSafeAreaInset
+    private lazy var stickerPanelHalfsizedHeight = minStickerPanelHeight
     
     private lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController.instance(conversationId: conversationId)
@@ -176,7 +178,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         tableView.addGestureRecognizer(tapRecognizer)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         tableView.actionDelegate = self
         tableView.viewController = self
         inputTextView.delegate = self
@@ -673,22 +674,22 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
             return
         }
-        let endFrame: CGRect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        stickerPanelHalfsizedHeight = endFrame.height
-        let duration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? TimeInterval ?? animationDuration
+        guard let endFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+        stickerPanelHalfsizedHeight = max(minStickerPanelHeight, endFrame.height)
         let windowHeight = AppDelegate.current.window!.bounds.height
         inputWrapperBottomConstraint.constant = max(windowHeight - endFrame.origin.y, bottomSafeAreaInset)
         let inputWrapperDisplacement = lastInputWrapperBottomConstant - inputWrapperBottomConstraint.constant
-        let keyboardIsMovingUp = inputWrapperBottomConstraint.constant > 0
-        var shouldHideStickerPanel = false
+        let keyboardIsMovingUp = inputWrapperBottomConstraint.constant > bottomSafeAreaInset
         if isShowingStickerPanel && keyboardIsMovingUp {
             isShowingStickerPanel = false
             toggleStickerPanelSizeButton.isHidden = true
             stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_sticker"), for: .normal)
-            shouldHideStickerPanel = true
+            stickerPanelContainerView.alpha = 0
         }
         if keyboardIsMovingUp {
-            if inputTextView.hasText || isShowingQuoteView {
+            if inputTextView.hasText || isShowingQuotePreviewView {
                 sendButton.isHidden = false
             } else {
                 audioInputContainerView.isHidden = false
@@ -698,15 +699,13 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             toggleMoreMenu(delay: 0)
         }
         lastInputWrapperBottomConstant = inputWrapperBottomConstraint.constant
-        UIView.animate(withDuration: duration) {
-            UIView.setAnimationCurve(.overdamped)
-            if shouldHideStickerPanel {
-                self.stickerPanelContainerView.alpha = 0
-            }
-            if !self.isShowingQuoteView {
-                self.tableView.contentOffset.y = max(0, self.tableView.contentOffset.y - inputWrapperDisplacement)
-            }
-            self.view.layoutIfNeeded()
+        view.layoutIfNeeded()
+        let contentOffsetY = tableView.contentOffset.y
+        tableView.contentInset.bottom = bottomOutsideWrapperView.frame.height + MessageViewModel.bottomSeparatorHeight
+        tableView.scrollIndicatorInsets.bottom = bottomOutsideWrapperView.frame.height
+        let maxContentOffsetY = tableView.contentSize.height - (tableView.frame.height - tableView.contentInset.vertical)
+        if !isShowingQuotePreviewView, maxContentOffsetY > 0 {
+            tableView.contentOffset.y = min(maxContentOffsetY, max(0, contentOffsetY - inputWrapperDisplacement))
         }
     }
     
@@ -855,7 +854,7 @@ extension ConversationViewController: UITextViewDelegate {
         let maxHeight = ceil(lineHeight * CGFloat(maxInputRow) + textView.textContainerInset.top + textView.textContainerInset.bottom)
         let contentSize = textView.sizeThatFits(CGSize(width: textView.bounds.width, height: UILayoutFittingExpandedSize.height))
         inputTextView.isScrollEnabled = contentSize.height > maxHeight
-        if !trimmedMessageDraft.isEmpty || isShowingQuoteView {
+        if !trimmedMessageDraft.isEmpty || isShowingQuotePreviewView {
             sendButton.isHidden = false
             audioInputContainerView.isHidden = true
             stickerKeyboardSwitcherButton.isHidden = true
@@ -1392,14 +1391,18 @@ extension ConversationViewController {
         isStickerPanelMax = false
         toggleStickerPanelSizeButton.setImage(#imageLiteral(resourceName: "ic_chat_panel_max"), for: .normal)
         let offset = inputWrapperBottomConstraint.constant - lastInputWrapperBottomConstant
-        UIView.animate(withDuration: animationDuration, delay: delay, options: .curveEaseOut, animations: {
-            self.tableView.contentOffset.y = max(0, self.tableView.contentOffset.y + offset)
+        UIView.animate(withDuration: 0, delay: delay, options: [], animations: {
+            UIView.setAnimationCurve(.overdamped)
+            if self.tableView.contentSize.height > self.tableView.bounds.height {
+                self.tableView.contentOffset.y = max(0, self.tableView.contentOffset.y + offset)
+            }
             self.stickerPanelContainerView.alpha = newAlpha
             self.audioInputContainerView.isHidden = !self.isShowingStickerPanel
             if self.isShowingStickerPanel {
                 self.dismissPanelsButton.alpha = 0
             }
             self.view.layoutIfNeeded()
+            self.updateBottomInset()
         }) { (_) in
             self.isShowingStickerPanel = !self.isShowingStickerPanel
             self.lastInputWrapperBottomConstant = self.inputWrapperBottomConstraint.constant
@@ -1482,6 +1485,8 @@ extension ConversationViewController {
                 self?.updateAccessoryButtons(animated: false)
             }
         }
+        tableView.contentInset.bottom = bottomOutsideWrapperView.frame.height + MessageViewModel.bottomSeparatorHeight
+        tableView.scrollIndicatorInsets.bottom = bottomOutsideWrapperView.frame.height
         updateMoreMenuFixedJobs()
         updateMoreMenuApps()
         updateStrangerTipsView()

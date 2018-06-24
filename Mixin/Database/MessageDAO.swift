@@ -31,53 +31,10 @@ final class MessageDAO {
     END
     """
     private static let sqlQueryLastNMessages = """
-        SELECT * FROM (
-        SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
-        m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.album_id, m.created_at,
-        u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
-        u1.full_name as participantFullName, u1.user_id as participantUserId,
-        s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType,
-        a.symbol as assetSymbol, a.icon_url as assetIcon,
-        st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, m.action as actionName, m.shared_user_id as sharedUserId,
-        su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified
-                       FROM messages m
-                       LEFT JOIN users u ON m.user_id = u.user_id
-                       LEFT JOIN users u1 ON m.participant_id = u1.user_id
-                       LEFT JOIN snapshots s ON m.snapshot_id = s.snapshot_id
-                       LEFT JOIN assets a ON s.asset_id = a.asset_id
-                       LEFT JOIN stickers st ON m.album_id = st.album_id AND m.name = st.name
-                       LEFT JOIN users su ON m.shared_user_id = su.user_id
+        SELECT * FROM (\(sqlQueryFullMessage)
                        WHERE m.conversation_id = ?
                        ORDER BY m.created_at DESC
                        LIMIT ?)
-        ORDER BY created_at ASC
-    """
-    private static let sqlQueryMessagesByOffset = """
-        SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
-        m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.album_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
-               u1.full_name as participantFullName, u1.user_id as participantUserId,
-               s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
-               st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified
-        FROM messages m
-        LEFT JOIN users u ON m.user_id = u.user_id
-        LEFT JOIN users u1 ON m.participant_id = u1.user_id
-        LEFT JOIN snapshots s ON m.snapshot_id = s.snapshot_id
-        LEFT JOIN assets a ON s.asset_id = a.asset_id
-        LEFT JOIN stickers st ON m.album_id = st.album_id AND m.name = st.name
-        LEFT JOIN users su ON m.shared_user_id = su.user_id
-        WHERE m.conversation_id = ?
-        ORDER BY m.created_at ASC
-        LIMIT ?
-        OFFSET ?
-    """
-    private static let sqlQueryOffsetByCreatedAt = """
-        SELECT COUNT(id)
-        FROM messages
-        WHERE conversation_id = ? AND created_at < ?
         ORDER BY created_at ASC
     """
     static let sqlQueryLastUnreadMessageTime = """
@@ -90,7 +47,7 @@ final class MessageDAO {
         UPDATE messages SET status = 'READ'
         WHERE conversation_id = ? AND status == 'DELIVERED' AND user_id != ? AND created_at <= ?
     """
-    static let sqlQueryFullMessageById = """
+    static let sqlQueryFullMessage = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
@@ -105,8 +62,17 @@ final class MessageDAO {
     LEFT JOIN assets a ON s.asset_id = a.asset_id
     LEFT JOIN stickers st ON m.album_id = st.album_id AND m.name = st.name
     LEFT JOIN users su ON m.shared_user_id = su.user_id
-    WHERE m.id = ?
+
     """
+    static let sqlQueryFullMessageBeforeCreatedAt = """
+    SELECT * FROM (\(sqlQueryFullMessage)
+                    WHERE m.conversation_id = ? AND m.created_at < ?
+                    ORDER BY m.created_at DESC
+                    LIMIT ?)
+    ORDER BY created_at ASC
+    """
+    static let sqlQueryFullMessageAfterCreatedAt = sqlQueryFullMessage + "WHERE m.conversation_id = ? AND m.created_at > ? LIMIT ?"
+    static let sqlQueryFullMessageById = sqlQueryFullMessage + "WHERE m.id = ?"
     private static let sqlQueryMessageSync = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
@@ -289,33 +255,28 @@ final class MessageDAO {
                                                orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)],
                                                inTransaction: false)
     }
-
-    func getOffset(conversationId: String, messageId: String) -> Int? {
-        guard let createdAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt, fromTable: Message.tableName, condition: Message.Properties.messageId == messageId, inTransaction: false)?.stringValue else {
-            return nil
-        }
-
-        guard let result = MixinDatabase.shared.scalar(on: Message.Properties.messageId.count(), fromTable: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt < createdAt, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)?.int32Value else {
-            return nil
-        }
-        return Int(result)
-    }
-
-    func getMessages(conversationId: String, location: Int, count: Int) -> [MessageItem] {
-        guard !conversationId.isEmpty else {
+    
+    func getMessages(conversationId: String, aroundMessageId messageId: String, count: Int) -> [MessageItem] {
+        guard let message = getFullMessage(messageId: messageId) else {
             return []
         }
-        let values: [ColumnEncodableBase]
-        if count < 0 {
-            if location + count >= 0 {
-                values = [conversationId, -count, location + count]
-            } else {
-                values = [conversationId, location, 0]
-            }
-        } else {
-            values = [conversationId, count, location]
-        }
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryMessagesByOffset, values: values, inTransaction: false)
+        let messagesAbove = getMessages(conversationId: conversationId, aboveMessage: message, count: count / 2)
+        let messagesBelow = getMessages(conversationId: conversationId, belowMessage: message, count: count / 2)
+        var messages = [MessageItem]()
+        messages.append(contentsOf: messagesAbove)
+        messages.append(message)
+        messages.append(contentsOf: messagesBelow)
+        return messages
+    }
+    
+    func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeCreatedAt,
+                                                values: [conversationId, location.createdAt, count])
+    }
+    
+    func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterCreatedAt,
+                                                values: [conversationId, location.createdAt, count])
     }
 
     func getLastNMessages(conversationId: String, count: Int) -> [MessageItem] {

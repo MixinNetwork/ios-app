@@ -11,7 +11,7 @@ extension UIImage {
         return data?.base64EncodedString()
     }
 
-    convenience init?(qrcode: String, size: CGFloat, foregroundColor: UIColor? = nil) {
+    convenience init?(qrcode: String, size: CGSize, foregroundColor: UIColor? = nil) {
         guard let filter = CIFilter(name: "CIQRCodeGenerator"), !qrcode.isEmpty else {
             return nil
         }
@@ -34,29 +34,13 @@ extension UIImage {
             outputImage = filter.outputImage
         }
 
-        if let outputImage = outputImage {
-            let extent = outputImage.extent
-            let scale = min(size / extent.width, size / extent.height)
-            let width = size_t(size)
-            let height = size_t(size)
-            UIGraphicsBeginImageContext(CGSize(width: width, height: height))
-            defer {
-                UIGraphicsEndImageContext()
-            }
-            if let bitmapContextRef = UIGraphicsGetCurrentContext() {
-                let context = CIContext(options: nil)
-                if let bitmapImage = context.createCGImage(outputImage, from: extent) {
-                    bitmapContextRef.interpolationQuality = .none
-                    bitmapContextRef.scaleBy(x: scale, y: scale)
-                    bitmapContextRef.draw(bitmapImage, in: extent)
-                    if let targetImage = bitmapContextRef.makeImage() {
-                        self.init(cgImage: targetImage)
-                        return
-                    }
-                }
-            }
+        if let ciImage = outputImage {
+            let transform = CGAffineTransform(scaleX: size.width * UIScreen.main.scale / ciImage.extent.width,
+                                              y: size.height * UIScreen.main.scale / ciImage.extent.height)
+            self.init(ciImage: ciImage.transformed(by: transform))
+        } else {
+            return nil
         }
-        return nil
     }
 
     convenience init?(withFirstFrameOfVideoAtAsset asset: AVAsset) {

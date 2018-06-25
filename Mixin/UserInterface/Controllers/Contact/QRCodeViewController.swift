@@ -25,7 +25,7 @@ class QRCodeViewController: UIViewController {
         switch content {
         case .me:
             if let account = AccountAPI.shared.account {
-                qrcodeImageView.image = UIImage(qrcode: account.code_url, size: qrcodeImageView.frame.width)
+                qrcodeImageView.image = UIImage(qrcode: account.code_url, size: qrcodeImageView.frame.size)
                 avatarImageView.setImage(with: account)
                 qrcodeAvatarImageView.setImage(with: account)
                 fullNameLabel.text = account.full_name
@@ -34,7 +34,7 @@ class QRCodeViewController: UIViewController {
             promptLabel.text = Localized.MYQRCODE_PROMPT
         case .group(let conversation):
             if let url = conversation.codeUrl {
-                qrcodeImageView.image = UIImage(qrcode: url, size: qrcodeImageView.frame.width)
+                qrcodeImageView.image = UIImage(qrcode: url, size: qrcodeImageView.frame.size)
             }
             avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
             qrcodeAvatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)

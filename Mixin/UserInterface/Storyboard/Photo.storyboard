@@ -114,6 +114,12 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_album_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="tDr-gS-LpT">
                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="30"/>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nsq-ak-fcP">
+                                                    <rect key="frame" x="4" y="11.5" width="19.5" height="14.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_album_video" translatesAutoresizingMaskIntoConstraints="NO" id="A80-EF-8hJ">
                                                     <rect key="frame" x="6" y="14" width="16" height="10"/>
                                                 </imageView>
@@ -128,12 +134,14 @@
                                             <constraints>
                                                 <constraint firstItem="tDr-gS-LpT" firstAttribute="top" secondItem="pIt-rG-UGf" secondAttribute="top" id="3bL-z1-m8R"/>
                                                 <constraint firstAttribute="bottom" secondItem="AQb-OG-IbI" secondAttribute="bottom" constant="4" id="4FS-2Q-og2"/>
+                                                <constraint firstAttribute="bottom" secondItem="Nsq-ak-fcP" secondAttribute="bottom" constant="4" id="O3o-i6-Fxf"/>
                                                 <constraint firstAttribute="trailing" secondItem="AQb-OG-IbI" secondAttribute="trailing" constant="4" id="Pu9-e6-edV"/>
                                                 <constraint firstAttribute="trailing" secondItem="tDr-gS-LpT" secondAttribute="trailing" id="Sde-nb-YFE"/>
                                                 <constraint firstItem="tDr-gS-LpT" firstAttribute="leading" secondItem="pIt-rG-UGf" secondAttribute="leading" id="gFX-AZ-vkR"/>
                                                 <constraint firstItem="A80-EF-8hJ" firstAttribute="leading" secondItem="pIt-rG-UGf" secondAttribute="leading" constant="6" id="kr5-9K-412"/>
                                                 <constraint firstAttribute="bottom" secondItem="A80-EF-8hJ" secondAttribute="bottom" constant="6" id="lKa-os-ten"/>
                                                 <constraint firstAttribute="bottom" secondItem="tDr-gS-LpT" secondAttribute="bottom" id="oVy-5X-hHH"/>
+                                                <constraint firstItem="Nsq-ak-fcP" firstAttribute="leading" secondItem="pIt-rG-UGf" secondAttribute="leading" constant="4" id="za8-sT-Q8Q"/>
                                             </constraints>
                                         </view>
                                     </subviews>
@@ -149,8 +157,10 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="durationLabel" destination="AQb-OG-IbI" id="cvs-5U-v4G"/>
+                                    <outlet property="fileTypeView" destination="pIt-rG-UGf" id="BXh-fe-q94"/>
+                                    <outlet property="gifLabel" destination="Nsq-ak-fcP" id="HrM-5E-8Ze"/>
                                     <outlet property="thumbImageView" destination="dMN-6Y-1RV" id="3e6-rk-RB8"/>
-                                    <outlet property="videoTypeView" destination="pIt-rG-UGf" id="BXh-fe-q94"/>
+                                    <outlet property="videoImageView" destination="A80-EF-8hJ" id="Isk-UD-bWk"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

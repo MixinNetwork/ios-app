@@ -856,6 +856,17 @@
                                                     <action selector="unblockAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="y67-bi-Qm4"/>
                                                 </connections>
                                             </button>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7To-Ye-Nmg" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="55.5"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Delete Chat"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_menu_delete"/>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="deleteConversationAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="cI6-ba-c3H"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -863,10 +874,14 @@
                                             <constraint firstAttribute="trailing" secondItem="IAk-sA-T54" secondAttribute="trailing" id="3Az-Iq-BhQ"/>
                                             <constraint firstAttribute="bottom" secondItem="IAk-sA-T54" secondAttribute="bottom" id="3h6-I7-8TH"/>
                                             <constraint firstItem="bTL-3p-VYH" firstAttribute="leading" secondItem="rZG-cd-J6L" secondAttribute="leading" id="5ht-ml-QOW"/>
+                                            <constraint firstItem="7To-Ye-Nmg" firstAttribute="top" secondItem="rZG-cd-J6L" secondAttribute="top" id="7Ow-4z-iP7"/>
                                             <constraint firstAttribute="trailing" secondItem="bTL-3p-VYH" secondAttribute="trailing" id="88L-XX-uah"/>
                                             <constraint firstItem="IAk-sA-T54" firstAttribute="leading" secondItem="rZG-cd-J6L" secondAttribute="leading" id="MfN-iA-vBs"/>
+                                            <constraint firstItem="7To-Ye-Nmg" firstAttribute="leading" secondItem="rZG-cd-J6L" secondAttribute="leading" id="Qqh-YT-hgn"/>
                                             <constraint firstAttribute="bottom" secondItem="bTL-3p-VYH" secondAttribute="bottom" id="XLI-k4-V2x"/>
                                             <constraint firstItem="bTL-3p-VYH" firstAttribute="top" secondItem="rZG-cd-J6L" secondAttribute="top" id="aZS-FP-1oP"/>
+                                            <constraint firstAttribute="trailing" secondItem="7To-Ye-Nmg" secondAttribute="trailing" id="tvg-fe-Ytp"/>
+                                            <constraint firstAttribute="bottom" secondItem="7To-Ye-Nmg" secondAttribute="bottom" id="tww-7L-Ara"/>
                                         </constraints>
                                     </view>
                                     <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OCN-L0-tlY">
@@ -959,6 +974,7 @@
                         <outlet property="avatarImageView" destination="tCB-t3-VXy" id="tSV-HN-6ST"/>
                         <outlet property="botButton" destination="Lc3-ZI-RQf" id="A9x-oK-w1g"/>
                         <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
+                        <outlet property="deleteConversationButton" destination="7To-Ye-Nmg" id="ddX-6h-ZWv"/>
                         <outlet property="dismissPanelsButton" destination="tBY-wh-HMf" id="gLk-YR-fNU"/>
                         <outlet property="galleryWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
                         <outlet property="inputTextView" destination="LmC-o2-ndc" id="oTt-5n-LgP"/>

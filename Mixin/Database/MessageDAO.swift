@@ -30,13 +30,6 @@ final class MessageDAO {
         UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = old.conversation_id) where conversation_id = old.conversation_id;
     END
     """
-    private static let sqlQueryLastNMessages = """
-        SELECT * FROM (\(sqlQueryFullMessage)
-                       WHERE m.conversation_id = ?
-                       ORDER BY m.created_at DESC
-                       LIMIT ?)
-        ORDER BY created_at ASC
-    """
     static let sqlQueryLastUnreadMessageTime = """
         SELECT created_at FROM messages
         WHERE conversation_id = ? AND status = 'DELIVERED' AND user_id != ?
@@ -62,17 +55,25 @@ final class MessageDAO {
     LEFT JOIN assets a ON s.asset_id = a.asset_id
     LEFT JOIN stickers st ON m.album_id = st.album_id AND m.name = st.name
     LEFT JOIN users su ON m.shared_user_id = su.user_id
-
+    """
+    private static let sqlQueryLastNMessages = """
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ?
+    ORDER BY m.created_at DESC
+    LIMIT ?
     """
     static let sqlQueryFullMessageBeforeCreatedAt = """
-    SELECT * FROM (\(sqlQueryFullMessage)
-                    WHERE m.conversation_id = ? AND m.created_at < ?
-                    ORDER BY m.created_at DESC
-                    LIMIT ?)
-    ORDER BY created_at ASC
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ? AND m.created_at < ?
+    ORDER BY m.created_at DESC
+    LIMIT ?
     """
-    static let sqlQueryFullMessageAfterCreatedAt = sqlQueryFullMessage + "WHERE m.conversation_id = ? AND m.created_at > ? LIMIT ?"
-    static let sqlQueryFullMessageById = sqlQueryFullMessage + "WHERE m.id = ?"
+    static let sqlQueryFullMessageAfterCreatedAt = """
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ? AND m.created_at > ?
+    LIMIT ?
+    """
+    static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
     private static let sqlQueryMessageSync = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
@@ -270,8 +271,8 @@ final class MessageDAO {
     }
     
     func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeCreatedAt,
-                                                values: [conversationId, location.createdAt, count])
+        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeCreatedAt, values: [conversationId, location.createdAt, count])
+        return messages.reversed()
     }
     
     func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
@@ -280,8 +281,8 @@ final class MessageDAO {
     }
 
     func getLastNMessages(conversationId: String, count: Int) -> [MessageItem] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values:
-            [conversationId, count], inTransaction: false)
+        let messages: [MessageItem] =  MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values: [conversationId, count], inTransaction: false)
+        return messages.reversed()
     }
     
     func getUnreadMessagesCount(conversationId: String) -> Int {

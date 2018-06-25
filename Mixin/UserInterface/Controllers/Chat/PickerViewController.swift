@@ -1,25 +1,17 @@
 import UIKit
 import Photos
 
-protocol PickerViewControllerDelegate: class {
-
-    func pickerController(_ picker: PickerViewController, didFinishPickingMediaWithAsset asset: PHAsset)
-}
-
 class PickerViewController: UICollectionViewController, MixinNavigationAnimating {
 
-    private var type: PHAssetCollectionType!
-    private var subtype: PHAssetCollectionSubtype!
     private var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
         options.deliveryMode = .opportunistic
         options.resizeMode = .fast
         return options
     }()
-    private lazy var defaultCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil)
-    private lazy var currentCollection = defaultCollection.firstObject
-
-    private var assets = PHFetchResult<PHAsset>()
+    private var collection: PHAssetCollection?
+    private var assets: PHFetchResult<PHAsset>!
+    
     private lazy var itemSize: CGSize = {
         let rowCount = floor(UIScreen.main.bounds.size.width / 90)
         let itemWidth = (UIScreen.main.bounds.size.width - rowCount * 1) / rowCount
@@ -27,12 +19,17 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
     }()
     private var scrollToBottom = false
 
-    weak var delegate: PickerViewControllerDelegate?
-
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.rightButton.isEnabled = true
-        reloadAssets()
+        if let collection = collection {
+            let options = PHFetchOptions()
+            options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            assets = PHAsset.fetchAssets(in: collection, options: options)
+        } else {
+            assets = PHFetchResult<PHAsset>()
+        }
+        collectionView?.reloadData()
     }
 
     override func viewDidLayoutSubviews() {
@@ -42,24 +39,14 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
             collectionView?.scrollToItem(at: IndexPath(row: assets.count - 1, section: 0), at: .bottom, animated: false)
         }
     }
-
-    private func reloadAssets() {
-        defer {
-            collectionView?.reloadData()
-        }
-        guard let collection = currentCollection else {
-            self.assets = PHFetchResult<PHAsset>()
-            return
-        }
-        let options = PHFetchOptions()
-        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        self.assets = PHAsset.fetchAssets(in: collection, options: options)
-    }
-
-    class func instance() -> PickerViewController {
+    
+    class func instance(collection: PHAssetCollection? = nil) -> UIViewController {
         let vc = Storyboard.photo.instantiateViewController(withIdentifier: "picker") as! PickerViewController
-        vc.type = .smartAlbum
-        vc.subtype = .smartAlbumUserLibrary
+        if let collection = collection {
+            vc.collection = collection
+        } else {
+            vc.collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject
+        }
         return vc
     }
 
@@ -68,9 +55,7 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
 extension PickerViewController: ContainerViewControllerDelegate {
 
     func barLeftButtonTappedAction() {
-        let vc = Storyboard.photo.instantiateViewController(withIdentifier: "album") as! AlbumViewController
-        vc.delegate = self
-        navigationController?.pushViewController(ContainerViewController.instance(viewController: vc, title: Localized.IMAGE_PICKER_TITLE_ALBUMS), animated: true)
+        navigationController?.popViewController(animated: true)
     }
 
     func textBarRightButton() -> String? {
@@ -78,18 +63,9 @@ extension PickerViewController: ContainerViewControllerDelegate {
     }
 
     func barRightButtonTappedAction() {
-        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
-}
-
-extension PickerViewController: AlbumViewControllerDelegate {
-
-    func albumController(_ albumController: AlbumViewController, didSelectRowAtCollection collection: PHAssetCollection, title: String) {
-        self.currentCollection = collection
-        self.container?.titleLabel.text = title
-        self.scrollToBottom = false
-        self.reloadAssets()
-    }
+    
 }
 
 extension PickerViewController: UICollectionViewDelegateFlowLayout {
@@ -123,9 +99,10 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        navigationController?.popViewController(animated: true)
-        delegate?.pickerController(self, didFinishPickingMediaWithAsset: assets[indexPath.row])
+        navigationController?.dismiss(animated: true, completion: nil)
+        (navigationController as? PhotoAssetPickerNavigationController)?.pickerDelegate?.pickerController(self, didFinishPickingMediaWithAsset: assets[indexPath.row])
     }
+    
 }
 
 class PickerCell: UICollectionViewCell {

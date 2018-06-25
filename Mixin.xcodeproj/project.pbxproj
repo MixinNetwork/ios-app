@@ -50,6 +50,7 @@
 		27FE22B81FC70399006F2AA5 /* SignalKeyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FE22B71FC70399006F2AA5 /* SignalKeyAPI.swift */; };
 		7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B075CCE1FC0A98B005315A2 /* ConversationTableView.swift */; };
 		7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B075CD01FC0B268005315A2 /* MessageCell.swift */; };
+		7B09664620E0B018007DC179 /* PhotoAssetPickerNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B09664520E0B018007DC179 /* PhotoAssetPickerNavigationController.swift */; };
 		7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B09E5571FD1264C002E45D3 /* TextMessageLabel.swift */; };
 		7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */; };
 		7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */; };
@@ -563,6 +564,7 @@
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		7B075CCE1FC0A98B005315A2 /* ConversationTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableView.swift; sourceTree = "<group>"; };
 		7B075CD01FC0B268005315A2 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		7B09664520E0B018007DC179 /* PhotoAssetPickerNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAssetPickerNavigationController.swift; sourceTree = "<group>"; };
 		7B09E5571FD1264C002E45D3 /* TextMessageLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageLabel.swift; sourceTree = "<group>"; };
 		7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 		7B09E55B1FD15B9B002E45D3 /* PhotoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1345,6 +1347,7 @@
 				7BF374A62063951E008A166B /* GalleryItemViewController.swift */,
 				DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */,
 				DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */,
+				7B09664520E0B018007DC179 /* PhotoAssetPickerNavigationController.swift */,
 				DF1ED8D820BBECFF003E10E8 /* AlbumViewController.swift */,
 				DF1ED8DA20BBED24003E10E8 /* PickerViewController.swift */,
 				7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */,
@@ -2373,6 +2376,7 @@
 				7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */,
 				7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */,
 				DFE356B31FB498D600E0E3A8 /* PhoneContactAPI.swift in Sources */,
+				7B09664620E0B018007DC179 /* PhotoAssetPickerNavigationController.swift in Sources */,
 				DF6ED3EE1FE37D0400E958A3 /* ConcurrentJobQueue.swift in Sources */,
 				DFEEE6F11FE14F44001CCFB5 /* RelationshipRequest.swift in Sources */,
 				DF1A9A801FF25DB600A95188 /* ShowNotificationJob.swift in Sources */,

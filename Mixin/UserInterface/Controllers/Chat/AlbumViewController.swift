@@ -1,47 +1,42 @@
 import UIKit
 import Photos
 
-protocol AlbumViewControllerDelegate: class {
-
-    func albumController(_ albumController: AlbumViewController, didSelectRowAtCollection collection: PHAssetCollection, title: String)
-}
-
 class AlbumViewController: UITableViewController {
 
     private var allAlbums = [Album]()
-    private var toPickerVC = false
-
-    weak var delegate: AlbumViewControllerDelegate?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
+    
+    override func didMove(toParentViewController parent: UIViewController?) {
+        super.didMove(toParentViewController: parent)
         container?.leftButton.setImage(#imageLiteral(resourceName: "ic_titlebar_close"), for: .normal)
-        fetchData()
     }
-
-    private func fetchData() {
-        var allAlbums = [Album?]()
-        if let cameraRollAlbum = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
-            allAlbums.append(Album(collection: cameraRollAlbum, isCameraRoll: true))
-        }
-        PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil).enumerateObjects { (collection, _, _) in
-            allAlbums.append(Album(collection: collection))
-        }
-        PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil).enumerateObjects { (collection, _, _) in
-            allAlbums.append(Album(collection: collection))
-        }
-        self.allAlbums = allAlbums.flatMap { $0 }.sorted(by: { (preAlbum, nextAlbum) -> Bool in
-            guard preAlbum.order == nextAlbum.order else {
-                return preAlbum.order > nextAlbum.order
+    
+    private func loadAlbums() {
+        DispatchQueue.global().async {
+            var allAlbums = [Album?]()
+            if let cameraRollAlbum = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
+                allAlbums.append(Album(collection: cameraRollAlbum, isCameraRoll: true))
             }
-            return preAlbum.title.compare(nextAlbum.title) == .orderedAscending
-        })
-        self.tableView.reloadData()
+            PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil).enumerateObjects { (collection, _, _) in
+                allAlbums.append(Album(collection: collection))
+            }
+            PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil).enumerateObjects { (collection, _, _) in
+                allAlbums.append(Album(collection: collection))
+            }
+            self.allAlbums = allAlbums.flatMap { $0 }.sorted(by: { (preAlbum, nextAlbum) -> Bool in
+                guard preAlbum.order == nextAlbum.order else {
+                    return preAlbum.order > nextAlbum.order
+                }
+                return preAlbum.title.compare(nextAlbum.title) == .orderedAscending
+            })
+            DispatchQueue.main.sync {
+                self.tableView?.reloadData()
+            }
+        }
     }
 
     class func instance() -> UIViewController {
         let vc = Storyboard.photo.instantiateViewController(withIdentifier: "album") as! AlbumViewController
+        vc.loadAlbums()
         return ContainerViewController.instance(viewController: vc, title: Localized.IMAGE_PICKER_TITLE_ALBUMS)
     }
 
@@ -50,25 +45,11 @@ class AlbumViewController: UITableViewController {
 extension AlbumViewController: ContainerViewControllerDelegate {
 
     func barLeftButtonTappedAction() {
-        guard let nav = self.navigationController else {
-            return
-        }
-        var viewControllers = nav.viewControllers
-        viewControllers.removeLast()
-        viewControllers.removeLast()
-        nav.setViewControllers(viewControllers, animated: true)
+        navigationController?.dismiss(animated: true, completion: nil)
     }
-
-}
-
-extension AlbumViewController: MixinNavigationAnimating {
-
-    var pushAnimation: MixinNavigationPushAnimation {
-        return .reversedPush
-    }
-
-    var popAnimation: MixinNavigationPopAnimation {
-        return toPickerVC ? .reversedPop : .dismiss
+    
+    func textBarRightButton() -> String? {
+        return nil
     }
 
 }
@@ -97,9 +78,9 @@ extension AlbumViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let album = allAlbums[indexPath.row]
-        delegate?.albumController(self, didSelectRowAtCollection: album.assetCollection, title: album.title)
-        toPickerVC = true
-        navigationController?.popViewController(animated: true)
+        let pickerViewController = PickerViewController.instance(collection: album.assetCollection)
+        let vc = ContainerViewController.instance(viewController: pickerViewController, title: album.title)
+        navigationController?.pushViewController(vc, animated: true)
     }
 
 }

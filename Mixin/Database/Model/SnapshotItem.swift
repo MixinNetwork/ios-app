@@ -9,10 +9,10 @@ struct SnapshotItem: TableCodable {
     let amount: String
     let transactionHash: String?
     let sender: String?
-    let counterUserId: String?
+    let opponentId: String?
 
     let createdAt: String
-    let counterUserFullName: String?
+    let opponentUserFullName: String?
     let receiver: String?
 
     let memo: String?
@@ -24,11 +24,11 @@ struct SnapshotItem: TableCodable {
         case assetId = "asset_id"
         case assetSymbol
         case amount
-        case counterUserId = "counter_user_id"
+        case opponentId = "opponent_id"
         case transactionHash = "transaction_hash"
         case sender
         case createdAt = "created_at"
-        case counterUserFullName
+        case opponentUserFullName
         case receiver
         case memo
 

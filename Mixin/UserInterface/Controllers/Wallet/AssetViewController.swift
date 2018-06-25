@@ -52,9 +52,9 @@ class AssetViewController: UITableViewController {
 
             let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId)
             let userIds: [String] = snapshots.filter({ (snapshot) -> Bool in
-                return snapshot.counterUserFullName == nil && snapshot.counterUserId != nil
+                return snapshot.opponentUserFullName == nil && snapshot.opponentId != nil
             }).flatMap({ (snapshot) -> String in
-                return snapshot.counterUserId!
+                return snapshot.opponentId!
             })
             if userIds.count > 0 {
                 for userId in userIds {

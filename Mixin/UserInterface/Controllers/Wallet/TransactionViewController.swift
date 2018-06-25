@@ -78,7 +78,7 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
                     cell.render(title: Localized.TRANSACTION_SENDER, value: snapshot.sender ?? "")
                 case SnapshotType.transfer.rawValue:
                     if snapshot.amount.toDouble() > 0 {
-                        cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: snapshot.counterUserFullName ?? "")
+                        cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: snapshot.opponentUserFullName ?? "")
                     } else {
                         cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: AccountAPI.shared.account?.full_name ?? "")
                     }
@@ -95,7 +95,7 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
                     if snapshot.amount.toDouble() > 0 {
                         cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: AccountAPI.shared.account?.full_name ?? "")
                     } else {
-                        cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: snapshot.counterUserFullName ?? "")
+                        cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: snapshot.opponentUserFullName ?? "")
                     }
                 case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
                     cell.render(title: Localized.TRANSACTION_RECEIVER, value: snapshot.receiver ?? "")
@@ -122,9 +122,9 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
 
         var transferUserId: String?
         if indexPath.row == 3  && snapshot.amount.toDouble() > 0 {
-            transferUserId = snapshot.counterUserId
+            transferUserId = snapshot.opponentId
         } else if indexPath.row == 4 && snapshot.amount.toDouble() < 0 {
-            transferUserId = snapshot.counterUserId
+            transferUserId = snapshot.opponentId
         }
 
         guard let userId = transferUserId, !userId.isEmpty else {

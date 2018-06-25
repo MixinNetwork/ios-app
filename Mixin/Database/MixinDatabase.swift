@@ -3,7 +3,7 @@ import Bugsnag
 
 class MixinDatabase: BaseDatabase {
 
-    private static let databaseVersion: Int = 3
+    private static let databaseVersion: Int = 4
 
     static let shared = MixinDatabase()
 
@@ -14,8 +14,12 @@ class MixinDatabase: BaseDatabase {
     }
 
     private func upgrade(database: Database) throws {
-        guard DatabaseUserDefault.shared.mixinDatabaseVersion < 3 && DatabaseUserDefault.shared.mixinDatabaseVersion > 0 else {
+        guard DatabaseUserDefault.shared.mixinDatabaseVersion < 4 && DatabaseUserDefault.shared.mixinDatabaseVersion > 0 else {
             return
+        }
+
+        if try database.isColumnExist(tableName: Snapshot.tableName, columnName: "counter_user_id") {
+            try database.prepareUpdateSQL(sql: "UPDATE snapshots SET opponent_id = counter_user_id").execute()
         }
     }
 
@@ -53,10 +57,10 @@ class MixinDatabase: BaseDatabase {
 
                 DatabaseUserDefault.shared.mixinDatabaseVersion = MixinDatabase.databaseVersion
             })
-            #if DEBUG
-                print("======MixinDatabase...configure...success...")
-            #endif
         } catch {
+            #if DEBUG
+                print("======MixinDatabase...configure...error:\(error)")
+            #endif
             Bugsnag.notifyError(error)
         }
     }

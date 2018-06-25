@@ -25,11 +25,11 @@ class SnapshotCell: UITableViewCell {
             let amount = snapshot.amount.toDouble()
             if amount > 0 {
                 amountLabel.textColor = .walletGreen
-                detailLabel.text = Localized.WALLET_SNAPSHOT_FROM(fullName: snapshot.counterUserFullName ?? "")
+                detailLabel.text = Localized.WALLET_SNAPSHOT_FROM(fullName: snapshot.opponentUserFullName ?? "")
                 amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
             } else {
                 amountLabel.textColor = .walletRed
-                detailLabel.text = Localized.WALLET_SNAPSHOT_TO(fullName: snapshot.counterUserFullName ?? "")
+                detailLabel.text = Localized.WALLET_SNAPSHOT_TO(fullName: snapshot.opponentUserFullName ?? "")
                 amountLabel.text = "\(snapshot.amount.formatFullBalance()) \(symbol)"
             }
         case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue:

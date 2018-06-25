@@ -487,8 +487,8 @@ extension ReceiveMessageService {
             return
         }
 
-        if let counterUserId = snapshot.counterUserId {
-            checkUser(userId: counterUserId, tryAgain: true)
+        if let opponentId = snapshot.opponentId {
+            checkUser(userId: opponentId, tryAgain: true)
         }
 
         switch AssetAPI.shared.asset(assetId: snapshot.assetId) {

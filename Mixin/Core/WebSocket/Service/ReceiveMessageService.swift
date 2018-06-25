@@ -171,7 +171,7 @@ class ReceiveMessageService: MixinService {
     }
 
     private func trackDecryptFailed(data: BlazeMessageData, dataHeader: SignalProtocol.ComposeMessageData, error: Error) {
-        guard data.category == MessageCategory.SIGNAL_KEY.rawValue, let signalError = error as? SignalError, signalError != .noSession else {
+        guard let signalError = error as? SignalError, signalError != .noSession else {
             return
         }
         let errorInfo = "\(error)"

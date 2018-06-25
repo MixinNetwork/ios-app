@@ -110,22 +110,11 @@ extension UIImage {
     }
 
     func scaledToSticker() -> UIImage {
-        let minWH: CGFloat = 180
         let maxWH: CGFloat = 360
-        var targetRect = CGRect.zero
-
-        if size.width < minWH && size.height < minWH {
-            targetRect = AVMakeRect(aspectRatio: size, insideRect: CGRect(x: 0, y: 0, width: minWH, height: minWH))
-        } else if size.width > maxWH || size.height > maxWH {
-            targetRect = AVMakeRect(aspectRatio: size, insideRect: CGRect(x: 0, y: 0, width: maxWH, height: maxWH))
-        } else {
-            return self
-        } 
-        UIGraphicsBeginImageContext(targetRect.size)
-        draw(in: targetRect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage!
+        let scale = CGFloat(size.width) / CGFloat(size.height)
+        let targetWidth: CGFloat = size.width > size.height ? maxWH : maxWH * scale
+        let targetHeight: CGFloat = size.width > size.height ? maxWH / scale : maxWH
+        return scaledToSize(newSize: CGSize(width: targetWidth, height: targetHeight))
     }
 
     func scaledToSize(newSize: CGSize) -> UIImage {

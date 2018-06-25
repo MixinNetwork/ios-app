@@ -22,6 +22,10 @@ class StickerManagerViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchStickers()
+
+        NotificationCenter.default.addObserver(forName: .StickerDidChange, object: nil, queue: .main) { [weak self] (_) in
+            self?.fetchStickers()
+        }
     }
 
     private func fetchStickers() {
@@ -30,6 +34,7 @@ class StickerManagerViewController: UICollectionViewController {
             DispatchQueue.main.async {
                 self?.stickers = stickers
                 self?.collectionView?.reloadData()
+                self?.container?.rightButton.isEnabled = stickers.count > 0
             }
         }
     }
@@ -52,6 +57,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         if isDeleteStickers {
             guard !(container?.rightButton.isBusy ?? true), let selectionCells = collectionView?.indexPathsForSelectedItems, selectionCells.count > 0 else {
+                isDeleteStickers = false
                 return
             }
             container?.rightButton.isBusy = true
@@ -70,11 +76,11 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                 weakSelf.container?.rightButton.isBusy = false
                 switch result {
                 case .success:
+                    StickerDAO.shared.removeStickers(stickerIds: stickerIds)
                     weakSelf.container?.rightButton.setTitle(Localized.ACTION_REMOVE, for: .normal)
                     weakSelf.isDeleteStickers = !weakSelf.isDeleteStickers
                     weakSelf.collectionView?.allowsMultipleSelection = false
-                    weakSelf.collectionView?.deleteItems(at: selectionCells)
-                    weakSelf.isDeleteStickers = !weakSelf.isDeleteStickers
+                    weakSelf.fetchStickers()
                 case .failure:
                     NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.STICKER_REMOVE_FAILED)
                 }

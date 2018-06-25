@@ -101,7 +101,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
 
         DispatchQueue.global().async { [weak self] in
             if let assetUrl = self?.animateURL {
-                guard FileManager.default.fileSize(assetUrl.path) > 0 else {
+                guard FileManager.default.validateFileSize(assetUrl.path) else {
                     failedBlock()
                     return
                 }
@@ -122,7 +122,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 let filename = "\(UUID().uuidString.lowercased()).\(ExtensionName.jpeg)"
                 let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
                 let targetPhoto = image.scaledToSticker()
-                if targetPhoto.saveToFile(path: targetUrl), let stickerBase64 = targetPhoto.base64, FileManager.default.fileSize(targetUrl.path) > 0 {
+                if targetPhoto.saveToFile(path: targetUrl), let stickerBase64 = targetPhoto.base64, FileManager.default.validateFileSize(targetUrl.path) {
                     addBloack(stickerBase64)
                 } else {
                     failedBlock()
@@ -133,6 +133,15 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
 
     func textBarRightButton() -> String? {
         return Localized.ACTION_SAVE
+    }
+
+}
+
+private extension FileManager {
+
+    func validateFileSize(_ path: String) -> Bool {
+        let size = fileSize(path)
+        return size > 1024 && size < 1024 * 1024
     }
 
 }

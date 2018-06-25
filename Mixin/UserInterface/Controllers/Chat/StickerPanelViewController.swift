@@ -26,6 +26,18 @@ class StickerPanelViewController: UIViewController {
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
         pagesScrollView.delegate = self
+
+        NotificationCenter.default.addObserver(forName: .StickerDidChange, object: nil, queue: .main) { [weak self] (_) in
+            DispatchQueue.global().async {
+                let stickers = StickerDAO.shared.getFavoriteStickers()
+                DispatchQueue.main.async {
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    weakSelf.pages[1].reload(stickers: stickers)
+                }
+            }
+        }
     }
     
     func reloadRecentPage() {

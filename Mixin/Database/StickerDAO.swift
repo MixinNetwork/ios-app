@@ -8,8 +8,14 @@ final class StickerDAO {
         return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.stickerId == stickerId, inTransaction: false)
     }
 
-    func isExist(albumId: String, name: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.albumId == albumId && Sticker.Properties.name == name, inTransaction: false)
+    func removeStickers(stickerIds: [String]) {
+        MixinDatabase.shared.delete(table: Sticker.tableName, condition: Sticker.Properties.stickerId.in(stickerIds))
+
+        NotificationCenter.default.afterPostOnMain(name: .StickerDidChange)
+    }
+
+    func getSticker(albumId: String, name: String) -> Sticker? {
+        return MixinDatabase.shared.getCodable(condition: Sticker.Properties.albumId == albumId && Sticker.Properties.name == name)
     }
 
     func getStickers(albumId: String) -> [Sticker] {
@@ -17,10 +23,10 @@ final class StickerDAO {
     }
 
     func getFavoriteStickers() -> [Sticker] {
-//        guard let albumnId = MixinDatabase.shared.scalar(on: StickerAlbum.Properties.albumId, fromTable: StickerAlbum.tableName, condition: StickerAlbum.Properties.category == AlbumCategory.FAVORITE.rawValue, inTransaction: false)?.stringValue, !albumnId.isEmpty else {
-//            return []
-//        }
-        return getStickers(albumId: "36a361eb-943d-4e34-ac3e-d327d7b9be57")
+        guard let albumnId = MixinDatabase.shared.scalar(on: StickerAlbum.Properties.albumId, fromTable: StickerAlbum.tableName, condition: StickerAlbum.Properties.category == AlbumCategory.PERSONAL.rawValue, inTransaction: false)?.stringValue, !albumnId.isEmpty else {
+            return []
+        }
+        return getStickers(albumId: albumnId)
     }
 
     func recentUsedStickers(limit: Int) -> [Sticker] {
@@ -31,6 +37,7 @@ final class StickerDAO {
         let lastUserAtProperty = Sticker.Properties.lastUseAt.asProperty()
         let propertyList = Sticker.Properties.all.filter { $0.name != lastUserAtProperty.name }
         MixinDatabase.shared.insertOrReplace(objects: stickers, on: propertyList)
+        NotificationCenter.default.afterPostOnMain(name: .StickerDidChange)
     }
 
     func updateUsedAt(albumId: String, name: String, usedAt: String) {

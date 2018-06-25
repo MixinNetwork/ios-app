@@ -78,7 +78,6 @@ class ConversationDataSource {
     }
     
     func initData() {
-        assert(!didInitializedData)
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         queue.async {
             guard !self.messageProcessingIsCancelled else {
@@ -522,7 +521,7 @@ extension ConversationDataSource {
             message.name = sticker.name
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = sticker.assetUrl
-            message.albumId = sticker.albumId
+            message.stickerId = sticker.stickerId
             let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: sticker.albumId)
             message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
             queue.async {

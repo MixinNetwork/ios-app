@@ -32,7 +32,7 @@ class StickerAPI : BaseAPI {
         return request(method: .get, url: url.stickers(id: stickerId))
     }
 
-    func removeSticker(stickerIds: [String], completion: @escaping (APIResult<Sticker>) -> Void) {
-        request(method: .delete, url: url.remove, parameters: stickerIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
+    func removeSticker(stickerIds: [String], completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+        request(method: .post, url: url.remove, parameters: stickerIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
     }
 }

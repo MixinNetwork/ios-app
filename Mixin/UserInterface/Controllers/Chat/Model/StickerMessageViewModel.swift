@@ -16,12 +16,12 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
 
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         if let assetWidth = message.assetWidth, var assetHeight = message.assetHeight {
-            if assetHeight == 0 {
-                assetHeight = 1
-            }
-            let width = min(StickerMessageViewModel.maxWidth, CGFloat(assetWidth) / UIScreen.main.scale)
             let ratio = CGFloat(assetWidth) / CGFloat(assetHeight)
-            contentSize = ceil(CGSize(width: width, height: width / ratio))
+            if assetWidth > assetHeight {
+                contentSize = ceil(CGSize(width: StickerMessageViewModel.maxWidth, height: StickerMessageViewModel.maxWidth / ratio))
+            } else {
+                contentSize = ceil(CGSize(width: StickerMessageViewModel.maxWidth * ratio, height: StickerMessageViewModel.maxWidth))
+            }
         } else {
             contentSize = CGSize(width: StickerMessageViewModel.maxWidth, height: StickerMessageViewModel.maxWidth)
         }

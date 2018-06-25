@@ -18,7 +18,7 @@ class TransferInViewController: UIViewController {
         view.layoutIfNeeded()
 
         if !asset.publicKey.isEmpty {
-            qrcodeImageView.image = UIImage(qrcode: asset.publicKey, size: qrcodeImageView.frame.width)
+            qrcodeImageView.image = UIImage(qrcode: asset.publicKey, size: qrcodeImageView.frame.size)
             addressButton.setTitle(asset.publicKey, for: .normal)
         }
         confirmationLabel.text = Localized.WALLET_DEPOSIT_CONFIRMATIONS(confirmations: asset.confirmations)

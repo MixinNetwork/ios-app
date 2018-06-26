@@ -20,7 +20,7 @@ class RefreshStickerJob: BaseJob {
         if let albumId = self.albumId {
             try RefreshStickerJob.cacheStickers(albumId: albumId)
         } else {
-            let stickerAlbums = StickerAlbumDAO.shared.getAblumsUpdateAt()
+            let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
             switch StickerAPI.shared.albums() {
             case let .success(albums):
                 for album in albums {
@@ -29,7 +29,12 @@ class RefreshStickerJob: BaseJob {
                     }
                     RefreshStickerJob.cacheImage(album.iconUrl)
                     try RefreshStickerJob.cacheStickers(albumId: album.albumId)
-                    StickerAlbumDAO.shared.insertOrUpdateAblum(album: album)
+                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                }
+
+                if !DatabaseUserDefault.shared.upgradeStickers {
+                    MessageDAO.shared.updateOldStickerMessages()
+                    DatabaseUserDefault.shared.upgradeStickers = true
                 }
             case let .failure(error):
                 throw error
@@ -44,6 +49,7 @@ class RefreshStickerJob: BaseJob {
             for sticker in stickers {
                 cacheImage(sticker.assetUrl)
             }
+            StickerAlbumDAO.shared.inserOrUpdate(albumId: albumId, stickers: stickers)
         case let .failure(error):
             throw error
         }

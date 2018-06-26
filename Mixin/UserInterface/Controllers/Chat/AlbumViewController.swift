@@ -8,7 +8,7 @@ protocol AlbumViewControllerDelegate: class {
 
 class AlbumViewController: UITableViewController {
 
-    private var allAlbums = [Album]()
+    private var allAlbums = [SmartAlbum]()
     private var toPickerVC = false
 
     weak var delegate: AlbumViewControllerDelegate?
@@ -21,15 +21,15 @@ class AlbumViewController: UITableViewController {
     }
 
     private func fetchData() {
-        var allAlbums = [Album?]()
+        var allAlbums = [SmartAlbum?]()
         if let cameraRollAlbum = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
-            allAlbums.append(Album(collection: cameraRollAlbum, isCameraRoll: true))
+            allAlbums.append(SmartAlbum(collection: cameraRollAlbum, isCameraRoll: true))
         }
         PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil).enumerateObjects { (collection, _, _) in
-            allAlbums.append(Album(collection: collection))
+            allAlbums.append(SmartAlbum(collection: collection))
         }
         PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil).enumerateObjects { (collection, _, _) in
-            allAlbums.append(Album(collection: collection))
+            allAlbums.append(SmartAlbum(collection: collection))
         }
         self.allAlbums = allAlbums.flatMap { $0 }.sorted(by: { (preAlbum, nextAlbum) -> Bool in
             guard preAlbum.order == nextAlbum.order else {
@@ -120,7 +120,7 @@ class AlbumCell: UITableViewCell {
 
 }
 
-fileprivate struct Album {
+fileprivate struct SmartAlbum {
 
     let title: String
     let assetCount: Int

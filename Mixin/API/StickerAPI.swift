@@ -16,7 +16,7 @@ class StickerAPI : BaseAPI {
         }
     }
 
-    func albums()  -> APIResult<[StickerAlbum]> {
+    func albums()  -> APIResult<[Album]> {
         return request(method: .get, url: url.albums)
     }
 

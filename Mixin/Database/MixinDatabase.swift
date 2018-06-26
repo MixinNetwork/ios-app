@@ -3,7 +3,7 @@ import Bugsnag
 
 class MixinDatabase: BaseDatabase {
 
-    private static let databaseVersion: Int = 4
+    private static let databaseVersion: Int = 6
 
     static let shared = MixinDatabase()
 
@@ -14,11 +14,12 @@ class MixinDatabase: BaseDatabase {
     }
 
     private func upgrade(database: Database) throws {
-        guard DatabaseUserDefault.shared.mixinDatabaseVersion < 4 && DatabaseUserDefault.shared.mixinDatabaseVersion > 0 else {
+        guard DatabaseUserDefault.shared.mixinDatabaseVersion < 6 && DatabaseUserDefault.shared.mixinDatabaseVersion > 0 else {
             return
         }
-        
+
         try database.drop(table: Sticker.tableName)
+        try database.drop(table: StickerAlbum.tableName)
     }
 
     override func configure(reset: Bool = false) {
@@ -34,6 +35,7 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Snapshot.self)
                 try database.create(of: Sticker.self)
                 try database.create(of: StickerAlbum.self)
+                try database.create(of: Album.self)
                 try database.create(of: MessageBlaze.self)
                 try database.create(of: MessageHistory.self)
                 try database.create(of: SentSenderKey.self)

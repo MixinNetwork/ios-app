@@ -104,7 +104,7 @@ extension StickerPageViewController: UICollectionViewDelegate {
         conversationViewController?.reduceStickerPanelHeightIfMaximized()
         if !isRecentPage {
             DispatchQueue.global().async { [weak self] in
-                StickerDAO.shared.updateUsedAt(albumId: sticker.albumId, name: sticker.name, usedAt: Date().toUTCString())
+                StickerDAO.shared.updateUsedAt(stickerId: sticker.stickerId, usedAt: Date().toUTCString())
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
                     self?.stickerPanelViewController?.reloadRecentPage()
                 })

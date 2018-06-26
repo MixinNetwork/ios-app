@@ -518,13 +518,13 @@ extension ConversationDataSource {
                 }
             }
         } else if type == .SIGNAL_STICKER, let sticker = value as? Sticker {
-            message.name = sticker.name
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = sticker.assetUrl
             message.stickerId = sticker.stickerId
-            let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: sticker.albumId)
-            message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
             queue.async {
+                let albumId = AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId
+                let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: albumId)
+                message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
         }

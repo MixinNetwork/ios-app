@@ -1395,7 +1395,7 @@ extension ConversationViewController {
     private func loadStickerAndAsset() {
         let containerWidth = AppDelegate.current.window!.bounds.width
         DispatchQueue.global().async { [weak self] in
-            let albums = StickerAlbumDAO.shared.getAlbums()
+            let albums = AlbumDAO.shared.getAlbums()
             var stickers = albums.map{ StickerDAO.shared.getStickers(albumId: $0.albumId) }
             let limit = StickerPageViewController.numberOfRecentStickers(forLayoutWidth: containerWidth)
             stickers.insert(StickerDAO.shared.recentUsedStickers(limit: limit), at: 0)

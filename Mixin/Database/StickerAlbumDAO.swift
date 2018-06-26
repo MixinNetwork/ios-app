@@ -3,17 +3,19 @@ import WCDBSwift
 final class StickerAlbumDAO {
 
     static let shared = StickerAlbumDAO()
-    
-    func getAlbums() -> [StickerAlbum] {
-        return MixinDatabase.shared.getCodables(condition: StickerAlbum.Properties.category != AlbumCategory.PERSONAL.rawValue, orderBy: [StickerAlbum.Properties.updateAt.asOrder(by: .descending)], inTransaction: false)
+
+    func inserOrUpdate(albumId: String, stickers: [Sticker]) {
+        MixinDatabase.shared.insertOrReplace(objects: stickers.map { StickerAlbum(albumId: albumId, stickerId: $0.stickerId) })
     }
 
-    func getAblumsUpdateAt() -> [String: String] {
-        return MixinDatabase.shared.getDictionary(key: StickerAlbum.Properties.albumId.asColumnResult(), value: StickerAlbum.Properties.updateAt.asColumnResult(), tableName: StickerAlbum.tableName)
+    func removeStickers(albumId: String, stickerIds: [String]) {
+        MixinDatabase.shared.delete(table: StickerAlbum.tableName, condition: StickerAlbum.Properties.albumId == albumId
+            && StickerAlbum.Properties.stickerId.in(stickerIds))
+
+        NotificationCenter.default.afterPostOnMain(name: .StickerDidChange)
     }
 
-    func insertOrUpdateAblum(album: StickerAlbum) {
-        MixinDatabase.shared.insertOrReplace(objects: [album])
+    func addStickers(albumId: String, stickerIds: [String]) {
+        MixinDatabase.shared.insertOrReplace(objects: stickerIds.map { StickerAlbum(albumId: albumId, stickerId: $0) })
     }
-
 }

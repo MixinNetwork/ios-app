@@ -13,7 +13,7 @@ class StickerManagerViewController: UICollectionViewController {
         let itemWidth = (UIScreen.main.bounds.size.width - (rowCount + 1) * 8) / rowCount
         return CGSize(width: itemWidth, height: itemWidth)
     }()
-    private var videoPickerController: UIViewController {
+    private var imagePickerController: UIViewController {
         let picker = PickerViewController.instance(filterMediaType: .image)
         picker.delegate = self
         return ContainerViewController.instance(viewController: picker, title: Localized.IMAGE_PICKER_TITLE_CAMERA_ROLL)
@@ -76,11 +76,21 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                 weakSelf.container?.rightButton.isBusy = false
                 switch result {
                 case .success:
-                    StickerDAO.shared.removeStickers(stickerIds: stickerIds)
-                    weakSelf.container?.rightButton.setTitle(Localized.ACTION_REMOVE, for: .normal)
-                    weakSelf.isDeleteStickers = !weakSelf.isDeleteStickers
-                    weakSelf.collectionView?.allowsMultipleSelection = false
-                    weakSelf.fetchStickers()
+                    DispatchQueue.global().async {
+                        if let album = AlbumDAO.shared.getSelfAlbum() {
+                            StickerAlbumDAO.shared.removeStickers(albumId: album.albumId, stickerIds: stickerIds)
+                        }
+
+                        DispatchQueue.main.async {
+                            guard let weakSelf = self else {
+                                return
+                            }
+                            weakSelf.container?.rightButton.setTitle(Localized.ACTION_REMOVE, for: .normal)
+                            weakSelf.isDeleteStickers = !weakSelf.isDeleteStickers
+                            weakSelf.collectionView?.allowsMultipleSelection = false
+                            weakSelf.fetchStickers()
+                        }
+                    }
                 case .failure:
                     NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.STICKER_REMOVE_FAILED)
                 }
@@ -130,8 +140,13 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
         guard !isDeleteStickers, indexPath.row == stickers.count else {
             return
         }
-        
-        navigationController?.pushViewController(videoPickerController, animated: true)
+
+        PHPhotoLibrary.checkAuthorization { [weak self](authorized) in
+            guard authorized, let weakSelf = self else {
+                return
+            }
+            weakSelf.navigationController?.pushViewController(weakSelf.imagePickerController, animated: true)
+        }
     }
 }
 

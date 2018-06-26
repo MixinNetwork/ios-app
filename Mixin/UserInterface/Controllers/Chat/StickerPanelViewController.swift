@@ -7,7 +7,7 @@ class StickerPanelViewController: UIViewController {
     @IBOutlet weak var pagesScrollView: UIScrollView!
     @IBOutlet weak var pagesContentView: UIView!
     
-    private var albums = [StickerAlbum]()
+    private var albums = [Album]()
     private var pages = [StickerPageViewController]()
     private var contentViewWidthConstraint: Constraint!
     private var currentPage = 0
@@ -50,7 +50,7 @@ class StickerPanelViewController: UIViewController {
         }
     }
     
-    func reload(albums: [StickerAlbum], stickers: [[Sticker]]) {
+    func reload(albums: [Album], stickers: [[Sticker]]) {
         self.albums = albums
         albumsCollectionView.reloadData()
         for page in pages {

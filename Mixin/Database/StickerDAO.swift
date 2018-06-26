@@ -2,31 +2,46 @@ import WCDBSwift
 
 final class StickerDAO {
 
+    private static let sqlQueryColumns = """
+    SELECT s.sticker_id, s.name, s.asset_url, s.asset_type, s.asset_width, s.asset_height, s.last_used_at FROM stickers s
+    """
+    private static let sqlQuerySticker = """
+    \(sqlQueryColumns)
+    INNER JOIN sticker_albums sa ON sa.sticker_id = s.sticker_id AND sa.album_id = ?
+    WHERE s.name = ?
+    LIMIT 1
+    """
+    private static let sqlQueryStickersByAlbum = """
+    \(sqlQueryColumns)
+    INNER JOIN sticker_albums sa ON sa.sticker_id = s.sticker_id AND sa.album_id = ?
+    """
+    private static let sqlQueryFavoriteStickers = """
+    \(sqlQueryColumns)
+    INNER JOIN sticker_albums sa ON sa.sticker_id = s.sticker_id
+    INNER JOIN albums a ON a.album_id = sa.album_id AND a.category = 'PERSONAL'
+    """
+
     static let shared = StickerDAO()
+
 
     func isExist(stickerId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.stickerId == stickerId, inTransaction: false)
     }
 
-    func removeStickers(stickerIds: [String]) {
-        MixinDatabase.shared.delete(table: Sticker.tableName, condition: Sticker.Properties.stickerId.in(stickerIds))
-
-        NotificationCenter.default.afterPostOnMain(name: .StickerDidChange)
+    func getSticker(albumId: String, name: String) -> Sticker? {
+        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQuerySticker, values: [albumId, name], inTransaction: false).first
     }
 
-    func getSticker(albumId: String, name: String) -> Sticker? {
-        return MixinDatabase.shared.getCodable(condition: Sticker.Properties.albumId == albumId && Sticker.Properties.name == name)
+    func getSticker(stickerId: String) -> Sticker? {
+        return MixinDatabase.shared.getCodable(condition: Sticker.Properties.stickerId == stickerId)
     }
 
     func getStickers(albumId: String) -> [Sticker] {
-        return MixinDatabase.shared.getCodables(condition: Sticker.Properties.albumId == albumId, inTransaction: false)
+        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQueryStickersByAlbum, values: [albumId], inTransaction: false)
     }
 
     func getFavoriteStickers() -> [Sticker] {
-        guard let albumnId = MixinDatabase.shared.scalar(on: StickerAlbum.Properties.albumId, fromTable: StickerAlbum.tableName, condition: StickerAlbum.Properties.category == AlbumCategory.PERSONAL.rawValue, inTransaction: false)?.stringValue, !albumnId.isEmpty else {
-            return []
-        }
-        return getStickers(albumId: albumnId)
+        return MixinDatabase.shared.getCodables(sql: StickerDAO.sqlQueryFavoriteStickers)
     }
 
     func recentUsedStickers(limit: Int) -> [Sticker] {
@@ -40,7 +55,7 @@ final class StickerDAO {
         NotificationCenter.default.afterPostOnMain(name: .StickerDidChange)
     }
 
-    func updateUsedAt(albumId: String, name: String, usedAt: String) {
-        MixinDatabase.shared.update(maps: [(Sticker.Properties.lastUseAt, usedAt)], tableName: Sticker.tableName, condition: Sticker.Properties.albumId == albumId && Sticker.Properties.name == name)
+    func updateUsedAt(stickerId: String, usedAt: String) {
+        MixinDatabase.shared.update(maps: [(Sticker.Properties.lastUseAt, usedAt)], tableName: Sticker.tableName, condition: Sticker.Properties.stickerId == stickerId)
     }
 }

@@ -6,7 +6,6 @@ struct Sticker: BaseCodable {
     static var tableName: String = "stickers"
 
     let stickerId: String
-    let albumId: String
     let name: String
     let assetUrl: String
     let assetType: String
@@ -17,7 +16,6 @@ struct Sticker: BaseCodable {
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Sticker
         case stickerId = "sticker_id"
-        case albumId = "album_id"
         case name
         case assetUrl = "asset_url"
         case assetType = "asset_type"

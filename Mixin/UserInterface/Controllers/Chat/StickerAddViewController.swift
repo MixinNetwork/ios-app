@@ -1,6 +1,7 @@
 import UIKit
 import FLAnimatedImage
 import Photos
+import SDWebImage
 
 class StickerAddViewController: UIViewController {
 
@@ -88,10 +89,17 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
             StickerAPI.shared.addSticker(stickerBase64: stickerBase64, completion: { [weak self](result) in
                 switch result {
                 case let .success(sticker):
-                    StickerDAO.shared.insertOrUpdateStickers(stickers: [sticker])
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_ADDED)
-                        self?.navigationController?.popViewController(animated: true)
+                    SDWebImageManager.shared().imageCache?.storeImageData(toDisk: Data(base64Encoded: stickerBase64), forKey: sticker.assetUrl)
+                    DispatchQueue.global().async {
+                        if let album = AlbumDAO.shared.getSelfAlbum() {
+                            StickerAlbumDAO.shared.inserOrUpdate(albumId: album.albumId, stickers: [sticker])
+                        }
+                        StickerDAO.shared.insertOrUpdateStickers(stickers: [sticker])
+
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_ADDED)
+                            self?.navigationController?.popViewController(animated: true)
+                        }
                     }
                 case .failure:
                     failedBlock()

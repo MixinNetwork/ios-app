@@ -56,8 +56,8 @@ class WebWindow: ZoomWindow {
         config.preferences.javaScriptEnabled = true
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController = userContentController
-        userContentController.add(self, name: "MixinContext")
-        userContentController.add(self, name: "ImageLongPressHandler")
+        userContentController.add(self, name: MessageHandlerName.mixinContext)
+        userContentController.add(self, name: MessageHandlerName.imageLongPress)
         userContentController.addUserScript(userScript)
         return MixinWebView(frame: .zero, configuration: config)
     }()
@@ -127,7 +127,8 @@ class WebWindow: ZoomWindow {
 
     override func dismissPopupControllerAnimated() {
         webView.stopLoading()
-        userContentController.removeScriptMessageHandler(forName: "MixinContext")
+        userContentController.removeScriptMessageHandler(forName: MessageHandlerName.mixinContext)
+        userContentController.removeScriptMessageHandler(forName: MessageHandlerName.imageLongPress)
         dismissView()
     }
 
@@ -203,7 +204,7 @@ class WebWindow: ZoomWindow {
 extension WebWindow: WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard !processLongPress, message.name == "ImageLongPressHandler", let urlString = message.body as? String, let url = URL(string: urlString) else {
+        guard !processLongPress, message.name == MessageHandlerName.imageLongPress, let urlString = message.body as? String, let url = URL(string: urlString) else {
             return
         }
         processLongPress = true
@@ -359,4 +360,13 @@ extension WebWindow: WKUIDelegate {
         }
         return nil
     }
+}
+
+extension WebWindow {
+    
+    enum MessageHandlerName {
+        static let mixinContext = "MixinContext"
+        static let imageLongPress = "ImageLongPressHandler"
+    }
+    
 }

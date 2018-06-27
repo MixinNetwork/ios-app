@@ -21,6 +21,7 @@ class ReCaptchaManager: NSObject {
     
     func validate(onViewController viewController: UIViewController, completion: @escaping CompletionCallback) {
         guard let htmlFilePath = htmlFilePath, let htmlString = try? String(contentsOfFile: htmlFilePath), let key = MixinKeys.reCaptcha else {
+            assertionFailure("Failed to load reCAPTCHA html. Probably due to missing of Mixin-Keys.plist")
             return
         }
         let config = WKWebViewConfiguration()

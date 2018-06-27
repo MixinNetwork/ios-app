@@ -1,6 +1,6 @@
 import Foundation
 
-struct MixinKeys {
+enum MixinKeys {
     
     static let keys: [String: Any] = {
         guard let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist") else {

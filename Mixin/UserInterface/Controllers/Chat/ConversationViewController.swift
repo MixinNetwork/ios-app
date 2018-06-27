@@ -93,11 +93,6 @@ class ConversationViewController: UIViewController {
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
     }()
-    private var videoPickerController: UIViewController {
-        let picker = PickerViewController.instance()
-        picker.delegate = self
-        return ContainerViewController.instance(viewController: picker, title: Localized.IMAGE_PICKER_TITLE_CAMERA_ROLL)
-    }
 
     private var bottomSafeAreaInset: CGFloat {
         if #available(iOS 11.0, *) {
@@ -704,7 +699,8 @@ class ConversationViewController: UIViewController {
             guard authorized, let weakSelf = self else {
                 return
             }
-            weakSelf.navigationController?.pushViewController(weakSelf.videoPickerController, animated: true)
+            let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: weakSelf)
+            weakSelf.present(picker, animated: true, completion: nil)
         }
     }
 
@@ -1157,11 +1153,13 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
 }
 
-extension ConversationViewController: PickerViewControllerDelegate {
+// MARK: - PhotoAssetPickerDelegate
+extension ConversationViewController: PhotoAssetPickerDelegate {
 
     func pickerController(_ picker: PickerViewController, didFinishPickingMediaWithAsset asset: PHAsset) {
         navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, dataSource: dataSource), animated: true)
     }
+    
 }
 
 // MARK: - UI Related Helpers

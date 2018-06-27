@@ -91,6 +91,8 @@ class ReceiveMessageService: MixinService {
             return
         }
 
+        let username = UserDAO.shared.getUser(userId: data.userId)?.fullName ?? data.userId
+
         if data.category == MessageCategory.SIGNAL_KEY.rawValue {
             updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
             MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
@@ -113,12 +115,14 @@ class ReceiveMessageService: MixinService {
                 }
             })
             let status = SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId)
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status ?? "")...source:\(data.source)...redecryptMessage:\(decoded.resendMessageId != nil)")
             if status == RatchetStatus.REQUESTING.rawValue {
                 SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId)
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId)
             }
         } catch {
             trackDecryptFailed(data: data, dataHeader: decoded, error: error)
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
             guard decoded.resendMessageId == nil else {
                 return
             }
@@ -143,6 +147,7 @@ class ReceiveMessageService: MixinService {
             return
         }
         refreshRefreshOneTimePreKeys[conversationId] = now
+        FileManager.default.writeLog(conversationId: conversationId, log: "[ProcessSignalMessage]...refreshKeys...")
         refreshKeys()
     }
 
@@ -392,6 +397,10 @@ class ReceiveMessageService: MixinService {
                 return
             }
 
+            if let user = UserDAO.shared.getUser(userId: data.userId) {
+                FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessPlainMessage][\(user.fullName)][\(data.category)][\(plainData.action)]...messageId:\(data.messageId)...\(data.createdAt)")
+            }
+
             defer {
                 updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
                 MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
@@ -513,6 +522,10 @@ extension ReceiveMessageService {
         let userId = sysMessage.userId ?? data.userId
         let messageId = data.messageId
         var operSuccess = true
+
+        if let participantId = sysMessage.participantId, let user = UserDAO.shared.getUser(userId: participantId) {
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSystemMessage][\(user.fullName)][\(sysMessage.action)]...messageId:\(data.messageId)...\(data.createdAt)")
+        }
 
         defer {
             if operSuccess {

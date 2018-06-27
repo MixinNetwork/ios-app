@@ -491,6 +491,7 @@
 		DFF353141FEEBC3A00058453 /* SnapshotCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFF353131FEEBC3A00058453 /* SnapshotCell.xib */; };
 		DFF353161FEEBC4700058453 /* SnapshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353151FEEBC4700058453 /* SnapshotCell.swift */; };
 		DFF353191FEEC83100058453 /* WalletUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353181FEEC83100058453 /* WalletUserDefault.swift */; };
+		DFF3B68E20E3599E00DC82D9 /* PrintLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3B68D20E3599E00DC82D9 /* PrintLog.swift */; };
 		DFF5D3F4207B7302008B9B75 /* ShareContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF5D3F3207B7302008B9B75 /* ShareContactViewController.swift */; };
 		DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */; };
 		DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF70F612079FC4900A5FA8B /* AssetItem.swift */; };
@@ -1024,6 +1025,7 @@
 		DFF353131FEEBC3A00058453 /* SnapshotCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotCell.xib; sourceTree = "<group>"; };
 		DFF353151FEEBC4700058453 /* SnapshotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotCell.swift; sourceTree = "<group>"; };
 		DFF353181FEEC83100058453 /* WalletUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletUserDefault.swift; sourceTree = "<group>"; };
+		DFF3B68D20E3599E00DC82D9 /* PrintLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintLog.swift; sourceTree = "<group>"; };
 		DFF5D3F3207B7302008B9B75 /* ShareContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareContactViewController.swift; sourceTree = "<group>"; };
 		DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferContactData.swift; sourceTree = "<group>"; };
 		DFF70F612079FC4900A5FA8B /* AssetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetItem.swift; sourceTree = "<group>"; };
@@ -1457,6 +1459,7 @@
 				DF19119B209028FF00BD415D /* Service */,
 				DF8DA19E1FD64B6F00425CEC /* Model */,
 				DF8DA1831FD1B39E00425CEC /* Jobs */,
+				DFF3B68D20E3599E00DC82D9 /* PrintLog.swift */,
 			);
 			path = WebSocket;
 			sourceTree = "<group>";
@@ -2668,6 +2671,7 @@
 				7B894CD820D25ABA004FA5A8 /* RecorderLongPressHintView.swift in Sources */,
 				7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */,
 				7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */,
+				DFF3B68E20E3599E00DC82D9 /* PrintLog.swift in Sources */,
 				DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */,

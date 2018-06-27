@@ -23,6 +23,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var participantsLabel: UILabel!
     @IBOutlet weak var unblockButton: StateResponsiveButton!
+    @IBOutlet weak var deleteConversationButton: StateResponsiveButton!
     @IBOutlet weak var stickerPanelContainerView: UIView!
     @IBOutlet weak var moreMenuContainerView: UIView!
     @IBOutlet weak var dismissPanelsButton: UIButton!
@@ -381,6 +382,21 @@ class ConversationViewController: UIViewController {
         }
     }
 
+    @IBAction func deleteConversationAction(_ sender: Any) {
+        guard !self.conversationId.isEmpty else {
+            return
+        }
+        deleteConversationButton.isBusy = true
+        let conversationId = self.conversationId
+        DispatchQueue.global().async { [weak self] in
+            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+            NotificationCenter.default.postOnMain(name: .ConversationDidChange)
+            DispatchQueue.main.async {
+                self?.navigationController?.backToHome()
+            }
+        }
+    }
+    
     @objc func blockAction(_ sender: Any) {
         guard let userId = ownerUser?.userId else {
             return
@@ -401,32 +417,20 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func unblockAction(_ sender: Any) {
-        if !conversationId.isEmpty && unblockButton.title(for: .normal) == Localized.GROUP_MENU_DELETE {
-            unblockButton.isBusy = true
-            let conversationId = self.conversationId
-            DispatchQueue.global().async { [weak self] in
-                ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-                NotificationCenter.default.postOnMain(name: .ConversationDidChange)
-                DispatchQueue.main.async {
-                    self?.navigationController?.backToHome()
-                }
-            }
-        } else {
-            guard let user = ownerUser else {
+        guard let user = ownerUser else {
+            return
+        }
+        unblockButton.isBusy = true
+        UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
+            guard let weakSelf = self else {
                 return
             }
-            unblockButton.isBusy = true
-            UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.unblockButton.isBusy = false
-                switch result {
-                case .success(let userResponse):
-                    weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
-                case .failure:
-                    break
-                }
+            weakSelf.unblockButton.isBusy = false
+            switch result {
+            case .success(let userResponse):
+                weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
+            case .failure:
+                break
             }
         }
     }
@@ -1194,7 +1198,9 @@ extension ConversationViewController {
         guard let user = ownerUser else {
             return
         }
-        unblockButton.isHidden = user.relationship != Relationship.BLOCKING.rawValue
+        let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
+        unblockButton.isHidden = !isBlocked
+        audioInputContainerView.isHidden = isBlocked
         botButton.isHidden = !user.isBot
     }
     
@@ -1354,7 +1360,6 @@ extension ConversationViewController {
         updateStrangerTipsView()
         updateBottomView()
         inputWrapperView.isHidden = false
-        audioInputContainerView.isHidden = false
         loadDraft()
         updateNavigationBar()
         reloadParticipants()
@@ -1402,6 +1407,8 @@ extension ConversationViewController {
                         return
                     }
                     weakSelf.unblockButton.isHidden = true
+                    weakSelf.deleteConversationButton.isHidden = true
+                    weakSelf.audioInputContainerView.isHidden = false
                     if weakSelf.dataSource?.category == .group {
                         weakSelf.participantsLabel.text = Localized.GROUP_SECTION_TITLE_MEMBERS(count: weakSelf.participants.count)
                     }
@@ -1412,8 +1419,8 @@ extension ConversationViewController {
                         return
                     }
                     weakSelf.participantsLabel.text = Localized.GROUP_REMOVE_TITLE
-                    weakSelf.unblockButton.setTitle(Localized.GROUP_MENU_DELETE, for: .normal)
-                    weakSelf.unblockButton.isHidden = false
+                    weakSelf.deleteConversationButton.isHidden = false
+                    weakSelf.audioInputContainerView.isHidden = true
                 }
             }
         }

@@ -21,6 +21,9 @@ class MixinDatabase: BaseDatabase {
         if try database.isColumnExist(tableName: Snapshot.tableName, columnName: "counter_user_id") {
             try database.prepareUpdateSQL(sql: "UPDATE snapshots SET opponent_id = counter_user_id").execute()
         }
+
+        try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index1").execute()
+        try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index2").execute()
     }
 
     override func configure(reset: Bool = false) {

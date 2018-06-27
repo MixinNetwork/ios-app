@@ -103,16 +103,14 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
             cell.durationLabel.text = mediaDurationFormatter.string(from: asset.duration)
             cell.fileTypeView.isHidden = false
         } else {
-            PHImageManager.default().requestImageData(for: asset, options: utiCheckingImageRequestOptions, resultHandler: { (_, uti, _, _) in
-                if let uti = uti, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
-                    cell.gifLabel.isHidden = false
-                    cell.videoImageView.isHidden = true
-                    cell.durationLabel.text = nil
-                    cell.fileTypeView.isHidden = false
-                } else {
-                    cell.fileTypeView.isHidden = true
-                }
-            })
+            if PHAssetResource.assetResources(for: asset).first?.uniformTypeIdentifier == (kUTTypeGIF as String) {
+                cell.gifLabel.isHidden = false
+                cell.videoImageView.isHidden = true
+                cell.durationLabel.text = nil
+                cell.fileTypeView.isHidden = false
+            } else {
+                cell.fileTypeView.isHidden = true
+            }
         }
         return cell
     }

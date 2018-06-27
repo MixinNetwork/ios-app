@@ -48,10 +48,6 @@ extension AlbumViewController: ContainerViewControllerDelegate {
         navigationController?.dismiss(animated: true, completion: nil)
     }
     
-    func textBarRightButton() -> String? {
-        return nil
-    }
-
 }
 
 extension AlbumViewController {

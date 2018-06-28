@@ -1,5 +1,6 @@
 import Foundation
 import WebKit
+import Photos
 
 class WebWindow: ZoomWindow {
 
@@ -14,7 +15,39 @@ class WebWindow: ZoomWindow {
     private let swipeToZoomVelocityThreshold: CGFloat = 800
 
     private var swipeToZoomAnimator: UIViewPropertyAnimator?
-    
+
+    private var userScript = WKUserScript(source: """
+        var imageElements = document.images;
+        for(var i = 0; i < imageElements.length; i++) {
+            var imageElement = imageElements[i];
+            var intervalID = 0;
+            var touchX = 0, touchY = 0;
+            imageElement.ontouchstart = function(e) {
+                e.preventDefault();
+                intervalID = window.setInterval(
+                    function() {
+                        window.clearInterval(intervalID);
+                        window.webkit.messageHandlers.ImageLongPressHandler.postMessage(e.target.src);
+                    },
+                    1000
+                );
+                touchX = e.touches[0].pageX
+                touchY = e.touches[0].pageY
+            };
+            imageElement.ontouchmove = function(e) {
+                var targetX = window.scrollX - (e.touches[0].pageX - touchX);
+                var targetY = window.scrollY - (e.touches[0].pageY - touchY);
+                window.scrollTo(targetX, targetY);
+            };
+            imageElement.ontouchend = function(e) {
+                window.clearInterval(intervalID);
+            };
+            imageElement.ontouchcancel = function(e) {
+                window.clearInterval(intervalID);
+            }
+        };
+""", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+
     private lazy var webView: MixinWebView = {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
@@ -24,10 +57,13 @@ class WebWindow: ZoomWindow {
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController = userContentController
         userContentController.add(self, name: "MixinContext")
+        userContentController.add(self, name: "ImageLongPressHandler")
+        userContentController.addUserScript(userScript)
         return MixinWebView(frame: .zero, configuration: config)
     }()
 
     private var conversationId = ""
+    private var processLongPress = false
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -38,6 +74,7 @@ class WebWindow: ZoomWindow {
         webView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
+        webView.allowsBackForwardNavigationGestures = true
 
         webView.scrollView.delegate = self
         webView.navigationDelegate = self
@@ -149,7 +186,7 @@ class WebWindow: ZoomWindow {
     }
 
     @objc func keyboardWillShow(_ notification: Notification) {
-        guard UIApplication.shared.keyWindow?.subviews.last == self, !windowMaximum else {
+        guard UIApplication.currentActivity()?.view.subviews.last == self, !windowMaximum else {
             return
         }
         toggleZoomAction()
@@ -166,6 +203,56 @@ class WebWindow: ZoomWindow {
 extension WebWindow: WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard !processLongPress, message.name == "ImageLongPressHandler", let urlString = message.body as? String, let url = URL(string: urlString) else {
+            return
+        }
+        processLongPress = true
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.requestCachePolicy = .returnCacheDataElseLoad
+        URLSession(configuration: sessionConfig).dataTask(with: url, completionHandler: { [weak self](data, response, error) in
+            defer {
+                self?.processLongPress = false
+            }
+            guard let data = data, let image = UIImage(data: data) else {
+                return
+            }
+            self?.showImageMenu(image: image)
+        }).resume()
+    }
+
+    private func showImageMenu(image: UIImage) {
+        DispatchQueue.global().async {
+            var qrcodeUrl: URL!
+            if let ciImage = CIImage(image: image), let features = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)?.features(in: ciImage) {
+                for case let feature as CIQRCodeFeature in features {
+                    guard let messageString = feature.messageString, let url = URL(string: messageString) else {
+                        continue
+                    }
+                    qrcodeUrl = url
+                    break
+                }
+            }
+            DispatchQueue.main.async {
+                let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                alc.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
+                    PHPhotoLibrary.checkAuthorization { (authorized) in
+                        guard authorized else {
+                            return
+                        }
+                        PHPhotoLibrary.saveImageToLibrary(image: image)
+                    }
+                }))
+                if qrcodeUrl != nil {
+                    alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
+                        if !UrlWindow.checkUrl(url: qrcodeUrl, clearNavigationStack: false) {
+
+                        }
+                    }))
+                }
+                alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+                UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
+            }
+        }
     }
 
 }

@@ -141,7 +141,7 @@ private extension NSInteger {
     func encodedOctets() -> [CUnsignedChar] {
         // Short form
         if self < 128 {
-            return [CUnsignedChar(self)];
+            return [CUnsignedChar(self)]
         }
 
         // Long form

@@ -10,6 +10,11 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Camera View Controller-->
         <scene sceneID="tvl-hK-adp">
@@ -74,19 +79,50 @@
                                     <constraint firstItem="qa4-MC-Qq2" firstAttribute="leading" secondItem="5sm-8G-Krj" secondAttribute="leading" id="xAP-4n-y67"/>
                                 </constraints>
                             </view>
+                            <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WmQ-ju-XH1">
+                                <rect key="frame" x="135" y="38.5" width="49.5" height="19.5"/>
+                                <subviews>
+                                    <view clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="98N-CS-DAD">
+                                        <rect key="frame" x="0.0" y="5.5" width="8" height="8"/>
+                                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="8" id="6TJ-DF-h4L"/>
+                                            <constraint firstAttribute="width" constant="8" id="Syw-rs-Uvi"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="0:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="30s-ZG-fbq">
+                                        <rect key="frame" x="16" y="0.0" width="33.5" height="20"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="30s-ZG-fbq" secondAttribute="bottom" id="26c-Z6-o9x"/>
+                                    <constraint firstItem="30s-ZG-fbq" firstAttribute="leading" secondItem="98N-CS-DAD" secondAttribute="trailing" constant="8" id="QqJ-7W-vkb"/>
+                                    <constraint firstItem="30s-ZG-fbq" firstAttribute="top" secondItem="WmQ-ju-XH1" secondAttribute="top" id="alt-gt-LVc"/>
+                                    <constraint firstItem="98N-CS-DAD" firstAttribute="leading" secondItem="WmQ-ju-XH1" secondAttribute="leading" priority="999" id="ieL-GY-eC6"/>
+                                    <constraint firstItem="98N-CS-DAD" firstAttribute="centerY" secondItem="WmQ-ju-XH1" secondAttribute="centerY" id="tyX-aq-tvV"/>
+                                    <constraint firstAttribute="trailing" secondItem="30s-ZG-fbq" secondAttribute="trailing" id="uOK-s7-3Rx"/>
+                                </constraints>
+                            </view>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="o5Y-dL-Imf">
                                 <rect key="frame" x="141.5" y="275.5" width="37" height="37"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8L-Tp-H0W">
-                                <rect key="frame" x="120" y="458" width="80" height="80"/>
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8L-Tp-H0W" customClass="RecordButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="124" y="466" width="72" height="72"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="5yf-C4-x4H"/>
-                                    <constraint firstAttribute="height" constant="80" id="bCd-Tj-eXg"/>
+                                    <constraint firstAttribute="width" constant="72" id="5yf-C4-x4H"/>
+                                    <constraint firstAttribute="height" constant="72" id="bCd-Tj-eXg"/>
                                 </constraints>
-                                <state key="normal" image="ic_camera_white"/>
-                                <state key="highlighted" image="ic_camera_white"/>
                                 <connections>
-                                    <action selector="takeAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="pZM-d2-cdn"/>
+                                    <action selector="takeAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="lgb-bU-qbR"/>
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hft-XM-7mq" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
@@ -225,8 +261,10 @@
                             <constraint firstItem="LBJ-RT-mbD" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="W89-ez-v1g"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="trailing" secondItem="LBJ-RT-mbD" secondAttribute="trailing" id="ZJy-mI-7RA"/>
                             <constraint firstItem="5sm-8G-Krj" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" id="aVK-Ir-3VC"/>
+                            <constraint firstItem="WmQ-ju-XH1" firstAttribute="centerY" secondItem="5sm-8G-Krj" secondAttribute="centerY" id="adt-op-H7l"/>
                             <constraint firstItem="o5Y-dL-Imf" firstAttribute="centerY" secondItem="ADJ-U9-E6n" secondAttribute="centerY" id="bmo-jI-9FY"/>
                             <constraint firstItem="Ene-l2-qnH" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" constant="-86" id="bqz-Ml-LT4"/>
+                            <constraint firstItem="WmQ-ju-XH1" firstAttribute="centerX" secondItem="5sm-8G-Krj" secondAttribute="centerX" id="cDv-XC-X0w"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="9hJ-zq-Afw" secondAttribute="bottom" id="caf-qy-Pe9"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="bottom" secondItem="LBJ-RT-mbD" secondAttribute="bottom" id="egT-Tv-W4L"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="Hft-XM-7mq" secondAttribute="bottom" id="g6Y-Dj-hpg"/>
@@ -252,10 +290,14 @@
                         <outlet property="qrcodeNotificationTopConstraint" destination="bqz-Ml-LT4" id="q7e-av-bV4"/>
                         <outlet property="qrcodeTipsView" destination="WNM-S5-JoA" id="Jtv-zA-4Cs"/>
                         <outlet property="qrcodeView" destination="Ene-l2-qnH" id="Sjc-ny-tmn"/>
+                        <outlet property="recordingRedDotView" destination="98N-CS-DAD" id="cxX-Ik-fTW"/>
                         <outlet property="saveButton" destination="9hJ-zq-Afw" id="grt-U5-Jdp"/>
                         <outlet property="sendButton" destination="Hft-XM-7mq" id="tox-WQ-Ivj"/>
                         <outlet property="snapshotImageView" destination="Lks-aY-qYz" id="yyp-b9-zGn"/>
                         <outlet property="takeButton" destination="B8L-Tp-H0W" id="ndP-jI-JWK"/>
+                        <outlet property="timeLabel" destination="30s-ZG-fbq" id="TCh-vU-OIR"/>
+                        <outlet property="timeView" destination="WmQ-ju-XH1" id="6v9-g3-p5w"/>
+                        <outlet property="toolbarView" destination="5sm-8G-Krj" id="ppx-Nb-x67"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YHv-rw-4SK" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -358,7 +400,6 @@
         <image name="ic_camera_save" width="44" height="44"/>
         <image name="ic_camera_send" width="36" height="36"/>
         <image name="ic_camera_swap" width="44" height="44"/>
-        <image name="ic_camera_white" width="64" height="64"/>
         <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_notification_qrcode" width="18" height="18"/>
         <image name="ic_search" width="12" height="12"/>

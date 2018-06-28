@@ -181,3 +181,83 @@ extension FileManager {
         "avi": "video/x-msvideo"
     ]
 }
+
+extension FileManager {
+
+    private static let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.log")
+    private static var conversations = [String: Conversation]()
+
+    func writeLog(log: String, newSection: Bool = false) {
+        guard let files = try? FileManager.default.contentsOfDirectory(atPath: MixinFile.logPath.path) else {
+            return
+        }
+        for file in files {
+            let filename = MixinFile.logPath.appendingPathComponent(file).lastPathComponent.substring(endChar: ".")
+            if log.hasPrefix("No sender key for:") {
+                if log.contains(filename) {
+                    FileManager.default.writeLog(conversationId: filename, log: log, commomLog: false, newSection: newSection)
+                }
+            } else {
+                FileManager.default.writeLog(conversationId: filename, log: log, commomLog: true, newSection: newSection)
+            }
+        }
+    }
+
+    func writeLog(conversationId: String, log: String, commomLog: Bool = false, newSection: Bool = false) {
+        guard !conversationId.isEmpty else {
+            return
+        }
+        FileManager.dispatchQueue.async {
+            var log = log + "...\(DateFormatter.filename.string(from: Date()))\n"
+            if newSection {
+                log += "------------------------------\n"
+            }
+            let url = MixinFile.logPath.appendingPathComponent("\(conversationId).txt")
+            let path = url.path
+            do {
+                if FileManager.default.fileExists(atPath: path) && FileManager.default.fileSize(path) > 1024 * 1024 * 2 {
+                    guard let fileHandle = FileHandle(forUpdatingAtPath: path) else {
+                        return
+                    }
+                    fileHandle.seek(toFileOffset: 1024 * 1024 * 1 + 1024 * 896)
+                    let lastString = String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8)
+                    fileHandle.closeFile()
+                    try FileManager.default.removeItem(at: url)
+                    try lastString?.write(toFile: path, atomically: true, encoding: .utf8)
+                }
+
+                if FileManager.default.fileExists(atPath: path) {
+                    guard let data = log.data(using: .utf8) else {
+                        return
+                    }
+                    guard let fileHandle = FileHandle(forUpdatingAtPath: path) else {
+                        return
+                    }
+                    fileHandle.seekToEndOfFile()
+                    fileHandle.write(data)
+                    fileHandle.closeFile()
+                } else {
+                    try log.write(toFile: path, atomically: true, encoding: .utf8)
+                }
+            } catch {
+                #if DEBUG
+                    print("======FileManagerExtension...writeLog...error:\(error)")
+                #endif
+                Bugsnag.notifyError(error)
+            }
+        }
+    }
+
+    func exportLog(conversationId: String) -> URL? {
+        let conversationFile = MixinFile.logPath.appendingPathComponent("\(conversationId).txt")
+        let filename = "\(AccountAPI.shared.accountIdentityNumber)_\(DateFormatter.filename.string(from: Date()))"
+        do {
+            return try Zip.quickZipFiles([conversationFile], fileName: filename)
+        } catch {
+            #if DEBUG
+                print("======FileManagerExtension...exportLog...error:\(error)")
+            #endif
+        }
+        return nil
+    }
+}

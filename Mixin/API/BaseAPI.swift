@@ -172,6 +172,7 @@ class BaseAPI {
         if checkLogin && !AccountAPI.shared.didLogin {
             return nil
         }
+        let requestTime = DateFormatter.filename.string(from: Date())
         let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
         return request.validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
@@ -181,6 +182,7 @@ class BaseAPI {
                     case 401:
                         var userInfo = UIApplication.getTrackUserInfo()
                         userInfo["request"] = request.debugDescription
+                        userInfo["startRequestTime"] = requestTime
                         UIApplication.trackError("BaseAPI async request", action: "401", userInfo: userInfo)
                         AccountAPI.shared.logout()
                         return
@@ -231,7 +233,7 @@ extension BaseAPI {
         return dispatchQueue.sync {
             var result: APIResult<T> = .failure(APIError.createAuthenticationError())
             var debugDescription = ""
-            let requestTime = DateFormatter.filename.string(from: Date())
+            let requestTime = Date()
             var errorMsg = ""
             if AccountAPI.shared.didLogin {
                 let semaphore = DispatchSemaphore(value: 0)
@@ -252,17 +254,17 @@ extension BaseAPI {
                                     result = .success(model)
                                 }
                             } catch {
-                                errorMsg = "\(error)"
+                                errorMsg = "decode error:\(error)"
                                 result = .failure(APIError.createError(error: error, status: httpStatusCode))
                             }
                         case let .failure(error):
-                            errorMsg = "\(error)"
+                            errorMsg = "api error:\(error)"
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                         semaphore.signal()
                     })
 
-                if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut, !result.isSuccess {
+                if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut || Date().timeIntervalSince1970 - requestTime.timeIntervalSince1970 >= 8 {
                     result = .failure(APIError(status: NSURLErrorTimedOut, code: -1, description: Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT))
                 }
                 debugDescription = req.debugDescription
@@ -272,7 +274,7 @@ extension BaseAPI {
                 if AccountAPI.shared.didLogin {
                     var userInfo = UIApplication.getTrackUserInfo()
                     userInfo["request"] = debugDescription
-                    userInfo["startRequestTime"] = requestTime
+                    userInfo["startRequestTime"] = DateFormatter.filename.string(from: requestTime)
                     userInfo["errorMsg"] = errorMsg
                     UIApplication.trackError("BaseAPI sync request", action: "401", userInfo: userInfo)
                 }

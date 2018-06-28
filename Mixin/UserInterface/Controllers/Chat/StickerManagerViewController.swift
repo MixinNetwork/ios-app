@@ -13,11 +13,6 @@ class StickerManagerViewController: UICollectionViewController {
         let itemWidth = (UIScreen.main.bounds.size.width - (rowCount + 1) * 8) / rowCount
         return CGSize(width: itemWidth, height: itemWidth)
     }()
-    private var imagePickerController: UIViewController {
-        let picker = PickerViewController.instance(filterMediaType: .image)
-        picker.delegate = self
-        return ContainerViewController.instance(viewController: picker, title: Localized.IMAGE_PICKER_TITLE_CAMERA_ROLL)
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +36,6 @@ class StickerManagerViewController: UICollectionViewController {
 
     class func instance() -> UIViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "sticker_manager") as! StickerManagerViewController
-
         return ContainerViewController.instance(viewController: vc, title: Localized.STICKER_MANAGER_TITLE)
     }
 
@@ -145,12 +139,15 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
             guard authorized, let weakSelf = self else {
                 return
             }
-            weakSelf.navigationController?.pushViewController(weakSelf.imagePickerController, animated: true)
+
+            let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: weakSelf, isFilterCustomSticker: true)
+            weakSelf.present(picker, animated: true, completion: nil)
         }
     }
 }
 
-extension StickerManagerViewController: PickerViewControllerDelegate {
+// MARK: - PhotoAssetPickerDelegate
+extension StickerManagerViewController: PhotoAssetPickerDelegate {
 
     func pickerController(_ picker: PickerViewController, didFinishPickingMediaWithAsset asset: PHAsset) {
         navigationController?.pushViewController(StickerAddViewController.instance(asset: asset), animated: true)

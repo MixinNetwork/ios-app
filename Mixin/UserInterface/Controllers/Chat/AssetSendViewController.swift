@@ -30,6 +30,13 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         super.viewDidLoad()
         if let image = self.image {
             photoImageView.image = image
+        } else if let asset = self.videoAsset {
+            DispatchQueue.global().async { [weak self] in
+                let thumbnail = UIImage(withFirstFrameOfVideoAtAsset: asset)
+                DispatchQueue.main.async {
+                    self?.loadAsset(asset: asset, thumbnail: thumbnail)
+                }
+            }
         } else if let asset = self.asset {
             if asset.mediaType == .video {
                 PHImageManager.default().requestAVAsset(forVideo: asset, options: nil) { [weak self](avasset, _, _) in
@@ -46,8 +53,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     let fileExtension = String(filename[startIndex..<filename.endIndex])
                     if fileExtension.hasSuffix(".webp") || fileExtension.hasSuffix(".gif") {
                         PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { [weak self](data, _, _, _) in
-                            let filename = "\(UUID().uuidString.lowercased())\(fileExtension)"
-                            let tempUrl = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
+                            let tempUrl = URL.createTempUrl(fileExtension: fileExtension)
                             do {
                                 try data?.write(to: tempUrl)
                                 self?.animateURL = tempUrl
@@ -144,8 +150,13 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                         self?.alert(Localized.CHAT_SEND_VIDEO_FAILED)
                         return
                     }
-                    self?.dataSource?.sendMessage(type: .SIGNAL_VIDEO, value: (outputURL, asset))
-                    self?.navigationController?.popViewController(animated: true)
+                    if let dataSource = self?.dataSource {
+                        dataSource.sendMessage(type: .SIGNAL_VIDEO, value: (outputURL, asset))
+                        self?.navigationController?.popViewController(animated: true)
+                    } else {
+                        self?.navigationController?.pushViewController(SendToViewController.instance(videoUrl: outputURL), animated: true)
+                    }
+
                 }
             })
         } else if let image = photoImageView.image, let dataSource = dataSource {
@@ -211,10 +222,11 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         navigationController?.popViewController(animated: true)
     }
 
-    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, dataSource: ConversationDataSource?) -> UIViewController {
+    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> UIViewController {
        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "send_asset") as! AssetSendViewController
         vc.image = image
         vc.asset = asset
+        vc.videoAsset = videoAsset
         vc.dataSource = dataSource
         return vc
     }

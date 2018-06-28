@@ -264,7 +264,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deleteRows(at: [indexPath], with: .fade)
         tableView.endUpdates()
         DispatchQueue.global().async {
-        ConversationDAO.shared.deleteAndExitConversation(conversationId: conversation.conversationId, autoNotification: false)
+            MessageDAO.shared.clearChat(conversationId: conversation.conversationId, autoNotification: false)
         }
     }
 

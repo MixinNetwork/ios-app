@@ -18,7 +18,7 @@ class MyQRCodeWindow: BottomSheetView {
 
     internal func render() {
         if let account = AccountAPI.shared.account {
-            qrcodeImageView.image = UIImage(qrcode: account.code_url, size: qrcodeImageView.frame.width, foregroundColor: UIColor.systemTint)
+            qrcodeImageView.image = UIImage(qrcode: account.code_url, size: qrcodeImageView.frame.size, foregroundColor: UIColor.systemTint)
             qrcodeAvatarImageView.setImage(with: account)
         }
     }

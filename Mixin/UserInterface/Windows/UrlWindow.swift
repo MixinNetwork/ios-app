@@ -316,10 +316,10 @@ extension UrlWindow {
 
 extension UrlWindow {
 
-    func presentPopupControllerAnimated(assetId: String, counterUserId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
+    func presentPopupControllerAnimated(assetId: String, opponentId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
-        AssetAPI.shared.payments(assetId: assetId, counterUserId: counterUserId, amount: amount, traceId: traceId) { [weak self](result) in
+        AssetAPI.shared.payments(assetId: assetId, opponentId: opponentId, amount: amount, traceId: traceId) { [weak self](result) in
             guard let weakSelf = self, weakSelf.isShowing else {
                 return
             }
@@ -363,7 +363,7 @@ extension UrlWindow {
         if let urlDecodeMemo = memo?.removingPercentEncoding {
             memo = urlDecodeMemo
         }
-        UrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, counterUserId: recipientId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
+        UrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
 
         return true
     }
@@ -372,14 +372,12 @@ extension UrlWindow {
         guard let query = url.getKeyVals() else {
             return false
         }
-        guard let text = query["text"] else {
-            return false
-        }
-        guard !text.isEmpty else {
+        guard let text = query["text"], !text.isEmpty else {
             return false
         }
 
-        UIApplication.rootNavigationController()?.pushViewController(SendToViewController.instance(text: text), animated: true)
+        let shareText = text.removingPercentEncoding ?? text
+        UIApplication.rootNavigationController()?.pushViewController(SendToViewController.instance(text: shareText), animated: true)
 
         return true
     }

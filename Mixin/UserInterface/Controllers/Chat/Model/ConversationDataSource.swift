@@ -46,8 +46,6 @@ class ConversationDataSource {
     private var didLoadEarliestMessage = false
     private var isLoadingAbove = false
     private var isLoadingBelow = false
-    private var topMessageOffset: Int?
-    private var bottomMessageOffset: Int?
     private var canInsertUnreadHint = true
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
@@ -110,26 +108,22 @@ class ConversationDataSource {
     }
     
     func loadMoreAboveIfNeeded() {
-        guard !isLoadingAbove, !didLoadEarliestMessage, let topMessageOffset = topMessageOffset else {
+        guard !isLoadingAbove, !didLoadEarliestMessage else {
             return
         }
         isLoadingAbove = true
         let messagesCountPerPage = self.messagesCountPerPage
         let conversationId = self.conversationId
-        let canInsertEncryptionHint = self.canInsertEncryptionHint
         let layoutWidth = self.layoutWidth
         queue.async {
-            guard !self.messageProcessingIsCancelled else {
+            guard !self.messageProcessingIsCancelled, let firstDate = self.dates.first, let location = self.viewModels[firstDate]?.first?.message else {
                 return
             }
             self.semaphore.wait()
-            var messages = [MessageItem]()
-            if topMessageOffset > 0 {
-                messages = MessageDAO.shared.getMessages(conversationId: conversationId, location: topMessageOffset, count: -messagesCountPerPage)
-            }
-            self.topMessageOffset = topMessageOffset - messages.count
-            self.didLoadEarliestMessage = messages.count < messagesCountPerPage
-            let shouldInsertEncryptionHint = canInsertEncryptionHint && messages.count > 0 && topMessageOffset - messages.count <= 0
+            var messages = MessageDAO.shared.getMessages(conversationId: conversationId, aboveMessage: location, count: messagesCountPerPage)
+            let didLoadEarliestMessage = messages.count < messagesCountPerPage
+            self.didLoadEarliestMessage = didLoadEarliestMessage
+            let shouldInsertEncryptionHint = self.canInsertEncryptionHint && didLoadEarliestMessage
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
             var (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
@@ -181,7 +175,7 @@ class ConversationDataSource {
     }
     
     func loadMoreBelowIfNeeded() {
-        guard !isLoadingBelow, !didLoadLatestMessage, let bottomMessageOffset = bottomMessageOffset else {
+        guard !isLoadingBelow, !didLoadLatestMessage else {
             return
         }
         isLoadingBelow = true
@@ -190,12 +184,11 @@ class ConversationDataSource {
         let messagesCountPerPage = self.messagesCountPerPage
         let layoutWidth = self.layoutWidth
         queue.async {
-            guard !self.messageProcessingIsCancelled else {
+            guard !self.messageProcessingIsCancelled, let lastDate = self.dates.last, let location = self.viewModels[lastDate]?.last?.message else {
                 return
             }
             self.semaphore.wait()
-            var messages = MessageDAO.shared.getMessages(conversationId: conversationId, location: bottomMessageOffset + 1, count: messagesCountPerPage)
-            self.bottomMessageOffset = bottomMessageOffset + messages.count
+            var messages = MessageDAO.shared.getMessages(conversationId: conversationId, belowMessage: location, count: messagesCountPerPage)
             self.didLoadLatestMessage = messages.count < messagesCountPerPage
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
@@ -552,15 +545,13 @@ extension ConversationDataSource {
         let initialMessageId = initialMessageId
             ?? highlight?.messageId
             ?? ConversationViewController.positions[conversationId]?.messageId
-        if let initialMessageId = initialMessageId, let offset = MessageDAO.shared.getOffset(conversationId: conversationId, messageId: initialMessageId) {
-            let location = max(0, offset - messagesCountPerPage / 2)
-            messages = MessageDAO.shared.getMessages(conversationId: conversationId, location: location, count: messagesCountPerPage)
+        if let initialMessageId = initialMessageId {
+            messages = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: messagesCountPerPage)
             if highlight == nil, initialMessageId != firstUnreadMessageId {
                 firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId
             }
-        } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId, let offset = MessageDAO.shared.getOffset(conversationId: conversationId, messageId: firstUnreadMessageId) {
-            let location = max(0, offset - messagesCountPerPage / 2)
-            messages = MessageDAO.shared.getMessages(conversationId: conversationId, location: location, count: messagesCountPerPage)
+        } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId {
+            messages = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: firstUnreadMessageId, count: messagesCountPerPage)
             self.firstUnreadMessageId = firstUnreadMessageId
         } else {
             messages = MessageDAO.shared.getLastNMessages(conversationId: conversationId, count: messagesCountPerPage)
@@ -570,15 +561,6 @@ extension ConversationDataSource {
         loadedMessageIds = Set(messages.map({ $0.messageId }))
         var shouldInsertEncryptionHint = false
         if messages.count > 0 {
-            if messages.count < messagesCountPerPage {
-                didLoadLatestMessage = true
-            }
-            topMessageOffset = MessageDAO.shared.getOffset(conversationId: conversationId, messageId: messages[0].messageId)
-            bottomMessageOffset = MessageDAO.shared.getOffset(conversationId: conversationId, messageId: messages[messages.count - 1].messageId)
-            if topMessageOffset == 0 {
-                didLoadEarliestMessage = true
-                shouldInsertEncryptionHint = true
-            }
             if highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.index(where: { $0.messageId == firstUnreadMessageId }) {
                 let firstUnreadMessge = messages[firstUnreadIndex]
                 let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
@@ -587,8 +569,6 @@ extension ConversationDataSource {
                 canInsertUnreadHint = false
             }
         } else {
-            topMessageOffset = nil
-            bottomMessageOffset = nil
             didLoadEarliestMessage = true
             didLoadLatestMessage = true
             shouldInsertEncryptionHint = true

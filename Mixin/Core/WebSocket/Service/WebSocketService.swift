@@ -106,6 +106,7 @@ extension WebSocketService: SRWebSocketDelegate {
         guard client != nil else {
             return
         }
+        FileManager.default.writeLog(log: "WebSocketService...webSocketDidOpen")
         connected = true
         NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: true)
 
@@ -155,8 +156,8 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     @objc func writePingFrame() {
-        let failedPing = awaitingPong ? sentPingCount : -1;
-        sentPingCount += 1;
+        let failedPing = awaitingPong ? sentPingCount : -1
+        sentPingCount += 1
         awaitingPong = true
         if failedPing != -1 {
             #if DEBUG
@@ -180,6 +181,7 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     func reconnect(didClose: Bool, afterReconnect: Bool = false) {
+        FileManager.default.writeLog(log: "WebSocketService...reconnect")
         connected = false
         NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: false)
         ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()

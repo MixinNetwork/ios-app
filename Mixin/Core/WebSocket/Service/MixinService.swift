@@ -23,6 +23,7 @@ class MixinService {
         var signalKeyMessages = [BlazeSignalMessage]()
         for p in participants {
             if SignalProtocol.shared.containsSession(recipient: p.userId) {
+                FileManager.default.writeLog(conversationId: conversationId, log: "[SendGroupSenderKey]...containsSession...\(p.userId)")
                 let cipherText = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, senderId: currentAccountId, recipientId: p.userId)
                 signalKeyMessages.append(BlazeSignalMessage(recipientId: p.userId, data: cipherText))
             } else {
@@ -52,14 +53,19 @@ class MixinService {
             }
         }
 
+        FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey]...signalKeyMessages:\(signalKeyMessages.count) + noKeyList:\(noKeyList.count)...requestSignalKeyUsers:\(requestSignalKeyUsers.count)...signalKeys:\(signalKeys.count)")
+
         guard signalKeyMessages.count > 0 else {
             return
         }
         let param = BlazeMessageParam(conversationId: conversationId, messages: signalKeyMessages)
         let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.CREATE_SIGNAL_KEY_MESSAGES.rawValue)
-        if deliverNoThrow(blazeMessage: blazeMessage) {
+        let result = deliverNoThrow(blazeMessage: blazeMessage)
+        if result {
             SentSenderKeyDAO.shared.batchUpdate(conversationId: conversationId, messages: signalKeyMessages)
         }
+        FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey][CREATE_SIGNAL_KEY_MESSAGES]...deliver:\(result)...\(signalKeyMessages.map { "{\($0.messageId):\($0.recipientId)}" }.joined(separator: ","))...")
+        FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey][SignalKeys]...\(signalKeys.map { "{\($0.userId ?? "")}" }.joined(separator: ","))...")
     }
 
     internal func checkSignalSession(conversationId: String, recipientId: String) throws -> Bool {
@@ -78,6 +84,7 @@ class MixinService {
         let signalKeys = signalKeysChannel(requestSignalKeyUsers: [recipientId])
         guard signalKeys.count > 0 else {
             SentSenderKeyDAO.shared.replace(SentSenderKey(conversationId: conversationId, userId: recipientId, sentToServer: SentSenderKeyStatus.UNKNOWN.rawValue))
+            FileManager.default.writeLog(conversationId: conversationId, log: "[ResendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
             if resendKey {
                 sendNoKeyMessage(conversationId: conversationId, recipientId: recipientId)
             }
@@ -93,6 +100,7 @@ class MixinService {
             let signalKeys = signalKeysChannel(requestSignalKeyUsers: [recipientId])
             guard signalKeys.count > 0 else {
                 SentSenderKeyDAO.shared.replace(SentSenderKey(conversationId: conversationId, userId: recipientId, sentToServer: SentSenderKeyStatus.UNKNOWN.rawValue))
+                FileManager.default.writeLog(conversationId: conversationId, log: "[SendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
                 if resendKey {
                     sendNoKeyMessage(conversationId: conversationId, recipientId: recipientId)
                 }
@@ -121,6 +129,7 @@ class MixinService {
         if result {
             SentSenderKeyDAO.shared.replace(SentSenderKey(conversationId: conversationId, userId: recipientId, sentToServer: SentSenderKeyStatus.SENT.rawValue))
         }
+        FileManager.default.writeLog(conversationId: conversationId, log: "[DeliverSenderKey]...recipientId:\(recipientId)...\(result)")
         return result
     }
 

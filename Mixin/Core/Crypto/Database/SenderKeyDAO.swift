@@ -11,7 +11,8 @@ class SenderKeyDAO: SignalDAO {
 
     @discardableResult
     func delete(groupId: String, senderId: String) -> Bool {
-        SignalDatabase.shared.delete(table: SenderKey.tableName, condition: SenderKey.Properties.groupId == groupId && SenderKey.Properties.senderId == senderId)
+        let changes = SignalDatabase.shared.delete(table: SenderKey.tableName, condition: SenderKey.Properties.groupId == groupId && SenderKey.Properties.senderId == senderId)
+        FileManager.default.writeLog(conversationId: groupId, log: "[SenderKeyDAO][Delete]...senderId:\(senderId)...changes:\(changes)")
         return true
     }
     

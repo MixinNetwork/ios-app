@@ -18,4 +18,8 @@ extension URL {
         }
         return results
     }
+
+    static func createTempUrl(fileExtension: String) -> URL {
+        return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString.lowercased()).\(fileExtension)")
+    }
 }

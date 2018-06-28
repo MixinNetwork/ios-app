@@ -13,7 +13,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var scrollToBottomWrapperView: UIView!
     @IBOutlet weak var scrollToBottomButton: UIButton!
     @IBOutlet weak var unreadBadgeLabel: UILabel!
-    @IBOutlet weak var bottomBarWrapperView: UIView!
+    @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var botButton: UIButton!
     @IBOutlet weak var inputTextView: InputTextView!
@@ -23,6 +23,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var participantsLabel: UILabel!
     @IBOutlet weak var unblockButton: StateResponsiveButton!
+    @IBOutlet weak var deleteConversationButton: StateResponsiveButton!
     @IBOutlet weak var stickerPanelContainerView: UIView!
     @IBOutlet weak var moreMenuContainerView: UIView!
     @IBOutlet weak var dismissPanelsButton: UIButton!
@@ -36,6 +37,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var stickerPanelContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var moreMenuHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var moreMenuTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     
     static var positions = [String: Position]()
     
@@ -48,6 +50,7 @@ class ConversationViewController: UIViewController {
     private let animationDuration: TimeInterval = 0.25
     private let stickerPanelSegueId = "StickerPanelSegueId"
     private let moreMenuSegueId = "MoreMenuSegueId"
+    private let audioInputSegueId = "AudioInputSegueId"
     
     private var ownerUser: UserItem?
     private var participants = [Participant]()
@@ -63,8 +66,10 @@ class ConversationViewController: UIViewController {
     private var stickerPanelHalfsizedHeight: CGFloat = 320
     
     private var tapRecognizer: UITapGestureRecognizer!
+    private var reportRecognizer: UILongPressGestureRecognizer!
     private var stickerPanelViewController: StickerPanelViewController?
     private var moreMenuViewController: ConversationMoreMenuViewController?
+    private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     private var userBot: App?
     
@@ -90,11 +95,6 @@ class ConversationViewController: UIViewController {
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
     }()
-    private var videoPickerController: UIViewController {
-        let picker = PickerViewController.instance()
-        picker.delegate = self
-        return ContainerViewController.instance(viewController: picker, title: Localized.IMAGE_PICKER_TITLE_CAMERA_ROLL)
-    }
 
     private var bottomSafeAreaInset: CGFloat {
         if #available(iOS 11.0, *) {
@@ -144,6 +144,13 @@ class ConversationViewController: UIViewController {
         } else if let ownerUser = ownerUser {
             titleLabel.text = ownerUser.fullName
         }
+
+        reportRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(showReportMenuAction))
+        reportRecognizer.minimumPressDuration = 2
+        titleLabel.isUserInteractionEnabled = true
+        titleLabel.addGestureRecognizer(reportRecognizer)
+
+        audioInputContainerWidthConstraint.constant = 55
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
@@ -156,7 +163,6 @@ class ConversationViewController: UIViewController {
         inputTextView.layer.cornerRadius = inputTextViewHeightConstraint.constant / 2
         connectionHintView.delegate = self
         loadStickerAndAsset()
-        loadDraft()
         DispatchQueue.global().async { [weak self] in
             var conversation: ConversationItem?
             if let dataSource = self?.dataSource {
@@ -193,12 +199,72 @@ class ConversationViewController: UIViewController {
             }
         }
     }
-    
+
+    @objc func showReportMenuAction() {
+        guard !self.conversationId.isEmpty else {
+            return
+        }
+
+        let conversationId = self.conversationId
+        let alc = UIAlertController(title: Localized.REPORT_TITLE, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.REPORT_BUTTON, style: .default, handler: { [weak self](_) in
+            self?.reportAction(conversationId: conversationId)
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        self.present(alc, animated: true, completion: nil)
+    }
+
+    private func reportAction(conversationId: String) {
+        DispatchQueue.global().async { [weak self] in
+            let developID = AccountAPI.shared.accountIdentityNumber == "762532" ? "31911" : "762532"
+            var user = UserDAO.shared.getUser(identityNumber: developID)
+            if user == nil {
+                switch UserAPI.shared.search(keyword: developID) {
+                    case let .success(userResponse):
+                        UserDAO.shared.updateUsers(users: [userResponse])
+                        user = UserItem.createUser(from: userResponse)
+                    case .failure:
+                       return
+                 }
+            }
+            guard let developUser = user, let url = FileManager.default.exportLog(conversationId: conversationId) else {
+                return
+            }
+            let targetUrl = MixinFile.url(ofChatDirectory: .files, filename: url.lastPathComponent)
+            do {
+                try FileManager.default.copyItem(at: url, to: targetUrl)
+                try FileManager.default.removeItem(at: url)
+            } catch {
+                return
+            }
+            guard FileManager.default.fileSize(targetUrl.path) > 0 else {
+                return
+            }
+
+            let developConversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: developUser.userId)
+            var message = Message.createMessage(category: MessageCategory.SIGNAL_DATA.rawValue, conversationId: developConversationId, userId: AccountAPI.shared.accountUserId)
+            message.name = url.lastPathComponent
+            message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+            message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+            message.mediaUrl = url.lastPathComponent
+            message.mediaStatus = MediaStatus.PENDING.rawValue
+
+            self?.dataSource?.queue.async {
+                SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
+                DispatchQueue.main.async {
+                    self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                }
+            }
+        }
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == stickerPanelSegueId, let destination = segue.destination as? StickerPanelViewController {
             stickerPanelViewController = destination
         } else if segue.identifier == moreMenuSegueId, let destination = segue.destination as? ConversationMoreMenuViewController {
             moreMenuViewController = destination
+        } else if segue.identifier == audioInputSegueId, let destination = segue.destination as? AudioInputViewController {
+            audioInputViewController = destination
         }
     }
     
@@ -207,6 +273,21 @@ class ConversationViewController: UIViewController {
         super.viewSafeAreaInsetsDidChange()
         if inputWrapperBottomConstraint.constant == 0 {
             inputWrapperBottomConstraint.constant = bottomSafeAreaInset
+        }
+    }
+    
+    override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        super.preferredContentSizeDidChange(forChildContentContainer: container)
+        if (container as? UIViewController) == audioInputViewController {
+            let isExpanding = container.preferredContentSize.width > audioInputContainerWidthConstraint.constant
+            audioInputContainerWidthConstraint.constant = container.preferredContentSize.width
+            if isExpanding {
+                UIView.animate(withDuration: animationDuration, animations: {
+                    self.view.layoutIfNeeded()
+                })
+            } else {
+                view.layoutIfNeeded()
+            }
         }
     }
     
@@ -366,6 +447,21 @@ class ConversationViewController: UIViewController {
         }
     }
 
+    @IBAction func deleteConversationAction(_ sender: Any) {
+        guard !self.conversationId.isEmpty else {
+            return
+        }
+        deleteConversationButton.isBusy = true
+        let conversationId = self.conversationId
+        DispatchQueue.global().async { [weak self] in
+            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+            NotificationCenter.default.postOnMain(name: .ConversationDidChange)
+            DispatchQueue.main.async {
+                self?.navigationController?.backToHome()
+            }
+        }
+    }
+    
     @objc func blockAction(_ sender: Any) {
         guard let userId = ownerUser?.userId else {
             return
@@ -386,32 +482,20 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func unblockAction(_ sender: Any) {
-        if !conversationId.isEmpty && unblockButton.title(for: .normal) == Localized.GROUP_MENU_DELETE {
-            unblockButton.isBusy = true
-            let conversationId = self.conversationId
-            DispatchQueue.global().async { [weak self] in
-                ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-                NotificationCenter.default.postOnMain(name: .ConversationDidChange)
-                DispatchQueue.main.async {
-                    self?.navigationController?.backToHome()
-                }
-            }
-        } else {
-            guard let user = ownerUser else {
+        guard let user = ownerUser else {
+            return
+        }
+        unblockButton.isBusy = true
+        UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
+            guard let weakSelf = self else {
                 return
             }
-            unblockButton.isBusy = true
-            UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.unblockButton.isBusy = false
-                switch result {
-                case .success(let userResponse):
-                    weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
-                case .failure:
-                    break
-                }
+            weakSelf.unblockButton.isBusy = false
+            switch result {
+            case .success(let userResponse):
+                weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
+            case .failure:
+                break
             }
         }
     }
@@ -436,6 +520,10 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {
+        if let audioInputViewController = audioInputViewController, audioInputViewController.isShowingLongPressHint {
+            audioInputViewController.animateHideLongPressHint()
+            return
+        }
         guard !isShowingMenu else {
             dismissMenu(animated: true)
             return
@@ -680,7 +768,8 @@ class ConversationViewController: UIViewController {
             guard authorized, let weakSelf = self else {
                 return
             }
-            weakSelf.navigationController?.pushViewController(weakSelf.videoPickerController, animated: true)
+            let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: weakSelf)
+            weakSelf.present(picker, animated: true, completion: nil)
         }
     }
 
@@ -689,6 +778,12 @@ class ConversationViewController: UIViewController {
             return
         }
         toggleStickerPanelSizeAction(self)
+    }
+    
+    func setInputWrapperHidden(_ hidden: Bool) {
+        UIView.animate(withDuration: animationDuration) {
+            self.inputWrapperView.alpha = hidden ? 0 : 1
+        }
     }
     
     // MARK: - Class func
@@ -1143,11 +1238,13 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
 }
 
-extension ConversationViewController: PickerViewControllerDelegate {
+// MARK: - PhotoAssetPickerDelegate
+extension ConversationViewController: PhotoAssetPickerDelegate {
 
     func pickerController(_ picker: PickerViewController, didFinishPickingMediaWithAsset asset: PHAsset) {
         navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, dataSource: dataSource), animated: true)
     }
+    
 }
 
 // MARK: - UI Related Helpers
@@ -1182,7 +1279,9 @@ extension ConversationViewController {
         guard let user = ownerUser else {
             return
         }
-        unblockButton.isHidden = user.relationship != Relationship.BLOCKING.rawValue
+        let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
+        unblockButton.isHidden = !isBlocked
+        audioInputContainerView.isHidden = isBlocked
         botButton.isHidden = !user.isBot
     }
     
@@ -1341,8 +1440,8 @@ extension ConversationViewController {
         updateMoreMenuApps()
         updateStrangerTipsView()
         updateBottomView()
-        bottomBarWrapperView.isHidden = false
-        audioInputContainerView.isHidden = false
+        inputWrapperView.isHidden = false
+        loadDraft()
         updateNavigationBar()
         reloadParticipants()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
@@ -1389,6 +1488,8 @@ extension ConversationViewController {
                         return
                     }
                     weakSelf.unblockButton.isHidden = true
+                    weakSelf.deleteConversationButton.isHidden = true
+                    weakSelf.audioInputContainerView.isHidden = false
                     if weakSelf.dataSource?.category == .group {
                         weakSelf.participantsLabel.text = Localized.GROUP_SECTION_TITLE_MEMBERS(count: weakSelf.participants.count)
                     }
@@ -1399,8 +1500,8 @@ extension ConversationViewController {
                         return
                     }
                     weakSelf.participantsLabel.text = Localized.GROUP_REMOVE_TITLE
-                    weakSelf.unblockButton.setTitle(Localized.GROUP_MENU_DELETE, for: .normal)
-                    weakSelf.unblockButton.isHidden = false
+                    weakSelf.deleteConversationButton.isHidden = false
+                    weakSelf.audioInputContainerView.isHidden = true
                 }
             }
         }

@@ -214,7 +214,7 @@ extension PayView: PinFieldDelegate {
         if avatarImageView.isHidden {
             WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
         } else {
-            AssetAPI.shared.transfer(assetId: assetId, counterUserId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+            AssetAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         }
     }
 

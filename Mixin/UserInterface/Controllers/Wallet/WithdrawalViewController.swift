@@ -22,9 +22,11 @@ class WithdrawalViewController: UIViewController {
     private var address: Address? {
         didSet {
             guard let addr = address else {
+                displayFeeHint(loading: false)
                 return
             }
             addressTextField.text = "\(addr.label) (\(addr.publicKey.toSimpleKey()))"
+            reloadTransactionFeeHint(addressId: addr.addressId)
         }
     }
     
@@ -56,7 +58,6 @@ class WithdrawalViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         amountTextField.delegate = self
-        reloadTransactionFeeHint()
         assetBalanceLabel.text = asset.localizedBalance
         assetSymbolLabel.text = asset.symbol
         subtitleLabel.text = asset.name
@@ -164,32 +165,67 @@ extension WithdrawalViewController: UITextFieldDelegate {
 
 extension WithdrawalViewController {
     
-    private func reloadTransactionFeeHint() {
-        AssetAPI.shared.fee(assetId: asset.assetId) { [weak self] (result) in
+    private func reloadTransactionFeeHint(addressId: String) {
+        displayFeeHint(loading: true)
+        WithdrawalAPI.shared.address(addressId: addressId) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }
             switch result {
-            case .success(let fee):
-                weakSelf.transactionFeeHintLabel.attributedText = weakSelf.transactionFeeHint(fee: fee)
-                weakSelf.transactionFeeHintLabel.isHidden = false
-                weakSelf.requestingFeeIndicator.stopAnimating()
+            case let .success(address):
+                weakSelf.fillFeeHint(address: address)
             case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: {
-                    weakSelf.reloadTransactionFeeHint()
+                    self?.reloadTransactionFeeHint(addressId: addressId)
                 })
             }
         }
     }
+
+    private func displayFeeHint(loading: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            self?.transactionFeeHintLabel.isHidden = loading
+            self?.requestingFeeIndicator.isHidden = !loading
+            if loading {
+                self?.requestingFeeIndicator.startAnimating()
+            } else {
+                self?.requestingFeeIndicator.stopAnimating()
+            }
+        }
+    }
     
-    private func transactionFeeHint(fee: Fee) -> NSAttributedString {
-        let symbol = AssetDAO.shared.getAsset(assetId: fee.assetId)?.symbol ?? ""
-        let feeRepresentation = fee.localizedAmount + " " + symbol
-        let hint = Localized.WALLET_HINT_TRANSACTION_FEE(feeRepresentation: feeRepresentation, symbol: asset.symbol)
-        let attributedHint = NSMutableAttributedString(string: hint, attributes: transactionLabelAttribute)
-        let feeRepresentationRange = (hint as NSString).range(of: feeRepresentation)
-        attributedHint.addAttributes(transactionLabelBoldAttribute, range: feeRepresentationRange)
-        return attributedHint
+    private func fillFeeHint(address: Address) {
+        DispatchQueue.global().async { [weak self] in
+            guard let asset = AssetDAO.shared.getAsset(assetId: address.assetId), let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId) else {
+                self?.transactionFeeHintLabel.text = ""
+                self?.displayFeeHint(loading: false)
+                return
+            }
+
+            let feeRepresentation = address.fee + " " + chainAsset.symbol
+            var hint = Localized.WALLET_HINT_TRANSACTION_FEE(feeRepresentation: feeRepresentation, name: asset.name)
+            var ranges = [(hint as NSString).range(of: feeRepresentation)]
+            if address.reserve.toDouble() > 0 {
+                let reserveRepresentation = address.reserve + " " + chainAsset.symbol
+                let reserveHint = Localized.WALLET_WITHDRAWAL_RESERVE(reserveRepresentation: reserveRepresentation, name: chainAsset.name)
+                let reserveRange = (reserveHint as NSString).range(of: reserveRepresentation)
+                ranges.append(NSRange(location: hint.count + reserveRange.location, length: reserveRange.length))
+                hint += reserveHint
+            }
+
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+
+                let attributedHint = NSMutableAttributedString(string: hint, attributes: weakSelf.transactionLabelAttribute)
+                for range in ranges {
+                    attributedHint.addAttributes(weakSelf.transactionLabelBoldAttribute, range: range)
+                }
+                weakSelf.transactionFeeHintLabel.attributedText = attributedHint
+                weakSelf.displayFeeHint(loading: false)
+            }
+        }
     }
     
 }

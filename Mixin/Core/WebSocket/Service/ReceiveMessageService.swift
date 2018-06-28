@@ -92,6 +92,8 @@ class ReceiveMessageService: MixinService {
             return
         }
 
+        let username = UserDAO.shared.getUser(userId: data.userId)?.fullName ?? data.userId
+
         if data.category == MessageCategory.SIGNAL_KEY.rawValue {
             updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
             MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
@@ -114,12 +116,14 @@ class ReceiveMessageService: MixinService {
                 }
             })
             let status = SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId)
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status ?? "")...source:\(data.source)...redecryptMessage:\(decoded.resendMessageId != nil)")
             if status == RatchetStatus.REQUESTING.rawValue {
                 SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId)
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId)
             }
         } catch {
             trackDecryptFailed(data: data, dataHeader: decoded, error: error)
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
             guard decoded.resendMessageId == nil else {
                 return
             }
@@ -144,6 +148,7 @@ class ReceiveMessageService: MixinService {
             return
         }
         refreshRefreshOneTimePreKeys[conversationId] = now
+        FileManager.default.writeLog(conversationId: conversationId, log: "[ProcessSignalMessage]...refreshKeys...")
         refreshKeys()
     }
 
@@ -172,7 +177,7 @@ class ReceiveMessageService: MixinService {
     }
 
     private func trackDecryptFailed(data: BlazeMessageData, dataHeader: SignalProtocol.ComposeMessageData, error: Error) {
-        guard data.category == MessageCategory.SIGNAL_KEY.rawValue, let signalError = error as? SignalError, signalError != .noSession else {
+        guard let signalError = error as? SignalError, signalError != .noSession else {
             return
         }
         let errorInfo = "\(error)"
@@ -321,6 +326,9 @@ class ReceiveMessageService: MixinService {
     }
 
     private func syncConversation(data: BlazeMessageData) {
+        guard data.category != MessageCategory.SIGNAL_KEY.rawValue else {
+            return
+        }
         if let status = ConversationDAO.shared.getConversationStatus(conversationId: data.conversationId) {
             if status == ConversationStatus.SUCCESS.rawValue || status == ConversationStatus.QUIT.rawValue {
                 return
@@ -410,6 +418,10 @@ class ReceiveMessageService: MixinService {
         case MessageCategory.PLAIN_JSON.rawValue:
             guard let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferPlainData.self, from: base64Data)) else {
                 return
+            }
+
+            if let user = UserDAO.shared.getUser(userId: data.userId) {
+                FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessPlainMessage][\(user.fullName)][\(data.category)][\(plainData.action)]...messageId:\(data.messageId)...\(data.createdAt)")
             }
 
             defer {
@@ -507,8 +519,8 @@ extension ReceiveMessageService {
             return
         }
 
-        if let counterUserId = snapshot.counterUserId {
-            checkUser(userId: counterUserId, tryAgain: true)
+        if let opponentId = snapshot.opponentId {
+            checkUser(userId: opponentId, tryAgain: true)
         }
 
         switch AssetAPI.shared.asset(assetId: snapshot.assetId) {
@@ -533,6 +545,10 @@ extension ReceiveMessageService {
         let userId = sysMessage.userId ?? data.userId
         let messageId = data.messageId
         var operSuccess = true
+
+        if let participantId = sysMessage.participantId, let user = UserDAO.shared.getUser(userId: participantId) {
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSystemMessage][\(user.fullName)][\(sysMessage.action)]...messageId:\(data.messageId)...\(data.createdAt)")
+        }
 
         defer {
             if operSuccess {

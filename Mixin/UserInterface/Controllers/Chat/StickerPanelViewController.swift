@@ -85,7 +85,7 @@ class StickerPanelViewController: UIViewController {
             contentViewWidthConstraint = make.width.equalToSuperview().multipliedBy(numberOfAlbums).constraint
         }
         if stickers.count >= 3, stickers[0].count == 0 {
-            let contentOffset = CGPoint(x: pagesScrollView.bounds.width, y: 0)
+            let contentOffset = CGPoint(x: pagesScrollView.bounds.width * 2, y: 0)
             pagesScrollView.setContentOffset(contentOffset, animated: false)
             albumsCollectionView.selectItem(at: IndexPath(item: 2, section: 0), animated: false, scrollPosition: [])
         } else {

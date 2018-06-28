@@ -135,7 +135,7 @@
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F8291FA1B80A000B838B /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */; };
 		7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */; };
-		7B97BA0A2019D42C0013D58F /* StickerAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA092019D42C0013D58F /* StickerAlbum.swift */; };
+		7B97BA0A2019D42C0013D58F /* StickerRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA092019D42C0013D58F /* StickerRelationship.swift */; };
 		7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA0B2019D7570013D58F /* AlbumCollectionViewCell.swift */; };
 		7B97BA0E2019F1A90013D58F /* StickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA0D2019F1A90013D58F /* StickerCollectionViewCell.swift */; };
 		7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */; };
@@ -343,7 +343,7 @@
 		DF65AAF520514B3B004E3459 /* ParticipantUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF420514B3B004E3459 /* ParticipantUser.swift */; };
 		DF68F1842014CEAB001C4225 /* RefreshStickerJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */; };
 		DF68F1862014CF5E001C4225 /* StickerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F1852014CF5E001C4225 /* StickerAPI.swift */; };
-		DF68F18C201567D6001C4225 /* StickerAlbumDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F18B201567D6001C4225 /* StickerAlbumDAO.swift */; };
+		DF68F18C201567D6001C4225 /* StickerRelationshipDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F18B201567D6001C4225 /* StickerRelationshipDAO.swift */; };
 		DF6DB83B2024D2E70060CF31 /* KeyboardLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6DB83A2024D2E70060CF31 /* KeyboardLayoutConstraint.swift */; };
 		DF6DB83D2024EAD10060CF31 /* PaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6DB83C2024EAD10060CF31 /* PaymentResponse.swift */; };
 		DF6DB83F20258BEA0060CF31 /* ZoomWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6DB83E20258BEA0060CF31 /* ZoomWindow.swift */; };
@@ -424,6 +424,7 @@
 		DFAB3B4520B85A0C00886838 /* ReceiveMoneyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */; };
 		DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D941FF7C2B6000875BD /* ResendData.swift */; };
 		DFB37D9F1FF94864000875BD /* RotateSignedPreKeyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */; };
+		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
 		DFB961441FA85F4B00F0922E /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB961431FA85F4B00F0922E /* MyProfileViewController.swift */; };
 		DFB9B3981FAAB8B9009503CE /* PhoneContactHeaderFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB9B3971FAAB8B9009503CE /* PhoneContactHeaderFooter.xib */; };
 		DFB9B39A1FAB01E6009503CE /* MixinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3991FAB01E6009503CE /* MixinNavigationController.swift */; };
@@ -648,7 +649,7 @@
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateResponsiveButton.swift; sourceTree = "<group>"; };
-		7B97BA092019D42C0013D58F /* StickerAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAlbum.swift; sourceTree = "<group>"; };
+		7B97BA092019D42C0013D58F /* StickerRelationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerRelationship.swift; sourceTree = "<group>"; };
 		7B97BA0B2019D7570013D58F /* AlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B97BA0D2019F1A90013D58F /* StickerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomWrapperView.swift; sourceTree = "<group>"; };
@@ -874,7 +875,7 @@
 		DF65AAF420514B3B004E3459 /* ParticipantUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantUser.swift; sourceTree = "<group>"; };
 		DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshStickerJob.swift; sourceTree = "<group>"; };
 		DF68F1852014CF5E001C4225 /* StickerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAPI.swift; sourceTree = "<group>"; };
-		DF68F18B201567D6001C4225 /* StickerAlbumDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAlbumDAO.swift; sourceTree = "<group>"; };
+		DF68F18B201567D6001C4225 /* StickerRelationshipDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerRelationshipDAO.swift; sourceTree = "<group>"; };
 		DF6DB83A2024D2E70060CF31 /* KeyboardLayoutConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutConstraint.swift; sourceTree = "<group>"; };
 		DF6DB83C2024EAD10060CF31 /* PaymentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentResponse.swift; sourceTree = "<group>"; };
 		DF6DB83E20258BEA0060CF31 /* ZoomWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomWindow.swift; sourceTree = "<group>"; };
@@ -957,6 +958,7 @@
 		DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReceiveMoneyWindow.xib; sourceTree = "<group>"; };
 		DFB37D941FF7C2B6000875BD /* ResendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendData.swift; sourceTree = "<group>"; };
 		DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateSignedPreKeyJob.swift; sourceTree = "<group>"; };
+		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
 		DFB961431FA85F4B00F0922E /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		DFB9B3971FAAB8B9009503CE /* PhoneContactHeaderFooter.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactHeaderFooter.xib; sourceTree = "<group>"; };
 		DFB9B3991FAB01E6009503CE /* MixinNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinNavigationController.swift; sourceTree = "<group>"; };
@@ -1473,7 +1475,7 @@
 				DF10709A2049BC3F00E20047 /* MixinDatabase.swift */,
 				7B4D112B205BC9160074BF60 /* AddressDAO.swift */,
 				DFF353011FEE532300058453 /* AssetDAO.swift */,
-				DF68F18B201567D6001C4225 /* StickerAlbumDAO.swift */,
+				DF68F18B201567D6001C4225 /* StickerRelationshipDAO.swift */,
 				DF2A3CD52016DB1E0095F024 /* StickerDAO.swift */,
 				DFF3B68B20E2690000DC82D9 /* AlbumDAO.swift */,
 				DF1070902048103000E20047 /* BlazeMessageDAO.swift */,
@@ -2050,7 +2052,7 @@
 				DFF353111FEEB72C00058453 /* Snapshot.swift */,
 				DF17B51620526050006447C2 /* SnapshotItem.swift */,
 				DF2A3CD72016DC860095F024 /* Sticker.swift */,
-				7B97BA092019D42C0013D58F /* StickerAlbum.swift */,
+				7B97BA092019D42C0013D58F /* StickerRelationship.swift */,
 				DFF3B68920E25CB500DC82D9 /* Album.swift */,
 				DF191193208F104800BD415D /* Job.swift */,
 				7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */,
@@ -2091,6 +2093,7 @@
 				DFEE215D200CAE8600D9B3F7 /* AuthorizationResponse.swift */,
 				DF6DB83C2024EAD10060CF31 /* PaymentResponse.swift */,
 				DFD5F6F620722C8F0017AAF1 /* PinTokenResponse.swift */,
+				DFB6C69320E4BF0A008345AF /* StickerResponse.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -2405,6 +2408,7 @@
 				7B6EC8FE20A91579009A7020 /* VideoDownloadJob.swift in Sources */,
 				7BC8503020CBA69B00A57B83 /* MXNOggOpusReader.m in Sources */,
 				DF2209301FFFE96500D470EF /* SessionRequest.swift in Sources */,
+				DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */,
 				DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerCollectionViewCell.swift in Sources */,
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
@@ -2431,7 +2435,7 @@
 				273FACC0205FB9A800513327 /* SessionCipher.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
 				7B8BFC8A1FDD77F9004E19DB /* UnknownMessageViewModel.swift in Sources */,
-				7B97BA0A2019D42C0013D58F /* StickerAlbum.swift in Sources */,
+				7B97BA0A2019D42C0013D58F /* StickerRelationship.swift in Sources */,
 				DF503D2A1FECEACB00C008E7 /* Identity.swift in Sources */,
 				DF1A9A7C1FF2245800A95188 /* NumberExtension.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
@@ -2741,7 +2745,7 @@
 				7BC8503420CBA69B00A57B83 /* MXNAudioPlayer.m in Sources */,
 				DFE356271FB40C4700E0E3A8 /* NotificationCenterExtension.swift in Sources */,
 				7B4A430620AC9ABA007D6936 /* GalleryVideoView.swift in Sources */,
-				DF68F18C201567D6001C4225 /* StickerAlbumDAO.swift in Sources */,
+				DF68F18C201567D6001C4225 /* StickerRelationshipDAO.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
 				DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,

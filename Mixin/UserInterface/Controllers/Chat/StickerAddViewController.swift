@@ -78,6 +78,13 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
         }
         rightButton.isBusy = true
 
+        let alertBlock = { [weak self] in
+            DispatchQueue.main.async {
+                self?.container?.rightButton.isBusy = false
+                self?.alert(Localized.STICKER_ADD_REQUIRED)
+            }
+        }
+
         let failedBlock = { [weak self] in
             DispatchQueue.main.async {
                 self?.container?.rightButton.isBusy = false
@@ -91,9 +98,6 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 case let .success(sticker):
                     SDWebImageManager.shared().imageCache?.storeImageData(toDisk: Data(base64Encoded: stickerBase64), forKey: sticker.assetUrl)
                     DispatchQueue.global().async {
-                        if let album = AlbumDAO.shared.getSelfAlbum() {
-                            StickerAlbumDAO.shared.inserOrUpdate(albumId: album.albumId, stickers: [sticker])
-                        }
                         StickerDAO.shared.insertOrUpdateStickers(stickers: [sticker])
 
                         DispatchQueue.main.async {
@@ -109,8 +113,8 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
 
         DispatchQueue.global().async { [weak self] in
             if let assetUrl = self?.animateURL {
-                guard FileManager.default.validateFileSize(assetUrl.path) else {
-                    failedBlock()
+                guard FileManager.default.validateSticker(assetUrl.path) else {
+                    alertBlock()
                     return
                 }
                 let fileExtension = assetUrl.pathExtension.lowercased()
@@ -130,10 +134,10 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 let filename = "\(UUID().uuidString.lowercased()).\(ExtensionName.jpeg)"
                 let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
                 let targetPhoto = image.scaledToSticker()
-                if targetPhoto.saveToFile(path: targetUrl), let stickerBase64 = targetPhoto.base64, FileManager.default.validateFileSize(targetUrl.path) {
+                if targetPhoto.saveToFile(path: targetUrl), let stickerBase64 = targetPhoto.base64, FileManager.default.validateSticker(targetUrl.path) {
                     addBloack(stickerBase64)
                 } else {
-                    failedBlock()
+                    alertBlock()
                 }
             }
         }
@@ -147,9 +151,17 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
 
 private extension FileManager {
 
-    func validateFileSize(_ path: String) -> Bool {
-        let size = fileSize(path)
-        return size > 1024 && size < 1024 * 1024
+    private static let minAspectRatio: CGFloat = 9.0 / 16.0
+    private static let maxAspectRatio: CGFloat = 16.0 / 9.0
+
+    func validateSticker(_ path: String) -> Bool {
+        let fSize = fileSize(path)
+        guard fSize > 1024 && fSize < 1024 * 1024 else {
+            return false
+        }
+        let size = imageSize(path)
+        let ratio = size.width / size.height
+        return ratio > FileManager.minAspectRatio && ratio < FileManager.maxAspectRatio
     }
 
 }

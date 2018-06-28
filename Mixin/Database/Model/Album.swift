@@ -9,9 +9,10 @@ struct Album: BaseCodable {
     let name: String
     let iconUrl: String
     let createdAt: String
-    let updateAt: String
+    let updatedAt: String
     let userId: String
     let category: String
+    let description: String
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Album
@@ -19,9 +20,10 @@ struct Album: BaseCodable {
         case name
         case iconUrl = "icon_url"
         case createdAt = "created_at"
-        case updateAt = "update_at"
+        case updatedAt = "update_at"
         case userId = "user_id"
         case category
+        case description
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {

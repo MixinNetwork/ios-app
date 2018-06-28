@@ -1,7 +1,7 @@
 import Foundation
 import Bugsnag
 import UIKit
-import SDWebImage
+import FLAnimatedImage
 
 class ReceiveMessageService: MixinService {
 
@@ -299,13 +299,13 @@ class ReceiveMessageService: MixinService {
             repeat {
                 switch StickerAPI.shared.sticker(stickerId: stickerId) {
                 case let .success(sticker):
-                    StickerDAO.shared.insertOrUpdateStickers(stickers: [sticker])
+                    StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
                     if let stickerUrl = URL(string: sticker.assetUrl) {
-                        SDWebImageManager.shared().loadImage(with:stickerUrl, options: [.continueInBackground, .retryFailed, .refreshCached], progress: nil) { (_, _, _, _, _, _) in
-
+                        DispatchQueue.main.async {
+                            FLAnimatedImageView().sd_setImage(with: stickerUrl, placeholderImage: nil, options: [.continueInBackground, .retryFailed, .refreshCached], completed: nil)
                         }
                     }
-                    return TransferStickerData(stickerId: sticker.stickerId, name: nil, albumId: nil)
+                    return transferStickerData
                 case let .failure(error):
                     guard error.code != 404 else {
                         return nil

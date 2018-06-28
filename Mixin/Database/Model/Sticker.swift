@@ -31,3 +31,11 @@ struct Sticker: BaseCodable {
         }
     }
 }
+
+extension Sticker {
+
+    static func createSticker(from sticker: StickerResponse) -> Sticker {
+        return Sticker(stickerId: sticker.stickerId, name: sticker.name, assetUrl: sticker.assetUrl, assetType: sticker.assetType, assetWidth: sticker.assetWidth, assetHeight: sticker.assetHeight, lastUseAt: nil)
+    }
+
+}

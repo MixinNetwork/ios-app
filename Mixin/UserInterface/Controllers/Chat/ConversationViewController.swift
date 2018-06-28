@@ -849,7 +849,21 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         case .reply:
             break
         case .add:
-            navigationController?.pushViewController(StickerAddViewController.instance(message: message), animated: true)
+            if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
+                StickerAPI.shared.addSticker(stickerId: stickerId, completion: { (result) in
+                    switch result {
+                    case let .success(sticker):
+                        DispatchQueue.global().async {
+                            StickerDAO.shared.insertOrUpdateStickers(stickers: [sticker])
+                            NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_ADDED)
+                        }
+                    case .failure:
+                        break
+                    }
+                })
+            } else {
+                navigationController?.pushViewController(StickerAddViewController.instance(message: message), animated: true)
+            }
         }
     }
 }

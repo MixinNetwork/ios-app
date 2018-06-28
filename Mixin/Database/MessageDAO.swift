@@ -128,7 +128,7 @@ final class MessageDAO {
     private static let sqlUpdateOldStickers = """
     UPDATE messages SET sticker_id = (
         SELECT s.sticker_id FROM stickers s
-        INNER JOIN sticker_albums sa ON sa.sticker_id = s.sticker_id
+        INNER JOIN sticker_relationships sa ON sa.sticker_id = s.sticker_id
         INNER JOIN albums a ON a.album_id = sa.album_id
         WHERE a.album_id = messages.album_id AND a.name = messages.name
     ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''

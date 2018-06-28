@@ -78,7 +78,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                 case .success:
                     DispatchQueue.global().async {
                         if let album = AlbumDAO.shared.getSelfAlbum() {
-                            StickerAlbumDAO.shared.removeStickers(albumId: album.albumId, stickerIds: stickerIds)
+                            StickerRelationshipDAO.shared.removeStickers(albumId: album.albumId, stickerIds: stickerIds)
                         }
 
                         DispatchQueue.main.async {

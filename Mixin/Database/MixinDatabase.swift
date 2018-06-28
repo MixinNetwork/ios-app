@@ -19,7 +19,7 @@ class MixinDatabase: BaseDatabase {
         }
 
         try database.drop(table: Sticker.tableName)
-        try database.drop(table: StickerAlbum.tableName)
+        try database.drop(table: "sticker_album")
     }
 
     override func configure(reset: Bool = false) {
@@ -34,7 +34,7 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Asset.self)
                 try database.create(of: Snapshot.self)
                 try database.create(of: Sticker.self)
-                try database.create(of: StickerAlbum.self)
+                try database.create(of: StickerRelationship.self)
                 try database.create(of: Album.self)
                 try database.create(of: MessageBlaze.self)
                 try database.create(of: MessageHistory.self)

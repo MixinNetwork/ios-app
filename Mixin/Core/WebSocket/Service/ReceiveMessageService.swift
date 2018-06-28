@@ -306,6 +306,9 @@ class ReceiveMessageService: MixinService {
     }
 
     private func syncConversation(data: BlazeMessageData) {
+        guard data.category != MessageCategory.SIGNAL_KEY.rawValue else {
+            return
+        }
         if let status = ConversationDAO.shared.getConversationStatus(conversationId: data.conversationId) {
             if status == ConversationStatus.SUCCESS.rawValue || status == ConversationStatus.QUIT.rawValue {
                 return

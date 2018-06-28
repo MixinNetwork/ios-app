@@ -445,7 +445,7 @@ extension CameraViewController {
             session.addOutput(capturePhotoOutput)
         }
 
-        captureVideoOutput.maxRecordedDuration = CMTime(seconds: 60, preferredTimescale: 30)
+        captureVideoOutput.maxRecordedDuration = CMTime(seconds: 15, preferredTimescale: 30)
         if session.canAddOutput(captureVideoOutput) {
             session.addOutput(captureVideoOutput)
         }

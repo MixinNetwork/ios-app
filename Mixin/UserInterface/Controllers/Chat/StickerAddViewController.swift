@@ -17,7 +17,11 @@ class StickerAddViewController: UIViewController {
         if let assetUrl = message?.assetUrl {
             stickerImageView.sd_setImage(with: URL(string: assetUrl))
         } else if let mediaUrl = message?.mediaUrl {
-            stickerImageView.sd_setImage(with: MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl))
+            let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+            if mediaUrl.hasSuffix(".webp") || mediaUrl.hasSuffix(".gif") {
+                animateURL = url
+            }
+            stickerImageView.sd_setImage(with: url)
         } else if let asset = self.asset {
             if let filename = PHAssetResource.assetResources(for: asset).first?.originalFilename.lowercased(), let startIndex = filename.index(of: "."), startIndex < filename.endIndex {
                 let fileExtension = String(filename[startIndex..<filename.endIndex])

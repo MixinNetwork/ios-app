@@ -100,7 +100,7 @@ extension Message {
     }
 
     static func createMessage(stickerData: TransferStickerData, data: BlazeMessageData) -> Message {
-        return Message(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: nil, mediaUrl: nil, mediaMimeType: nil, mediaSize: nil, mediaDuration: nil, mediaWidth: nil, mediaHeight: nil, mediaHash: nil, mediaKey: nil, mediaDigest: nil, mediaStatus: nil, mediaWaveform: nil, thumbImage: nil, status: MessageStatus.DELIVERED.rawValue, action: nil, participantId: nil, snapshotId: nil, name: stickerData.name, stickerId: stickerData.stickerId, sharedUserId: nil, createdAt: data.createdAt)
+        return Message(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: nil, mediaUrl: nil, mediaMimeType: nil, mediaSize: nil, mediaDuration: nil, mediaWidth: nil, mediaHeight: nil, mediaHash: nil, mediaKey: nil, mediaDigest: nil, mediaStatus: nil, mediaWaveform: nil, thumbImage: nil, status: MessageStatus.DELIVERED.rawValue, action: nil, participantId: nil, snapshotId: nil, name: nil, stickerId: stickerData.stickerId, sharedUserId: nil, createdAt: data.createdAt)
     }
 
     static func createMessage(contactData: TransferContactData, data: BlazeMessageData) -> Message {

@@ -4,6 +4,8 @@ import Photos
 
 class StickerManagerViewController: UICollectionViewController {
 
+    static let maxStickerCount = 99
+    
     private var stickers = [Sticker]()
     private var isDeleteStickers = false
 
@@ -13,6 +15,9 @@ class StickerManagerViewController: UICollectionViewController {
         let itemWidth = (UIScreen.main.bounds.size.width - (rowCount + 1) * 8) / rowCount
         return CGSize(width: itemWidth, height: itemWidth)
     }()
+    private var isReachLimit: Bool {
+        return stickers.count >= StickerManagerViewController.maxStickerCount
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +56,10 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         if isDeleteStickers {
             guard !(container?.rightButton.isBusy ?? true), let selectionCells = collectionView?.indexPathsForSelectedItems, selectionCells.count > 0 else {
+                container?.rightButton.setTitle(Localized.ACTION_REMOVE, for: .normal)
                 isDeleteStickers = false
+                collectionView?.allowsMultipleSelection = false
+                collectionView?.reloadData()
                 return
             }
             container?.rightButton.isBusy = true
@@ -107,6 +115,9 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
 extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard !isReachLimit else {
+            return stickers.count
+        }
         return isDeleteStickers ? stickers.count : stickers.count + 1
     }
 
@@ -116,7 +127,7 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell_identifier_favorite_sticker", for: indexPath) as! FavoriteStickerCell
-        if isDeleteStickers {
+        if isDeleteStickers || isReachLimit {
             cell.render(sticker: stickers[indexPath.row], isDeleteStickers: isDeleteStickers)
         } else {
             if indexPath.row == stickers.count {
@@ -131,7 +142,7 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard !isDeleteStickers, indexPath.row == stickers.count else {
+        guard !isDeleteStickers, !isReachLimit, indexPath.row == stickers.count else {
             return
         }
 

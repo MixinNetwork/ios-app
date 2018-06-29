@@ -9,8 +9,8 @@ class StickerAPI : BaseAPI {
             return "stickers/albums/\(id)"
         }
 
-        static let add = "stickers/add"
-        static let remove = "stickers/remove"
+        static let add = "stickers/favorite/add"
+        static let remove = "stickers/favorite/remove"
         static func stickers(id: String) -> String {
             return "stickers/\(id)"
         }

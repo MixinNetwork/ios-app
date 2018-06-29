@@ -1,4 +1,5 @@
 import UIKit
+import FLAnimatedImage
 
 class StickerPageViewController: UIViewController {
 

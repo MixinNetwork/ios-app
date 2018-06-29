@@ -21,6 +21,7 @@ final class StickerDAO {
     INNER JOIN sticker_relationships sa ON sa.sticker_id = s.sticker_id
     INNER JOIN albums a ON a.album_id = sa.album_id AND a.category = 'PERSONAL'
     ORDER BY sa.created_at ASC
+    LIMIT \(StickerManagerViewController.maxStickerCount)
     """
 
     static let shared = StickerDAO()

@@ -1,6 +1,7 @@
 import Foundation
 import WebKit
 import Photos
+import UIKit.UIGestureRecognizerSubclass
 
 class WebWindow: BottomSheetView {
 
@@ -9,16 +10,19 @@ class WebWindow: BottomSheetView {
     @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var webViewWrapperView: UIView!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
-
+    @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
+    
     @IBOutlet weak var titleHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var webViewWrapperHeightConstraint: NSLayoutConstraint!
     
-    weak var controller: StatusBarStyleSwitchableViewController?
+    weak var controller: (UIViewController & StatusBarStyleSwitchableViewController)?
 
     private let swipeToDismissByPositionThresholdHeight: CGFloat = 180
     private let swipeToDismissByVelocityThresholdHeight: CGFloat = 250
     private let swipeToDismissByVelocityThresholdVelocity: CGFloat = 1200
     private let swipeToZoomVelocityThreshold: CGFloat = 800
+    private let edgePanToDismissDecisionDistance: CGFloat = 50
+    
     private let imageExtractingScriptString = """
         var imageElements = document.images;
         for(var i = 0; i < imageElements.length; i++) {
@@ -110,6 +114,7 @@ class WebWindow: BottomSheetView {
         webView.scrollView.delegate = self
         webView.navigationDelegate = self
         webView.uiDelegate = self
+        webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
         webViewTitleObserver = webView.observe(\.title) { [weak self] (_, _) in
             self?.updateTitle()
         }
@@ -131,6 +136,7 @@ class WebWindow: BottomSheetView {
         CATransaction.perform(blockWithTransaction: {
             dismissView()
         }) {
+            self.controller?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             self.removeFromSuperview()
         }
     }
@@ -189,6 +195,32 @@ class WebWindow: BottomSheetView {
         }
     }
     
+    @IBAction func screenEdgePanAction(_ recognizer: WebViewScreenEdgePanGestureRecognizer) {
+        switch recognizer.state {
+        case .changed:
+            popupView.transform = CGAffineTransform(scaleX: 1 - 0.2 * recognizer.fractionComplete,
+                                                    y: 1 - 0.2 * recognizer.fractionComplete)
+            if isMaximized {
+                let alpha = BackgroundAlpha.fullsized + (BackgroundAlpha.halfsized - BackgroundAlpha.fullsized) * recognizer.fractionComplete
+                backgroundColor = UIColor.black.withAlphaComponent(alpha)
+            }
+        case .ended:
+            UIView.animate(withDuration: 0.25, animations: {
+                self.popupView.transform = .identity
+            })
+            dismissPopupControllerAnimated()
+        case .cancelled:
+            UIView.animate(withDuration: 0.25, animations: {
+                self.popupView.transform = .identity
+                if self.isMaximized {
+                    self.backgroundColor = .black
+                }
+            })
+        default:
+            break
+        }
+    }
+    
     @objc func keyboardWillShow(_ notification: Notification) {
         guard UIApplication.currentActivity()?.view.subviews.last == self, !isMaximized else {
             return
@@ -201,6 +233,7 @@ class WebWindow: BottomSheetView {
         webView.load(URLRequest(url: url))
         loadingView.startAnimating()
         loadingView.isHidden = false
+        controller?.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
     
     class func instance(conversationId: String) -> WebWindow {
@@ -404,6 +437,42 @@ extension WebWindow {
     private func updateBackgroundColor() {
         let alpha = (webViewHeight - minimumWebViewHeight) * (BackgroundAlpha.fullsized - BackgroundAlpha.halfsized) / (maximumWebViewHeight - minimumWebViewHeight) + BackgroundAlpha.halfsized
         backgroundColor = UIColor.black.withAlphaComponent(max(BackgroundAlpha.halfsized, alpha))
+    }
+    
+}
+
+class WebViewScreenEdgePanGestureRecognizer: UIScreenEdgePanGestureRecognizer {
+    
+    static let decisionDistance: CGFloat = UIScreen.main.bounds.width / 4
+
+    private(set) var fractionComplete: CGFloat = 0
+    
+    private var beganTranslation = CGPoint.zero
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        fractionComplete = 0
+        super.touchesBegan(touches, with: event)
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        let translation = self.translation(in: view)
+        var shouldEnd = false
+        fractionComplete = min(1, max(0, translation.x / WebViewScreenEdgePanGestureRecognizer.decisionDistance))
+        if translation.x > WebViewScreenEdgePanGestureRecognizer.decisionDistance {
+            shouldEnd = true
+        }
+        super.touchesMoved(touches, with: event)
+        if shouldEnd {
+            state = .ended
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        if fractionComplete > 0.99 {
+            super.touchesEnded(touches, with: event)
+        } else {
+            super.touchesCancelled(touches, with: event)
+        }
     }
     
 }

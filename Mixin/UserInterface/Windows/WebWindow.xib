@@ -110,6 +110,7 @@
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <gestureRecognizers/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="okA-Lg-ndE" secondAttribute="bottom" constant="32" id="45j-1W-Mcz"/>
                         <constraint firstAttribute="trailing" secondItem="Rr0-ei-B13" secondAttribute="trailing" id="DLY-qP-MCy"/>
@@ -124,6 +125,9 @@
                             <integer key="value" value="8"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="Zny-eT-cmj" appends="YES" id="sAS-wF-1BK"/>
+                    </connections>
                 </view>
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
@@ -136,6 +140,7 @@
             <viewLayoutGuide key="safeArea" id="7b3-bB-hYw"/>
             <connections>
                 <outlet property="dismissButton" destination="uvk-a8-USK" id="HYf-br-IUr"/>
+                <outlet property="edgePanGestureRecognizer" destination="Zny-eT-cmj" id="5ck-lX-RjC"/>
                 <outlet property="loadingView" destination="AbR-VA-i5f" id="0Gr-Ng-eZQ"/>
                 <outlet property="moreButton" destination="BdC-R9-TIr" id="ZhI-eI-Drh"/>
                 <outlet property="popupView" destination="nW9-LR-ccq" id="S6i-Pw-tuJ"/>
@@ -151,6 +156,12 @@
                 <action selector="panAction:" destination="Qmy-MR-oXV" id="COv-pL-1Xd"/>
             </connections>
         </panGestureRecognizer>
+        <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="Zny-eT-cmj" customClass="WebViewScreenEdgePanGestureRecognizer" customModule="Mixin" customModuleProvider="target">
+            <rectEdge key="edges" left="YES"/>
+            <connections>
+                <action selector="screenEdgePanAction:" destination="Qmy-MR-oXV" id="eG7-7q-BJC"/>
+            </connections>
+        </screenEdgePanGestureRecognizer>
     </objects>
     <resources>
         <image name="ic_titlebar_close" width="44" height="44"/>

@@ -319,7 +319,7 @@ class ReceiveMessageService: MixinService {
                 }
             } while AccountAPI.shared.didLogin
             return nil
-        } else if let stickerName = transferStickerData.name, let albumId = transferStickerData.albumId, let sticker = StickerDAO.shared.getSticker(albumId: stickerName, name: albumId) {
+        } else if let stickerName = transferStickerData.name, let albumId = transferStickerData.albumId, let sticker = StickerDAO.shared.getSticker(albumId: albumId, name: stickerName) {
             return TransferStickerData(stickerId: sticker.stickerId, name: nil, albumId: nil)
         }
         return nil

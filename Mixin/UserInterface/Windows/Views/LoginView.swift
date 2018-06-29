@@ -120,7 +120,7 @@ class LoginView: UIView {
         iconBottomConstaint.constant = iconBottomConstaint.constant * scale
         contentHeightConstraint.constant = targetHeight
         UIView.animate(withDuration: 0.25) {
-            self.backgroundWindow?.zoomAnimation(targetHeight: self.contentHeightConstraint.constant)
+            self.backgroundWindow?.webViewHeight = targetHeight
             superView.layoutIfNeeded()
         }
     }
@@ -241,7 +241,7 @@ extension LoginView: UIScrollViewDelegate {
         let newConstant = contentHeightConstraint.constant + scrollView.contentOffset.y
         if newConstant <= maximumWebViewHeight {
             contentHeightConstraint.constant = newConstant
-            self.backgroundWindow?.zoomAnimation(targetHeight: self.contentHeightConstraint.constant)
+            self.backgroundWindow?.webViewHeight = newConstant
             superView.layoutIfNeeded()
             scrollView.contentOffset.y = 0
             let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
@@ -263,9 +263,10 @@ extension LoginView: UIScrollViewDelegate {
                 zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
             }
         }
-        contentHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        let contentHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        contentHeightConstraint.constant = contentHeight
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-            self.backgroundWindow?.zoomAnimation(targetHeight: self.contentHeightConstraint.constant)
+            self.backgroundWindow?.webViewHeight = contentHeight
             superView.layoutIfNeeded()
         }, completion: nil)
     }

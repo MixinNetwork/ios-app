@@ -1241,7 +1241,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
 // MARK: - PhotoAssetPickerDelegate
 extension ConversationViewController: PhotoAssetPickerDelegate {
 
-    func pickerController(_ picker: PickerViewController, didFinishPickingMediaWithAsset asset: PHAsset) {
+    func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
         navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, dataSource: dataSource), animated: true)
     }
     

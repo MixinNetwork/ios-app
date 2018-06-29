@@ -76,7 +76,7 @@ extension AlbumViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let album = allAlbums[indexPath.row]
-        let pickerViewController = PickerViewController.instance(collection: album.assetCollection, isFilterCustomSticker: isFilterCustomSticker)
+        let pickerViewController = PickerViewController.instance(collection: album.assetCollection, isFilterCustomSticker: isFilterCustomSticker, scrollToOffset: CGPoint.zero)
         let vc = ContainerViewController.instance(viewController: pickerViewController, title: album.title)
         navigationController?.pushViewController(vc, animated: true)
     }

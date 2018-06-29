@@ -27,6 +27,7 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
         return CGSize(width: itemWidth, height: itemWidth)
     }()
     private var scrollToBottom = false
+    private var scrollToOffset = CGPoint.zero
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,16 +49,21 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
         super.viewDidLayoutSubviews()
         if !scrollToBottom && assets.count > 0 {
             scrollToBottom = true
-            collectionView?.scrollToItem(at: IndexPath(row: assets.count - 1, section: 0), at: .bottom, animated: false)
+            if scrollToOffset.y > 0 {
+                collectionView?.contentOffset = scrollToOffset
+            } else {
+                collectionView?.scrollToItem(at: IndexPath(row: assets.count - 1, section: 0), at: .bottom, animated: false)
+            }
         }
     }
-    class func instance(collection: PHAssetCollection? = nil, isFilterCustomSticker: Bool) -> UIViewController {
+    class func instance(collection: PHAssetCollection? = nil, isFilterCustomSticker: Bool, scrollToOffset: CGPoint) -> UIViewController {
         let vc = Storyboard.photo.instantiateViewController(withIdentifier: "picker") as! PickerViewController
         if let collection = collection {
             vc.collection = collection
         } else {
             vc.collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject
         }
+        vc.scrollToOffset = scrollToOffset
         vc.isFilterCustomSticker = isFilterCustomSticker
         return vc
     }
@@ -123,7 +129,7 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         navigationController?.dismiss(animated: true, completion: nil)
-        (navigationController as? PhotoAssetPickerNavigationController)?.pickerDelegate?.pickerController(self, didFinishPickingMediaWithAsset: assets[indexPath.row])
+        (navigationController as? PhotoAssetPickerNavigationController)?.pickerDelegate?.pickerController(self, contentOffset: collectionView.contentOffset, didFinishPickingMediaWithAsset: assets[indexPath.row])
     }
     
 }

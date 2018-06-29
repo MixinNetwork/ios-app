@@ -6,6 +6,7 @@ class StickerManagerViewController: UICollectionViewController {
 
     private var stickers = [Sticker]()
     private var isDeleteStickers = false
+    private var pickerContentOffset = CGPoint.zero
 
     private lazy var itemSize: CGSize = {
         let minWidth: CGFloat = UIScreen.main.bounds.width > 400 ? 120 : 100
@@ -143,7 +144,7 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
                 return
             }
 
-            let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: weakSelf, isFilterCustomSticker: true)
+            let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: weakSelf, isFilterCustomSticker: true, scrollToOffset: weakSelf.pickerContentOffset)
             weakSelf.present(picker, animated: true, completion: nil)
         }
     }
@@ -152,7 +153,8 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - PhotoAssetPickerDelegate
 extension StickerManagerViewController: PhotoAssetPickerDelegate {
 
-    func pickerController(_ picker: PickerViewController, didFinishPickingMediaWithAsset asset: PHAsset) {
+    func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
+        self.pickerContentOffset = contentOffset
         navigationController?.pushViewController(StickerAddViewController.instance(asset: asset), animated: true)
     }
 

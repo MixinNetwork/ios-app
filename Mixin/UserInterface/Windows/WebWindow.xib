@@ -98,6 +98,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="okA-Lg-ndE">
                             <rect key="frame" x="0.0" y="56" width="375" height="428"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <gestureRecognizers/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="428" id="FTp-5J-UK8" customClass="LayoutConstraintCompat" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
@@ -107,6 +108,9 @@
                                     </userDefinedRuntimeAttributes>
                                 </constraint>
                             </constraints>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="rul-Ns-81m" appends="YES" id="G23-iF-LY5"/>
+                            </connections>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -142,6 +146,7 @@
                 <outlet property="dismissButton" destination="uvk-a8-USK" id="HYf-br-IUr"/>
                 <outlet property="edgePanGestureRecognizer" destination="Zny-eT-cmj" id="5ck-lX-RjC"/>
                 <outlet property="loadingView" destination="AbR-VA-i5f" id="0Gr-Ng-eZQ"/>
+                <outlet property="longPressGestureRecognizer" destination="rul-Ns-81m" id="zQa-W8-Oxf"/>
                 <outlet property="moreButton" destination="BdC-R9-TIr" id="ZhI-eI-Drh"/>
                 <outlet property="popupView" destination="nW9-LR-ccq" id="S6i-Pw-tuJ"/>
                 <outlet property="titleHeightConstraint" destination="Ewj-cl-Uzr" id="sAH-Xt-fdE"/>
@@ -162,6 +167,12 @@
                 <action selector="screenEdgePanAction:" destination="Qmy-MR-oXV" id="eG7-7q-BJC"/>
             </connections>
         </screenEdgePanGestureRecognizer>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="rul-Ns-81m">
+            <connections>
+                <action selector="longPressAction:" destination="Qmy-MR-oXV" id="R2S-GF-caM"/>
+                <outlet property="delegate" destination="Qmy-MR-oXV" id="lXR-hb-Ezj"/>
+            </connections>
+        </pongPressGestureRecognizer>
     </objects>
     <resources>
         <image name="ic_titlebar_close" width="44" height="44"/>

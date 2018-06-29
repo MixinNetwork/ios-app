@@ -2,6 +2,7 @@ import Foundation
 import WebKit
 import Photos
 import UIKit.UIGestureRecognizerSubclass
+import SwiftMessages
 
 class WebWindow: BottomSheetView {
 
@@ -11,6 +12,7 @@ class WebWindow: BottomSheetView {
     @IBOutlet weak var webViewWrapperView: UIView!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
+    @IBOutlet weak var longPressGestureRecognizer: UILongPressGestureRecognizer!
     
     @IBOutlet weak var titleHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var webViewWrapperHeightConstraint: NSLayoutConstraint!
@@ -22,46 +24,19 @@ class WebWindow: BottomSheetView {
     private let swipeToDismissByVelocityThresholdVelocity: CGFloat = 1200
     private let swipeToZoomVelocityThreshold: CGFloat = 800
     private let edgePanToDismissDecisionDistance: CGFloat = 50
-    
-    private let imageExtractingScriptString = """
-        var imageElements = document.images;
-        for(var i = 0; i < imageElements.length; i++) {
-            var imageElement = imageElements[i];
-            var intervalID = 0;
-            var touchX = 0, touchY = 0;
-            imageElement.ontouchstart = function(e) {
-                e.preventDefault();
-                intervalID = window.setInterval(
-                    function() {
-                        window.clearInterval(intervalID);
-                        window.webkit.messageHandlers.ImageLongPressHandler.postMessage(e.target.src);
-                    },
-                    1000
-                );
-                touchX = e.touches[0].pageX
-                touchY = e.touches[0].pageY
-            };
-            imageElement.ontouchmove = function(e) {
-                var targetX = window.scrollX - (e.touches[0].pageX - touchX);
-                var targetY = window.scrollY - (e.touches[0].pageY - touchY);
-                window.scrollTo(targetX, targetY);
-            };
-            imageElement.ontouchend = function(e) {
-                window.clearInterval(intervalID);
-            };
-            imageElement.ontouchcancel = function(e) {
-                window.clearInterval(intervalID);
-            }
-        };
+    private let disableImageSelectionScriptString = """
+    var style = document.createElement('style');
+    style.innerHTML = 'img { -webkit-user-select: none; -webkit-touch-callout: none; }';
+    document.head.appendChild(style)
     """
     
     private var swipeToZoomAnimator: UIViewPropertyAnimator?
     private var conversationId = ""
-    private var processLongPress = false
     private var isMaximized = false
     private var webViewTitleObserver: NSKeyValueObservation?
     private var minimumWebViewHeight: CGFloat = 428
     private var scrollViewBeganDraggingOffset = CGPoint.zero
+    private var imageDownloadTask: URLSessionDataTask?
     
     private lazy var maximumWebViewHeight: CGFloat = {
         let minStatusBarHeight: CGFloat = 20
@@ -72,8 +47,8 @@ class WebWindow: BottomSheetView {
         }
     }()
     private lazy var medianWebViewHeight = minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
-    private lazy var imageExtractingUserScript = WKUserScript(source: imageExtractingScriptString, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
     private lazy var webView: MixinWebView = {
+        let disableImageSelectionScript = WKUserScript(source: disableImageSelectionScriptString, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
         config.preferences = WKPreferences()
@@ -81,11 +56,15 @@ class WebWindow: BottomSheetView {
         config.preferences.javaScriptEnabled = true
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.add(self, name: MessageHandlerName.mixinContext)
-        config.userContentController.add(self, name: MessageHandlerName.imageLongPress)
-        config.userContentController.addUserScript(imageExtractingUserScript)
+        config.userContentController.addUserScript(disableImageSelectionScript)
         return MixinWebView(frame: .zero, configuration: config)
     }()
-
+    private lazy var imageDownloadSession: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.requestCachePolicy = .returnCacheDataElseLoad
+        return URLSession(configuration: config)
+    }()
+    
     var webViewHeight: CGFloat {
         get {
             return webViewWrapperHeightConstraint.constant
@@ -130,15 +109,23 @@ class WebWindow: BottomSheetView {
     }
     
     override func dismissPopupControllerAnimated() {
+        imageDownloadTask?.cancel()
         controller?.statusBarStyle = .default
         webView.stopLoading()
         webView.configuration.userContentController.removeScriptMessageHandler(forName: MessageHandlerName.mixinContext)
-        webView.configuration.userContentController.removeScriptMessageHandler(forName: MessageHandlerName.imageLongPress)
         CATransaction.perform(blockWithTransaction: {
             dismissView()
         }) {
             self.controller?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             self.removeFromSuperview()
+        }
+    }
+    
+    override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if gestureRecognizer == longPressGestureRecognizer {
+            return true
+        } else {
+            return super.gestureRecognizer(gestureRecognizer, shouldReceive: touch)
         }
     }
     
@@ -222,11 +209,36 @@ class WebWindow: BottomSheetView {
         }
     }
     
+    @IBAction func longPressAction(_ recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        imageDownloadTask?.cancel()
+        let location = round(recognizer.location(in: webView))
+        let script = "document.elementFromPoint(\(location.x), \(location.y)).src"
+        webView.evaluateJavaScript(script) { (urlString, error) in
+            guard error == nil, let urlString = urlString as? String, let url = URL(string: urlString) else {
+                return
+            }
+            self.imageDownloadTask = self.imageDownloadSession.dataTask(with: url, completionHandler: { [weak self] (data, response, error) in
+                guard let data = data, let image = UIImage(data: data) else {
+                    return
+                }
+                self?.presentAlertController(for: image)
+            })
+            self.imageDownloadTask?.resume()
+        }
+    }
+    
     @objc func keyboardWillShow(_ notification: Notification) {
         guard UIApplication.currentActivity()?.view.subviews.last == self, !isMaximized else {
             return
         }
         setIsMaximizedAnimated(true)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 
     func presentPopupControllerAnimated(url: URL) {
@@ -248,56 +260,7 @@ class WebWindow: BottomSheetView {
 extension WebWindow: WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard !processLongPress, message.name == MessageHandlerName.imageLongPress, let urlString = message.body as? String, let url = URL(string: urlString) else {
-            return
-        }
-        processLongPress = true
-        let sessionConfig = URLSessionConfiguration.default
-        sessionConfig.requestCachePolicy = .returnCacheDataElseLoad
-        URLSession(configuration: sessionConfig).dataTask(with: url, completionHandler: { [weak self](data, response, error) in
-            defer {
-                self?.processLongPress = false
-            }
-            guard let data = data, let image = UIImage(data: data) else {
-                return
-            }
-            self?.showImageMenu(image: image)
-        }).resume()
-    }
-
-    private func showImageMenu(image: UIImage) {
-        DispatchQueue.global().async {
-            var qrcodeUrl: URL!
-            if let ciImage = CIImage(image: image), let features = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)?.features(in: ciImage) {
-                for case let feature as CIQRCodeFeature in features {
-                    guard let messageString = feature.messageString, let url = URL(string: messageString) else {
-                        continue
-                    }
-                    qrcodeUrl = url
-                    break
-                }
-            }
-            DispatchQueue.main.async {
-                let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                alc.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
-                    PHPhotoLibrary.checkAuthorization { (authorized) in
-                        guard authorized else {
-                            return
-                        }
-                        PHPhotoLibrary.saveImageToLibrary(image: image)
-                    }
-                }))
-                if qrcodeUrl != nil {
-                    alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
-                        if !UrlWindow.checkUrl(url: qrcodeUrl, clearNavigationStack: false) {
-
-                        }
-                    }))
-                }
-                alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-                UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
-            }
-        }
+    
     }
 
 }
@@ -409,17 +372,12 @@ extension WebWindow {
     
     enum MessageHandlerName {
         static let mixinContext = "MixinContext"
-        static let imageLongPress = "ImageLongPressHandler"
     }
     
     enum BackgroundAlpha {
         static let halfsized: CGFloat = 0.3
         static let fullsized: CGFloat = 1
     }
-    
-}
-
-extension WebWindow {
     
     private func updateTitle() {
         titleLabel.text = webView.title
@@ -439,6 +397,41 @@ extension WebWindow {
     private func updateBackgroundColor() {
         let alpha = (webViewHeight - minimumWebViewHeight) * (BackgroundAlpha.fullsized - BackgroundAlpha.halfsized) / (maximumWebViewHeight - minimumWebViewHeight) + BackgroundAlpha.halfsized
         backgroundColor = UIColor.black.withAlphaComponent(max(BackgroundAlpha.halfsized, alpha))
+    }
+    
+    private func presentAlertController(for image: UIImage) {
+        DispatchQueue.global().async {
+            var qrcodeUrl: URL!
+            if let ciImage = CIImage(image: image), let features = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)?.features(in: ciImage) {
+                for case let feature as CIQRCodeFeature in features {
+                    guard let messageString = feature.messageString, let url = URL(string: messageString) else {
+                        continue
+                    }
+                    qrcodeUrl = url
+                    break
+                }
+            }
+            DispatchQueue.main.async {
+                let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                alc.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
+                    PHPhotoLibrary.checkAuthorization { (authorized) in
+                        guard authorized else {
+                            return
+                        }
+                        PHPhotoLibrary.saveImageToLibrary(image: image)
+                    }
+                }))
+                if qrcodeUrl != nil {
+                    alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
+                        if !UrlWindow.checkUrl(url: qrcodeUrl, clearNavigationStack: false) {
+                            SwiftMessages.showToast(message: Localized.NOT_MIXIN_QR_CODE, backgroundColor: .hintRed)
+                        }
+                    }))
+                }
+                alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+                UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
+            }
+        }
     }
     
 }

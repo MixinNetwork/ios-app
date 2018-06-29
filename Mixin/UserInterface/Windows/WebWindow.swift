@@ -61,6 +61,7 @@ class WebWindow: BottomSheetView {
     private var isMaximized = false
     private var webViewTitleObserver: NSKeyValueObservation?
     private var minimumWebViewHeight: CGFloat = 428
+    private var scrollViewBeganDraggingOffset = CGPoint.zero
     
     private lazy var maximumWebViewHeight: CGFloat = {
         let minStatusBarHeight: CGFloat = 20
@@ -304,12 +305,12 @@ extension WebWindow: WKScriptMessageHandler {
 extension WebWindow: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.isTracking {
-            let newConstant = webViewHeight + scrollView.contentOffset.y
-            if newConstant <= maximumWebViewHeight {
-                webViewHeight = newConstant
-                scrollView.contentOffset.y = 0
-                isMaximized = newConstant > medianWebViewHeight
+        if scrollView.isTracking, scrollView.contentOffset.y < 0.1 || scrollView.panGestureRecognizer.velocity(in: scrollView).y < 0 {
+            let newHeight = webViewHeight + (scrollView.contentOffset.y - scrollViewBeganDraggingOffset.y)
+            if newHeight <= maximumWebViewHeight {
+                webViewHeight = newHeight
+                scrollView.contentOffset = scrollViewBeganDraggingOffset
+                isMaximized = newHeight > medianWebViewHeight
             }
         }
         controller?.statusBarStyle = maximumWebViewHeight - titleHeightConstraint.constant - webViewHeight < 1 ? .lightContent : .default
@@ -318,6 +319,7 @@ extension WebWindow: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         swipeToZoomAnimator?.stopAnimation(true)
         swipeToZoomAnimator = nil
+        scrollViewBeganDraggingOffset = scrollView.contentOffset
         webViewHeight = webViewWrapperView.frame.height
     }
 

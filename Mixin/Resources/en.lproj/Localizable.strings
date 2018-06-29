@@ -44,6 +44,7 @@
 "toast_operation_failed" = "The operation failed, please try again later";
 "toast_copied" = "Successfully copied to clipboard";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
+"toast_added" = "Added";
 
 
 // Login
@@ -113,6 +114,7 @@
 "chat_message_menu_forward" = "Forward";
 "chat_message_menu_copy" = "Copy";
 "chat_message_open_url" = "Open URL";
+"chat_message_sticker" = "Add to Stickers";
 "chat_time_today" = "Today";
 "chat_cell_title_unread_messages" = "Unread messages";
 "chat_message_you" = "You";
@@ -143,6 +145,15 @@
 "chat_file_expired" = "Expired";
 "chat_voice_record_cancel" = "Slide to cancel";
 "chat_voice_record_longpress_hint" = "Hold to record, release to send.";
+
+// Sticker
+"sticker_manager_title" = "My Stickers";
+"sticker_add_title" = "Add Sticker";
+"sticker_remove_title" = "Delete Stickers";
+"sticker_add_failed" = "Failed to add sticker";
+"sticker_remove_failed" = "Failed to delete stickers";
+"sticker_add_required" = "Requires stickers file size larger than 1KB and less than 1MB, aspect ratio between 16:9 and 9:16.";
+"sticker_add_limit" = "Too many stickers.";
 
 // Camera
 "camera_save_photo_success" = "Photo saved.";

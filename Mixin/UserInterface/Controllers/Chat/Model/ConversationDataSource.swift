@@ -76,7 +76,6 @@ class ConversationDataSource {
     }
     
     func initData() {
-        assert(!didInitializedData)
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         queue.async {
             guard !self.messageProcessingIsCancelled else {
@@ -512,13 +511,13 @@ extension ConversationDataSource {
                 }
             }
         } else if type == .SIGNAL_STICKER, let sticker = value as? Sticker {
-            message.name = sticker.name
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = sticker.assetUrl
-            message.albumId = sticker.albumId
-            let transferData = TransferStickerData(name: sticker.name, albumId: sticker.albumId)
-            message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+            message.stickerId = sticker.stickerId
             queue.async {
+                let albumId = AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId
+                let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: albumId)
+                message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
         }

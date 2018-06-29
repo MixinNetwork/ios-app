@@ -1,6 +1,7 @@
 import Foundation
 import Bugsnag
 import UIKit
+import FLAnimatedImage
 
 class ReceiveMessageService: MixinService {
 
@@ -225,16 +226,8 @@ class ReceiveMessageService: MixinService {
             }
             MessageDAO.shared.insertMessage(message: Message.createMessage(mediaData: transferMediaData, data: data), messageSource: data.source)
         } else if data.category.hasSuffix("_STICKER") {
-            guard let base64Data = Data(base64Encoded: plainText), let transferStickerData = (try? jsonDecoder.decode(TransferStickerData.self, from: base64Data)) else {
+            guard let transferStickerData = parseSticker(plainText) else {
                 return
-            }
-
-            if !StickerDAO.shared.isExist(albumId: transferStickerData.albumId, name: transferStickerData.name) {
-                do {
-                    try RefreshStickerJob.cacheStickers(albumId: transferStickerData.albumId)
-                } catch {
-                    ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(albumId: transferStickerData.albumId))
-                }
             }
             MessageDAO.shared.insertMessage(message: Message.createMessage(stickerData: transferStickerData, data: data), messageSource: data.source)
         } else if data.category.hasSuffix("_CONTACT") {
@@ -278,15 +271,8 @@ class ReceiveMessageService: MixinService {
             }
             MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId, mediaStatus: mediaStatus)
         case MessageCategory.SIGNAL_STICKER.rawValue:
-            guard let base64Data = Data(base64Encoded: plainText), let transferStickerData = (try? jsonDecoder.decode(TransferStickerData.self, from: base64Data)) else {
+            guard let transferStickerData = parseSticker(plainText) else {
                 return
-            }
-            if !StickerDAO.shared.isExist(albumId: transferStickerData.albumId, name: transferStickerData.name) {
-                do {
-                    try RefreshStickerJob.cacheStickers(albumId: transferStickerData.albumId)
-                } catch {
-                    ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(albumId: transferStickerData.albumId))
-                }
             }
             MessageDAO.shared.updateStickerMessage(stickerData: transferStickerData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId)
         case MessageCategory.SIGNAL_CONTACT.rawValue:
@@ -303,6 +289,40 @@ class ReceiveMessageService: MixinService {
         default:
             break
         }
+    }
+
+    private func parseSticker(_ stickerText: String) -> TransferStickerData? {
+        guard let base64Data = Data(base64Encoded: stickerText), let transferStickerData = (try? jsonDecoder.decode(TransferStickerData.self, from: base64Data)) else {
+            return nil
+        }
+
+        if let stickerId = transferStickerData.stickerId, !stickerId.isEmpty {
+            guard !StickerDAO.shared.isExist(stickerId: stickerId) else {
+                return transferStickerData
+            }
+
+            repeat {
+                switch StickerAPI.shared.sticker(stickerId: stickerId) {
+                case let .success(sticker):
+                    StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
+                    if let stickerUrl = URL(string: sticker.assetUrl) {
+                        DispatchQueue.main.async {
+                            FLAnimatedImageView().sd_setImage(with: stickerUrl, placeholderImage: nil, options: [.continueInBackground, .retryFailed, .refreshCached], completed: nil)
+                        }
+                    }
+                    return transferStickerData
+                case let .failure(error):
+                    guard error.code != 404 else {
+                        return nil
+                    }
+                    checkNetworkAndWebSocket()
+                }
+            } while AccountAPI.shared.didLogin
+            return nil
+        } else if let stickerName = transferStickerData.name, let albumId = transferStickerData.albumId, let sticker = StickerDAO.shared.getSticker(albumId: albumId, name: stickerName) {
+            return TransferStickerData(stickerId: sticker.stickerId, name: nil, albumId: nil)
+        }
+        return nil
     }
 
     private func syncConversation(data: BlazeMessageData) {

@@ -7,13 +7,13 @@ class StickerPanelViewController: UIViewController {
     @IBOutlet weak var pagesScrollView: UIScrollView!
     @IBOutlet weak var pagesContentView: UIView!
     
-    private var albums = [StickerAlbum]()
+    private var albums = [Album]()
     private var pages = [StickerPageViewController]()
     private var contentViewWidthConstraint: Constraint!
     private var currentPage = 0
     private var isFastScrolling = false
     private var numberOfAlbums: Int {
-        return albums.count + 1
+        return albums.count + 2
     }
     
     private let albumCellReuseId = "AlbumCollectionViewCell"
@@ -26,6 +26,18 @@ class StickerPanelViewController: UIViewController {
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
         pagesScrollView.delegate = self
+
+        NotificationCenter.default.addObserver(forName: .StickerDidChange, object: nil, queue: .main) { [weak self] (_) in
+            DispatchQueue.global().async {
+                let stickers = StickerDAO.shared.getFavoriteStickers()
+                DispatchQueue.main.async {
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    weakSelf.pages[1].reload(stickers: stickers)
+                }
+            }
+        }
     }
     
     func reloadRecentPage() {
@@ -38,7 +50,7 @@ class StickerPanelViewController: UIViewController {
         }
     }
     
-    func reload(albums: [StickerAlbum], stickers: [[Sticker]]) {
+    func reload(albums: [Album], stickers: [[Sticker]]) {
         self.albums = albums
         albumsCollectionView.reloadData()
         for page in pages {
@@ -67,14 +79,15 @@ class StickerPanelViewController: UIViewController {
             pages.append(page)
             page.didMove(toParentViewController: self)
         }
-        pages.first?.isRecentPage = true
+        pages[0].isRecentPage = true
+        pages[1].isFavoritePage = true
         pagesContentView.snp.remakeConstraints { (make) in
             contentViewWidthConstraint = make.width.equalToSuperview().multipliedBy(numberOfAlbums).constraint
         }
-        if stickers.count >= 2, stickers[0].count == 0 {
-            let contentOffset = CGPoint(x: pagesScrollView.bounds.width, y: 0)
+        if stickers.count >= 3, stickers[0].count == 0 {
+            let contentOffset = CGPoint(x: pagesScrollView.bounds.width * 2, y: 0)
             pagesScrollView.setContentOffset(contentOffset, animated: false)
-            albumsCollectionView.selectItem(at: IndexPath(item: 1, section: 0), animated: false, scrollPosition: [])
+            albumsCollectionView.selectItem(at: IndexPath(item: 2, section: 0), animated: false, scrollPosition: [])
         } else {
             albumsCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: [])
         }
@@ -104,7 +117,10 @@ extension StickerPanelViewController: UICollectionViewDataSource {
         if indexPath.row == 0 {
             cell.imageView.image = #imageLiteral(resourceName: "ic_recent_stickers")
             cell.imageView.contentMode = .center
-        } else if let url = URL(string: albums[indexPath.row - 1].iconUrl) {
+        } else if indexPath.row == 1 {
+            cell.imageView.image = #imageLiteral(resourceName: "ic_sticker_favorite")
+            cell.imageView.contentMode = .center
+        } else if let url = URL(string: albums[indexPath.row - 2].iconUrl) {
             cell.imageView.sd_setImage(with: url, completed: nil)
             cell.imageView.contentMode = .scaleAspectFit
         }

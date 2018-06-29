@@ -294,7 +294,7 @@ internal extension Database {
 
 }
 
-internal extension Database {
+extension Database {
 
     func isColumnExist(tableName: String, columnName: String) throws -> Bool {
         return try getValue(on: Master.Properties.sql, fromTable: Master.builtinTableName, where: Master.Properties.tableName == tableName && Master.Properties.type == "table").stringValue.contains(columnName)

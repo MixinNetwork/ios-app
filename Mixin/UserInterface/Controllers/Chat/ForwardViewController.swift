@@ -94,15 +94,14 @@ class ForwardViewController: UIViewController {
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
             newMessage.mediaDuration = message.mediaDuration
         } else if message.category.hasSuffix("_STICKER") {
-            newMessage.name = message.name
-            newMessage.mediaUrl = message.mediaUrl
-            newMessage.albumId = message.albumId
-            newMessage.mediaStatus = MediaStatus.PENDING.rawValue
-            guard let stickerName = message.name, let albumId = message.albumId else {
-                UIApplication.trackError("ForwardViewController", action: "forward sticker failed")
+            guard let stickerId = message.stickerId, let sticker = StickerDAO.shared.getSticker(stickerId: stickerId), let albumId = AlbumDAO.shared.getAlbum(stickerId: sticker.stickerId)?.albumId else {
                 return
             }
-            let transferData = TransferStickerData(name: stickerName, albumId: albumId)
+
+            newMessage.mediaUrl = message.mediaUrl
+            newMessage.stickerId = message.stickerId
+            newMessage.mediaStatus = MediaStatus.PENDING.rawValue
+            let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: albumId)
             newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
         } else if message.category.hasSuffix("_CONTACT") {
             guard let sharedUserId = message.sharedUserId else {

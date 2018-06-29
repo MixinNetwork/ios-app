@@ -5,6 +5,9 @@ extension MessageItem {
     private static let deleteAction = [#selector(ConversationTableView.deleteAction(_:))]
     private static let forwardAndDeleteActions = [#selector(ConversationTableView.forwardAction(_:)),
                                                   #selector(ConversationTableView.deleteAction(_:))]
+    private static let imageActions = [#selector(ConversationTableView.addToStickersAction(_:)),
+                                       #selector(ConversationTableView.forwardAction(_:)),
+                                       #selector(ConversationTableView.deleteAction(_:))]
     private static let textActions = [#selector(ConversationTableView.forwardAction(_:)),
                                       #selector(ConversationTableView.copyAction(_:)),
                                       #selector(ConversationTableView.deleteAction(_:))]
@@ -12,12 +15,10 @@ extension MessageItem {
     var allowedActions: [Selector] {
         if category.hasSuffix("_TEXT") {
             return MessageItem.textActions
-        } else if category.hasSuffix("_IMAGE") {
-            return MessageItem.forwardAndDeleteActions
+        } else if category.hasSuffix("_IMAGE") || category.hasSuffix("_STICKER") {
+            return MessageItem.imageActions
         } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") {
             return mediaStatus == MediaStatus.DONE.rawValue ? MessageItem.forwardAndDeleteActions : MessageItem.deleteAction
-        } else if category.hasSuffix("_STICKER") {
-            return MessageItem.forwardAndDeleteActions
         } else if category.hasSuffix("_CONTACT") {
             return MessageItem.forwardAndDeleteActions
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
@@ -98,6 +99,10 @@ class ConversationTableView: UITableView {
     
     @objc func deleteAction(_ sender: Any) {
         invokeDelegate(action: .delete)
+    }
+
+    @objc func addToStickersAction(_ sender: Any) {
+        invokeDelegate(action: .add)
     }
     
     @objc func longPressAction(_ recognizer: UIGestureRecognizer) {
@@ -189,10 +194,12 @@ class ConversationTableView: UITableView {
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
         addGestureRecognizer(longPressRecognizer)
-        UIMenuController.shared.menuItems = [UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_REPLY, action: #selector(replyAction(_:))),
-                                             UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_FORWARD, action: #selector(forwardAction(_:))),
-                                             UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_COPY, action: #selector(copyAction(_:))),
-                                             UIMenuItem(title: Localized.MENU_DELETE, action: #selector(deleteAction(_:)))]
+        UIMenuController.shared.menuItems = [
+            UIMenuItem(title: Localized.CHAT_MESSAGE_ADD, action: #selector(addToStickersAction(_:))),
+            UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_REPLY, action: #selector(replyAction(_:))),
+            UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_FORWARD, action: #selector(forwardAction(_:))),
+            UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_COPY, action: #selector(copyAction(_:))),
+            UIMenuItem(title: Localized.MENU_DELETE, action: #selector(deleteAction(_:)))]
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerWillHideMenu(_:)), name: .UIMenuControllerWillHideMenu, object: nil)
     }
     
@@ -205,6 +212,7 @@ extension ConversationTableView {
         case forward
         case copy
         case delete
+        case add
     }
     
     enum ReuseId: String {

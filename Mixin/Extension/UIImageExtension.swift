@@ -93,6 +93,14 @@ extension UIImage {
         return newImage
     }
 
+    func scaledToSticker() -> UIImage {
+        let maxWH: CGFloat = 360
+        let scale = CGFloat(size.width) / CGFloat(size.height)
+        let targetWidth: CGFloat = size.width > size.height ? maxWH : maxWH * scale
+        let targetHeight: CGFloat = size.width > size.height ? maxWH / scale : maxWH
+        return scaledToSize(newSize: CGSize(width: targetWidth, height: targetHeight))
+    }
+
     func scaledToSize(newSize: CGSize) -> UIImage {
         UIGraphicsBeginImageContext(newSize)
         draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))

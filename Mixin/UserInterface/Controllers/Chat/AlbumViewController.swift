@@ -3,7 +3,8 @@ import Photos
 
 class AlbumViewController: UITableViewController {
 
-    private var allAlbums = [Album]()
+    private var allAlbums = [SmartAlbum]()
+    private var isFilterCustomSticker = false
     
     override func didMove(toParentViewController parent: UIViewController?) {
         super.didMove(toParentViewController: parent)
@@ -12,15 +13,15 @@ class AlbumViewController: UITableViewController {
     
     private func loadAlbums() {
         DispatchQueue.global().async {
-            var allAlbums = [Album?]()
+            var allAlbums = [SmartAlbum?]()
             if let cameraRollAlbum = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
-                allAlbums.append(Album(collection: cameraRollAlbum, isCameraRoll: true))
+                allAlbums.append(SmartAlbum(collection: cameraRollAlbum, isCameraRoll: true))
             }
             PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil).enumerateObjects { (collection, _, _) in
-                allAlbums.append(Album(collection: collection))
+                allAlbums.append(SmartAlbum(collection: collection))
             }
             PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil).enumerateObjects { (collection, _, _) in
-                allAlbums.append(Album(collection: collection))
+                allAlbums.append(SmartAlbum(collection: collection))
             }
             self.allAlbums = allAlbums.flatMap { $0 }.sorted(by: { (preAlbum, nextAlbum) -> Bool in
                 guard preAlbum.order == nextAlbum.order else {
@@ -34,9 +35,10 @@ class AlbumViewController: UITableViewController {
         }
     }
 
-    class func instance() -> UIViewController {
+    class func instance(isFilterCustomSticker: Bool = false) -> UIViewController {
         let vc = Storyboard.photo.instantiateViewController(withIdentifier: "album") as! AlbumViewController
         vc.loadAlbums()
+        vc.isFilterCustomSticker = isFilterCustomSticker
         return ContainerViewController.instance(viewController: vc, title: Localized.IMAGE_PICKER_TITLE_ALBUMS)
     }
 
@@ -74,7 +76,7 @@ extension AlbumViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let album = allAlbums[indexPath.row]
-        let pickerViewController = PickerViewController.instance(collection: album.assetCollection)
+        let pickerViewController = PickerViewController.instance(collection: album.assetCollection, isFilterCustomSticker: isFilterCustomSticker, scrollToOffset: CGPoint.zero)
         let vc = ContainerViewController.instance(viewController: pickerViewController, title: album.title)
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -97,7 +99,7 @@ class AlbumCell: UITableViewCell {
 
 }
 
-fileprivate struct Album {
+fileprivate struct SmartAlbum {
 
     let title: String
     let assetCount: Int

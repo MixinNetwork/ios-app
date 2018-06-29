@@ -943,6 +943,22 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             navigationController?.pushViewController(ForwardViewController.instance(message: message, ownerUser: ownerUser), animated: true)
         case .reply:
             break
+        case .add:
+            if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
+                StickerAPI.shared.addSticker(stickerId: stickerId, completion: { (result) in
+                    switch result {
+                    case let .success(sticker):
+                        DispatchQueue.global().async {
+                            StickerDAO.shared.insertOrUpdateStickers(stickers: [sticker])
+                            NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_ADDED)
+                        }
+                    case .failure:
+                        break
+                    }
+                })
+            } else {
+                navigationController?.pushViewController(StickerAddViewController.instance(message: message), animated: true)
+            }
         }
     }
 }
@@ -1225,7 +1241,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
 // MARK: - PhotoAssetPickerDelegate
 extension ConversationViewController: PhotoAssetPickerDelegate {
 
-    func pickerController(_ picker: PickerViewController, didFinishPickingMediaWithAsset asset: PHAsset) {
+    func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
         navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, dataSource: dataSource), animated: true)
     }
     
@@ -1494,10 +1510,11 @@ extension ConversationViewController {
     private func loadStickerAndAsset() {
         let containerWidth = AppDelegate.current.window!.bounds.width
         DispatchQueue.global().async { [weak self] in
-            let albums = StickerAlbumDAO.shared.getAlbums()
+            let albums = AlbumDAO.shared.getAlbums()
             var stickers = albums.map{ StickerDAO.shared.getStickers(albumId: $0.albumId) }
             let limit = StickerPageViewController.numberOfRecentStickers(forLayoutWidth: containerWidth)
             stickers.insert(StickerDAO.shared.recentUsedStickers(limit: limit), at: 0)
+            stickers.insert(StickerDAO.shared.getFavoriteStickers(), at: 1)
             DispatchQueue.main.async {
                 self?.stickerPanelViewController?.reload(albums: albums, stickers: stickers)
             }

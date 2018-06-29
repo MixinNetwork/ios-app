@@ -2,7 +2,7 @@ import UIKit
 import Photos
 
 protocol PhotoAssetPickerDelegate: class {
-    func pickerController(_ picker: PickerViewController, didFinishPickingMediaWithAsset asset: PHAsset)
+    func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset)
 }
 
 class PhotoAssetPickerNavigationController: UINavigationController {
@@ -14,12 +14,12 @@ class PhotoAssetPickerNavigationController: UINavigationController {
         interactivePopGestureRecognizer?.delegate = self
     }
     
-    class func instance(pickerDelegate: PhotoAssetPickerDelegate?) -> UIViewController {
+    class func instance(pickerDelegate: PhotoAssetPickerDelegate?, isFilterCustomSticker: Bool = false, scrollToOffset: CGPoint = CGPoint.zero) -> UIViewController {
         let vc = Storyboard.photo.instantiateInitialViewController() as! PhotoAssetPickerNavigationController
         vc.pickerDelegate = pickerDelegate
-        let picker = ContainerViewController.instance(viewController: PickerViewController.instance(),
+        let picker = ContainerViewController.instance(viewController: PickerViewController.instance(isFilterCustomSticker: isFilterCustomSticker, scrollToOffset: scrollToOffset),
                                                       title: Localized.IMAGE_PICKER_TITLE_CAMERA_ROLL)
-        vc.viewControllers = [AlbumViewController.instance(), picker]
+        vc.viewControllers = [AlbumViewController.instance(isFilterCustomSticker: isFilterCustomSticker), picker]
         return vc
     }
     

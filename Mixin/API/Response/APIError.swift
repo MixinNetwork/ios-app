@@ -45,10 +45,12 @@ extension APIError {
             return Localized.TRANSFER_ERROR_AMOUNT_TOO_SMALL
         case 20116:
             return Localized.GROUP_JOIN_FAIL_FULL
-        case 20124:
-            return Localized.TRANSFER_ERROR_FEE_INSUFFICIENT
         case 20122:
             return Localized.TOAST_API_ERROR_UNAVAILABLE_PHONE_NUMBER
+        case 20124:
+            return Localized.TRANSFER_ERROR_FEE_INSUFFICIENT
+        case 20126:
+            return Localized.STICKER_ADD_LIMIT
         case 30100:
             return Localized.WALLET_BLOCKCHIAN_NOT_IN_SYNC
         case 30102:

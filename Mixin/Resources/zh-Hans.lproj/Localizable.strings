@@ -43,7 +43,7 @@
 "permission_denied_microphone" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
 "toast_copied" = "已复制到剪贴板";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
-
+"toast_added" = "已添加";
 
 // Login
 "navigation_title_select_country" = "选择一个国家";
@@ -110,6 +110,7 @@
 "chat_message_menu_forward" = "转发";
 "chat_message_menu_copy" = "复制";
 "chat_message_open_url" = "打开链接";
+"chat_message_sticker" = "添加贴纸";
 "chat_time_today" = "今天";
 "chat_cell_title_unread_messages" = "未读消息";
 "chat_message_you" = "你";
@@ -140,6 +141,15 @@
 "chat_file_expired" = "已过期";
 "chat_voice_record_cancel" = "滑动取消";
 "chat_voice_record_longpress_hint" = "长按说话，松手发送";
+
+// Sticker
+"sticker_manager_title" = "我收藏的贴纸";
+"sticker_add_title" = "添加贴纸";
+"sticker_remove_title" = "删除贴纸";
+"sticker_add_failed" = "添加贴纸失败";
+"sticker_remove_failed" = "删除贴纸失败";
+"sticker_add_required" = "贴纸要求大于 1KB 小于 1MB，长宽比在 16:9 和 9:16 之间。";
+"sticker_add_limit" = "贴纸数已达上限";
 
 // Camera
 "camera_save_photo_success" = "图片已成功保存在相册";

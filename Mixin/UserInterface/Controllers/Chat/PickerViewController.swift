@@ -19,6 +19,7 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
     }()
     private var collection: PHAssetCollection?
     private var assets: PHFetchResult<PHAsset>!
+    private var isFilterCustomSticker = false
     
     private lazy var itemSize: CGSize = {
         let rowCount = floor(UIScreen.main.bounds.size.width / 90)
@@ -26,12 +27,16 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
         return CGSize(width: itemWidth, height: itemWidth)
     }()
     private var scrollToBottom = false
+    private var scrollToOffset = CGPoint.zero
 
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.rightButton.isEnabled = true
         if let collection = collection {
             let options = PHFetchOptions()
+            if isFilterCustomSticker {
+                options.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+            }
             options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
             assets = PHAsset.fetchAssets(in: collection, options: options)
         } else {
@@ -44,17 +49,22 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
         super.viewDidLayoutSubviews()
         if !scrollToBottom && assets.count > 0 {
             scrollToBottom = true
-            collectionView?.scrollToItem(at: IndexPath(row: assets.count - 1, section: 0), at: .bottom, animated: false)
+            if scrollToOffset.y > 0 {
+                collectionView?.contentOffset = scrollToOffset
+            } else {
+                collectionView?.scrollToItem(at: IndexPath(row: assets.count - 1, section: 0), at: .bottom, animated: false)
+            }
         }
     }
-    
-    class func instance(collection: PHAssetCollection? = nil) -> UIViewController {
+    class func instance(collection: PHAssetCollection? = nil, isFilterCustomSticker: Bool, scrollToOffset: CGPoint) -> UIViewController {
         let vc = Storyboard.photo.instantiateViewController(withIdentifier: "picker") as! PickerViewController
         if let collection = collection {
             vc.collection = collection
         } else {
             vc.collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject
         }
+        vc.scrollToOffset = scrollToOffset
+        vc.isFilterCustomSticker = isFilterCustomSticker
         return vc
     }
 
@@ -119,7 +129,7 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         navigationController?.dismiss(animated: true, completion: nil)
-        (navigationController as? PhotoAssetPickerNavigationController)?.pickerDelegate?.pickerController(self, didFinishPickingMediaWithAsset: assets[indexPath.row])
+        (navigationController as? PhotoAssetPickerNavigationController)?.pickerDelegate?.pickerController(self, contentOffset: collectionView.contentOffset, didFinishPickingMediaWithAsset: assets[indexPath.row])
     }
     
 }

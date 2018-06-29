@@ -2,9 +2,8 @@ import UIKit
 
 class StickerMessageViewModel: DetailInfoMessageViewModel {
 
-    static let maxHeight: CGFloat = UIScreen.main.bounds.height / 2
     static let timeMargin = Margin(leading: 2, trailing: 2, top: 4, bottom: 4)
-    static let maxWidth: CGFloat = 120
+    static let maxHeight: CGFloat = 120
     
     internal(set) var contentFrame = CGRect.zero
 
@@ -15,15 +14,11 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     private let contentSize: CGSize
 
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        if let assetWidth = message.assetWidth, var assetHeight = message.assetHeight {
-            if assetHeight == 0 {
-                assetHeight = 1
-            }
-            let width = min(StickerMessageViewModel.maxWidth, CGFloat(assetWidth) / UIScreen.main.scale)
+        if let assetWidth = message.assetWidth, let assetHeight = message.assetHeight {
             let ratio = CGFloat(assetWidth) / CGFloat(assetHeight)
-            contentSize = ceil(CGSize(width: width, height: width / ratio))
+            contentSize = CGSize(width: StickerMessageViewModel.maxHeight * ratio, height: StickerMessageViewModel.maxHeight)
         } else {
-            contentSize = CGSize(width: StickerMessageViewModel.maxWidth, height: StickerMessageViewModel.maxWidth)
+            contentSize = CGSize(width: StickerMessageViewModel.maxHeight, height: StickerMessageViewModel.maxHeight)
         }
         super.init(message: message, style: style, fits: layoutWidth)
         backgroundImage = nil

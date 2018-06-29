@@ -13,22 +13,6 @@ class MixinDatabase: BaseDatabase {
         set { }
     }
 
-    private func upgrade(database: Database) throws {
-        guard DatabaseUserDefault.shared.mixinDatabaseVersion < 5 && DatabaseUserDefault.shared.mixinDatabaseVersion > 0 else {
-            return
-        }
-
-        try database.drop(table: Sticker.tableName)
-        try database.drop(table: "sticker_album")
-
-        if try database.isColumnExist(tableName: Snapshot.tableName, columnName: "counter_user_id") {
-            try database.prepareUpdateSQL(sql: "UPDATE snapshots SET opponent_id = counter_user_id").execute()
-        }
-
-        try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index1").execute()
-        try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index2").execute()
-    }
-
     override func configure(reset: Bool = false) {
         if MixinFile.databasePath != _database.path {
             _database.close()
@@ -36,7 +20,8 @@ class MixinDatabase: BaseDatabase {
         }
         do {
             try database.run(transaction: {
-                try self.upgrade(database: database)
+                let currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
+                try self.createBefore(database: database, currentVersion: currentVersion)
 
                 try database.create(of: Asset.self)
                 try database.create(of: Snapshot.self)
@@ -57,6 +42,8 @@ class MixinDatabase: BaseDatabase {
                 try database.create(of: Job.self)
                 try database.create(of: ResendMessage.self)
 
+                try self.createAfter(database: database, currentVersion: currentVersion)
+
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerUnseenMessageInsert).execute()
@@ -69,6 +56,32 @@ class MixinDatabase: BaseDatabase {
                 print("======MixinDatabase...configure...error:\(error)")
             #endif
             Bugsnag.notifyError(error)
+        }
+    }
+
+    private func createBefore(database: Database, currentVersion: Int) throws {
+        guard currentVersion > 0 else {
+            return
+        }
+
+        if currentVersion < 4 {
+            try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index1").execute()
+            try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_index2").execute()
+        }
+
+        if currentVersion < 5 {
+            try database.drop(table: Sticker.tableName)
+            try database.drop(table: "sticker_album")
+        }
+    }
+
+    private func createAfter(database: Database, currentVersion: Int) throws {
+        guard currentVersion > 0 else {
+            return
+        }
+
+        if currentVersion < 4, try database.isColumnExist(tableName: Snapshot.tableName, columnName: "counter_user_id") {
+            try database.prepareUpdateSQL(sql: "UPDATE snapshots SET opponent_id = counter_user_id").execute()
         }
     }
 

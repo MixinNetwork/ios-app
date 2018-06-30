@@ -19,6 +19,10 @@ class AlbumDAO {
         return MixinDatabase.shared.getCodable(condition: Album.Properties.category == AlbumCategory.PERSONAL.rawValue)
     }
 
+    func getSelfAlbumId() -> String? {
+        return getSelfAlbum()?.albumId
+    }
+
     func getAlbums() -> [Album] {
         return MixinDatabase.shared.getCodables(condition: Album.Properties.category != AlbumCategory.PERSONAL.rawValue, orderBy: [Album.Properties.updatedAt.asOrder(by: .descending)], inTransaction: false)
     }

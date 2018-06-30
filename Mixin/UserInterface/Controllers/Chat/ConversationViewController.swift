@@ -949,7 +949,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                     switch result {
                     case let .success(sticker):
                         DispatchQueue.global().async {
-                            StickerDAO.shared.insertOrUpdateStickers(stickers: [sticker])
+                            StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                             NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_ADDED)
                         }
                     case .failure:

@@ -58,25 +58,34 @@ final class StickerDAO {
         }
     }
 
-    func insertOrUpdateStickers(stickers: [StickerResponse], albumId: String? = nil) {
+    func insertOrUpdateStickers(stickers: [StickerResponse], albumId: String) {
         let lastUserAtProperty = Sticker.Properties.lastUseAt.asProperty().name
         let propertyList = Sticker.Properties.all.filter { $0.name != lastUserAtProperty }
 
         MixinDatabase.shared.transaction { (database) in
-            var albumId = albumId
-            if albumId == nil {
-                let albumIdValue = try database.getValue(on: Album.Properties.albumId, fromTable: Album.tableName, where: Album.Properties.category == AlbumCategory.PERSONAL.rawValue, limit: 1)
-                if albumIdValue.type != .null && !albumIdValue.stringValue.isEmpty {
-                    albumId = albumIdValue.stringValue
-                }
-            }
-
-            if let albumId = albumId {
-                try database.insertOrReplace(objects: stickers.map { StickerRelationship(albumId: albumId, stickerId: $0.stickerId, createdAt: $0.createdAt) }, intoTable: StickerRelationship.tableName)
-            }
-
+            try database.insertOrReplace(objects: stickers.map { StickerRelationship(albumId: albumId, stickerId: $0.stickerId, createdAt: $0.createdAt) }, intoTable: StickerRelationship.tableName)
             try database.insertOrReplace(objects: stickers.map { Sticker.createSticker(from: $0) }, on: propertyList, intoTable: Sticker.tableName)
             NotificationCenter.default.afterPostOnMain(name: .StickerDidChange)
+        }
+    }
+
+    func insertOrUpdateFavoriteSticker(sticker: StickerResponse) {
+        if let albumId = AlbumDAO.shared.getSelfAlbumId() {
+            insertOrUpdateStickers(stickers: [sticker], albumId: albumId)
+        } else {
+            switch StickerAPI.shared.albums() {
+            case let .success(albums):
+                for album in albums {
+                    guard album.category == AlbumCategory.PERSONAL.rawValue else {
+                        continue
+                    }
+                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                    insertOrUpdateStickers(stickers: [sticker], albumId: album.albumId)
+                    break
+                }
+            case .failure:
+                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
+            }
         }
     }
 

@@ -102,8 +102,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                 case let .success(sticker):
                     SDWebImageManager.shared().imageCache?.storeImageData(toDisk: Data(base64Encoded: stickerBase64), forKey: sticker.assetUrl)
                     DispatchQueue.global().async {
-                        StickerDAO.shared.insertOrUpdateStickers(stickers: [sticker])
-
+                        StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                         DispatchQueue.main.async {
                             NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_ADDED)
                             self?.navigationController?.popViewController(animated: true)

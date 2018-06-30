@@ -71,7 +71,7 @@ class MixinDatabase: BaseDatabase {
 
         if currentVersion < 5 {
             try database.drop(table: Sticker.tableName)
-            try database.drop(table: "sticker_album")
+            try database.drop(table: "sticker_albums")
         }
     }
 

@@ -116,7 +116,7 @@ class ReceiveMessageService: MixinService {
                 }
             })
             let status = SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId)
-            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status ?? "")...source:\(data.source)...redecryptMessage:\(decoded.resendMessageId != nil)")
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)]...decrypt success...messageId:\(data.messageId)...\(data.createdAt)...status:\(status ?? "")...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
             if status == RatchetStatus.REQUESTING.rawValue {
                 SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId)
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId)
@@ -124,6 +124,10 @@ class ReceiveMessageService: MixinService {
         } catch {
             trackDecryptFailed(data: data, dataHeader: decoded, error: error)
             FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
+            guard !MessageDAO.shared.isExist(messageId: data.messageId) else {
+                UIApplication.trackError("ReceiveMessageService", action: "duplicateMessage")
+                return
+            }
             guard decoded.resendMessageId == nil else {
                 return
             }

@@ -41,7 +41,13 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
         } else {
             assets = PHFetchResult<PHAsset>()
         }
+        container?.titleLabel.text = collection?.localizedTitle
         collectionView?.reloadData()
+        PHPhotoLibrary.shared().register(self)
+    }
+    
+    deinit {
+        PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
 
     override func viewDidLayoutSubviews() {
@@ -55,6 +61,7 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
             }
         }
     }
+    
     class func instance(collection: PHAssetCollection? = nil, isFilterCustomSticker: Bool, scrollToOffset: CGPoint) -> UIViewController {
         let vc = Storyboard.photo.instantiateViewController(withIdentifier: "picker") as! PickerViewController
         if let collection = collection {
@@ -131,6 +138,44 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
         (navigationController as? PhotoAssetPickerNavigationController)?.pickerDelegate?.pickerController(self, contentOffset: collectionView.contentOffset, didFinishPickingMediaWithAsset: assets[indexPath.row])
     }
     
+}
+
+extension PickerViewController: PHPhotoLibraryChangeObserver {
+    
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        guard let collectionView = collectionView else {
+            return
+        }
+        DispatchQueue.main.sync {
+            if let collection = collection, let albumChanges = changeInstance.changeDetails(for: collection), let newCollection = albumChanges.objectAfterChanges {
+                self.collection = newCollection
+                container?.titleLabel.text = newCollection.localizedTitle
+            }
+            if let changes = changeInstance.changeDetails(for: assets) {
+                assets = changes.fetchResultAfterChanges
+                if changes.hasIncrementalChanges {
+                    collectionView.performBatchUpdates({
+                        if let removed = changes.removedIndexes, removed.count > 0 {
+                            collectionView.deleteItems(at: removed.map{ IndexPath(item: $0, section:0) })
+                        }
+                        if let inserted = changes.insertedIndexes, inserted.count > 0 {
+                            collectionView.insertItems(at: inserted.map{ IndexPath(item: $0, section:0) })
+                        }
+                        if let changed = changes.changedIndexes, changed.count > 0 {
+                            collectionView.reloadItems(at: changed.map{ IndexPath(item: $0, section:0) })
+                        }
+                        changes.enumerateMoves { fromIndex, toIndex in
+                            collectionView.moveItem(at: IndexPath(item: fromIndex, section: 0),
+                                                    to: IndexPath(item: toIndex, section: 0))
+                        }
+                    })
+                } else {
+                    collectionView.reloadData()
+                }
+            }
+        }
+    }
+
 }
 
 class PickerCell: UICollectionViewCell {

@@ -17,9 +17,9 @@ class PhotoAssetPickerNavigationController: UINavigationController {
     class func instance(pickerDelegate: PhotoAssetPickerDelegate?, isFilterCustomSticker: Bool = false, scrollToOffset: CGPoint = CGPoint.zero) -> UIViewController {
         let vc = Storyboard.photo.instantiateInitialViewController() as! PhotoAssetPickerNavigationController
         vc.pickerDelegate = pickerDelegate
-        let picker = ContainerViewController.instance(viewController: PickerViewController.instance(isFilterCustomSticker: isFilterCustomSticker, scrollToOffset: scrollToOffset),
-                                                      title: Localized.IMAGE_PICKER_TITLE_CAMERA_ROLL)
-        vc.viewControllers = [AlbumViewController.instance(isFilterCustomSticker: isFilterCustomSticker), picker]
+        let albums = AlbumViewController.instance(isFilterCustomSticker: isFilterCustomSticker)
+        let picker = ContainerViewController.instance(viewController: PickerViewController.instance(isFilterCustomSticker: isFilterCustomSticker, scrollToOffset: scrollToOffset), title: "")
+        vc.viewControllers = [albums, picker]
         return vc
     }
     

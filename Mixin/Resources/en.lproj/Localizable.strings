@@ -161,7 +161,6 @@
 "camera_send_to_title" = "Send To";
 "camera_save_video_success" = "Video saved.";
 "camera_save_video_failed" = "Unable to save video.";
-"image_picker_title_camera_roll" = "Camera Roll";
 "image_picker_title_albums" = "Albums";
 "camera_qrcode_title" = "TEXT QR CODE";
 "camera_qrcode_codes" = "Detected a Mixin QR code, tap to recognize";

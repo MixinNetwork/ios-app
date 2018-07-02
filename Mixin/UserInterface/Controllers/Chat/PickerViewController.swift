@@ -37,7 +37,6 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
             if isFilterCustomSticker {
                 options.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
             }
-            options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
             assets = PHAsset.fetchAssets(in: collection, options: options)
         } else {
             assets = PHFetchResult<PHAsset>()

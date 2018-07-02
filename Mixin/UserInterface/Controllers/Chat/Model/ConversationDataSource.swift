@@ -222,7 +222,7 @@ class ConversationDataSource {
                 guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                     return
                 }
-                if messages.count != 0 {
+                if !viewModels.isEmpty {
                     self.viewModels.values.flatMap({ $0 }).forEach {
                         ($0 as? TextMessageViewModel)?.removeHighlights()
                     }
@@ -236,7 +236,9 @@ class ConversationDataSource {
                         self.viewModels[date]!.append(contentsOf: newViewModels)
                     }
                 }
-                tableView.reloadData()
+                if !viewModels.isEmpty {
+                    tableView.reloadData()
+                }
                 self.isLoadingBelow = false
                 self.semaphore.signal()
             }

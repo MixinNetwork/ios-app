@@ -560,15 +560,14 @@ extension ConversationDataSource {
         }
         loadedMessageIds = Set(messages.map({ $0.messageId }))
         var shouldInsertEncryptionHint = false
-        if messages.count > 0 {
-            if highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.index(where: { $0.messageId == firstUnreadMessageId }) {
-                let firstUnreadMessge = messages[firstUnreadIndex]
-                let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
-                messages.insert(hint, at: firstUnreadIndex)
-                self.firstUnreadMessageId = nil
-                canInsertUnreadHint = false
-            }
-        } else {
+        if messages.count > 0, highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.index(where: { $0.messageId == firstUnreadMessageId }) {
+            let firstUnreadMessge = messages[firstUnreadIndex]
+            let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
+            messages.insert(hint, at: firstUnreadIndex)
+            self.firstUnreadMessageId = nil
+            canInsertUnreadHint = false
+        }
+        if messages.count < messagesCountPerPage {
             didLoadEarliestMessage = true
             didLoadLatestMessage = true
             shouldInsertEncryptionHint = true

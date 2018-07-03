@@ -276,11 +276,13 @@ extension WebWindow: UIScrollViewDelegate {
                     scrollView.contentOffset = scrollViewBeganDraggingOffset
                     isMaximized = newHeight > medianWebViewHeight
                 }
-            } else if scrollView.contentOffset.y < 0.1 {
-                scrollViewBeganDraggingOffset = .zero
-                webViewHeight += scrollView.contentOffset.y
-                scrollView.contentOffset.y = 0
-                isMaximized = webViewHeight > medianWebViewHeight
+            } else {
+                scrollViewBeganDraggingOffset = scrollView.contentOffset
+                if scrollView.contentOffset.y < 0.1 {
+                    webViewHeight += scrollView.contentOffset.y
+                    scrollView.contentOffset.y = 0
+                    isMaximized = webViewHeight > medianWebViewHeight
+                }
             }
         }
         controller?.statusBarStyle = maximumWebViewHeight - titleHeightConstraint.constant - webViewHeight < 1 ? .lightContent : .default
@@ -300,19 +302,31 @@ extension WebWindow: UIScrollViewDelegate {
         if shouldDismissByPosition || shouldDismissByVelocity {
             dismissPopupControllerAnimated()
         } else {
-            var shouldShowTitleBar = false
             if abs(velocity.y) > 0.01 {
-                let suggestedWindowMaximum = velocity.y > 0
-                if isMaximized != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
-                    isMaximized = suggestedWindowMaximum
+                let isDraggingUp = velocity.y > 0
+                if isMaximized != isDraggingUp && (isDraggingUp || targetContentOffset.pointee.y < 0.1) {
+                    isMaximized = isDraggingUp
                 }
-                shouldShowTitleBar = !suggestedWindowMaximum && velocity.y < 0
             }
+            let isShowingTitleBar = maximumWebViewHeight - self.webViewHeight > 5
+            let shouldShowTitleBar = velocity.y < 0 || (velocity.y == 0 && isShowingTitleBar)
             let webViewHeight = (isMaximized ? maximumWebViewHeight : minimumWebViewHeight) - (shouldShowTitleBar ? titleHeightConstraint.constant : 0)
+            var newContentOffsetY: CGFloat?
+            let heightDifference = (webViewHeight - self.webViewHeight)
+            let shouldAdjustContentOffset = velocity.y == 0
+                && isMaximized
+                && (webViewHeight != self.webViewHeight)
+                && heightDifference <= titleHeightConstraint.constant
+            if shouldAdjustContentOffset {
+                newContentOffsetY = scrollView.contentOffset.y - heightDifference
+            }
             webViewWrapperHeightConstraint.constant = webViewHeight
             let animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeOut, animations: {
                 self.layoutIfNeeded()
                 self.updateBackgroundColor()
+                if let newContentOffsetY = newContentOffsetY {
+                    scrollView.contentOffset.y = newContentOffsetY
+                }
             })
             animator.addCompletion({ (_) in
                 self.swipeToZoomAnimator = nil

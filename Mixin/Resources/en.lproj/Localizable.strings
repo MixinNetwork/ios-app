@@ -21,6 +21,7 @@
 "action_see_more" = "See more";
 "action_open_safari" = "Open in Safari";
 "action_refresh" = "Refresh";
+"action_select" = "Select";
 "menu_delete" = "Delete";
 
 "date_format_day" = "hh:mm a";
@@ -380,6 +381,7 @@
 "setting_header_conversation_source" = "WHO CAN ADD ME TO GROUP CHATS";
 "setting_source_everybody" = "Everybody";
 "setting_source_contacts" = "My Contacts";
+"setting_storage_usage" = "Storage Usage";
 "setting_logout" = "Log Out";
 
 // Notifications

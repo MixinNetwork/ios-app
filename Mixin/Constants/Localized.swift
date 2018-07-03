@@ -403,9 +403,8 @@ public class Localized {
     public static let SETTING_ABOUT = LocalizedString("setting_about", comment: "About")
     public static let SETTING_PRIVACY_AND_SECURITY_SUMMARY = LocalizedString("setting_privacy_and_security_summary", comment: "Change who can add you to conversation and groups.")
     public static let SETTING_PRIVACY_AND_SECURITY_TITLE = LocalizedString("setting_privacy_and_security_title", comment: "PRIVACY")
-    public static let SETTING_CONVERSATION_EVERYBODY = LocalizedString("setting_conversation_everybody", comment: "Everybody")
-    public static let SETTING_CONVERSATION_CONTACTS = LocalizedString("setting_conversation_contacts", comment: "My Contacts")
-    public static let SETTING_CONVERSATION_SUMMARY = LocalizedString("setting_conversation_summary", comment: "You can restrict who can send message to me or add me to group chats.")
+    public static let SETTING_HEADER_MESSAGE_SOURCE = LocalizedString("setting_header_message_source", comment: "WHO CAN SEND ME MESSAGES")
+    public static let SETTING_HEADER_CONVERSATION_SOURCE = LocalizedString("setting_header_conversation_source", comment: "WHO CAN ADD ME TO GROUP CHATS")
     public static let SETTING_LOGOUT = LocalizedString("setting_logout", comment: "Log Out")
 
     // Notifications

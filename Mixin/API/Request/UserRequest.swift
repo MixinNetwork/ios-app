@@ -5,4 +5,5 @@ struct UserRequest: Codable {
     let avatar_base64: String?
     let notification_token: String?
     let receive_message_source: String?
+    let accept_conversation_source: String?
 }

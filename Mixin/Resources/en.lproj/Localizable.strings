@@ -376,9 +376,10 @@
 "setting_blocked_empty" = "No blocked users";
 "setting_blocked_summary" = "Blocked users can't send you messages or add you to groups.";
 "setting_conversation" = "Conversation";
-"setting_conversation_summary" = "You can restrict who can send message to me or add me to group chats.";
-"setting_conversation_everybody" = "Everybody";
-"setting_conversation_contacts" = "My Contacts";
+"setting_header_message_source" = "WHO CAN SEND ME MESSAGES";
+"setting_header_conversation_source" = "WHO CAN ADD ME TO GROUP CHATS";
+"setting_source_everybody" = "Everybody";
+"setting_source_contacts" = "My Contacts";
 "setting_logout" = "Log Out";
 
 // Notifications

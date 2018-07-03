@@ -377,9 +377,10 @@
 "setting_blocked_empty" = "没有人被屏蔽";
 "setting_blocked_summary" = "被屏蔽的用户不能给你发消息也不能邀请你入群。";
 "setting_conversation" = "会话";
-"setting_conversation_summary" = "你可以限制谁可以给你发消息或邀请你加入群聊。";
-"setting_conversation_everybody" = "任何人";
-"setting_conversation_contacts" = "我的联系人";
+"setting_header_message_source" = "谁可以给我发消息";
+"setting_header_conversation_source" = "谁可以加我入群";
+"setting_source_everybody" = "任何人";
+"setting_source_contacts" = "我的联系人";
 "setting_logout" = "退出登录";
 
 // Notifications

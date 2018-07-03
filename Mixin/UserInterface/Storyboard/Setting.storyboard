@@ -48,7 +48,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="fht-aF-5Qb" detailTextLabel="n68-yH-ahc" style="IBUITableViewCellStyleValue1" id="TLd-XW-wWs">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="fht-aF-5Qb" style="IBUITableViewCellStyleDefault" id="TLd-XW-wWs">
                                         <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TLd-XW-wWs" id="2WC-Hl-i41">
@@ -56,7 +56,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Conversation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fht-aF-5Qb">
-                                                    <rect key="frame" x="16" y="12" width="101" height="20.5"/>
+                                                    <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -64,13 +64,6 @@
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_conversation"/>
                                                     </userDefinedRuntimeAttributes>
-                                                </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text=" " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="n68-yH-ahc">
-                                                    <rect key="frame" x="335.5" y="12" width="4.5" height="20.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -109,7 +102,6 @@
                     </tableView>
                     <connections>
                         <outlet property="blockedUsersDetailLabel" destination="Ngq-0X-upg" id="ZTq-Be-dzz"/>
-                        <outlet property="conversationDetailLabel" destination="n68-yH-ahc" id="bUZ-66-Zgo"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LXv-ji-uhe" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -125,10 +117,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
-                            <tableViewSection footerTitle="You can restrict who can send message to me or add me to group chats." id="wdb-kI-jE5">
+                            <tableViewSection headerTitle="WHO CAN SEND ME MESSAGES" id="wdb-kI-jE5">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="9t5-qA-nPb" style="IBUITableViewCellStyleDefault" id="SW7-MM-iY0">
-                                        <rect key="frame" x="0.0" y="35" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SW7-MM-iY0" id="VG1-CM-IQ1">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -141,7 +133,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_conversation_everybody"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_source_everybody"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="vtB-yO-ih2">
@@ -152,7 +144,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="Za0-42-Kb0" style="IBUITableViewCellStyleDefault" id="l2H-dE-uh0">
-                                        <rect key="frame" x="0.0" y="79" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l2H-dE-uh0" id="hR8-Dn-U8j">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -165,10 +157,62 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_conversation_contacts"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_source_contacts"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="puH-LE-t3m">
+                                                    <rect key="frame" x="340" y="10" width="19" height="19"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="WHO CAN ADD ME TO GROUP CHATS" id="yVW-n5-SwI">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="jvp-Ff-JlS" style="IBUITableViewCellStyleDefault" id="aGZ-hZ-MVq">
+                                        <rect key="frame" x="0.0" y="199.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aGZ-hZ-MVq" id="wOL-4v-DN4">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Everybody" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jvp-Ff-JlS">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_source_everybody"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="O57-Uj-X2I">
+                                                    <rect key="frame" x="340" y="9" width="19" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="YJ5-Pe-EJy" style="IBUITableViewCellStyleDefault" id="x9r-Kf-2RQ">
+                                        <rect key="frame" x="0.0" y="243.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="x9r-Kf-2RQ" id="Azz-PU-nmc">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="My Contacts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="YJ5-Pe-EJy">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_source_contacts"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="tvQ-bN-Q59">
                                                     <rect key="frame" x="340" y="10" width="19" height="19"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </activityIndicatorView>
@@ -184,10 +228,14 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="contactsCell" destination="l2H-dE-uh0" id="bL1-BH-B3m"/>
-                        <outlet property="contactsIndicator" destination="puH-LE-t3m" id="xZP-Tp-MoZ"/>
-                        <outlet property="everybodyCell" destination="SW7-MM-iY0" id="R8O-Gc-jqi"/>
-                        <outlet property="everybodyIndicator" destination="vtB-yO-ih2" id="Dxv-Gb-0l3"/>
+                        <outlet property="ConversationSourceContactsCell" destination="x9r-Kf-2RQ" id="QS3-Y1-hkB"/>
+                        <outlet property="ConversationSourceContactsIndicator" destination="tvQ-bN-Q59" id="xxG-bu-ZdP"/>
+                        <outlet property="ConversationSourceEverybodyCell" destination="aGZ-hZ-MVq" id="mUH-hB-J6j"/>
+                        <outlet property="ConversationSourceEverybodyIndicator" destination="O57-Uj-X2I" id="Foz-wz-AWM"/>
+                        <outlet property="MessageSourceContactsCell" destination="l2H-dE-uh0" id="bL1-BH-B3m"/>
+                        <outlet property="MessageSourceContactsIndicator" destination="puH-LE-t3m" id="xZP-Tp-MoZ"/>
+                        <outlet property="MessageSourceEverybodyCell" destination="SW7-MM-iY0" id="R8O-Gc-jqi"/>
+                        <outlet property="MessageSourceEverybodyIndicator" destination="vtB-yO-ih2" id="Dxv-Gb-0l3"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iy4-6j-yel" userLabel="First Responder" sceneMemberID="firstResponder"/>

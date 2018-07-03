@@ -157,7 +157,6 @@
 "camera_send_to_title" = "发送至";
 "camera_save_video_success" = "视频已成功保存在相册";
 "camera_save_video_failed" = "保存视频失败";
-"image_picker_title_camera_roll" = "相机胶卷";
 "image_picker_title_albums" = "相册";
 "camera_qrcode_title" = "文本二维码";
 "camera_qrcode_codes" = "检测到一个 Mixin 二维码，点击识别";

@@ -300,13 +300,15 @@ extension WebWindow: UIScrollViewDelegate {
         if shouldDismissByPosition || shouldDismissByVelocity {
             dismissPopupControllerAnimated()
         } else {
+            var shouldShowTitleBar = false
             if abs(velocity.y) > 0.01 {
                 let suggestedWindowMaximum = velocity.y > 0
                 if isMaximized != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
                     isMaximized = suggestedWindowMaximum
                 }
+                shouldShowTitleBar = !suggestedWindowMaximum && velocity.y < 0
             }
-            let webViewHeight = (isMaximized ? maximumWebViewHeight : minimumWebViewHeight)
+            let webViewHeight = (isMaximized ? maximumWebViewHeight : minimumWebViewHeight) - (shouldShowTitleBar ? titleHeightConstraint.constant : 0)
             webViewWrapperHeightConstraint.constant = webViewHeight
             let animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeOut, animations: {
                 self.layoutIfNeeded()

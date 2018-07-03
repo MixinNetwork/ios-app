@@ -18,6 +18,7 @@ public class Localized {
     public static let ACTION_SEE_MORE = LocalizedString("action_see_more", comment: "See more")
     public static let ACTION_OPEN_SAFARI = LocalizedString("action_open_safari", comment: "Open in Safari")
     public static let ACTION_REFRESH = LocalizedString("action_refresh", comment: "Refresh")
+    public static let ACTION_SELECT = LocalizedString("action_select", comment: "Select")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
 
     public static let DATE_FORMAT_DAY = LocalizedString("date_format_day", comment: "hh:mm a")
@@ -406,6 +407,7 @@ public class Localized {
     public static let SETTING_CONVERSATION_EVERYBODY = LocalizedString("setting_conversation_everybody", comment: "Everybody")
     public static let SETTING_CONVERSATION_CONTACTS = LocalizedString("setting_conversation_contacts", comment: "My Contacts")
     public static let SETTING_CONVERSATION_SUMMARY = LocalizedString("setting_conversation_summary", comment: "You can restrict who can send message to me or add me to group chats.")
+    public static let SETTING_STORAGE_USAGE = LocalizedString("setting_storage_usage", comment: "Storage Usage")
     public static let SETTING_LOGOUT = LocalizedString("setting_logout", comment: "Log Out")
 
     // Notifications

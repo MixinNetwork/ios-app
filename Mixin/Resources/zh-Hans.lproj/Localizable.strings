@@ -21,6 +21,7 @@
 "action_see_more" = "查看更多";
 "action_open_safari" = "在 Safari 中打开";
 "action_refresh" = "刷新";
+"action_select" = "选择";
 "menu_delete" = "删除";
 
 "date_format_day" = "ahh:mm";
@@ -380,6 +381,7 @@
 "setting_conversation_summary" = "你可以限制谁可以给你发消息或邀请你加入群聊。";
 "setting_conversation_everybody" = "任何人";
 "setting_conversation_contacts" = "我的联系人";
+"setting_storage_usage" = "存储空间";
 "setting_logout" = "退出登录";
 
 // Notifications

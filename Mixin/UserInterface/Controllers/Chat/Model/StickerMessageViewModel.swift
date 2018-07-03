@@ -16,8 +16,8 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
 
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         if let assetWidth = message.assetWidth, let assetHeight = message.assetHeight, assetWidth > 0, assetHeight > 0 {
-            let width = CGFloat(assetWidth)
-            let height = CGFloat(assetHeight)
+            let width = CGFloat(assetWidth / 2)
+            let height = CGFloat(assetHeight / 2)
             let ratio = width / height
             var targetSize = CGSize.zero
 

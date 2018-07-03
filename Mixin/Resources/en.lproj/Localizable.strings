@@ -21,6 +21,7 @@
 "action_see_more" = "See more";
 "action_open_safari" = "Open in Safari";
 "action_refresh" = "Refresh";
+"action_select" = "Select";
 "menu_delete" = "Delete";
 
 "date_format_day" = "hh:mm a";
@@ -379,6 +380,7 @@
 "setting_conversation_summary" = "You can restrict who can send message to me or add me to group chats.";
 "setting_conversation_everybody" = "Everybody";
 "setting_conversation_contacts" = "My Contacts";
+"setting_storage_usage" = "Storage Usage";
 "setting_logout" = "Log Out";
 
 // Notifications

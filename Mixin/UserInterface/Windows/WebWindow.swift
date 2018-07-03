@@ -268,12 +268,19 @@ extension WebWindow: WKScriptMessageHandler {
 extension WebWindow: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.isTracking, scrollView.contentOffset.y < 0.1 || scrollView.panGestureRecognizer.velocity(in: scrollView).y < 0 {
-            let newHeight = webViewHeight + (scrollView.contentOffset.y - scrollViewBeganDraggingOffset.y)
-            if newHeight <= maximumWebViewHeight {
-                webViewHeight = newHeight
-                scrollView.contentOffset = scrollViewBeganDraggingOffset
-                isMaximized = newHeight > medianWebViewHeight
+        if scrollView.isTracking {
+            if scrollView.panGestureRecognizer.velocity(in: scrollView).y < 0 {
+                let newHeight = webViewHeight + (scrollView.contentOffset.y - scrollViewBeganDraggingOffset.y)
+                if newHeight <= maximumWebViewHeight {
+                    webViewHeight = newHeight
+                    scrollView.contentOffset = scrollViewBeganDraggingOffset
+                    isMaximized = newHeight > medianWebViewHeight
+                }
+            } else if scrollView.contentOffset.y < 0.1 {
+                scrollViewBeganDraggingOffset = .zero
+                webViewHeight += scrollView.contentOffset.y
+                scrollView.contentOffset.y = 0
+                isMaximized = webViewHeight > medianWebViewHeight
             }
         }
         controller?.statusBarStyle = maximumWebViewHeight - titleHeightConstraint.constant - webViewHeight < 1 ? .lightContent : .default

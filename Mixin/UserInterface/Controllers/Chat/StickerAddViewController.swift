@@ -115,7 +115,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
         }
 
         DispatchQueue.global().async { [weak self] in
-            if let assetUrl = self?.animateURL {
+            if let assetUrl = self?.animateURL, !FileManager.default.isStillImage(assetUrl.path) {
                 guard FileManager.default.validateSticker(assetUrl.path) else {
                     alertBlock()
                     return
@@ -154,17 +154,14 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
 
 private extension FileManager {
 
-    private static let minAspectRatio: CGFloat = 9.0 / 16.0
-    private static let maxAspectRatio: CGFloat = 16.0 / 9.0
 
     func validateSticker(_ path: String) -> Bool {
         let fSize = fileSize(path)
-        guard fSize > 1024 && fSize < 1024 * 1024 else {
+        guard fSize > 1024 && fSize < 1024 * 800 else {
             return false
         }
         let size = imageSize(path)
-        let ratio = size.width / size.height
-        return ratio > FileManager.minAspectRatio && ratio < FileManager.maxAspectRatio
+        return min(size.width, size.height) >= 64.0 && max(size.width, size.height) <= 512
     }
 
 }

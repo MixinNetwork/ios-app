@@ -3,7 +3,8 @@ import UIKit
 class StickerMessageViewModel: DetailInfoMessageViewModel {
 
     static let timeMargin = Margin(leading: 2, trailing: 2, top: 4, bottom: 4)
-    static let maxHeight: CGFloat = 120
+    static let maxWH: CGFloat = 130
+    static let minWH: CGFloat = 48
     
     internal(set) var contentFrame = CGRect.zero
 
@@ -14,11 +15,31 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     private let contentSize: CGSize
 
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        if let assetWidth = message.assetWidth, let assetHeight = message.assetHeight {
-            let ratio = CGFloat(assetWidth) / CGFloat(assetHeight)
-            contentSize = CGSize(width: StickerMessageViewModel.maxHeight * ratio, height: StickerMessageViewModel.maxHeight)
+        if let assetWidth = message.assetWidth, let assetHeight = message.assetHeight, assetWidth > 0, assetHeight > 0 {
+            let width = CGFloat(assetWidth)
+            let height = CGFloat(assetHeight)
+            let ratio = width / height
+            var targetSize = CGSize.zero
+
+            if min(width, height) < StickerMessageViewModel.minWH {
+                if width > height {
+                    targetSize = CGSize(width: StickerMessageViewModel.minWH * ratio, height: StickerMessageViewModel.minWH)
+                } else {
+                    targetSize = CGSize(width: StickerMessageViewModel.minWH, height: StickerMessageViewModel.minWH / ratio)
+                }
+            }
+
+            if max(width, height) > StickerMessageViewModel.maxWH || max(targetSize.width, targetSize.height) > StickerMessageViewModel.maxWH {
+                if width > height {
+                    contentSize = CGSize(width: StickerMessageViewModel.maxWH, height: StickerMessageViewModel.maxWH / ratio)
+                } else {
+                    contentSize = CGSize(width: StickerMessageViewModel.maxWH * ratio, height: StickerMessageViewModel.maxWH)
+                }
+            } else {
+                contentSize = CGSize(width: width, height: height)
+            }
         } else {
-            contentSize = CGSize(width: StickerMessageViewModel.maxHeight, height: StickerMessageViewModel.maxHeight)
+            contentSize = CGSize(width: StickerMessageViewModel.minWH, height: StickerMessageViewModel.minWH)
         }
         super.init(message: message, style: style, fits: layoutWidth)
         backgroundImage = nil

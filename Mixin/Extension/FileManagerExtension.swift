@@ -20,6 +20,21 @@ extension FileManager {
         return fileSize(path1) == fileSize(path2) && contentsEqual(atPath: path1, andPath: path2)
     }
 
+    func isStillImage(_ path: String) -> Bool {
+        guard let handler = FileHandle(forReadingAtPath: path) else {
+            return false
+        }
+        defer {
+            handler.closeFile()
+        }
+        guard let c = handler.readData(ofLength: 1).bytes.first else {
+            return false
+        }
+        // 0xFF => image/jpeg
+        // 0x89 => image/png
+        return c == 0x89 || c == 0xFF
+    }
+
     func imageSize(_ path: String) -> CGSize {
         let imageFileURL = URL(fileURLWithPath: path)
         guard let imageSource = CGImageSourceCreateWithURL(imageFileURL as CFURL, nil), let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any], let width = properties[kCGImagePropertyPixelWidth] as? NSNumber, let height = properties[kCGImagePropertyPixelHeight] as? NSNumber else {

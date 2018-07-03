@@ -152,7 +152,7 @@
 "sticker_remove_title" = "Delete Stickers";
 "sticker_add_failed" = "Failed to add sticker";
 "sticker_remove_failed" = "Failed to delete stickers";
-"sticker_add_required" = "Requires stickers file size larger than 1KB and less than 1MB, aspect ratio between 16:9 and 9:16.";
+"sticker_add_required" = "Requires stickers file size larger than 1KB and less than 800KB, width and height between 64 and 512 pixels.";
 "sticker_add_limit" = "Too many stickers.";
 
 // Camera

@@ -22,6 +22,7 @@
 "action_open_safari" = "Open in Safari";
 "action_refresh" = "Refresh";
 "action_select" = "Select";
+"action_clear" = "Clear";
 "menu_delete" = "Delete";
 
 "date_format_day" = "hh:mm a";

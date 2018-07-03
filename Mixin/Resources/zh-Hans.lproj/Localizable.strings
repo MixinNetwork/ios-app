@@ -22,6 +22,7 @@
 "action_open_safari" = "在 Safari 中打开";
 "action_refresh" = "刷新";
 "action_select" = "选择";
+"action_clear" = "清理";
 "menu_delete" = "删除";
 
 "date_format_day" = "ahh:mm";

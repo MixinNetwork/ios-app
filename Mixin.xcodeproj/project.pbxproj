@@ -467,6 +467,10 @@
 		DFE356B31FB498D600E0E3A8 /* PhoneContactAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE356B21FB498D600E0E3A8 /* PhoneContactAPI.swift */; };
 		DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE356B41FB4990100E0E3A8 /* Setting.storyboard */; };
 		DFE356B81FB4994200E0E3A8 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */; };
+		DFE48ADA20E69B31003E0BF8 /* StorageUsageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */; };
+		DFE48ADC20EB8165003E0BF8 /* ConversationStorageUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48ADB20EB8165003E0BF8 /* ConversationStorageUsage.swift */; };
+		DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */; };
+		DFE48AE020EBD7F3003E0BF8 /* ConversationCategoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE48ADF20EBD7F3003E0BF8 /* ConversationCategoryStorage.swift */; };
 		DFE63C9A1FC6B15600D6E028 /* SignalKeyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE63C991FC6B15600D6E028 /* SignalKeyRequest.swift */; };
 		DFE63C9C1FC6B18900D6E028 /* SignalKeyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE63C9B1FC6B18900D6E028 /* SignalKeyResponse.swift */; };
 		DFE63C9E1FC6B1C600D6E028 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE63C9D1FC6B1C600D6E028 /* EmptyResponse.swift */; };
@@ -1005,6 +1009,10 @@
 		DFE356B21FB498D600E0E3A8 /* PhoneContactAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneContactAPI.swift; sourceTree = "<group>"; };
 		DFE356B41FB4990100E0E3A8 /* Setting.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
 		DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageUsageViewController.swift; sourceTree = "<group>"; };
+		DFE48ADB20EB8165003E0BF8 /* ConversationStorageUsage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStorageUsage.swift; sourceTree = "<group>"; };
+		DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearStorageViewController.swift; sourceTree = "<group>"; };
+		DFE48ADF20EBD7F3003E0BF8 /* ConversationCategoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCategoryStorage.swift; sourceTree = "<group>"; };
 		DFE63C991FC6B15600D6E028 /* SignalKeyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyRequest.swift; sourceTree = "<group>"; };
 		DFE63C9B1FC6B18900D6E028 /* SignalKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyResponse.swift; sourceTree = "<group>"; };
 		DFE63C9D1FC6B1C600D6E028 /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
@@ -2036,6 +2044,8 @@
 				DF8CECE81FC411AB00E40064 /* NotificationViewController.swift */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
 				DF8CECEE1FC4240500E40064 /* BlockUserViewController.swift */,
+				DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */,
+				DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */,
 				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
 				7BF653552000DFE8007CCFAA /* AboutContainerViewController.swift */,
 			);
@@ -2056,6 +2066,8 @@
 				DFBC04A0200397B0008CA56A /* SentSenderKey.swift */,
 				DF2A244D1FC84E3F003A8C1E /* Conversation.swift */,
 				DF17B51220525485006447C2 /* ConversationItem.swift */,
+				DFE48ADB20EB8165003E0BF8 /* ConversationStorageUsage.swift */,
+				DFE48ADF20EBD7F3003E0BF8 /* ConversationCategoryStorage.swift */,
 				DF7A4B451FCDA6A000F21BCB /* User.swift */,
 				DF17B51B20528B36006447C2 /* UserItem.swift */,
 				DF8DA1971FD5301200425CEC /* Participant.swift */,
@@ -2388,6 +2400,7 @@
 				7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,
 				273FACB0205FB9A800513327 /* SignalError.swift in Sources */,
+				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
 				DFD089E21FE4041400A7D815 /* AttachmentUploadJob.swift in Sources */,
 				7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */,
 				273FACC6205FB9A800513327 /* SessionStoreWrapper.swift in Sources */,
@@ -2411,6 +2424,7 @@
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
 				DF503D411FED162300C008E7 /* MixinPreKeyStore.swift in Sources */,
 				273FACBA205FB9A800513327 /* SenderKeyStore.swift in Sources */,
+				DFE48AE020EBD7F3003E0BF8 /* ConversationCategoryStorage.swift in Sources */,
 				DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
 				7BC8503520CBA69B00A57B83 /* MXNAudioRecorder.m in Sources */,
@@ -2513,6 +2527,7 @@
 				DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */,
 				DF736F901FC09724001DB063 /* WalletTotalBalanceCell.swift in Sources */,
 				DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */,
+				DFE48ADA20E69B31003E0BF8 /* StorageUsageViewController.swift in Sources */,
 				DFE63C9C1FC6B18900D6E028 /* SignalKeyResponse.swift in Sources */,
 				DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */,
 				DF63E1D920B84B5300A833A7 /* ContactQRCodeCell.swift in Sources */,
@@ -2598,6 +2613,7 @@
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				DFF21459209ABA6500612234 /* GroupWindow.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
+				DFE48ADC20EB8165003E0BF8 /* ConversationStorageUsage.swift in Sources */,
 				DF114B062020551900EA8F9C /* AppDAO.swift in Sources */,
 				DFD659C620501858000696B0 /* BaseDatabase.swift in Sources */,
 				DFD2943D1FA706E100FADAAD /* ContactMeCell.swift in Sources */,

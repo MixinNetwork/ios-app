@@ -54,10 +54,14 @@ extension SettingViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 && indexPath.row == 0 {
-            navigationController?.pushViewController(BlockUserViewController.instance(), animated: true)
-        } else if indexPath.section == 0 && indexPath.row == 1 {
-            navigationController?.pushViewController(ConversationSettingViewController.instance(), animated: true)
+        if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                navigationController?.pushViewController(BlockUserViewController.instance(), animated: true)
+            } else {
+                navigationController?.pushViewController(ConversationSettingViewController.instance(), animated: true)
+            }
+        } else if indexPath.section == 1 {
+            navigationController?.pushViewController(StorageUsageViewController.instance(), animated: true)
         } else {
             navigationController?.pushViewController(AboutContainerViewController.instance(), animated: true)
         }

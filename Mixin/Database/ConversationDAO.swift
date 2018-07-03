@@ -39,6 +39,27 @@ final class ConversationDAO {
     private static let sqlQueryConversationByOwnerId = String(format: sqlQueryConversation, " AND c.owner_id = ? AND c.category = 'CONTACT'")
     private static let sqlQueryConversationByCoversationId = String(format: sqlQueryConversation, " AND c.conversation_id = ? ")
     private static let sqlQueryConversationByName = String(format: sqlQueryConversation, "AND c.name LIKE ?") + " LIMIT 1"
+    private static let sqlQueryStorageUsage = """
+    SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name, u.identity_number as ownerIdentityNumber,
+    u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl, u.is_verified as ownerIsVerified, m.mediaSize
+    FROM conversations c
+    INNER JOIN (SELECT conversation_id, sum(media_size) as mediaSize FROM messages WHERE ifnull(media_size,'') != '' GROUP BY conversation_id) m
+        ON m.conversation_id = c.conversation_id
+    INNER JOIN users u ON u.user_id = c.owner_id
+    ORDER BY m.mediaSize DESC
+    """
+    private static let sqlQueryConversationStorageUsage = """
+    SELECT category, sum(media_size) as mediaSize FROM messages
+    WHERE conversation_id = ? AND ifnull(media_size,'') != '' GROUP BY category
+    """
+
+    func getCategoryStorages(conversationId: String) -> [ConversationCategoryStorage] {
+        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationStorageUsage, values: [conversationId])
+    }
+
+    func storageUsageConversations() -> [ConversationStorageUsage] {
+        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryStorageUsage)
+    }
 
     func isExist(conversationId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Conversation.self, condition: Conversation.Properties.conversationId == conversationId)

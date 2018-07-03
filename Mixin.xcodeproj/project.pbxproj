@@ -348,7 +348,6 @@
 		DF68F18C201567D6001C4225 /* StickerRelationshipDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F18B201567D6001C4225 /* StickerRelationshipDAO.swift */; };
 		DF6DB83B2024D2E70060CF31 /* KeyboardLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6DB83A2024D2E70060CF31 /* KeyboardLayoutConstraint.swift */; };
 		DF6DB83D2024EAD10060CF31 /* PaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6DB83C2024EAD10060CF31 /* PaymentResponse.swift */; };
-		DF6DB83F20258BEA0060CF31 /* ZoomWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6DB83E20258BEA0060CF31 /* ZoomWindow.swift */; };
 		DF6DB8412028C1A60060CF31 /* AppButtonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6DB8402028C1A60060CF31 /* AppButtonData.swift */; };
 		DF6ED3EB1FE36F3E00E958A3 /* JobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6ED3EA1FE36F3E00E958A3 /* JobQueue.swift */; };
 		DF6ED3EE1FE37D0400E958A3 /* ConcurrentJobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6ED3ED1FE37D0400E958A3 /* ConcurrentJobQueue.swift */; };
@@ -884,7 +883,6 @@
 		DF68F18B201567D6001C4225 /* StickerRelationshipDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerRelationshipDAO.swift; sourceTree = "<group>"; };
 		DF6DB83A2024D2E70060CF31 /* KeyboardLayoutConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutConstraint.swift; sourceTree = "<group>"; };
 		DF6DB83C2024EAD10060CF31 /* PaymentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentResponse.swift; sourceTree = "<group>"; };
-		DF6DB83E20258BEA0060CF31 /* ZoomWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomWindow.swift; sourceTree = "<group>"; };
 		DF6DB8402028C1A60060CF31 /* AppButtonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonData.swift; sourceTree = "<group>"; };
 		DF6ED3EA1FE36F3E00E958A3 /* JobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobQueue.swift; sourceTree = "<group>"; };
 		DF6ED3ED1FE37D0400E958A3 /* ConcurrentJobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentJobQueue.swift; sourceTree = "<group>"; };
@@ -1396,7 +1394,6 @@
 				DF8EF6AC203055DD00E99CE8 /* UrlWindow.xib */,
 				DFFDCF8B20ADC83900B4956E /* RecognizeWindow.swift */,
 				DFFDCF8D20ADC8A200B4956E /* RecognizeWindow.xib */,
-				DF6DB83E20258BEA0060CF31 /* ZoomWindow.swift */,
 				DF016B282096BD0700B8FFDE /* UserWindow.swift */,
 				DF016B2A2096BDB100B8FFDE /* UserWindow.xib */,
 				DFF21458209ABA6500612234 /* GroupWindow.swift */,
@@ -2728,7 +2725,6 @@
 				DF503D451FED1D3C00C008E7 /* MixinSenderKeyStore.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
-				DF6DB83F20258BEA0060CF31 /* ZoomWindow.swift in Sources */,
 				DF503D361FECF86D00C008E7 /* SessionDAO.swift in Sources */,
 				DF5D9F3D1F9CA3160036D5FD /* UserAPI.swift in Sources */,
 				7BFF3B011FAAE92F0039A1C5 /* SearchResultContactCell.swift in Sources */,

@@ -11,29 +11,34 @@ fileprivate extension Selector {
 extension MessageItem {
     
     var allowedActions: [Selector] {
+        var actions = [Selector]()
         if category.hasSuffix("_TEXT") {
-            return [.reply, .forward, .copy, .delete]
+            actions = [.reply, .forward, .copy, .delete]
         } else if category.hasSuffix("_STICKER") {
-            return [.addToStickers, .reply, .forward, .delete]
+            actions = [.addToStickers, .reply, .forward, .delete]
         } else if category.hasSuffix("_CONTACT") {
-            return [.reply, .forward, .delete]
+            actions = [.reply, .forward, .delete]
         } else if category.hasSuffix("_IMAGE") {
             if mediaStatus == MediaStatus.DONE.rawValue {
-                return [.addToStickers, .reply, .forward, .delete]
+                actions = [.addToStickers, .reply, .forward, .delete]
             } else {
-                return [.reply, .delete]
+                actions = [.reply, .delete]
             }
         } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") || category.hasSuffix("_AUDIO") {
             if mediaStatus == MediaStatus.DONE.rawValue {
-                return [.reply, .forward, .delete]
+                actions = [.reply, .forward, .delete]
             } else {
-                return [.reply, .delete]
+                actions = [.reply, .delete]
             }
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue || category == MessageCategory.APP_CARD.rawValue{
-            return [.reply, .delete]
+            actions = [.reply, .delete]
         } else {
-            return []
+            actions = []
         }
+        if status == MessageStatus.FAILED.rawValue, let index = actions.index(of: .reply) {
+            actions.remove(at: index)
+        }
+        return actions
     }
     
 }

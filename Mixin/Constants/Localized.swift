@@ -19,6 +19,7 @@ public class Localized {
     public static let ACTION_OPEN_SAFARI = LocalizedString("action_open_safari", comment: "Open in Safari")
     public static let ACTION_REFRESH = LocalizedString("action_refresh", comment: "Refresh")
     public static let ACTION_SELECT = LocalizedString("action_select", comment: "Select")
+    public static let ACTION_CLEAR = LocalizedString("action_clear", comment: "Clear")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
 
     public static let DATE_FORMAT_DAY = LocalizedString("date_format_day", comment: "hh:mm a")
@@ -407,6 +408,9 @@ public class Localized {
     public static let SETTING_HEADER_MESSAGE_SOURCE = LocalizedString("setting_header_message_source", comment: "WHO CAN SEND ME MESSAGES")
     public static let SETTING_HEADER_CONVERSATION_SOURCE = LocalizedString("setting_header_conversation_source", comment: "WHO CAN ADD ME TO GROUP CHATS")
     public static let SETTING_STORAGE_USAGE = LocalizedString("setting_storage_usage", comment: "Storage Usage")
+    public static func SETTING_STORAGE_USAGE_CLEAR(messageCount: Int, size: String) -> String {
+    return String(format: LocalizedString("setting_storage_usage_clear", comment: "Clear %@ messages (%@)?"), "\(messageCount)", size)
+    }
     public static let SETTING_LOGOUT = LocalizedString("setting_logout", comment: "Log Out")
 
     // Notifications

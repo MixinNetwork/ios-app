@@ -100,6 +100,14 @@ final class MessageDAO {
         WHERE a.album_id = messages.album_id AND s.name = messages.name
     ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''
     """
+    
+    func storageUsageMessages(conversationId: String, category: String) -> [String: String] {
+        return MixinDatabase.shared.getDictionary(key: Message.Properties.messageId.asColumnResult(), value: Message.Properties.mediaUrl.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.like("%\(category)"))
+    }
+
+    func deleteMessages(conversationId: String, category: String) {
+        MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.like("%\(category)"))
+    }
 
     func findFailedMessages(conversationId: String, userId: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000, inTransaction: false)

@@ -22,6 +22,7 @@
 "action_open_safari" = "在 Safari 中打开";
 "action_refresh" = "刷新";
 "action_select" = "选择";
+"action_clear" = "清理";
 "menu_delete" = "删除";
 
 "date_format_day" = "ahh:mm";
@@ -378,11 +379,17 @@
 "setting_blocked_empty" = "没有人被屏蔽";
 "setting_blocked_summary" = "被屏蔽的用户不能给你发消息也不能邀请你入群。";
 "setting_conversation" = "会话";
+"setting_storage_usage" = "存储空间";
+"setting_storage_usage_clear" = "清除 %@ 个消息（%@）吗？";
 "setting_header_message_source" = "谁可以给我发消息";
 "setting_header_conversation_source" = "谁可以加我入群";
 "setting_source_everybody" = "任何人";
 "setting_source_contacts" = "我的联系人";
 "setting_storage_usage" = "存储空间";
+"setting_storage_photos" = "图片";
+"setting_storage_videos" = "视频";
+"setting_storage_audios" = "音频";
+"setting_storage_files" = "文件";
 "setting_logout" = "退出登录";
 
 // Notifications

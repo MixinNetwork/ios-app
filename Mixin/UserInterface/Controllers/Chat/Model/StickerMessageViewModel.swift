@@ -73,6 +73,9 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
         }
         super.didSetStyle()
         fullnameFrame.size.width = min(fullnameWidth, maxContentWidth)
+        if style.contains(.received) {
+            timeFrame.origin.x = max(timeFrame.origin.x, contentFrame.origin.x)
+        }
         timeFrame.origin.y = contentFrame.maxY + contentMargin.bottom + timeMargin.top
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)

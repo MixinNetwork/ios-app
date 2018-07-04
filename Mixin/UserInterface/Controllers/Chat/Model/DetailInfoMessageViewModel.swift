@@ -7,7 +7,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     static let doubleCheckmarkImage = #imageLiteral(resourceName: "ic_chat_double_checkmark").withRenderingMode(.alwaysTemplate)
     static let statusImageSize = CGSize(width: #imageLiteral(resourceName: "ic_chat_double_checkmark").size.width, height: #imageLiteral(resourceName: "ic_chat_time").size.height)
     static let statusHighlightTintColor = UIColor.darkTheme
-    static let margin = Margin(leading: 16, trailing: 10, top: 0, bottom: 10)
+    static let margin = Margin(leading: 16, trailing: 10, top: 0, bottom: 8)
     static let statusLeftMargin: CGFloat = 4
     static let timeFont = UIFont.systemFont(ofSize: 11, weight: .light)
     static let fullnameFont = UIFont.systemFont(ofSize: 14)
@@ -16,6 +16,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
 
     internal(set) var statusImage: UIImage?
     internal(set) var statusTintColor = UIColor.infoGray
+    internal(set) var timeSize = CGSize.zero
     internal(set) var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
     internal(set) var fullnameColor = UIColor.darkTheme
     internal(set) var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
@@ -92,11 +93,13 @@ class DetailInfoMessageViewModel: MessageViewModel {
     }
     
     override func didSetStyle() {
+        super.didSetStyle()
+        timeSize = ceil((time as NSString).size(withAttributes: [.font: DetailInfoMessageViewModel.timeFont]))
         let margin = DetailInfoMessageViewModel.margin
-        timeFrame = CGRect(x: backgroundImageFrame.origin.x,
-                           y: backgroundImageFrame.maxY - margin.bottom - timeFrame.height,
-                           width: backgroundImageFrame.width,
-                           height: timeFrame.height)
+        timeFrame = CGRect(x: backgroundImageFrame.maxX - timeSize.width,
+                           y: backgroundImageFrame.maxY - margin.bottom - timeSize.height,
+                           width: timeSize.width,
+                           height: timeSize.height)
         if style.contains(.received) {
             if style.contains(.hasTail) {
                 backgroundImage = leftWithTailBubbleImage
@@ -104,9 +107,9 @@ class DetailInfoMessageViewModel: MessageViewModel {
                 backgroundImage = leftBubbleImage
             }
             if message.status == MessageStatus.FAILED.rawValue {
-                timeFrame.size.width -= (margin.trailing + DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width)
+                timeFrame.origin.x -= (margin.trailing + DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width)
             } else {
-                timeFrame.size.width -= margin.trailing
+                timeFrame.origin.x -= margin.trailing
             }
         } else if style.contains(.sent) {
             if style.contains(.hasTail) {
@@ -114,7 +117,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
             } else {
                 backgroundImage = rightBubbleImage
             }
-            timeFrame.size.width -= (margin.leading + DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width)
+            timeFrame.origin.x -= (margin.leading + DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width)
         }
         if style.contains(.showFullname), let identityNumber = Int64(message.userIdentityNumber) {
             let index = identityNumber % Int64(UIColor.usernameColors.count)
@@ -125,7 +128,6 @@ class DetailInfoMessageViewModel: MessageViewModel {
         fullnameFrame.size.width = min(fullnameWidth, maxContentWidth)
         identityIconFrame.origin = CGPoint(x: fullnameFrame.maxX + DetailInfoMessageViewModel.identityIconLeftMargin,
                                            y: fullnameFrame.origin.y + (fullnameFrame.height - identityIconFrame.height) / 2)
-        super.didSetStyle()
     }
     
 }

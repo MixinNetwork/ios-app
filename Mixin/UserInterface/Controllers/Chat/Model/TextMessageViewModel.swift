@@ -124,8 +124,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         // Make content
         content = CoreTextLabel.Content(lines: lines, lineOrigins: lineOrigins, links: links)
         // Calculate content size
-        let time = message.createdAt.toUTCDate().timeHoursAndMinutes() as NSString
-        let timeSize = time.size(withAttributes: [.font: DetailInfoMessageViewModel.timeFont])
         let hasStatusImage = style.contains(.sent)
         let statusImageWidth = hasStatusImage ? DetailInfoMessageViewModel.statusImageSize.width : 0
         let additionalTrailingSize = CGSize(width: timeLeftMargin + timeSize.width + statusImageWidth + DetailInfoMessageViewModel.statusLeftMargin, height: 16)

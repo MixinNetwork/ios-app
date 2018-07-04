@@ -3,7 +3,7 @@ import MobileCoreServices
 import AVKit
 import Photos
 
-class ConversationViewController: UIViewController {
+class ConversationViewController: UIViewController, StatusBarStyleSwitchableViewController {
     
     @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -42,6 +42,11 @@ class ConversationViewController: UIViewController {
     static var positions = [String: Position]()
     
     var dataSource: ConversationDataSource?
+    var statusBarStyle = UIStatusBarStyle.default {
+        didSet {
+            setNeedsStatusBarAppearanceUpdate()
+        }
+    }
     private(set) var conversationId = ""
     
     private let maxInputRow = 6
@@ -128,6 +133,10 @@ class ConversationViewController: UIViewController {
     
     override var prefersStatusBarHidden: Bool {
         return hideStatusBar
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return statusBarStyle
     }
     
     // MARK: - Life cycle
@@ -408,8 +417,7 @@ class ConversationViewController: UIViewController {
         if isShowingStickerPanel {
             toggleStickerPanel(delay: 0)
         }
-
-        WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+        presentWebWindow(withURL: url)
     }
     
     @IBAction func toggleStickerPanelSizeAction(_ sender: Any) {
@@ -1558,7 +1566,13 @@ extension ConversationViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+        presentWebWindow(withURL: url)
+    }
+    
+    private func presentWebWindow(withURL url: URL) {
+        let window = WebWindow.instance(conversationId: conversationId)
+        window.controller = self
+        window.presentPopupControllerAnimated(url: url)
     }
     
 }

@@ -3,33 +3,16 @@ import UIKit
 class SettingViewController: UITableViewController {
 
     @IBOutlet weak var blockedUsersDetailLabel: UILabel!
-    @IBOutlet weak var conversationDetailLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        updateConversationCell()
         updateBlockedUserCell()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateConversationCell), name: .AccountDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateBlockedUserCell), name: .UserDidChange, object: nil)
     }
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-
-    @objc func updateConversationCell() {
-        guard let account = AccountAPI.shared.account else {
-            return
-        }
-        switch account.receive_message_source {
-        case ReceiveMessageSource.everybody.rawValue:
-            conversationDetailLabel.text = Localized.SETTING_CONVERSATION_EVERYBODY
-        case ReceiveMessageSource.contacts.rawValue:
-            conversationDetailLabel.text = Localized.SETTING_CONVERSATION_CONTACTS
-        default:
-            break
-        }
     }
 
     @objc func updateBlockedUserCell() {

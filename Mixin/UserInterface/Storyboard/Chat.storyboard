@@ -1003,7 +1003,7 @@
                         <outlet property="moreMenuHeightConstraint" destination="pLr-Yd-ULj" id="QPf-3K-eEy"/>
                         <outlet property="moreMenuTopConstraint" destination="iaR-17-gKI" id="9QR-8F-QCc"/>
                         <outlet property="participantsLabel" destination="a4C-sE-rDR" id="OnC-u4-cXC"/>
-                        <outlet property="quoteView" destination="y0l-2x-7bv" id="UYG-xX-QdK"/>
+                        <outlet property="quotePreviewView" destination="y0l-2x-7bv" id="UYG-xX-QdK"/>
                         <outlet property="quoteViewHeightConstraint" destination="NvR-WP-xVN" id="F2A-6v-erf"/>
                         <outlet property="quoteViewHiddenConstraint" destination="2nN-2w-Rhr" id="mt9-R1-1iB"/>
                         <outlet property="quoteViewShowConstraint" destination="Gru-pw-vyc" id="oJY-lo-g87"/>

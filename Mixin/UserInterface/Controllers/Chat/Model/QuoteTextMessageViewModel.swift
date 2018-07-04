@@ -58,7 +58,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         subtitleWidth = ceil(subtitleWidth)
         subtitleWidth = min(maxSubtitleWidth, subtitleWidth)
         
-        quoteMaxWidth = max(titleWidth, paddedQuoteIconWidth + subtitleWidth + quoteImageWidth)
+        quoteMaxWidth = max(titleWidth + quoteImageWidth, paddedQuoteIconWidth + subtitleWidth + quoteImageWidth)
             + Quote.contentMargin.horizontal
             + Quote.backgroundMargin.horizontal
         

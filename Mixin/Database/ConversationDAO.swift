@@ -49,7 +49,7 @@ final class ConversationDAO {
     ORDER BY m.mediaSize DESC
     """
     private static let sqlQueryConversationStorageUsage = """
-    SELECT category, sum(media_size) as mediaSize FROM messages
+    SELECT category, sum(media_size) as mediaSize, count(id) as messageCount  FROM messages
     WHERE conversation_id = ? AND ifnull(media_size,'') != '' GROUP BY category
     """
 

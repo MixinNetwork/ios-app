@@ -30,6 +30,8 @@ extension NSNotification.Name {
     static let DefaultAddressDidChange = NSNotification.Name("one.mixin.ios.addresses.default.changed")
 
     static let StickerDidChange = NSNotification.Name("one.mixin.ios.stickers.changed")
+
+    static let StorageUsageDidChange = NSNotification.Name("one.mixin.ios.storage.changed")
 }
 
 enum NotificationIdentifier: String {

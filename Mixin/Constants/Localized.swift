@@ -409,6 +409,9 @@ public class Localized {
     public static let SETTING_CONVERSATION_CONTACTS = LocalizedString("setting_conversation_contacts", comment: "My Contacts")
     public static let SETTING_CONVERSATION_SUMMARY = LocalizedString("setting_conversation_summary", comment: "You can restrict who can send message to me or add me to group chats.")
     public static let SETTING_STORAGE_USAGE = LocalizedString("setting_storage_usage", comment: "Storage Usage")
+    public static func SETTING_STORAGE_USAGE_CLEAR(messageCount: Int, size: String) -> String {
+        return String(format: LocalizedString("setting_storage_usage_clear", comment: "Clear %@ messages (%@)?"), "\(messageCount)", size)
+    }
     public static let SETTING_LOGOUT = LocalizedString("setting_logout", comment: "Log Out")
 
     // Notifications

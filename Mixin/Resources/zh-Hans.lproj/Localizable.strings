@@ -383,6 +383,7 @@
 "setting_conversation_everybody" = "任何人";
 "setting_conversation_contacts" = "我的联系人";
 "setting_storage_usage" = "存储空间";
+"setting_storage_usage_clear" = "清除 %@ 个消息（%@）吗？";
 "setting_logout" = "退出登录";
 
 // Notifications

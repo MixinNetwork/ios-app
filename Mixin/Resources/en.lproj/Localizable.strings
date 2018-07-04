@@ -382,6 +382,7 @@
 "setting_conversation_everybody" = "Everybody";
 "setting_conversation_contacts" = "My Contacts";
 "setting_storage_usage" = "Storage Usage";
+"setting_storage_usage_clear" = "Clear %@ messages (%@)?";
 "setting_logout" = "Log Out";
 
 // Notifications

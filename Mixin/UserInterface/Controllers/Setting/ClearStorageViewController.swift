@@ -2,10 +2,10 @@ import UIKit
 
 class ClearStorageViewController: UITableViewController {
 
-    @IBOutlet weak var photoCell: ClearStorageCell!
-    @IBOutlet weak var videoCell: ClearStorageCell!
-    @IBOutlet weak var audioCell: ClearStorageCell!
-    @IBOutlet weak var fileCell: ClearStorageCell!
+    @IBOutlet weak var photoCell: UITableViewCell!
+    @IBOutlet weak var videoCell: UITableViewCell!
+    @IBOutlet weak var audioCell: UITableViewCell!
+    @IBOutlet weak var fileCell: UITableViewCell!
     
     @IBOutlet weak var photosLabel: UILabel!
     @IBOutlet weak var videosLabel: UILabel!
@@ -17,6 +17,7 @@ class ClearStorageViewController: UITableViewController {
     private var isClearVideos = true
     private var isClearAudios = true
     private var isClearFiles = true
+    private var categorys = [String: ConversationCategoryStorage]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +31,16 @@ class ClearStorageViewController: UITableViewController {
                 for categoryStorage in categoryStorages {
                     let mediaSize = categoryStorage.mediaSize
                     if categoryStorage.category.hasSuffix("_IMAGE") {
+                        self?.categorys["_IMAGE"] = categoryStorage
                         self?.photosLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
                     } else if categoryStorage.category.hasSuffix("_VIDEO") {
+                        self?.categorys["_VIDEO"] = categoryStorage
                         self?.videosLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
                     } else if categoryStorage.category.hasSuffix("_AUDIO") {
+                        self?.categorys["_AUDIO"] = categoryStorage
                         self?.audiosLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
                     } else if categoryStorage.category.hasSuffix("_DATA") {
+                        self?.categorys["_DATA"] = categoryStorage
                         self?.filesLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
                     }
                 }
@@ -63,7 +68,73 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
     }
 
     func barRightButtonTappedAction() {
-        
+        guard let rightButton = container?.rightButton, !rightButton.isBusy else {
+            return
+        }
+
+        var messageCount = 0
+        var size: Int64 = 0
+        if isClearPhotos, let category = categorys["_IMAGE"] {
+            messageCount += category.messageCount
+            size += category.mediaSize
+        }
+        if isClearVideos, let category = categorys["_VIDEO"] {
+            messageCount += category.messageCount
+            size += category.mediaSize
+        }
+        if isClearAudios, let category = categorys["_AUDIO"] {
+            messageCount += category.messageCount
+            size += category.mediaSize
+        }
+        if isClearFiles, let category = categorys["_DATA"] {
+            messageCount += category.messageCount
+            size += category.mediaSize
+        }
+
+        let alc = UIAlertController(title: Localized.SETTING_STORAGE_USAGE_CLEAR(messageCount: messageCount, size: VideoMessageViewModel.byteCountFormatter.string(fromByteCount: size)), message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.ACTION_CLEAR, style: .destructive, handler: { [weak self](_) in
+            self?.clearAction()
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        self.present(alc, animated: true, completion: nil)
+    }
+
+    private func clearAction() {
+        let clearPhotos = isClearPhotos && categorys["_IMAGE"]?.messageCount ?? 0 > 0
+        let clearVideos = isClearVideos && categorys["_VIDEO"]?.messageCount ?? 0 > 0
+        let clearAudios = isClearPhotos && categorys["_AUDIO"]?.messageCount ?? 0 > 0
+        let clearFiles = isClearPhotos && categorys["_DATA"]?.messageCount ?? 0 > 0
+        container?.rightButton.isBusy = true
+        DispatchQueue.global().async { [weak self] in
+            if clearPhotos {
+                self?.clearCategoryData(directory: .photos, category: "_IMAGE")
+            }
+            if clearVideos {
+                self?.clearCategoryData(directory: .videos, category: "_VIDEO")
+            }
+            if clearAudios {
+                self?.clearCategoryData(directory: .audios, category: "_AUDIO")
+            }
+            if clearFiles {
+                self?.clearCategoryData(directory: .files, category: "_DATA")
+            }
+
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                NotificationCenter.default.post(name: .StorageUsageDidChange, object: nil)
+                weakSelf.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+
+    private func clearCategoryData(directory: MixinFile.ChatDirectory, category: String) {
+        let dict = MessageDAO.shared.storageUsageMessages(conversationId: conversation.conversationId, category: category)
+        for filename in dict.values {
+            try? FileManager.default.removeItem(at: MixinFile.url(ofChatDirectory: directory, filename: filename))
+        }
+        MessageDAO.shared.deleteMessages(conversationId: conversation.conversationId, category: category)
     }
 
     func textBarRightButton() -> String? {

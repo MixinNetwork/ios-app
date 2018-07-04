@@ -12,6 +12,10 @@ class StorageUsageViewController: UITableViewController {
 
         tableView.tableFooterView = UIView()
         fetchConversations()
+
+        NotificationCenter.default.addObserver(forName: .StorageUsageDidChange, object: nil, queue: .main) { [weak self] (_) in
+            self?.fetchConversations()
+        }
     }
 
     private func fetchConversations() {

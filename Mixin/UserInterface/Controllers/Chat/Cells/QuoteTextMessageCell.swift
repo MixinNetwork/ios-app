@@ -46,6 +46,7 @@ class QuoteTextMessageCell: TextMessageCell {
         addSubview(quoteIconImageView)
         
         quoteSubtitleLabel.font = QuoteTextMessageViewModel.Quote.subtitleFont
+        quoteSubtitleLabel.textColor = UIColor.gray
         addSubview(quoteSubtitleLabel)
         
         quoteImageView.layer.cornerRadius = 6

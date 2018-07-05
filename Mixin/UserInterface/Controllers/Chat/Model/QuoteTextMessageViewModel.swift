@@ -11,7 +11,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         static let linesVerticalSpacing: CGFloat = 4
         static let iconSize = MessageCategory.maxIconSize
         static let iconTrailingMargin: CGFloat = 4
-        static let subtitleFont = UIFont.systemFont(ofSize: 14)
+        static let subtitleFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.light)
         static let subtitleHeight = ceil(subtitleFont.lineHeight)
         static let imageSize = CGSize(width: height, height: height)
     }

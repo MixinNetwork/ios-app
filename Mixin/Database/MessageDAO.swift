@@ -282,17 +282,19 @@ final class MessageDAO {
                                                inTransaction: false)
     }
     
-    func getMessages(conversationId: String, aroundMessageId messageId: String, count: Int) -> [MessageItem] {
+    typealias MessagesResult = (messages: [MessageItem], didReachBegin: Bool, didReachEnd: Bool)
+    func getMessages(conversationId: String, aroundMessageId messageId: String, count: Int) -> MessagesResult? {
         guard let message = getFullMessage(messageId: messageId) else {
-            return []
+            return nil
         }
-        let messagesAbove = getMessages(conversationId: conversationId, aboveMessage: message, count: count / 2)
-        let messagesBelow = getMessages(conversationId: conversationId, belowMessage: message, count: count / 2)
+        let count = count / 2
+        let messagesAbove = getMessages(conversationId: conversationId, aboveMessage: message, count: count)
+        let messagesBelow = getMessages(conversationId: conversationId, belowMessage: message, count: count)
         var messages = [MessageItem]()
         messages.append(contentsOf: messagesAbove)
         messages.append(message)
         messages.append(contentsOf: messagesBelow)
-        return messages
+        return (messages, messagesAbove.count < count, messagesBelow.count < count)
     }
     
     func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {

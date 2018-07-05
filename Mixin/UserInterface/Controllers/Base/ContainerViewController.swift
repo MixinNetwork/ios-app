@@ -49,6 +49,7 @@ class ContainerViewController: UIViewController {
 
     @IBOutlet weak var navigationBar: UIView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var rightButton: StateResponsiveButton!
     @IBOutlet weak var leftButton: UIButton!

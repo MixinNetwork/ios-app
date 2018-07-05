@@ -37,7 +37,7 @@ class AssetViewController: UITableViewController {
         guard !depositButton.isBusy else {
             return
         }
-        navigationController?.pushViewController(TransferInViewController.instance(asset: asset), animated: true)
+        navigationController?.pushViewController(DepositViewController.instance(asset: asset), animated: true)
     }
     
     private func fetchAsset() {

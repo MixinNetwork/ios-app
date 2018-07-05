@@ -290,6 +290,7 @@ extension SendMessageService {
 
         blazeMessage.params?.category = message.category
         blazeMessage.params?.messageId = resendMessageId
+        blazeMessage.params?.quoteMessageId = message.quoteMessageId
         blazeMessage.params?.data = try SignalProtocol.shared.encryptSessionMessageData(conversationId: message.conversationId, recipientId: recipientId, content: message.content ?? "", resendMessageId: messageId)
         try deliverMessage(blazeMessage: blazeMessage)
 
@@ -306,6 +307,7 @@ extension SendMessageService {
         }
 
         blazeMessage.params?.category = message.category
+        blazeMessage.params?.quoteMessageId = message.quoteMessageId
 
         if message.category.hasPrefix("PLAIN_") {
             try requestCreateConversation(conversation: conversation)

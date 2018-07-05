@@ -462,10 +462,9 @@ extension ConversationDataSource {
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
-        } else if type == .SIGNAL_VIDEO, let value = value as? (URL, AVAsset) {
+        } else if type == .SIGNAL_VIDEO, let url = value as? URL {
             queue.async {
-                let url = value.0
-                let asset = value.1
+                let asset = AVAsset(url: url)
                 guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
                     NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
                     return

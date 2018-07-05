@@ -4,7 +4,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     
     enum Quote {
         static let height = #imageLiteral(resourceName: "bg_chat_quote").size.height
-        static let backgroundMargin = Margin(leading: 9, trailing: 3, top: 2, bottom: 0)
+        static let backgroundMargin = Margin(leading: 11, trailing: 4, top: 3, bottom: 0)
         static let contentMargin = Margin(leading: 11, trailing: 11, top: 5, bottom: 5)
         static let titleFont = UIFont.systemFont(ofSize: 16)
         static let titleHeight = ceil(titleFont.lineHeight)

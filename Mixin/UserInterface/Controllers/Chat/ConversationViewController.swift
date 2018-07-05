@@ -1482,6 +1482,7 @@ extension ConversationViewController {
         inputTextViewLeadingExpandedConstraint.priority = hidden ? .defaultLow : .almostRequired
         audioInputContainerView.isHidden = !hidden
         stickerKeyboardSwitcherButton.isHidden = !hidden
+        sendButton.isHidden = false
         UIView.animate(withDuration: animationDuration) {
             self.updateBottomInset()
             self.view.layoutIfNeeded()

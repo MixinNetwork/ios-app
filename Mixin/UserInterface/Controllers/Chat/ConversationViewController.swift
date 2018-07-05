@@ -629,6 +629,15 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                 return
             }
             open(url: action)
+        } else if message.category.hasSuffix("_TEXT") {
+            guard let cell = cell as? QuoteTextMessageCell, cell.quoteBackgroundImageView.frame.contains(recognizer.location(in: cell)), let messageId = viewModel.message.quoteMessageId else {
+                return
+            }
+            if let indexPath = dataSource?.indexPath(where: { $0.messageId == messageId }) {
+                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+            } else {
+                dataSource?.scrollToTopAndReload(initialMessageId: messageId)
+            }
         }
     }
     

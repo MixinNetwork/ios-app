@@ -107,6 +107,23 @@ class ConversationDataSource {
         }
     }
     
+    func scrollToTopAndReload(initialMessageId: String) {
+        guard !self.messageProcessingIsCancelled else {
+            return
+        }
+        didLoadEarliestMessage = true
+        didLoadLatestMessage = true
+        tableView?.setContentOffset(.zero, animated: true)
+        highlight = nil
+        ConversationViewController.positions[conversationId] = nil
+        queue.async {
+            guard !self.messageProcessingIsCancelled else {
+                return
+            }
+            self.reload(initialMessageId: initialMessageId)
+        }
+    }
+    
     func loadMoreAboveIfNeeded() {
         guard !isLoadingAbove, !didLoadEarliestMessage else {
             return
@@ -587,12 +604,9 @@ extension ConversationDataSource {
         var offset: CGFloat = 0
         let unreadMessagesCount = MessageDAO.shared.getUnreadMessagesCount(conversationId: conversationId)
         
-        if let initialMessageId = highlight?.messageId {
+        if let initialMessageId = initialMessageId {
             initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == initialMessageId })
             offset -= ConversationDateHeaderView.height
-        } else if let position = ConversationViewController.positions[conversationId] {
-            initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == position.messageId })
-            offset = position.offset
         } else if let unreadHintIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.category == MessageCategory.EXT_UNREAD.rawValue }) {
             if unreadHintIndexPath == IndexPath(row: 1, section: 0), viewModels[dates[0]]?.first?.message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 initialIndexPath = IndexPath(row: 0, section: 0)

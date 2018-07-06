@@ -22,6 +22,22 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private var isObservingRate = false
     private var seekToZero = false
 
+    private lazy var videoSettings: [String: Any] = [
+        AVVideoCodecKey: AVVideoCodecH264,
+        AVVideoWidthKey: 1280,
+        AVVideoHeightKey: 720,
+        AVVideoCompressionPropertiesKey: [
+            AVVideoAverageBitRateKey: 1000000,
+            AVVideoProfileLevelKey: AVVideoProfileLevelH264MainAutoLevel
+        ]
+    ]
+    private lazy var audioSettings: [String: Any] = [
+        AVFormatIDKey: kAudioFormatMPEG4AAC,
+        AVNumberOfChannelsKey: 2,
+        AVSampleRateKey: 44100,
+        AVEncoderBitRateKey: 128000
+    ]
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -133,32 +149,27 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         }
         sendButton.isBusy = true
         if let asset = self.videoAsset {
-            guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPreset640x480) else {
-                sendButton.isBusy = false
-                alert(Localized.CHAT_SEND_VIDEO_FAILED)
-                return
-            }
             let filename = UUID().uuidString.lowercased()
             let outputURL = MixinFile.url(ofChatDirectory: .videos, filename: filename + ExtensionName.mp4.withDot)
-            exportSession.outputFileType = .mp4
-            exportSession.outputURL = outputURL
-            exportSession.shouldOptimizeForNetworkUse = true
-            exportSession.exportAsynchronously(completionHandler: { [weak self] in
-                DispatchQueue.main.async {
-                    guard exportSession.status == .completed else {
-                        self?.sendButton.isBusy = false
-                        self?.alert(Localized.CHAT_SEND_VIDEO_FAILED)
-                        return
-                    }
-                    if let dataSource = self?.dataSource {
-                        dataSource.sendMessage(type: .SIGNAL_VIDEO, value: (outputURL, asset))
-                        self?.navigationController?.popViewController(animated: true)
-                    } else {
-                        self?.navigationController?.pushViewController(SendToViewController.instance(videoUrl: outputURL), animated: true)
-                    }
-
+            let exportSession = AssetExportSession(asset: asset, videoSettings: videoSettings, audioSettings: audioSettings, outputURL: outputURL)
+            exportSession.exportAsynchronously { [weak self] in
+                guard let weakSelf = self else {
+                    return
                 }
-            })
+                DispatchQueue.main.async {
+                    if exportSession.status == .completed {
+                        if let dataSource = weakSelf.dataSource {
+                            dataSource.sendMessage(type: .SIGNAL_VIDEO, value: outputURL)
+                            weakSelf.navigationController?.popViewController(animated: true)
+                        } else {
+                            weakSelf.navigationController?.pushViewController(SendToViewController.instance(videoUrl: outputURL), animated: true)
+                        }
+                    } else {
+                        weakSelf.sendButton.isBusy = false
+                        weakSelf.alert(Localized.CHAT_SEND_VIDEO_FAILED)
+                    }
+                }
+            }
         } else if let image = photoImageView.image, let dataSource = dataSource {
             var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: dataSource.conversationId, userId: AccountAPI.shared.accountUserId)
             message.mediaStatus = MediaStatus.PENDING.rawValue

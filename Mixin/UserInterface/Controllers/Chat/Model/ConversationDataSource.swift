@@ -545,21 +545,21 @@ extension ConversationDataSource {
         let initialMessageId = initialMessageId
             ?? highlight?.messageId
             ?? ConversationViewController.positions[conversationId]?.messageId
-        if let initialMessageId = initialMessageId {
-            messages = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: messagesCountPerPage)
+        if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: messagesCountPerPage) {
+            (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
             if highlight == nil, initialMessageId != firstUnreadMessageId {
                 firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId
             }
-        } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId {
-            messages = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: firstUnreadMessageId, count: messagesCountPerPage)
+        } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: firstUnreadMessageId, count: messagesCountPerPage) {
+            (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
             self.firstUnreadMessageId = firstUnreadMessageId
         } else {
             messages = MessageDAO.shared.getLastNMessages(conversationId: conversationId, count: messagesCountPerPage)
             didLoadLatestMessage = true
+            didLoadEarliestMessage = messages.count < messagesCountPerPage
             firstUnreadMessageId = nil
         }
         loadedMessageIds = Set(messages.map({ $0.messageId }))
-        var shouldInsertEncryptionHint = false
         if messages.count > 0, highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.index(where: { $0.messageId == firstUnreadMessageId }) {
             let firstUnreadMessge = messages[firstUnreadIndex]
             let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
@@ -567,13 +567,8 @@ extension ConversationDataSource {
             self.firstUnreadMessageId = nil
             canInsertUnreadHint = false
         }
-        if messages.count < messagesCountPerPage {
-            didLoadEarliestMessage = true
-            didLoadLatestMessage = true
-            shouldInsertEncryptionHint = true
-        }
         var (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
-        if canInsertEncryptionHint && shouldInsertEncryptionHint {
+        if canInsertEncryptionHint && didLoadEarliestMessage {
             let date: String
             if let firstDate = dates.first {
                 date = firstDate

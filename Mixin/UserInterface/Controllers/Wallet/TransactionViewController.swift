@@ -42,7 +42,7 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 1 : 7
+        return section == 0 ? 1 : (asset.isAccount ? 8 : 7)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -103,8 +103,19 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
                     break
                 }
             case 5:
-                cell.render(title: Localized.TRANSACTION_MEMO, value: snapshot.memo ?? "      ")
+                if asset.isAccount {
+                    // TODO
+                    cell.render(title: Localized.WALLET_ACCOUNT_NAME, value: "mengbilaomao")
+                } else {
+                    cell.render(title: Localized.TRANSACTION_MEMO, value: snapshot.memo ?? "      ")
+                }
             case 6:
+                if asset.isAccount {
+                    cell.render(title: Localized.TRANSACTION_MEMO, value: snapshot.memo ?? "      ")
+                } else {
+                    cell.render(title: Localized.TRANSACTION_DATE, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate()))
+                }
+            case 7:
                 cell.render(title: Localized.TRANSACTION_DATE, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate()))
             default:
                 break

@@ -25,10 +25,7 @@ class DepositViewController: UIViewController {
         container?.subtitleLabel.isHidden = false
 
         view.layoutIfNeeded()
-
-        asset.accountName = "mengbilaomao"
-        asset.accountMemo = "4001243559"
-
+        
         if asset.isAccount, let accountName = asset.accountName, let accountMemo = asset.accountMemo {
             accountNameLabel.text = accountName
             accountMemoLabel.text = accountMemo
@@ -36,7 +33,7 @@ class DepositViewController: UIViewController {
             accountAssetView.isHidden = false
             confirmationLabel.isHidden = true
             accountConfirmationLabel.isHidden = false
-            accountConfirmationLabel.text = Localized.WALLET_DEPOSIT_CONFIRMATIONS(confirmations: asset.confirmations)
+            accountConfirmationLabel.text = Localized.WALLET_DEPOSIT_ACCOUNT_NOTICE(confirmations: asset.confirmations)
         } else {
             if !asset.publicKey.isEmpty {
                 qrcodeImageView.image = UIImage(qrcode: asset.publicKey, size: qrcodeImageView.frame.size)
@@ -71,11 +68,21 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction func copyAccountNameAction(_ sender: Any) {
-
+        UIPasteboard.general.string = asset.accountName
+        NotificationCenter.default.afterPostOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_COPIED)
     }
 
     @IBAction func copyAccountMemoAction(_ sender: Any) {
+        UIPasteboard.general.string = asset.accountMemo
+        NotificationCenter.default.afterPostOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_COPIED)
+    }
 
+    @IBAction func openNameAction(_ sender: Any) {
+        DepositWindow.instance().presentView(asset: asset, isDisplayAccountName: true)
+    }
+
+    @IBAction func openMemoAction(_ sender: Any) {
+        DepositWindow.instance().presentView(asset: asset, isDisplayAccountName: false)
     }
 
     class func instance(asset: AssetItem) -> UIViewController {

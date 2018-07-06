@@ -4,6 +4,7 @@ class NewAddressViewController: UIViewController {
 
     @IBOutlet weak var labelTextField: UITextField!
     @IBOutlet weak var addressTextView: PlaceholderTextView!
+    @IBOutlet weak var accountNameButton: UIButton!
 
     @IBOutlet weak var addressTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
@@ -31,6 +32,13 @@ class NewAddressViewController: UIViewController {
             checkLabelAndAddressAction(self)
             textViewDidChange(addressTextView)
         }
+
+        if asset.isAccount {
+            labelTextField.placeholder = Localized.WALLET_ACCOUNT_NAME
+            addressTextView.placeholder = Localized.WALLET_ACCOUNT_MEMO
+            accountNameButton.isHidden = false
+        }
+
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
     }
     
@@ -56,6 +64,16 @@ class NewAddressViewController: UIViewController {
             weakSelf.textViewDidChange(weakSelf.addressTextView)
         }, animated: true)
     }
+
+    @IBAction func scanAccountNameAction(_ sender: Any) {
+        navigationController?.pushViewController(CameraViewController.instance(fromWithdrawal: true) { [weak self](accountName) in
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.labelTextField.text = accountName
+        }, animated: true)
+    }
+
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         let endFrame: CGRect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero

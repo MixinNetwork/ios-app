@@ -313,6 +313,11 @@ public class Localized {
     public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {
         return String(format: LocalizedString("wallet_deposit_confirmations", comment: "Deposit will arrive after at least %@ block confirmations."), "\(confirmations)")
     }
+    public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name")
+    public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo")
+    public static func WALLET_DEPOSIT_ACCOUNT_NOTICE(confirmations: Int) -> String {
+        return String(format: LocalizedString("wallet_deposit_account_notice", comment: "Notice: Both an Account Memo and an Account Name are required to successfully deposit your EOS to Mixin, deposit will arrive after at least %@ block confirmations."), "\(confirmations)")
+    }
     public static let WALLET_MENU_SHOW_HIDDEN_ASSETS = LocalizedString("wallet_menu_show_hidden_assets", comment: "Hidden assets")
     public static let WALLET_MENU_SHOW_ASSET = LocalizedString("wallet_menu_show_asset", comment: "Show asset")
     public static let WALLET_MENU_HIDE_ASSET = LocalizedString("wallet_menu_hide_asset", comment: "Hide asset")

@@ -14,6 +14,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         static let subtitleFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.light)
         static let subtitleHeight = ceil(subtitleFont.lineHeight)
         static let imageSize = CGSize(width: height, height: height)
+        static let avatarImageMargin: CGFloat = 8
     }
     
     private(set) var quoteBackgroundFrame = CGRect.zero
@@ -37,7 +38,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
             return
         }
         let paddedQuoteIconWidth = quote.icon == nil ? 0 : Quote.iconSize.width + Quote.iconTrailingMargin
-        let quoteImageWidth = (quote.imageUrl == nil && quote.thumbnail == nil) ? 0 : Quote.imageSize.width
+        let quoteImageWidth = quote.image == nil ? 0 : Quote.imageSize.width
         let maxTitleWidth = maxContentWidth
             - Quote.backgroundMargin.horizontal
             - Quote.contentMargin.horizontal
@@ -104,10 +105,19 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
                                     y: quoteTitleFrame.maxY + Quote.linesVerticalSpacing + (secondLineHeight - Quote.subtitleHeight) / 2,
                                     width: subtitleWidth,
                                     height: Quote.subtitleHeight)
-        let quoteImageOrigin = CGPoint(x: quoteBackgroundFrame.maxX - Quote.imageSize.width,
-                                       y: quoteBackgroundFrame.origin.y)
-        let quoteImageSize = (quote.imageUrl == nil && quote.thumbnail == nil) ? .zero : Quote.imageSize
-        quoteImageFrame = CGRect(origin: quoteImageOrigin, size: quoteImageSize)
+        if let image = quote.image {
+            let quoteImageOrigin = CGPoint(x: quoteBackgroundFrame.maxX - Quote.imageSize.width,
+                                           y: quoteBackgroundFrame.origin.y)
+            let quoteImageSize = quote.image == nil ? .zero : Quote.imageSize
+            if case .user(_, _, _) = image {
+                quoteImageFrame = CGRect(origin: quoteImageOrigin, size: quoteImageSize)
+                    .insetBy(dx: Quote.avatarImageMargin, dy: Quote.avatarImageMargin)
+            } else {
+                quoteImageFrame = CGRect(origin: quoteImageOrigin, size: quoteImageSize)
+            }
+        } else {
+            quoteImageFrame = .zero
+        }
     }
     
 }

@@ -6,7 +6,7 @@ class QuotePreviewView: UIView, XibDesignable {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var contentImageWrapperView: UIView!
-    @IBOutlet weak var contentImageView: UIImageView!
+    @IBOutlet weak var contentImageView: AvatarImageView!
     @IBOutlet weak var dismissButton: UIButton!
     
     private let contentImageViewNormalCornerRadius: CGFloat = 4
@@ -26,6 +26,7 @@ class QuotePreviewView: UIView, XibDesignable {
     func render(message: MessageItem, contentImageThumbnail: UIImage?) {
         contentImageView.sd_cancelCurrentImageLoad()
         contentImageView.sd_setImage(with: nil, completed: nil)
+        contentImageView.titleLabel.text = nil
         contentImageView.layer.cornerRadius = contentImageViewNormalCornerRadius
         contentImageView.contentMode = .scaleAspectFill
         titleLabel.text = message.userFullName
@@ -43,10 +44,8 @@ class QuotePreviewView: UIView, XibDesignable {
             }
         } else if message.category.hasSuffix("_VIDEO") {
             contentImageView.image = contentImageThumbnail
-        } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-            if let icon = message.assetIcon {
-                contentImageView.sd_setImage(with: URL(string: icon), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
-            }
+        } else if message.category.hasSuffix("_CONTACT") {
+            contentImageView.setImage(with: message.sharedUserAvatarUrl, identityNumber: message.sharedUserIdentityNumber, name: message.sharedUserFullName)
         }
         UIView.performWithoutAnimation {
             contentImageWrapperView.isHidden = (contentImageView.image == nil && contentImageView.sd_imageURL() == nil)

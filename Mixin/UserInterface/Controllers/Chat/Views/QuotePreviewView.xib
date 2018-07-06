@@ -75,7 +75,7 @@
                         <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QrL-aT-D7K">
                             <rect key="frame" x="261.5" y="0.0" width="57" height="73"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BgY-AV-DMv">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BgY-AV-DMv" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="8" width="57" height="57"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="BgY-AV-DMv" secondAttribute="height" priority="999" id="dQm-iV-pQ1"/>

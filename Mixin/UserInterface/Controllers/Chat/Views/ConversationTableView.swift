@@ -30,7 +30,9 @@ extension MessageItem {
             } else {
                 actions = [.reply, .delete]
             }
-        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue || category == MessageCategory.APP_CARD.rawValue{
+        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+            actions = [.delete]
+        } else if category == MessageCategory.APP_CARD.rawValue {
             actions = [.reply, .delete]
         } else {
             actions = []

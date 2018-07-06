@@ -4,12 +4,16 @@ struct Quote {
     
     static let jsonDecoder = JSONDecoder()
 
+    enum Image {
+        case url(url: URL, contentMode: UIViewContentMode)
+        case user(urlString: String, identityNumber: String, name: String)
+        case thumbnail(UIImage)
+    }
+    
     let title: String
     let icon: UIImage?
     let subtitle: String
-    let thumbnail: UIImage?
-    let imageUrl: URL?
-    let imageContentMode: UIViewContentMode
+    let image: Image?
     
     init?(quoteContent: Data) {
         guard let message = try? Quote.jsonDecoder.decode(MessageItem.self, from: quoteContent) else {
@@ -18,32 +22,33 @@ struct Quote {
         title = message.userFullName
         icon = MessageCategory.iconImage(forMessageCategoryString: message.category)
         subtitle = message.quoteSubtitle
-
-        var thumbnail: UIImage?
-        if let thumbnailString = message.thumbImage, let data = Data(base64Encoded: thumbnailString) {
-            thumbnail = UIImage(data: data)
-        } else {
-            thumbnail = nil
-        }
-        self.thumbnail = thumbnail
         
-        var imageUrl: URL?
-        var imageContentMode = UIViewContentMode.scaleAspectFill
+        var image: Image?
         if message.mediaStatus == MediaStatus.DONE.rawValue {
             if message.category.hasSuffix("_IMAGE"), let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
-                imageUrl = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+                let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+                image = .url(url: url, contentMode: .scaleAspectFill)
             } else if message.category.hasSuffix("_VIDEO"), let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
                 let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
-                imageUrl = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
-            } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue, let assetIcon = message.assetIcon {
-                imageUrl = URL(string: assetIcon)
+                let url = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
+                image = .url(url: url, contentMode: .scaleAspectFill)
             }
-        } else if message.category.hasSuffix("_STICKER"), let assetUrl = message.assetUrl {
-            imageContentMode = .scaleAspectFit
-            imageUrl = URL(string: assetUrl)
+        } else if message.category.hasSuffix("_STICKER"), let assetUrl = message.assetUrl, let url = URL(string: assetUrl) {
+            image = .url(url: url, contentMode: .scaleAspectFit)
+        } else if message.category.hasSuffix("_CONTACT") {
+            image = .user(urlString: message.sharedUserAvatarUrl, identityNumber: message.sharedUserIdentityNumber, name: message.sharedUserFullName)
         }
-        self.imageUrl = imageUrl
-        self.imageContentMode = imageContentMode
+        if image == nil, let thumbnail = Quote.image(from: message.thumbImage) {
+            image = .thumbnail(thumbnail)
+        }
+        self.image = image
+    }
+    
+    static func image(from str: String?) -> UIImage? {
+        guard let str = str, let data = Data(base64Encoded: str) else {
+            return nil
+        }
+        return UIImage(data: data)
     }
     
 }

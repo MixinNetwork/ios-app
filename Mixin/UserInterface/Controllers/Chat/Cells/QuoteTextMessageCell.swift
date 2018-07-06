@@ -6,11 +6,12 @@ class QuoteTextMessageCell: TextMessageCell {
     let quoteTitleLabel = UILabel()
     let quoteIconImageView = UIImageView()
     let quoteSubtitleLabel = UILabel()
-    let quoteImageView = UIImageView()
+    let quoteImageView = AvatarImageView(frame: .zero)
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        quoteImageView.sd_cancelCurrentImageLoad()
+        quoteImageView.titleLabel.text = nil
+        quoteImageView.sd_setImage(with: nil, completed: nil)
     }
     
     override func render(viewModel: MessageViewModel) {
@@ -24,11 +25,18 @@ class QuoteTextMessageCell: TextMessageCell {
             quoteSubtitleLabel.text = viewModel.quote?.subtitle
             quoteSubtitleLabel.frame = viewModel.quoteSubtitleFrame
             quoteImageView.frame = viewModel.quoteImageFrame
-            quoteImageView.contentMode = viewModel.quote?.imageContentMode ?? .scaleAspectFit
-            if let url = viewModel.quote?.imageUrl {
-                quoteImageView.sd_setImage(with: url, completed: nil)
-            } else {
-                quoteImageView.image = viewModel.quote?.thumbnail
+            if let image = viewModel.quote?.image {
+                switch image {
+                case let .url(url, contentMode):
+                    quoteImageView.contentMode = contentMode
+                    quoteImageView.sd_setImage(with: url, completed: nil)
+                case let .user(url, identityNumber, name):
+                    quoteImageView.contentMode = .scaleToFill
+                    quoteImageView.setImage(with: url, identityNumber: identityNumber, name: name)
+                case let .thumbnail(thumbnail):
+                    quoteImageView.contentMode = .scaleAspectFill
+                    quoteImageView.image = thumbnail
+                }
             }
         }
     }

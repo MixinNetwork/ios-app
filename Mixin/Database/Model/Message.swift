@@ -96,7 +96,8 @@ extension Message {
     }
 
     static func createMessage(textMessage plainText: String, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: plainText, status: MessageStatus.DELIVERED.rawValue, quoteMessageId: data.quoteMessageId, createdAt: data.createdAt)
+        let quoteMessageId = data.quoteMessageId.isEmpty ? nil : data.quoteMessageId
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: plainText, status: MessageStatus.DELIVERED.rawValue, quoteMessageId: quoteMessageId, createdAt: data.createdAt)
     }
 
     static func createMessage(systemMessage action: String?, participantId: String?, userId: String, data: BlazeMessageData) -> Message {

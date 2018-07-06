@@ -11,8 +11,8 @@ struct BlazeMessageData: Codable {
     let createdAt: String
     let updatedAt: String
     let source: String
-    let quoteMessageId: String?
-    let representativeId: String?
+    let quoteMessageId: String
+    let representativeId: String
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -32,10 +32,10 @@ struct BlazeMessageData: Codable {
 extension BlazeMessageData {
 
     func getSenderId() -> String {
-        guard let rId = representativeId, !rId.isEmpty else {
+        guard !representativeId.isEmpty else {
             return userId
         }
-        return rId
+        return representativeId
     }
 
 }

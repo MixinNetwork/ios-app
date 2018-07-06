@@ -255,13 +255,14 @@ class ReceiveMessageService: MixinService {
         var failedMessage = Message.createMessage(messageId: data.messageId, category: data.category, conversationId: data.conversationId, createdAt: data.createdAt, userId: data.userId)
         failedMessage.status = MessageStatus.FAILED.rawValue
         failedMessage.content = data.data
-        failedMessage.quoteMessageId = data.quoteMessageId
+        failedMessage.quoteMessageId = data.quoteMessageId.isEmpty ? nil : data.quoteMessageId
         MessageDAO.shared.insertMessage(message: failedMessage, messageSource: data.source)
     }
 
     private func processRedecryptMessage(data: BlazeMessageData, messageId: String, plainText: String) {
         defer {
-            if let quoteMessageId = data.quoteMessageId, let quoteContent = MessageDAO.shared.getQuoteMessage(messageId: quoteMessageId) {
+            let quoteMessageId = data.quoteMessageId
+            if !quoteMessageId.isEmpty, let quoteContent = MessageDAO.shared.getQuoteMessage(messageId: quoteMessageId) {
                 MessageDAO.shared.updateMessageQuoteContent(quoteMessageId: quoteMessageId, quoteContent: quoteContent)
             }
         }
@@ -459,9 +460,7 @@ class ReceiveMessageService: MixinService {
                 break
             }
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
-            if let representativeId = data.representativeId {
-                _ = syncUser(userId: representativeId)
-            }
+            _ = syncUser(userId: data.representativeId)
             processDecryptSuccess(data: data, plainText: data.data, representativeId: data.representativeId)
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED, createdAt: data.createdAt)
         default:

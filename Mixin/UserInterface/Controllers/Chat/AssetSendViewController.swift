@@ -28,7 +28,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         AVVideoHeightKey: 720,
         AVVideoCompressionPropertiesKey: [
             AVVideoAverageBitRateKey: 1000000,
-            AVVideoProfileLevelKey: AVVideoProfileLevelH264High40
+            AVVideoProfileLevelKey: AVVideoProfileLevelH264MainAutoLevel
         ]
     ]
     private lazy var audioSettings: [String: Any] = [

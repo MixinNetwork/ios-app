@@ -711,9 +711,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         view.layoutIfNeeded()
         let contentOffsetY = tableView.contentOffset.y
         updateBottomInset()
-        let maxContentOffsetY = tableView.contentSize.height - (tableView.frame.height - tableView.contentInset.vertical)
-        if !isShowingQuotePreviewView, maxContentOffsetY > 0 {
-            tableView.contentOffset.y = min(maxContentOffsetY, max(0, contentOffsetY - inputWrapperDisplacement))
+        if !isShowingQuotePreviewView {
+            tableView.setContentOffsetYSafely(contentOffsetY - inputWrapperDisplacement)
         }
     }
     
@@ -871,13 +870,14 @@ extension ConversationViewController: UITextViewDelegate {
             stickerKeyboardSwitcherButton.isHidden = false
         }
         let newHeight = min(contentSize.height, maxHeight)
-        if abs(newHeight - inputTextViewHeightConstraint.constant) > 0.1 {
-            let newContentOffset = CGPoint(x: tableView.contentOffset.x,
-                                           y: tableView.contentOffset.y - (inputTextViewHeightConstraint.constant - newHeight))
+        let heightDifference = newHeight - inputTextViewHeightConstraint.constant
+        if abs(heightDifference) > 0.1 {
             inputTextViewHeightConstraint.constant = newHeight
+            let newContentOffset = tableView.contentOffset.y + heightDifference
             UIView.animate(withDuration: animationDuration, animations: {
-                self.tableView.setContentOffset(newContentOffset, animated: false)
                 self.view.layoutIfNeeded()
+                self.updateBottomInset()
+                self.tableView.setContentOffsetYSafely(newContentOffset)
             })
         }
     }
@@ -1404,16 +1404,15 @@ extension ConversationViewController {
         let offset = inputWrapperBottomConstraint.constant - lastInputWrapperBottomConstant
         UIView.animate(withDuration: 0, delay: delay, options: [], animations: {
             UIView.setAnimationCurve(.overdamped)
-            if self.tableView.contentSize.height > self.tableView.bounds.height {
-                self.tableView.contentOffset.y = max(0, self.tableView.contentOffset.y + offset)
-            }
             self.stickerPanelContainerView.alpha = newAlpha
             self.audioInputContainerView.isHidden = !self.isShowingStickerPanel
             if self.isShowingStickerPanel {
                 self.dismissPanelsButton.alpha = 0
             }
             self.view.layoutIfNeeded()
+            let contentOffsetY = self.tableView.contentOffset.y
             self.updateBottomInset()
+            self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
         }) { (_) in
             self.isShowingStickerPanel = !self.isShowingStickerPanel
             self.lastInputWrapperBottomConstant = self.inputWrapperBottomConstraint.constant

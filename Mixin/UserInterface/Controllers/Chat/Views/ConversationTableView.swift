@@ -187,6 +187,13 @@ class ConversationTableView: UITableView {
         setContentOffset(bottomOffset, animated: animated)
     }
     
+    func setContentOffsetYSafely(_ y: CGFloat) {
+        let maxContentOffsetY = contentSize.height - (frame.height - contentInset.vertical)
+        if maxContentOffsetY > 0 {
+            contentOffset.y = min(maxContentOffsetY, max(0, y))
+        }
+    }
+    
     private func invokeDelegate(action: Action) {
         guard let indexPath = indexPathForSelectedRow else {
             return

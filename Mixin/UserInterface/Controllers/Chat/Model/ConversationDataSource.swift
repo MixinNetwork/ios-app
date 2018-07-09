@@ -423,11 +423,11 @@ extension ConversationDataSource {
 // MARK: - Send Message
 extension ConversationDataSource {
     
-    func sendMessage(type: MessageCategory, value: Any) {
+    func sendMessage(type: MessageCategory, value: Any, quoteMessageId: String? = nil) {
         let isGroupMessage = category == .group
         let ownerUser = self.ownerUser
         var message = Message.createMessage(category: type.rawValue, conversationId: conversationId, userId: me.user_id)
-        
+        message.quoteMessageId = quoteMessageId
         if type == .SIGNAL_TEXT, let text = value as? String {
             message.content = text
             queue.async {

@@ -117,7 +117,7 @@ class MixinService {
         }
         let plainData = TransferPlainData(action: PlainDataAction.NO_KEY.rawValue, messageId: nil, messages: nil)
         let encoded = (try? jsonEncoder.encode(plainData))?.base64EncodedString() ?? ""
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased(), keys: nil, recipients: nil, messages: nil)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased(), quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: recipientId, blazeMessage: blazeMessage, action: .SEND_NO_KEY)
     }

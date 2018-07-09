@@ -255,10 +255,16 @@ class ReceiveMessageService: MixinService {
         var failedMessage = Message.createMessage(messageId: data.messageId, category: data.category, conversationId: data.conversationId, createdAt: data.createdAt, userId: data.userId)
         failedMessage.status = MessageStatus.FAILED.rawValue
         failedMessage.content = data.data
+        failedMessage.quoteMessageId = data.quoteMessageId
         MessageDAO.shared.insertMessage(message: failedMessage, messageSource: data.source)
     }
 
     private func processRedecryptMessage(data: BlazeMessageData, messageId: String, plainText: String) {
+        defer {
+            if let quoteMessageId = data.quoteMessageId, let quoteContent = MessageDAO.shared.getQuoteMessage(messageId: quoteMessageId) {
+                MessageDAO.shared.updateMessageQuoteContent(quoteMessageId: quoteMessageId, quoteContent: quoteContent)
+            }
+        }
         switch data.category {
         case MessageCategory.SIGNAL_TEXT.rawValue:
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId)
@@ -476,7 +482,7 @@ class ReceiveMessageService: MixinService {
         let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, keys: nil, recipients: nil, messages: nil)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_MESSAGES)
     }
@@ -489,7 +495,7 @@ class ReceiveMessageService: MixinService {
         let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, keys: nil, recipients: nil, messages: nil)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_KEY)
     }

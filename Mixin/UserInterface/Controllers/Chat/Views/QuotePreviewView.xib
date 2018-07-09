@@ -37,25 +37,25 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="geM-mk-ULD">
-                            <rect key="frame" x="16" y="0.0" width="237.5" height="73"/>
+                            <rect key="frame" x="16" y="0.0" width="213" height="73"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="vYN-yf-6H1">
-                                    <rect key="frame" x="0.0" y="16" width="237.5" height="41.5"/>
+                                    <rect key="frame" x="0.0" y="16" width="213" height="41.5"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Shou" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zdh-IN-FAv">
-                                            <rect key="frame" x="0.0" y="0.0" width="237.5" height="20.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="213" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Dmt-6c-wXa">
-                                            <rect key="frame" x="0.0" y="24.5" width="237.5" height="17"/>
+                                            <rect key="frame" x="0.0" y="24.5" width="213" height="17"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_message_video" translatesAutoresizingMaskIntoConstraints="NO" id="kFr-Av-RVi">
                                                     <rect key="frame" x="0.0" y="0.0" width="16" height="17"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="Video" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="735-NN-sST">
-                                                    <rect key="frame" x="20" y="0.0" width="217.5" height="17"/>
+                                                    <rect key="frame" x="20" y="0.0" width="193" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -73,7 +73,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QrL-aT-D7K">
-                            <rect key="frame" x="261.5" y="0.0" width="57" height="73"/>
+                            <rect key="frame" x="237" y="0.0" width="57" height="73"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BgY-AV-DMv" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="8" width="57" height="57"/>
@@ -91,9 +91,9 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JFc-Zi-npb">
-                            <rect key="frame" x="326.5" y="0.0" width="48.5" height="73"/>
+                            <rect key="frame" x="302" y="0.0" width="73" height="73"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="JFc-Zi-npb" secondAttribute="height" multiplier="2:3" id="z4c-bA-SBJ"/>
+                                <constraint firstAttribute="width" secondItem="JFc-Zi-npb" secondAttribute="height" multiplier="1:1" id="z4c-bA-SBJ"/>
                             </constraints>
                             <state key="normal" image="ic_reply_close"/>
                         </button>

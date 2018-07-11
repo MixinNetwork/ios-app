@@ -14,6 +14,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         static let subtitleFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.light)
         static let subtitleHeight = ceil(subtitleFont.lineHeight)
         static let imageSize = CGSize(width: height, height: height)
+        static let imageCornerRadius: CGFloat = 6
         static let avatarImageMargin: CGFloat = 8
     }
     
@@ -39,11 +40,13 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         }
         let paddedQuoteIconWidth = quote.icon == nil ? 0 : Quote.iconSize.width + Quote.iconTrailingMargin
         let quoteImageWidth = quote.image == nil ? 0 : Quote.imageSize.width
-        let maxTitleWidth = maxContentWidth
+        let maxTitleWidth = layoutWidth
+            - MessageViewModel.backgroundImageMargin.horizontal
             - Quote.backgroundMargin.horizontal
             - Quote.contentMargin.horizontal
             - quoteImageWidth
-        let maxSubtitleWidth = maxContentWidth
+        let maxSubtitleWidth = layoutWidth
+            - MessageViewModel.backgroundImageMargin.horizontal
             - Quote.backgroundMargin.horizontal
             - Quote.contentMargin.horizontal
             - paddedQuoteIconWidth

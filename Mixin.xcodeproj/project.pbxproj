@@ -1256,10 +1256,10 @@
 				7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */,
 				7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */,
 				7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */,
+				7B84358620D8DC2600237242 /* QuoteTextMessageViewModel.swift */,
 				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
 				7BF9969420CA6F3800FD948F /* Waveform.swift */,
 				7B287A3320EA5770007278A3 /* AssetExportSession.swift */,
-				7B84358620D8DC2600237242 /* QuoteTextMessageViewModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

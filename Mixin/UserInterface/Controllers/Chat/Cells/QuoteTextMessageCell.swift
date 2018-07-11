@@ -32,12 +32,15 @@ class QuoteTextMessageCell: TextMessageCell {
                     case let .url(url, contentMode):
                         quoteImageView.contentMode = contentMode
                         quoteImageView.sd_setImage(with: url, completed: nil)
+                        quoteImageView.cornerRadius = QuoteTextMessageViewModel.Quote.imageCornerRadius
                     case let .user(url, identityNumber, name):
                         quoteImageView.contentMode = .scaleToFill
                         quoteImageView.setImage(with: url, identityNumber: identityNumber, name: name)
+                        quoteImageView.cornerRadius = viewModel.quoteImageFrame.width / 2
                     case let .thumbnail(thumbnail):
                         quoteImageView.contentMode = .scaleAspectFill
                         quoteImageView.image = thumbnail
+                        quoteImageView.cornerRadius = QuoteTextMessageViewModel.Quote.imageCornerRadius
                     }
                 }
             }
@@ -60,7 +63,6 @@ class QuoteTextMessageCell: TextMessageCell {
         quoteSubtitleLabel.textColor = UIColor.gray
         addSubview(quoteSubtitleLabel)
         
-        quoteImageView.layer.cornerRadius = 6
         quoteImageView.clipsToBounds = true
         addSubview(quoteImageView)
     }

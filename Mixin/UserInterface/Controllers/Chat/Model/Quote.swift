@@ -11,7 +11,7 @@ struct Quote {
     }
     
     let title: String
-    let titleColor: UIColor
+    let tintColor: UIColor
     let icon: UIImage?
     let subtitle: String
     let image: Image?
@@ -22,9 +22,9 @@ struct Quote {
         }
         title = message.userFullName
         if let identityNumber = Int(message.userIdentityNumber) {
-            titleColor = UIColor.usernameColors[identityNumber % UIColor.usernameColors.count]
+            tintColor = UIColor.usernameColors[identityNumber % UIColor.usernameColors.count]
         } else {
-            titleColor = .black
+            tintColor = .black
         }
         icon = MessageCategory.iconImage(forMessageCategoryString: message.category)
         subtitle = message.quoteSubtitle

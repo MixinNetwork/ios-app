@@ -23,8 +23,9 @@ class QuoteTextMessageCell: TextMessageCell {
             quoteSubtitleLabel.frame = viewModel.quoteSubtitleFrame
             quoteImageView.frame = viewModel.quoteImageFrame
             if let quote = viewModel.quote {
+                quoteBackgroundImageView.tintColor = quote.tintColor
                 quoteTitleLabel.text = quote.title
-                quoteTitleLabel.textColor = quote.titleColor
+                quoteTitleLabel.textColor = quote.tintColor
                 quoteIconImageView.image = quote.icon
                 quoteSubtitleLabel.text = quote.subtitle
                 if let image = quote.image {

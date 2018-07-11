@@ -26,6 +26,14 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     
     private var quoteMaxWidth: CGFloat = 0
     
+    override var rightBubbleImage: UIImage {
+        return #imageLiteral(resourceName: "ic_chat_bubble_right_white")
+    }
+    
+    override var rightWithTailBubbleImage: UIImage {
+        return #imageLiteral(resourceName: "ic_chat_bubble_right_white_tail")
+    }
+    
     override var contentLabelTopMargin: CGFloat {
         return fullnameHeight + contentMargin.top + Quote.height + Quote.backgroundMargin.vertical
     }

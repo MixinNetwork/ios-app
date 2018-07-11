@@ -30,11 +30,11 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
     }
 
     override var rightBubbleImage: UIImage {
-        return #imageLiteral(resourceName: "ic_transfer_bubble_right")
+        return #imageLiteral(resourceName: "ic_chat_bubble_right_white")
     }
     
     override var rightWithTailBubbleImage: UIImage {
-        return #imageLiteral(resourceName: "ic_transfer_bubble_right_tail")
+        return #imageLiteral(resourceName: "ic_chat_bubble_right_white_tail")
     }
     
     override func didSetStyle() {

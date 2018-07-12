@@ -70,6 +70,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var role = ""
     private var asset: AssetItem?
     private var quoteMessageId: String?
+    private var quotingMessageId: String?
     private var isShowingMenu = false
     private var isShowingStickerPanel = false
     private var isAppearanceAnimating = true
@@ -382,7 +383,12 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     @IBAction func scrollToBottomAction(_ sender: Any) {
         unreadBadgeValue = 0
-        dataSource?.scrollToFirstUnreadMessageOrBottom()
+        if let quotingMessageId = quotingMessageId, let indexPath = dataSource?.indexPath(where: { $0.messageId == quotingMessageId }) {
+            self.quotingMessageId = nil
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        } else {
+            dataSource?.scrollToFirstUnreadMessageOrBottom()
+        }
     }
     
     @IBAction func moreAction(_ sender: Any) {
@@ -630,13 +636,15 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             }
             open(url: action)
         } else if message.category.hasSuffix("_TEXT") {
-            guard let cell = cell as? QuoteTextMessageCell, cell.quoteBackgroundImageView.frame.contains(recognizer.location(in: cell)), let messageId = viewModel.message.quoteMessageId else {
+            guard let cell = cell as? QuoteTextMessageCell, cell.quoteBackgroundImageView.frame.contains(recognizer.location(in: cell)), let quoteMessageId = viewModel.message.quoteMessageId else {
                 return
             }
-            if let indexPath = dataSource?.indexPath(where: { $0.messageId == messageId }) {
+            if let indexPath = dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
                 tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-            } else {
-                dataSource?.scrollToTopAndReload(initialMessageId: messageId)
+                quotingMessageId = message.messageId
+            } else if MessageDAO.shared.hasMessage(id: quoteMessageId) {
+                quotingMessageId = message.messageId
+                dataSource?.scrollToTopAndReload(initialMessageId: quoteMessageId)
             }
         }
     }
@@ -1055,9 +1063,13 @@ extension ConversationViewController: UITableViewDelegate {
         } else if let lastIndexPath = dataSource.lastIndexPath, indexPath.section == lastIndexPath.section, indexPath.row >= lastIndexPath.row - loadMoreMessageThreshold {
             dataSource.loadMoreBelowIfNeeded()
         }
-        if dataSource.viewModel(for: indexPath)?.message.messageId == dataSource.firstUnreadMessageId || cell is UnreadHintMessageCell {
+        let messageId = dataSource.viewModel(for: indexPath)?.message.messageId
+        if messageId == dataSource.firstUnreadMessageId || cell is UnreadHintMessageCell {
             unreadBadgeValue = 0
             dataSource.firstUnreadMessageId = nil
+        }
+        if let messageId = messageId, messageId == quotingMessageId {
+            quotingMessageId = nil
         }
         if let viewModel = dataSource.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
             viewModel.beginAttachmentLoading()
@@ -1065,8 +1077,14 @@ extension ConversationViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let viewModel = dataSource?.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
+        guard let viewModel = dataSource?.viewModel(for: indexPath) else {
+            return
+        }
+        if let viewModel = viewModel as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
             viewModel.cancelAttachmentLoading(markMediaStatusCancelled: false)
+        }
+        if viewModel.message.messageId == quotingMessageId, let lastVisibleIndexPath = tableView.indexPathsForVisibleRows?.last, lastVisibleIndexPath.section > indexPath.section || (lastVisibleIndexPath.section == indexPath.section && lastVisibleIndexPath.row > indexPath.row) {
+            quotingMessageId = nil
         }
     }
 

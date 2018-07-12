@@ -403,6 +403,10 @@ final class MessageDAO {
             && Message.Properties.userId != AccountAPI.shared.accountUserId
         return MixinDatabase.shared.isExist(type: Message.self, condition: condition, inTransaction: false)
     }
+    
+    func hasMessage(id: String) -> Bool {
+        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id)
+    }
 
     func getQuoteMessage(messageId: String?) -> Data? {
         guard let quoteMessageId = messageId, let quoteMessage: MessageItem = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [quoteMessageId], inTransaction: false).first else {

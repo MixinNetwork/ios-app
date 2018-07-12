@@ -5,7 +5,7 @@ struct Quote {
     static let jsonDecoder = JSONDecoder()
 
     enum Image {
-        case url(url: URL, contentMode: UIViewContentMode)
+        case url(URL)
         case user(urlString: String, identityNumber: String, name: String)
         case thumbnail(UIImage)
     }
@@ -33,14 +33,14 @@ struct Quote {
         if message.mediaStatus == MediaStatus.DONE.rawValue {
             if message.category.hasSuffix("_IMAGE"), let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
                 let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
-                image = .url(url: url, contentMode: .scaleAspectFill)
+                image = .url(url)
             } else if message.category.hasSuffix("_VIDEO"), let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
                 let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
                 let url = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
-                image = .url(url: url, contentMode: .scaleAspectFill)
+                image = .url(url)
             }
         } else if message.category.hasSuffix("_STICKER"), let assetUrl = message.assetUrl, let url = URL(string: assetUrl) {
-            image = .url(url: url, contentMode: .scaleAspectFit)
+            image = .url(url)
         } else if message.category.hasSuffix("_CONTACT") {
             image = .user(urlString: message.sharedUserAvatarUrl, identityNumber: message.sharedUserIdentityNumber, name: message.sharedUserFullName)
         }

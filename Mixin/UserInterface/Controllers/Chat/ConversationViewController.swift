@@ -386,6 +386,14 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         if let quotingMessageId = quotingMessageId, let indexPath = dataSource?.indexPath(where: { $0.messageId == quotingMessageId }) {
             self.quotingMessageId = nil
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+            blinkCellBackground(at: indexPath)
+        } else if let quotingMessageId = quotingMessageId, MessageDAO.shared.hasMessage(id: quotingMessageId) {
+            self.quotingMessageId = nil
+            dataSource?.scrollToBottomAndReload(initialMessageId: quotingMessageId, completion: {
+                if let indexPath = self.dataSource?.indexPath(where: { $0.messageId == quotingMessageId }) {
+                    self.blinkCellBackground(at: indexPath)
+                }
+            })
         } else {
             dataSource?.scrollToFirstUnreadMessageOrBottom()
         }
@@ -640,11 +648,16 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                 return
             }
             if let indexPath = dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
-                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
                 quotingMessageId = message.messageId
+                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+                blinkCellBackground(at: indexPath)
             } else if MessageDAO.shared.hasMessage(id: quoteMessageId) {
                 quotingMessageId = message.messageId
-                dataSource?.scrollToTopAndReload(initialMessageId: quoteMessageId)
+                dataSource?.scrollToTopAndReload(initialMessageId: quoteMessageId, completion: {
+                    if let indexPath = self.dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
+                        self.blinkCellBackground(at: indexPath)
+                    }
+                })
             }
         }
     }
@@ -1503,6 +1516,31 @@ extension ConversationViewController {
         UIView.animate(withDuration: animationDuration) {
             self.updateBottomInset()
             self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func blinkCellBackground(at indexPath: IndexPath) {
+        let animation = { (indexPath: IndexPath) in
+            guard let cell = self.tableView.cellForRow(at: indexPath) else {
+                return
+            }
+            UIView.animateKeyframes(withDuration: 0.6, delay: 0, options: [], animations: {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5, animations: {
+                    cell.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+                })
+                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
+                    cell.backgroundColor = .clear
+                })
+            }) { (finished) in
+                cell.backgroundColor = nil
+            }
+        }
+        if let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(indexPath) {
+            animation(indexPath)
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                animation(indexPath)
+            })
         }
     }
     

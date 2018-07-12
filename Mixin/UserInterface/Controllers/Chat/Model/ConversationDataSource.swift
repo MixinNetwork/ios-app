@@ -107,7 +107,7 @@ class ConversationDataSource {
         }
     }
     
-    func scrollToTopAndReload(initialMessageId: String) {
+    func scrollToTopAndReload(initialMessageId: String, completion: (() -> Void)? = nil) {
         guard !self.messageProcessingIsCancelled else {
             return
         }
@@ -120,7 +120,24 @@ class ConversationDataSource {
             guard !self.messageProcessingIsCancelled else {
                 return
             }
-            self.reload(initialMessageId: initialMessageId)
+            self.reload(initialMessageId: initialMessageId, completion: completion)
+        }
+    }
+    
+    func scrollToBottomAndReload(initialMessageId: String? = nil, completion: (() -> Void)? = nil) {
+        guard !self.messageProcessingIsCancelled else {
+            return
+        }
+        didLoadEarliestMessage = true
+        didLoadLatestMessage = true
+        tableView?.scrollToBottom(animated: true)
+        highlight = nil
+        ConversationViewController.positions[conversationId] = nil
+        queue.async {
+            guard !self.messageProcessingIsCancelled else {
+                return
+            }
+            self.reload(initialMessageId: initialMessageId, completion: completion)
         }
     }
     
@@ -552,7 +569,7 @@ extension ConversationDataSource {
         }
     }
     
-    private func reload(initialMessageId: String? = nil) {
+    private func reload(initialMessageId: String? = nil, completion: (() -> Void)? = nil) {
         semaphore.wait()
         canInsertUnreadHint = true
         var didLoadEarliestMessage = false
@@ -644,6 +661,7 @@ extension ConversationDataSource {
             }
             self.pendingChanges = []
             self.semaphore.signal()
+            completion?()
         }
     }
     
@@ -893,23 +911,6 @@ extension ConversationDataSource {
                 NotificationCenter.default.postOnMain(name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: 1)
                 self.semaphore.signal()
             }
-        }
-    }
-    
-    private func scrollToBottomAndReload(initialMessageId: String? = nil) {
-        guard !self.messageProcessingIsCancelled else {
-            return
-        }
-        didLoadEarliestMessage = true
-        didLoadLatestMessage = true
-        tableView?.scrollToBottom(animated: true)
-        highlight = nil
-        ConversationViewController.positions[conversationId] = nil
-        queue.async {
-            guard !self.messageProcessingIsCancelled else {
-                return
-            }
-            self.reload(initialMessageId: initialMessageId)
         }
     }
     

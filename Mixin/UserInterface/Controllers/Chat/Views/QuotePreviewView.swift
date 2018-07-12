@@ -2,6 +2,7 @@ import UIKit
 
 class QuotePreviewView: UIView, XibDesignable {
 
+    @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var subtitleLabel: UILabel!
@@ -24,12 +25,20 @@ class QuotePreviewView: UIView, XibDesignable {
     }
     
     func render(message: MessageItem, contentImageThumbnail: UIImage?) {
+        let tintColor: UIColor
+        if let identityNumber = Int(message.userIdentityNumber) {
+            tintColor = UIColor.usernameColors[identityNumber % UIColor.usernameColors.count]
+        } else {
+            tintColor = .black
+        }
+        indicatorView.backgroundColor = tintColor
         contentImageView.sd_cancelCurrentImageLoad()
         contentImageView.sd_setImage(with: nil, completed: nil)
         contentImageView.titleLabel.text = nil
         contentImageView.layer.cornerRadius = contentImageViewNormalCornerRadius
         contentImageView.contentMode = .scaleAspectFill
         titleLabel.text = message.userFullName
+        titleLabel.textColor = tintColor
         subtitleLabel.text = message.quoteSubtitle
         if message.category.hasSuffix("_STICKER") {
             if let assetUrl = message.assetUrl {

@@ -17,6 +17,7 @@
                 <outlet property="contentImageWrapperView" destination="QrL-aT-D7K" id="LXH-HI-g0b"/>
                 <outlet property="dismissButton" destination="JFc-Zi-npb" id="IvU-rx-zTA"/>
                 <outlet property="iconImageView" destination="kFr-Av-RVi" id="Wa6-yv-UF6"/>
+                <outlet property="indicatorView" destination="uag-2i-djb" id="sSm-Sn-Pje"/>
                 <outlet property="subtitleLabel" destination="735-NN-sST" id="LVv-gJ-Sxh"/>
                 <outlet property="titleLabel" destination="zdh-IN-FAv" id="V6U-OP-hBb"/>
             </connections>
@@ -30,32 +31,32 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="73"/>
                     <subviews>
                         <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uag-2i-djb">
-                            <rect key="frame" x="0.0" y="0.0" width="8" height="73"/>
+                            <rect key="frame" x="0.0" y="0.0" width="4" height="73"/>
                             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="8" id="7ex-Th-m9l"/>
+                                <constraint firstAttribute="width" constant="4" id="7ex-Th-m9l"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="geM-mk-ULD">
-                            <rect key="frame" x="16" y="0.0" width="213" height="73"/>
+                            <rect key="frame" x="12" y="0.0" width="217" height="73"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="vYN-yf-6H1">
-                                    <rect key="frame" x="0.0" y="16" width="213" height="41.5"/>
+                                    <rect key="frame" x="0.0" y="16" width="217" height="41.5"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Shou" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zdh-IN-FAv">
-                                            <rect key="frame" x="0.0" y="0.0" width="213" height="20.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="217" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Dmt-6c-wXa">
-                                            <rect key="frame" x="0.0" y="24.5" width="213" height="17"/>
+                                            <rect key="frame" x="0.0" y="24.5" width="217" height="17"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_message_video" translatesAutoresizingMaskIntoConstraints="NO" id="kFr-Av-RVi">
                                                     <rect key="frame" x="0.0" y="0.0" width="16" height="17"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="Video" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="735-NN-sST">
-                                                    <rect key="frame" x="20" y="0.0" width="193" height="17"/>
+                                                    <rect key="frame" x="20" y="0.0" width="197" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>

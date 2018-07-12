@@ -142,7 +142,7 @@ class ConversationTableView: UITableView {
     func dequeueReusableCell(withMessage message: MessageItem, for indexPath: IndexPath) -> UITableViewCell {
         if message.status == MessageStatus.FAILED.rawValue {
             return dequeueReusableCell(withReuseId: .text, for: indexPath)
-        } else if message.quoteMessageId != nil {
+        } else if message.quoteMessageId != nil && message.quoteContent != nil {
             return dequeueReusableCell(withReuseId: .quoteText, for: indexPath)
         } else {
             return dequeueReusableCell(withReuseId: ReuseId(category: message.category), for: indexPath)

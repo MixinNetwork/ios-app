@@ -51,7 +51,7 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
                                     height: $0.height - buttonMargin.vertical)
             return (button: $0, label: labelFrame)
         })
-        if style.contains(.showFullname) {
+        if style.contains(.fullname) {
             self.frames = self.frames.map {
                 (button: $0.button.offsetBy(dx: 0, dy: fullnameFrame.height),
                  label: $0.label.offsetBy(dx: 0, dy: fullnameFrame.height))
@@ -59,10 +59,10 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
         }
         if let lastFrame = frames.last {
             cellHeight = lastFrame.maxY + margin.bottom
-            if style.contains(.showFullname) {
+            if style.contains(.fullname) {
                 cellHeight += fullnameFrame.height
             }
-            if style.contains(.hasBottomSeparator) {
+            if style.contains(.bottomSeparator) {
                 cellHeight += bottomSeparatorHeight
             }
         } else {

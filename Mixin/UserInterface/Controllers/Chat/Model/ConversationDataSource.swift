@@ -107,6 +107,40 @@ class ConversationDataSource {
         }
     }
     
+    func scrollToTopAndReload(initialMessageId: String, completion: (() -> Void)? = nil) {
+        guard !self.messageProcessingIsCancelled else {
+            return
+        }
+        didLoadEarliestMessage = true
+        didLoadLatestMessage = true
+        tableView?.setContentOffset(.zero, animated: true)
+        highlight = nil
+        ConversationViewController.positions[conversationId] = nil
+        queue.async {
+            guard !self.messageProcessingIsCancelled else {
+                return
+            }
+            self.reload(initialMessageId: initialMessageId, completion: completion)
+        }
+    }
+    
+    func scrollToBottomAndReload(initialMessageId: String? = nil, completion: (() -> Void)? = nil) {
+        guard !self.messageProcessingIsCancelled else {
+            return
+        }
+        didLoadEarliestMessage = true
+        didLoadLatestMessage = true
+        tableView?.scrollToBottom(animated: true)
+        highlight = nil
+        ConversationViewController.positions[conversationId] = nil
+        queue.async {
+            guard !self.messageProcessingIsCancelled else {
+                return
+            }
+            self.reload(initialMessageId: initialMessageId, completion: completion)
+        }
+    }
+    
     func loadMoreAboveIfNeeded() {
         guard !isLoadingAbove, !didLoadEarliestMessage else {
             return
@@ -129,7 +163,7 @@ class ConversationDataSource {
             var (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
             if shouldInsertEncryptionHint, let firstDate = dates.first {
                 let hint = MessageItem.encryptionHintMessage(conversationId: conversationId)
-                let encryptionHintViewModel = self.viewModel(withMessage: hint, style: .hasBottomSeparator, fits: layoutWidth)
+                let encryptionHintViewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
                 viewModels[firstDate]?.insert(encryptionHintViewModel, at: 0)
             }
             if let lastDate = dates.last, let viewModelsBeforeInsertion = self.viewModels[lastDate] {
@@ -423,11 +457,11 @@ extension ConversationDataSource {
 // MARK: - Send Message
 extension ConversationDataSource {
     
-    func sendMessage(type: MessageCategory, value: Any) {
+    func sendMessage(type: MessageCategory, quoteMessageId: String? = nil , value: Any) {
         let isGroupMessage = category == .group
         let ownerUser = self.ownerUser
         var message = Message.createMessage(category: type.rawValue, conversationId: conversationId, userId: me.user_id)
-        
+        message.quoteMessageId = quoteMessageId
         if type == .SIGNAL_TEXT, let text = value as? String {
             message.content = text
             queue.async {
@@ -535,7 +569,7 @@ extension ConversationDataSource {
         }
     }
     
-    private func reload(initialMessageId: String? = nil) {
+    private func reload(initialMessageId: String? = nil, completion: (() -> Void)? = nil) {
         semaphore.wait()
         canInsertUnreadHint = true
         var didLoadEarliestMessage = false
@@ -576,7 +610,7 @@ extension ConversationDataSource {
                 dates.append(date)
             }
             let hint = MessageItem.encryptionHintMessage(conversationId: self.conversationId)
-            let viewModel = self.viewModel(withMessage: hint, style: .hasBottomSeparator, fits: layoutWidth)
+            let viewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
             if viewModels[date] != nil {
                 viewModels[date]?.insert(viewModel, at: 0)
             } else {
@@ -587,12 +621,9 @@ extension ConversationDataSource {
         var offset: CGFloat = 0
         let unreadMessagesCount = MessageDAO.shared.getUnreadMessagesCount(conversationId: conversationId)
         
-        if let initialMessageId = highlight?.messageId {
+        if let initialMessageId = initialMessageId {
             initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == initialMessageId })
             offset -= ConversationDateHeaderView.height
-        } else if let position = ConversationViewController.positions[conversationId] {
-            initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == position.messageId })
-            offset = position.offset
         } else if let unreadHintIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.category == MessageCategory.EXT_UNREAD.rawValue }) {
             if unreadHintIndexPath == IndexPath(row: 1, section: 0), viewModels[dates[0]]?.first?.message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 initialIndexPath = IndexPath(row: 0, section: 0)
@@ -630,6 +661,7 @@ extension ConversationDataSource {
             }
             self.pendingChanges = []
             self.semaphore.signal()
+            completion?()
         }
     }
     
@@ -681,12 +713,10 @@ extension ConversationDataSource {
         if message.status == MessageStatus.FAILED.rawValue {
             viewModel = DecryptionFailedMessageViewModel(message: message, style: style, fits: layoutWidth)
         } else {
-            if message.category.hasSuffix("_TEXT") {
-                let textViewModel = TextMessageViewModel(message: message, style: style, fits: layoutWidth)
-                if let keyword = highlight?.keyword {
-                    textViewModel.highlight(keyword: keyword)
-                }
-                viewModel = textViewModel
+            if message.quoteMessageId != nil && message.quoteContent != nil {
+                viewModel = QuoteTextMessageViewModel(message: message, style: style, fits: layoutWidth)
+            } else if message.category.hasSuffix("_TEXT") {
+                viewModel = TextMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_IMAGE") {
                 viewModel = PhotoMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_STICKER") {
@@ -715,6 +745,9 @@ extension ConversationDataSource {
             } else {
                 viewModel = UnknownMessageViewModel(message: message, style: style, fits: layoutWidth)
             }
+            if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
+                viewModel.highlight(keyword: keyword)
+            }
         }
         return viewModel
     }
@@ -723,30 +756,28 @@ extension ConversationDataSource {
         let message = messages[index]
         let isFirstMessage = (index == 0)
         let isLastMessage = (index == messages.count - 1)
-        var style: MessageViewModel.Style
-        if message.userId == me.user_id {
-            style = .sent
-        } else {
+        var style: MessageViewModel.Style = []
+        if message.userId != me.user_id {
             style = .received
         }
         if isLastMessage
             || messages[index + 1].userId != message.userId
             || messages[index + 1].isExtensionMessage
             || messages[index + 1].isSystemMessage {
-            style.insert(.hasTail)
+            style.insert(.tail)
         }
         if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-            style.insert(.hasBottomSeparator)
+            style.insert(.bottomSeparator)
         } else if !isLastMessage && (message.isSystemMessage
             || messages[index + 1].userId != message.userId
             || messages[index + 1].isSystemMessage
             || messages[index + 1].isExtensionMessage) {
-            style.insert(.hasBottomSeparator)
+            style.insert(.bottomSeparator)
         }
         if message.isRepresentativeMessage(conversation: conversation) {
             if (isFirstMessage && !message.isExtensionMessage && !message.isSystemMessage)
                 || (!isFirstMessage && (messages[index - 1].userId != message.userId || messages[index - 1].isExtensionMessage || messages[index - 1].isSystemMessage)) {
-                style.insert(.showFullname)
+                style.insert(.fullname)
             }
         }
         return style
@@ -758,7 +789,10 @@ extension ConversationDataSource {
         let messageIsSentByMe = message.userId == me.user_id
         let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
         let lastIndexPathBeforeInsertion = lastIndexPath
-        var style: MessageViewModel.Style = (messageIsSentByMe ? .sent : .received)
+        var style: MessageViewModel.Style = []
+        if !messageIsSentByMe {
+            style.insert(.received)
+        }
         let needsInsertNewSection: Bool
         let section: Int
         let row: Int
@@ -773,25 +807,25 @@ extension ConversationDataSource {
             } else {
                 isLastCell = true
                 row = viewModels.count
-                style.insert(.hasTail)
+                style.insert(.tail)
             }
             if row - 1 >= 0 {
                 let previousViewModel = viewModels[row - 1]
                 let previousViewModelIsFromDifferentUser = previousViewModel.message.userId != message.userId
                 if previousViewModel.message.isSystemMessage || message.isSystemMessage || message.isExtensionMessage {
                     if !messageIsSentByMe {
-                        style.insert(.showFullname)
+                        style.insert(.fullname)
                     }
-                    previousViewModel.style.insert(.hasBottomSeparator)
+                    previousViewModel.style.insert(.bottomSeparator)
                 } else if previousViewModelIsFromDifferentUser {
-                    previousViewModel.style.insert(.hasBottomSeparator)
-                    previousViewModel.style.insert(.hasTail)
+                    previousViewModel.style.insert(.bottomSeparator)
+                    previousViewModel.style.insert(.tail)
                 } else {
-                    previousViewModel.style.remove(.hasBottomSeparator)
-                    previousViewModel.style.remove(.hasTail)
+                    previousViewModel.style.remove(.bottomSeparator)
+                    previousViewModel.style.remove(.tail)
                 }
                 if message.isRepresentativeMessage(conversation: conversation) && style.contains(.received) && previousViewModelIsFromDifferentUser {
-                    style.insert(.showFullname)
+                    style.insert(.fullname)
                 }
                 DispatchQueue.main.async {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
@@ -806,15 +840,15 @@ extension ConversationDataSource {
             if !isLastCell {
                 let nextViewModel = viewModels[row]
                 if viewModel.message.userId != nextViewModel.message.userId {
-                    viewModel.style.insert(.hasTail)
-                    viewModel.style.insert(.hasBottomSeparator)
+                    viewModel.style.insert(.tail)
+                    viewModel.style.insert(.bottomSeparator)
                     if nextViewModel.message.isRepresentativeMessage(conversation: conversation) && nextViewModel.style.contains(.received) {
-                        nextViewModel.style.insert(.showFullname)
+                        nextViewModel.style.insert(.fullname)
                     }
                 } else {
-                    viewModel.style.remove(.hasTail)
-                    viewModel.style.remove(.hasBottomSeparator)
-                    nextViewModel.style.remove(.showFullname)
+                    viewModel.style.remove(.tail)
+                    viewModel.style.remove(.bottomSeparator)
+                    nextViewModel.style.remove(.fullname)
                 }
                 DispatchQueue.main.async {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
@@ -832,7 +866,7 @@ extension ConversationDataSource {
             row = 0
             isLastCell = section == dates.count
             if style.contains(.received) && message.isRepresentativeMessage(conversation: conversation) {
-                style.insert(.showFullname)
+                style.insert(.fullname)
             }
             viewModel = self.viewModel(withMessage: message, style: style, fits: layoutWidth)
         }
@@ -876,23 +910,6 @@ extension ConversationDataSource {
                 NotificationCenter.default.postOnMain(name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: 1)
                 self.semaphore.signal()
             }
-        }
-    }
-    
-    private func scrollToBottomAndReload(initialMessageId: String? = nil) {
-        guard !self.messageProcessingIsCancelled else {
-            return
-        }
-        didLoadEarliestMessage = true
-        didLoadLatestMessage = true
-        tableView?.scrollToBottom(animated: true)
-        highlight = nil
-        ConversationViewController.positions[conversationId] = nil
-        queue.async {
-            guard !self.messageProcessingIsCancelled else {
-                return
-            }
-            self.reload(initialMessageId: initialMessageId)
         }
     }
     

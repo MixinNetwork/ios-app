@@ -46,22 +46,22 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     }
     
     override func didSetStyle() {
-        let bottomSeparatorHeight = style.contains(.hasBottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
-        let fullnameHeight = style.contains(.showFullname) ? fullnameFrame.height : 0
+        let bottomSeparatorHeight = style.contains(.bottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
+        let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
         let timeMargin = StickerMessageViewModel.timeMargin
         if style.contains(.received) {
             contentFrame = CGRect(x: contentMargin.leading,
                                   y: contentMargin.top,
                                   width: contentSize.width,
                                   height: contentSize.height)
-            if style.contains(.showFullname) {
+            if style.contains(.fullname) {
                 contentFrame.origin.y += fullnameHeight
             }
             backgroundImageFrame = CGRect(x: contentFrame.origin.x - DetailInfoMessageViewModel.margin.leading + timeMargin.trailing,
                                           y: contentMargin.vertical + contentFrame.origin.y,
                                           width: contentSize.width + contentMargin.horizontal,
                                           height: contentSize.height + contentMargin.vertical)
-        } else if style.contains(.sent) {
+        } else {
             contentFrame = CGRect(x: layoutWidth - contentMargin.leading - contentSize.width,
                                   y: contentMargin.top,
                                   width: contentSize.width,

@@ -29,6 +29,8 @@ struct Message: BaseCodable {
     var name: String? = nil
     var stickerId: String? = nil
     var sharedUserId: String? = nil
+    var quoteMessageId: String? = nil
+    var quoteContent: Data? = nil
     var createdAt: String
 
     enum CodingKeys: String, CodingTableKey {
@@ -57,6 +59,8 @@ struct Message: BaseCodable {
         case name
         case stickerId = "sticker_id"
         case sharedUserId = "shared_user_id"
+        case quoteMessageId = "quote_message_id"
+        case quoteContent = "quote_content"
         case createdAt = "created_at"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -83,41 +87,46 @@ struct Message: BaseCodable {
 
 extension Message {
 
+    static func createMessage(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, thumbImage: String? = nil, status: String, action: String? = nil, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, sharedUserId: String? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, createdAt: String) -> Message {
+        return Message(messageId: messageId, conversationId: conversationId, userId: userId, category: category, content: content, mediaUrl: mediaUrl, mediaMimeType: mediaMimeType, mediaSize: mediaSize, mediaDuration: mediaDuration, mediaWidth: mediaWidth, mediaHeight: mediaHeight, mediaHash: mediaHash, mediaKey: mediaKey, mediaDigest: mediaDigest, mediaStatus: mediaStatus, mediaWaveform: mediaWaveform, thumbImage: thumbImage, status: status, action: action, participantId: participantId, snapshotId: snapshotId, name: name, stickerId: stickerId, sharedUserId: sharedUserId, quoteMessageId: quoteMessageId, quoteContent: quoteContent, createdAt: createdAt)
+    }
+
     static func createMessage(snapshotMesssage snapshot: Snapshot, data: BlazeMessageData) -> Message {
-        return Message(messageId: data.messageId, conversationId: data.conversationId, userId: data.userId, category: data.category, content: nil, mediaUrl: nil, mediaMimeType: nil, mediaSize: nil, mediaDuration: nil, mediaWidth: nil, mediaHeight: nil, mediaHash: nil, mediaKey: nil, mediaDigest: nil, mediaStatus: nil, mediaWaveform: nil, thumbImage: nil, status: MessageStatus.DELIVERED.rawValue, action: snapshot.type, participantId: nil, snapshotId: snapshot.snapshotId, name: nil, stickerId: nil, sharedUserId: nil, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.userId, category: data.category, status: MessageStatus.DELIVERED.rawValue, action: snapshot.type, snapshotId: snapshot.snapshotId, createdAt: data.createdAt)
     }
 
     static func createMessage(textMessage plainText: String, data: BlazeMessageData) -> Message {
-        return Message(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: plainText, mediaUrl: nil, mediaMimeType: nil, mediaSize: nil, mediaDuration: nil, mediaWidth: nil, mediaHeight: nil, mediaHash: nil, mediaKey: nil, mediaDigest: nil, mediaStatus: nil, mediaWaveform: nil, thumbImage: nil, status: MessageStatus.DELIVERED.rawValue, action: nil, participantId: nil, snapshotId: nil, name: nil, stickerId: nil, sharedUserId: nil, createdAt: data.createdAt)
+        let quoteMessageId = data.quoteMessageId.isEmpty ? nil : data.quoteMessageId
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: plainText, status: MessageStatus.DELIVERED.rawValue, quoteMessageId: quoteMessageId, createdAt: data.createdAt)
     }
 
     static func createMessage(systemMessage action: String?, participantId: String?, userId: String, data: BlazeMessageData) -> Message {
-        return Message(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, content: nil, mediaUrl: nil, mediaMimeType: nil, mediaSize: nil, mediaDuration: nil, mediaWidth: nil, mediaHeight: nil, mediaHash: nil, mediaKey: nil, mediaDigest: nil, mediaStatus: nil, mediaWaveform: nil, thumbImage: nil, status: MessageStatus.READ.rawValue, action: action, participantId: participantId, snapshotId: nil, name: nil, stickerId: nil, sharedUserId: nil, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, status: MessageStatus.READ.rawValue, action: action, participantId: participantId, createdAt: data.createdAt)
     }
 
     static func createMessage(appMessage data: BlazeMessageData) -> Message {
-        return Message(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: data.data, mediaUrl: nil, mediaMimeType: nil, mediaSize: nil, mediaDuration: nil, mediaWidth: nil, mediaHeight: nil, mediaHash: nil, mediaKey: nil, mediaDigest: nil, mediaStatus: nil, mediaWaveform: nil, thumbImage: nil, status: MessageStatus.DELIVERED.rawValue, action: nil, participantId: nil, snapshotId: nil, name: nil, stickerId: nil, sharedUserId: nil, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: data.data, status: MessageStatus.DELIVERED.rawValue, createdAt: data.createdAt)
     }
 
     static func createMessage(stickerData: TransferStickerData, data: BlazeMessageData) -> Message {
-        return Message(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: nil, mediaUrl: nil, mediaMimeType: nil, mediaSize: nil, mediaDuration: nil, mediaWidth: nil, mediaHeight: nil, mediaHash: nil, mediaKey: nil, mediaDigest: nil, mediaStatus: nil, mediaWaveform: nil, thumbImage: nil, status: MessageStatus.DELIVERED.rawValue, action: nil, participantId: nil, snapshotId: nil, name: nil, stickerId: stickerData.stickerId, sharedUserId: nil, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, status: MessageStatus.DELIVERED.rawValue, stickerId: stickerData.stickerId, createdAt: data.createdAt)
     }
 
     static func createMessage(contactData: TransferContactData, data: BlazeMessageData) -> Message {
-        return Message(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: nil, mediaUrl: nil, mediaMimeType: nil, mediaSize: nil, mediaDuration: nil, mediaWidth: nil, mediaHeight: nil, mediaHash: nil, mediaKey: nil, mediaDigest: nil, mediaStatus: nil, mediaWaveform: nil, thumbImage: nil, status: MessageStatus.DELIVERED.rawValue, action: nil, participantId: nil, snapshotId: nil, name: nil, stickerId: nil, sharedUserId: contactData.userId, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, status: MessageStatus.DELIVERED.rawValue, sharedUserId: contactData.userId, createdAt: data.createdAt)
     }
 
     static func createMessage(mediaData: TransferAttachmentData, data: BlazeMessageData) -> Message {
         let mediaStatus = data.category.hasSuffix("_DATA") || data.category.hasSuffix("_VIDEO") ? MediaStatus.CANCELED.rawValue : MediaStatus.PENDING.rawValue
-        return Message(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: mediaData.attachmentId, mediaUrl: nil, mediaMimeType: mediaData.mimeType, mediaSize: mediaData.size, mediaDuration: mediaData.duration, mediaWidth: mediaData.width, mediaHeight: mediaData.height, mediaHash: nil, mediaKey: mediaData.key, mediaDigest: mediaData.digest, mediaStatus: mediaStatus, mediaWaveform: mediaData.waveform, thumbImage: mediaData.thumbnail, status: MessageStatus.DELIVERED.rawValue, action: nil, participantId: nil, snapshotId: nil, name: mediaData.name, stickerId: nil, sharedUserId: nil, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: mediaData.attachmentId, mediaMimeType: mediaData.mimeType, mediaSize: mediaData.size, mediaDuration: mediaData.duration, mediaWidth: mediaData.width, mediaHeight: mediaData.height, mediaKey: mediaData.key, mediaDigest: mediaData.digest, mediaStatus: mediaStatus, mediaWaveform: mediaData.waveform, thumbImage: mediaData.thumbnail, status: MessageStatus.DELIVERED.rawValue, name: mediaData.name, createdAt: data.createdAt)
     }
 
     static func createMessage(messageId: String = UUID().uuidString.lowercased(), category: String, conversationId: String, createdAt: String = Date().toUTCString(), userId: String) -> Message {
-        return Message(messageId: messageId, conversationId: conversationId, userId: userId, category: category, content: nil, mediaUrl: nil, mediaMimeType: nil, mediaSize: nil, mediaDuration: nil, mediaWidth: nil, mediaHeight: nil, mediaHash: nil, mediaKey: nil, mediaDigest: nil, mediaStatus: nil, mediaWaveform: nil, thumbImage: nil, status: MessageStatus.SENDING.rawValue, action: nil, participantId: nil, snapshotId: nil, name: nil, stickerId: nil, sharedUserId: nil, createdAt: createdAt)
+        return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category, status: MessageStatus.SENDING.rawValue, createdAt: createdAt)
     }
 
     static func createMessage(message: MessageItem) -> Message {
-        return Message(messageId: message.messageId, conversationId: message.conversationId, userId: message.userId, category: message.category, content: message.content, mediaUrl: message.mediaUrl, mediaMimeType: message.mediaMimeType, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration, mediaWidth: message.mediaWidth, mediaHeight: message.mediaHeight, mediaHash: message.mediaHash, mediaKey: message.mediaKey, mediaDigest: message.mediaDigest, mediaStatus: message.mediaStatus, mediaWaveform: message.mediaWaveform, thumbImage: message.thumbImage, status: message.status, action: message.actionName, participantId: message.participantId, snapshotId: message.snapshotId, name: message.name, stickerId: message.stickerId, sharedUserId: nil, createdAt: message.createdAt)
+        return Message(messageId: message.messageId, conversationId: message.conversationId, userId: message.userId, category: message.category, content: message.content, mediaUrl: message.mediaUrl, mediaMimeType: message.mediaMimeType, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration, mediaWidth: message.mediaWidth, mediaHeight: message.mediaHeight, mediaHash: message.mediaHash, mediaKey: message.mediaKey, mediaDigest: message.mediaDigest, mediaStatus: message.mediaStatus, mediaWaveform: message.mediaWaveform, thumbImage: message.thumbImage, status: message.status, action: message.actionName, participantId: message.participantId, snapshotId: message.snapshotId, name: message.name, stickerId: message.stickerId, sharedUserId: message.sharedUserId, quoteMessageId: message.quoteMessageId, quoteContent: message.quoteContent, createdAt: message.createdAt)
     }
 
 }
@@ -146,6 +155,40 @@ enum MessageCategory: String {
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN
+    
+    static let maxIconSize: CGSize = {
+        let maxLength = max(#imageLiteral(resourceName: "ic_message_photo").size.width, #imageLiteral(resourceName: "ic_message_photo").size.height,
+                            #imageLiteral(resourceName: "ic_message_sticker").size.width, #imageLiteral(resourceName: "ic_message_sticker").size.height,
+                            #imageLiteral(resourceName: "ic_message_contact").size.width, #imageLiteral(resourceName: "ic_message_contact").size.height,
+                            #imageLiteral(resourceName: "ic_message_file").size.width, #imageLiteral(resourceName: "ic_message_file").size.height,
+                            #imageLiteral(resourceName: "ic_message_video").size.width, #imageLiteral(resourceName: "ic_message_video").size.height,
+                            #imageLiteral(resourceName: "ic_message_audio").size.width, #imageLiteral(resourceName: "ic_message_audio").size.height,
+                            #imageLiteral(resourceName: "ic_message_transfer").size.width, #imageLiteral(resourceName: "ic_message_transfer").size.height,
+                            #imageLiteral(resourceName: "ic_message_bot_menu").size.width, #imageLiteral(resourceName: "ic_message_bot_menu").size.height)
+        return CGSize(width: maxLength, height: maxLength)
+    }()
+    
+    static func iconImage(forMessageCategoryString category: String) -> UIImage? {
+        if category.hasSuffix("_IMAGE") {
+            return #imageLiteral(resourceName: "ic_message_photo")
+        } else if category.hasSuffix("_STICKER") {
+            return #imageLiteral(resourceName: "ic_message_sticker")
+        } else if category.hasSuffix("_CONTACT") {
+            return #imageLiteral(resourceName: "ic_message_contact")
+        } else if category.hasSuffix("_DATA") {
+            return #imageLiteral(resourceName: "ic_message_file")
+        } else if category.hasSuffix("_VIDEO") {
+            return #imageLiteral(resourceName: "ic_message_video")
+        } else if category.hasSuffix("_AUDIO") {
+            return #imageLiteral(resourceName: "ic_message_audio")
+        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+            return #imageLiteral(resourceName: "ic_message_transfer")
+        } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue || category == MessageCategory.APP_CARD.rawValue {
+            return #imageLiteral(resourceName: "ic_message_bot_menu")
+        } else {
+            return nil
+        }
+    }
 }
 
 enum MessageStatus: String, Codable {

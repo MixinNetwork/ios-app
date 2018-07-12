@@ -2,9 +2,9 @@ import UIKit
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
     
-    private(set) var content: CoreTextLabel.Content?
-    private(set) var contentLabelFrame = CGRect.zero
-    private(set) var highlightPaths = [UIBezierPath]()
+    internal(set) var content: CoreTextLabel.Content?
+    internal(set) var contentLabelFrame = CGRect.zero
+    internal(set) var highlightPaths = [UIBezierPath]()
     
     var textColor: UIColor {
         return .black
@@ -27,7 +27,19 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     override var debugDescription: String {
         return super.debugDescription + ", textSize: \(textSize), contentSize: \(contentSize), contentLength: \(message.content.count)"
     }
+    
+    internal var fullnameHeight: CGFloat {
+        return style.contains(.fullname) ? fullnameFrame.height : 0
+    }
 
+    internal var backgroundWidth: CGFloat {
+        return contentSize.width + contentMargin.horizontal
+    }
+    
+    internal var contentLabelTopMargin: CGFloat {
+        return style.contains(.fullname) ? fullnameHeight : contentMargin.top
+    }
+    
     // Link detection will be disabled if subclasses override this var and return a non-nil value
     internal var fixedLinks: [NSRange: URL]? {
         return nil
@@ -82,9 +94,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             str.setCTForegroundColor(link.value.color ?? linkColor, for: link.key)
         }
         // Make CTLine and Origins
-        let maxLabelWidth = layoutWidth - MessageViewModel.backgroundImageMargin.horizontal - contentMargin.horizontal
         let framesetter = CTFramesetterCreateWithAttributedString(str as CFAttributedString)
-        let layoutSize = CGSize(width: maxLabelWidth, height: UILayoutFittingExpandedSize.height)
+        let layoutSize = CGSize(width: maxContentWidth, height: UILayoutFittingExpandedSize.height)
         textSize = ceil(CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, layoutSize, nil))
         if textSize.height < minimumTextSize.height {
             textSize = minimumTextSize
@@ -124,14 +135,14 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         // Make content
         content = CoreTextLabel.Content(lines: lines, lineOrigins: lineOrigins, links: links)
         // Calculate content size
-        let hasStatusImage = style.contains(.sent)
+        let hasStatusImage = !style.contains(.received)
         let statusImageWidth = hasStatusImage ? DetailInfoMessageViewModel.statusImageSize.width : 0
         let additionalTrailingSize = CGSize(width: timeLeftMargin + timeSize.width + statusImageWidth + DetailInfoMessageViewModel.statusLeftMargin, height: 16)
         var contentSize = textSize
         if let lastLine = lines.last {
             let rect = CTLineGetBoundsWithOptions(lastLine, [])
             let lastLineWithTrailingWidth = rect.width + additionalTrailingSize.width
-            if lastLineWithTrailingWidth > maxLabelWidth {
+            if lastLineWithTrailingWidth > layoutSize.width {
                 contentSize.height += additionalTrailingSize.height
             } else if lines.count == 1 {
                 contentSize.width = lastLineWithTrailingWidth
@@ -139,7 +150,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 contentSize.width = max(contentSize.width, lastLineWithTrailingWidth)
             }
         }
-        if style.contains(.showFullname) {
+        if style.contains(.fullname) {
             if message.userIsBot {
                 let identityIconWidth = DetailInfoMessageViewModel.identityIconLeftMargin + DetailInfoMessageViewModel.identityIconSize.width
                 contentSize.width = min(layoutSize.width, max(contentSize.width, fullnameWidth + identityIconWidth))
@@ -152,24 +163,22 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
     
     override func didSetStyle() {
-        let fullnameHeight = style.contains(.showFullname) ? fullnameFrame.height : 0
-        let backgroundHeightAdjustment = style.contains(.showFullname) ? fullnameHeight + contentMargin.bottom : contentMargin.vertical
         if style.contains(.received) {
             backgroundImageFrame = CGRect(x: MessageViewModel.backgroundImageMargin.leading,
                                           y: 0,
-                                          width: contentSize.width + contentMargin.horizontal,
-                                          height: contentSize.height + backgroundHeightAdjustment)
+                                          width: backgroundWidth,
+                                          height: contentSize.height + contentLabelTopMargin + contentMargin.bottom)
             contentLabelFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.leading),
-                                       y: ceil(style.contains(.showFullname) ? fullnameHeight : contentMargin.top),
+                                       y: contentLabelTopMargin,
                                        width: textSize.width,
                                        height: textSize.height)
-        } else if style.contains(.sent) {
-            backgroundImageFrame = CGRect(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - contentMargin.horizontal - contentSize.width,
+        } else {
+            backgroundImageFrame = CGRect(x: layoutWidth - MessageViewModel.backgroundImageMargin.leading - backgroundWidth,
                                           y: 0,
-                                          width: contentSize.width + contentMargin.horizontal,
-                                          height: contentSize.height + backgroundHeightAdjustment)
+                                          width: backgroundWidth,
+                                          height: contentSize.height + contentLabelTopMargin + contentMargin.bottom)
             contentLabelFrame = CGRect(x: ceil(backgroundImageFrame.origin.x + contentMargin.trailing),
-                                       y: ceil(contentMargin.top),
+                                       y: contentLabelTopMargin,
                                        width: textSize.width,
                                        height: textSize.height)
         }

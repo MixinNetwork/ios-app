@@ -62,7 +62,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
                 } else {
                     statusImage = nil
                 }
-            } else if style.contains(.sent) {
+            } else {
                 switch newValue {
                 case MessageStatus.SENDING.rawValue, MessageStatus.FAILED.rawValue, MessageStatus.UNKNOWN.rawValue:
                     statusImage = DetailInfoMessageViewModel.pendingImage
@@ -101,7 +101,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
                            width: timeSize.width,
                            height: timeSize.height)
         if style.contains(.received) {
-            if style.contains(.hasTail) {
+            if style.contains(.tail) {
                 backgroundImage = leftWithTailBubbleImage
             } else {
                 backgroundImage = leftBubbleImage
@@ -111,15 +111,15 @@ class DetailInfoMessageViewModel: MessageViewModel {
             } else {
                 timeFrame.origin.x -= margin.trailing
             }
-        } else if style.contains(.sent) {
-            if style.contains(.hasTail) {
+        } else {
+            if style.contains(.tail) {
                 backgroundImage = rightWithTailBubbleImage
             } else {
                 backgroundImage = rightBubbleImage
             }
             timeFrame.origin.x -= (margin.leading + DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width)
         }
-        if style.contains(.showFullname), let identityNumber = Int64(message.userIdentityNumber) {
+        if style.contains(.fullname), let identityNumber = Int64(message.userIdentityNumber) {
             let index = identityNumber % Int64(UIColor.usernameColors.count)
             fullnameColor = UIColor.usernameColors[Int(index)]
         }

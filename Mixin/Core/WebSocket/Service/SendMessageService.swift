@@ -133,7 +133,7 @@ class SendMessageService: MixinService {
             }
 
             if MessageDAO.shared.isExist(messageId: messageId) {
-                let param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: nil, data: nil, offset: nil, status: MessageStatus.SENT.rawValue, messageId: messageId, keys: nil, recipients: nil, messages: nil)
+                let param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: nil, data: nil, offset: nil, status: MessageStatus.SENT.rawValue, messageId: messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
                 let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createMessage.rawValue)
                 jobs.append(Job(jobId: blazeMessage.id, action: .RESEND_MESSAGE, userId: userId, conversationId: conversationId, resendMessageId: UUID().uuidString.lowercased(), blazeMessage: blazeMessage))
                 resendMessages.append(ResendMessage(messageId: messageId, userId: userId, status: 1))
@@ -290,6 +290,7 @@ extension SendMessageService {
 
         blazeMessage.params?.category = message.category
         blazeMessage.params?.messageId = resendMessageId
+        blazeMessage.params?.quoteMessageId = message.quoteMessageId
         blazeMessage.params?.data = try SignalProtocol.shared.encryptSessionMessageData(conversationId: message.conversationId, recipientId: recipientId, content: message.content ?? "", resendMessageId: messageId)
         try deliverMessage(blazeMessage: blazeMessage)
 
@@ -306,6 +307,7 @@ extension SendMessageService {
         }
 
         blazeMessage.params?.category = message.category
+        blazeMessage.params?.quoteMessageId = message.quoteMessageId
 
         if message.category.hasPrefix("PLAIN_") {
             try requestCreateConversation(conversation: conversation)

@@ -1,35 +1,46 @@
 import UIKit
 
+fileprivate extension Selector {
+    static let reply = #selector(ConversationTableView.replyAction(_:))
+    static let delete = #selector(ConversationTableView.deleteAction(_:))
+    static let forward = #selector(ConversationTableView.forwardAction(_:))
+    static let copy = #selector(ConversationTableView.copyAction(_:))
+    static let addToStickers = #selector(ConversationTableView.addToStickersAction(_:))
+}
+
 extension MessageItem {
-
-    private static let deleteAction = [#selector(ConversationTableView.deleteAction(_:))]
-    private static let forwardAndDeleteActions = [#selector(ConversationTableView.forwardAction(_:)),
-                                                  #selector(ConversationTableView.deleteAction(_:))]
-    private static let imageActions = [#selector(ConversationTableView.addToStickersAction(_:)),
-                                       #selector(ConversationTableView.forwardAction(_:)),
-                                       #selector(ConversationTableView.deleteAction(_:))]
-    private static let textActions = [#selector(ConversationTableView.forwardAction(_:)),
-                                      #selector(ConversationTableView.copyAction(_:)),
-                                      #selector(ConversationTableView.deleteAction(_:))]
-
+    
     var allowedActions: [Selector] {
+        var actions = [Selector]()
         if category.hasSuffix("_TEXT") {
-            return MessageItem.textActions
-        } else if category.hasSuffix("_IMAGE") || category.hasSuffix("_STICKER") {
-            return MessageItem.imageActions
-        } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") {
-            return mediaStatus == MediaStatus.DONE.rawValue ? MessageItem.forwardAndDeleteActions : MessageItem.deleteAction
+            actions = [.reply, .forward, .copy, .delete]
+        } else if category.hasSuffix("_STICKER") {
+            actions = [.addToStickers, .reply, .forward, .delete]
         } else if category.hasSuffix("_CONTACT") {
-            return MessageItem.forwardAndDeleteActions
+            actions = [.reply, .forward, .delete]
+        } else if category.hasSuffix("_IMAGE") {
+            if mediaStatus == MediaStatus.DONE.rawValue {
+                actions = [.addToStickers, .reply, .forward, .delete]
+            } else {
+                actions = [.reply, .delete]
+            }
+        } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") || category.hasSuffix("_AUDIO") {
+            if mediaStatus == MediaStatus.DONE.rawValue {
+                actions = [.reply, .forward, .delete]
+            } else {
+                actions = [.reply, .delete]
+            }
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-            return MessageItem.deleteAction
+            actions = [.delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
-            return MessageItem.deleteAction
-        } else if category.hasSuffix("_AUDIO") {
-            return MessageItem.forwardAndDeleteActions
+            actions = [.reply, .delete]
         } else {
-            return []
+            actions = []
         }
+        if status == MessageStatus.FAILED.rawValue, let index = actions.index(of: .reply) {
+            actions.remove(at: index)
+        }
+        return actions
     }
     
 }
@@ -130,14 +141,15 @@ class ConversationTableView: UITableView {
     
     func dequeueReusableCell(withMessage message: MessageItem, for indexPath: IndexPath) -> UITableViewCell {
         if message.status == MessageStatus.FAILED.rawValue {
-            return dequeueReusableCell(withMessageCategory: MessageCategory.SIGNAL_TEXT.rawValue, for: indexPath)
+            return dequeueReusableCell(withReuseId: .text, for: indexPath)
+        } else if message.quoteMessageId != nil && message.quoteContent != nil {
+            return dequeueReusableCell(withReuseId: .quoteText, for: indexPath)
         } else {
-            return dequeueReusableCell(withMessageCategory: message.category, for: indexPath)
+            return dequeueReusableCell(withReuseId: ReuseId(category: message.category), for: indexPath)
         }
     }
     
-    func dequeueReusableCell(withMessageCategory category: String, for indexPath: IndexPath) -> UITableViewCell {
-        let reuseId = ReuseId(category: category)
+    func dequeueReusableCell(withReuseId reuseId: ReuseId, for indexPath: IndexPath) -> UITableViewCell {
         let cell = dequeueReusableCell(withIdentifier: reuseId.rawValue, for: indexPath)
         if let cell = cell as? DetailInfoMessageCell, cell.delegate == nil {
             cell.delegate = viewController
@@ -175,6 +187,13 @@ class ConversationTableView: UITableView {
         setContentOffset(bottomOffset, animated: animated)
     }
     
+    func setContentOffsetYSafely(_ y: CGFloat) {
+        let maxContentOffsetY = contentSize.height - (frame.height - contentInset.vertical)
+        if maxContentOffsetY > 0 {
+            contentOffset.y = min(maxContentOffsetY, max(0, y))
+        }
+    }
+    
     private func invokeDelegate(action: Action) {
         guard let indexPath = indexPathForSelectedRow else {
             return
@@ -191,6 +210,7 @@ class ConversationTableView: UITableView {
         register(UnknownMessageCell.self, forCellReuseIdentifier: ReuseId.unknown.rawValue)
         register(AppButtonGroupMessageCell.self, forCellReuseIdentifier: ReuseId.appButtonGroup.rawValue)
         register(VideoMessageCell.self, forCellReuseIdentifier: ReuseId.video.rawValue)
+        register(QuoteTextMessageCell.self, forCellReuseIdentifier: ReuseId.quoteText.rawValue)
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
         addGestureRecognizer(longPressRecognizer)
@@ -229,6 +249,7 @@ extension ConversationTableView {
         case video = "VideoMessageCell"
         case appCard = "AppCardMessageCell"
         case audio = "AudioMessageCell"
+        case quoteText = "QuoteTextMessageCell"
         case header = "DateHeader"
 
         init(category: String) {

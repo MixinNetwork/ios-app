@@ -81,7 +81,7 @@ extension Job {
 extension Job {
 
     init(message: Message) {
-        let blazeParam = BlazeMessageParam(conversationId: message.conversationId, recipientId: nil, category: message.category, data: nil, offset: nil, status: MessageStatus.SENT.rawValue, messageId: message.messageId, keys: nil, recipients: nil, messages: nil)
+        let blazeParam = BlazeMessageParam(conversationId: message.conversationId, recipientId: nil, category: message.category, data: nil, offset: nil, status: MessageStatus.SENT.rawValue, messageId: message.messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
         let blazeMessage = BlazeMessage(params: blazeParam, action: BlazeMessageAction.createMessage.rawValue)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
     }

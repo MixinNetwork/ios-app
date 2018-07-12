@@ -50,61 +50,50 @@ class ConversationCell: UITableViewCell {
             let senderName = item.senderId == AccountAPI.shared.accountUserId ? Localized.CHAT_MESSAGE_YOU : item.senderFullName
 
             let category = item.contentType
+            messageTypeImageView.image = MessageCategory.iconImage(forMessageCategoryString: category)
+            messageTypeImageView.isHidden = (messageTypeImageView.image == nil)
             if category.hasSuffix("_TEXT") {
                 if item.isGroup() {
                     contentLabel.text = "\(senderName): \(item.content)"
                 } else {
                     contentLabel.text = item.content
                 }
-                messageTypeImageView.isHidden = true
             } else if category.hasSuffix("_IMAGE") {
                 if item.isGroup() {
                     contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_PHOTO)"
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_PHOTO
                 }
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_photo")
-                messageTypeImageView.isHidden = false
             } else if category.hasSuffix("_STICKER") {
                 if item.isGroup() {
                     contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_STICKER)"
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_STICKER
                 }
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_sticker")
-                messageTypeImageView.isHidden = false
             } else if category.hasSuffix("_CONTACT") {
                 if item.isGroup() {
                     contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_CONTACT)"
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_CONTACT
                 }
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_contact")
-                messageTypeImageView.isHidden = false
             } else if category.hasSuffix("_DATA") {
                 if item.isGroup() {
                     contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_FILE)"
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_FILE
                 }
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_file")
-                messageTypeImageView.isHidden = false
             } else if category.hasSuffix("_VIDEO") {
                 if item.isGroup() {
                     contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_VIDEO)"
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_VIDEO
                 }
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_video")
-                messageTypeImageView.isHidden = false
             } else if category.hasSuffix("_AUDIO") {
                 if item.isGroup() {
                     contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_AUDIO)"
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_AUDIO
                 }
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_audio")
-                messageTypeImageView.isHidden = false
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 contentLabel.text = Localized.NOTIFICATION_CONTENT_TRANSFER
                 messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_transfer")
@@ -113,19 +102,14 @@ class ConversationCell: UITableViewCell {
                 contentLabel.text = (item.appButtons?.map({ (appButton) -> String in
                     return "[\(appButton.label)]"
                 }) ?? []).joined()
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_bot_menu")
-                messageTypeImageView.isHidden = false
             } else if category == MessageCategory.APP_CARD.rawValue, let appCard = item.appCard {
                 contentLabel.text = "[\(appCard.title)]"
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_bot_menu")
-                messageTypeImageView.isHidden = false
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
                     contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)
                 } else {
                     contentLabel.text = ""
                 }
-                messageTypeImageView.isHidden = true
             }
         }
         

@@ -169,6 +169,7 @@ extension PayView: PinFieldDelegate {
         }
         processing = true
         let assetId = asset.assetId
+        let isWithdrawal = avatarImageView.isHidden
         dismissButton.isEnabled = false
 
         let completion = { [weak self](result: APIResult<Snapshot>) in
@@ -178,6 +179,9 @@ extension PayView: PinFieldDelegate {
 
             switch result {
             case let .success(snapshot):
+                if isWithdrawal {
+                    ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
+                }
                 SnapshotDAO.shared.replaceSnapshot(snapshot: snapshot)
                 if weakSelf.avatarImageView.isHidden {
                     WalletUserDefault.shared.lastWithdrawalAddress[assetId] = weakSelf.address.addressId
@@ -211,7 +215,7 @@ extension PayView: PinFieldDelegate {
         } else {
             generalizedAmount = amount
         }
-        if avatarImageView.isHidden {
+        if isWithdrawal {
             WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
         } else {
             AssetAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)

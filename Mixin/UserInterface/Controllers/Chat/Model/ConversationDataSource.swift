@@ -716,11 +716,7 @@ extension ConversationDataSource {
             if message.quoteMessageId != nil && message.quoteContent != nil {
                 viewModel = QuoteTextMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_TEXT") {
-                let textViewModel = TextMessageViewModel(message: message, style: style, fits: layoutWidth)
-                if let keyword = highlight?.keyword {
-                    textViewModel.highlight(keyword: keyword)
-                }
-                viewModel = textViewModel
+                viewModel = TextMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_IMAGE") {
                 viewModel = PhotoMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_STICKER") {
@@ -748,6 +744,9 @@ extension ConversationDataSource {
                 viewModel = EncryptionHintViewModel(message: message, style: style, fits: layoutWidth)
             } else {
                 viewModel = UnknownMessageViewModel(message: message, style: style, fits: layoutWidth)
+            }
+            if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
+                viewModel.highlight(keyword: keyword)
             }
         }
         return viewModel

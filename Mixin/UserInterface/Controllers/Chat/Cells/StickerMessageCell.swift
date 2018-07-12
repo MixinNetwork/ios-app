@@ -11,7 +11,7 @@ class StickerMessageCell: DetailInfoMessageCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        contentImageView.sd_cancelCurrentImageLoad()
+        contentImageView.sd_setImage(with: nil, completed: nil)
     }
 
     override func render(viewModel: MessageViewModel) {

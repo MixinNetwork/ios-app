@@ -186,6 +186,7 @@ class SendMessageService: MixinService {
                 try database.insert(objects: [job], intoTable: Job.tableName)
                 NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
             })
+            SendMessageService.shared.processMessages()
         }
     }
 

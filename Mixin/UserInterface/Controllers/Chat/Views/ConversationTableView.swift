@@ -12,7 +12,9 @@ extension MessageItem {
     
     var allowedActions: [Selector] {
         var actions = [Selector]()
-        if category.hasSuffix("_TEXT") {
+        if status == MessageStatus.FAILED.rawValue {
+            actions = [.delete]
+        } else if category.hasSuffix("_TEXT") {
             actions = [.reply, .forward, .copy, .delete]
         } else if category.hasSuffix("_STICKER") {
             actions = [.addToStickers, .reply, .forward, .delete]
@@ -36,9 +38,6 @@ extension MessageItem {
             actions = [.reply, .delete]
         } else {
             actions = []
-        }
-        if status == MessageStatus.FAILED.rawValue, let index = actions.index(of: .reply) {
-            actions.remove(at: index)
         }
         return actions
     }

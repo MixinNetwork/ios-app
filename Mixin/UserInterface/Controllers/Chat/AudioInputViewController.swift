@@ -150,6 +150,13 @@ class AudioInputViewController: UIViewController {
         })
     }
     
+    func cancelIfRecording() {
+        guard let recorder = recorder, recorder.isRecording else {
+            return
+        }
+        cancelAction(self)
+    }
+    
 }
 
 extension AudioInputViewController: UIGestureRecognizerDelegate {

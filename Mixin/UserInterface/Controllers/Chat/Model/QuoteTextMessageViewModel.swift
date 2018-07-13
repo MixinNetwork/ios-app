@@ -6,12 +6,12 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         static let height = #imageLiteral(resourceName: "bg_chat_quote").size.height
         static let backgroundMargin = Margin(leading: 9, trailing: 2, top: 1, bottom: 0)
         static let contentMargin = Margin(leading: 11, trailing: 11, top: 5, bottom: 5)
-        static let titleFont = UIFont.systemFont(ofSize: 16)
+        static let titleFont = UIFont.systemFont(ofSize: 15)
         static let titleHeight = ceil(titleFont.lineHeight)
         static let linesVerticalSpacing: CGFloat = 4
         static let iconSize = MessageCategory.maxIconSize
         static let iconTrailingMargin: CGFloat = 4
-        static let subtitleFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.light)
+        static let subtitleFont = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.light)
         static let subtitleHeight = ceil(subtitleFont.lineHeight)
         static let imageSize = CGSize(width: height, height: height)
         static let imageCornerRadius: CGFloat = 6

@@ -994,8 +994,10 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                 }
             }
         case .forward:
+            audioInputViewController?.cancelIfRecording()
             navigationController?.pushViewController(ForwardViewController.instance(message: message, ownerUser: ownerUser), animated: true)
         case .reply:
+            audioInputViewController?.cancelIfRecording()
             quoteMessageId = message.messageId
             quotePreviewView.render(message: message, contentImageThumbnail: viewModel.thumbnail)
             setQuoteViewHidden(false)

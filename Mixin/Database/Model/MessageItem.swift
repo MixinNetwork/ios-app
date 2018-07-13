@@ -97,6 +97,10 @@ class MessageItem: TableCodable {
             return (snapshotAmount ?? "0") + " " + (assetSymbol ?? "")
         } else if category.hasSuffix("_CONTACT") {
             return sharedUserIdentityNumber
+        } else if category == MessageCategory.APP_CARD.rawValue {
+            return appCard?.description ?? ""
+        } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
+            return appButtons?.first?.label ?? ""
         } else {
             return ""
         }

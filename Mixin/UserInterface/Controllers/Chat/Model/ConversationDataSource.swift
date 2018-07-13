@@ -575,6 +575,9 @@ extension ConversationDataSource {
         var didLoadEarliestMessage = false
         var didLoadLatestMessage = false
         var messages: [MessageItem]
+        if initialMessageId != nil {
+            ConversationViewController.positions[conversationId] = nil
+        }
         let initialMessageId = initialMessageId
             ?? highlight?.messageId
             ?? ConversationViewController.positions[conversationId]?.messageId
@@ -623,7 +626,11 @@ extension ConversationDataSource {
         
         if let initialMessageId = initialMessageId {
             initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == initialMessageId })
-            offset -= ConversationDateHeaderView.height
+            if let position = ConversationViewController.positions[conversationId], initialMessageId == position.messageId, highlight == nil {
+                offset = position.offset
+            } else {
+                offset -= ConversationDateHeaderView.height
+            }
         } else if let unreadHintIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.category == MessageCategory.EXT_UNREAD.rawValue }) {
             if unreadHintIndexPath == IndexPath(row: 1, section: 0), viewModels[dates[0]]?.first?.message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 initialIndexPath = IndexPath(row: 0, section: 0)
@@ -654,6 +661,7 @@ extension ConversationDataSource {
             if ConversationViewController.positions[self.conversationId] != nil && !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
                 NotificationCenter.default.post(name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: unreadMessagesCount)
             }
+            ConversationViewController.positions[self.conversationId] = nil
             SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
             self.didInitializedData = true
             for change in self.pendingChanges {

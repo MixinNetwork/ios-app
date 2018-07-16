@@ -77,12 +77,7 @@ class ConversationDataSource {
     
     func initData() {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
-        queue.async {
-            guard !self.messageProcessingIsCancelled else {
-                return
-            }
-            self.reload()
-        }
+        reload()
     }
     
     func cancelMessageProcessing() {
@@ -570,7 +565,10 @@ extension ConversationDataSource {
     }
     
     private func reload(initialMessageId: String? = nil, completion: (() -> Void)? = nil) {
-        semaphore.wait()
+        let isLoadingOnBackgroundThread = !Thread.isMainThread
+        if isLoadingOnBackgroundThread {
+            semaphore.wait()
+        }
         canInsertUnreadHint = true
         var didLoadEarliestMessage = false
         var didLoadLatestMessage = false
@@ -639,7 +637,7 @@ extension ConversationDataSource {
             }
             offset -= ConversationDateHeaderView.height
         }
-        DispatchQueue.main.async {
+        let updateUI = {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                 return
             }
@@ -668,8 +666,15 @@ extension ConversationDataSource {
                 self.perform(change: change)
             }
             self.pendingChanges = []
-            self.semaphore.signal()
+            if isLoadingOnBackgroundThread {
+                self.semaphore.signal()
+            }
             completion?()
+        }
+        if isLoadingOnBackgroundThread {
+            DispatchQueue.main.async(execute: updateUI)
+        } else {
+            updateUI()
         }
     }
     

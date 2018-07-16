@@ -62,7 +62,7 @@ class InviteLinkViewController: UIViewController {
                 DispatchQueue.global().async {
                     ConversationDAO.shared.updateCodeUrl(conversation: response)
                     DispatchQueue.main.async {
-                        weakSelf.conversation = ConversationItem.createConversation(from: response)
+                        weakSelf.conversation = ConversationItem(response: response)
                         weakSelf.updateUI()
                     }
                 }

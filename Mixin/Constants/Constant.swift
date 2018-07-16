@@ -17,6 +17,8 @@ extension NSNotification.Name {
 
     static let ToastMessageDidAppear = NSNotification.Name("one.mixin.ios.toast.message")
 
+    static let SyncMessageDidAppear = NSNotification.Name("one.mixin.ios.sync.message")
+
     static let ParticipantDidChange = NSNotification.Name("one.mixin.ios.participant.changed")
 
     static let AssetsDidChange = NSNotification.Name("one.mixin.ios.assets.changed")

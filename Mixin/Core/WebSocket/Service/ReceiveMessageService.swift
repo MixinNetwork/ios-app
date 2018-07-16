@@ -53,8 +53,16 @@ class ReceiveMessageService: MixinService {
             defer {
                 ReceiveMessageService.shared.processing = false
             }
+
+            var finishedJobCount = 0
+
             repeat {
                 let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(limit: 50)
+                let remainJobCount = BlazeMessageDAO.shared.getCount()
+                if remainJobCount + finishedJobCount > 500 {
+                    let progress = Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
+                    NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: progress)
+                }
                 guard blazeMessageDatas.count > 0 else {
                     return
                 }
@@ -75,6 +83,8 @@ class ReceiveMessageService: MixinService {
                     ReceiveMessageService.shared.processAppButton(data: data)
                     BlazeMessageDAO.shared.delete(data: data)
                 }
+
+                finishedJobCount += blazeMessageDatas.count
             } while true
         }
     }

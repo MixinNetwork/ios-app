@@ -9,8 +9,6 @@
 "dialog_button_got_it" = "知道了";
 "dialog_progress_logout" = "退出登录...";
 "dialog_progress_connect" = "正在连接...";
-"connection_hint_connecting" = "正在连接";
-"connection_hint_waiting" = "等待重连";
 "action_next" = "下一步";
 "action_camera" = "相机";
 "action_continue" = "继续";
@@ -24,6 +22,10 @@
 "action_select" = "选择";
 "action_clear" = "清理";
 "menu_delete" = "删除";
+
+"connection_hint_connecting" = "正在连接";
+"connection_hint_waiting" = "等待重连";
+"connection_hint_progress" = "正在同步消息 %@%%";
 
 "date_format_day" = "ahh:mm";
 "date_format_date" = "yyyy/MM/dd";

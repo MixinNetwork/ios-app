@@ -9,8 +9,6 @@
 "dialog_button_got_it" = "Got It";
 "dialog_progress_logout" = "Log out...";
 "dialog_progress_connect" = "Connecting...";
-"connection_hint_connecting" = "Connecting";
-"connection_hint_waiting" = "Waiting to reconnect";
 "action_next" = "Next";
 "action_camera" = "Camera";
 "action_continue" = "Continue";
@@ -24,6 +22,10 @@
 "action_select" = "Select";
 "action_clear" = "Clear";
 "menu_delete" = "Delete";
+
+"connection_hint_connecting" = "Connecting";
+"connection_hint_waiting" = "Waiting to reconnect";
+"connection_hint_progress" = "Syncing messages %@%%";
 
 "date_format_day" = "hh:mm a";
 "date_format_date" = "dd/MM/yyyy";

@@ -7,8 +7,6 @@ public class Localized {
     public static let DIALOG_BUTTON_CANCEL = LocalizedString("dialog_button_cancel", comment: "Cancel")
     public static let DIALOG_BUTTON_CHANGE = LocalizedString("dialog_button_change", comment: "Change")
     public static let DIALOG_BUTTON_CONFIRM = LocalizedString("dialog_button_confirm", comment: "Confirm")
-    public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
-    public static let CONNECTION_HINT_WAITING = LocalizedString("connection_hint_waiting", comment: "Waiting to reconnect")
     public static let ACTION_NEXT = LocalizedString("action_next", comment: "Next")
     public static let ACTION_REMOVE = LocalizedString("action_remove", comment: "Remove")
     public static let ACTION_CAMERA = LocalizedString("action_camera", comment: "Camera")
@@ -21,6 +19,12 @@ public class Localized {
     public static let ACTION_SELECT = LocalizedString("action_select", comment: "Select")
     public static let ACTION_CLEAR = LocalizedString("action_clear", comment: "Clear")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
+
+    public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
+    public static let CONNECTION_HINT_WAITING = LocalizedString("connection_hint_waiting", comment: "Waiting to reconnect")
+    public static func CONNECTION_HINT_PROGRESS(_ progress: Int) -> String {
+        return String(format: LocalizedString("connection_hint_progress", comment: "Syncing messages %@%%"), "\(progress)")
+    }
 
     public static let DATE_FORMAT_DAY = LocalizedString("date_format_day", comment: "hh:mm a")
     public static let DATE_FORMAT_DATE = LocalizedString("date_format_date", comment: "dd/MM/yyyy")

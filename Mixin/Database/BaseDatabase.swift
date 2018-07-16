@@ -199,9 +199,17 @@ class BaseDatabase {
         return value.type == .null ? nil : value
     }
 
-    func getCount(on: ColumnResultConvertible, fromTable: String, condition: Condition? = nil) -> Int {
+    func getCount(on: ColumnResultConvertible, fromTable: String, condition: Condition? = nil, inTransaction: Bool = true) -> Int {
         do {
-            return Int(try database.getValue(on: on, fromTable: fromTable, where: condition).int32Value)
+            if inTransaction {
+                var result = 0
+                try database.run(transaction: {
+                    result = Int(try database.getValue(on: on, fromTable: fromTable, where: condition).int32Value)
+                })
+                return result
+            } else {
+                return Int(try database.getValue(on: on, fromTable: fromTable, where: condition).int32Value)
+            }
         } catch {
             #if DEBUG
                 print("======BaseDatabase...getCount...error:\(error)")

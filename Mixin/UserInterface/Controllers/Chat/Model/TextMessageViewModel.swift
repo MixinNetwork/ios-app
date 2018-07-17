@@ -47,30 +47,26 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         super.init(message: message, style: style, fits: layoutWidth)
-        let text: String
+        let content = message.content
         // Detect links
-        var linksMap = [NSRange: (url: URL, color: UIColor?)]()
+        let linksMap: [NSRange: URL]
         if let fixedLinks = fixedLinks {
-            text = message.content
-            for (key, value) in fixedLinks {
-                linksMap[key] = (value, nil)
-            }
+            linksMap = fixedLinks
         } else {
-            text = message.content
-            let textLength = (text as NSString).length
-            let linkDetectionRange = NSRange(location: 0, length: textLength)
-            if let matches = Link.detector?.matches(in: text, options: [], range: linkDetectionRange) {
-                for match in matches {
-                    guard let url = match.url else {
-                        continue
-                    }
-                    linksMap[match.range] = (url: url, color: nil)
+            var map = [NSRange: URL]()
+            let contentLength = (content as NSString).length
+            let linkDetectionRange = NSRange(location: 0, length: contentLength)
+            Link.detector?.enumerateMatches(in: content, options: [], range: linkDetectionRange, using: { (result, flags, stop) in
+                guard let result = result, let url = result.url else {
+                    return
                 }
-            }
+                map[result.range] = url
+            })
+            linksMap = map
         }
-        let fullRange = NSRange(location: 0, length: (text as NSString).length)
+        let fullRange = NSRange(location: 0, length: (content as NSString).length)
         // Set attributes
-        let str = NSMutableAttributedString(string: text)
+        let str = NSMutableAttributedString(string: content)
         let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
         var textAlignment = self.textAlignment.rawValue
         var lineBreakMode = self.lineBreakMode.rawValue
@@ -91,7 +87,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         ]
         str.setAttributes(attr, range: fullRange)
         for link in linksMap {
-            str.setCTForegroundColor(link.value.color ?? linkColor, for: link.key)
+            str.setCTForegroundColor(linkColor, for: link.key)
         }
         // Make CTLine and Origins
         let framesetter = CTFramesetterCreateWithAttributedString(str as CFAttributedString)
@@ -129,11 +125,11 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 }
             }
             if let path = path {
-                links += linkRects.map{ Link(hitFrame: $0, backgroundPath: path, url: link.value.url) }
+                links += linkRects.map{ Link(hitFrame: $0, backgroundPath: path, url: link.value) }
             }
         }
         // Make content
-        content = CoreTextLabel.Content(lines: lines, lineOrigins: lineOrigins, links: links)
+        self.content = CoreTextLabel.Content(lines: lines, lineOrigins: lineOrigins, links: links)
         // Calculate content size
         let hasStatusImage = !style.contains(.received)
         let statusImageWidth = hasStatusImage ? DetailInfoMessageViewModel.statusImageSize.width : 0

@@ -47,16 +47,15 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         super.init(message: message, style: style, fits: layoutWidth)
-        let content = message.content
+        let str = NSMutableAttributedString(string: message.content)
+        let fullRange = NSRange(location: 0, length: str.length)
         // Detect links
         let linksMap: [NSRange: URL]
         if let fixedLinks = fixedLinks {
             linksMap = fixedLinks
         } else {
             var map = [NSRange: URL]()
-            let contentLength = (content as NSString).length
-            let linkDetectionRange = NSRange(location: 0, length: contentLength)
-            Link.detector?.enumerateMatches(in: content, options: [], range: linkDetectionRange, using: { (result, flags, stop) in
+            Link.detector.enumerateMatches(in: str, options: [], using: { (result, _, _) in
                 guard let result = result, let url = result.url else {
                     return
                 }
@@ -64,9 +63,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             })
             linksMap = map
         }
-        let fullRange = NSRange(location: 0, length: (content as NSString).length)
         // Set attributes
-        let str = NSMutableAttributedString(string: content)
         let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
         var textAlignment = self.textAlignment.rawValue
         var lineBreakMode = self.lineBreakMode.rawValue

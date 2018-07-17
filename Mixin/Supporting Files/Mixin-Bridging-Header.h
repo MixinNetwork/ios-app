@@ -8,3 +8,4 @@
 #import "JWT/JWT.h"
 #import "MXNAudioRecorder.h"
 #import "MXNAudioPlayer.h"
+#import "MXNFastURLDetector.h"

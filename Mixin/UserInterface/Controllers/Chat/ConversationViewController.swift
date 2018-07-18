@@ -184,7 +184,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         titleLabel.addGestureRecognizer(reportRecognizer)
 
         audioInputContainerWidthConstraint.constant = 55
-        quotePreviewView.dismissButton.addTarget(self, action: #selector(dismissQuoteView(_:)), for: .touchUpInside)
+        quotePreviewView.dismissAction = { [weak self] in
+            self?.setQuoteViewHidden(true)
+        }
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)

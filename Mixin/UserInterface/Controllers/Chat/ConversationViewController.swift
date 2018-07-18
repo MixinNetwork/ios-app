@@ -63,7 +63,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.25
     private let minReasonableKeyboardHeight: CGFloat = 271
-    private let stickerPanelSegueId = "StickerPanelSegueId"
     private let moreMenuSegueId = "MoreMenuSegueId"
     private let audioInputSegueId = "AudioInputSegueId"
     
@@ -85,7 +84,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
-    private var stickerPanelViewController: StickerPanelViewController?
     private var moreMenuViewController: ConversationMoreMenuViewController?
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
@@ -97,6 +95,17 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private lazy var lastInputWrapperBottomConstant = bottomSafeAreaInset
     private lazy var lastKeyboardHeight = minReasonableKeyboardHeight
     
+    private lazy var stickerPanelViewController: StickerPanelViewController = {
+        let controller = StickerPanelViewController.instance()
+        addChildViewController(controller)
+        stickerPanelContainerView.addSubview(controller.view)
+        controller.view.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+        controller.didMove(toParentViewController: self)
+        stickerPanelContainerView.layoutIfNeeded()
+        return controller
+    }()
     private lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController.instance(conversationId: conversationId)
         controller.delegate = self
@@ -276,9 +285,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == stickerPanelSegueId, let destination = segue.destination as? StickerPanelViewController {
-            stickerPanelViewController = destination
-        } else if segue.identifier == moreMenuSegueId, let destination = segue.destination as? ConversationMoreMenuViewController {
+        if segue.identifier == moreMenuSegueId, let destination = segue.destination as? ConversationMoreMenuViewController {
             moreMenuViewController = destination
         } else if segue.identifier == audioInputSegueId, let destination = segue.destination as? AudioInputViewController {
             audioInputViewController = destination
@@ -1618,7 +1625,7 @@ extension ConversationViewController {
             stickers.insert(StickerDAO.shared.recentUsedStickers(limit: limit), at: 0)
             stickers.insert(StickerDAO.shared.getFavoriteStickers(), at: 1)
             DispatchQueue.main.async {
-                self?.stickerPanelViewController?.reload(albums: albums, stickers: stickers)
+                self?.stickerPanelViewController.reload(albums: albums, stickers: stickers)
             }
             
             self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)

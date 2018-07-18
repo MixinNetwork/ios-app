@@ -2,23 +2,21 @@ import UIKit
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
     
+    private static let font = UIFont.systemFont(ofSize: 16)
+    private static let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
+    private static let lineHeight = round(font.lineHeight)
+    
+    internal class var textColor: UIColor {
+        return .black
+    }
+    
     internal(set) var content: CoreTextLabel.Content?
     internal(set) var contentLabelFrame = CGRect.zero
     internal(set) var highlightPaths = [UIBezierPath]()
     
-    var textColor: UIColor {
-        return .black
-    }
-    
     private let timeLeftMargin: CGFloat = 20
-    
     private let minimumTextSize = CGSize(width: 5, height: 18)
-    private let font = UIFont.systemFont(ofSize: 16)
     private let linkColor = UIColor.systemTint
-    private let textAlignment = CTTextAlignment.left
-    private let lineBreakMode = CTLineBreakMode.byWordWrapping
-    private let lineSpacing: CGFloat = 0
-    private let paragraphSpacing: CGFloat = 0
     private let hightlightPathCornerRadius: CGFloat = 4
     
     private var textSize = CGSize.zero
@@ -48,7 +46,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         super.init(message: message, style: style, fits: layoutWidth)
         let str = NSMutableAttributedString(string: message.content)
-        let fullRange = NSRange(location: 0, length: str.length)
         // Detect links
         let linksMap: [NSRange: URL]
         if let fixedLinks = fixedLinks {
@@ -64,48 +61,51 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             linksMap = map
         }
         // Set attributes
-        let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
-        var textAlignment = self.textAlignment.rawValue
-        var lineBreakMode = self.lineBreakMode.rawValue
-        var lineSpacing = self.lineSpacing
-        var paragraphSpacing = self.paragraphSpacing
-        var lineHeight = self.font.lineHeight
-        let settings = [CTParagraphStyleSetting(spec: .alignment, valueSize: MemoryLayout<CTTextAlignment>.size, value: &textAlignment),
-                        CTParagraphStyleSetting(spec: .lineBreakMode, valueSize: MemoryLayout<CTLineBreakMode>.size, value: &lineBreakMode),
-                        CTParagraphStyleSetting(spec: .minimumLineSpacing, valueSize: MemoryLayout<CGFloat>.size, value: &lineSpacing),
-                        CTParagraphStyleSetting(spec: .maximumLineSpacing, valueSize: MemoryLayout<CGFloat>.size, value: &lineSpacing),
-                        CTParagraphStyleSetting(spec: .paragraphSpacing, valueSize: MemoryLayout<CGFloat>.size, value: &paragraphSpacing),
-                        CTParagraphStyleSetting(spec: .minimumLineHeight, valueSize: MemoryLayout<CGFloat>.size, value: &lineHeight)]
-        let paragraphStyle = CTParagraphStyleCreate(settings, settings.count)
-        let attr: [NSAttributedStringKey: Any] = [
-            .ctFont: ctFont,
-            .ctParagraphStyle: paragraphStyle,
-            .ctForegroundColor: textColor.cgColor
-        ]
-        str.setAttributes(attr, range: fullRange)
+        let cfStr = str as CFMutableAttributedString
+        let fullRange = CFRange(location: 0, length: CFAttributedStringGetLength(cfStr))
+        CFAttributedStringSetAttribute(cfStr, fullRange, kCTFontAttributeName, TextMessageViewModel.ctFont)
+        CFAttributedStringSetAttribute(cfStr, fullRange, kCTForegroundColorAttributeName, TextMessageViewModel.textColor)
         for link in linksMap {
-            str.setCTForegroundColor(linkColor, for: link.key)
+            let range = CFRange(nsRange: link.key)
+            CFAttributedStringSetAttribute(cfStr, range, kCTForegroundColorAttributeName, linkColor)
         }
         // Make CTLine and Origins
-        let framesetter = CTFramesetterCreateWithAttributedString(str as CFAttributedString)
-        let layoutSize = CGSize(width: maxContentWidth, height: UILayoutFittingExpandedSize.height)
-        textSize = ceil(CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, layoutSize, nil))
+        let typesetter = CTTypesetterCreateWithAttributedString(str as CFAttributedString)
+        var lines = [CTLine]()
+        var lineOrigins = [CGPoint]()
+        var lineRanges = [CFRange]()
+        var characterIndex: CFIndex = 0
+        var y: CGFloat = 4
+        var lastLineWidth: CGFloat = 0
+        while true {
+            let lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, Double(maxContentWidth))
+            if lineCharacterCount > 0 {
+                let lineRange = CFRange(location: characterIndex, length: lineCharacterCount)
+                let line = CTTypesetterCreateLine(typesetter, lineRange)
+                let lineWidth = ceil(CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil) - CTLineGetTrailingWhitespaceWidth(line)))
+                let lineOrigin = CGPoint(x: 0, y: y)
+                lines.append(line)
+                lineOrigins.append(lineOrigin)
+                lineRanges.append(lineRange)
+                textSize.height += TextMessageViewModel.lineHeight
+                textSize.width = max(textSize.width, lineWidth)
+                y += TextMessageViewModel.lineHeight
+                lastLineWidth = lineWidth
+                characterIndex += lineCharacterCount
+            } else {
+                break
+            }
+        }
+        lineOrigins = lineOrigins.reversed()
         if textSize.height < minimumTextSize.height {
             textSize = minimumTextSize
         }
-        let path = CGPath(rect: CGRect(origin: .zero, size: textSize), transform: nil)
-        let frame = CTFramesetterCreateFrame(framesetter, .zero, path, nil)
-        let lines = CTFrameGetLines(frame) as! [CTLine]
-        var origins = [CGPoint](repeating: .zero, count: lines.count)
-        CTFrameGetLineOrigins(frame, .zero, &origins)
-        let lineOrigins = origins.map{ round($0) }
         // Make Links
         var links = [Link]()
         for link in linksMap {
             let linkRects: [CGRect] = lines.enumerated().flatMap({ (index, line) -> CGRect? in
                 let lineOrigin = lineOrigins[index]
-                let cfLineRange = CTLineGetStringRange(line)
-                let lineRange = NSRange(cfRange: cfLineRange)
+                let lineRange = NSRange(cfRange: lineRanges[index])
                 if let intersection = lineRange.intersection(link.key) {
                     return line.frame(forRange: intersection, lineOrigin: lineOrigin)
                 } else {
@@ -132,23 +132,20 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         let statusImageWidth = hasStatusImage ? DetailInfoMessageViewModel.statusImageSize.width : 0
         let additionalTrailingSize = CGSize(width: timeLeftMargin + timeSize.width + statusImageWidth + DetailInfoMessageViewModel.statusLeftMargin, height: 16)
         var contentSize = textSize
-        if let lastLine = lines.last {
-            let rect = CTLineGetBoundsWithOptions(lastLine, [])
-            let lastLineWithTrailingWidth = rect.width + additionalTrailingSize.width
-            if lastLineWithTrailingWidth > layoutSize.width {
-                contentSize.height += additionalTrailingSize.height
-            } else if lines.count == 1 {
-                contentSize.width = lastLineWithTrailingWidth
-            } else {
-                contentSize.width = max(contentSize.width, lastLineWithTrailingWidth)
-            }
+        let lastLineWithTrailingWidth = lastLineWidth + additionalTrailingSize.width
+        if lastLineWithTrailingWidth > maxContentWidth {
+            contentSize.height += additionalTrailingSize.height
+        } else if lines.count == 1 {
+            contentSize.width = lastLineWithTrailingWidth
+        } else {
+            contentSize.width = max(contentSize.width, lastLineWithTrailingWidth)
         }
         if style.contains(.fullname) {
             if message.userIsBot {
                 let identityIconWidth = DetailInfoMessageViewModel.identityIconLeftMargin + DetailInfoMessageViewModel.identityIconSize.width
-                contentSize.width = min(layoutSize.width, max(contentSize.width, fullnameWidth + identityIconWidth))
+                contentSize.width = min(maxContentWidth, max(contentSize.width, fullnameWidth + identityIconWidth))
             } else {
-                contentSize.width = min(layoutSize.width, max(contentSize.width, fullnameWidth))
+                contentSize.width = min(maxContentWidth, max(contentSize.width, fullnameWidth))
             }
         }
         self.contentSize = contentSize

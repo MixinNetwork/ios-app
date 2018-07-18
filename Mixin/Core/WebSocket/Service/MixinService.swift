@@ -20,12 +20,12 @@ class MixinService {
 
     internal func sendBatchSenderKey(conversationId: String, participants: [Participant], from: String) throws {
         var requestSignalKeyUsers = [String]()
-        var signalKeyMessages = [BlazeSignalMessage]()
+        var signalKeyMessages = [TransferMessage]()
         for p in participants {
             if SignalProtocol.shared.containsSession(recipient: p.userId) {
                 FileManager.default.writeLog(conversationId: conversationId, log: "[SendGroupSenderKey]...containsSession...\(p.userId)")
                 let cipherText = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, senderId: currentAccountId, recipientId: p.userId)
-                signalKeyMessages.append(BlazeSignalMessage(recipientId: p.userId, data: cipherText))
+                signalKeyMessages.append(TransferMessage(recipientId: p.userId, data: cipherText))
             } else {
                 requestSignalKeyUsers.append(p.userId)
             }
@@ -43,7 +43,7 @@ class MixinService {
                 }
                 try SignalProtocol.shared.buildSession(conversationId: conversationId, recipientId: recipientId, signalKey: signalKey)
                 let cipherText = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, senderId: AccountAPI.shared.accountUserId, recipientId: recipientId)
-                signalKeyMessages.append(BlazeSignalMessage(recipientId: recipientId, data: cipherText))
+                signalKeyMessages.append(TransferMessage(recipientId: recipientId, data: cipherText))
                 keys.append(recipientId)
             }
 

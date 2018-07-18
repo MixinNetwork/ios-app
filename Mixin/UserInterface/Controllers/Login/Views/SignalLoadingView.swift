@@ -15,6 +15,7 @@ class SignalLoadingView: BottomSheetView {
         super.presentPopupControllerAnimated()
         self.dismissBlock = dismissBlock
 
+        FileManager.default.writeLog(log: "SignalLoadingView...")
         let startTime = Date()
         DispatchQueue.global().async { [weak self] in
             repeat {

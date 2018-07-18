@@ -45,7 +45,7 @@
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
 		27ACB9E72084944C0088B593 /* DecryptionCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ACB9E62084944C0088B593 /* DecryptionCallback.swift */; };
 		27B84EE51FCDA34A0081DD12 /* MD5Digest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B84EE41FCDA34A0081DD12 /* MD5Digest.swift */; };
-		27D6E8D22045473300BA678A /* BlazeSignalKeyMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6E8D12045473300BA678A /* BlazeSignalKeyMessage.swift */; };
+		27D6E8D22045473300BA678A /* TransferMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6E8D12045473300BA678A /* TransferMessage.swift */; };
 		27DA337F1FE8F92900A4D16F /* SignalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DA337E1FE8F92900A4D16F /* SignalProtocol.swift */; };
 		27FE22B81FC70399006F2AA5 /* SignalKeyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FE22B71FC70399006F2AA5 /* SignalKeyAPI.swift */; };
 		7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B075CCE1FC0A98B005315A2 /* ConversationTableView.swift */; };
@@ -571,7 +571,7 @@
 		277FF7101F909A1200DBB2EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27ACB9E62084944C0088B593 /* DecryptionCallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecryptionCallback.swift; sourceTree = "<group>"; };
 		27B84EE41FCDA34A0081DD12 /* MD5Digest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MD5Digest.swift; sourceTree = "<group>"; };
-		27D6E8D12045473300BA678A /* BlazeSignalKeyMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeSignalKeyMessage.swift; sourceTree = "<group>"; };
+		27D6E8D12045473300BA678A /* TransferMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferMessage.swift; sourceTree = "<group>"; };
 		27DA337E1FE8F92900A4D16F /* SignalProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalProtocol.swift; sourceTree = "<group>"; };
 		27FE22B71FC70399006F2AA5 /* SignalKeyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyAPI.swift; sourceTree = "<group>"; };
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1895,7 +1895,7 @@
 				DF8DA19F1FD64B7900425CEC /* BlazeMessage.swift */,
 				DF8DA1A11FD64C1E00425CEC /* BlazeMessageParam.swift */,
 				DF8DA1A31FD64C5800425CEC /* BlazeMessageData.swift */,
-				27D6E8D12045473300BA678A /* BlazeSignalKeyMessage.swift */,
+				27D6E8D12045473300BA678A /* TransferMessage.swift */,
 				DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */,
 				DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */,
 				DF2A3CD920173F2D0095F024 /* TransferStickerData.swift */,
@@ -2718,7 +2718,7 @@
 				DF22D94D1FDE500500243CAE /* SystemConversationData.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
 				DF03C85D1FF2BE6500C1ED6B /* MessageHistoryDAO.swift in Sources */,
-				27D6E8D22045473300BA678A /* BlazeSignalKeyMessage.swift in Sources */,
+				27D6E8D22045473300BA678A /* TransferMessage.swift in Sources */,
 				7B84358920D8DC2E00237242 /* QuoteTextMessageCell.swift in Sources */,
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DF16681E20A6F84200C45E31 /* SnapshotViewController.swift in Sources */,

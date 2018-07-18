@@ -1,6 +1,5 @@
 import Foundation
 import Alamofire
-import KeychainAccess
 
 class WithdrawalAPI: BaseAPI {
     

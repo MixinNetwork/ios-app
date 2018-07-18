@@ -26,7 +26,6 @@ PODS:
   - GzipSwift (4.0.4)
   - JWT (3.0.0-beta.8):
     - Base64 (~> 1.1.2)
-  - KeychainAccess (3.1.1)
   - libwebp (0.6.1):
     - libwebp/core (= 0.6.1)
     - libwebp/dec (= 0.6.1)
@@ -91,7 +90,6 @@ DEPENDENCIES:
   - Firebase/Core
   - GzipSwift
   - JWT (~> 3.0.0-beta.7)
-  - KeychainAccess
   - PhoneNumberKit
   - RSKImageCropper
   - SDWebImage
@@ -118,7 +116,6 @@ SPEC REPOS:
     - GoogleToolboxForMac
     - GzipSwift
     - JWT
-    - KeychainAccess
     - libwebp
     - nanopb
     - PhoneNumberKit
@@ -158,7 +155,6 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   GzipSwift: 1a5bc5f7827e09846b0635b5079f1224bc3b1c3a
   JWT: 6e7ec473b6febcb7498affc84f0e75d393914411
-  KeychainAccess: 7bd430028059754a3debab3cfc0bd1fc7fb85df3
   libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   PhoneNumberKit: 62003f40ff75315fd3738286558bc365365ac222
@@ -171,6 +167,6 @@ SPEC CHECKSUMS:
   WCDB.swift: 5bb038bc5bb46067cccc7c48392e8f4c4a15def0
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 3da767661e883491923e537bd77547ac92d7c8e1
+PODFILE CHECKSUM: 39b7858ee0fb6790e16720e3dec1da064e7cdc47
 
 COCOAPODS: 1.5.3

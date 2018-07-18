@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initBugsnag()
         FirebaseApp.configure()
         #endif
-        AccountUserDefault.shared.upgrade()
         if let account = AccountAPI.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
         }

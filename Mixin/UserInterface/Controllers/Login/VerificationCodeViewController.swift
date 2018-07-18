@@ -1,5 +1,4 @@
 import UIKit
-import KeychainAccess
 import Bugsnag
 
 class VerificationCodeViewController: LoginViewController {

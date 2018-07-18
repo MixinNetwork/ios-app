@@ -234,6 +234,7 @@
 		DF05F0151FE6759B00F98479 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0141FE6759B00F98479 /* PieChartView.swift */; };
 		DF05F0191FE90A1B00F98479 /* SignalKeyCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */; };
 		DF07391620B86E5200E46EC3 /* ReceiveMoneyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */; };
+		DF0E2D2420FDEB2500BB2658 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0E2D2320FDEB2500BB2658 /* Keychain.swift */; };
 		DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070902048103000E20047 /* BlazeMessageDAO.swift */; };
 		DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070922049186B00E20047 /* ReceiveMessageService.swift */; };
 		DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF10709A2049BC3F00E20047 /* MixinDatabase.swift */; };
@@ -283,7 +284,6 @@
 		DF2F089320B68872005786CB /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2F089220B68872005786CB /* UserView.swift */; };
 		DF2F089520B688DB005786CB /* UserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF2F089420B688DB005786CB /* UserView.xib */; };
 		DF30D7441FA22D4E00683C1A /* WebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7431FA22D4E00683C1A /* WebSocketService.swift */; };
-		DF30D7461FA2BB8C00683C1A /* KeychainExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7451FA2BB8C00683C1A /* KeychainExtension.swift */; };
 		DF30D7481FA2BDD200683C1A /* CodableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7471FA2BDD200683C1A /* CodableExtension.swift */; };
 		DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF3C47441FA071CD00A07C71 /* Home.storyboard */; };
 		DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47461FA071F400A07C71 /* HomeViewController.swift */; };
@@ -776,6 +776,7 @@
 		DF05F0141FE6759B00F98479 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyCount.swift; sourceTree = "<group>"; };
 		DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMoneyWindow.swift; sourceTree = "<group>"; };
+		DF0E2D2320FDEB2500BB2658 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		DF1070902048103000E20047 /* BlazeMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeMessageDAO.swift; sourceTree = "<group>"; };
 		DF1070922049186B00E20047 /* ReceiveMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMessageService.swift; sourceTree = "<group>"; };
 		DF10709A2049BC3F00E20047 /* MixinDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinDatabase.swift; sourceTree = "<group>"; };
@@ -825,7 +826,6 @@
 		DF2F089220B68872005786CB /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		DF2F089420B688DB005786CB /* UserView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserView.xib; sourceTree = "<group>"; };
 		DF30D7431FA22D4E00683C1A /* WebSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketService.swift; sourceTree = "<group>"; };
-		DF30D7451FA2BB8C00683C1A /* KeychainExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainExtension.swift; sourceTree = "<group>"; };
 		DF30D7471FA2BDD200683C1A /* CodableExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableExtension.swift; sourceTree = "<group>"; };
 		DF3C47441FA071CD00A07C71 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		DF3C47461FA071F400A07C71 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -1180,6 +1180,7 @@
 				27382EC51FECDF0D00437A1B /* PreKeyUtil.swift */,
 				DFCC433F206B60CE006F50BE /* KeyUtil.swift */,
 				DFF353031FEE657000058453 /* CryptoUserDefault.swift */,
+				DF0E2D2320FDEB2500BB2658 /* Keychain.swift */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -1604,7 +1605,6 @@
 				DF8DA1881FD4F5D700425CEC /* DictionaryExtension.swift */,
 				DF2A24491FC7E25B003A8C1E /* ErrorExtension.swift */,
 				DFD87C841FD9881900BBCFFC /* FileManagerExtension.swift */,
-				DF30D7451FA2BB8C00683C1A /* KeychainExtension.swift */,
 				DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */,
 				DF1A9A7B1FF2245800A95188 /* NumberExtension.swift */,
 				DFE356261FB40C4700E0E3A8 /* NotificationCenterExtension.swift */,
@@ -2332,7 +2332,6 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/GzipSwift/Gzip.framework",
 				"${BUILT_PRODUCTS_DIR}/JWT/JWT.framework",
-				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
 				"${BUILT_PRODUCTS_DIR}/RSKImageCropper/RSKImageCropper.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -2355,7 +2354,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gzip.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JWT.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSKImageCropper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
@@ -2529,6 +2527,7 @@
 				DF879498207504CA004A1E55 /* TransactionHeaderCell.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* MixinNavigationController.swift in Sources */,
 				273FACB3205FB9A800513327 /* CiphertextMessage.swift in Sources */,
+				DF0E2D2420FDEB2500BB2658 /* Keychain.swift in Sources */,
 				DF503D431FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift in Sources */,
 				7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */,
 				DFE63CA41FC6B6D300D6E028 /* ConversationRequest.swift in Sources */,
@@ -2538,7 +2537,6 @@
 				DF03C85F1FF2C01B00C1ED6B /* MessageHistory.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
 				DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */,
-				DF30D7461FA2BB8C00683C1A /* KeychainExtension.swift in Sources */,
 				DFD87C8B1FDBF10100BBCFFC /* RefreshOffsetJob.swift in Sources */,
 				DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */,
 				DF736F901FC09724001DB063 /* WalletTotalBalanceCell.swift in Sources */,

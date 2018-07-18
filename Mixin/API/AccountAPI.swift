@@ -1,7 +1,6 @@
 import Foundation
 import Alamofire
 import UserNotifications
-import KeychainAccess
 
 final class AccountAPI: BaseAPI {
     

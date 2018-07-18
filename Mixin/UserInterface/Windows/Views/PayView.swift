@@ -24,7 +24,7 @@ class PayView: UIStackView {
 
     private weak var superView: BottomSheetView?
 
-    private let context = LAContext()
+    private lazy var context = LAContext()
     private var user: UserItem!
     private var trackId: String!
     private var asset: AssetItem!
@@ -89,6 +89,10 @@ class PayView: UIStackView {
         paySuccessImageView.isHidden = true
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.biometricsPayAction()
+        }
     }
 
     @IBAction func dismissAction(_ sender: Any) {
@@ -222,6 +226,24 @@ extension PayView: PinFieldDelegate {
         }
     }
 
+    private func biometricsPayAction() {
+        let context = LAContext()
+        context.localizedFallbackTitle = Localized.TRANSFER_PAY_PASSWORD
+
+//        context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: <#T##NSErrorPointer#>)
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: Localized.TRANSFER_TOUCH_ID_REASON) { [weak self](success, error) in
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                if success {
+                    weakSelf.pinField.insertText("123499")
+//                    weakSelf.transferAction(pin: "123499")
+                }
+            }
+        }
+    }
+
     private func delayDismissWindow() {
         pinField.resignFirstResponder()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
@@ -236,7 +258,7 @@ extension PayView: PinFieldDelegate {
         }
     }
 
-    func playSuccessSound() {
+    private func playSuccessSound() {
         if soundId == 0 {
             guard let path = Bundle.main.path(forResource: "payment_success", ofType: "caf") else {
                 return

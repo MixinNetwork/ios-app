@@ -14,7 +14,7 @@ struct BlazeMessageParam: Codable {
 
     var keys: SignalKeyRequest? = nil
     var recipients: [String]? = nil
-    var messages: [BlazeSignalMessage]? = nil
+    var messages: [TransferMessage]? = nil
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -60,8 +60,12 @@ extension BlazeMessageParam {
         self.keys = keys
     }
 
-    init(conversationId: String, messages: [BlazeSignalMessage]) {
+    init(conversationId: String, messages: [TransferMessage]) {
         self.conversationId = conversationId
+        self.messages = messages
+    }
+
+    init(messages: [TransferMessage]) {
         self.messages = messages
     }
 }

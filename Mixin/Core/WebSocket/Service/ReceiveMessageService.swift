@@ -60,7 +60,7 @@ class ReceiveMessageService: MixinService {
                 let blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(limit: 50)
                 let remainJobCount = BlazeMessageDAO.shared.getCount()
                 if remainJobCount + finishedJobCount > 500 {
-                    let progress = Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
+                    let progress = blazeMessageDatas.count == 0 ? 100 : Int(Float(finishedJobCount) / Float(remainJobCount + finishedJobCount) * 100)
                     NotificationCenter.default.postOnMain(name: .SyncMessageDidAppear, object: progress)
                 }
                 guard blazeMessageDatas.count > 0 else {

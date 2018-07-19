@@ -20,8 +20,8 @@ class DepositWindow: BottomSheetView {
             qrcodeImageView.image = UIImage(qrcode: asset.accountName ?? "", size: qrcodeImageView.frame.size)
         } else {
             titleLabel.text = Localized.WALLET_ACCOUNT_MEMO
-            subtitleLabel.text = asset.accountMemo
-            qrcodeImageView.image = UIImage(qrcode: asset.accountMemo ?? "", size: qrcodeImageView.frame.size)
+            subtitleLabel.text = asset.accountTag
+            qrcodeImageView.image = UIImage(qrcode: asset.accountTag ?? "", size: qrcodeImageView.frame.size)
         }
         qrcodeAvatarImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
         qrcodeAvatarImageView.layer.borderColor = UIColor.white.cgColor

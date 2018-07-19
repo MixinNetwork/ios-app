@@ -26,7 +26,7 @@ class DepositViewController: UIViewController {
 
         view.layoutIfNeeded()
         
-        if asset.isAccount, let accountName = asset.accountName, let accountMemo = asset.accountMemo {
+        if asset.isAccount, let accountName = asset.accountName, let accountMemo = asset.accountTag {
             accountNameLabel.text = accountName
             accountMemoLabel.text = accountMemo
             normalAssetView.isHidden = true
@@ -34,11 +34,9 @@ class DepositViewController: UIViewController {
             confirmationLabel.isHidden = true
             accountConfirmationLabel.isHidden = false
             accountConfirmationLabel.text = Localized.WALLET_DEPOSIT_ACCOUNT_NOTICE(confirmations: asset.confirmations)
-        } else {
-            if !asset.publicKey.isEmpty {
-                qrcodeImageView.image = UIImage(qrcode: asset.publicKey, size: qrcodeImageView.frame.size)
-                addressButton.setTitle(asset.publicKey, for: .normal)
-            }
+        } else if let publicKey = asset.publicKey, !publicKey.isEmpty {
+            qrcodeImageView.image = UIImage(qrcode: publicKey, size: qrcodeImageView.frame.size)
+            addressButton.setTitle(asset.publicKey, for: .normal)
             confirmationLabel.text = Localized.WALLET_DEPOSIT_CONFIRMATIONS(confirmations: asset.confirmations)
             qrcodeAvatarImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
             qrcodeAvatarImageView.layer.borderColor = UIColor.white.cgColor
@@ -73,7 +71,7 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction func copyAccountMemoAction(_ sender: Any) {
-        UIPasteboard.general.string = asset.accountMemo
+        UIPasteboard.general.string = asset.accountTag
         NotificationCenter.default.afterPostOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_COPIED)
     }
 

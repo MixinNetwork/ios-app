@@ -86,7 +86,7 @@ class AssetViewController: UITableViewController {
         }
         balanceLabel.text = String(format: "%@ %@", asset.balance.formatFullBalance(), asset.symbol)
         exchangeLabel.text = asset.getUSDBalance()
-        depositButton.isBusy = asset.publicKey.isEmpty
+        depositButton.isBusy = !(asset.isAccount || asset.isAddress)
     }
 
     class func instance(asset: AssetItem) -> UIViewController {

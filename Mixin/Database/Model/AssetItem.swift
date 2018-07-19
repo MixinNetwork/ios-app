@@ -9,7 +9,7 @@ struct AssetItem: TableCodable, NumberStringLocalizable {
     let name: String
     let iconUrl: String
     let balance: String
-    let publicKey: String
+    let publicKey: String?
     let priceBtc: String
     let priceUsd: String
     let chainId: String
@@ -17,7 +17,7 @@ struct AssetItem: TableCodable, NumberStringLocalizable {
     let changeUsd: String
     let confirmations: Int
     var accountName: String?
-    var accountMemo: String?
+    var accountTag: String?
 
     enum CodingKeys: String, CodingTableKey {
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -37,14 +37,18 @@ struct AssetItem: TableCodable, NumberStringLocalizable {
         case chainIconUrl = "chain_icon_url"
         case confirmations
         case accountName = "account_name"
-        case accountMemo = "account_memo"
+        case accountTag = "account_tag"
     }
 }
 
 extension AssetItem {
 
     var isAccount: Bool {
-        return !(accountName?.isEmpty ?? true || accountMemo?.isEmpty ?? true)
+        return !(accountName?.isEmpty ?? true || accountTag?.isEmpty ?? true)
+    }
+
+    var isAddress: Bool {
+        return !(publicKey?.isEmpty ?? true)
     }
 
     var localizedPriceUsd: String {
@@ -67,7 +71,7 @@ extension AssetItem {
 extension AssetItem {
 
     static func createAsset(asset: Asset, chainIconUrl: String?) -> AssetItem {
-        return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd, confirmations: asset.confirmations, accountName: asset.accountName, accountMemo: asset.accountMemo)
+        return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd, confirmations: asset.confirmations, accountName: asset.accountName, accountTag: asset.accountTag)
     }
 
 }

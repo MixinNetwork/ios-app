@@ -18,6 +18,7 @@ public class Localized {
     public static let ACTION_REFRESH = LocalizedString("action_refresh", comment: "Refresh")
     public static let ACTION_SELECT = LocalizedString("action_select", comment: "Select")
     public static let ACTION_CLEAR = LocalizedString("action_clear", comment: "Clear")
+    public static let ACTION_SEND = LocalizedString("action_send", comment: "Send")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
 
     public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")

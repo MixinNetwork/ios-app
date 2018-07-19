@@ -235,6 +235,8 @@
 		DF05F0151FE6759B00F98479 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0141FE6759B00F98479 /* PieChartView.swift */; };
 		DF05F0191FE90A1B00F98479 /* SignalKeyCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */; };
 		DF07391620B86E5200E46EC3 /* ReceiveMoneyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */; };
+		DF0E2D2821008B8200BB2658 /* FowardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF0E2D2721008B8200BB2658 /* FowardCell.xib */; };
+		DF0E2D2A21008BB300BB2658 /* FowardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0E2D2921008BB300BB2658 /* FowardCell.swift */; };
 		DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070902048103000E20047 /* BlazeMessageDAO.swift */; };
 		DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070922049186B00E20047 /* ReceiveMessageService.swift */; };
 		DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF10709A2049BC3F00E20047 /* MixinDatabase.swift */; };
@@ -779,6 +781,8 @@
 		DF05F0141FE6759B00F98479 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyCount.swift; sourceTree = "<group>"; };
 		DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMoneyWindow.swift; sourceTree = "<group>"; };
+		DF0E2D2721008B8200BB2658 /* FowardCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FowardCell.xib; sourceTree = "<group>"; };
+		DF0E2D2921008BB300BB2658 /* FowardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FowardCell.swift; sourceTree = "<group>"; };
 		DF1070902048103000E20047 /* BlazeMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeMessageDAO.swift; sourceTree = "<group>"; };
 		DF1070922049186B00E20047 /* ReceiveMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMessageService.swift; sourceTree = "<group>"; };
 		DF10709A2049BC3F00E20047 /* MixinDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinDatabase.swift; sourceTree = "<group>"; };
@@ -2041,6 +2045,8 @@
 				7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */,
 				7B9F06C720A985E70095A51B /* VideoMessageCell.swift */,
 				7B84358820D8DC2E00237242 /* QuoteTextMessageCell.swift */,
+				DF0E2D2721008B8200BB2658 /* FowardCell.xib */,
+				DF0E2D2921008BB300BB2658 /* FowardCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2255,6 +2261,7 @@
 				7BFF3B021FAAE92F0039A1C5 /* SearchResultContactCell.xib in Resources */,
 				DF3EEF841FA9EF54007C6E03 /* PhoneContactGuideCell.xib in Resources */,
 				7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */,
+				DF0E2D2821008B8200BB2658 /* FowardCell.xib in Resources */,
 				DF8CECDB1FC3015D00E40064 /* TransferTypeView.xib in Resources */,
 				DFF21457209AB2FC00612234 /* PhoneContactWindow.xib in Resources */,
 				DF8CECF41FC425F700E40064 /* BlockUserCell.xib in Resources */,
@@ -2434,6 +2441,7 @@
 				DF1A9A801FF25DB600A95188 /* ShowNotificationJob.swift in Sources */,
 				7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */,
 				9B748DD81FA88DB300BC009B /* QRCodeViewController.swift in Sources */,
+				DF0E2D2A21008BB300BB2658 /* FowardCell.swift in Sources */,
 				DF53BB732023F466002BF028 /* SwiftMessageExtension.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
 				7B61EB9020978856001C1985 /* AttachmentDecryptingOutputStream.swift in Sources */,

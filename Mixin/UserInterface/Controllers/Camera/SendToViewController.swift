@@ -7,24 +7,28 @@ class SendToViewController: ForwardViewController {
     private var text: String!
     private var videoUrl: URL!
 
-    override func forwardMessage(_ targetUser: ForwardUser) {
+    override func sendMessage(_ conversation: ForwardUser) {
         var msg: Message?
         if text != nil {
-            msg = createTextMessage(targetUser)
+            msg = createTextMessage(conversation)
         } else if photo != nil {
-            msg = createPhotoMessage(targetUser)
+            msg = createPhotoMessage(conversation)
         } else if videoUrl != nil {
-            msg = createVideoMessage(targetUser)
+            msg = createVideoMessage(conversation)
         }
 
         guard let message = msg else {
             return
         }
-        DispatchQueue.global().async { [weak self] in
-            SendMessageService.shared.sendMessage(message: message, ownerUser: targetUser.toUser(), isGroupMessage: targetUser.isGroup)
-            DispatchQueue.main.async {
-                self?.gotoConversationVC(targetUser)
-            }
+
+        SendMessageService.shared.sendMessage(message: message, ownerUser: conversation.toUser(), isGroupMessage: conversation.isGroup)
+    }
+
+    override func backToConversation(_ conversations: [ForwardUser]) {
+        if conversations.count > 1 {
+            navigationController?.backToHome()
+        } else {
+            super.backToConversation(conversations)
         }
     }
 

@@ -21,6 +21,7 @@
 "action_refresh" = "Refresh";
 "action_select" = "Select";
 "action_clear" = "Clear";
+"action_send" = "Send";
 "menu_delete" = "Delete";
 
 "connection_hint_connecting" = "Connecting";

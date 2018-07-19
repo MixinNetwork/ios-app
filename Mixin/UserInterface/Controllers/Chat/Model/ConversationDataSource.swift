@@ -76,9 +76,9 @@ class ConversationDataSource {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func initData() {
+    func initData(completion: @escaping () -> Void) {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
-        reload()
+        reload(completion: completion)
     }
     
     func cancelMessageProcessing() {

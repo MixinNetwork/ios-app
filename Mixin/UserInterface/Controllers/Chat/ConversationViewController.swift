@@ -194,6 +194,15 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         tableView.delegate = self
         tableView.actionDelegate = self
         tableView.viewController = self
+        let bottomSafeAreaInset: CGFloat
+        if #available(iOS 11.0, *) {
+            bottomSafeAreaInset = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
+        } else {
+            view.layoutIfNeeded()
+            bottomSafeAreaInset = 0
+        }
+        tableView.contentInset.bottom = inputWrapperView.frame.height + bottomSafeAreaInset + MessageViewModel.bottomSeparatorHeight
+        tableView.scrollIndicatorInsets.bottom = inputWrapperView.frame.height
         inputTextView.delegate = self
         inputTextView.layer.cornerRadius = inputTextViewHeightConstraint.constant / 2
         connectionHintView.delegate = self
@@ -201,13 +210,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
-        dataSource.initData()
-        dataSource.queue.async { [weak self] in
-            DispatchQueue.main.async {
-                self?.updateAccessoryButtons(animated: false)
-            }
+        dataSource.initData {
+            self.updateAccessoryButtons(animated: false)
         }
-        updateBottomInset()
         updateMoreMenuFixedJobs()
         updateMoreMenuApps()
         updateStrangerTipsView()

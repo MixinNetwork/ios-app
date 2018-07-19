@@ -37,7 +37,7 @@ class AssetViewController: UITableViewController {
         guard !depositButton.isBusy else {
             return
         }
-        navigationController?.pushViewController(TransferInViewController.instance(asset: asset), animated: true)
+        navigationController?.pushViewController(DepositViewController.instance(asset: asset), animated: true)
     }
     
     private func fetchAsset() {
@@ -86,7 +86,7 @@ class AssetViewController: UITableViewController {
         }
         balanceLabel.text = String(format: "%@ %@", asset.balance.formatFullBalance(), asset.symbol)
         exchangeLabel.text = asset.getUSDBalance()
-        depositButton.isBusy = asset.publicKey.isEmpty
+        depositButton.isBusy = !(asset.isAccount || asset.isAddress)
     }
 
     class func instance(asset: AssetItem) -> UIViewController {

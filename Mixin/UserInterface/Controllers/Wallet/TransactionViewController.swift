@@ -75,7 +75,11 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
             case 3:
                 switch snapshot.type {
                 case SnapshotType.deposit.rawValue:
-                    cell.render(title: Localized.TRANSACTION_SENDER, value: snapshot.sender ?? "")
+                    if asset.isAccount {
+                        cell.render(title: Localized.WALLET_ACCOUNT_NAME, value: snapshot.sender ?? "")
+                    } else {
+                        cell.render(title: Localized.TRANSACTION_SENDER, value: snapshot.sender ?? "")
+                    }
                 case SnapshotType.transfer.rawValue:
                     if snapshot.amount.toDouble() > 0 {
                         cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: snapshot.opponentUserFullName ?? "")
@@ -98,7 +102,11 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
                         cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: snapshot.opponentUserFullName ?? "")
                     }
                 case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
-                    cell.render(title: Localized.TRANSACTION_RECEIVER, value: snapshot.receiver ?? "")
+                    if asset.isAccount {
+                        cell.render(title: Localized.WALLET_ACCOUNT_NAME, value: snapshot.receiver ?? "")
+                    } else {
+                        cell.render(title: Localized.TRANSACTION_RECEIVER, value: snapshot.receiver ?? "")
+                    }
                 default:
                     break
                 }

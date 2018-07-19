@@ -296,6 +296,8 @@
 		DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47511FA191A600A07C71 /* UserDAO.swift */; };
 		DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EEF811FA9EF49007C6E03 /* PhoneContactGuideCell.swift */; };
 		DF3EEF841FA9EF54007C6E03 /* PhoneContactGuideCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3EEF831FA9EF54007C6E03 /* PhoneContactGuideCell.xib */; };
+		DF3F6D6920EF2618006D0CBC /* DepositWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3F6D6820EF2618006D0CBC /* DepositWindow.xib */; };
+		DF3F6D6B20EF2627006D0CBC /* DepositWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3F6D6A20EF2627006D0CBC /* DepositWindow.swift */; };
 		DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */; };
 		DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */; };
 		DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */; };
@@ -329,7 +331,7 @@
 		DF53BB732023F466002BF028 /* SwiftMessageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB722023F466002BF028 /* SwiftMessageExtension.swift */; };
 		DF56966F1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift */; };
 		DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */; };
-		DF5BF5611FBB2D490092AFB8 /* TransferInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* TransferInViewController.swift */; };
+		DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */; };
 		DF5CDA74204FEBA1004A52BA /* BaseCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */; };
 		DF5CDA77204FF9A0004A52BA /* SignalDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5CDA76204FF9A0004A52BA /* SignalDAO.swift */; };
 		DF5D9F221F9C79E10036D5FD /* BaseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F211F9C79660036D5FD /* BaseAPI.swift */; };
@@ -842,6 +844,8 @@
 		DF3C47511FA191A600A07C71 /* UserDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDAO.swift; sourceTree = "<group>"; };
 		DF3EEF811FA9EF49007C6E03 /* PhoneContactGuideCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactGuideCell.swift; sourceTree = "<group>"; };
 		DF3EEF831FA9EF54007C6E03 /* PhoneContactGuideCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactGuideCell.xib; sourceTree = "<group>"; };
+		DF3F6D6820EF2618006D0CBC /* DepositWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositWindow.xib; sourceTree = "<group>"; };
+		DF3F6D6A20EF2627006D0CBC /* DepositWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWindow.swift; sourceTree = "<group>"; };
 		DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUploadJob.swift; sourceTree = "<group>"; };
 		DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadOrDownloadJob.swift; sourceTree = "<group>"; };
 		DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAttachmentData.swift; sourceTree = "<group>"; };
@@ -875,7 +879,7 @@
 		DF53BB722023F466002BF028 /* SwiftMessageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMessageExtension.swift; sourceTree = "<group>"; };
 		DF56966E1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactHeaderFooter.swift; sourceTree = "<group>"; };
 		DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewController.swift; sourceTree = "<group>"; };
-		DF5BF5601FBB2D490092AFB8 /* TransferInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferInViewController.swift; sourceTree = "<group>"; };
+		DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCodable.swift; sourceTree = "<group>"; };
 		DF5CDA76204FF9A0004A52BA /* SignalDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalDAO.swift; sourceTree = "<group>"; };
 		DF5D9F131F9C5AF40036D5FD /* LocalizedExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedExtension.swift; sourceTree = "<group>"; };
@@ -1436,6 +1440,8 @@
 				DFAB3B4220B856A600886838 /* MyQRCodeWindow.xib */,
 				DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */,
 				DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */,
+				DF3F6D6A20EF2627006D0CBC /* DepositWindow.swift */,
+				DF3F6D6820EF2618006D0CBC /* DepositWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -1954,7 +1960,7 @@
 				DF8794932074FB4E004A1E55 /* TransactionViewController.swift */,
 				DF16681D20A6F84200C45E31 /* SnapshotViewController.swift */,
 				DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */,
-				DF5BF5601FBB2D490092AFB8 /* TransferInViewController.swift */,
+				DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */,
 				DF754CB71FBC7F1200F2F2E5 /* WalletPasswordViewController.swift */,
 				7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */,
 				7B894AF2205BF8660065A1B8 /* AddressViewController.swift */,
@@ -2275,6 +2281,7 @@
 				DF114B0E2020B85600EA8F9C /* WebWindow.xib in Resources */,
 				DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */,
 				DF736F8A1FC08C49001DB063 /* WalletTotalBalanceCell.xib in Resources */,
+				DF3F6D6920EF2618006D0CBC /* DepositWindow.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
 				DFD294451FA7087800FADAAD /* ContactNavCell.xib in Resources */,
 				DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */,
@@ -2402,6 +2409,7 @@
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
 				DF3C474E1FA1849500A07C71 /* MessageDAO.swift in Sources */,
 				DF6DB83B2024D2E70060CF31 /* KeyboardLayoutConstraint.swift in Sources */,
+				DF3F6D6B20EF2627006D0CBC /* DepositWindow.swift in Sources */,
 				DFE63C9E1FC6B1C600D6E028 /* EmptyResponse.swift in Sources */,
 				DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */,
 				DFAB3B4120B8569300886838 /* MyQRCodeWindow.swift in Sources */,
@@ -2501,7 +2509,7 @@
 				DF8CED021FC6790400E40064 /* MessageAPI.swift in Sources */,
 				DF17B51720526050006447C2 /* SnapshotItem.swift in Sources */,
 				DF5D9F3B1F9C9A400036D5FD /* AccountAPI.swift in Sources */,
-				DF5BF5611FBB2D490092AFB8 /* TransferInViewController.swift in Sources */,
+				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				DF8DA19A1FD562E200425CEC /* AttachmentResponse.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
 				DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */,

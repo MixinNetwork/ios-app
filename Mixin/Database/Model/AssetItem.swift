@@ -9,13 +9,15 @@ struct AssetItem: TableCodable, NumberStringLocalizable {
     let name: String
     let iconUrl: String
     let balance: String
-    let publicKey: String
+    let publicKey: String?
     let priceBtc: String
     let priceUsd: String
     let chainId: String
     let chainIconUrl: String?
     let changeUsd: String
     let confirmations: Int
+    var accountName: String?
+    var accountTag: String?
 
     enum CodingKeys: String, CodingTableKey {
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -34,11 +36,21 @@ struct AssetItem: TableCodable, NumberStringLocalizable {
         case chainId = "chain_id"
         case chainIconUrl = "chain_icon_url"
         case confirmations
+        case accountName = "account_name"
+        case accountTag = "account_tag"
     }
 }
 
 extension AssetItem {
-    
+
+    var isAccount: Bool {
+        return !(accountName?.isEmpty ?? true || accountTag?.isEmpty ?? true)
+    }
+
+    var isAddress: Bool {
+        return !(publicKey?.isEmpty ?? true)
+    }
+
     var localizedPriceUsd: String {
         return localizedNumberString(priceUsd)
     }
@@ -59,7 +71,7 @@ extension AssetItem {
 extension AssetItem {
 
     static func createAsset(asset: Asset, chainIconUrl: String?) -> AssetItem {
-        return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd, confirmations: asset.confirmations)
+        return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd, confirmations: asset.confirmations, accountName: asset.accountName, accountTag: asset.accountTag)
     }
 
 }

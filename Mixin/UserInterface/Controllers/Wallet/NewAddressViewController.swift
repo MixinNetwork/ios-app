@@ -4,6 +4,7 @@ class NewAddressViewController: UIViewController {
 
     @IBOutlet weak var labelTextField: UITextField!
     @IBOutlet weak var addressTextView: PlaceholderTextView!
+    @IBOutlet weak var accountNameButton: UIButton!
 
     @IBOutlet weak var addressTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
@@ -26,11 +27,23 @@ class NewAddressViewController: UIViewController {
         container?.rightButton.isEnabled = false
         container?.rightButton.setTitleColor(.systemTint, for: .normal)
         if let address = address {
-            labelTextField.text = address.label
-            addressTextView.text = address.publicKey
+            if asset.isAccount {
+                labelTextField.text = address.accountName
+                addressTextView.text = address.accountTag
+            } else {
+                labelTextField.text = address.label
+                addressTextView.text = address.publicKey
+            }
             checkLabelAndAddressAction(self)
             textViewDidChange(addressTextView)
         }
+
+        if asset.isAccount {
+            labelTextField.placeholder = Localized.WALLET_ACCOUNT_NAME
+            addressTextView.placeholder = Localized.WALLET_ACCOUNT_MEMO
+            accountNameButton.isHidden = false
+        }
+
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
     }
     
@@ -56,6 +69,16 @@ class NewAddressViewController: UIViewController {
             weakSelf.textViewDidChange(weakSelf.addressTextView)
         }, animated: true)
     }
+
+    @IBAction func scanAccountNameAction(_ sender: Any) {
+        navigationController?.pushViewController(CameraViewController.instance(fromWithdrawal: true) { [weak self](accountName) in
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.labelTextField.text = accountName
+        }, animated: true)
+    }
+
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         let endFrame: CGRect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
@@ -92,7 +115,11 @@ extension NewAddressViewController: ContainerViewControllerDelegate {
 
     private func saveAddressAction(pin: String) {
         let assetId = asset.assetId
-        let request = AddressRequest(assetId: assetId, publicKey: addressValue, label: label, pin: pin)
+        let publicKey: String? = asset.isAccount ? nil : addressValue
+        let label: String? = asset.isAccount ? nil : self.label
+        let accountName: String? = asset.isAccount ? self.label : nil
+        let accountTag: String? = asset.isAccount ? addressValue : nil
+        let request = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: pin, accountName: accountName, accountTag: accountTag)
         WithdrawalAPI.shared.save(address: request) { [weak self](result) in
             switch result {
             case let .success(address):

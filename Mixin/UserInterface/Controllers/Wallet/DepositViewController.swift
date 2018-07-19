@@ -33,7 +33,7 @@ class DepositViewController: UIViewController {
             accountAssetView.isHidden = false
             confirmationLabel.isHidden = true
             accountConfirmationLabel.isHidden = false
-            accountConfirmationLabel.text = Localized.WALLET_DEPOSIT_ACCOUNT_NOTICE(confirmations: asset.confirmations)
+            accountConfirmationLabel.text = Localized.WALLET_DEPOSIT_ACCOUNT_NOTICE(symbol: asset.symbol, confirmations: asset.confirmations)
         } else if let publicKey = asset.publicKey, !publicKey.isEmpty {
             qrcodeImageView.image = UIImage(qrcode: publicKey, size: qrcodeImageView.frame.size)
             addressButton.setTitle(asset.publicKey, for: .normal)

@@ -27,8 +27,13 @@ class NewAddressViewController: UIViewController {
         container?.rightButton.isEnabled = false
         container?.rightButton.setTitleColor(.systemTint, for: .normal)
         if let address = address {
-            labelTextField.text = address.label
-            addressTextView.text = address.publicKey
+            if asset.isAccount {
+                labelTextField.text = address.accountName
+                addressTextView.text = address.accountTag
+            } else {
+                labelTextField.text = address.label
+                addressTextView.text = address.publicKey
+            }
             checkLabelAndAddressAction(self)
             textViewDidChange(addressTextView)
         }
@@ -110,7 +115,11 @@ extension NewAddressViewController: ContainerViewControllerDelegate {
 
     private func saveAddressAction(pin: String) {
         let assetId = asset.assetId
-        let request = AddressRequest(assetId: assetId, publicKey: addressValue, label: label, pin: pin)
+        let publicKey: String? = asset.isAccount ? nil : addressValue
+        let label: String? = asset.isAccount ? nil : self.label
+        let accountName: String? = asset.isAccount ? self.label : nil
+        let accountTag: String? = asset.isAccount ? addressValue : nil
+        let request = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: pin, accountName: accountName, accountTag: accountTag)
         WithdrawalAPI.shared.save(address: request) { [weak self](result) in
             switch result {
             case let .success(address):

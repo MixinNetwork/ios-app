@@ -27,7 +27,7 @@ class WithdrawalViewController: UIViewController {
                 return
             }
             let prefix = (asset.isAccount ? addr.accountName : addr.label) ?? ""
-            let suffix = (asset.isAccount ? addr.accountTag : addr.publicKey?.toSimpleKey()) ?? ""
+            let suffix = (asset.isAccount ? addr.accountTag?.toSimpleKey() : addr.publicKey?.toSimpleKey()) ?? ""
             addressTextField.text = "\(prefix) (\(suffix))"
             reloadTransactionFeeHint(addressId: addr.addressId)
         }

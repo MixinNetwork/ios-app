@@ -434,7 +434,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2WZ-xE-yp6" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="15" y="146" width="384" height="210"/>
+                                <rect key="frame" x="15" y="146" width="384" height="209.33333333333337"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vz3-Do-oSp">
                                         <rect key="frame" x="30" y="0.0" width="95" height="17"/>
@@ -489,15 +489,15 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bw5-Uz-1Bc">
-                                        <rect key="frame" x="30" y="120" width="324" height="45"/>
+                                        <rect key="frame" x="30" y="119.99999999999999" width="324" height="44.333333333333329"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100854985" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUI-h4-qeQ">
-                                                <rect key="frame" x="8" y="12" width="90.666666666666671" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="752" text="100854985" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUI-h4-qeQ">
+                                                <rect key="frame" x="8" y="11.999999999999998" width="90.666666666666671" height="20.333333333333329"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ucx-NL-Umd">
-                                                <rect key="frame" x="279" y="0.0" width="45" height="45"/>
+                                                <rect key="frame" x="279.66666666666669" y="0.0" width="44.333333333333314" height="44.333333333333336"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="Ucx-NL-Umd" secondAttribute="height" multiplier="1:1" id="eOM-sh-jAy"/>
                                                 </constraints>
@@ -515,7 +515,7 @@
                                             <constraint firstAttribute="trailing" secondItem="Ucx-NL-Umd" secondAttribute="trailing" id="Pa7-WT-iGK"/>
                                             <constraint firstItem="ZUI-h4-qeQ" firstAttribute="top" secondItem="bw5-Uz-1Bc" secondAttribute="top" constant="12" id="kbs-cj-RGI"/>
                                             <constraint firstItem="Ucx-NL-Umd" firstAttribute="top" secondItem="bw5-Uz-1Bc" secondAttribute="top" id="kfo-08-Ivi"/>
-                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ZUI-h4-qeQ" secondAttribute="trailing" constant="8" id="mrl-t3-j8s"/>
+                                            <constraint firstItem="Ucx-NL-Umd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ZUI-h4-qeQ" secondAttribute="trailing" constant="8" id="pgk-nn-Wva"/>
                                             <constraint firstAttribute="bottom" secondItem="Ucx-NL-Umd" secondAttribute="bottom" id="vvK-Rj-wJR"/>
                                         </constraints>
                                         <connections>
@@ -544,7 +544,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Deposit will arrive after at least 6 block confirmations." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x7c-Pw-J8I">
-                                <rect key="frame" x="15" y="376" width="384" height="17"/>
+                                <rect key="frame" x="15" y="375.33333333333331" width="384" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>

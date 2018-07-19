@@ -129,7 +129,7 @@ extension AddressBookView: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! AddressCell
-        cell.render(address: addresses[indexPath.row])
+        cell.render(address: addresses[indexPath.row], asset: asset)
         return cell
     }
 

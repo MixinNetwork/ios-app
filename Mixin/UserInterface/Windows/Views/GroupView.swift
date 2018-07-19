@@ -52,7 +52,7 @@ class GroupView: CornerView {
     
     func render(codeId: String, conversation: ConversationResponse, ownerUser: UserItem, participants: [ParticipantUser], alreadyInTheGroup: Bool, superView: BottomSheetView) {
         self.superView = superView
-        self.conversation = ConversationItem.createConversation(from: conversation)
+        self.conversation = ConversationItem(response: conversation)
         self.conversationResponse = conversation
         self.codeId = codeId
 

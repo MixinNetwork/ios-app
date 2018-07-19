@@ -898,9 +898,6 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="320" id="fUe-nX-Ano"/>
                                         </constraints>
-                                        <connections>
-                                            <segue destination="e4C-0d-RJh" kind="embed" identifier="StickerPanelSegueId" id="6V8-D0-Uev"/>
-                                        </connections>
                                     </containerView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1703,7 +1700,7 @@
         <!--Sticker Panel View Controller-->
         <scene sceneID="4sv-ui-Xez">
             <objects>
-                <viewController id="e4C-0d-RJh" customClass="StickerPanelViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="sticker_panel" id="e4C-0d-RJh" customClass="StickerPanelViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="a8H-rQ-nOE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="320"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1775,6 +1772,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kbd-CS-Ved"/>
                     </view>
+                    <size key="freeformSize" width="375" height="320"/>
                     <connections>
                         <outlet property="albumsCollectionView" destination="lYW-3l-TLl" id="VJj-Sv-U3O"/>
                         <outlet property="pagesContentView" destination="fDU-EE-0uo" id="4oE-1r-LwW"/>

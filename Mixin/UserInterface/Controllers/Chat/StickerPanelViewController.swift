@@ -93,6 +93,10 @@ class StickerPanelViewController: UIViewController {
         }
     }
     
+    static func instance() -> StickerPanelViewController {
+        return Storyboard.chat.instantiateViewController(withIdentifier: "sticker_panel") as! StickerPanelViewController
+    }
+    
     private func updatePageSelection(force: Bool) {
         var page = Int(round((pagesScrollView.contentOffset.x / pagesScrollView.contentSize.width) * CGFloat(numberOfAlbums)))
         page = max(0, min(numberOfAlbums - 1, page))

@@ -97,6 +97,9 @@
                                 <constraint firstAttribute="width" secondItem="JFc-Zi-npb" secondAttribute="height" multiplier="1:1" id="z4c-bA-SBJ"/>
                             </constraints>
                             <state key="normal" image="ic_reply_close"/>
+                            <connections>
+                                <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="M7C-DU-j1b"/>
+                            </connections>
                         </button>
                     </subviews>
                 </stackView>

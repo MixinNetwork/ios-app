@@ -12,19 +12,19 @@ class QuotePreviewView: UIView, XibDesignable {
     
     private let contentImageViewNormalCornerRadius: CGFloat = 4
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        loadXib()
-        dismissButton.imageView?.contentMode = .center
-    }
+    private var isXibLoaded = false
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        loadXib()
-        dismissButton.imageView?.contentMode = .center
+    var dismissAction: (() -> Void)?
+    
+    @IBAction func dismissAction(_ sender: Any) {
+        dismissAction?()
     }
     
     func render(message: MessageItem, contentImageThumbnail: UIImage?) {
+        if !isXibLoaded {
+            loadXib()
+            dismissButton.imageView?.contentMode = .center
+        }
         let tintColor: UIColor
         if let identityNumber = Int(message.userIdentityNumber) {
             tintColor = UIColor.usernameColors[identityNumber % UIColor.usernameColors.count]

@@ -42,7 +42,7 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 1 : (asset.isAccount ? 8 : 7)
+        return section == 0 ? 1 : 7
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -75,7 +75,11 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
             case 3:
                 switch snapshot.type {
                 case SnapshotType.deposit.rawValue:
-                    cell.render(title: Localized.TRANSACTION_SENDER, value: snapshot.sender ?? "")
+                    if asset.isAccount {
+                        cell.render(title: Localized.WALLET_ACCOUNT_NAME, value: snapshot.sender ?? "")
+                    } else {
+                        cell.render(title: Localized.TRANSACTION_SENDER, value: snapshot.sender ?? "")
+                    }
                 case SnapshotType.transfer.rawValue:
                     if snapshot.amount.toDouble() > 0 {
                         cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: snapshot.opponentUserFullName ?? "")
@@ -98,24 +102,17 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
                         cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: snapshot.opponentUserFullName ?? "")
                     }
                 case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
-                    cell.render(title: Localized.TRANSACTION_RECEIVER, value: snapshot.receiver ?? "")
+                    if asset.isAccount {
+                        cell.render(title: Localized.WALLET_ACCOUNT_NAME, value: snapshot.receiver ?? "")
+                    } else {
+                        cell.render(title: Localized.TRANSACTION_RECEIVER, value: snapshot.receiver ?? "")
+                    }
                 default:
                     break
                 }
             case 5:
-                if asset.isAccount {
-                    // TODO
-                    cell.render(title: Localized.WALLET_ACCOUNT_NAME, value: "mengbilaomao")
-                } else {
-                    cell.render(title: Localized.TRANSACTION_MEMO, value: snapshot.memo ?? "      ")
-                }
+                cell.render(title: Localized.TRANSACTION_MEMO, value: snapshot.memo ?? "      ")
             case 6:
-                if asset.isAccount {
-                    cell.render(title: Localized.TRANSACTION_MEMO, value: snapshot.memo ?? "      ")
-                } else {
-                    cell.render(title: Localized.TRANSACTION_DATE, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate()))
-                }
-            case 7:
                 cell.render(title: Localized.TRANSACTION_DATE, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate()))
             default:
                 break

@@ -1,5 +1,4 @@
 import UIKit
-import DeviceGuru
 
 class NumberPadView: UIView, XibDesignable {
 
@@ -7,15 +6,27 @@ class NumberPadView: UIView, XibDesignable {
     
     weak var target: UIKeyInput?
     
-    private let contentHeight: CGFloat = 226
-    private let bottomSafeAreaInset: CGFloat = 34
     private let contentBottomMargin: CGFloat = 2
     
-    private static let needsLayoutForIPhoneX: Bool = {
-        let hardware = DeviceGuru().hardware()
-        return hardware == .iphoneX
-            || hardware == .simulator && abs(UIScreen.main.bounds.height - 812) < 0.1
-    }()
+    private var contentHeight: CGFloat {
+        let height: CGFloat = 226
+        if bottomSafeAreaInset > 0 {
+            return height - 10
+        } else {
+            return height
+        }
+    }
+    private var bottomSafeAreaInset: CGFloat {
+        if #available(iOS 11.0, *) {
+            var bottom = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
+            if bottom > 0 {
+                bottom += 41
+            }
+            return bottom
+        } else {
+            return 0
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -41,13 +52,8 @@ class NumberPadView: UIView, XibDesignable {
     private func prepare() {
         loadXib()
         var bounds = UIScreen.main.bounds
-        if NumberPadView.needsLayoutForIPhoneX {
-            bounds.size.height = contentHeight + bottomSafeAreaInset
-            contentViewBottomConstraint.constant = contentBottomMargin + bottomSafeAreaInset
-        } else {
-            bounds.size.height = contentHeight
-            contentViewBottomConstraint.constant = contentBottomMargin
-        }
+        bounds.size.height = contentHeight + bottomSafeAreaInset
+        contentViewBottomConstraint.constant = contentBottomMargin + bottomSafeAreaInset
         self.bounds = bounds
         layoutIfNeeded()
     }

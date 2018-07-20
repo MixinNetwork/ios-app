@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nW9-LR-ccq">
-                    <rect key="frame" x="0.0" y="183" width="375" height="516"/>
+                    <rect key="frame" x="0.0" y="251" width="375" height="448"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rr0-ei-B13">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
@@ -96,14 +96,14 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="okA-Lg-ndE">
-                            <rect key="frame" x="0.0" y="56" width="375" height="428"/>
+                            <rect key="frame" x="0.0" y="56" width="375" height="360"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="428" id="FTp-5J-UK8" customClass="LayoutConstraintCompat" customModule="Mixin" customModuleProvider="target">
+                                <constraint firstAttribute="height" constant="360" id="FTp-5J-UK8" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="iphoneCompat">
-                                            <real key="value" value="360"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_5">
+                                            <real key="value" value="428"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </constraint>

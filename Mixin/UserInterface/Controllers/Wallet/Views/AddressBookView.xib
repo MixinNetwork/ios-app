@@ -18,7 +18,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FYd-eg-ms2" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="218" width="375" height="457"/>
+                    <rect key="frame" x="0.0" y="314" width="375" height="361"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kev-p3-ZR8">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
@@ -73,20 +73,20 @@
                             </constraints>
                         </view>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0xe-Xa-rZC">
-                            <rect key="frame" x="0.0" y="57" width="375" height="384"/>
+                            <rect key="frame" x="0.0" y="57" width="375" height="288"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="384" id="tr9-tI-kvk" customClass="LayoutConstraintCompat" customModule="Mixin" customModuleProvider="target">
+                                <constraint firstAttribute="height" constant="288" id="tr9-tI-kvk" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="iphoneCompat">
-                                            <real key="value" value="288"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_5">
+                                            <real key="value" value="384"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </constraint>
                             </constraints>
                         </tableView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="43Y-Lf-QEf">
-                            <rect key="frame" x="116" y="197" width="142" height="62"/>
+                            <rect key="frame" x="116" y="149" width="142" height="62"/>
                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                             <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                             <state key="normal" title="Add address"/>

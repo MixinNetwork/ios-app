@@ -10,7 +10,7 @@ class LoginView: UIView {
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var zoomButton: UIButton!
 
-    @IBOutlet weak var contentHeightConstraint: LayoutConstraintCompat!
+    @IBOutlet weak var contentHeightConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var iconTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var iconBottomConstaint: NSLayoutConstraint!
 

@@ -14,7 +14,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="Mx8-Xj-JvZ" customClass="LoginView" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="484"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="356"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zAD-lf-MAv">
@@ -100,7 +100,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7xc-ct-1xa">
-                    <rect key="frame" x="0.0" y="56" width="375" height="428"/>
+                    <rect key="frame" x="0.0" y="56" width="375" height="300"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="8oA-Mi-qQD" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="151.5" y="30" width="72" height="72"/>
@@ -115,7 +115,7 @@
                             </userDefinedRuntimeAttributes>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OQX-er-Pi3" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="372" width="375" height="56"/>
+                            <rect key="frame" x="0.0" y="244" width="375" height="56"/>
                             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="56" id="ajR-Ot-w8N"/>
@@ -132,16 +132,16 @@
                             </connections>
                         </button>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="D8V-LP-gZW">
-                            <rect key="frame" x="30" y="132" width="315" height="220"/>
+                            <rect key="frame" x="30" y="132" width="315" height="92"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </tableView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="428" id="5bj-cY-Eyf" customClass="LayoutConstraintCompat" customModule="Mixin" customModuleProvider="target">
+                        <constraint firstAttribute="height" constant="300" id="5bj-cY-Eyf" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="iphoneCompat">
-                                    <real key="value" value="300"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch5_5">
+                                    <real key="value" value="428"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </constraint>
@@ -185,6 +185,7 @@
                 <outlet property="titleLabel" destination="wg5-ss-P8k" id="RKW-rf-eyf"/>
                 <outlet property="zoomButton" destination="r1T-9o-v2k" id="YjC-gI-KRS"/>
             </connections>
+            <point key="canvasLocation" x="24.5" y="-11"/>
         </view>
     </objects>
     <resources>

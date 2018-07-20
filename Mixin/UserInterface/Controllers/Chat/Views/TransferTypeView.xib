@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qcu-fV-csP" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="232" width="375" height="443"/>
+                    <rect key="frame" x="0.0" y="328" width="375" height="347"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="llD-wi-ohs" userLabel="User">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
@@ -61,13 +61,13 @@
                             </constraints>
                         </view>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="IU0-6i-ENQ">
-                            <rect key="frame" x="0.0" y="51" width="375" height="384"/>
+                            <rect key="frame" x="0.0" y="51" width="375" height="288"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="384" id="Lx7-ZR-YbK" customClass="LayoutConstraintCompat" customModule="Mixin" customModuleProvider="target">
+                                <constraint firstAttribute="height" constant="288" id="Lx7-ZR-YbK" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="iphoneCompat">
-                                            <real key="value" value="288"/>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_5">
+                                            <real key="value" value="384"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </constraint>

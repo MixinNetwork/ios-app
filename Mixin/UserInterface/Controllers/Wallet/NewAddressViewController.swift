@@ -76,6 +76,7 @@ class NewAddressViewController: UIViewController {
                 return
             }
             weakSelf.labelTextField.text = accountName
+            weakSelf.textViewDidChange(weakSelf.addressTextView)
         }, animated: true)
     }
 

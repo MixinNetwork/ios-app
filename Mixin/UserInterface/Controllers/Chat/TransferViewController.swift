@@ -2,10 +2,13 @@ import UIKit
 
 class TransferViewController: UIViewController, MixinNavigationAnimating {
 
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var memoTextField: UITextField!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var transferToLabel: UILabel!
+    @IBOutlet weak var continueButtonWrapperView: UIView!
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var assetImageView: CornerImageView!
     @IBOutlet weak var assetSymbolLabel: UILabel!
@@ -15,7 +18,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var chooseAssetsButton: UIButton!
     @IBOutlet weak var blockchainImageView: CornerImageView!
 
-    @IBOutlet weak var continueBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
 
     private let placeHolderFont = UIFont.systemFont(ofSize: 18)
     private let amountFont = UIFont.systemFont(ofSize: 32)
@@ -26,70 +29,35 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
     private var asset: AssetItem?
     private var availableAssets = [AssetItem]()
     private var userWindow: UserWindow?
+    private var keyboardHeight: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
         amountTextField.delegate = self
+        memoTextField.delegate = self
         avatarImageView.setImage(with: user)
         transferToLabel.text = Localized.TRANSFER_TITLE_TO(fullName: user.fullName)
         updateUI()
         fetchAssets()
-        NotificationCenter.default.addObserver(forName: .AssetsDidChange, object: nil, queue: .main) { [weak self] (_) in
-            self?.fetchAssets()
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetsDidChange, object: nil)
     }
-
-    private func fetchAssets() {
-        DispatchQueue.global().async { [weak self] in
-            let assets = AssetDAO.shared.getAvailableAssets()
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.availableAssets = assets
-                if assets.count > 1 {
-                    weakSelf.assetChooseImageView.isHidden = false
-                    weakSelf.chooseAssetsButton.isUserInteractionEnabled = true
-                }
-                weakSelf.loadingAssetsView.stopAnimating()
-                weakSelf.loadingAssetsView.isHidden = true
-            }
-        }
-    }
-
-    private func updateUI() {
-        if let asset = self.asset {
-            assetImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
-            assetSymbolLabel.text = asset.symbol
-            balanceLabel.text = asset.localizedBalance
-            if let chainIconUrl = asset.chainIconUrl {
-                blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
-                blockchainImageView.isHidden = false
-            } else {
-                blockchainImageView.isHidden = true
-            }
-        } else {
-            assetImageView.image = #imageLiteral(resourceName: "ic_wallet_xin")
-            blockchainImageView.image = #imageLiteral(resourceName: "ic_wallet_xin")
-            assetSymbolLabel.text = "XIN"
-            balanceLabel.text = "0"
-        }
-        amountTextField.text = ""
-        memoTextField.text = ""
-        amountEditingChangedAction(self)
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isDidAppear = true
         amountTextField.becomeFirstResponder()
     }
+    
+    override func willMove(toParentViewController parent: UIViewController?) {
+        super.willMove(toParentViewController: parent)
+        isDidAppear = false
+    }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     @IBAction func profileAction(_ sender: Any) {
         guard let user = user else {
             return
@@ -122,16 +90,56 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
 
         PayWindow.shared.presentPopupControllerAnimated(isTransfer: true, asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
     }
-
     
     @IBAction func amountEditingChangedAction(_ sender: Any) {
         guard let transferAmount = amountTextField.text else {
             return
         }
         amountTextField.font = transferAmount.isEmpty ? placeHolderFont : amountFont
-        continueButton.isHidden = !transferAmount.isNumeric
+        let shouldHideContinueButton = !transferAmount.isNumeric
+        if continueButtonWrapperView.isHidden != shouldHideContinueButton {
+            continueButtonWrapperView.isHidden = shouldHideContinueButton
+            updateBottomInset()
+        }
     }
-
+    
+    @objc func fetchAssets() {
+        DispatchQueue.global().async { [weak self] in
+            let assets = AssetDAO.shared.getAvailableAssets()
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.availableAssets = assets
+                if assets.count > 1 {
+                    weakSelf.assetChooseImageView.isHidden = false
+                    weakSelf.chooseAssetsButton.isUserInteractionEnabled = true
+                }
+                weakSelf.loadingAssetsView.stopAnimating()
+                weakSelf.loadingAssetsView.isHidden = true
+            }
+        }
+    }
+    
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
+        guard let userInfo = notification.userInfo, let keyboardBeginFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? CGRect, let keyboardEndFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        keyboardHeight = UIScreen.main.bounds.height - keyboardEndFrame.minY
+        continueWrapperBottomConstraint.constant = keyboardHeight
+        let keyboardIsVisibleBeforeFrameChange = UIScreen.main.bounds.height - keyboardBeginFrame.minY > 0
+        let keyboardIsDismissing = keyboardHeight <= 0
+        if keyboardIsVisibleBeforeFrameChange && !keyboardIsDismissing {
+            UIView.performWithoutAnimation {
+                self.view.layoutIfNeeded()
+                self.updateBottomInset()
+            }
+        } else {
+            view.layoutIfNeeded()
+            updateBottomInset()
+        }
+    }
+    
     class func instance(user: UserItem, conversationId: String, asset: AssetItem?) -> UIViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "transfer") as! TransferViewController
         vc.user = user
@@ -139,11 +147,15 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         vc.asset = asset
         return vc
     }
+    
 }
 
 extension TransferViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard textField == amountTextField else {
+            return true
+        }
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         if newText.isEmpty {
             return true
@@ -156,49 +168,56 @@ extension TransferViewController: UITextFieldDelegate {
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == amountTextField {
+            memoTextField.becomeFirstResponder()
+        } else if textField == memoTextField {
+            continueAction(textField)
+        }
+        return false
+    }
+    
 }
 
 extension TransferViewController {
-
-    override func willMove(toParentViewController parent: UIViewController?) {
-        super.willMove(toParentViewController: parent)
-        isDidAppear = false
-    }
-
-    @objc func keyboardWillChangeFrame(_ sender: Notification) {
-        guard let info = sender.userInfo else {
-            return
-        }
-        guard let duration = (info[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
-            return
-        }
-        guard let beginKeyboardRect = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue else {
-            return
-        }
-        guard let endKeyboardRect = (info[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-            return
-        }
-        guard isDidAppear else {
-            return
-        }
-
-        UIView.animate(withDuration: duration, animations: {
-            self.showOrHideKeyboard(beginKeyboardRect, endKeyboardRect)
-        })
-    }
-
-    func showOrHideKeyboard(_ beginKeyboardRect: CGRect, _ endKeyboardRect: CGRect) {
-        let bounds = UIScreen.main.bounds
-        if endKeyboardRect.origin.y == bounds.height || endKeyboardRect.origin.y == bounds.width {
-            continueBottomConstraint.constant = 0
-        } else {
-            if #available(iOS 11.0, *) {
-                continueBottomConstraint.constant = -endKeyboardRect.height + view.safeAreaInsets.bottom
+    
+    private func updateUI() {
+        if let asset = self.asset {
+            assetImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
+            assetSymbolLabel.text = asset.symbol
+            balanceLabel.text = asset.localizedBalance
+            if let chainIconUrl = asset.chainIconUrl {
+                blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
+                blockchainImageView.isHidden = false
             } else {
-                continueBottomConstraint.constant = -endKeyboardRect.height
+                blockchainImageView.isHidden = true
             }
+        } else {
+            assetImageView.image = #imageLiteral(resourceName: "ic_wallet_xin")
+            blockchainImageView.image = #imageLiteral(resourceName: "ic_wallet_xin")
+            assetSymbolLabel.text = "XIN"
+            balanceLabel.text = "0"
         }
-        self.view.layoutIfNeeded()
+        amountTextField.text = ""
+        memoTextField.text = ""
+        amountEditingChangedAction(self)
+    }
+    
+    private func updateBottomInset() {
+        let continueButtonHeight = continueButtonWrapperView.isHidden ? 0 : continueButtonWrapperView.frame.height
+        var bottomInset = keyboardHeight + continueButtonHeight + contentView.frame.height - scrollView.frame.height
+        bottomInset = max(0, bottomInset)
+        scrollView.contentInset.bottom = bottomInset
+        scrollView.scrollIndicatorInsets.bottom = bottomInset
+        updateContentOffsetIfNeeded()
+    }
+    
+    private func updateContentOffsetIfNeeded() {
+        guard scrollView.contentInset.bottom > 0 else {
+            return
+        }
+        let y = max(0, scrollView.contentSize.height + scrollView.contentInset.vertical - scrollView.frame.height)
+        scrollView.setContentOffset(CGPoint(x: 0, y: y), animated: false)
     }
 
 }

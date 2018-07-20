@@ -19,29 +19,29 @@
                 <rect key="frame" x="0.0" y="0.0" width="414" height="68.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gbf-NL-58r">
-                        <rect key="frame" x="20" y="14" width="374" height="40.5"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Receiver" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vfz-EO-iGN">
-                                <rect key="frame" x="0.0" y="0.0" width="374" height="17"/>
-                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="0x7Ac5934B5DA55D744659E598111698feC7681C" textAlignment="natural" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nez-aF-I3S">
-                                <rect key="frame" x="0.0" y="21" width="374" height="19.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                    </stackView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Receiver" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vfz-EO-iGN">
+                        <rect key="frame" x="20" y="14" width="55.5" height="17"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="0x7Ac5934B5DA55D744659E598111698feC7681C" textAlignment="natural" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nez-aF-I3S">
+                        <rect key="frame" x="20" y="35" width="372.5" height="19.5"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="19.5" id="Hpa-oW-Xm5"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="gbf-NL-58r" secondAttribute="bottom" constant="14" id="42p-Hp-7Hf"/>
-                    <constraint firstItem="gbf-NL-58r" firstAttribute="top" secondItem="juA-4F-kF5" secondAttribute="top" constant="14" id="4ID-AF-wwr"/>
-                    <constraint firstAttribute="leadingMargin" secondItem="gbf-NL-58r" secondAttribute="leading" id="QGa-OB-bvG"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="gbf-NL-58r" secondAttribute="trailing" id="f9x-ub-xEa"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="nez-aF-I3S" secondAttribute="leading" id="8Ao-uR-g8b"/>
+                    <constraint firstItem="vfz-EO-iGN" firstAttribute="top" secondItem="juA-4F-kF5" secondAttribute="top" constant="14" id="Ag2-b8-066"/>
+                    <constraint firstItem="vfz-EO-iGN" firstAttribute="leading" secondItem="juA-4F-kF5" secondAttribute="leadingMargin" id="Lq6-bL-vfT"/>
+                    <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="nez-aF-I3S" secondAttribute="trailing" id="Oy5-Ee-55g"/>
+                    <constraint firstAttribute="bottom" secondItem="nez-aF-I3S" secondAttribute="bottom" constant="14" id="ceN-rb-Q3E"/>
+                    <constraint firstItem="nez-aF-I3S" firstAttribute="top" secondItem="vfz-EO-iGN" secondAttribute="bottom" constant="4" id="in9-SQ-RUS"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

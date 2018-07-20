@@ -94,7 +94,7 @@
                     <rect key="frame" x="0.0" y="57" width="375" height="103"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="ic_wallet_xin_medium" translatesAutoresizingMaskIntoConstraints="NO" id="Rfz-A7-Jra" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="163.5" y="30" width="48" height="48"/>
+                            <rect key="frame" x="163.5" y="27.5" width="48" height="48"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="48" id="GRK-9F-jfx"/>
                                 <constraint firstAttribute="width" constant="48" id="gcJ-F6-3bw"/>
@@ -106,7 +106,7 @@
                             </userDefinedRuntimeAttributes>
                         </imageView>
                         <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="k07-Py-pCL" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="163.5" y="66" width="12" height="12"/>
+                            <rect key="frame" x="163.5" y="63.5" width="12" height="12"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="12" id="2wH-T1-uI6"/>
                                 <constraint firstAttribute="height" constant="12" id="hFd-Vm-tc8"/>
@@ -120,9 +120,15 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="Rfz-A7-Jra" firstAttribute="top" secondItem="s2O-9a-Sm6" secondAttribute="top" constant="30" id="70R-ur-Sla"/>
+                        <constraint firstItem="Rfz-A7-Jra" firstAttribute="centerY" secondItem="s2O-9a-Sm6" secondAttribute="centerY" id="Ktd-NN-CkR"/>
                         <constraint firstItem="Rfz-A7-Jra" firstAttribute="centerX" secondItem="s2O-9a-Sm6" secondAttribute="centerX" id="aDX-07-vO2"/>
-                        <constraint firstAttribute="height" constant="103" id="cN0-h0-Ao6"/>
+                        <constraint firstAttribute="height" constant="103" id="cN0-h0-Ao6" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <real key="value" value="73"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="k07-Py-pCL" firstAttribute="bottom" secondItem="Rfz-A7-Jra" secondAttribute="bottom" id="cqQ-hI-aEs"/>
                         <constraint firstItem="k07-Py-pCL" firstAttribute="leading" secondItem="Rfz-A7-Jra" secondAttribute="leading" id="idx-mh-x2Q"/>
                     </constraints>
@@ -160,7 +166,13 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="C02-xQ-2hI" firstAttribute="top" secondItem="yfc-sw-leV" secondAttribute="top" constant="25" id="0K1-Jy-661"/>
+                        <constraint firstItem="C02-xQ-2hI" firstAttribute="top" secondItem="yfc-sw-leV" secondAttribute="top" constant="25" id="0K1-Jy-661" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <real key="value" value="10"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstAttribute="bottom" secondItem="C02-xQ-2hI" secondAttribute="bottom" id="DJa-v4-dhb"/>
                         <constraint firstAttribute="trailing" secondItem="C02-xQ-2hI" secondAttribute="trailing" constant="30" id="jvN-ag-p2x"/>
                         <constraint firstItem="C02-xQ-2hI" firstAttribute="leading" secondItem="yfc-sw-leV" secondAttribute="leading" constant="30" id="tYO-u6-63K"/>
@@ -170,7 +182,13 @@
                     <rect key="frame" x="0.0" y="281" width="375" height="30"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="Puf-B8-ss1"/>
+                        <constraint firstAttribute="height" constant="30" id="Puf-B8-ss1" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <real key="value" value="15"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYl-I4-Vjb" userLabel="Payment Password">

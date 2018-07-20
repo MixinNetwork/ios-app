@@ -2,7 +2,6 @@ import Foundation
 import Bugsnag
 import UserNotifications
 import Firebase
-import AudioToolbox
 import SafariServices
 
 extension UIApplication {
@@ -55,18 +54,6 @@ extension UIApplication {
         userInfo["lastUpdateOrInstallTime"] = CommonUserDefault.shared.lastUpdateOrInstallTime
         userInfo["clientTime"] = DateFormatter.filename.string(from: Date())
         return userInfo
-    }
-
-}
-
-extension UIApplication {
-
-    static func playTakePhotoSound() {
-        AudioServicesPlaySystemSound(1108)
-    }
-
-    static func playPeekSound() {
-        AudioServicesPlaySystemSound(1519)
     }
 
 }

@@ -1,4 +1,5 @@
 import UIKit
+import AVKit
 
 class NumberPadView: UIView, XibDesignable {
 
@@ -16,6 +17,7 @@ class NumberPadView: UIView, XibDesignable {
             return height
         }
     }
+    
     private var bottomSafeAreaInset: CGFloat {
         if #available(iOS 11.0, *) {
             var bottom = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
@@ -42,10 +44,12 @@ class NumberPadView: UIView, XibDesignable {
         guard let sender = sender as? NumberPadButton else {
             return
         }
+        UIDevice.current.playInputClick()
         target?.insertText(String(sender.number))
     }
     
     @IBAction func deleteAction(_ sender: Any) {
+        UIDevice.current.playInputDelete()
         target?.deleteBackward()
     }
     
@@ -56,6 +60,14 @@ class NumberPadView: UIView, XibDesignable {
         contentViewBottomConstraint.constant = contentBottomMargin + bottomSafeAreaInset
         self.bounds = bounds
         layoutIfNeeded()
+    }
+    
+}
+
+extension NumberPadView: UIInputViewAudioFeedback {
+    
+    var enableInputClicksWhenVisible: Bool {
+        return true
     }
     
 }

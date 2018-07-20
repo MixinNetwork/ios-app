@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import AudioToolbox
 
 extension UIDevice {
 
@@ -27,5 +28,9 @@ extension UIDevice {
             return false
         }
     }()
-
+    
+    func playInputDelete() {
+        AudioServicesPlaySystemSound(1155)
+    }
+    
 }

@@ -24,6 +24,7 @@ class GalleryViewController: UIViewController {
     var item: GalleryItem?
     
     private let scrollViewContentView = UIView()
+    private let damping: CGFloat = 1.5
     private let animationDuration: TimeInterval = 0.25
     private let itemsCountPerFetch = 20
     private let queue = DispatchQueue(label: "one.mixin.ios.gallery")
@@ -209,7 +210,7 @@ class GalleryViewController: UIViewController {
                                    height: view.frame.height - safeAreaInsets.vertical)
         let imageFinalFrame = item.size.rect(fittingSize: containerSize, byContentMode: .scaleAspectFit)
         let safeAreaOrigin = CGPoint(x: safeAreaInsets.left, y: safeAreaInsets.top)
-        UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: [], animations: {
             if let itemSize = self.item?.size, let snapshot = sourceViewSnapshotView {
                 if self.currentItemIsVerticallyOversized {
                     let width = containerSize.height * (itemSize.width / itemSize.height)
@@ -258,7 +259,7 @@ class GalleryViewController: UIViewController {
         transitionView.transform = .identity
         transitionView.frame = frame
         (transitionView as? ImageClippingView)?.imageView.frame = transitionView.bounds
-        UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: [], animations: {
             self.backgroundDimmingView.alpha = 0
             if let item = self.item, let sourceRect = self.delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {
                 sourceViewSnapshotView?.frame = sourceRect

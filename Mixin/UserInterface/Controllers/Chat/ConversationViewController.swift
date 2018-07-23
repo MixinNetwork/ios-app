@@ -790,10 +790,12 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     // MARK: - Interface
     func toggleMoreMenu(delay: TimeInterval) {
         let dismissButtonAlpha: CGFloat
+        let shouldHideContainer = isShowingMoreMenu
         if isShowingMoreMenu {
             moreMenuTopConstraint.constant = 0
             dismissButtonAlpha = 0
         } else {
+            moreMenuContainerView.isHidden = false
             moreMenuTopConstraint.constant = moreMenuViewController?.contentHeight ?? moreMenuHeightConstraint.constant
             dismissButtonAlpha = 0.3
         }
@@ -801,7 +803,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             UIView.setAnimationCurve(.overdamped)
             self.dismissPanelsButton.alpha = dismissButtonAlpha
             self.view.layoutIfNeeded()
-        }, completion: nil)
+        }) { (success) in
+            if shouldHideContainer {
+                self.moreMenuContainerView.isHidden = true
+            }
+        }
     }
     
     func documentAction() {

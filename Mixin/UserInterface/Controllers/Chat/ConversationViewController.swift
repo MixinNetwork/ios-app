@@ -5,7 +5,6 @@ import Photos
 
 class ConversationViewController: UIViewController, StatusBarStyleSwitchableViewController {
     
-    @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var connectionHintView: ConnectionHintView!
     @IBOutlet weak var tableView: ConversationTableView!
@@ -76,7 +75,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var isShowingStickerPanel = false
     private var isAppearanceAnimating = true
     private var isStickerPanelMax = false
-    private var hideStatusBar = false
     private var inputWrapperShouldFollowKeyboardPosition = true
     private var isShowingQuotePreviewView: Bool {
         return quoteMessageId != nil
@@ -109,12 +107,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController.instance(conversationId: conversationId)
         controller.delegate = self
-        addChildViewController(controller)
-        galleryWrapperView.addSubview(controller.view)
-        controller.view.snp.makeConstraints({ (make) in
-            make.edges.equalToSuperview()
-        })
-        controller.didMove(toParentViewController: self)
         return controller
     }()
     private lazy var strangerTipsView: StrangerTipsView = {
@@ -153,10 +145,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             unreadBadgeLabel.isHidden = unreadBadgeValue <= 0
             unreadBadgeLabel.text = unreadBadgeValue <= 99 ? String(unreadBadgeValue) : "99+"
         }
-    }
-    
-    override var prefersStatusBarHidden: Bool {
-        return hideStatusBar
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -589,7 +577,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                 return
             }
             MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
-            view.bringSubview(toFront: galleryWrapperView)
             galleryViewController.show(item: item)
         } else if message.category.hasSuffix("_AUDIO") {
             guard message.mediaStatus == MediaStatus.DONE.rawValue, let cell = cell as? AudioMessageCell else {
@@ -1309,12 +1296,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
             contentViews.forEach {
                 $0.isHidden = true
             }
-        case .ended:
-            if transition == .dismiss {
-                view.sendSubview(toBack: galleryWrapperView)
-            }
-            fallthrough
-        case .cancelled:
+        case .ended, .cancelled:
             contentViews.forEach {
                 $0.isHidden = false
             }
@@ -1327,16 +1309,6 @@ extension ConversationViewController: GalleryViewControllerDelegate {
         } else {
             return nil
         }
-    }
-    
-    func animateAlongsideGalleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition) {
-        switch transition {
-        case .show:
-            hideStatusBar = true
-        case .dismiss:
-            hideStatusBar = false
-        }
-        setNeedsStatusBarAppearanceUpdate()
     }
     
 }

@@ -7,7 +7,6 @@ protocol GalleryViewControllerDelegate: class {
     func galleryViewController(_ viewController: GalleryViewController, sourceRectForItemOfMessageId id: String) -> CGRect?
     func galleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition, stateDidChangeTo state: GalleryViewController.TransitionState, forItemOfMessageId id: String?)
     func galleryViewController(_ viewController: GalleryViewController, snapshotForItemOfMessageId id: String) -> UIView?
-    func animateAlongsideGalleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition)
 }
 
 class GalleryViewController: UIViewController {
@@ -45,6 +44,12 @@ class GalleryViewController: UIViewController {
     
     private let imageClippingTransitionView = ImageClippingView()
     private lazy var separatorWidth = scrollViewTrailingConstraint.constant
+    private lazy var window: UIWindow = {
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = self
+        window.windowLevel = UIWindowLevelNormal + 1
+        return window
+    }()
     
     private var safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
@@ -81,6 +86,10 @@ class GalleryViewController: UIViewController {
         tapRecognizer.require(toFail: doubleTapRecognizer)
         panRecognizer.require(toFail: longPressRecognizer)
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
     deinit {
@@ -173,9 +182,10 @@ class GalleryViewController: UIViewController {
     }
     
     func show(item: GalleryItem) {
+        window.makeKeyAndVisible()
+        setNeedsStatusBarAppearanceUpdate()
         self.item = item
         reload()
-        backgroundDimmingView.alpha = 0
         scrollView.isHidden = true
         var sourceViewSnapshotView: UIView?
         self.delegate?.galleryViewController(self, transition: .show, stateDidChangeTo: .began, forItemOfMessageId: item.messageId)
@@ -215,7 +225,6 @@ class GalleryViewController: UIViewController {
             self.backgroundDimmingView.alpha = 1
             self.imageClippingTransitionView.frame = CGRect(origin: safeAreaOrigin, size: containerSize)
             self.imageClippingTransitionView.imageView.frame = imageFinalFrame
-            self.delegate?.animateAlongsideGalleryViewController(self, transition: .show)
         }, completion: { (_) in
             sourceViewSnapshotView?.removeFromSuperview()
             self.imageClippingTransitionView.removeFromSuperview()
@@ -225,9 +234,7 @@ class GalleryViewController: UIViewController {
     }
     
     func dismiss() {
-        if currentPage.item?.category == .video {
-            currentPage.videoView.player.rate = 0
-        }
+        currentPage.stopVideoPlayingAndRemoveObservers()
         scrollView.isHidden = true
         let messageId = item?.messageId
         if let messageId = messageId {
@@ -268,20 +275,25 @@ class GalleryViewController: UIViewController {
                 }
             }
             self.transitionView.alpha = 0
-            self.delegate?.animateAlongsideGalleryViewController(self, transition: .dismiss)
         }, completion: { (_) in
-            sourceViewSnapshotView?.removeFromSuperview()
-            self.transitionView.removeFromSuperview()
-            if let videoView = self.transitionView as? GalleryVideoView {
-                self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
-            }
-            self.scrollView.isHidden = false
-            self.transitionView.alpha = 1
-            self.transitionView = nil
             self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .ended, forItemOfMessageId: messageId)
-            self.snapshotView = nil
-            for page in self.pages {
-                page.item = nil
+            DispatchQueue.main.async {
+                self.window.isHidden = true
+                sourceViewSnapshotView?.removeFromSuperview()
+                self.transitionView.removeFromSuperview()
+                if let videoView = self.transitionView as? GalleryVideoView {
+                    self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
+                }
+                self.scrollView.isHidden = false
+                self.transitionView.alpha = 1
+                self.transitionView = nil
+                self.snapshotView = nil
+                for page in self.pages {
+                    page.item = nil
+                }
+                self.backgroundDimmingView.alpha = 0
+                AppDelegate.current.window?.makeKeyAndVisible()
+                AppDelegate.current.window?.rootViewController?.setNeedsStatusBarAppearanceUpdate()
             }
         })
     }

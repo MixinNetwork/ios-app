@@ -26,10 +26,10 @@ class WalletAssetCell: UITableViewCell {
             blockchainImageView.isHidden = true
         }
 
-        if asset.priceUsd.toDouble() > 0 {
+        if asset.priceUsd.doubleValue > 0 {
             priceLabel.text = "$\(asset.localizedPriceUsd)"
             priceChangeLabel.text = "\(asset.getUsdChange())%"
-            if asset.changeUsd.toDouble() > 0 {
+            if asset.changeUsd.doubleValue > 0 {
                  priceChangeLabel.textColor = greenColor
             } else {
                 priceChangeLabel.textColor = redColor

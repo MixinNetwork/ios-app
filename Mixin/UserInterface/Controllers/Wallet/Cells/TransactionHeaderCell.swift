@@ -27,7 +27,7 @@ class TransactionHeaderCell: UITableViewCell {
             amountLabel.textColor = .walletGreen
             amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(asset.symbol)"
         case SnapshotType.transfer.rawValue:
-            let amount = snapshot.amount.toDouble()
+            let amount = snapshot.amount.doubleValue
             if amount > 0 {
                 amountLabel.textColor = .walletGreen
                 amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(asset.symbol)"
@@ -44,7 +44,7 @@ class TransactionHeaderCell: UITableViewCell {
         default:
             break
         }
-        exchangeLabel.text = String(format: "≈ %@ USD", (snapshot.amount.toDouble() * asset.priceUsd.toDouble()).toFormatLegalTender())
+        exchangeLabel.text = String(format: "≈ %@ USD", (snapshot.amount.doubleValue * asset.priceUsd.doubleValue).toFormatLegalTender())
     }
 
 }

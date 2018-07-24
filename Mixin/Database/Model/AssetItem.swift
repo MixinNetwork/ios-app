@@ -60,11 +60,11 @@ extension AssetItem {
     }
 
     func getUSDBalance() -> String {
-        return String(format: "≈ %@ USD", (balance.toDouble() * priceUsd.toDouble()).toFormatLegalTender())
+        return String(format: "≈ %@ USD", (balance.doubleValue * priceUsd.doubleValue).toFormatLegalTender())
     }
 
     func getUsdChange() -> String {
-        return (changeUsd.toDouble() * 100).toFormatLegalTender()
+        return (changeUsd.doubleValue * 100).toFormatLegalTender()
     }
 }
 

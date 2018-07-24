@@ -22,7 +22,7 @@ class SnapshotCell: UITableViewCell {
                 detailLabel.text = nil
             }
         case SnapshotType.transfer.rawValue:
-            let amount = snapshot.amount.toDouble()
+            let amount = snapshot.amount.doubleValue
             if amount > 0 {
                 amountLabel.textColor = .walletGreen
                 detailLabel.text = Localized.WALLET_SNAPSHOT_FROM(fullName: snapshot.opponentUserFullName ?? "")

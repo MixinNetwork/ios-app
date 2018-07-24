@@ -92,7 +92,7 @@ class PayView: UIStackView {
         pinField.clear()
         memoLabel.text = memo
         amountLabel.text =  String(format: "%@ %@", amount.formatSimpleBalance(), asset.symbol)
-        amountExchangeLabel.text = String(format: "≈ %@ USD", (amount.toDouble() * asset.priceUsd.toDouble()).toFormatLegalTender())
+        amountExchangeLabel.text = String(format: "≈ %@ USD", (amount.doubleValue * asset.priceUsd.doubleValue).toFormatLegalTender())
         paySuccessImageView.isHidden = true
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()

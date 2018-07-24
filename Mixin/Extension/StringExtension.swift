@@ -4,6 +4,19 @@ import CoreText
 
 extension String {
 
+    var isNumeric: Bool {
+        let number = NumberFormatter.decimal.number(from: self)
+        return number != nil
+    }
+    
+    var integerValue: Int {
+        return Int(self) ?? 0
+    }
+    
+    var doubleValue: Double {
+        return Double(self) ?? 0
+    }
+    
     func md5() -> String {
         guard let messageData = data(using: .utf8) else {
             return self
@@ -60,23 +73,6 @@ extension String {
         let startIndex = self.index(self.startIndex, offsetBy: i)
         let endIndex = self.index(startIndex, offsetBy: i + 1)
         return String(self[startIndex ..< endIndex])
-    }
-
-    var isNumeric: Bool {
-        let number = NumberFormatter.decimal.number(from: self)
-        return number != nil
-    }
-
-    public func toInt() -> Int {
-        return (self as NSString).integerValue
-    }
-
-    public func toInt32() -> Int32 {
-        return (self as NSString).intValue
-    }
-
-    public func toDouble() -> Double {
-        return (self as NSString).doubleValue
     }
     
     func removeWhiteSpaces() -> String {

@@ -31,11 +31,11 @@ class WalletTotalBalanceCell: UITableViewCell {
         var btcTotalBalance: Double = 0
         var usdTotalBalance: Double = 0
         for asset in assets {
-            let balance = asset.balance.toDouble()
-            let priceBalance = balance * asset.priceUsd.toDouble()
+            let balance = asset.balance.doubleValue
+            let priceBalance = balance * asset.priceUsd.doubleValue
             if priceBalance > 0 {
-                btcTotalBalance += balance * asset.priceBtc.toDouble()
-                usdTotalBalance += balance * asset.priceUsd.toDouble()
+                btcTotalBalance += balance * asset.priceBtc.doubleValue
+                usdTotalBalance += balance * asset.priceUsd.doubleValue
                 totalPriceBalance += priceBalance
                 if segments.count < 3 {
                     segments.append(PieSegment(color: colors[segments.count], value: priceBalance, symbol: asset.symbol))

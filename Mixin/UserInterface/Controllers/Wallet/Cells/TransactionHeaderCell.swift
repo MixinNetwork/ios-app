@@ -23,28 +23,26 @@ class TransactionHeaderCell: UITableViewCell {
         }
 
         switch snapshot.type {
-        case SnapshotType.deposit.rawValue:
+        case SnapshotType.deposit.rawValue, SnapshotType.rebate.rawValue:
             amountLabel.textColor = .walletGreen
-            amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(asset.symbol)"
         case SnapshotType.transfer.rawValue:
-            let amount = snapshot.amount.doubleValue
-            if amount > 0 {
-                amountLabel.textColor = .walletGreen
-                amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(asset.symbol)"
-            } else {
+            if snapshot.amount.hasMinusPrefix {
                 amountLabel.textColor = .walletRed
-                amountLabel.text = "\(snapshot.amount.formatFullBalance()) \(asset.symbol)"
+            } else {
+                amountLabel.textColor = .walletGreen
             }
         case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue:
             amountLabel.textColor = .walletRed
-            amountLabel.text = "\(snapshot.amount.formatFullBalance()) \(asset.symbol)"
-        case SnapshotType.rebate.rawValue:
-            amountLabel.textColor = .walletGreen
-            amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(asset.symbol)"
         default:
             break
         }
-        exchangeLabel.text = String(format: "≈ %@ USD", (snapshot.amount.doubleValue * asset.priceUsd.doubleValue).toFormatLegalTender())
+        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always, symbol: .custom(asset.symbol))
+        let exchange = snapshot.amount.doubleValue * asset.priceUsd.doubleValue
+        if let value = CurrencyFormatter.localizedString(from: exchange, format: .legalTender, sign: .never, symbol: .usd) {
+            exchangeLabel.text = "≈ " + value
+        } else {
+            exchangeLabel.text = nil
+        }
     }
 
 }

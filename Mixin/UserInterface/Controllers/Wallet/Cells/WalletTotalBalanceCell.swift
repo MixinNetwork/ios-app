@@ -46,8 +46,8 @@ class WalletTotalBalanceCell: UITableViewCell {
             }
         }
 
-        btcBalanceLabel.text = String(format: "%@ BTC", btcTotalBalance.formatSimpleBalance())
-        usdBalanceLabel.text = String(format: "%@ USD", usdTotalBalance.toFormatLegalTender())
+        btcBalanceLabel.text = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never, symbol: .btc)
+        usdBalanceLabel.text = CurrencyFormatter.localizedString(from: usdTotalBalance, format: .legalTender, sign: .never, symbol: .usd)
 
         indicatorStackView.isHidden = segments.count == 0
         switch segments.count {

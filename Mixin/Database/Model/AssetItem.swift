@@ -56,16 +56,23 @@ extension AssetItem {
     }
     
     var localizedBalance: String {
-        return localizedNumberString(balance.formatBalance())
+        return localizedNumberString(balance)
     }
-
-    func getUSDBalance() -> String {
-        return String(format: "≈ %@ USD", (balance.doubleValue * priceUsd.doubleValue).toFormatLegalTender())
+    
+    var localizedUSDBalance: String {
+        let usdBalance = balance.doubleValue * priceUsd.doubleValue
+        if let value = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never, symbol: .usd) {
+            return "≈ " + value
+        } else {
+            return ""
+        }
     }
-
-    func getUsdChange() -> String {
-        return (changeUsd.doubleValue * 100).toFormatLegalTender()
+    
+    var localizedUSDChange: String {
+        let usdChange = changeUsd.doubleValue * 100
+        return CurrencyFormatter.localizedString(from: usdChange, format: .legalTender, sign: .whenNegative) ?? ""
     }
+    
 }
 
 extension AssetItem {
@@ -75,4 +82,3 @@ extension AssetItem {
     }
 
 }
-

@@ -152,6 +152,7 @@
 		7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */; };
 		7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B9863901FA313E300D4B16C /* BottomWrapperView.xib */; };
 		7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9863921FA3141F00D4B16C /* XibDesignable.swift */; };
+		7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */; };
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
 		7B9B8F3D205A27E700DC81AF /* WithdrawalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */; };
 		7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */; };
@@ -689,6 +690,7 @@
 		7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomWrapperView.swift; sourceTree = "<group>"; };
 		7B9863901FA313E300D4B16C /* BottomWrapperView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomWrapperView.xib; sourceTree = "<group>"; };
 		7B9863921FA3141F00D4B16C /* XibDesignable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XibDesignable.swift; sourceTree = "<group>"; };
+		7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
 		7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalViewController.swift; sourceTree = "<group>"; };
 		7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
@@ -1328,6 +1330,7 @@
 				7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */,
 				7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */,
 				7B5FEE3F2101AD790008321F /* ScreenSize.swift */,
+				7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2652,6 +2655,7 @@
 				DF6DB8412028C1A60060CF31 /* AppButtonData.swift in Sources */,
 				273FACB4205FB9A800513327 /* setup.c in Sources */,
 				273FACAE205FB9A800513327 /* SignalSenderKeyName.swift in Sources */,
+				7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
 				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
 				DFF353001FEE516F00058453 /* Asset.swift in Sources */,

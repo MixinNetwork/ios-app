@@ -5,7 +5,7 @@ class TransferMessageViewModel: CardMessageViewModel {
     let snapshotAmount: String?
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        snapshotAmount = message.snapshotAmount?.formatSimpleBalance()
+        snapshotAmount = CurrencyFormatter.localizedString(from: message.snapshotAmount, format: .pretty, sign: .whenNegative)
         super.init(message: message, style: style, fits: layoutWidth)
     }
     

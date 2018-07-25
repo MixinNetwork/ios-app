@@ -91,8 +91,8 @@ class PayView: UIStackView {
         pinField.isHidden = false
         pinField.clear()
         memoLabel.text = memo
-        amountLabel.text =  String(format: "%@ %@", amount.formatSimpleBalance(), asset.symbol)
-        amountExchangeLabel.text = String(format: "≈ %@ USD", (amount.doubleValue * asset.priceUsd.doubleValue).toFormatLegalTender())
+        amountLabel.text = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
+        amountExchangeLabel.text = CurrencyFormatter.localizedString(from: amount.doubleValue * asset.priceUsd.doubleValue, format: .legalTender, sign: .never, symbol: .usd)
         paySuccessImageView.isHidden = true
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
@@ -223,7 +223,7 @@ extension PayView: PinFieldDelegate {
         }
 
         let generalizedAmount: String
-        if let decimalSeparator = Locale.current.decimalSeparator {
+        if let decimalSeparator = Locale.current.decimalSeparator, decimalSeparator != "." {
             generalizedAmount = amount.replacingOccurrences(of: decimalSeparator, with: ".")
         } else {
             generalizedAmount = amount

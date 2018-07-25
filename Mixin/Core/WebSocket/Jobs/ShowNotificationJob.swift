@@ -30,7 +30,7 @@ class ShowNotificationJob: BaseJob {
             guard let user = UserDAO.shared.getUser(userId: message.userId) else {
                 return
             }
-            if AccountAPI.shared.account?.receive_message_source == ReceiveMessageSource.contacts.rawValue && user.role != Relationship.FRIEND.rawValue {
+            if AccountAPI.shared.account?.receive_message_source == ReceiveMessageSource.contacts.rawValue && user.relationship != Relationship.FRIEND.rawValue {
                 return
             }
             ownerUser = user

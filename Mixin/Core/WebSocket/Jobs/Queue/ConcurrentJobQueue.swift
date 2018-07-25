@@ -54,7 +54,7 @@ class ConcurrentJobQueue: JobQueue {
                 return
             }
 
-            ConcurrentJobQueue.shared.addJob(job: ShowNotificationJob(messageId: message.messageId))
+            ConcurrentJobQueue.shared.addJob(job: ShowNotificationJob(message: message))
         }
     }
     

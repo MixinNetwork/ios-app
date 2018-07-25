@@ -4,21 +4,19 @@ import UIKit
 
 class ShowNotificationJob: BaseJob {
 
-    let messageId: String
+    let message: MessageItem
 
-    init(messageId: String) {
-        self.messageId = messageId
+    init(message: MessageItem) {
+        self.message = message
     }
 
     override func getJobId() -> String {
-        return "show-notification-\(messageId)"
+        return "show-notification-\(message.messageId)"
     }
 
     override func main() {
-        guard !isCancelled, let message = MessageDAO.shared.getFullMessage(messageId: messageId) else {
-            return
-        }
-        guard message.status == MessageStatus.DELIVERED.rawValue, message.userId != currentAccountId else {
+        let message = self.message
+        guard !isCancelled, message.status == MessageStatus.DELIVERED.rawValue, message.userId != currentAccountId else {
             return
         }
         guard let conversation = ConversationDAO.shared.getConversation(conversationId: message.conversationId), conversation.status == ConversationStatus.SUCCESS.rawValue, !conversation.isMuted else {

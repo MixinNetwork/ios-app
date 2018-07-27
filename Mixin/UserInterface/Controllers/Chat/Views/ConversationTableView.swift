@@ -126,8 +126,10 @@ class ConversationTableView: UITableView {
             if actionDelegate.conversationTableViewCanBecomeFirstResponder(self) {
                 becomeFirstResponder()
             }
-            UIMenuController.shared.setTargetRect(cell.contentFrame, in: cell)
-            UIMenuController.shared.setMenuVisible(true, animated: true)
+            DispatchQueue.main.async {
+                UIMenuController.shared.setTargetRect(cell.contentFrame, in: cell)
+                UIMenuController.shared.setMenuVisible(true, animated: true)
+            }
         }
     }
     

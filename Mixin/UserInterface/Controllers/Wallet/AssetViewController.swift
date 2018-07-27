@@ -181,7 +181,7 @@ extension AssetViewController {
         if indexPath.section == 1 {
             return SnapshotCell.cellHeight
         } else {
-            return super.tableView(tableView, heightForRowAt: indexPath)
+            return UITableViewAutomaticDimension
         }
     }
     

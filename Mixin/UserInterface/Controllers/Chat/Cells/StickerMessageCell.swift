@@ -9,7 +9,7 @@ class StickerMessageCell: DetailInfoMessageCell {
         let imageView = UIImageView()
         imageView.alpha = 0
         imageView.tintColor = UIColor.black.withAlphaComponent(0.2)
-        contentView.addSubview(imageView)
+        contentImageView.addSubview(imageView)
         return imageView
     }()
     
@@ -35,7 +35,7 @@ class StickerMessageCell: DetailInfoMessageCell {
             return
         }
         selectedOverlapImageView.image = overlapImage
-        selectedOverlapImageView.frame = contentImageView.frame
+        selectedOverlapImageView.frame = contentImageView.bounds
         UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
             self.selectedOverlapImageView.alpha = highlight ? 1 : 0
         }

@@ -25,7 +25,7 @@ class GalleryViewController: UIViewController {
     
     private let scrollViewContentView = UIView()
     private let damping: CGFloat = 1.5
-    private let animationDuration: TimeInterval = 0.25
+    private let animationDuration: TimeInterval = 0.35
     private let itemsCountPerFetch = 20
     private let queue = DispatchQueue(label: "one.mixin.ios.gallery")
     private let pageSize = UIScreen.main.bounds.size

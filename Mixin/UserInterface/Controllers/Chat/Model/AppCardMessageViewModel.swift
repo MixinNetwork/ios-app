@@ -6,8 +6,8 @@ class AppCardMessageViewModel: CardMessageViewModel {
     static let descriptionAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]
     static let emptyLabelWidth: CGFloat = 2
     
-    override var leftWithTailBubbleImage: UIImage {
-        return #imageLiteral(resourceName: "ic_chat_bubble_left")
+    override class var bubbleImageProvider: BubbleImageProvider.Type {
+        return AppCardBubbleImageProvider.self
     }
     
     override var leftLeadingMargin: CGFloat {
@@ -31,6 +31,22 @@ class AppCardMessageViewModel: CardMessageViewModel {
         let descriptionWidth = ceil(message.appCard?.description.size(withAttributes: AppCardMessageViewModel.descriptionAttributes).width ?? emptyLabelWidth)
         contentWidth = max(emptyLabelWidth, titleWidth, descriptionWidth)
         super.init(message: message, style: style, fits: layoutWidth)
+    }
+    
+}
+
+extension AppCardMessageViewModel {
+    
+    class AppCardBubbleImageProvider: BubbleImageProvider {
+
+        override class var leftTail: UIImage {
+            return #imageLiteral(resourceName: "ic_chat_bubble_left")
+        }
+        
+        override class var leftTailHighlight: UIImage {
+            return #imageLiteral(resourceName: "ic_chat_bubble_left_highlight")
+        }
+        
     }
     
 }

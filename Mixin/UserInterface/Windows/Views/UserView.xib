@@ -29,6 +29,12 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h4w-MA-ie4">
+                    <rect key="frame" x="155.5" y="30" width="64" height="64"/>
+                    <connections>
+                        <action selector="previewAvatarAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="hci-51-y67"/>
+                    </connections>
+                </button>
                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="JE3-86-sR8">
                     <rect key="frame" x="157" y="109" width="61" height="6"/>
                     <subviews>
@@ -238,14 +244,18 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="h4w-MA-ie4" firstAttribute="top" secondItem="Iu9-go-9Om" secondAttribute="top" id="4oV-PO-zP6"/>
                 <constraint firstAttribute="trailing" secondItem="Tvr-3M-1aD" secondAttribute="trailing" id="8nj-NU-dsP"/>
                 <constraint firstItem="xy6-Gm-00q" firstAttribute="trailing" secondItem="syg-ya-iZc" secondAttribute="trailing" constant="30" id="ASu-TM-rUN"/>
+                <constraint firstItem="h4w-MA-ie4" firstAttribute="bottom" secondItem="Iu9-go-9Om" secondAttribute="bottom" id="Dx7-mp-DO2"/>
                 <constraint firstItem="xy6-Gm-00q" firstAttribute="bottom" secondItem="Tvr-3M-1aD" secondAttribute="bottom" id="Ho2-e7-OR9"/>
                 <constraint firstItem="Iu9-go-9Om" firstAttribute="top" secondItem="VIH-5N-txF" secondAttribute="top" constant="30" id="K9X-eC-Inv"/>
                 <constraint firstItem="JE3-86-sR8" firstAttribute="top" secondItem="Iu9-go-9Om" secondAttribute="bottom" constant="15" id="MhN-Pu-7bn"/>
                 <constraint firstItem="zGB-B7-Mn1" firstAttribute="leading" secondItem="VIH-5N-txF" secondAttribute="leading" id="N18-vN-o1F"/>
+                <constraint firstItem="h4w-MA-ie4" firstAttribute="leading" secondItem="Iu9-go-9Om" secondAttribute="leading" id="NxY-Zt-dRj"/>
                 <constraint firstItem="8fu-LT-QCJ" firstAttribute="bottom" secondItem="syg-ya-iZc" secondAttribute="top" id="Vdn-7g-YgG"/>
                 <constraint firstItem="Tvr-3M-1aD" firstAttribute="top" secondItem="syg-ya-iZc" secondAttribute="bottom" id="Za6-y9-4ZT"/>
+                <constraint firstItem="h4w-MA-ie4" firstAttribute="trailing" secondItem="Iu9-go-9Om" secondAttribute="trailing" id="iTf-3J-aZA"/>
                 <constraint firstItem="8fu-LT-QCJ" firstAttribute="top" secondItem="JE3-86-sR8" secondAttribute="bottom" constant="6" id="ith-2G-67Y"/>
                 <constraint firstItem="syg-ya-iZc" firstAttribute="leading" secondItem="xy6-Gm-00q" secondAttribute="leading" constant="30" id="mpw-v7-dPH"/>
                 <constraint firstItem="8fu-LT-QCJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="VIH-5N-txF" secondAttribute="leading" constant="30" id="q6w-zB-2fi"/>

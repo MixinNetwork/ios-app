@@ -33,7 +33,6 @@ class PayView: UIStackView {
     private var memo = ""
     private(set) var processing = false
     private var soundId: SystemSoundID = 0
-    private lazy var userWindow = UserWindow.instance()
 
     override func awakeFromNib() {
         super.awakeFromNib()

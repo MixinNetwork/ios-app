@@ -1539,19 +1539,13 @@ extension ConversationViewController {
     
     private func blinkCellBackground(at indexPath: IndexPath) {
         let animation = { (indexPath: IndexPath) in
-            guard let cell = self.tableView.cellForRow(at: indexPath) else {
+            guard let cell = self.tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
                 return
             }
-            UIView.animateKeyframes(withDuration: 0.6, delay: 0, options: [], animations: {
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5, animations: {
-                    cell.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-                })
-                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
-                    cell.backgroundColor = .clear
-                })
-            }) { (finished) in
-                cell.backgroundColor = nil
-            }
+            cell.updateAppearance(highlight: true, animated: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                cell.updateAppearance(highlight: false, animated: true)
+            })
         }
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(indexPath) {
             animation(indexPath)

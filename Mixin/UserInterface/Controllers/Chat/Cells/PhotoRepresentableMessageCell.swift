@@ -6,6 +6,12 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     
     let contentImageView = FLAnimatedImageView()
     let shadowImageView = UIImageView()
+    lazy var selectedOverlapView: UIView = {
+        let view = SelectedOverlapView()
+        view.alpha = 0
+        contentView.addSubview(view)
+        return view
+    }()
     
     internal lazy var contentSnapshotViews = [
         contentImageView,
@@ -23,7 +29,8 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
             contentImageView.frame = viewModel.contentFrame
             contentImageView.layer.mask = backgroundImageView.layer
-           
+            selectedOverlapView.frame = contentImageView.bounds
+
             shadowImageView.image = viewModel.shadowImage
             shadowImageView.frame = CGRect(origin: viewModel.shadowImageOrigin,
                                            size: viewModel.shadowImage?.size ?? .zero)
@@ -31,17 +38,25 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     }
     
     override func prepare() {
-        contentView.addSubview(contentImageView)
         contentImageView.contentMode = .scaleAspectFill
         contentImageView.clipsToBounds = true
         contentImageView.layer.cornerRadius = 6
-        timeLabel.textColor = .white
+        contentView.addSubview(contentImageView)
         shadowImageView.contentMode = .scaleToFill
         shadowImageView.layer.cornerRadius = 6
         shadowImageView.clipsToBounds = true
         contentView.addSubview(shadowImageView)
+        timeLabel.textColor = .white
+        updateAppearance(highlight: false, animated: false)
+        contentImageView.addSubview(selectedOverlapView)
         super.prepare()
         backgroundImageView.removeFromSuperview()
+    }
+    
+    override func updateAppearance(highlight: Bool, animated: Bool) {
+        UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
+            self.selectedOverlapView.alpha = highlight ? 1 : 0
+        }
     }
 
     func contentSnapshotView(afterScreenUpdates: Bool) -> UIView {
@@ -58,5 +73,32 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         return view
     }
     
+}
+
+extension PhotoRepresentableMessageCell {
+
+    class SelectedOverlapView: UIView {
+
+        override var backgroundColor: UIColor? {
+            set {
+
+            }
+            get {
+                return super.backgroundColor
+            }
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            super.init(coder: aDecoder)
+            super.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        }
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            super.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        }
+
+    }
+
 }
 

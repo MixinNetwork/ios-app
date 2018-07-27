@@ -12,6 +12,7 @@ class DetailInfoMessageCell: MessageCell {
     let timeLabel = UILabel()
     let statusImageView = UIImageView()
     let identityIconImageView = UIImageView(image: #imageLiteral(resourceName: "ic_user_bot"))
+    let highlightAnimationDuration: TimeInterval = 0.2
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
@@ -39,6 +40,14 @@ class DetailInfoMessageCell: MessageCell {
         }
     }
     
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        let needsUpdateAppearance = isSelected != selected
+        super.setSelected(selected, animated: animated)
+        if needsUpdateAppearance {
+            updateAppearance(highlight: selected, animated: animated)
+        }
+    }
+    
     override func prepare() {
         super.prepare()
         fullnameButton.titleLabel?.font = DetailInfoMessageViewModel.fullnameFont
@@ -59,4 +68,22 @@ class DetailInfoMessageCell: MessageCell {
         delegate?.detailInfoMessageCellDidSelectFullname(self)
     }
  
+    func updateAppearance(highlight: Bool, animated: Bool) {
+        guard let viewModel = viewModel, let bubbleImageProvider = (type(of: viewModel) as? DetailInfoMessageViewModel.Type)?.bubbleImageProvider else {
+            return
+        }
+        let transition = {
+            self.backgroundImageView.image = bubbleImageProvider.bubbleImage(forStyle: viewModel.style, highlight: highlight)
+        }
+        if animated {
+            UIView.transition(with: backgroundImageView,
+                              duration: highlightAnimationDuration,
+                              options: [.transitionCrossDissolve, .beginFromCurrentState],
+                              animations: transition,
+                              completion: nil)
+        } else {
+            transition()
+        }
+    }
+    
 }

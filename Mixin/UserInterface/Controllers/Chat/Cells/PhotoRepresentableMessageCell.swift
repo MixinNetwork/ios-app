@@ -88,14 +88,16 @@ extension PhotoRepresentableMessageCell {
             }
         }
         
+        private let dimmingColor = UIColor.black.withAlphaComponent(0.2)
+        
         required init?(coder aDecoder: NSCoder) {
             super.init(coder: aDecoder)
-            super.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+            super.backgroundColor = dimmingColor
         }
         
         override init(frame: CGRect) {
             super.init(frame: frame)
-            super.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+            super.backgroundColor = dimmingColor
         }
 
     }

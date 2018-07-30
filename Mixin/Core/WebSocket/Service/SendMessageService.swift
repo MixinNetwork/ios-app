@@ -211,13 +211,50 @@ class SendMessageService: MixinService {
                 SendMessageService.shared.processing = false
             }
             repeat {
-                guard let job = JobDAO.shared.nextJob(), SendMessageService.shared.handlerJob(job: job) else {
+                guard let job = JobDAO.shared.nextJob() else {
                     return
                 }
 
-                JobDAO.shared.removeJob(jobId: job.jobId)
+                if job.action == JobAction.SEND_ACK_MESSAGE.rawValue || job.action == JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue {
+                    let jobs = JobDAO.shared.nextBatchAckJobs(limit: 100)
+                    let messages: [TransferMessage] = jobs.flatMap {
+                        guard let params = $0.toBlazeMessage().params, let messageId = params.messageId, let status = params.status else {
+                            return nil
+                        }
+                        return TransferMessage(messageId: messageId, status: status)
+                    }
+
+                    guard messages.count > 0, SendMessageService.shared.deliverAckMessages(messages: messages) else {
+                        return
+                    }
+                    
+                    JobDAO.shared.removeJobs(jobIds: jobs.flatMap { $0.jobId })
+                } else {
+                    guard SendMessageService.shared.handlerJob(job: job) else {
+                        return
+                    }
+
+                    JobDAO.shared.removeJob(jobId: job.jobId)
+                }
             } while true
         }
+    }
+
+    private func deliverAckMessages(messages: [TransferMessage]) -> Bool {
+        let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
+        repeat {
+            guard AccountAPI.shared.didLogin else {
+                return false
+            }
+
+            do {
+                try deliver(blazeMessage: blazeMessage)
+                return true
+            } catch {
+                checkNetworkAndWebSocket()
+                Bugsnag.notifyError(error)
+            }
+        } while true
     }
 
     private func handlerJob(job: Job) -> Bool {

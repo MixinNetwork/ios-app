@@ -49,21 +49,22 @@ class QuoteTextMessageCell: TextMessageCell {
         super.prepare()
         
         quoteBackgroundImageView.image = #imageLiteral(resourceName: "bg_chat_quote")
-        addSubview(quoteBackgroundImageView)
+        contentView.addSubview(quoteBackgroundImageView)
         
         quoteTitleLabel.font = QuoteTextMessageViewModel.Quote.titleFont
-        addSubview(quoteTitleLabel)
+        contentView.addSubview(quoteTitleLabel)
         
         quoteIconImageView.contentMode = .center
-        addSubview(quoteIconImageView)
+        contentView.addSubview(quoteIconImageView)
         
         quoteSubtitleLabel.font = QuoteTextMessageViewModel.Quote.subtitleFont
         quoteSubtitleLabel.textColor = UIColor.gray
-        addSubview(quoteSubtitleLabel)
+        quoteSubtitleLabel.numberOfLines = QuoteTextMessageViewModel.Quote.subtitleNumberOfLines
+        contentView.addSubview(quoteSubtitleLabel)
         
         quoteImageView.clipsToBounds = true
         quoteImageView.contentMode = .scaleAspectFill
-        addSubview(quoteImageView)
+        contentView.addSubview(quoteImageView)
     }
     
 }

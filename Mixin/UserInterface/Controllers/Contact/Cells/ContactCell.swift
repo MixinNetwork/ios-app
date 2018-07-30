@@ -23,15 +23,6 @@ class ContactCell: UITableViewCell {
         render(avatarUrl: user.avatarUrl, identityNumber: user.identityNumber, fullName: user.fullName, isVerified: user.isVerified, isBot: user.isBot)
     }
 
-    func render(user: ForwardUser) {
-        if user.isGroup {
-            avatarImageView.setGroupImage(with: user.iconUrl, conversationId: user.conversationId)
-            render(avatarUrl: "", identityNumber: "", fullName: user.name, isVerified: false, isBot: false, isGroup: true)
-        } else {
-            render(avatarUrl: user.ownerAvatarUrl, identityNumber: user.identityNumber, fullName: user.fullName, isVerified: user.ownerIsVerified, isBot: user.isBot)
-        }
-    }
-
     private func render(avatarUrl: String, identityNumber: String, fullName: String, isVerified: Bool, isBot: Bool, isGroup: Bool = false) {
         if !isGroup {
             avatarImageView.setImage(with: avatarUrl, identityNumber: identityNumber, name: fullName)

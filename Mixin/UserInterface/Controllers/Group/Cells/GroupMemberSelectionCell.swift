@@ -26,10 +26,14 @@ class GroupMemberSelectionCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        guard let user = self.user, !user.disabled else {
+        guard !isDisabled else {
             return
         }
         selectionImageView.image = selected ? #imageLiteral(resourceName: "ic_member_selected") : #imageLiteral(resourceName: "ic_member_not_selected")
+    }
+
+    internal var isDisabled: Bool {
+        return user?.disabled ?? true
     }
 
     func render(user: GroupUser) {
@@ -39,15 +43,18 @@ class GroupMemberSelectionCell: UITableViewCell {
         if user.disabled {
             selectionImageView.image = #imageLiteral(resourceName: "ic_member_disabled")
         }
-        if user.isVerified {
+        displayVerifiedIcon(isVerified: user.isVerified, isBot: user.isBot)
+    }
+
+    internal func displayVerifiedIcon(isVerified: Bool, isBot: Bool) {
+        if isVerified {
             verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")
             verifiedImageView.isHidden = false
-        } else if user.isBot {
+        } else if isBot {
             verifiedImageView.image = #imageLiteral(resourceName: "ic_user_bot")
             verifiedImageView.isHidden = false
         } else {
             verifiedImageView.isHidden = true
         }
     }
-    
 }

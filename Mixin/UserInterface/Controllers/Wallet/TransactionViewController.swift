@@ -75,35 +75,47 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
             case 3:
                 switch snapshot.type {
                 case SnapshotType.deposit.rawValue:
-                    cell.render(title: Localized.TRANSACTION_SENDER, value: snapshot.sender ?? "")
+                    if asset.isAccount {
+                        cell.render(title: Localized.WALLET_ACCOUNT_NAME, value: snapshot.sender)
+                    } else {
+                        cell.render(title: Localized.TRANSACTION_SENDER, value: snapshot.sender)
+                    }
                 case SnapshotType.transfer.rawValue:
                     if snapshot.amount.toDouble() > 0 {
-                        cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: snapshot.opponentUserFullName ?? "")
+                        cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: snapshot.opponentUserFullName)
                     } else {
-                        cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: AccountAPI.shared.account?.full_name ?? "")
+                        cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: AccountAPI.shared.account?.full_name)
                     }
                 case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
-                    cell.render(title: Localized.TRANSACTION_TRANSACTION_HASH, value: snapshot.transactionHash ?? "")
+                    cell.render(title: Localized.TRANSACTION_TRANSACTION_HASH, value: snapshot.transactionHash)
                 default:
                     break
                 }
             case 4:
                 switch snapshot.type {
                 case SnapshotType.deposit.rawValue:
-                    cell.render(title: Localized.TRANSACTION_TRANSACTION_HASH, value: snapshot.transactionHash ?? "")
+                    cell.render(title: Localized.TRANSACTION_TRANSACTION_HASH, value: snapshot.transactionHash)
                 case SnapshotType.transfer.rawValue:
                     if snapshot.amount.toDouble() > 0 {
-                        cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: AccountAPI.shared.account?.full_name ?? "")
+                        cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: AccountAPI.shared.account?.full_name)
                     } else {
-                        cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: snapshot.opponentUserFullName ?? "")
+                        cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: snapshot.opponentUserFullName)
                     }
                 case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
-                    cell.render(title: Localized.TRANSACTION_RECEIVER, value: snapshot.receiver ?? "")
+                    if asset.isAccount {
+                        cell.render(title: Localized.WALLET_ACCOUNT_NAME, value: snapshot.receiver)
+                    } else {
+                        cell.render(title: Localized.TRANSACTION_RECEIVER, value: snapshot.receiver)
+                    }
                 default:
                     break
                 }
             case 5:
-                cell.render(title: Localized.TRANSACTION_MEMO, value: snapshot.memo ?? "      ")
+                if asset.isAccount && (snapshot.type == SnapshotType.deposit.rawValue || snapshot.type == SnapshotType.withdrawal.rawValue || snapshot.type == SnapshotType.fee.rawValue || snapshot.type == SnapshotType.rebate.rawValue) {
+                    cell.render(title: Localized.WALLET_ACCOUNT_MEMO, value: snapshot.memo)
+                } else {
+                    cell.render(title: Localized.TRANSACTION_MEMO, value: snapshot.memo)
+                }
             case 6:
                 cell.render(title: Localized.TRANSACTION_DATE, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate()))
             default:

@@ -187,6 +187,35 @@ class UserView: CornerView {
         UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
     }
 
+    @IBAction func previewAvatarAction(_ sender: Any) {
+        guard !user.avatarUrl.isEmpty, avatarImageView.sd_imageProgress.isFinished, let superView = superView else {
+            return
+        }
+        let frame = avatarImageView.convert(avatarImageView.bounds, to: superView)
+        let avatarPreviewImageView = AvatarPreviewImageView(frame: frame)
+        avatarPreviewImageView.image = avatarImageView.image
+        avatarPreviewImageView.layer.cornerRadius = avatarImageView.layer.cornerRadius
+        avatarPreviewImageView.clipsToBounds = true
+        avatarImageView.alpha = 0
+        superView.addSubview(avatarPreviewImageView)
+        if #available(iOS 11.0, *) {
+            superView.contentBottomConstraint.constant = -self.frame.height - superView.safeAreaInsets.vertical
+        } else {
+            superView.contentBottomConstraint.constant = -self.frame.height
+        }
+        UIView.animate(withDuration: 0.25, animations: {
+            superView.layoutIfNeeded()
+            avatarPreviewImageView.layer.cornerRadius = 0
+            avatarPreviewImageView.bounds.size = CGSize(width: superView.frame.width,
+                                                        height: superView.frame.width)
+            avatarPreviewImageView.center = CGPoint(x: superView.frame.width / 2,
+                                                    y: superView.frame.height / 2)
+        }, completion: { (finished: Bool) -> Void in
+            superView.popupView.removeFromSuperview()
+            superView.popupView = avatarPreviewImageView
+        })
+    }
+    
     private func addMuteAlertAction(alc: UIAlertController) {
         if user.isMuted {
             alc.addAction(UIAlertAction(title: Localized.PROFILE_UNMUTE, style: .default, handler: { [weak self](action) in
@@ -360,6 +389,18 @@ extension UserView: CollapsingLabelDelegate {
         descriptionScrollViewHeightConstraint.constant = textSize.height
         descriptionScrollView.isScrollEnabled = newMode == .normal && textSize.height > descriptionScrollView.frame.height
         layoutIfNeeded()
+    }
+    
+}
+
+extension UserView {
+    
+    class AvatarPreviewImageView: UIImageView {
+        
+        override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+            return false
+        }
+        
     }
     
 }

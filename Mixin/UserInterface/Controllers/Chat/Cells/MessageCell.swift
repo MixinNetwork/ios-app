@@ -4,6 +4,8 @@ class MessageCell: UITableViewCell {
 
     let backgroundImageView = UIImageView()
 
+    internal(set) var viewModel: MessageViewModel?
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         prepare()
@@ -18,20 +20,8 @@ class MessageCell: UITableViewCell {
         return backgroundImageView.frame
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        if animated {
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(0.15)
-        }
-        backgroundImageView.alpha = selected ? 0.65 : 1
-        if animated {
-            UIView.commitAnimations()
-        }
-    }
-
     func render(viewModel: MessageViewModel) {
-        
+        self.viewModel = viewModel
     }
     
     func prepare() {

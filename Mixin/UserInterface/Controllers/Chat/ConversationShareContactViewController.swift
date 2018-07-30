@@ -24,22 +24,17 @@ class ConversationShareContactViewController: ForwardViewController, MixinNaviga
         }
     }
 
-    override func forwardMessage(_ targetUser: ForwardUser) {
+    override func sendMessage(_ conversation: ForwardUser) {
         var newMessage = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue, conversationId: conversationId, userId: AccountAPI.shared.accountUserId)
-        newMessage.sharedUserId = targetUser.userId
-        let transferData = TransferContactData(userId: targetUser.userId)
+        newMessage.sharedUserId = conversation.userId
+        let transferData = TransferContactData(userId: conversation.userId)
         newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
 
-        let ownerUser = self.ownerUser
-        DispatchQueue.global().async { [weak self] in
-            SendMessageService.shared.sendMessage(message: newMessage, ownerUser: ownerUser, isGroupMessage: targetUser.isGroup)
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.navigationController?.popViewController(animated: true)
-            }
-        }
+        SendMessageService.shared.sendMessage(message: newMessage, ownerUser: ownerUser, isGroupMessage: conversation.isGroup)
+    }
+
+    override func backToConversation(_ conversations: [ForwardUser]) {
+        navigationController?.popViewController(animated: true)
     }
 
     class func instance(ownerUser: UserItem?, conversationId: String) -> UIViewController {

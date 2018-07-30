@@ -48,20 +48,21 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     static var positions = [String: Position]()
     
-    var dataSource: ConversationDataSource?
+    var dataSource: ConversationDataSource!
+    var conversationId: String {
+        return dataSource.conversationId
+    }
     var statusBarStyle = UIStatusBarStyle.default {
         didSet {
             setNeedsStatusBarAppearanceUpdate()
         }
     }
-    private(set) var conversationId = ""
     
     private let maxInputRow = 6
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.25
     private let minReasonableKeyboardHeight: CGFloat = 271
-    private let stickerPanelSegueId = "StickerPanelSegueId"
     private let moreMenuSegueId = "MoreMenuSegueId"
     private let audioInputSegueId = "AudioInputSegueId"
     
@@ -83,18 +84,27 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
-    private var stickerPanelViewController: StickerPanelViewController?
     private var moreMenuViewController: ConversationMoreMenuViewController?
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     private var userBot: App?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
-    private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
     private lazy var lastInputWrapperBottomConstant = bottomSafeAreaInset
     private lazy var lastKeyboardHeight = minReasonableKeyboardHeight
     
+    private lazy var stickerPanelViewController: StickerPanelViewController = {
+        let controller = StickerPanelViewController.instance()
+        addChildViewController(controller)
+        stickerPanelContainerView.addSubview(controller.view)
+        controller.view.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+        controller.didMove(toParentViewController: self)
+        stickerPanelContainerView.layoutIfNeeded()
+        return controller
+    }()
     private lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController.instance(conversationId: conversationId)
         controller.delegate = self
@@ -173,7 +183,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         titleLabel.addGestureRecognizer(reportRecognizer)
 
         audioInputContainerWidthConstraint.constant = 55
-        quotePreviewView.dismissButton.addTarget(self, action: #selector(dismissQuoteView(_:)), for: .touchUpInside)
+        quotePreviewView.dismissAction = { [weak self] in
+            self?.setQuoteViewHidden(true)
+        }
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
@@ -181,45 +193,43 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         tableView.delegate = self
         tableView.actionDelegate = self
         tableView.viewController = self
+        let bottomSafeAreaInset: CGFloat
+        if #available(iOS 11.0, *) {
+            bottomSafeAreaInset = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
+        } else {
+            view.layoutIfNeeded()
+            bottomSafeAreaInset = 0
+        }
+        tableView.contentInset.bottom = inputWrapperView.frame.height + bottomSafeAreaInset + MessageViewModel.bottomSeparatorHeight
+        tableView.scrollIndicatorInsets.bottom = inputWrapperView.frame.height
         inputTextView.delegate = self
         inputTextView.layer.cornerRadius = inputTextViewHeightConstraint.constant / 2
         connectionHintView.delegate = self
         loadStickerAndAsset()
-        DispatchQueue.global().async { [weak self] in
-            var conversation: ConversationItem?
-            if let dataSource = self?.dataSource {
-                if dataSource.category == .contact, self?.ownerUser == nil {
-                    self?.ownerUser = UserDAO.shared.getUser(userId: dataSource.conversation.ownerId)
-                }
-            } else if let ownerUser = self?.ownerUser, let conversationId = self?.conversationId {
-                conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
-                if conversation == nil {
-                    let item = ConversationItem()
-                    item.conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: ownerUser.userId)
-                    item.name = ownerUser.fullName
-                    item.iconUrl = ownerUser.avatarUrl
-                    item.ownerId = ownerUser.userId
-                    item.ownerIdentityNumber = ownerUser.identityNumber
-                    item.category = ConversationCategory.CONTACT.rawValue
-                    item.contentType = MessageCategory.SIGNAL_TEXT.rawValue
-                    conversation = item
-                }
-            }
-            var hasUnreadAnnouncement = false
-            if let conversationId = self?.conversationId {
-                hasUnreadAnnouncement = CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
-            }
-            DispatchQueue.main.async {
-                if let conversation = conversation {
-                    self?.dataSource = ConversationDataSource(conversation: conversation)
-                }
-                if hasUnreadAnnouncement {
-                    self?.announcementButton.isHidden = false
-                }
-                self?.prepareInterfaceAndObservers()
-                self?.hideLoading()
-            }
+        announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
+        dataSource.ownerUser = ownerUser
+        dataSource.tableView = tableView
+        dataSource.initData {
+            self.updateAccessoryButtons(animated: false)
         }
+        updateMoreMenuFixedJobs()
+        updateMoreMenuApps()
+        updateStrangerTipsView()
+        updateBottomView()
+        inputWrapperView.isHidden = false
+        loadDraft()
+        updateNavigationBar()
+        reloadParticipants()
+        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: .UIMenuControllerDidShowMenu, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: .UIMenuControllerDidHideMenu, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didAddedMessagesOutsideVisibleBounds(_:)), name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
+        hideLoading()
     }
 
     @objc func showReportMenuAction() {
@@ -281,9 +291,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == stickerPanelSegueId, let destination = segue.destination as? StickerPanelViewController {
-            stickerPanelViewController = destination
-        } else if segue.identifier == moreMenuSegueId, let destination = segue.destination as? ConversationMoreMenuViewController {
+        if segue.identifier == moreMenuSegueId, let destination = segue.destination as? ConversationMoreMenuViewController {
             moreMenuViewController = destination
         } else if segue.identifier == audioInputSegueId, let destination = segue.destination as? AudioInputViewController {
             audioInputViewController = destination
@@ -363,6 +371,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             groupWindow.bounds.size.width = view.bounds.width
             groupWindow.updateGroup(conversation: dataSource.conversation).presentView()
         } else if let user = ownerUser {
+            let userWindow = UserWindow.instance()
             userWindow.bounds.size.width = view.bounds.width
             userWindow.updateUser(user: user).presentView()
         }
@@ -622,7 +631,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             if shareUserId == AccountAPI.shared.accountUserId {
                 navigationController?.pushViewController(withBackRoot: MyProfileViewController.instance())
             } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
-                userWindow.updateUser(user: user).presentView()
+                UserWindow.instance().updateUser(user: user).presentView()
             }
         } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
             guard let cell = cell as? SystemMessageCell, cell.contentFrame.contains(recognizer.location(in: cell)) else {
@@ -842,15 +851,21 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
-        vc.dataSource = ConversationDataSource(conversation: conversation, highlight: highlight)
-        vc.conversationId = conversation.conversationId
+        let dataSource = ConversationDataSource(conversation: conversation, highlight: highlight)
+        if dataSource.category == .contact {
+            vc.ownerUser = UserDAO.shared.getUser(userId: dataSource.conversation.ownerId)
+        }
+        vc.dataSource = dataSource
         return vc
     }
     
     class func instance(ownerUser: UserItem) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
         vc.ownerUser = ownerUser
-        vc.conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: ownerUser.userId)
+        let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: ownerUser.userId)
+        let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
+            ?? ConversationItem(ownerUser: ownerUser)
+        vc.dataSource = ConversationDataSource(conversation: conversation)
         return vc
     }
     
@@ -1140,7 +1155,7 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
             return
         }
-        userWindow.updateUser(user: user).presentView()
+        UserWindow.instance().updateUser(user: user).presentView()
     }
     
 }
@@ -1524,19 +1539,13 @@ extension ConversationViewController {
     
     private func blinkCellBackground(at indexPath: IndexPath) {
         let animation = { (indexPath: IndexPath) in
-            guard let cell = self.tableView.cellForRow(at: indexPath) else {
+            guard let cell = self.tableView.cellForRow(at: indexPath) as? DetailInfoMessageCell else {
                 return
             }
-            UIView.animateKeyframes(withDuration: 0.6, delay: 0, options: [], animations: {
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5, animations: {
-                    cell.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-                })
-                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
-                    cell.backgroundColor = .clear
-                })
-            }) { (finished) in
-                cell.backgroundColor = nil
-            }
+            cell.updateAppearance(highlight: true, animated: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                cell.updateAppearance(highlight: false, animated: true)
+            })
         }
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(indexPath) {
             animation(indexPath)
@@ -1554,35 +1563,6 @@ extension ConversationViewController {
     
     private var trimmedMessageDraft: String {
         return inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-    
-    private func prepareInterfaceAndObservers() {
-        dataSource?.ownerUser = ownerUser
-        dataSource?.tableView = tableView
-        dataSource?.initData()
-        dataSource?.queue.async { [weak self] in
-            DispatchQueue.main.async {
-                self?.updateAccessoryButtons(animated: false)
-            }
-        }
-        updateBottomInset()
-        updateMoreMenuFixedJobs()
-        updateMoreMenuApps()
-        updateStrangerTipsView()
-        updateBottomView()
-        inputWrapperView.isHidden = false
-        loadDraft()
-        updateNavigationBar()
-        reloadParticipants()
-        NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: .UIMenuControllerDidShowMenu, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: .UIMenuControllerDidHideMenu, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didAddedMessagesOutsideVisibleBounds(_:)), name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
     }
     
     private func saveDraft() {
@@ -1646,7 +1626,7 @@ extension ConversationViewController {
             stickers.insert(StickerDAO.shared.recentUsedStickers(limit: limit), at: 0)
             stickers.insert(StickerDAO.shared.getFavoriteStickers(), at: 1)
             DispatchQueue.main.async {
-                self?.stickerPanelViewController?.reload(albums: albums, stickers: stickers)
+                self?.stickerPanelViewController.reload(albums: albums, stickers: stickers)
             }
             
             self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)

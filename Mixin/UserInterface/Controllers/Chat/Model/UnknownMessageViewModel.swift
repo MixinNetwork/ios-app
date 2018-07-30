@@ -1,12 +1,13 @@
 import UIKit
 
 class UnknownMessageViewModel: TextMessageViewModel {
-
-    private static let leftWithTailBubbleImage = #imageLiteral(resourceName: "ic_chat_bubble_unknown_left_tail")
-    private static let leftBubbleImage = #imageLiteral(resourceName: "ic_chat_bubble_unknown_left")
     
-    override var textColor: UIColor {
+    override class var textColor: UIColor {
         return .white
+    }
+    
+    override class var bubbleImageProvider: BubbleImageProvider.Type {
+        return UnknownBubbleImageProvider.self
     }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
@@ -15,13 +16,20 @@ class UnknownMessageViewModel: TextMessageViewModel {
         statusImage = nil
     }
     
-    override func didSetStyle() {
-        super.didSetStyle()
-        if style.contains(.tail) {
-            backgroundImage = UnknownMessageViewModel.leftWithTailBubbleImage
-        } else {
-            backgroundImage = UnknownMessageViewModel.leftWithTailBubbleImage
+}
+
+extension UnknownMessageViewModel {
+    
+    class UnknownBubbleImageProvider: BubbleImageProvider {
+        
+        override class var left: UIImage {
+            return #imageLiteral(resourceName: "ic_chat_bubble_unknown_left")
         }
+        
+        override class var leftTail: UIImage {
+            return #imageLiteral(resourceName: "ic_chat_bubble_unknown_left_tail")
+        }
+        
     }
     
 }

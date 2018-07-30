@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 class RefreshAssetsJob: BaseJob {
 
@@ -16,6 +17,18 @@ class RefreshAssetsJob: BaseJob {
         if let assetId = self.assetId {
             switch AssetAPI.shared.asset(assetId: assetId) {
             case let .success(asset):
+                if asset.isErrorAddress {
+                    var userInfo = UIApplication.getTrackUserInfo()
+                    userInfo["chainId"] = asset.chainId
+                    userInfo["name"] = asset.name
+                    userInfo["symbol"] = asset.symbol
+                    userInfo["type"] = asset.type
+                    userInfo["assetId"] = asset.assetId
+                    userInfo["publicKey"] = asset.publicKey ?? ""
+                    userInfo["accountName"] = asset.accountName ?? ""
+                    userInfo["accountTag"] = asset.accountTag ?? ""
+                    UIApplication.trackError("RefreshAssetsJob", action: "asset deposit data bad", userInfo: userInfo)
+                }
                 AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
             case let .failure(error):
                 throw error

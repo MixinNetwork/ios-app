@@ -26,7 +26,8 @@ class ConversationDataSource {
     var firstUnreadMessageId: String?
     weak var tableView: ConversationTableView?
     
-    private let messagesCountPerPage = 100
+    private let numberOfMessagesOnPaging = 100
+    private let numberOfMessagesOnReloading = 30
     private let layoutWidth = AppDelegate.current.window!.bounds.width
     private let me = AccountAPI.shared.account!
     private let semaphore = DispatchSemaphore(value: 1)
@@ -75,14 +76,9 @@ class ConversationDataSource {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func initData() {
+    func initData(completion: @escaping () -> Void) {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
-        queue.async {
-            guard !self.messageProcessingIsCancelled else {
-                return
-            }
-            self.reload()
-        }
+        reload(completion: completion)
     }
     
     func cancelMessageProcessing() {
@@ -146,7 +142,7 @@ class ConversationDataSource {
             return
         }
         isLoadingAbove = true
-        let messagesCountPerPage = self.messagesCountPerPage
+        let requiredCount = self.numberOfMessagesOnPaging
         let conversationId = self.conversationId
         let layoutWidth = self.layoutWidth
         queue.async {
@@ -154,8 +150,8 @@ class ConversationDataSource {
                 return
             }
             self.semaphore.wait()
-            var messages = MessageDAO.shared.getMessages(conversationId: conversationId, aboveMessage: location, count: messagesCountPerPage)
-            let didLoadEarliestMessage = messages.count < messagesCountPerPage
+            var messages = MessageDAO.shared.getMessages(conversationId: conversationId, aboveMessage: location, count: requiredCount)
+            let didLoadEarliestMessage = messages.count < requiredCount
             self.didLoadEarliestMessage = didLoadEarliestMessage
             let shouldInsertEncryptionHint = self.canInsertEncryptionHint && didLoadEarliestMessage
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
@@ -215,15 +211,15 @@ class ConversationDataSource {
         isLoadingBelow = true
         highlight = nil
         let conversationId = self.conversationId
-        let messagesCountPerPage = self.messagesCountPerPage
+        let requiredCount = self.numberOfMessagesOnPaging
         let layoutWidth = self.layoutWidth
         queue.async {
             guard !self.messageProcessingIsCancelled, let lastDate = self.dates.last, let location = self.viewModels[lastDate]?.last?.message else {
                 return
             }
             self.semaphore.wait()
-            var messages = MessageDAO.shared.getMessages(conversationId: conversationId, belowMessage: location, count: messagesCountPerPage)
-            self.didLoadLatestMessage = messages.count < messagesCountPerPage
+            var messages = MessageDAO.shared.getMessages(conversationId: conversationId, belowMessage: location, count: requiredCount)
+            self.didLoadLatestMessage = messages.count < requiredCount
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
             if self.canInsertUnreadHint, let firstUnreadMessageId = self.firstUnreadMessageId, let index = messages.index(where: { $0.messageId == firstUnreadMessageId }) {
@@ -256,7 +252,7 @@ class ConversationDataSource {
                 guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                     return
                 }
-                if messages.count != 0 {
+                if !viewModels.isEmpty {
                     self.viewModels.values.flatMap({ $0 }).forEach {
                         ($0 as? TextMessageViewModel)?.removeHighlights()
                     }
@@ -270,7 +266,9 @@ class ConversationDataSource {
                         self.viewModels[date]!.append(contentsOf: newViewModels)
                     }
                 }
-                tableView.reloadData()
+                if !viewModels.isEmpty {
+                    tableView.reloadData()
+                }
                 self.isLoadingBelow = false
                 self.semaphore.signal()
             }
@@ -570,7 +568,10 @@ extension ConversationDataSource {
     }
     
     private func reload(initialMessageId: String? = nil, completion: (() -> Void)? = nil) {
-        semaphore.wait()
+        let isLoadingOnBackgroundThread = !Thread.isMainThread
+        if isLoadingOnBackgroundThread {
+            semaphore.wait()
+        }
         canInsertUnreadHint = true
         var didLoadEarliestMessage = false
         var didLoadLatestMessage = false
@@ -581,18 +582,18 @@ extension ConversationDataSource {
         let initialMessageId = initialMessageId
             ?? highlight?.messageId
             ?? ConversationViewController.positions[conversationId]?.messageId
-        if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: messagesCountPerPage) {
+        if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: numberOfMessagesOnReloading) {
             (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
             if highlight == nil, initialMessageId != firstUnreadMessageId {
                 firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId
             }
-        } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: firstUnreadMessageId, count: messagesCountPerPage) {
+        } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: firstUnreadMessageId, count: numberOfMessagesOnReloading) {
             (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
             self.firstUnreadMessageId = firstUnreadMessageId
         } else {
-            messages = MessageDAO.shared.getLastNMessages(conversationId: conversationId, count: messagesCountPerPage)
+            messages = MessageDAO.shared.getLastNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
             didLoadLatestMessage = true
-            didLoadEarliestMessage = messages.count < messagesCountPerPage
+            didLoadEarliestMessage = messages.count < numberOfMessagesOnReloading
             firstUnreadMessageId = nil
         }
         loadedMessageIds = Set(messages.map({ $0.messageId }))
@@ -639,7 +640,7 @@ extension ConversationDataSource {
             }
             offset -= ConversationDateHeaderView.height
         }
-        DispatchQueue.main.async {
+        let updateUI = {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                 return
             }
@@ -668,8 +669,15 @@ extension ConversationDataSource {
                 self.perform(change: change)
             }
             self.pendingChanges = []
-            self.semaphore.signal()
+            if isLoadingOnBackgroundThread {
+                self.semaphore.signal()
+            }
             completion?()
+        }
+        if isLoadingOnBackgroundThread {
+            DispatchQueue.main.async(execute: updateUI)
+        } else {
+            updateUI()
         }
     }
     

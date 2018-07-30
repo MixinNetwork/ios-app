@@ -6,8 +6,6 @@ class BlockUserViewController: UIViewController {
 
     private var users = [UserItem]()
 
-    private lazy var userWindow = UserWindow.instance()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareTableView()
@@ -64,7 +62,7 @@ extension BlockUserViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        userWindow.updateUser(user: users[indexPath.row]).presentView()
+        UserWindow.instance().updateUser(user: users[indexPath.row]).presentView()
     }
     
 }

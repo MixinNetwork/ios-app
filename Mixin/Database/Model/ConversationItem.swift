@@ -93,6 +93,31 @@ class ConversationItem: TableCodable {
         return muteUntil > Date().toUTCString()
     }
 
+    convenience init(ownerUser: UserItem) {
+        self.init()
+        conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: ownerUser.userId)
+        name = ownerUser.fullName
+        iconUrl = ownerUser.avatarUrl
+        ownerId = ownerUser.userId
+        ownerIdentityNumber = ownerUser.identityNumber
+        category = ConversationCategory.CONTACT.rawValue
+        contentType = MessageCategory.SIGNAL_TEXT.rawValue
+    }
+    
+    convenience init(response: ConversationResponse) {
+        self.init()
+        conversationId = response.conversationId
+        ownerId = response.creatorId
+        category = response.category
+        name = response.name
+        iconUrl = response.iconUrl
+        announcement = response.announcement
+        status = ConversationStatus.SUCCESS.rawValue
+        muteUntil = response.muteUntil
+        codeUrl = response.codeUrl
+        createdAt = response.createdAt
+    }
+    
     func getConversationName() -> String {
         guard category == ConversationCategory.CONTACT.rawValue else {
             return name
@@ -106,25 +131,6 @@ class ConversationItem: TableCodable {
 
     func isNeedCachedGroupIcon() -> Bool {
         return category == ConversationCategory.GROUP.rawValue && (iconUrl.isEmpty || !FileManager.default.fileExists(atPath: MixinFile.groupIconsUrl.appendingPathComponent(iconUrl).path))
-    }
-
-}
-
-extension ConversationItem {
-
-    static func createConversation(from response: ConversationResponse) -> ConversationItem {
-        let conversation = ConversationItem()
-        conversation.conversationId = response.conversationId
-        conversation.ownerId = response.creatorId
-        conversation.category = response.category
-        conversation.name = response.name
-        conversation.iconUrl = response.iconUrl
-        conversation.announcement = response.announcement
-        conversation.status = ConversationStatus.SUCCESS.rawValue
-        conversation.muteUntil = response.muteUntil
-        conversation.codeUrl = response.codeUrl
-        conversation.createdAt = response.createdAt
-        return conversation
     }
 
 }

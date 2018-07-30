@@ -123,6 +123,7 @@ class BaseAPI {
         claims["exp"] = UInt64(Date().addingTimeInterval(60 * 30).timeIntervalSince1970)
         claims["jti"] = UUID().uuidString.lowercased()
         claims["sig"] = sig.sha256()
+        claims["scp"] = "FULL"
 
         let token = KeyUtil.stripRsaPrivateKeyHeaders(authenticationToken)
         let keyType = JWTCryptoKeyExtractor.privateKeyWithPEMBase64()

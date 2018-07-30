@@ -11,6 +11,7 @@ class WithdrawalViewController: UIViewController {
     @IBOutlet weak var memoTextField: UITextField!
     @IBOutlet weak var transactionFeeHintLabel: UILabel!
     @IBOutlet weak var requestingFeeIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var memoView: UIView!
     
     @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
     
@@ -25,7 +26,9 @@ class WithdrawalViewController: UIViewController {
                 displayFeeHint(loading: false)
                 return
             }
-            addressTextField.text = "\(addr.label) (\(addr.publicKey.toSimpleKey()))"
+            let prefix = (asset.isAccount ? addr.accountName : addr.label) ?? ""
+            let suffix = (asset.isAccount ? addr.accountTag?.toSimpleKey() : addr.publicKey?.toSimpleKey()) ?? ""
+            addressTextField.text = "\(prefix) (\(suffix))"
             reloadTransactionFeeHint(addressId: addr.addressId)
         }
     }
@@ -64,6 +67,8 @@ class WithdrawalViewController: UIViewController {
         if abs(UIScreen.main.bounds.width - 320) < 1 {
             contentViewTopConstraint.constant = 0
         }
+
+        memoView.isHidden = asset.isAccount
 
         loadDefaultAddress()
         self.view.addSubview(addressBookView)

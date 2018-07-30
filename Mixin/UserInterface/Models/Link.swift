@@ -2,7 +2,7 @@ import UIKit
 
 class Link {
     
-    static let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+    static let detector = MXNFastURLDetector()
     
     let hitFrame: CGRect
     let backgroundPath: UIBezierPath

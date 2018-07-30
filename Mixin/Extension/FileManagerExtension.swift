@@ -210,15 +210,15 @@ extension FileManager {
             let filename = MixinFile.logPath.appendingPathComponent(file).lastPathComponent.substring(endChar: ".")
             if log.hasPrefix("No sender key for:") {
                 if log.contains(filename) {
-                    FileManager.default.writeLog(conversationId: filename, log: log, commomLog: false, newSection: newSection)
+                    FileManager.default.writeLog(conversationId: filename, log: log, newSection: newSection)
                 }
             } else {
-                FileManager.default.writeLog(conversationId: filename, log: log, commomLog: true, newSection: newSection)
+                FileManager.default.writeLog(conversationId: filename, log: log, newSection: newSection)
             }
         }
     }
 
-    func writeLog(conversationId: String, log: String, commomLog: Bool = false, newSection: Bool = false) {
+    func writeLog(conversationId: String, log: String, newSection: Bool = false) {
         guard !conversationId.isEmpty else {
             return
         }

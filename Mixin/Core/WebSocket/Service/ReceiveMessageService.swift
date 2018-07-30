@@ -33,10 +33,15 @@ class ReceiveMessageService: MixinService {
                 if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
                 } else {
+                    var success = false
+                    defer {
+                        FileManager.default.writeLog(conversationId: data.conversationId, log: "[Receive][\(data.category)]...\(data.messageId)...\(data.createdAt)...insertOrReplace:\(success)")
+                    }
                     guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, data: blazeMessage.data, createdAt: data.createdAt) else {
                         UIApplication.trackError("ReceiveMessageService", action: "receiveMessage insert failed")
                         return
                     }
+                    success = true
                     ReceiveMessageService.shared.processReceiveMessages()
                 }
             }
@@ -132,7 +137,6 @@ class ReceiveMessageService: MixinService {
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId)
             }
         } catch {
-            trackDecryptFailed(data: data, dataHeader: decoded, error: error)
             FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
             guard !MessageDAO.shared.isExist(messageId: data.messageId) else {
                 UIApplication.trackError("ReceiveMessageService", action: "duplicateMessage")
@@ -188,24 +192,6 @@ class ReceiveMessageService: MixinService {
         case let .failure(error):
             Bugsnag.notifyError(error)
         }
-    }
-
-    private func trackDecryptFailed(data: BlazeMessageData, dataHeader: SignalProtocol.ComposeMessageData, error: Error) {
-        guard let signalError = error as? SignalError, signalError != .noSession else {
-            return
-        }
-        let errorInfo = "\(error)"
-        var userInfo = UIApplication.getTrackUserInfo()
-        userInfo["messageId"] = data.messageId
-        userInfo["userId"] = data.userId
-        userInfo["conversationId"] = data.conversationId
-        userInfo["category"] = data.category
-        userInfo["createdAt"] = data.createdAt
-        userInfo["source"] = data.source
-        userInfo["error"] = errorInfo
-        userInfo["keyType"] = CiphertextMessage.MessageType.toString(rawValue: dataHeader.keyType)
-        userInfo["resendMessageId"] = dataHeader.resendMessageId ?? ""
-        UIApplication.trackError("ReceiveMessageService", action: "signal key decrypt failed \(errorInfo)", userInfo: userInfo)
     }
     
     private func processDecryptSuccess(data: BlazeMessageData, plainText: String, representativeId: String? = nil) {
@@ -488,6 +474,7 @@ class ReceiveMessageService: MixinService {
             return
         }
 
+        FileManager.default.writeLog(conversationId: conversationId, log: "[ReceiveMessageService][REQUEST_REQUEST_MESSAGES]...messages:[\(messages.joined(separator: ","))]")
         let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()

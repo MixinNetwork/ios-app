@@ -21,6 +21,7 @@
 "action_refresh" = "Refresh";
 "action_select" = "Select";
 "action_clear" = "Clear";
+"action_send" = "Send";
 "menu_delete" = "Delete";
 
 "connection_hint_connecting" = "Connecting";
@@ -229,6 +230,9 @@
 "wallet_snapshot_to" = "To %@";
 "wallet_deposit" = "Deposit";
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
+"wallet_account_name" = "Account Name";
+"wallet_account_memo" = "Account Memo";
+"wallet_deposit_account_notice" = "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin, deposit will arrive after at least %@ block confirmations.";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";

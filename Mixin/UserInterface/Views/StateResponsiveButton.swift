@@ -2,7 +2,7 @@ import UIKit
 
 class StateResponsiveButton: CornerButton {
     
-    let activityIndicator = UIActivityIndicatorView()
+    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 
     @IBInspectable var enabledColor: UIColor?
     @IBInspectable var disabledColor: UIColor?
@@ -60,7 +60,6 @@ class StateResponsiveButton: CornerButton {
         }
         activityIndicator.hidesWhenStopped = true
         activityIndicator.stopAnimating()
-        activityIndicator.activityIndicatorViewStyle = .gray
         saveNormalState()
     }
 

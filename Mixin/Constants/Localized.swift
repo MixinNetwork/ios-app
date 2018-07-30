@@ -18,6 +18,7 @@ public class Localized {
     public static let ACTION_REFRESH = LocalizedString("action_refresh", comment: "Refresh")
     public static let ACTION_SELECT = LocalizedString("action_select", comment: "Select")
     public static let ACTION_CLEAR = LocalizedString("action_clear", comment: "Clear")
+    public static let ACTION_SEND = LocalizedString("action_send", comment: "Send")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
 
     public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
@@ -319,6 +320,11 @@ public class Localized {
     public static let WALLET_DEPOSIT = LocalizedString("wallet_deposit", comment: "Deposit")
     public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {
         return String(format: LocalizedString("wallet_deposit_confirmations", comment: "Deposit will arrive after at least %@ block confirmations."), "\(confirmations)")
+    }
+    public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name")
+    public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo")
+    public static func WALLET_DEPOSIT_ACCOUNT_NOTICE(symbol: String, confirmations: Int) -> String {
+        return String(format: LocalizedString("wallet_deposit_account_notice", comment: "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin, deposit will arrive after at least %@ block confirmations."), symbol, "\(confirmations)")
     }
     public static let WALLET_MENU_SHOW_HIDDEN_ASSETS = LocalizedString("wallet_menu_show_hidden_assets", comment: "Hidden assets")
     public static let WALLET_MENU_SHOW_ASSET = LocalizedString("wallet_menu_show_asset", comment: "Show asset")

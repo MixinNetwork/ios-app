@@ -21,6 +21,7 @@
 "action_refresh" = "刷新";
 "action_select" = "选择";
 "action_clear" = "清理";
+"action_send" = "发送";
 "menu_delete" = "删除";
 
 "connection_hint_connecting" = "正在连接";
@@ -227,6 +228,9 @@
 "wallet_snapshot_to" = "你转账给%@";
 "wallet_deposit" = "充值";
 "wallet_deposit_confirmations" = "充值到账至少需要 %@ 个区块确认";
+"wallet_account_name" = "账号名";
+"wallet_account_memo" = "备注";
+"wallet_deposit_account_notice" = "注意：账号名和备注同时使用才能充值 %@ 到 Mixin，充值到账至少需要 %@ 个区块确认。";
 "wallet_menu_show_hidden_assets" = "隐藏资产";
 "wallet_menu_show_asset" = "显示资产";
 "wallet_menu_hide_asset" = "隐藏资产";

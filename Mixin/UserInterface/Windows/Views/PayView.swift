@@ -33,7 +33,6 @@ class PayView: UIStackView {
     private var memo = ""
     private(set) var processing = false
     private var soundId: SystemSoundID = 0
-    private lazy var userWindow = UserWindow.instance()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -65,8 +64,13 @@ class PayView: UIStackView {
         } else if let address = address {
             self.address = address
             avatarImageView.isHidden = true
-            nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label)
-            mixinIDLabel.text = address.publicKey.toSimpleKey()
+            if asset.isAccount {
+                nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.accountName ?? "")
+                mixinIDLabel.text = address.accountTag
+            } else {
+                nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label ?? "")
+                mixinIDLabel.text = address.publicKey?.toSimpleKey()
+            }
             payStatusLabel.text = Localized.WALLET_WITHDRAWAL_PAY_PASSWORD
         }
         if let url = URL(string: asset.iconUrl) {

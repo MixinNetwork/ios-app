@@ -3,7 +3,7 @@ import UIKit
 class StickerMessageViewModel: DetailInfoMessageViewModel {
 
     static let timeMargin = Margin(leading: 2, trailing: 2, top: 4, bottom: 4)
-    static let maxWH: CGFloat = 130
+    static let maxWH: CGFloat = 120
     static let minWH: CGFloat = 48
     
     internal(set) var contentFrame = CGRect.zero

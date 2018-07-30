@@ -5,6 +5,7 @@ class BlockUserViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     private var users = [UserItem]()
+    private var userWindow: UserWindow?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +63,9 @@ extension BlockUserViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        UserWindow.instance().updateUser(user: users[indexPath.row]).presentView()
+        userWindow?.removeFromSuperview()
+        userWindow = UserWindow.instance()
+        userWindow!.updateUser(user: users[indexPath.row]).presentView()
     }
     
 }

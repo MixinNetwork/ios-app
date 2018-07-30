@@ -6,6 +6,7 @@ class TransactionViewController: UIViewController {
 
     private var asset: AssetItem!
     private var snapshot: SnapshotItem!
+    private var userWindow: UserWindow?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,7 +149,9 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
                 return
             }
             DispatchQueue.main.async {
-                UserWindow.instance().updateUser(user: user).presentView()
+                self.userWindow?.removeFromSuperview()
+                self.userWindow = UserWindow.instance()
+                self.userWindow!.updateUser(user: user).presentView()
             }
         }
     }

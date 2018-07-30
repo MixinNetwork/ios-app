@@ -21,13 +21,9 @@ class UserWindow: BottomSheetView {
             UIView.animate(withDuration: 0.25, animations: {
                 self.alpha = 0
                 self.popupView.bounds.size = .zero
-            }, completion: { (_) in
-                self.removeFromSuperview()
             })
         } else {
-            CATransaction.perform(blockWithTransaction: dismissView, completion: {
-                self.removeFromSuperview()
-            })
+            dismissView()
         }
     }
 

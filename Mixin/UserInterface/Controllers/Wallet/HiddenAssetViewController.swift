@@ -6,10 +6,28 @@ class HiddenAssetViewController: UIViewController {
 
     private var assets = [AssetItem]()
 
+    private lazy var assetAction: UITableViewRowAction = {
+        let action = UITableViewRowAction(style: .destructive, title: Localized.ACTION_SHOW, handler: { [weak self] (_, indexPath) in
+            guard let weakSelf = self else {
+                return
+            }
+            let assetId = weakSelf.assets[indexPath.row].assetId
+            weakSelf.assets.remove(at: indexPath.row)
+            weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
+            WalletUserDefault.shared.hiddenAssets[assetId] = nil
+        })
+        action.backgroundColor = .actionBackground
+        return action
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareTableView()
         fetchAssets()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     private func prepareTableView() {
@@ -18,12 +36,11 @@ class HiddenAssetViewController: UIViewController {
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         tableView.reloadData()
-        NotificationCenter.default.addObserver(forName: .AssetVisibleDidChange, object: nil, queue: .main) { [weak self] (_) in
-            self?.fetchAssets()
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
     }
 
-    private func fetchAssets() {
+    @objc private func fetchAssets() {
         DispatchQueue.global().async { [weak self] in
             let hiddenAssets = WalletUserDefault.shared.hiddenAssets
             let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
@@ -81,6 +98,10 @@ extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return CGFloat.leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        return [assetAction]
     }
     
 }

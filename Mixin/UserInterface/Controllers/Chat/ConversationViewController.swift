@@ -1380,7 +1380,7 @@ extension ConversationViewController {
         }
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         unblockButton.isHidden = !isBlocked
-        audioInputContainerView.isHidden = isBlocked
+        audioInputContainerView.isHidden = isBlocked || isShowingStickerPanel
         botButton.isHidden = !user.isBot
     }
     

@@ -34,6 +34,11 @@ class UserWindow: BottomSheetView {
     }
 
     class func instance() -> UserWindow {
-        return Bundle.main.loadNibNamed("UserWindow", owner: nil, options: nil)?.first as! UserWindow
+        let window = Bundle.main.loadNibNamed("UserWindow", owner: nil, options: nil)?.first as! UserWindow
+        if let windowFrame = UIApplication.shared.keyWindow?.bounds {
+            window.frame = windowFrame
+        }
+        return window
     }
+    
 }

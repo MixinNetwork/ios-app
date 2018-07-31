@@ -136,7 +136,7 @@
                             <rect key="frame" x="0.0" y="30" width="385" height="1"/>
                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="1" id="nKv-sF-g5N" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                <constraint firstAttribute="height" constant="1" id="nKv-sF-g5N" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                             </constraints>
                         </view>
                         <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gqf-oP-J5h" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
@@ -173,7 +173,7 @@
                             <rect key="frame" x="0.0" y="87" width="385" height="1"/>
                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="1" id="oCw-Um-udG" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                <constraint firstAttribute="height" constant="1" id="oCw-Um-udG" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                             </constraints>
                         </view>
                     </subviews>

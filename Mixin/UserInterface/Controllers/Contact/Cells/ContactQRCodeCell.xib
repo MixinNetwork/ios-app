@@ -77,7 +77,7 @@
                         <rect key="frame" x="187" y="0.0" width="1" height="55.5"/>
                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="1" id="xOn-WJ-MZP" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                            <constraint firstAttribute="width" constant="1" id="xOn-WJ-MZP" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                         </constraints>
                     </view>
                 </subviews>

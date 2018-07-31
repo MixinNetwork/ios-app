@@ -81,7 +81,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                                                             <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="1" id="aub-EY-rCj" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                                                <constraint firstAttribute="height" constant="1" id="aub-EY-rCj" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unread messages" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MXJ-nZ-7Cv">
@@ -98,7 +98,7 @@
                                                             <rect key="frame" x="0.0" y="27" width="375" height="1"/>
                                                             <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="1" id="H94-st-sU5" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                                                <constraint firstAttribute="height" constant="1" id="H94-st-sU5" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
@@ -616,7 +616,7 @@
                                                 <rect key="frame" x="0.0" y="55" width="375" height="1"/>
                                                 <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="1" id="kU3-iB-nOM" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                                    <constraint firstAttribute="height" constant="1" id="kU3-iB-nOM" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                                 </constraints>
                                             </view>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tCB-t3-VXy" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
@@ -914,7 +914,7 @@
                                 <rect key="frame" x="0.0" y="610" width="375" height="1"/>
                                 <color key="backgroundColor" red="0.81176470590000005" green="0.81176470590000005" blue="0.81176470590000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="3QZ-TF-boi" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                    <constraint firstAttribute="height" constant="1" id="3QZ-TF-boi" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                 </constraints>
                             </view>
                             <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b5P-d4-dTD">
@@ -1090,7 +1090,7 @@
                                         <rect key="frame" x="0.0" y="55" width="375" height="1"/>
                                         <color key="backgroundColor" red="0.35294117650000001" green="0.35686274509999999" blue="0.40000000000000002" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="0.5" id="6V7-U7-Jnt" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                            <constraint firstAttribute="height" constant="0.5" id="6V7-U7-Jnt" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                         </constraints>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vXs-py-VWa" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
@@ -1256,7 +1256,7 @@
                                                                                 <rect key="frame" x="0.0" y="59" width="285" height="1"/>
                                                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="height" constant="1" id="oSH-tA-edb" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                                                                    <constraint firstAttribute="height" constant="1" id="oSH-tA-edb" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                                                                 </constraints>
                                                                             </view>
                                                                         </subviews>
@@ -1294,7 +1294,7 @@
                                                                                 <rect key="frame" x="0.0" y="59" width="285" height="1"/>
                                                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="height" constant="1" id="zMq-JY-P8Y" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                                                                    <constraint firstAttribute="height" constant="1" id="zMq-JY-P8Y" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                                                                 </constraints>
                                                                             </view>
                                                                         </subviews>
@@ -1489,7 +1489,7 @@
                                 <rect key="frame" x="0.0" y="63" width="375" height="1"/>
                                 <color key="backgroundColor" red="0.81960784310000001" green="0.81960784310000001" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="FHF-ED-6LK" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                    <constraint firstAttribute="height" constant="1" id="FHF-ED-6LK" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RZg-ud-ehj">
@@ -1579,7 +1579,7 @@
                                 <rect key="frame" x="0.0" y="63" width="375" height="1"/>
                                 <color key="backgroundColor" red="0.81960784310000001" green="0.81960784310000001" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="yJ8-Hy-vdB" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                    <constraint firstAttribute="height" constant="1" id="yJ8-Hy-vdB" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XbT-Np-njY">
@@ -1881,7 +1881,7 @@
                                         <rect key="frame" x="20" y="133" width="355" height="1"/>
                                         <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="htJ-2P-1dQ" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                            <constraint firstAttribute="height" constant="1" id="htJ-2P-1dQ" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Extensions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F1m-k7-jRk">

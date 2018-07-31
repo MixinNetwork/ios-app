@@ -87,7 +87,7 @@
                     <rect key="frame" x="0.0" y="56" width="375" height="1"/>
                     <color key="backgroundColor" red="0.35294117650000001" green="0.35686274509999999" blue="0.40000000000000002" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="0.5" id="yjL-27-Uga" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                        <constraint firstAttribute="height" constant="0.5" id="yjL-27-Uga" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s2O-9a-Sm6">
@@ -198,7 +198,7 @@
                             <rect key="frame" x="30" y="0.0" width="315" height="1"/>
                             <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="1" id="sCt-tF-meQ" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                <constraint firstAttribute="height" constant="1" id="sCt-tF-meQ" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                             </constraints>
                         </view>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TOW-aq-cCZ" customClass="PinField" customModule="Mixin" customModuleProvider="target">

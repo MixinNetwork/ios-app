@@ -45,7 +45,7 @@
                                             <rect key="frame" x="30" y="59" width="315" height="1"/>
                                             <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="1" id="w3e-hJ-o2v" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                                <constraint firstAttribute="height" constant="1" id="w3e-hJ-o2v" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                             </constraints>
                                         </view>
                                     </subviews>
@@ -116,7 +116,7 @@
                                             <rect key="frame" x="30" y="0.0" width="315" height="1"/>
                                             <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="1" id="liH-EV-LZb" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                                <constraint firstAttribute="height" constant="1" id="liH-EV-LZb" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="You'll be asked for it periodically to help you remember it." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HDn-sR-n9l">

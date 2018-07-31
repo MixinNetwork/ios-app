@@ -2,6 +2,7 @@ import UIKit
 
 enum ScreenSize {
     
+    case inch3_5
     case inch4
     case inch4_7
     case inch5_5
@@ -11,6 +12,8 @@ enum ScreenSize {
     static let current: ScreenSize = {
         let screenHeight = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         switch screenHeight {
+        case 480:
+            return .inch3_5
         case 568:
             return .inch4
         case 667:

@@ -2,6 +2,12 @@ import UIKit
 
 class ScreenSizeCompatibleLayoutConstraint: NSLayoutConstraint {
     
+    @IBInspectable var inch3_5: CGFloat = 0 {
+        didSet {
+            updateConstraint(trait: .inch3_5, value: inch3_5)
+        }
+    }
+    
     @IBInspectable var inch4: CGFloat = 0 {
         didSet {
             updateConstraint(trait: .inch4, value: inch4)

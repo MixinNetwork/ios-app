@@ -38,6 +38,11 @@ class PayView: UIStackView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        if ScreenSize.current == .inch3_5 {
+            pinField.cellLength = 8
+            assetImageView.cornerRadius = 12
+            blockchainImageView.cornerRadius = 4
+        }
         pinField.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: NSNotification.Name.UIKeyboardWillHide, object: nil)

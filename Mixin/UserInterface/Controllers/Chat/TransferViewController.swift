@@ -207,6 +207,9 @@ extension TransferViewController {
         let continueButtonHeight = continueButtonWrapperView.isHidden ? 0 : continueButtonWrapperView.frame.height
         var bottomInset = keyboardHeight + continueButtonHeight + contentView.frame.height - scrollView.frame.height
         bottomInset = max(0, bottomInset)
+        if ScreenSize.current == .inch3_5 {
+            bottomInset -= 16
+        }
         scrollView.contentInset.bottom = bottomInset
         scrollView.scrollIndicatorInsets.bottom = bottomInset
         updateContentOffsetIfNeeded()

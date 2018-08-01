@@ -68,6 +68,8 @@
 	<string>Allow Mixin to access your microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow Mixin to access your photos</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Allow Mixin to authorize payment via Face ID</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

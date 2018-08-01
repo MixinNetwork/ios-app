@@ -97,6 +97,9 @@ class WalletViewController: UIViewController {
         guard AccountAPI.shared.account?.has_pin ?? false else {
             return nil
         }
+        guard !UIDevice.isJailbreak else {
+            return nil
+        }
 
         let context = LAContext()
         var error: NSError?

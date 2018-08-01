@@ -21,13 +21,13 @@ class PayWindow: BottomSheetView {
 
     static let shared = Bundle.main.loadNibNamed("PayWindow", owner: nil, options: nil)?.first as! PayWindow
 
-    func presentPopupControllerAnimated(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, textfield: UITextField?) {
+    func presentPopupControllerAnimated(isTransfer: Bool, asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, textfield: UITextField?) {
         guard !isShowing else {
             return
         }
         self.textfield = textfield
         super.presentPopupControllerAnimated()
-        payView.render(asset: asset, user: user, address: address, amount: amount, memo: memo, trackId: trackId, superView: self)
+        payView.render(isTransfer: isTransfer, asset: asset, user: user, address: address, amount: amount, memo: memo, trackId: trackId, superView: self)
     }
 
     override func dismissPopupControllerAnimated() {

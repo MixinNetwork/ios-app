@@ -1,4 +1,5 @@
 import Foundation
+import LocalAuthentication
 
 class Keychain {
 
@@ -85,6 +86,24 @@ extension Keychain {
 }
 
 extension Keychain {
+
+    @discardableResult
+    func storePIN(pin: String) -> Bool {
+        guard #available(iOS 11.0, *) else {
+            return false
+        }
+        let context = LAContext()
+        var error: NSError?
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            if context.biometryType == .touchID {
+                return storePIN(pin: pin, prompt: Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_TOUCH_ID))
+            } else if context.biometryType == .faceID {
+                return storePIN(pin: pin, prompt: Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_FACE_ID))
+            }
+        }
+
+        return false
+    }
 
     func storePIN(pin: String, prompt: String) -> Bool {
         guard let privateKey = getPrivateKeyRef(prompt: prompt) ?? generateKey() else {

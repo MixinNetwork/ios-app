@@ -469,6 +469,7 @@
 		DFD87C871FDA9DD300BBCFFC /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD87C861FDA9DD300BBCFFC /* NetworkManager.swift */; };
 		DFD87C891FDBE07600BBCFFC /* ParticipantRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD87C881FDBE07600BBCFFC /* ParticipantRequest.swift */; };
 		DFD87C8B1FDBF10100BBCFFC /* RefreshOffsetJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD87C8A1FDBF10100BBCFFC /* RefreshOffsetJob.swift */; };
+		DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */; };
 		DFD995A0207C9D6100621FFA /* AccountUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD9959F207C9D6100621FFA /* AccountUserDefault.swift */; };
 		DFDC7E431FAC8D50003233EE /* ContactAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDC7E421FAC8D50003233EE /* ContactAPI.swift */; };
 		DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE1F9801FAB40A800537D43 /* CornerButton.swift */; };
@@ -1023,6 +1024,7 @@
 		DFD87C861FDA9DD300BBCFFC /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		DFD87C881FDBE07600BBCFFC /* ParticipantRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantRequest.swift; sourceTree = "<group>"; };
 		DFD87C8A1FDBF10100BBCFFC /* RefreshOffsetJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshOffsetJob.swift; sourceTree = "<group>"; };
+		DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 		DFD9959F207C9D6100621FFA /* AccountUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountUserDefault.swift; sourceTree = "<group>"; };
 		DFDC7E421FAC8D50003233EE /* ContactAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAPI.swift; sourceTree = "<group>"; };
 		DFE1F9801FAB40A800537D43 /* CornerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerButton.swift; sourceTree = "<group>"; };
@@ -1629,6 +1631,7 @@
 				DF5D9F141F9C5B970036D5FD /* StringExtension.swift */,
 				DF5D9F151F9C5BBB0036D5FD /* UIApplicationExtension.swift */,
 				DF5D9F161F9C5E6A0036D5FD /* UIColorExtension.swift */,
+				DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */,
 				DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */,
 				DF7A4B491FCE6EE200F21BCB /* UIViewExtension.swift */,
 				7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */,
@@ -2477,6 +2480,7 @@
 				DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerCollectionViewCell.swift in Sources */,
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
+				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				DF114B0C2020B56E00EA8F9C /* WebWindow.swift in Sources */,
 				273FACB9205FB9A800513327 /* PreKeyStore.swift in Sources */,
 				DFF353041FEE657000058453 /* CryptoUserDefault.swift in Sources */,

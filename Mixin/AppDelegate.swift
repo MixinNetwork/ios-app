@@ -29,7 +29,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         checkLogin()
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+        checkJailbreak()
         return true
+    }
+
+    private func checkJailbreak() {
+        guard UIDevice.isJailbreak else {
+            return
+        }
+        Keychain.shared.clearPIN()
     }
 
     private func initBugsnag() {

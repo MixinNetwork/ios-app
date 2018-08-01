@@ -33,6 +33,8 @@ class PayView: UIStackView {
     private var memo = ""
     private(set) var processing = false
     private var soundId: SystemSoundID = 0
+    private var isTransfer = false
+    private var isAutoFillPIN = false
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -48,7 +50,8 @@ class PayView: UIStackView {
         NotificationCenter.default.removeObserver(self)
     }
 
-    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
+    func render(isTransfer: Bool, asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
+        self.isTransfer = isTransfer
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -196,7 +199,9 @@ extension PayView: PinFieldDelegate {
                 } else {
                     WalletUserDefault.shared.defalutTransferAssetId = assetId
                 }
-                WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                if !weakSelf.isAutoFillPIN {
+                    WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                }
                 weakSelf.transferLoadingView.stopAnimating()
                 weakSelf.transferLoadingView.isHidden = true
                 weakSelf.paySuccessImageView.isHidden = false
@@ -235,6 +240,10 @@ extension PayView: PinFieldDelegate {
         guard WalletUserDefault.shared.isBiometricPay else {
             return
         }
+        guard Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime < WalletUserDefault.shared.checkPinInterval else {
+            return
+        }
+
         let context = LAContext()
         var error: NSError?
         guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), context.biometryType == .touchID || context.biometryType == .faceID else {
@@ -247,6 +256,7 @@ extension PayView: PinFieldDelegate {
                 return
             }
             DispatchQueue.main.async {
+                self?.isAutoFillPIN = true
                 self?.pinField.insertText(pin)
             }
         }

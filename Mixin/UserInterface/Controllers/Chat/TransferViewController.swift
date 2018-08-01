@@ -117,7 +117,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         let amount = amountTextField.text ?? ""
         let memo = memoTextField.text ?? ""
 
-        PayWindow.shared.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+        PayWindow.shared.presentPopupControllerAnimated(isTransfer: true, asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
     }
 
     

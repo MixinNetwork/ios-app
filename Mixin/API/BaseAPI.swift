@@ -135,7 +135,7 @@ class BaseAPI {
     private static let baseHeaders: HTTPHeaders = [
         "Content-Type": "application/json",
         "Accept-Language": Locale.current.languageCode ?? "en",
-        "Mixin-Device-Id": Keychain.getDeviceId(),
+        "Mixin-Device-Id": Keychain.shared.getDeviceId(),
         "User-Agent": "Mixin/\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) (iOS \(UIDevice.current.systemVersion); \(DeviceGuru().hardware()); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
     ]
     private static let jsonEncoding = JSONEncoding()

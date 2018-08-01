@@ -7,6 +7,7 @@
 "dialog_button_change" = "Change";
 "dialog_button_confirm" = "Confirm";
 "dialog_button_got_it" = "Got It";
+"dialog_button_disable" = "Disable";
 "dialog_progress_logout" = "Log out...";
 "dialog_progress_connect" = "Connecting...";
 "action_next" = "Next";
@@ -262,6 +263,16 @@
 "wallet_pin_tips_title" = "Enter your Wallet PIN";
 "wallet_pin_tips_description" = "You'll be asked for it periodically to help you remember it.";
 "wallet_all_transactions_title" = "All Transactions";
+"wallet_pin_touch_id_prompt" = "Confirm PIN to enable Touch Pay";
+"wallet_pin_face_id_prompt" = "Confirm PIN to enable Face Pay";
+"wallet_setting" = "Wallet Setting";
+"wallet_touch_id" = "Touch ID";
+"wallet_face_id" = "Face ID";
+"wallet_enable_biometric_pay_title" = "Pay with %@";
+"wallet_enable_biometric_pay_prompt" = "Once enabled, %@ can be used to make quick transfers";
+"wallet_store_encrypted_pin" = "Enable %@ Pay";
+"wallet_biometric_pay_prompt" = "Authorize payment via %@";
+"wallet_disable_biometric_pay" = "Disable %@ Pay?";
 
 // Transaction
 "transaction_title" = "Transaction";

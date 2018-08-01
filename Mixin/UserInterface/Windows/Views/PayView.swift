@@ -94,8 +94,8 @@ class PayView: UIStackView {
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.biometricsPayAction()
+        if #available(iOS 11.0, *) {
+            biometricsPayAction()
         }
     }
 
@@ -230,20 +230,24 @@ extension PayView: PinFieldDelegate {
         }
     }
 
+    @available(iOS 11.0, *)
     private func biometricsPayAction() {
+        guard WalletUserDefault.shared.isBiometricPay else {
+            return
+        }
         let context = LAContext()
-        context.localizedFallbackTitle = Localized.TRANSFER_PAY_PASSWORD
+        var error: NSError?
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), context.biometryType == .touchID || context.biometryType == .faceID else {
+            return
+        }
+        let prompt = Localized.WALLET_BIOMETRIC_PAY_PROMPT(biometricType: context.biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
 
-//        context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: <#T##NSErrorPointer#>)
-        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: Localized.TRANSFER_TOUCH_ID_REASON) { [weak self](success, error) in
+        DispatchQueue.global().async { [weak self] in
+            guard let pin = Keychain.shared.getPIN(prompt: prompt) else {
+                return
+            }
             DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                if success {
-                    weakSelf.pinField.insertText("123499")
-//                    weakSelf.transferAction(pin: "123499")
-                }
+                self?.pinField.insertText(pin)
             }
         }
     }

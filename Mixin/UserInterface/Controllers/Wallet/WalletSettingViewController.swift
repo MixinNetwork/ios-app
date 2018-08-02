@@ -17,13 +17,6 @@ class WalletSettingViewController: UITableViewController {
         payTitleLabel.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
     }
 
-    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        guard section == 0 else {
-            return nil
-        }
-        return Localized.WALLET_ENABLE_BIOMETRIC_PAY_PROMPT(biometricType: biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
-    }
-
     @IBAction func biometryPaySwitchAction(_ sender: Any) {
         if WalletUserDefault.shared.isBiometricPay {
             let title = Localized.WALLET_DISABLE_BIOMETRIC_PAY(biometricType: biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
@@ -56,9 +49,23 @@ class WalletSettingViewController: UITableViewController {
         }
     }
 
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        guard section == 0 else {
+            return nil
+        }
+        return Localized.WALLET_ENABLE_BIOMETRIC_PAY_PROMPT(biometricType: biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        if indexPath.section == 1 {
+            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .changePinStep1), animated: true)
+        }
+    }
+
     @IBAction func changePINAction(_ sender: Any) {
-        let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .changePinStep1), animated: true)
     }
 
     class func instance(biometryType: LABiometryType) -> UIViewController {

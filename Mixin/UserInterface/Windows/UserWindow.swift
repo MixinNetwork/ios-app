@@ -21,13 +21,9 @@ class UserWindow: BottomSheetView {
             UIView.animate(withDuration: 0.25, animations: {
                 self.alpha = 0
                 self.popupView.bounds.size = .zero
-            }, completion: { (_) in
-                self.removeFromSuperview()
             })
         } else {
-            CATransaction.perform(blockWithTransaction: dismissView, completion: {
-                self.removeFromSuperview()
-            })
+            dismissView()
         }
     }
 
@@ -38,6 +34,11 @@ class UserWindow: BottomSheetView {
     }
 
     class func instance() -> UserWindow {
-        return Bundle.main.loadNibNamed("UserWindow", owner: nil, options: nil)?.first as! UserWindow
+        let window = Bundle.main.loadNibNamed("UserWindow", owner: nil, options: nil)?.first as! UserWindow
+        if let windowFrame = UIApplication.shared.keyWindow?.bounds {
+            window.frame = windowFrame
+        }
+        return window
     }
+    
 }

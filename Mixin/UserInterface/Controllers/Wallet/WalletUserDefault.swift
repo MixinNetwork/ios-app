@@ -78,6 +78,7 @@ class WalletUserDefault {
         }
         set {
             session.set(newValue, forKey: keyHiddenAssets)
+            NotificationCenter.default.postOnMain(name: .HiddenAssetsDidChange)
         }
     }
 

@@ -23,6 +23,8 @@
 "action_select" = "Select";
 "action_clear" = "Clear";
 "action_send" = "Send";
+"action_hide" = "Hide";
+"action_show" = "Show";
 "menu_delete" = "Delete";
 
 "connection_hint_connecting" = "Connecting";

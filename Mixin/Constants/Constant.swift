@@ -34,6 +34,8 @@ extension NSNotification.Name {
     static let StickerDidChange = NSNotification.Name("one.mixin.ios.stickers.changed")
 
     static let StorageUsageDidChange = NSNotification.Name("one.mixin.ios.storage.changed")
+    
+    static let HiddenAssetsDidChange = NSNotification.Name("one.mixin.ios.hidden.assets.changed")
 }
 
 enum NotificationIdentifier: String {

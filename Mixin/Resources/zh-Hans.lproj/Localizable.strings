@@ -23,6 +23,8 @@
 "action_select" = "选择";
 "action_clear" = "清理";
 "action_send" = "发送";
+"action_hide" = "隐藏";
+"action_show" = "显示";
 "menu_delete" = "删除";
 
 "connection_hint_connecting" = "正在连接";

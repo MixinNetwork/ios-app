@@ -21,6 +21,8 @@ extension UIColor {
     static let hintRed = UIColor(rgbValue: 0xFF7070)
     static let hintGreen = UIColor(rgbValue: 0x48CF94)
 
+    static let actionBackground = UIColor(rgbValue: 0xc7c7cd)
+    
     static let usernameColors = [UIColor(rgbValue: 0xAA4848),
                                  UIColor(rgbValue: 0xB0665E),
                                  UIColor(rgbValue: 0xEF8A44),

@@ -36,7 +36,7 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_chat_bg" translatesAutoresizingMaskIntoConstraints="NO" id="MYg-f9-MjM">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="39" sectionHeaderHeight="44" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0e-5f-Xnl" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="39" sectionHeaderHeight="44" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0e-5f-Xnl" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="76" width="375" height="591"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -900,7 +900,7 @@
                                         </constraints>
                                     </containerView>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="rZG-cd-J6L" firstAttribute="bottom" secondItem="OCN-L0-tlY" secondAttribute="top" id="5nr-Tb-veR"/>
                                     <constraint firstItem="rZG-cd-J6L" firstAttribute="leading" secondItem="6MP-pq-xci" secondAttribute="leading" id="9r2-zv-y3s"/>

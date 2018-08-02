@@ -271,6 +271,13 @@
 "wallet_store_encrypted_pin" = "启用%@支付";
 "wallet_biometric_pay_prompt" = "通过%@验证支付";
 "wallet_disable_biometric_pay" = "确定暂停使用%@支付？";
+"wallet_pin_pay_interval_minutes" = "%@ 分钟";
+"wallet_pin_pay_interval_hour" = "1 小时";
+"wallet_pin_pay_interval_hours" = "%@ 小时";
+"wallet_pin_pay_interval" = "支付密码使用间隔";
+"wallet_pin_pay_interval_confirm" = "确认钱包密码保护设置安全";
+"wallet_pin_pay_interval_tips" = "为了你的资产安全，距离上次输入支付密码的时间超过以上指定时间时，再次转账时仍然需要支付密码";
+
 
 // Transaction
 "transaction_title" = "交易详情";

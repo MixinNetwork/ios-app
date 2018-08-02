@@ -12,12 +12,18 @@ class PinTipsView: BottomSheetView {
 
     private var tips: String!
     private var successCallback: ((String) -> Void)?
+    private var dismissCallback: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
         pinField.delegate = self
         loadingView.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+    }
+
+    func presentPopupControllerAnimated(dismissCallback: @escaping () -> Void) {
+        self.dismissCallback = dismissCallback
+        presentPopupControllerAnimated()
     }
 
     override func presentPopupControllerAnimated() {
@@ -63,6 +69,10 @@ class PinTipsView: BottomSheetView {
             targetConstraint = endKeyboardRect.height
             targetAlpha = 1
             self.alpha = 0
+        }
+
+        if targetConstraint == 0 {
+            dismissCallback?()
         }
 
         UIView.animate(withDuration: duration, animations: {

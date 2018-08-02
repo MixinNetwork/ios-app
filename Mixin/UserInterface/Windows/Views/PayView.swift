@@ -240,7 +240,7 @@ extension PayView: PinFieldDelegate {
         guard WalletUserDefault.shared.isBiometricPay else {
             return
         }
-        guard Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime < WalletUserDefault.shared.checkPinInterval else {
+        guard Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime < WalletUserDefault.shared.pinInterval else {
             return
         }
 

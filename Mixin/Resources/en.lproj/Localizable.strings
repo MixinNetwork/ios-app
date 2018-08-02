@@ -273,6 +273,13 @@
 "wallet_store_encrypted_pin" = "Enable %@ Pay";
 "wallet_biometric_pay_prompt" = "Authorize payment via %@";
 "wallet_disable_biometric_pay" = "Disable %@ Pay?";
+"wallet_pin_pay_interval_minutes" = "%@ Minutes";
+"wallet_pin_pay_interval_hour" = "1 Hour";
+"wallet_pin_pay_interval_hours" = "%@ Hours";
+"wallet_pin_pay_interval" = "Pay with PIN interval";
+"wallet_pin_pay_interval_confirm" = "Confirm PIN to protect your settings security.";
+"wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your Wallet PIN for the specified interval.";
+
 
 // Transaction
 "transaction_title" = "Transaction";

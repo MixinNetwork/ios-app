@@ -31,11 +31,11 @@ class WalletTotalBalanceCell: UITableViewCell {
         var btcTotalBalance: Double = 0
         var usdTotalBalance: Double = 0
         for asset in assets {
-            let balance = asset.balance.toDouble()
-            let priceBalance = balance * asset.priceUsd.toDouble()
+            let balance = asset.balance.doubleValue
+            let priceBalance = balance * asset.priceUsd.doubleValue
             if priceBalance > 0 {
-                btcTotalBalance += balance * asset.priceBtc.toDouble()
-                usdTotalBalance += balance * asset.priceUsd.toDouble()
+                btcTotalBalance += balance * asset.priceBtc.doubleValue
+                usdTotalBalance += balance * asset.priceUsd.doubleValue
                 totalPriceBalance += priceBalance
                 if segments.count < 3 {
                     segments.append(PieSegment(color: colors[segments.count], value: priceBalance, symbol: asset.symbol))
@@ -46,8 +46,8 @@ class WalletTotalBalanceCell: UITableViewCell {
             }
         }
 
-        btcBalanceLabel.text = String(format: "%@ BTC", btcTotalBalance.formatSimpleBalance())
-        usdBalanceLabel.text = String(format: "%@ USD", usdTotalBalance.toFormatLegalTender())
+        btcBalanceLabel.text = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never, symbol: .btc)
+        usdBalanceLabel.text = CurrencyFormatter.localizedString(from: usdTotalBalance, format: .legalTender, sign: .never, symbol: .usd)
 
         indicatorStackView.isHidden = segments.count == 0
         switch segments.count {

@@ -87,17 +87,23 @@
                     <rect key="frame" x="0.0" y="56" width="375" height="1"/>
                     <color key="backgroundColor" red="0.35294117650000001" green="0.35686274509999999" blue="0.40000000000000002" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="0.5" id="yjL-27-Uga" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                        <constraint firstAttribute="height" constant="0.5" id="yjL-27-Uga" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s2O-9a-Sm6">
                     <rect key="frame" x="0.0" y="57" width="375" height="103"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="ic_wallet_xin_medium" translatesAutoresizingMaskIntoConstraints="NO" id="Rfz-A7-Jra" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="163.5" y="30" width="48" height="48"/>
+                            <rect key="frame" x="163.5" y="27.5" width="48" height="48"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="48" id="GRK-9F-jfx"/>
-                                <constraint firstAttribute="width" constant="48" id="gcJ-F6-3bw"/>
+                                <constraint firstAttribute="width" secondItem="Rfz-A7-Jra" secondAttribute="height" multiplier="1:1" id="bVX-Ff-l4U"/>
+                                <constraint firstAttribute="width" constant="48" id="gcJ-F6-3bw" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                            <real key="value" value="24"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
                             </constraints>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -106,10 +112,16 @@
                             </userDefinedRuntimeAttributes>
                         </imageView>
                         <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="k07-Py-pCL" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="163.5" y="66" width="12" height="12"/>
+                            <rect key="frame" x="163.5" y="63.5" width="12" height="12"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="12" id="2wH-T1-uI6"/>
-                                <constraint firstAttribute="height" constant="12" id="hFd-Vm-tc8"/>
+                                <constraint firstAttribute="width" constant="12" id="2wH-T1-uI6" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                            <real key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
+                                <constraint firstAttribute="width" secondItem="k07-Py-pCL" secondAttribute="height" multiplier="1:1" id="aJW-ze-gfc"/>
                             </constraints>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -120,9 +132,18 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="Rfz-A7-Jra" firstAttribute="top" secondItem="s2O-9a-Sm6" secondAttribute="top" constant="30" id="70R-ur-Sla"/>
+                        <constraint firstItem="Rfz-A7-Jra" firstAttribute="centerY" secondItem="s2O-9a-Sm6" secondAttribute="centerY" id="Ktd-NN-CkR"/>
                         <constraint firstItem="Rfz-A7-Jra" firstAttribute="centerX" secondItem="s2O-9a-Sm6" secondAttribute="centerX" id="aDX-07-vO2"/>
-                        <constraint firstAttribute="height" constant="103" id="cN0-h0-Ao6"/>
+                        <constraint firstAttribute="height" constant="103" id="cN0-h0-Ao6" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <real key="value" value="73"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="40"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="k07-Py-pCL" firstAttribute="bottom" secondItem="Rfz-A7-Jra" secondAttribute="bottom" id="cqQ-hI-aEs"/>
                         <constraint firstItem="k07-Py-pCL" firstAttribute="leading" secondItem="Rfz-A7-Jra" secondAttribute="leading" id="idx-mh-x2Q"/>
                     </constraints>
@@ -160,7 +181,16 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="C02-xQ-2hI" firstAttribute="top" secondItem="yfc-sw-leV" secondAttribute="top" constant="25" id="0K1-Jy-661"/>
+                        <constraint firstItem="C02-xQ-2hI" firstAttribute="top" secondItem="yfc-sw-leV" secondAttribute="top" constant="25" id="0K1-Jy-661" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <real key="value" value="10"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="4"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstAttribute="bottom" secondItem="C02-xQ-2hI" secondAttribute="bottom" id="DJa-v4-dhb"/>
                         <constraint firstAttribute="trailing" secondItem="C02-xQ-2hI" secondAttribute="trailing" constant="30" id="jvN-ag-p2x"/>
                         <constraint firstItem="C02-xQ-2hI" firstAttribute="leading" secondItem="yfc-sw-leV" secondAttribute="leading" constant="30" id="tYO-u6-63K"/>
@@ -170,7 +200,16 @@
                     <rect key="frame" x="0.0" y="281" width="375" height="30"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="Puf-B8-ss1"/>
+                        <constraint firstAttribute="height" constant="30" id="Puf-B8-ss1" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <real key="value" value="15"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="4"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYl-I4-Vjb" userLabel="Payment Password">
@@ -180,14 +219,20 @@
                             <rect key="frame" x="30" y="0.0" width="315" height="1"/>
                             <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="1" id="sCt-tF-meQ" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                <constraint firstAttribute="height" constant="1" id="sCt-tF-meQ" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                             </constraints>
                         </view>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TOW-aq-cCZ" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="101" y="21" width="172" height="24"/>
                             <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="24" id="Dqu-S0-QcM"/>
+                                <constraint firstAttribute="height" constant="24" id="Dqu-S0-QcM" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                            <real key="value" value="12"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
                                 <constraint firstAttribute="width" constant="172" id="q3M-uz-a3Q"/>
                             </constraints>
                         </view>
@@ -201,6 +246,22 @@
                         </activityIndicatorView>
                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pay_success" translatesAutoresizingMaskIntoConstraints="NO" id="Ef6-lQ-oaM">
                             <rect key="frame" x="166" y="12" width="42" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="42" id="H7a-c6-8dX" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                            <real key="value" value="20"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
+                                <constraint firstAttribute="height" constant="42" id="kkc-I8-bFV" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                            <real key="value" value="20"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
+                            </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pay with Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3y-3k-wek">
                             <rect key="frame" x="124.5" y="60" width="127.5" height="23"/>
@@ -214,18 +275,42 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="TOW-aq-cCZ" firstAttribute="top" secondItem="DzD-Nk-6wr" secondAttribute="bottom" constant="20" id="2Gv-yY-H05"/>
+                        <constraint firstItem="TOW-aq-cCZ" firstAttribute="top" secondItem="DzD-Nk-6wr" secondAttribute="bottom" constant="20" id="2Gv-yY-H05" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="12"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="DzD-Nk-6wr" firstAttribute="top" secondItem="XYl-I4-Vjb" secondAttribute="top" id="2Jb-JO-KaA"/>
                         <constraint firstItem="DzD-Nk-6wr" firstAttribute="leading" secondItem="XYl-I4-Vjb" secondAttribute="leading" constant="30" id="6zG-jv-eV0"/>
-                        <constraint firstAttribute="height" constant="98" id="FdF-8u-ucj"/>
+                        <constraint firstAttribute="height" constant="98" id="FdF-8u-ucj" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="60"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="Ef6-lQ-oaM" firstAttribute="centerY" secondItem="TOW-aq-cCZ" secondAttribute="centerY" id="GLV-tq-qPp"/>
                         <constraint firstAttribute="trailing" secondItem="DzD-Nk-6wr" secondAttribute="trailing" constant="30" id="Lkh-cZ-WkI"/>
                         <constraint firstItem="i3y-3k-wek" firstAttribute="centerX" secondItem="XYl-I4-Vjb" secondAttribute="centerX" id="RON-FG-m2J"/>
-                        <constraint firstAttribute="bottom" secondItem="i3y-3k-wek" secondAttribute="bottom" constant="15" id="Y0y-KE-9C4"/>
+                        <constraint firstAttribute="bottom" secondItem="i3y-3k-wek" secondAttribute="bottom" constant="15" id="Y0y-KE-9C4" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="4"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="Ef6-lQ-oaM" firstAttribute="centerX" secondItem="TOW-aq-cCZ" secondAttribute="centerX" id="eKc-ZE-uwQ"/>
                         <constraint firstItem="TOW-aq-cCZ" firstAttribute="centerX" secondItem="XYl-I4-Vjb" secondAttribute="centerX" id="rZz-Ii-ayQ"/>
                         <constraint firstItem="4Uy-ZM-9QU" firstAttribute="centerX" secondItem="TOW-aq-cCZ" secondAttribute="centerX" id="sIK-6J-Z39"/>
-                        <constraint firstItem="i3y-3k-wek" firstAttribute="top" secondItem="TOW-aq-cCZ" secondAttribute="bottom" constant="15" id="uqS-qj-7y4"/>
+                        <constraint firstItem="i3y-3k-wek" firstAttribute="top" secondItem="TOW-aq-cCZ" secondAttribute="bottom" constant="15" id="uqS-qj-7y4" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
                         <constraint firstItem="4Uy-ZM-9QU" firstAttribute="centerY" secondItem="TOW-aq-cCZ" secondAttribute="centerY" id="vQL-tx-ZtD"/>
                     </constraints>
                 </view>

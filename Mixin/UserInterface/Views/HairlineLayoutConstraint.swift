@@ -1,6 +1,6 @@
 import UIKit
 
-class LayoutConstraintHairline: NSLayoutConstraint {
+class HairlineLayoutConstraint: NSLayoutConstraint {
 
     override func awakeFromNib() {
         super.awakeFromNib()

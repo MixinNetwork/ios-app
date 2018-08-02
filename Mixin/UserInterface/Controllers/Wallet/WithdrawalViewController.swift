@@ -210,7 +210,7 @@ extension WithdrawalViewController {
             let feeRepresentation = address.fee + " " + chainAsset.symbol
             var hint = Localized.WALLET_HINT_TRANSACTION_FEE(feeRepresentation: feeRepresentation, name: asset.name)
             var ranges = [(hint as NSString).range(of: feeRepresentation)]
-            if address.reserve.toDouble() > 0 {
+            if address.reserve.doubleValue > 0 {
                 let reserveRepresentation = address.reserve + " " + chainAsset.symbol
                 let reserveHint = Localized.WALLET_WITHDRAWAL_RESERVE(reserveRepresentation: reserveRepresentation, name: chainAsset.name)
                 let reserveRange = (reserveHint as NSString).range(of: reserveRepresentation)

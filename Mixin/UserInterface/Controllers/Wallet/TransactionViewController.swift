@@ -82,7 +82,7 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
                         cell.render(title: Localized.TRANSACTION_SENDER, value: snapshot.sender)
                     }
                 case SnapshotType.transfer.rawValue:
-                    if snapshot.amount.toDouble() > 0 {
+                    if snapshot.amount.doubleValue > 0 {
                         cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: snapshot.opponentUserFullName)
                     } else {
                         cell.render(title: Localized.WALLET_SNAPSHOT_FROM(fullName: ""), value: AccountAPI.shared.account?.full_name)
@@ -97,7 +97,7 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
                 case SnapshotType.deposit.rawValue:
                     cell.render(title: Localized.TRANSACTION_TRANSACTION_HASH, value: snapshot.transactionHash)
                 case SnapshotType.transfer.rawValue:
-                    if snapshot.amount.toDouble() > 0 {
+                    if snapshot.amount.doubleValue > 0 {
                         cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: AccountAPI.shared.account?.full_name)
                     } else {
                         cell.render(title: Localized.WALLET_SNAPSHOT_TO(fullName: ""), value: snapshot.opponentUserFullName)
@@ -134,9 +134,9 @@ extension TransactionViewController: UITableViewDataSource, UITableViewDelegate 
         }
 
         var transferUserId: String?
-        if indexPath.row == 3  && snapshot.amount.toDouble() > 0 {
+        if indexPath.row == 3  && snapshot.amount.doubleValue > 0 {
             transferUserId = snapshot.opponentId
-        } else if indexPath.row == 4 && snapshot.amount.toDouble() < 0 {
+        } else if indexPath.row == 4 && snapshot.amount.doubleValue < 0 {
             transferUserId = snapshot.opponentId
         }
 

@@ -4,6 +4,25 @@ import CoreText
 
 extension String {
 
+    var isNumeric: Bool {
+        let number = NumberFormatter.decimal.number(from: self)
+        return number != nil
+    }
+    
+    var hasMinusPrefix: Bool {
+        return hasPrefix("-")
+    }
+    
+    var integerValue: Int {
+        return Int(self) ?? 0
+    }
+    
+    var doubleValue: Double {
+        return Double(self)
+            ?? NumberFormatter.decimal.number(from: self)?.doubleValue
+            ?? 0
+    }
+    
     func md5() -> String {
         guard let messageData = data(using: .utf8) else {
             return self
@@ -61,23 +80,6 @@ extension String {
         let endIndex = self.index(startIndex, offsetBy: i + 1)
         return String(self[startIndex ..< endIndex])
     }
-
-    var isNumeric: Bool {
-        let number = NumberFormatter.decimal.number(from: self)
-        return number != nil
-    }
-
-    public func toInt() -> Int {
-        return (self as NSString).integerValue
-    }
-
-    public func toInt32() -> Int32 {
-        return (self as NSString).intValue
-    }
-
-    public func toDouble() -> Double {
-        return (self as NSString).doubleValue
-    }
     
     func removeWhiteSpaces() -> String {
         let nsStr = self as NSString
@@ -115,24 +117,7 @@ extension String {
         let endString = self[self.index(self.endIndex, offsetBy: -4)...]
         return "\(startString)...\(endString)"
     }
-
-    func formatSimpleBalance() -> String {
-        let formatter = NumberFormatter(numberStyle: .decimal)
-        if hasPrefix("0.") || hasPrefix("-0.") {
-            formatter.maximumFractionDigits = 8
-        } else if let dotIdx = index(of: ".") {
-            formatter.maximumFractionDigits = 8 - dotIdx.encodedOffset
-        }
-        return formatter.string(from: NSDecimalNumber(string: self)) ?? self
-    }
-
-    func formatBalance() -> String {
-        return NumberFormatter(numberStyle: .decimal).string(from: NSDecimalNumber(string: self)) ?? self
-    }
-
-    func formatFullBalance() -> String {
-        return NumberFormatter.balanceFormatter.string(from: NSDecimalNumber(string: self)) ?? self
-    }
+    
 }
 
 extension NSAttributedStringKey {

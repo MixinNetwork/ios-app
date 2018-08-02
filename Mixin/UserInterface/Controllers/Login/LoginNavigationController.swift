@@ -3,7 +3,13 @@ import UIKit
 class LoginNavigationController: UINavigationController {
 
     let backButton = UIButton()
-    let backButtonLayoutOffset = UIEdgeInsets(top: 8, left: 6, bottom: 0, right: 0)
+    let backButtonLayoutOffset: UIEdgeInsets = {
+        if ScreenSize.current == .inch3_5 {
+            return UIEdgeInsets(top: 4, left: 6, bottom: 0, right: 0)
+        } else {
+            return UIEdgeInsets(top: 8, left: 6, bottom: 0, right: 0)
+        }
+    }()
 
     var lastKeyboardFrame = CGRect.zero
     

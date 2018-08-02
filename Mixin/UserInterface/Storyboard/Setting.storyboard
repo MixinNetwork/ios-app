@@ -714,7 +714,7 @@
                                         <rect key="frame" x="0.0" y="55" width="375" height="1"/>
                                         <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="OxI-Ml-D3K" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                            <constraint firstAttribute="height" constant="1" id="OxI-Ml-D3K" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -779,7 +779,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_mixin" translatesAutoresizingMaskIntoConstraints="NO" id="1PS-Cb-fAg">
-                                                    <rect key="frame" x="0.0" y="50" width="375" height="280"/>
+                                                    <rect key="frame" x="-27.5" y="50" width="375" height="280"/>
                                                 </imageView>
                                             </subviews>
                                             <constraints>

@@ -11,6 +11,10 @@ class PayWindow: BottomSheetView {
 
     private let payView = PayView.instance()
 
+    override var endEditingWhenPresented: Bool {
+        return false
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         containerView.addSubview(payView)
@@ -34,8 +38,15 @@ class PayWindow: BottomSheetView {
         if payView.processing {
             return
         }
-        super.dismissPopupControllerAnimated()
-        textfield?.becomeFirstResponder()
+        self.alpha = 1.0
+        isShowing = false
+        UIView.animate(withDuration: 0.25, animations: {
+            self.alpha = 0
+            self.popupView.center = self.getAnimationStartPoint()
+        }, completion: { (finished: Bool) -> Void in
+            self.removeFromSuperview()
+            self.textfield?.becomeFirstResponder()
+        })
     }
 
 }

@@ -84,8 +84,8 @@ class AssetViewController: UITableViewController {
             blockchainImageView.sd_setImage(with: chainUrl)
             blockchainImageView.isHidden = false
         }
-        balanceLabel.text = String(format: "%@ %@", asset.balance.formatFullBalance(), asset.symbol)
-        exchangeLabel.text = asset.getUSDBalance()
+        balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never, symbol: .custom(asset.symbol))
+        exchangeLabel.text = asset.localizedUSDBalance
         depositButton.isBusy = !(asset.isAccount || asset.isAddress)
     }
 
@@ -181,7 +181,7 @@ extension AssetViewController {
         if indexPath.section == 1 {
             return SnapshotCell.cellHeight
         } else {
-            return super.tableView(tableView, heightForRowAt: indexPath)
+            return UITableViewAutomaticDimension
         }
     }
     

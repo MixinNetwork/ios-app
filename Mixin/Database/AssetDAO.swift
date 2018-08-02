@@ -55,7 +55,7 @@ final class AssetDAO {
         if let assetId = assetId {
             asset = getAsset(assetId: assetId)
         }
-        if asset == nil || asset?.balance.toDouble() == 0 {
+        if asset == nil || asset?.balance.doubleValue == 0 {
             let availableAsset: AssetItem? = MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailable, inTransaction: false).first
             if availableAsset != nil {
                 return availableAsset

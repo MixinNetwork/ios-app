@@ -19,6 +19,9 @@ class WalletUserDefault {
     private var keyWithdrawalAddresses: String {
         return "withdrawal_addresses_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyIsBiometricPay: String {
+        return "is_biometric_pay_\(AccountAPI.shared.accountIdentityNumber)"
+    }
 
     let session = UserDefaults(suiteName: SuiteName.wallet)!
     let checkMaxInterval: Double = 60 * 60 * 24
@@ -80,6 +83,15 @@ class WalletUserDefault {
         set {
             session.set(newValue, forKey: keyWithdrawalAddresses)
             NotificationCenter.default.afterPostOnMain(name: .DefaultAddressDidChange)
+        }
+    }
+
+    var isBiometricPay: Bool {
+        get {
+            return session.bool(forKey: keyIsBiometricPay)
+        }
+        set {
+            session.set(newValue, forKey: keyIsBiometricPay)
         }
     }
 }

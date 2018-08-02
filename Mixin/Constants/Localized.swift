@@ -7,6 +7,7 @@ public class Localized {
     public static let DIALOG_BUTTON_CANCEL = LocalizedString("dialog_button_cancel", comment: "Cancel")
     public static let DIALOG_BUTTON_CHANGE = LocalizedString("dialog_button_change", comment: "Change")
     public static let DIALOG_BUTTON_CONFIRM = LocalizedString("dialog_button_confirm", comment: "Confirm")
+    public static let DIALOG_BUTTON_DISABLE = LocalizedString("dialog_button_disable", comment: "Disable")
     public static let ACTION_NEXT = LocalizedString("action_next", comment: "Next")
     public static let ACTION_REMOVE = LocalizedString("action_remove", comment: "Remove")
     public static let ACTION_CAMERA = LocalizedString("action_camera", comment: "Camera")
@@ -354,6 +355,26 @@ public class Localized {
     public static let WALLET_PIN_CONFIRM_TITLE = LocalizedString("wallet_pin_confirm_title", comment: "Confirm PIN")
     public static let WALLET_PIN_NEW_TITLE = LocalizedString("wallet_pin_new_title", comment: "Set a new PIN")
     public static let WALLET_ALL_TRANSACTIONS_TITLE = LocalizedString("wallet_all_transactions_title", comment: "All Transactions")
+    public static let WALLET_SETTING = LocalizedString("wallet_setting", comment: "Wallet Setting")
+    public static let WALLET_PIN_TOUCH_ID_PROMPT = LocalizedString("wallet_pin_touch_id_prompt", comment: "Confirm PIN to enable Touch Pay")
+    public static let WALLET_PIN_FACE_ID_PROMPT = LocalizedString("wallet_pin_face_id_prompt", comment: "Confirm PIN to enable Face Pay")
+    public static let WALLET_TOUCH_ID = LocalizedString("wallet_touch_id", comment: "Touch ID")
+    public static let WALLET_FACE_ID = LocalizedString("wallet_face_id", comment: "Face ID")
+    public static func WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_enable_biometric_pay_title", comment: "Pay with %@"), biometricType)
+    }
+    public static func WALLET_ENABLE_BIOMETRIC_PAY_PROMPT(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_enable_biometric_pay_prompt", comment: "Once enabled, %@ can be used to make quick transfers"), biometricType)
+    }
+    public static func WALLET_STORE_ENCRYPTED_PIN(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_store_encrypted_pin", comment: "Enable %@ Pay"), biometricType)
+    }
+    public static func WALLET_BIOMETRIC_PAY_PROMPT(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_biometric_pay_prompt", comment: "Authorize payment via %@"), biometricType)
+    }
+    public static func WALLET_DISABLE_BIOMETRIC_PAY(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_disable_biometric_pay", comment: "Disable %@ Pay"), biometricType)
+    }
 
     // Transaction
     public static let TRANSACTION_TITLE = LocalizedString("transaction_title", comment: "Transaction")

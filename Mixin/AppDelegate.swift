@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initBugsnag()
         FirebaseApp.configure()
         #endif
-        AccountUserDefault.shared.upgrade()
         if let account = AccountAPI.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
         }
@@ -30,7 +29,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         checkLogin()
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+        checkJailbreak()
         return true
+    }
+
+    private func checkJailbreak() {
+        guard UIDevice.isJailbreak else {
+            return
+        }
+        Keychain.shared.clearPIN()
     }
 
     private func initBugsnag() {

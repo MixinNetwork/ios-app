@@ -7,6 +7,7 @@
 "dialog_button_change" = "更改";
 "dialog_button_confirm" = "确认";
 "dialog_button_got_it" = "知道了";
+"dialog_button_disable" = "暂停使用";
 "dialog_progress_logout" = "退出登录...";
 "dialog_progress_connect" = "正在连接...";
 "action_next" = "下一步";
@@ -260,6 +261,16 @@
 "wallet_pin_tips_title" = "输入你的钱包密码";
 "wallet_pin_tips_description" = "定期输入钱包密码有助于记住该密码";
 "wallet_all_transactions_title" = "所有交易记录";
+"wallet_pin_touch_id_prompt" = "确认钱包密码启用指纹支付";
+"wallet_pin_face_id_prompt" = "确认钱包密码启用面容支付";
+"wallet_setting" = "钱包设置";
+"wallet_touch_id" = "指纹";
+"wallet_face_id" = "面容";
+"wallet_enable_biometric_pay_title" = "%@支付";
+"wallet_enable_biometric_pay_prompt" = "开启后，转账时可验证%@快速完成付款";
+"wallet_store_encrypted_pin" = "启用%@支付";
+"wallet_biometric_pay_prompt" = "通过%@验证支付";
+"wallet_disable_biometric_pay" = "确定暂停使用%@支付？";
 
 // Transaction
 "transaction_title" = "交易详情";

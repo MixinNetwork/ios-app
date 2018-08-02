@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1104,6 +1105,93 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7kp-zD-jKL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="141" y="2274"/>
+        </scene>
+        <!--Wallet Setting View Controller-->
+        <scene sceneID="Osd-4K-R2k">
+            <objects>
+                <tableViewController storyboardIdentifier="wallet_setting" id="fti-OC-ybj" customClass="WalletSettingViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="tFp-9C-nzK">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection id="ekt-s0-3Oh">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Ath-bW-gEz">
+                                        <rect key="frame" x="0.0" y="35" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ath-bW-gEz" id="OFr-qw-Tuu">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Pay with Touch ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WO-Ce-5F7">
+                                                    <rect key="frame" x="20" y="10.999999999999998" width="136" height="20.333333333333329"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Slg-de-TB8">
+                                                    <rect key="frame" x="345" y="6" width="51" height="31"/>
+                                                    <color key="onTintColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <connections>
+                                                        <action selector="biometryPaySwitchAction:" destination="fti-OC-ybj" eventType="valueChanged" id="k2A-Y7-MBL"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Slg-de-TB8" secondAttribute="trailing" id="7uK-2R-Ftd"/>
+                                                <constraint firstItem="Slg-de-TB8" firstAttribute="centerY" secondItem="OFr-qw-Tuu" secondAttribute="centerY" id="Oj1-CJ-UKW"/>
+                                                <constraint firstItem="5WO-Ce-5F7" firstAttribute="centerY" secondItem="OFr-qw-Tuu" secondAttribute="centerY" id="Qm4-Az-grt"/>
+                                                <constraint firstItem="5WO-Ce-5F7" firstAttribute="leading" secondItem="OFr-qw-Tuu" secondAttribute="leadingMargin" id="mrU-Ms-gAr"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection id="PxA-bw-ltx">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="GrM-lp-AWt">
+                                        <rect key="frame" x="0.0" y="115" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GrM-lp-AWt" id="tCM-CH-sUr">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="89U-kf-ZWh">
+                                                    <rect key="frame" x="20" y="5.6666666666666679" width="374" height="33"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <state key="normal" title="Change PIN"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_change_password"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="changePINAction:" destination="fti-OC-ybj" eventType="touchUpInside" id="i4U-zu-fjd"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="89U-kf-ZWh" firstAttribute="centerY" secondItem="tCM-CH-sUr" secondAttribute="centerY" id="5w6-sB-4jI"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="89U-kf-ZWh" secondAttribute="trailing" id="TLJ-Fd-QYS"/>
+                                                <constraint firstItem="89U-kf-ZWh" firstAttribute="leading" secondItem="tCM-CH-sUr" secondAttribute="leadingMargin" id="kAi-Tn-1ME"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="fti-OC-ybj" id="mAY-qz-b5R"/>
+                            <outlet property="delegate" destination="fti-OC-ybj" id="DeC-sy-6iq"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="biometricsPaySwitch" destination="Slg-de-TB8" id="ZIh-BV-9sp"/>
+                        <outlet property="payTitleLabel" destination="5WO-Ce-5F7" id="aNC-zC-Fm3"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QXU-oo-BvW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="883" y="2274"/>
         </scene>
         <!--Wallet Password View Controller-->
         <scene sceneID="RZW-0e-IdW">

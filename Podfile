@@ -15,7 +15,6 @@ target 'Mixin' do
   pod 'SnapKit', '~> 4.0.0'
   pod 'SocketRocket'
   pod 'PhoneNumberKit'
-  pod 'KeychainAccess'
   pod 'GzipSwift'
   pod 'RSKImageCropper'
   pod 'DeviceGuru'

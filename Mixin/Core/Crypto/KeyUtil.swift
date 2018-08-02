@@ -3,7 +3,6 @@ import Security
 import UIKit
 import Goutils
 import Bugsnag
-import KeychainAccess
 
 class KeyUtil {
 

@@ -1,7 +1,6 @@
 import Foundation
 import Alamofire
 import UserNotifications
-import KeychainAccess
 
 final class AccountAPI: BaseAPI {
     
@@ -144,6 +143,7 @@ final class AccountAPI: BaseAPI {
     func logout() {
         DispatchQueue.main.async {
             self.account = nil
+            Keychain.shared.clearPIN()
             WebSocketService.shared.disconnect()
             AccountUserDefault.shared.clear()
             MixinDatabase.shared.logout()

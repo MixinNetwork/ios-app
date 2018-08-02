@@ -2313,13 +2313,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="55"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="40" placeholderIntrinsicHeight="200" translatesAutoresizingMaskIntoConstraints="NO" id="I2m-Ir-vYO" customClass="RecorderLockView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="327" y="55" width="40" height="200"/>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8dL-ll-JSL" userLabel="Lock View Clipping View">
+                                <rect key="frame" x="317.5" y="-245" width="60" height="300"/>
+                                <subviews>
+                                    <view userInteractionEnabled="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="40" placeholderIntrinsicHeight="200" translatesAutoresizingMaskIntoConstraints="NO" id="I2m-Ir-vYO" customClass="RecorderLockView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="10" y="300" width="40" height="200"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V0W-Cr-zFF">
-                                <rect key="frame" x="0.0" y="55" width="375" height="200"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="7AV-c1-L7q"/>
+                                    <constraint firstAttribute="bottom" secondItem="I2m-Ir-vYO" secondAttribute="top" priority="750" id="CiI-jN-FxF"/>
+                                    <constraint firstAttribute="height" constant="300" id="NpO-l8-QKB"/>
+                                    <constraint firstAttribute="bottom" secondItem="I2m-Ir-vYO" secondAttribute="bottom" priority="250" id="TcN-9N-uY6"/>
+                                    <constraint firstItem="I2m-Ir-vYO" firstAttribute="centerX" secondItem="8dL-ll-JSL" secondAttribute="centerX" id="jNF-aw-Rk7"/>
+                                </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r1K-Cs-6xD">
                                 <rect key="frame" x="0.0" y="0.0" width="319.5" height="54.5"/>
@@ -2436,19 +2445,14 @@
                         <constraints>
                             <constraint firstItem="Zt0-eZ-yAA" firstAttribute="leading" secondItem="r1K-Cs-6xD" secondAttribute="trailing" id="7Js-H5-6dp"/>
                             <constraint firstAttribute="trailing" secondItem="eyz-oe-6bw" secondAttribute="trailing" id="7t7-Ze-lf0"/>
-                            <constraint firstItem="V0W-Cr-zFF" firstAttribute="height" secondItem="I2m-Ir-vYO" secondAttribute="height" id="BW7-db-mZM"/>
+                            <constraint firstItem="8dL-ll-JSL" firstAttribute="centerX" secondItem="Zt0-eZ-yAA" secondAttribute="centerX" id="CV5-Ez-Y6l"/>
+                            <constraint firstAttribute="bottom" secondItem="8dL-ll-JSL" secondAttribute="bottom" id="ECM-UC-M5e"/>
                             <constraint firstAttribute="bottom" secondItem="r1K-Cs-6xD" secondAttribute="bottom" id="GgV-v1-zuM"/>
                             <constraint firstItem="U7v-cP-WyC" firstAttribute="trailing" secondItem="Zt0-eZ-yAA" secondAttribute="trailing" id="Jhk-3k-9hK"/>
-                            <constraint firstAttribute="bottom" secondItem="I2m-Ir-vYO" secondAttribute="bottom" priority="250" id="Ku2-hA-4b7"/>
                             <constraint firstAttribute="bottom" secondItem="unk-Os-zQq" secondAttribute="bottom" id="Nbv-RO-X3d"/>
-                            <constraint firstAttribute="trailing" secondItem="V0W-Cr-zFF" secondAttribute="trailing" id="PSt-to-yGY"/>
                             <constraint firstItem="U7v-cP-WyC" firstAttribute="bottom" secondItem="Zt0-eZ-yAA" secondAttribute="bottom" id="QIF-Qi-QJP"/>
                             <constraint firstItem="unk-Os-zQq" firstAttribute="leading" secondItem="tMG-4F-9D7" secondAttribute="trailing" id="X6Z-01-Grt"/>
-                            <constraint firstItem="V0W-Cr-zFF" firstAttribute="top" secondItem="GGT-9f-mbQ" secondAttribute="bottom" id="XM3-2c-w0q"/>
-                            <constraint firstItem="I2m-Ir-vYO" firstAttribute="centerX" secondItem="Zt0-eZ-yAA" secondAttribute="centerX" id="aOj-LW-bhN"/>
-                            <constraint firstItem="V0W-Cr-zFF" firstAttribute="leading" secondItem="GGT-9f-mbQ" secondAttribute="leading" id="bEL-CW-7XG"/>
                             <constraint firstAttribute="trailing" secondItem="unk-Os-zQq" secondAttribute="trailing" id="bgw-NH-NKQ"/>
-                            <constraint firstItem="I2m-Ir-vYO" firstAttribute="top" secondItem="GGT-9f-mbQ" secondAttribute="bottom" priority="750" id="cqr-Wv-g09"/>
                             <constraint firstItem="Zt0-eZ-yAA" firstAttribute="top" secondItem="U7v-cP-WyC" secondAttribute="top" id="dnM-U3-j4W"/>
                             <constraint firstItem="r1K-Cs-6xD" firstAttribute="top" secondItem="GGT-9f-mbQ" secondAttribute="top" id="fab-Wv-38p"/>
                             <constraint firstItem="unk-Os-zQq" firstAttribute="top" secondItem="GGT-9f-mbQ" secondAttribute="top" id="oNk-Mi-7Ht"/>
@@ -2462,8 +2466,8 @@
                     </view>
                     <connections>
                         <outlet property="lockView" destination="I2m-Ir-vYO" id="ktv-YK-YKg"/>
-                        <outlet property="lockViewHiddenConstraint" destination="cqr-Wv-g09" id="VNw-fK-sal"/>
-                        <outlet property="lockViewVisibleConstraint" destination="Ku2-hA-4b7" id="pIv-cs-j7t"/>
+                        <outlet property="lockViewHiddenConstraint" destination="CiI-jN-FxF" id="r98-c0-f9j"/>
+                        <outlet property="lockViewVisibleConstraint" destination="TcN-9N-uY6" id="LWK-w6-A5J"/>
                         <outlet property="lockedActionsView" destination="unk-Os-zQq" id="5yO-FB-bn0"/>
                         <outlet property="recordGestureRecognizer" destination="288-Q6-395" id="Axj-vW-lEk"/>
                         <outlet property="recordImageView" destination="Zt0-eZ-yAA" id="lVd-iA-AkZ"/>

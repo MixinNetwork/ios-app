@@ -140,7 +140,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="300" id="5bj-cY-Eyf" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch5_5">
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch5_x">
                                     <real key="value" value="428"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>

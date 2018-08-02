@@ -102,7 +102,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="360" id="FTp-5J-UK8" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_5">
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_x">
                                             <real key="value" value="428"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>

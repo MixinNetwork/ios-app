@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qcu-fV-csP" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="328" width="375" height="347"/>
+                    <rect key="frame" x="0.0" y="328" width="375" height="331"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="llD-wi-ohs" userLabel="User">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
@@ -66,7 +66,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="288" id="Lx7-ZR-YbK" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_5">
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_x">
                                             <real key="value" value="384"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>

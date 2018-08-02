@@ -78,7 +78,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="288" id="tr9-tI-kvk" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_5">
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch5_x">
                                             <real key="value" value="384"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>

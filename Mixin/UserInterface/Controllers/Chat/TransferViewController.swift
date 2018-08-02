@@ -125,6 +125,9 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         guard let userInfo = notification.userInfo, let keyboardBeginFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? CGRect, let keyboardEndFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
+        guard PayWindow.shared.window == nil else {
+            return
+        }
         keyboardHeight = UIScreen.main.bounds.height - keyboardEndFrame.minY
         continueWrapperBottomConstraint.constant = keyboardHeight
         let keyboardIsVisibleBeforeFrameChange = UIScreen.main.bounds.height - keyboardBeginFrame.minY > 0

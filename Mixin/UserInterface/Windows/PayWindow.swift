@@ -38,15 +38,8 @@ class PayWindow: BottomSheetView {
         if payView.processing {
             return
         }
-        self.alpha = 1.0
-        isShowing = false
-        UIView.animate(withDuration: 0.25, animations: {
-            self.alpha = 0
-            self.popupView.center = self.getAnimationStartPoint()
-        }, completion: { (finished: Bool) -> Void in
-            self.removeFromSuperview()
-            self.textfield?.becomeFirstResponder()
-        })
+        super.dismissPopupControllerAnimated()
+        textfield?.becomeFirstResponder()
     }
 
 }

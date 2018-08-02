@@ -95,8 +95,8 @@
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="qcu-fV-csP" firstAttribute="bottom" secondItem="Pti-nJ-lNc" secondAttribute="bottom" constant="8" id="0Fd-V8-R7u"/>
                 <constraint firstItem="Pti-nJ-lNc" firstAttribute="trailing" secondItem="qcu-fV-csP" secondAttribute="trailing" id="1Cf-16-i4O"/>
+                <constraint firstAttribute="bottom" secondItem="qcu-fV-csP" secondAttribute="bottom" constant="-8" id="W0g-Hs-8jz"/>
                 <constraint firstItem="qcu-fV-csP" firstAttribute="leading" secondItem="Pti-nJ-lNc" secondAttribute="leading" id="c98-M2-5qY"/>
                 <constraint firstItem="IU0-6i-ENQ" firstAttribute="bottom" secondItem="Pti-nJ-lNc" secondAttribute="bottom" id="cIj-WQ-rQ8"/>
             </constraints>

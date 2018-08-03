@@ -717,6 +717,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
             return
         }
+        guard presentedViewController == nil else {
+            return
+        }
         guard let endFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }

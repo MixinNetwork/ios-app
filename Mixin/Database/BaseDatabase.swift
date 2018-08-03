@@ -286,7 +286,7 @@ fileprivate extension Database {
         do {
             try run(transaction: transaction)
         } catch {
-            Bugsnag.notifyError(error)
+            notifyError(error)
             throw error
         }
     }
@@ -295,7 +295,7 @@ fileprivate extension Database {
         do {
             return try getValue(on: result, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
         } catch {
-            Bugsnag.notifyError(error)
+            notifyError(error)
             throw error
         }
     }
@@ -304,7 +304,7 @@ fileprivate extension Database {
         do {
             return try getObjects(on: propertyConvertibleList, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
         } catch {
-            Bugsnag.notifyError(error)
+            notifyError(error)
             throw error
         }
     }
@@ -313,7 +313,7 @@ fileprivate extension Database {
         do {
             return try getObject(on: propertyConvertibleList, fromTable: table, where: condition, orderBy: orderList, offset: offset)
         } catch {
-            Bugsnag.notifyError(error)
+            notifyError(error)
             throw error
         }
     }
@@ -322,7 +322,7 @@ fileprivate extension Database {
         do {
             return try getRows(on: columnResultConvertibleList, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
         } catch {
-            Bugsnag.notifyError(error)
+            notifyError(error)
             throw error
         }
     }
@@ -331,7 +331,7 @@ fileprivate extension Database {
         do {
             return try getColumn(on: result, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
         } catch {
-            Bugsnag.notifyError(error)
+            notifyError(error)
             throw error
         }
     }
@@ -340,7 +340,7 @@ fileprivate extension Database {
         do {
             return try getDistinctColumn(on: result, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
         } catch {
-            Bugsnag.notifyError(error)
+            notifyError(error)
             throw error
         }
     }
@@ -349,8 +349,20 @@ fileprivate extension Database {
         do {
             return try prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values)
         } catch {
-            Bugsnag.notifyError(error)
+            notifyError(error)
             throw error
+        }
+    }
+
+    private func notifyError(_ error: Swift.Error) {
+        if let err = error as? WCDBSwift.Error {
+            var userInfo = UIApplication.getTrackUserInfo()
+            userInfo["sql"] = err.sql ?? ""
+            userInfo["description"] = err.description
+            userInfo["callStack"] = Thread.callStackSymbols.first ?? ""
+            UIApplication.trackError("BaseDatabase", action: "track sql error", userInfo: userInfo)
+        } else {
+            Bugsnag.notifyError(error)
         }
     }
 }

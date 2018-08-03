@@ -188,6 +188,10 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
                 self.session.addInput(deviceInput)
             }
 
+            if let connection = self.captureVideoOutput.connection(with: .video), connection.isVideoMirroringSupported {
+                connection.isVideoMirrored = preferredPosition == .front
+            }
+
             self.session.commitConfiguration()
         }
     }

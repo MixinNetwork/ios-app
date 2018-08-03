@@ -88,9 +88,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     private var userBot: App?
-    private var userWindow: UserWindow?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
+    private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
     private lazy var lastInputWrapperBottomConstant = bottomSafeAreaInset
     private lazy var lastKeyboardHeight = minReasonableKeyboardHeight
@@ -372,10 +372,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             groupWindow.bounds.size.width = view.bounds.width
             groupWindow.updateGroup(conversation: dataSource.conversation).presentView()
         } else if let user = ownerUser {
-            userWindow?.removeFromSuperview()
-            userWindow = UserWindow.instance()
-            userWindow!.bounds.size.width = view.bounds.width
-            userWindow!.updateUser(user: user).presentView()
+            userWindow.bounds.size.width = view.bounds.width
+            userWindow.updateUser(user: user).presentView()
         }
     }
     
@@ -633,9 +631,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             if shareUserId == AccountAPI.shared.accountUserId {
                 navigationController?.pushViewController(withBackRoot: MyProfileViewController.instance())
             } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
-                userWindow?.removeFromSuperview()
-                userWindow = UserWindow.instance()
-                userWindow!.updateUser(user: user).presentView()
+                userWindow.updateUser(user: user).presentView()
             }
         } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
             guard let cell = cell as? SystemMessageCell, cell.contentFrame.contains(recognizer.location(in: cell)) else {
@@ -1163,9 +1159,7 @@ extension ConversationViewController: DetailInfoMessageCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell), let message = dataSource?.viewModel(for: indexPath)?.message, let user = UserDAO.shared.getUser(userId: message.userId) else {
             return
         }
-        userWindow?.removeFromSuperview()
-        userWindow = UserWindow.instance()
-        userWindow!.updateUser(user: user).presentView()
+        userWindow.updateUser(user: user).presentView()
     }
     
 }

@@ -15,8 +15,8 @@ class GroupParticipentViewController: UIViewController {
     private var currentAccountRole = ""
     private var conversation: ConversationItem!
     private var participants = [UserItem]()
+    private lazy var userWindow = UserWindow.instance()
     private var searchResult = [UserItem]()
-    private var userWindow: UserWindow?
 
     private var isSearching: Bool {
         return !(keywordTextField.text ?? "").isEmpty
@@ -213,9 +213,7 @@ extension GroupParticipentViewController {
     }
 
     private func infoAction(participant: UserItem) {
-        userWindow?.removeFromSuperview()
-        userWindow = UserWindow.instance()
-        userWindow!.updateUser(user: participant).presentView()
+        userWindow.updateUser(user: participant).presentView()
     }
     
     private func sendMessageAction(participant: UserItem) {

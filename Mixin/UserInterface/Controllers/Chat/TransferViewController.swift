@@ -28,7 +28,6 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
     private var conversationId = ""
     private var asset: AssetItem?
     private var availableAssets = [AssetItem]()
-    private var userWindow: UserWindow?
     private var keyboardHeight: CGFloat = 0
     
     override func viewDidLoad() {
@@ -62,9 +61,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         guard let user = user else {
             return
         }
-        userWindow?.removeFromSuperview()
-        userWindow = UserWindow.instance()
-        userWindow!.updateUser(user: user).presentView()
+        UserWindow.instance().updateUser(user: user).presentView()
     }
 
     @IBAction func closeAction(_ sender: Any) {

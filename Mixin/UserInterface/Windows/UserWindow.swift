@@ -4,6 +4,8 @@ import SDWebImage
 class UserWindow: BottomSheetView {
 
     @IBOutlet weak var containerView: UIView!
+    
+    var userViewPopupView: UIView?
 
     private let userView = UserView.instance()
 
@@ -16,11 +18,19 @@ class UserWindow: BottomSheetView {
     }
 
     override func dismissPopupControllerAnimated() {
-        if popupView is UIImageView {
+        if popupView is UserView.AvatarPreviewImageView {
             isShowing = false
             UIView.animate(withDuration: 0.25, animations: {
                 self.alpha = 0
-                self.popupView.bounds.size = .zero
+                self.popupView.bounds = .zero
+            }, completion: { (_) in
+                self.popupView.removeFromSuperview()
+                if let popupView = self.userViewPopupView {
+                    self.popupView = popupView
+                }
+                self.userView.avatarImageView.isHidden = false
+                self.contentBottomConstraint.constant = 0
+                self.layoutIfNeeded()
             })
         } else {
             dismissView()

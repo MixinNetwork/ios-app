@@ -13,8 +13,6 @@ class AddPeopleViewController: UIViewController {
     private let legalKeywordCharactersSet = Set("+0123456789")
     private let phoneNumberKit = PhoneNumberKit()
     
-    private var userWindow: UserWindow?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         if let id = AccountAPI.shared.account?.identity_number {
@@ -44,9 +42,7 @@ class AddPeopleViewController: UIViewController {
             switch result {
             case let .success(user):
                 UserDAO.shared.updateUsers(users: [user])
-                weakSelf.userWindow?.removeFromSuperview()
-                weakSelf.userWindow = UserWindow.instance()
-                weakSelf.userWindow!.updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentView()
+                UserWindow.instance().updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentView()
             case let .failure(error):
                 NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
             }

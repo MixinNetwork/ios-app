@@ -15,7 +15,7 @@ class FowardCell: GroupMemberSelectionCell {
             displayVerifiedIcon(isVerified: false, isBot: false)
         } else {
             nameLabel.text = user.fullName
-            avatarImageView.setImage(with: user.ownerAvatarUrl, identityNumber: user.identityNumber, name: user.name)
+            avatarImageView.setImage(with: user.ownerAvatarUrl, identityNumber: user.identityNumber, name: user.fullName)
             displayVerifiedIcon(isVerified: user.ownerIsVerified, isBot: user.isBot)
         }
     }

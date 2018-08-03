@@ -64,9 +64,9 @@ class JobQueue {
         guard queue.operations.count > 0 else {
             return false
         }
-        return queue.operations.first { (operation) -> Bool in
-            return (operation as? BaseJob)?.getJobId() == jodId
-            } != nil
+        return queue.operations.contains(where: { (operation) -> Bool in
+            (operation as? BaseJob)?.getJobId() == jodId && !operation.isCancelled
+        })
     }
 }
 

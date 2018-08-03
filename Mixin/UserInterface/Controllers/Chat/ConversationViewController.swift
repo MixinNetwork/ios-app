@@ -1094,7 +1094,8 @@ extension ConversationViewController: UITableViewDelegate {
         }
         if indexPath.section == 0 && indexPath.row <= loadMoreMessageThreshold {
             dataSource.loadMoreAboveIfNeeded()
-        } else if let lastIndexPath = dataSource.lastIndexPath, indexPath.section == lastIndexPath.section, indexPath.row >= lastIndexPath.row - loadMoreMessageThreshold {
+        }
+        if let lastIndexPath = dataSource.lastIndexPath, indexPath.section == lastIndexPath.section, indexPath.row >= lastIndexPath.row - loadMoreMessageThreshold {
             dataSource.loadMoreBelowIfNeeded()
         }
         let messageId = dataSource.viewModel(for: indexPath)?.message.messageId

@@ -717,6 +717,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
             return
         }
+        guard presentedViewController == nil else {
+            return
+        }
         guard let endFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
@@ -1094,7 +1097,8 @@ extension ConversationViewController: UITableViewDelegate {
         }
         if indexPath.section == 0 && indexPath.row <= loadMoreMessageThreshold {
             dataSource.loadMoreAboveIfNeeded()
-        } else if let lastIndexPath = dataSource.lastIndexPath, indexPath.section == lastIndexPath.section, indexPath.row >= lastIndexPath.row - loadMoreMessageThreshold {
+        }
+        if let lastIndexPath = dataSource.lastIndexPath, indexPath.section == lastIndexPath.section, indexPath.row >= lastIndexPath.row - loadMoreMessageThreshold {
             dataSource.loadMoreBelowIfNeeded()
         }
         let messageId = dataSource.viewModel(for: indexPath)?.message.messageId

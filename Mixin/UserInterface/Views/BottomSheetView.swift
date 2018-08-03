@@ -8,10 +8,6 @@ class BottomSheetView: UIView {
 
     internal(set) var isShowing = false
     internal(set) var windowBackgroundColor = UIColor(white: 0.0, alpha: 0.5)
-
-    internal var endEditingWhenPresented: Bool {
-        return true
-    }
     
     private var animationOriginPoint: CGPoint {
         return CGPoint(x: self.center.x, y: self.bounds.size.height + self.popupView.bounds.size.height)
@@ -21,9 +17,7 @@ class BottomSheetView: UIView {
     }
 
     func presentPopupControllerAnimated() {
-        if endEditingWhenPresented {
-            UIApplication.currentActivity()?.view.endEditing(true)
-        }
+        UIApplication.currentActivity()?.view.endEditing(true)
         guard !isShowing, let window = UIApplication.shared.keyWindow else {
             return
         }
@@ -99,10 +93,10 @@ extension BottomSheetView {
             gestureRecognizer.delegate = self
             self.addGestureRecognizer(gestureRecognizer)
 
-            self.popupView.center = getAnimationStartPoint()
             superView.addSubview(self)
         }
         self.alpha = 0
+        self.popupView.center = getAnimationStartPoint()
         UIView.animate(withDuration: 0.25, animations: {
             self.popAnimationBody()
         })

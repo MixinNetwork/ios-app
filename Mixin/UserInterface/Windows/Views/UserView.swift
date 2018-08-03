@@ -188,7 +188,7 @@ class UserView: CornerView {
     }
 
     @IBAction func previewAvatarAction(_ sender: Any) {
-        guard !user.avatarUrl.isEmpty, avatarImageView.sd_imageProgress.isFinished, let superView = superView else {
+        guard !user.avatarUrl.isEmpty, avatarImageView.sd_imageProgress.isFinished, let superView = superView as? UserWindow else {
             return
         }
         let frame = avatarImageView.convert(avatarImageView.bounds, to: superView)
@@ -196,7 +196,7 @@ class UserView: CornerView {
         avatarPreviewImageView.image = avatarImageView.image
         avatarPreviewImageView.layer.cornerRadius = avatarImageView.layer.cornerRadius
         avatarPreviewImageView.clipsToBounds = true
-        avatarImageView.alpha = 0
+        avatarImageView.isHidden = true
         superView.addSubview(avatarPreviewImageView)
         if #available(iOS 11.0, *) {
             superView.contentBottomConstraint.constant = -self.frame.height - superView.safeAreaInsets.vertical
@@ -211,7 +211,7 @@ class UserView: CornerView {
             avatarPreviewImageView.center = CGPoint(x: superView.frame.width / 2,
                                                     y: superView.frame.height / 2)
         }, completion: { (finished: Bool) -> Void in
-            superView.popupView.removeFromSuperview()
+            superView.userViewPopupView = superView.popupView
             superView.popupView = avatarPreviewImageView
         })
     }

@@ -28,8 +28,8 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
     private var conversationId = ""
     private var asset: AssetItem?
     private var availableAssets = [AssetItem]()
-    private var userWindow: UserWindow?
     private var keyboardHeight: CGFloat = 0
+    private var continueButtonFollowsKeyboardPosition = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,9 +62,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         guard let user = user else {
             return
         }
-        userWindow?.removeFromSuperview()
-        userWindow = UserWindow.instance()
-        userWindow!.updateUser(user: user).presentView()
+        UserWindow.instance().updateUser(user: user).presentView()
     }
 
     @IBAction func closeAction(_ sender: Any) {
@@ -88,7 +86,9 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         let amount = amountTextField.text ?? ""
         let memo = memoTextField.text ?? ""
 
+        continueButtonFollowsKeyboardPosition = false
         PayWindow.shared.presentPopupControllerAnimated(isTransfer: true, asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+        continueButtonFollowsKeyboardPosition = true
     }
     
     @IBAction func amountEditingChangedAction(_ sender: Any) {
@@ -125,7 +125,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         guard let userInfo = notification.userInfo, let keyboardBeginFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? CGRect, let keyboardEndFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
-        guard PayWindow.shared.window == nil else {
+        guard continueButtonFollowsKeyboardPosition else {
             return
         }
         keyboardHeight = UIScreen.main.bounds.height - keyboardEndFrame.minY

@@ -10,10 +10,6 @@ class PayWindow: BottomSheetView {
     private weak var textfield: UITextField?
 
     private let payView = PayView.instance()
-
-    override var endEditingWhenPresented: Bool {
-        return false
-    }
     
     override func awakeFromNib() {
         super.awakeFromNib()

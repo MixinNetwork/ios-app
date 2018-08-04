@@ -245,6 +245,9 @@ class BaseDatabase {
 
     func deleteAll(table: String) {
         try! database.runTransaction {
+            guard try database.isTableExists(table) else {
+                return
+            }
             try database.delete(fromTable: table)
         }
     }

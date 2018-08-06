@@ -999,6 +999,7 @@
                         <outlet property="scrollToBottomWrapperHeightConstraint" destination="iai-L8-XoW" id="F9Z-Pn-XNa"/>
                         <outlet property="scrollToBottomWrapperView" destination="enU-Jm-AWl" id="kR8-6F-tEk"/>
                         <outlet property="sendButton" destination="4sU-2a-lMZ" id="gkB-0g-9ur"/>
+                        <outlet property="statusBarPlaceholderHeightConstraint" destination="zpg-10-Eec" id="ivj-pa-2FX"/>
                         <outlet property="stickerKeyboardSwitcherButton" destination="JTL-Jf-Smd" id="ZXj-Dl-yTy"/>
                         <outlet property="stickerPanelContainerHeightConstraint" destination="fUe-nX-Ano" id="e5w-7t-FQm"/>
                         <outlet property="stickerPanelContainerView" destination="OCN-L0-tlY" id="qw6-7P-w3t"/>

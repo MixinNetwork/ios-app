@@ -3,6 +3,7 @@ import SwiftMessages
 import AVKit
 
 protocol GalleryViewControllerDelegate: class {
+    func galleryViewControllerShouldAnimateStatusBarAppearanceWhenDismissing(_ viewController: GalleryViewController) -> Bool
     func galleryViewController(_ viewController: GalleryViewController, placeholderForItemOfMessageId id: String) -> UIImage?
     func galleryViewController(_ viewController: GalleryViewController, sourceRectForItemOfMessageId id: String) -> CGRect?
     func galleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition, stateDidChangeTo state: GalleryViewController.TransitionState, forItemOfMessageId id: String?)
@@ -42,6 +43,7 @@ class GalleryViewController: UIViewController {
     private var isLoadingAfter = false
     private var transitionView: UIView!
     private var snapshotView: UIView?
+    private var statusBarHidden = true
     
     private let imageClippingTransitionView = ImageClippingView()
     private lazy var separatorWidth = scrollViewTrailingConstraint.constant
@@ -90,7 +92,7 @@ class GalleryViewController: UIViewController {
     }
     
     override var prefersStatusBarHidden: Bool {
-        return true
+        return statusBarHidden
     }
     
     deinit {
@@ -183,8 +185,8 @@ class GalleryViewController: UIViewController {
     }
     
     func show(item: GalleryItem) {
+        statusBarHidden = true
         window.makeKeyAndVisible()
-        setNeedsStatusBarAppearanceUpdate()
         self.item = item
         reload()
         scrollView.isHidden = true
@@ -276,6 +278,10 @@ class GalleryViewController: UIViewController {
                 }
             }
             self.transitionView.alpha = 0
+            if let delegate = self.delegate, delegate.galleryViewControllerShouldAnimateStatusBarAppearanceWhenDismissing(self) {
+                self.statusBarHidden = false
+                self.setNeedsStatusBarAppearanceUpdate()
+            }
         }, completion: { (_) in
             self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .ended, forItemOfMessageId: messageId)
             DispatchQueue.main.async {
@@ -294,7 +300,6 @@ class GalleryViewController: UIViewController {
                 }
                 self.backgroundDimmingView.alpha = 0
                 AppDelegate.current.window?.makeKeyAndVisible()
-                AppDelegate.current.window?.rootViewController?.setNeedsStatusBarAppearanceUpdate()
             }
         })
     }

@@ -440,6 +440,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             toggleMoreMenu(delay: 0)
             delay = animationDuration
         }
+        bottomOutsideWrapperView.backgroundColor = .white
         if isShowingStickerPanel {
             inputTextView.becomeFirstResponder()
         } else {
@@ -1321,18 +1322,29 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
         let inputAccessoryViewHeight = inputTextView.inputAccessoryView?.frame.height ?? 0
         inputWrapperBottomConstraint.constant = max(windowHeight - newFrame.origin.y - inputAccessoryViewHeight, bottomSafeAreaInset)
         let inputWrapperDisplacement = lastInputWrapperBottomConstant - inputWrapperBottomConstraint.constant
-        let keyboardIsMovingUp = inputWrapperBottomConstraint.constant > bottomSafeAreaInset
-        if isShowingStickerPanel && keyboardIsMovingUp {
-            isShowingStickerPanel = false
-            toggleStickerPanelSizeButton.isHidden = true
-            stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_sticker"), for: .normal)
-            stickerPanelContainerView.alpha = 0
-        }
-        if keyboardIsMovingUp {
+        if intent == .show {
+            if isShowingStickerPanel {
+                UIView.performWithoutAnimation {
+                    bottomOutsideWrapperView.backgroundColor = .white
+                }
+                isShowingStickerPanel = false
+                toggleStickerPanelSizeButton.isHidden = true
+                stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_sticker"), for: .normal)
+                stickerPanelContainerView.alpha = 0
+            }
             if inputTextView.hasText || isShowingQuotePreviewView {
                 sendButton.isHidden = false
             } else {
                 audioInputContainerView.isHidden = false
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
+                if manager.isShowingKeyboard {
+                    self.bottomOutsideWrapperView.backgroundColor = .clear
+                }
+            }
+        } else if intent == .hide {
+            UIView.performWithoutAnimation {
+                bottomOutsideWrapperView.backgroundColor = .white
             }
         }
         if isShowingMoreMenu {

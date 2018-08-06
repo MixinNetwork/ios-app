@@ -853,6 +853,10 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
 // MARK: - UITextViewDelegate
 extension ConversationViewController: UITextViewDelegate {
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return !(audioInputViewController?.isRecording ?? false)
+    }
+    
     func textViewDidChange(_ textView: UITextView) {
         guard let lineHeight = textView.font?.lineHeight else {
             return

@@ -32,6 +32,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var audioInputContainerView: UIView!
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
     
+    @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewLeadingShrinkConstraint: NSLayoutConstraint!
@@ -52,6 +53,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         return dataSource.conversationId
     }
     var statusBarStyle = UIStatusBarStyle.default {
+        didSet {
+            setNeedsStatusBarAppearanceUpdate()
+        }
+    }
+    var statusBarHidden = false {
         didSet {
             setNeedsStatusBarAppearanceUpdate()
         }
@@ -149,6 +155,10 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return statusBarStyle
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return statusBarHidden
     }
     
     // MARK: - Life cycle
@@ -577,7 +587,12 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                 return
             }
             MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
-            galleryViewController.show(item: item)
+            statusBarPlaceholderHeightConstraint.constant = UIApplication.shared.statusBarFrame.height
+            statusBarHidden = true
+            view.layoutIfNeeded()
+            DispatchQueue.main.async {
+                self.galleryViewController.show(item: item)
+            }
         } else if message.category.hasSuffix("_AUDIO") {
             guard message.mediaStatus == MediaStatus.DONE.rawValue, let cell = cell as? AudioMessageCell else {
                 return
@@ -1258,6 +1273,10 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
 // MARK: - GalleryViewControllerDelegate
 extension ConversationViewController: GalleryViewControllerDelegate {
     
+    func galleryViewControllerShouldAnimateStatusBarAppearanceWhenDismissing(_ viewController: GalleryViewController) -> Bool {
+        return statusBarPlaceholderHeightConstraint.constant == StatusBarHeight.normal
+    }
+    
     func galleryViewController(_ viewController: GalleryViewController, placeholderForItemOfMessageId id: String) -> UIImage? {
         if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
             return cell.contentImageView.image
@@ -1299,6 +1318,12 @@ extension ConversationViewController: GalleryViewControllerDelegate {
         case .ended, .cancelled:
             contentViews.forEach {
                 $0.isHidden = false
+            }
+        }
+        if transition == .dismiss && state == .ended {
+            DispatchQueue.main.async {
+                self.statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.normal
+                self.statusBarHidden = false
             }
         }
     }

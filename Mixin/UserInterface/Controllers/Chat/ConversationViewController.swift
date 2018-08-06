@@ -739,10 +739,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         saveDraft()
     }
     
-    @objc func dismissQuoteView(_ sender: Any) {
-        setQuoteViewHidden(true)
-    }
-    
     // MARK: - Interface
     func toggleMoreMenu(delay: TimeInterval) {
         let dismissButtonAlpha: CGFloat

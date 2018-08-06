@@ -26,7 +26,7 @@ class LoginView: UIView {
             return minimumWebViewHeight
         }
         if #available(iOS 11.0, *) {
-            return superView.frame.height - 56 - max(safeAreaInsets.top, 20) - safeAreaInsets.bottom
+            return superView.frame.height - 56 - max(superView.safeAreaInsets.top, 20) - superView.safeAreaInsets.bottom
         } else {
             return superView.frame.height - 56 - 20
         }

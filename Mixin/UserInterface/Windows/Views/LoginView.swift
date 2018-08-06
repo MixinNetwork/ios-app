@@ -8,7 +8,6 @@ class LoginView: UIView {
     @IBOutlet weak var iconImageView: CornerImageView!
     @IBOutlet weak var authButton: StateResponsiveButton!
     @IBOutlet weak var closeButton: UIButton!
-    @IBOutlet weak var zoomButton: UIButton!
 
     @IBOutlet weak var contentHeightConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var iconTopConstraint: NSLayoutConstraint!
@@ -97,7 +96,6 @@ class LoginView: UIView {
         prepareTableView()
         tableView.reloadData()
         windowMaximum = contentHeightConstraint.constant > minimumWebViewHeight
-        zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
         DispatchQueue.main.async {
             for idx in 0..<self.scopes.count {
                 self.tableView.selectRow(at: IndexPath(row: idx, section: 0), animated: false, scrollPosition: .none)
@@ -110,7 +108,6 @@ class LoginView: UIView {
             return
         }
         windowMaximum = !windowMaximum
-        zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
 
         let oldHeight = contentHeightConstraint.constant
         let targetHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
@@ -247,7 +244,6 @@ extension LoginView: UIScrollViewDelegate {
             let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
             if windowMaximum != shouldMaximizeWindow {
                 windowMaximum = shouldMaximizeWindow
-                zoomButton.setImage(shouldMaximizeWindow ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
             }
         }
     }
@@ -260,7 +256,6 @@ extension LoginView: UIScrollViewDelegate {
             let suggestedWindowMaximum = velocity.y > 0
             if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
                 windowMaximum = suggestedWindowMaximum
-                zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
             }
         }
         let contentHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight

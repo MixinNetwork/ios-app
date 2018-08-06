@@ -61,19 +61,6 @@
                                 <constraint firstItem="ych-nE-yx4" firstAttribute="centerX" secondItem="xLE-cI-shl" secondAttribute="centerX" id="wcV-uD-gc9"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r1T-9o-v2k">
-                            <rect key="frame" x="319" y="0.0" width="56" height="56"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="r1T-9o-v2k" secondAttribute="height" multiplier="1:1" id="zOs-Vu-WNR"/>
-                            </constraints>
-                            <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <state key="normal" image="ic_titlebar_max">
-                                <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="zoomAction:" destination="Mx8-Xj-JvZ" eventType="touchUpInside" id="9pv-Bu-x3r"/>
-                            </connections>
-                        </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6wN-bU-oGa">
                             <rect key="frame" x="0.0" y="55" width="375" height="1"/>
                             <color key="backgroundColor" red="0.35294117650000001" green="0.35686274509999999" blue="0.40000000000000002" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
@@ -86,17 +73,14 @@
                     <constraints>
                         <constraint firstItem="xLE-cI-shl" firstAttribute="leading" secondItem="DiI-uj-Xy3" secondAttribute="trailing" constant="4" id="Mfj-vO-AMY"/>
                         <constraint firstItem="xLE-cI-shl" firstAttribute="centerY" secondItem="zAD-lf-MAv" secondAttribute="centerY" id="Mhp-Vk-uMX"/>
-                        <constraint firstItem="r1T-9o-v2k" firstAttribute="centerY" secondItem="zAD-lf-MAv" secondAttribute="centerY" id="MmY-54-iqU"/>
+                        <constraint firstAttribute="trailing" secondItem="xLE-cI-shl" secondAttribute="trailing" constant="60" id="ONQ-Zp-BP3"/>
                         <constraint firstAttribute="trailing" secondItem="6wN-bU-oGa" secondAttribute="trailing" id="PJZ-j4-wb0"/>
                         <constraint firstItem="DiI-uj-Xy3" firstAttribute="height" secondItem="zAD-lf-MAv" secondAttribute="height" id="RB5-mP-tFz"/>
                         <constraint firstItem="DiI-uj-Xy3" firstAttribute="centerY" secondItem="zAD-lf-MAv" secondAttribute="centerY" id="SPe-Vn-eV9"/>
                         <constraint firstItem="6wN-bU-oGa" firstAttribute="leading" secondItem="zAD-lf-MAv" secondAttribute="leading" id="SfI-74-oCV"/>
-                        <constraint firstItem="r1T-9o-v2k" firstAttribute="leading" secondItem="xLE-cI-shl" secondAttribute="trailing" constant="4" id="UWf-fL-0M2"/>
                         <constraint firstAttribute="bottom" secondItem="6wN-bU-oGa" secondAttribute="bottom" id="VEM-AR-oO3"/>
                         <constraint firstItem="DiI-uj-Xy3" firstAttribute="leading" secondItem="zAD-lf-MAv" secondAttribute="leading" id="XcW-BV-InC"/>
                         <constraint firstAttribute="height" constant="56" id="jo3-VI-5lE"/>
-                        <constraint firstItem="r1T-9o-v2k" firstAttribute="height" secondItem="zAD-lf-MAv" secondAttribute="height" id="puX-A0-ZbP"/>
-                        <constraint firstAttribute="trailing" secondItem="r1T-9o-v2k" secondAttribute="trailing" id="rnF-je-Che"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7xc-ct-1xa">
@@ -183,7 +167,6 @@
                 <outlet property="iconTopConstraint" destination="RDP-tI-918" id="qQ6-DF-dfn"/>
                 <outlet property="tableView" destination="D8V-LP-gZW" id="Wcg-Um-Wb2"/>
                 <outlet property="titleLabel" destination="wg5-ss-P8k" id="RKW-rf-eyf"/>
-                <outlet property="zoomButton" destination="r1T-9o-v2k" id="YjC-gI-KRS"/>
             </connections>
             <point key="canvasLocation" x="24.5" y="-11"/>
         </view>
@@ -191,6 +174,5 @@
     <resources>
         <image name="ic_place_holder" width="38" height="38"/>
         <image name="ic_titlebar_back" width="44" height="44"/>
-        <image name="ic_titlebar_max" width="44" height="44"/>
     </resources>
 </document>

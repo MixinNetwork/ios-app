@@ -50,6 +50,14 @@ class AudioInputViewController: UIViewController {
     
     private lazy var longPressHintView = RecorderLongPressHintView()
     
+    var isRecording: Bool {
+        if let recorder = recorder {
+            return recorder.isRecording
+        } else {
+            return false
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         recordGestureRecognizer.delegate = self

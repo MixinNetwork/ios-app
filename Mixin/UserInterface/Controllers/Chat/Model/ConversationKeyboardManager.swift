@@ -1,12 +1,13 @@
 import UIKit
 
 protocol ConversationKeyboardManagerDelegate: class {
+    func conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(_ manager: ConversationKeyboardManager) -> UIScrollView
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent)
 }
 
 class ConversationKeyboardManager {
     
-    static let minReasonableKeyboardHeight: CGFloat = 270
+    static let minReasonableKeyboardHeight: CGFloat = 271
     static var lastKeyboardHeight: CGFloat = minReasonableKeyboardHeight
     
     let inputAccessoryView: FrameObservingInputAccessoryView
@@ -53,6 +54,10 @@ class ConversationKeyboardManager {
         } else if !keyboardFrameIsInvisible(endFrame) && !isShowingKeyboard {
             isShowingKeyboard = true
             delegate?.conversationKeyboardManager(self, keyboardWillChangeFrameTo: endFrame, intent: .show)
+        } else if endFrame.height < ConversationKeyboardManager.minReasonableKeyboardHeight, let delegate = delegate {
+            if delegate.conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(self).isTracking {
+                delegate.conversationKeyboardManager(self, keyboardWillChangeFrameTo: endFrame, intent: .hide)
+            }
         }
     }
     
@@ -68,7 +73,7 @@ class ConversationKeyboardManager {
     }
     
     private func keyboardFrameIsInvisible(_ frame: CGRect) -> Bool {
-        return frame.origin.y == UIApplication.shared.keyWindow?.frame.height
+        return frame.origin.y >= UIScreen.main.bounds.height
     }
     
 }

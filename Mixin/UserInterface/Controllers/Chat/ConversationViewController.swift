@@ -1308,6 +1308,10 @@ extension ConversationViewController: PhotoAssetPickerDelegate {
 // MARK: - ConversationKeyboardManagerDelegate
 extension ConversationViewController: ConversationKeyboardManagerDelegate {
 
+    func conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(_ manager: ConversationKeyboardManager) -> UIScrollView {
+        return tableView
+    }
+    
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
             return

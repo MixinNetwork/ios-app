@@ -33,7 +33,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="1" id="SN4-Qv-vtf" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                        <constraint firstAttribute="height" constant="1" id="SN4-Qv-vtf" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                     </constraints>
                                 </view>
                                 <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8mK-Il-JRf" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
@@ -55,7 +55,7 @@
                                     <rect key="frame" x="0.0" y="57" width="375" height="1"/>
                                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="1" id="acI-Zj-lLo" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                        <constraint firstAttribute="height" constant="1" id="acI-Zj-lLo" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                     </constraints>
                                 </view>
                             </subviews>

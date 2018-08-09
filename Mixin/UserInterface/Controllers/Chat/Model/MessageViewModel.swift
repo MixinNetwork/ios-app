@@ -6,9 +6,11 @@ class MessageViewModel: CustomDebugStringConvertible {
     static let bottomSeparatorHeight: CGFloat = 10
 
     let message: MessageItem
+    let quote: Quote?
     let time: String
     let layoutWidth: CGFloat
     
+    internal(set) var thumbnail: UIImage?
     internal(set) var backgroundImage: UIImage?
     internal(set) var backgroundImageFrame = CGRect.zero
     internal(set) var cellHeight: CGFloat = 44
@@ -30,7 +32,7 @@ class MessageViewModel: CustomDebugStringConvertible {
     }
     
     internal var bottomSeparatorHeight: CGFloat {
-        if style.contains(.hasBottomSeparator) {
+        if style.contains(.bottomSeparator) {
             return MessageViewModel.bottomSeparatorHeight
         } else {
             return 0
@@ -42,6 +44,16 @@ class MessageViewModel: CustomDebugStringConvertible {
         self.style = style
         self.time = message.createdAt.toUTCDate().timeHoursAndMinutes()
         self.layoutWidth = layoutWidth
+        if let thumbImage = message.thumbImage, let imageData = Data(base64Encoded: thumbImage)  {
+            thumbnail = UIImage(data: imageData)
+        } else {
+            thumbnail = nil
+        }
+        if let quoteContent = message.quoteContent {
+            self.quote = Quote(quoteContent: quoteContent)
+        } else {
+            self.quote = nil
+        }
         didSetStyle()
     }
     
@@ -56,10 +68,9 @@ extension MessageViewModel {
     struct Style: OptionSet {
         let rawValue: Int
         static let received = Style(rawValue: 1 << 0)
-        static let sent = Style(rawValue: 1 << 1)
-        static let hasTail = Style(rawValue: 1 << 2)
-        static let hasBottomSeparator = Style(rawValue: 1 << 3)
-        static let showFullname = Style(rawValue: 1 << 4)
+        static let tail = Style(rawValue: 1 << 1)
+        static let bottomSeparator = Style(rawValue: 1 << 2)
+        static let fullname = Style(rawValue: 1 << 3)
     }
     
     struct Margin {

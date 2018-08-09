@@ -8,11 +8,11 @@ class SignalKeyAPI : BaseAPI {
         static let signalKeyCount = "signal/keys/count"
     }
 
-    func pushSignalKeys(key: SignalKeyRequest) -> Result<EmptyResponse> {
+    func pushSignalKeys(key: SignalKeyRequest) -> APIResult<EmptyResponse> {
         return request(method: .post, url: url.signal, parameters: key.toParameters(), encoding: EncodableParameterEncoding<SignalKeyRequest>())
     }
 
-    func getSignalKeyCount() -> Result<SignalKeyCount> {
+    func getSignalKeyCount() -> APIResult<SignalKeyCount> {
         return request(method: .get, url: url.signalKeyCount)
     }
 }

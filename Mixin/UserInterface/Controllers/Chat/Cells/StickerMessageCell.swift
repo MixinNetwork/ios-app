@@ -5,13 +5,21 @@ class StickerMessageCell: DetailInfoMessageCell {
 
     let contentImageView = FLAnimatedImageView()
     
+    lazy var selectedOverlapImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.alpha = 0
+        imageView.tintColor = UIColor.black.withAlphaComponent(0.2)
+        contentImageView.addSubview(imageView)
+        return imageView
+    }()
+    
     override var contentFrame: CGRect {
         return contentImageView.frame
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        contentImageView.sd_cancelCurrentImageLoad()
+        contentImageView.sd_setImage(with: nil, completed: nil)
     }
 
     override func render(viewModel: MessageViewModel) {
@@ -19,6 +27,17 @@ class StickerMessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? StickerMessageViewModel, let assetUrl = viewModel.message.assetUrl {
             contentImageView.frame = viewModel.contentFrame
             contentImageView.sd_setImage(with: URL(string: assetUrl))
+        }
+    }
+    
+    override func updateAppearance(highlight: Bool, animated: Bool) {
+        guard let overlapImage = contentImageView.image?.withRenderingMode(.alwaysTemplate) else {
+            return
+        }
+        selectedOverlapImageView.image = overlapImage
+        selectedOverlapImageView.frame = contentImageView.bounds
+        UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
+            self.selectedOverlapImageView.alpha = highlight ? 1 : 0
         }
     }
     

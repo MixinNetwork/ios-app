@@ -16,6 +16,7 @@ struct Account: Encodable {
     let reputation: Int
     let created_at: String
     let receive_message_source: String
+    let accept_conversation_source: String
     let has_pin: Bool
     let pin_token: String
     
@@ -34,6 +35,28 @@ struct Account: Encodable {
         self.reputation = old.reputation
         self.created_at = old.created_at
         self.receive_message_source = receiveMessageSource.rawValue
+        self.accept_conversation_source = old.accept_conversation_source
+        self.has_pin = old.has_pin
+        self.code_url = old.code_url
+        self.pin_token = old.pin_token
+    }
+    
+    init(withAccount old: Account, acceptConversationSource: AcceptConversationSource) {
+        self.user_id = old.user_id
+        self.session_id = old.session_id
+        self.type = old.type
+        self.identity_number = old.identity_number
+        self.full_name = old.full_name
+        self.avatar_url = old.avatar_url
+        self.phone = old.phone
+        self.authentication_token = old.authentication_token
+        self.invitation_code = old.invitation_code
+        self.consumed_count = old.consumed_count
+        self.code_id = old.code_id
+        self.reputation = old.reputation
+        self.created_at = old.created_at
+        self.receive_message_source = old.receive_message_source
+        self.accept_conversation_source = acceptConversationSource.rawValue
         self.has_pin = old.has_pin
         self.code_url = old.code_url
         self.pin_token = old.pin_token
@@ -54,6 +77,7 @@ struct Account: Encodable {
         self.reputation = old.reputation
         self.created_at = old.created_at
         self.receive_message_source = old.receive_message_source
+        self.accept_conversation_source = old.accept_conversation_source
         self.has_pin = old.has_pin
         self.code_url = old.code_url
         self.pin_token = old.pin_token
@@ -79,6 +103,7 @@ extension Account: Decodable {
         reputation = container.getInt(key: .reputation)
         created_at = container.getString(key: .created_at)
         receive_message_source = container.getString(key: .receive_message_source)
+        accept_conversation_source = container.getString(key: .accept_conversation_source)
         has_pin = container.getBool(key: .has_pin)
         code_url = container.getString(key: .code_url)
         pin_token = container.getString(key: .pin_token)
@@ -87,6 +112,11 @@ extension Account: Decodable {
 }
 
 enum ReceiveMessageSource: String {
+    case everybody = "EVERYBODY"
+    case contacts = "CONTACTS"
+}
+
+enum AcceptConversationSource: String {
     case everybody = "EVERYBODY"
     case contacts = "CONTACTS"
 }

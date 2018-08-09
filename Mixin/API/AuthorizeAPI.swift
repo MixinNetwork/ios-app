@@ -10,7 +10,7 @@ final class AuthorizeAPI: BaseAPI {
     }
 
     func authorize(authorization: AuthorizationRequest, completion: @escaping (APIResult<AuthorizationResponse>) -> Void) {
-        request(method: .post, url: url.authorize, parameters: authorization.toParameters(), encoding: EncodableParameterEncoding<AuthorizationRequest>(), completion: completion)
+        request(method: .post, url: url.authorize, parameters: authorization.toParameters(), encoding: EncodableParameterEncoding<AuthorizationRequest>(), toastError: false, completion: completion)
     }
 
 }

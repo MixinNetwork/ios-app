@@ -1,5 +1,5 @@
 import Foundation
-import SDWebImage
+import FLAnimatedImage
 
 class RefreshStickerJob: BaseJob {
 
@@ -20,16 +20,21 @@ class RefreshStickerJob: BaseJob {
         if let albumId = self.albumId {
             try RefreshStickerJob.cacheStickers(albumId: albumId)
         } else {
-            let stickerAlbums = StickerAlbumDAO.shared.getAblumsUpdateAt()
+            let stickerAlbums = AlbumDAO.shared.getAblumsUpdateAt()
             switch StickerAPI.shared.albums() {
             case let .success(albums):
                 for album in albums {
-                    guard stickerAlbums[album.albumId] != album.updateAt else {
+                    guard stickerAlbums[album.albumId] != album.updatedAt else {
                         continue
                     }
                     RefreshStickerJob.cacheImage(album.iconUrl)
                     try RefreshStickerJob.cacheStickers(albumId: album.albumId)
-                    StickerAlbumDAO.shared.insertOrUpdateAblum(album: album)
+                    AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                }
+
+                if !DatabaseUserDefault.shared.upgradeStickers {
+                    MessageDAO.shared.updateOldStickerMessages()
+                    DatabaseUserDefault.shared.upgradeStickers = true
                 }
             case let .failure(error):
                 throw error
@@ -40,7 +45,7 @@ class RefreshStickerJob: BaseJob {
     static func cacheStickers(albumId: String) throws {
         switch StickerAPI.shared.stickers(albumId: albumId) {
         case let .success(stickers):
-            StickerDAO.shared.insertOrUpdateStickers(stickers: stickers)
+            StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
             for sticker in stickers {
                 cacheImage(sticker.assetUrl)
             }
@@ -53,8 +58,8 @@ class RefreshStickerJob: BaseJob {
         guard let url = URL(string: urlString) else {
             return
         }
-        SDWebImageManager.shared().loadImage(with:url, options: [.continueInBackground, .retryFailed, .refreshCached], progress: nil) { (_, _, _, _, _, _) in
-
+        DispatchQueue.main.async {
+            FLAnimatedImageView().sd_setImage(with: url, placeholderImage: nil, options: [.continueInBackground, .retryFailed, .refreshCached], completed: nil)
         }
     }
 }

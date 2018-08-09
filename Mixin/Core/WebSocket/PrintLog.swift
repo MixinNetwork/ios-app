@@ -1,11 +1,3 @@
-//
-//  PrintLog.swift
-//  Mixin
-//
-//  Created by crossle on 27/3/2018.
-//  Copyright © 2018 Mixin. All rights reserved.
-//
-
 import Foundation
 
 @_silgen_name("printSignalLog")

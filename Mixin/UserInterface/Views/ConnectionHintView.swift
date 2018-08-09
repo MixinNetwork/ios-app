@@ -16,7 +16,7 @@ class ConnectionHintView: UIView, XibDesignable {
     
     private enum Style {
         case connecting
-        case waiting
+        case progress
         case error
         case toast
     }
@@ -27,9 +27,8 @@ class ConnectionHintView: UIView, XibDesignable {
             case .connecting:
                 activityIndicator.isHidden = false
                 label.text = Localized.CONNECTION_HINT_CONNECTING
-            case .waiting:
+            case .progress:
                 activityIndicator.isHidden = false
-                label.text = Localized.CONNECTION_HINT_WAITING
             case .error:
                 activityIndicator.isHidden = true
                 label.text = errorMsg
@@ -59,35 +58,12 @@ class ConnectionHintView: UIView, XibDesignable {
         NotificationCenter.default.addObserver(self, selector: #selector(updateConnectionHint), name: .SocketStatusChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showErrorMessage(_:)), name: .ErrorMessageDidAppear, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showToastMessage(_:)), name: .ToastMessageDidAppear, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showSyncMessage(_:)), name: .SyncMessageDidAppear, object: nil)
     }
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-
-    private func setConnectionHintHidden(_ hidden: Bool, animated: Bool = true) {
-        switch style {
-        case .connecting, .waiting:
-            backgroundView.backgroundColor = UIColor.hintBlue
-        case .error:
-            backgroundView.backgroundColor = UIColor.hintRed
-        case .toast:
-            backgroundView.backgroundColor = UIColor.hintGreen
-        }
-        let newHeight: CGFloat = hidden ? 0 : 36
-        let heightDifference = newHeight - connectionHintViewHeightConstraint.constant
-        connectionHintViewHeightConstraint.constant = newHeight
-        let block = {
-            self.delegate?.animateAlongsideConnectionHintView(self, changingHeightWithDifference: heightDifference)
-            self.superview?.superview?.layoutIfNeeded()
-        }
-        if animated {
-            UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut], animations: {
-                block()
-            })
-        } else {
-            block()
-        }
+        UIApplication.shared.isIdleTimerDisabled = false
     }
 
     @objc func showErrorMessage(_ notification: Notification) {
@@ -120,8 +96,53 @@ class ConnectionHintView: UIView, XibDesignable {
         }
     }
 
+    @objc func showSyncMessage(_ notification: Notification) {
+        guard let progress = notification.object as? Int, isVisibleInScreen else {
+            return
+        }
+
+        let isHidden = progress >= 100
+        if UIApplication.shared.isIdleTimerDisabled != isHidden {
+            UIApplication.shared.isIdleTimerDisabled = isHidden
+        }
+        guard connectionHintViewHeightConstraint.constant == 0 || style == .progress else {
+            return
+        }
+        style = .progress
+        label.text = Localized.CONNECTION_HINT_PROGRESS(progress)
+        setConnectionHintHidden(isHidden)
+    }
+
     @objc func updateConnectionHint() {
+        if !WebSocketService.shared.connected {
+            style = .connecting
+        }
         setConnectionHintHidden(WebSocketService.shared.connected)
+    }
+
+    private func setConnectionHintHidden(_ hidden: Bool, animated: Bool = true) {
+        switch style {
+        case .connecting, .progress:
+            backgroundView.backgroundColor = UIColor.hintBlue
+        case .error:
+            backgroundView.backgroundColor = UIColor.hintRed
+        case .toast:
+            backgroundView.backgroundColor = UIColor.hintGreen
+        }
+        let newHeight: CGFloat = hidden ? 0 : 36
+        let heightDifference = newHeight - connectionHintViewHeightConstraint.constant
+        connectionHintViewHeightConstraint.constant = newHeight
+        let block = {
+            self.delegate?.animateAlongsideConnectionHintView(self, changingHeightWithDifference: heightDifference)
+            self.superview?.superview?.layoutIfNeeded()
+        }
+        if animated {
+            UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut], animations: {
+                block()
+            })
+        } else {
+            block()
+        }
     }
     
 }

@@ -132,7 +132,7 @@
                                         <rect key="frame" x="0.0" y="75" width="375" height="1"/>
                                         <color key="backgroundColor" red="0.78431372549019607" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="tc2-Yl-UKV" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                            <constraint firstAttribute="height" constant="1" id="tc2-Yl-UKV" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -358,7 +358,7 @@
                                         <rect key="frame" x="0.0" y="75" width="375" height="1"/>
                                         <color key="backgroundColor" red="0.73725490199999999" green="0.72941176470000002" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="29g-UL-lu2" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                            <constraint firstAttribute="height" constant="1" id="29g-UL-lu2" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                         </constraints>
                                     </view>
                                 </subviews>

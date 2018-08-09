@@ -30,56 +30,6 @@ final class MessageDAO {
         UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = old.conversation_id) where conversation_id = old.conversation_id;
     END
     """
-    private static let sqlQueryLastNMessages = """
-        SELECT * FROM (
-        SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
-        m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.album_id, m.created_at,
-        u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
-        u1.full_name as participantFullName, u1.user_id as participantUserId,
-        s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType,
-        a.symbol as assetSymbol, a.icon_url as assetIcon,
-        st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, m.action as actionName, m.shared_user_id as sharedUserId,
-        su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified
-                       FROM messages m
-                       LEFT JOIN users u ON m.user_id = u.user_id
-                       LEFT JOIN users u1 ON m.participant_id = u1.user_id
-                       LEFT JOIN snapshots s ON m.snapshot_id = s.snapshot_id
-                       LEFT JOIN assets a ON s.asset_id = a.asset_id
-                       LEFT JOIN stickers st ON m.album_id = st.album_id AND m.name = st.name
-                       LEFT JOIN users su ON m.shared_user_id = su.user_id
-                       WHERE m.conversation_id = ?
-                       ORDER BY m.created_at DESC
-                       LIMIT ?)
-        ORDER BY created_at ASC
-    """
-    private static let sqlQueryMessagesByOffset = """
-        SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
-        m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.album_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
-               u1.full_name as participantFullName, u1.user_id as participantUserId,
-               s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
-               st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified
-        FROM messages m
-        LEFT JOIN users u ON m.user_id = u.user_id
-        LEFT JOIN users u1 ON m.participant_id = u1.user_id
-        LEFT JOIN snapshots s ON m.snapshot_id = s.snapshot_id
-        LEFT JOIN assets a ON s.asset_id = a.asset_id
-        LEFT JOIN stickers st ON m.album_id = st.album_id AND m.name = st.name
-        LEFT JOIN users su ON m.shared_user_id = su.user_id
-        WHERE m.conversation_id = ?
-        ORDER BY m.created_at ASC
-        LIMIT ?
-        OFFSET ?
-    """
-    private static let sqlQueryOffsetByCreatedAt = """
-        SELECT COUNT(id)
-        FROM messages
-        WHERE conversation_id = ? AND created_at < ?
-        ORDER BY created_at ASC
-    """
     static let sqlQueryLastUnreadMessageTime = """
         SELECT created_at FROM messages
         WHERE conversation_id = ? AND status = 'DELIVERED' AND user_id != ?
@@ -90,41 +40,78 @@ final class MessageDAO {
         UPDATE messages SET status = 'READ'
         WHERE conversation_id = ? AND status == 'DELIVERED' AND user_id != ? AND created_at <= ?
     """
-    static let sqlQueryFullMessageById = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
+    static let sqlQueryFullMessage = """
+    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.album_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
+        m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
+        m.sticker_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
                u1.full_name as participantFullName, u1.user_id as participantUserId,
                s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
-               st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified
+               st.asset_width as assetWidth, st.asset_height as assetHeight, st.asset_url as assetUrl, m.action as actionName, m.shared_user_id as sharedUserId, su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, m.quote_message_id, m.quote_content
     FROM messages m
     LEFT JOIN users u ON m.user_id = u.user_id
     LEFT JOIN users u1 ON m.participant_id = u1.user_id
     LEFT JOIN snapshots s ON m.snapshot_id = s.snapshot_id
     LEFT JOIN assets a ON s.asset_id = a.asset_id
-    LEFT JOIN stickers st ON m.album_id = st.album_id AND m.name = st.name
+    LEFT JOIN stickers st ON m.sticker_id = st.sticker_id
     LEFT JOIN users su ON m.shared_user_id = su.user_id
-    WHERE m.id = ?
     """
+    private static let sqlQueryLastNMessages = """
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ?
+    ORDER BY m.created_at DESC
+    LIMIT ?
+    """
+    static let sqlQueryFullMessageBeforeCreatedAt = """
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ? AND m.created_at < ?
+    ORDER BY m.created_at DESC
+    LIMIT ?
+    """
+    static let sqlQueryFullMessageAfterCreatedAt = """
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ? AND m.created_at > ?
+    LIMIT ?
+    """
+    static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
     private static let sqlQueryMessageSync = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
+    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.album_id, m.created_at FROM messages m
+        m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
+        m.sticker_id, m.quote_message_id, m.quote_content, m.created_at FROM messages m
     INNER JOIN conversations c ON c.conversation_id = m.conversation_id AND c.status = 1
     WHERE m.status = 'SENDING'
     ORDER BY m.created_at ASC
     """
     private static let sqlQueryPendingMessages = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mine_type,
+    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.album_id, m.created_at FROM messages m
+        m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
+        m.sticker_id, m.created_at FROM messages m
     INNER JOIN conversations c ON c.conversation_id = m.conversation_id AND c.status = 1
     WHERE m.status = 'SENDING' AND m.media_status = 'PENDING'
     ORDER BY m.created_at ASC
     """
+    static let sqlQueryQuoteMessageById = """
+    \(sqlQueryFullMessage)
+    WHERE m.id = ? AND m.status <> 'FAILED'
+    """
+    private static let sqlUpdateOldStickers = """
+    UPDATE messages SET sticker_id = (
+        SELECT s.sticker_id FROM stickers s
+        INNER JOIN sticker_relationships sa ON sa.sticker_id = s.sticker_id
+        INNER JOIN albums a ON a.album_id = sa.album_id
+        WHERE a.album_id = messages.album_id AND s.name = messages.name
+    ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''
+    """
+    
+    func storageUsageMessages(conversationId: String, category: String) -> [String: String] {
+        return MixinDatabase.shared.getDictionary(key: Message.Properties.messageId.asColumnResult(), value: Message.Properties.mediaUrl.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.like("%\(category)"))
+    }
+
+    func deleteMessages(conversationId: String, category: String) {
+        MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.like("%\(category)"))
+    }
 
     func findFailedMessages(conversationId: String, userId: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000, inTransaction: false)
@@ -146,6 +133,10 @@ final class MessageDAO {
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
 
+    func updateMessageQuoteContent(quoteMessageId: String, quoteContent: Data) {
+        MixinDatabase.shared.update(maps: [(Message.Properties.quoteContent, quoteContent)], tableName: Message.tableName, condition: Message.Properties.quoteMessageId == quoteContent)
+    }
+
     func updateMessageContentAndStatus(content: String, status: String, messageId: String, conversationId: String) {
         guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
             return
@@ -155,7 +146,7 @@ final class MessageDAO {
     }
 
     func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.albumId, stickerData.albumId), (Message.Properties.name, stickerData.name), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.stickerId, stickerData.stickerId), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
             return
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
@@ -173,14 +164,16 @@ final class MessageDAO {
     func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, conversationId: String, mediaStatus: MediaStatus) {
         guard MixinDatabase.shared.update(maps: [
             (Message.Properties.content, mediaData.attachmentId),
-            (Message.Properties.mediaMineType, mediaData.mineType),
+            (Message.Properties.mediaMimeType, mediaData.mimeType),
             (Message.Properties.mediaSize, mediaData.size),
+            (Message.Properties.mediaDuration, mediaData.duration),
             (Message.Properties.mediaWidth, mediaData.width),
             (Message.Properties.mediaHeight, mediaData.height),
             (Message.Properties.thumbImage, mediaData.thumbnail),
             (Message.Properties.mediaKey, mediaData.key),
             (Message.Properties.mediaDigest, mediaData.digest),
             (Message.Properties.mediaStatus, mediaStatus.rawValue),
+            (Message.Properties.mediaWaveform, mediaData.waveform),
             (Message.Properties.status, status),
             (Message.Properties.name, mediaData.name)
             ], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
@@ -222,6 +215,15 @@ final class MessageDAO {
 
         let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: status))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+    }
+
+    func updateOldStickerMessages() {
+        MixinDatabase.shared.transaction { (database) in
+            guard try database.isColumnExist(tableName: Message.tableName, columnName: "album_id") else {
+                return
+            }
+            try database.prepareUpdateSQL(sql: MessageDAO.sqlUpdateOldStickers).execute()
+        }
     }
 
     func getFullMessage(messageId: String) -> MessageItem? {
@@ -287,38 +289,35 @@ final class MessageDAO {
                                                orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)],
                                                inTransaction: false)
     }
-
-    func getOffset(conversationId: String, messageId: String) -> Int? {
-        guard let createdAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt, fromTable: Message.tableName, condition: Message.Properties.messageId == messageId, inTransaction: false)?.stringValue else {
+    
+    typealias MessagesResult = (messages: [MessageItem], didReachBegin: Bool, didReachEnd: Bool)
+    func getMessages(conversationId: String, aroundMessageId messageId: String, count: Int) -> MessagesResult? {
+        guard let message = getFullMessage(messageId: messageId) else {
             return nil
         }
-
-        guard let result = MixinDatabase.shared.scalar(on: Message.Properties.messageId.count(), fromTable: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt < createdAt, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)?.int32Value else {
-            return nil
-        }
-        return Int(result)
+        let count = count / 2
+        let messagesAbove = getMessages(conversationId: conversationId, aboveMessage: message, count: count)
+        let messagesBelow = getMessages(conversationId: conversationId, belowMessage: message, count: count)
+        var messages = [MessageItem]()
+        messages.append(contentsOf: messagesAbove)
+        messages.append(message)
+        messages.append(contentsOf: messagesBelow)
+        return (messages, messagesAbove.count < count, messagesBelow.count < count)
     }
-
-    func getMessages(conversationId: String, location: Int, count: Int) -> [MessageItem] {
-        guard !conversationId.isEmpty else {
-            return []
-        }
-        let values: [ColumnEncodableBase]
-        if count < 0 {
-            if location + count >= 0 {
-                values = [conversationId, -count, location + count]
-            } else {
-                values = [conversationId, location, 0]
-            }
-        } else {
-            values = [conversationId, count, location]
-        }
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryMessagesByOffset, values: values, inTransaction: false)
+    
+    func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
+        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeCreatedAt, values: [conversationId, location.createdAt, count])
+        return messages.reversed()
+    }
+    
+    func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterCreatedAt,
+                                                values: [conversationId, location.createdAt, count])
     }
 
     func getLastNMessages(conversationId: String, count: Int) -> [MessageItem] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values:
-            [conversationId, count], inTransaction: false)
+        let messages: [MessageItem] =  MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values: [conversationId, count], inTransaction: false)
+        return messages.reversed()
     }
     
     func getUnreadMessagesCount(conversationId: String) -> Int {
@@ -330,12 +329,16 @@ final class MessageDAO {
                                              condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
-    func getPhotos(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
+    func getGalleryItems(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
         assert(count != 0)
         let messages: [Message]
+        let isGalleryItem = Message.Properties.category == MessageCategory.SIGNAL_IMAGE.rawValue
+            || Message.Properties.category == MessageCategory.PLAIN_IMAGE.rawValue
+            || Message.Properties.category == MessageCategory.SIGNAL_VIDEO.rawValue
+            || Message.Properties.category == MessageCategory.PLAIN_VIDEO.rawValue
         if count > 0 {
             let condition = Message.Properties.conversationId == conversationId
-                && (Message.Properties.category == MessageCategory.SIGNAL_IMAGE.rawValue || Message.Properties.category == MessageCategory.PLAIN_IMAGE.rawValue)
+                && isGalleryItem
                 && Message.Properties.status != MessageStatus.FAILED.rawValue
                 && !(Message.Properties.userId == AccountAPI.shared.accountUserId && Message.Properties.mediaStatus != MediaStatus.DONE.rawValue)
                 && Message.Properties.createdAt > location.createdAt
@@ -345,7 +348,7 @@ final class MessageDAO {
                                                         inTransaction: false)
         } else {
             let condition = Message.Properties.conversationId == conversationId
-                && (Message.Properties.category == MessageCategory.SIGNAL_IMAGE.rawValue || Message.Properties.category == MessageCategory.PLAIN_IMAGE.rawValue)
+                && isGalleryItem
                 && Message.Properties.status != MessageStatus.FAILED.rawValue
                 && !(Message.Properties.userId == AccountAPI.shared.accountUserId && Message.Properties.mediaStatus != MediaStatus.DONE.rawValue)
                 && Message.Properties.createdAt < location.createdAt
@@ -358,6 +361,11 @@ final class MessageDAO {
     }
 
     func insertMessage(message: Message, messageSource: String) {
+        var message = message
+        if let quoteMessageId = message.quoteMessageId, let quoteContent = getQuoteMessage(messageId: quoteMessageId) {
+            message.quoteContent = quoteContent
+        }
+
         MixinDatabase.shared.transaction { (db) in
             try insertMessage(database: db, message: message, messageSource: messageSource)
         }
@@ -394,6 +402,17 @@ final class MessageDAO {
             && Message.Properties.status == MessageStatus.DELIVERED.rawValue
             && Message.Properties.userId != AccountAPI.shared.accountUserId
         return MixinDatabase.shared.isExist(type: Message.self, condition: condition, inTransaction: false)
+    }
+    
+    func hasMessage(id: String) -> Bool {
+        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id)
+    }
+
+    func getQuoteMessage(messageId: String?) -> Data? {
+        guard let quoteMessageId = messageId, let quoteMessage: MessageItem = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [quoteMessageId], inTransaction: false).first else {
+            return nil
+        }
+        return try? JSONEncoder().encode(quoteMessage)
     }
 
 }

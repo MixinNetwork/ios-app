@@ -24,7 +24,7 @@ class PayView: UIStackView {
 
     private weak var superView: BottomSheetView?
 
-    private let context = LAContext()
+    private lazy var context = LAContext()
     private var user: UserItem!
     private var trackId: String!
     private var asset: AssetItem!
@@ -33,10 +33,16 @@ class PayView: UIStackView {
     private var memo = ""
     private(set) var processing = false
     private var soundId: SystemSoundID = 0
-    private lazy var userWindow = UserWindow.instance()
+    private var isTransfer = false
+    private var isAutoFillPIN = false
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        if ScreenSize.current == .inch3_5 {
+            pinField.cellLength = 8
+            assetImageView.cornerRadius = 12
+            blockchainImageView.cornerRadius = 4
+        }
         pinField.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -49,7 +55,8 @@ class PayView: UIStackView {
         NotificationCenter.default.removeObserver(self)
     }
 
-    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
+    func render(isTransfer: Bool, asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
+        self.isTransfer = isTransfer
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -65,8 +72,13 @@ class PayView: UIStackView {
         } else if let address = address {
             self.address = address
             avatarImageView.isHidden = true
-            nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label)
-            mixinIDLabel.text = address.publicKey.toSimpleKey()
+            if asset.isAccount {
+                nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.accountName ?? "")
+                mixinIDLabel.text = address.accountTag
+            } else {
+                nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label ?? "")
+                mixinIDLabel.text = address.publicKey?.toSimpleKey()
+            }
             payStatusLabel.text = Localized.WALLET_WITHDRAWAL_PAY_PASSWORD
         }
         if let url = URL(string: asset.iconUrl) {
@@ -84,25 +96,20 @@ class PayView: UIStackView {
         pinField.isHidden = false
         pinField.clear()
         memoLabel.text = memo
-        amountLabel.text =  String(format: "%@ %@", amount.formatSimpleBalance(), asset.symbol)
-        amountExchangeLabel.text = String(format: "≈ %@ USD", (amount.toDouble() * asset.priceUsd.toDouble()).toFormatLegalTender())
+        amountLabel.text = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
+        amountExchangeLabel.text = CurrencyFormatter.localizedString(from: amount.doubleValue * asset.priceUsd.doubleValue, format: .legalTender, sign: .never, symbol: .usd)
         paySuccessImageView.isHidden = true
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
+
+        if #available(iOS 11.0, *) {
+            biometricsPayAction()
+        }
     }
 
     @IBAction func dismissAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
     }
-
-    @IBAction func profileAction(_ sender: Any) {
-        guard let user = self.user, !avatarImageView.isHidden, !processing else {
-            return
-        }
-        superView?.dismissPopupControllerAnimated()
-        userWindow.updateUser(user: user).presentView()
-    }
-    
 
     class func instance() -> PayView {
         return Bundle.main.loadNibNamed("PayView", owner: nil, options: nil)?.first as! PayView
@@ -151,7 +158,6 @@ extension PayView {
                 superView.popupView.center = superView.getAnimationStartPoint()
             }, completion: { (_) in
                 superView.isShowing = false
-                NotificationCenter.default.postOnMain(name: .WindowDidDisappear)
                 superView.removeFromSuperview()
             })
         } else {
@@ -179,6 +185,7 @@ extension PayView: PinFieldDelegate {
         }
         processing = true
         let assetId = asset.assetId
+        let isWithdrawal = avatarImageView.isHidden
         dismissButton.isEnabled = false
 
         let completion = { [weak self](result: APIResult<Snapshot>) in
@@ -188,38 +195,75 @@ extension PayView: PinFieldDelegate {
 
             switch result {
             case let .success(snapshot):
+                if isWithdrawal {
+                    ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
+                }
                 SnapshotDAO.shared.replaceSnapshot(snapshot: snapshot)
                 if weakSelf.avatarImageView.isHidden {
                     WalletUserDefault.shared.lastWithdrawalAddress[assetId] = weakSelf.address.addressId
                 } else {
                     WalletUserDefault.shared.defalutTransferAssetId = assetId
                 }
-                WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                if !weakSelf.isAutoFillPIN {
+                    WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
+                }
                 weakSelf.transferLoadingView.stopAnimating()
                 weakSelf.transferLoadingView.isHidden = true
                 weakSelf.paySuccessImageView.isHidden = false
                 weakSelf.payStatusLabel.text = Localized.ACTION_DONE
                 weakSelf.playSuccessSound()
                 weakSelf.delayDismissWindow()
-            case let .failure(error, _):
+            case let .failure(error):
                 weakSelf.processing = false
                 weakSelf.superView?.dismissPopupControllerAnimated()
-                guard error.kind != .cancelled else {
+                guard error.status != NSURLErrorCancelled else {
                     return
                 }
-                let errorMsg = error.kind.localizedDescription ?? error.description
                 if (weakSelf.superView as? UrlWindow)?.fromWeb ?? false {
-                    SwiftMessages.showToast(message: errorMsg, backgroundColor: .hintRed)
+                    SwiftMessages.showToast(message: error.localizedDescription, backgroundColor: .hintRed)
                 } else {
-                    UIApplication.currentActivity()?.alert(errorMsg, message: nil)
+                    UIApplication.currentActivity()?.alert(error.localizedDescription, message: nil)
                 }
             }
         }
 
-        if avatarImageView.isHidden {
-            WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: amount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+        let generalizedAmount: String
+        if let decimalSeparator = Locale.current.decimalSeparator, decimalSeparator != "." {
+            generalizedAmount = amount.replacingOccurrences(of: decimalSeparator, with: ".")
         } else {
-            AssetAPI.shared.transfer(assetId: assetId, counterUserId: user.userId, amount: amount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+            generalizedAmount = amount
+        }
+        if isWithdrawal {
+            WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+        } else {
+            AssetAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+        }
+    }
+
+    @available(iOS 11.0, *)
+    private func biometricsPayAction() {
+        guard WalletUserDefault.shared.isBiometricPay else {
+            return
+        }
+        guard Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime < WalletUserDefault.shared.pinInterval else {
+            return
+        }
+
+        let context = LAContext()
+        var error: NSError?
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), context.biometryType == .touchID || context.biometryType == .faceID else {
+            return
+        }
+        let prompt = Localized.WALLET_BIOMETRIC_PAY_PROMPT(biometricType: context.biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
+
+        DispatchQueue.global().async { [weak self] in
+            guard let pin = Keychain.shared.getPIN(prompt: prompt) else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.isAutoFillPIN = true
+                self?.pinField.insertText(pin)
+            }
         }
     }
 
@@ -237,7 +281,7 @@ extension PayView: PinFieldDelegate {
         }
     }
 
-    func playSuccessSound() {
+    private func playSuccessSound() {
         if soundId == 0 {
             guard let path = Bundle.main.path(forResource: "payment_success", ofType: "caf") else {
                 return

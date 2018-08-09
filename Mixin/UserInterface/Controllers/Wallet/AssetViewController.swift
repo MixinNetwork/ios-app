@@ -37,7 +37,7 @@ class AssetViewController: UITableViewController {
         guard !depositButton.isBusy else {
             return
         }
-        navigationController?.pushViewController(TransferInViewController.instance(asset: asset), animated: true)
+        navigationController?.pushViewController(DepositViewController.instance(asset: asset), animated: true)
     }
     
     private func fetchAsset() {
@@ -52,9 +52,9 @@ class AssetViewController: UITableViewController {
 
             let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId)
             let userIds: [String] = snapshots.filter({ (snapshot) -> Bool in
-                return snapshot.counterUserFullName == nil && snapshot.counterUserId != nil
+                return snapshot.opponentUserFullName == nil && snapshot.opponentId != nil
             }).flatMap({ (snapshot) -> String in
-                return snapshot.counterUserId!
+                return snapshot.opponentId!
             })
             if userIds.count > 0 {
                 for userId in userIds {
@@ -84,9 +84,9 @@ class AssetViewController: UITableViewController {
             blockchainImageView.sd_setImage(with: chainUrl)
             blockchainImageView.isHidden = false
         }
-        balanceLabel.text = String(format: "%@ %@", asset.balance.formatFullBalance(), asset.symbol)
-        exchangeLabel.text = asset.getUSDBalance()
-        depositButton.isBusy = asset.publicKey.isEmpty
+        balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never, symbol: .custom(asset.symbol))
+        exchangeLabel.text = asset.localizedUSDBalance
+        depositButton.isBusy = !(asset.isAccount || asset.isAddress)
     }
 
     class func instance(asset: AssetItem) -> UIViewController {
@@ -181,7 +181,7 @@ extension AssetViewController {
         if indexPath.section == 1 {
             return SnapshotCell.cellHeight
         } else {
-            return super.tableView(tableView, heightForRowAt: indexPath)
+            return UITableViewAutomaticDimension
         }
     }
     

@@ -2,6 +2,7 @@ import UIKit
 import AVFoundation
 import Photos
 import SwiftMessages
+import AVKit
 
 enum DetechStatus {
     case detecting
@@ -13,20 +14,30 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var previewView: PreviewView!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var sendButton: BouncingButton!
-    @IBOutlet weak var takeButton: UIButton!
+    @IBOutlet weak var takeButton: RecordButton!
     @IBOutlet weak var saveButton: BouncingButton!
     @IBOutlet weak var backButton: BouncingButton!
     @IBOutlet weak var cameraSwapButton: BouncingButton!
     @IBOutlet weak var cameraFlashButton: BouncingButton!
     @IBOutlet weak var snapshotImageView: UIImageView!
+    @IBOutlet weak var qrcodeContentLabel: UILabel!
+    @IBOutlet weak var qrcodeView: UIVisualEffectView!
+    @IBOutlet weak var qrcodeTipsView: UIView!
+    @IBOutlet weak var toolbarView: UIView!
+    @IBOutlet weak var timeView: UIView!
+    @IBOutlet weak var recordingRedDotView: UIView!
+    @IBOutlet weak var timeLabel: UILabel!
+
+    @IBOutlet weak var qrcodeNotificationTopConstraint: NSLayoutConstraint!
 
     private let sessionQueue = DispatchQueue(label: "one.mixin.messenger.queue.camera")
     private let metadataOutput = AVCaptureMetadataOutput()
     private let session = AVCaptureSession()
+    private let captureVideoOutput = AVCaptureMovieFileOutput()
     private var capturePhotoOutput = AVCapturePhotoOutput()
     private var videoDeviceInput: AVCaptureDeviceInput!
+    private var audioDeviceInput: AVCaptureDeviceInput!
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
-    private var detectQRCode = false
     private var didTakePhoto = false
     private var photoCaptureProcessor: PhotoCaptureProcessor?
     private var cameraPosition = AVCaptureDevice.Position.unspecified
@@ -34,6 +45,11 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var fromWithdrawal = false
     private var flashOn = false
     private var addressCallback: ((String) -> Void)?
+    private var detectQRCodes = [String]()
+    private var detectLock = NSLock()
+    private var detectText = ""
+    private var recordTimer: Timer?
+    private var isGrantedAudioRecordPermission = false
 
     private lazy var videoDeviceDiscoverySession: AVCaptureDevice.DiscoverySession = {
         if #available(iOS 10.2, *) {
@@ -43,18 +59,19 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         }
     }()
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        prepareNotification()
         previewView.session = session
         sessionQueue.async {
             self.configureSession()
         }
 
-        NotificationCenter.default.addObserver(forName: .WindowDidDisappear, object: nil, queue: .main) { [weak self] (_) in
-            self?.detectQRCode = false
+        if !CommonUserDefault.shared.isCameraQRCodeTips {
+            qrcodeTipsView.isHidden = false
         }
+        prepareRecord()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -68,9 +85,14 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         session.stopRunning()
-        detectQRCode = false
         loadingView.stopAnimating()
     }
+
+    @IBAction func hideTipsAction(_ sender: Any) {
+        CommonUserDefault.shared.isCameraQRCodeTips = true
+        qrcodeTipsView.isHidden = true
+    }
+
 
     @IBAction func savePhotoAction(_ sender: Any) {
         guard didTakePhoto, let photo = photoCaptureProcessor?.photo else {
@@ -79,11 +101,11 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
 
         saveButton.isEnabled = false
         sendButton.isEnabled = false
-        checkPhotoLibrary { [weak self](success) in
+        PHPhotoLibrary.checkAuthorization { [weak self](authorized) in
             guard let weakSelf = self else {
                 return
             }
-            guard success else {
+            guard authorized else {
                 weakSelf.saveButton.isEnabled = true
                 weakSelf.sendButton.isEnabled = true
                 return
@@ -166,12 +188,16 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
                 self.session.addInput(deviceInput)
             }
 
+            if let connection = self.captureVideoOutput.connection(with: .video), connection.isVideoMirroringSupported {
+                connection.isVideoMirrored = preferredPosition == .front
+            }
+
             self.session.commitConfiguration()
         }
     }
 
     @IBAction func takeAction(_ sender: Any) {
-        guard !didTakePhoto, !detectQRCode else {
+        guard !didTakePhoto else {
             return
         }
         didTakePhoto = true
@@ -275,16 +301,136 @@ class PhotoCaptureProcessor: NSObject, AVCapturePhotoCaptureDelegate {
     }
 }
 
+extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
+
+    func prepareRecord() {
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(recordViewAction))
+        longPressRecognizer.minimumPressDuration = 0.15
+        takeButton.addGestureRecognizer(longPressRecognizer)
+        takeButton.longPressRecognizer = longPressRecognizer
+
+        timeLabel.shadowColor = UIColor.black
+        timeLabel.shadowOffset = CGSize(width: 0.3, height: 0.3)
+    }
+
+    @objc func recordViewAction(gestureRecognizer: UILongPressGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .began:
+            startRecordingIfGranted()
+            takeButton.startAnimation { [weak self] in
+                self?.startRecord()
+            }
+            timeLabel.text = mediaDurationFormatter.string(from: 0)
+            displayMainUI(false)
+            self.recordTimer?.invalidate()
+            let timer = Timer(timeInterval: 0.5,
+                              target: self,
+                              selector: #selector(updateTimeLabelAction(_:)),
+                              userInfo: nil,
+                              repeats: true)
+            RunLoop.main.add(timer, forMode: .commonModes)
+            recordTimer = timer
+            startRedDotAnimation()
+        case .ended, .cancelled, .failed:
+            takeButton.resetAnimation { [weak self] in
+                self?.stopRecord()
+            }
+            displayMainUI(true)
+            stopRedDotAnimation()
+            recordTimer?.invalidate()
+            recordTimer = nil
+        default:
+            break
+        }
+    }
+
+    private func startRecordingIfGranted() {
+        isGrantedAudioRecordPermission = false
+        switch AVAudioSession.sharedInstance().recordPermission() {
+        case .denied:
+            alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
+        case .granted:
+            isGrantedAudioRecordPermission = true
+        case .undetermined:
+            AVAudioSession.sharedInstance().requestRecordPermission({ (_) in })
+        }
+    }
+
+    private func startRecord() {
+        guard captureVideoOutput.connection(with: .video)?.isActive ?? false else {
+            return
+        }
+
+        captureVideoOutput.startRecording(to: URL.createTempUrl(fileExtension: "mov"), recordingDelegate: self)
+    }
+
+    private func stopRecord() {
+        guard captureVideoOutput.isRecording else {
+            return
+        }
+        captureVideoOutput.stopRecording()
+    }
+
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        defer {
+            takeButton.autoStopAction()
+        }
+        guard error == nil, isGrantedAudioRecordPermission else {
+            try? FileManager.default.removeItem(at: outputFileURL)
+            return
+        }
+        let asset = AVAsset(url: outputFileURL)
+        guard asset.duration.isValid, asset.duration.seconds >= 1 else {
+            try? FileManager.default.removeItem(at: outputFileURL)
+            return
+        }
+
+        navigationController?.pushViewController(AssetSendViewController.instance(videoAsset: asset, dataSource: nil), animated: true)
+    }
+
+    private func displayMainUI(_ display: Bool) {
+        UIView.animate(withDuration: 0.15) {
+            self.toolbarView.alpha = display ? 1 : 0
+            self.timeView.alpha = display ? 0 : 1
+        }
+    }
+
+    private func startRedDotAnimation() {
+        UIView.animate(withDuration: 1, delay: 0, options: [.repeat, .autoreverse], animations: {
+            self.recordingRedDotView.alpha = 1
+        }, completion: nil)
+    }
+
+    private func stopRedDotAnimation() {
+        recordingRedDotView.layer.removeAllAnimations()
+        recordingRedDotView.alpha = 0
+    }
+
+    @objc func updateTimeLabelAction(_ sender: Any) {
+        guard captureVideoOutput.isRecording, captureVideoOutput.recordedDuration.isValid else {
+            return
+        }
+        timeLabel.text = mediaDurationFormatter.string(from: captureVideoOutput.recordedDuration.seconds)
+    }
+}
+
 extension CameraViewController {
 
     private func configureSession() {
         session.beginConfiguration()
-        session.sessionPreset = .photo
+        session.sessionPreset = .high
 
         if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .unspecified), let deviceInput = try? AVCaptureDeviceInput(device: device) {
             if session.canAddInput(deviceInput) {
                 session.addInput(deviceInput)
                 videoDeviceInput = deviceInput
+            }
+        }
+
+        if let device = AVCaptureDevice.default(for: .audio), let deviceInput = try? AVCaptureDeviceInput(device: device) {
+            if session.canAddInput(deviceInput) {
+                session.addInput(deviceInput)
+                audioDeviceInput = deviceInput
             }
         }
 
@@ -301,6 +447,11 @@ extension CameraViewController {
         capturePhotoOutput.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey : AVVideoCodecJPEG])], completionHandler: nil)
         if session.canAddOutput(capturePhotoOutput) {
             session.addOutput(capturePhotoOutput)
+        }
+
+        captureVideoOutput.maxRecordedDuration = CMTime(seconds: 15, preferredTimescale: 30)
+        if session.canAddOutput(captureVideoOutput) {
+            session.addOutput(captureVideoOutput)
         }
 
         session.commitConfiguration()
@@ -335,25 +486,7 @@ extension CameraViewController {
                 self.takeButton.isHidden = false
                 self.shutterAnimationView.removeFromSuperview()
             })
-            backButton.setImage(#imageLiteral(resourceName: "ic_close_shdow"), for: .normal)
-        }
-    }
-
-    private func checkPhotoLibrary(callback: @escaping (Bool) -> Void) {
-        switch PHPhotoLibrary.authorizationStatus() {
-        case .authorized:
-            callback(true)
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization { (status) in
-                switch status {
-                case .authorized:
-                    callback(true)
-                case .denied, .notDetermined, .restricted:
-                    callback(false)
-                }
-            }
-        case .denied, .restricted:
-            callback(false)
+            backButton.setImage(#imageLiteral(resourceName: "ic_close_shadow"), for: .normal)
         }
     }
     
@@ -397,33 +530,168 @@ extension CameraViewController {
 }
 
 extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
-    
-    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard !detectQRCode, !didTakePhoto else {
+
+    private func prepareNotification() {
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction))
+        qrcodeView.addGestureRecognizer(panRecognizer)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        qrcodeView.addGestureRecognizer(tapRecognizer)
+    }
+
+    @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            recognizer.setTranslation(.zero, in: qrcodeView)
+        case .changed:
+            qrcodeNotificationTopConstraint.constant = qrcodeNotificationTopConstraint.constant + recognizer.translation(in: qrcodeView).y
+            recognizer.setTranslation(.zero, in: qrcodeView)
+        default:
+            if qrcodeNotificationTopConstraint.constant > 6 && qrcodeNotificationTopConstraint.constant < 18 {
+                qrcodeNotificationTopConstraint.constant = 12
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.view.layoutIfNeeded()
+                })
+            } else {
+                hideNotification()
+            }
+        }
+    }
+
+    @objc func tapAction(_ recognizer: UIPanGestureRecognizer) {
+        hideNotification()
+
+        if let url = URL(string: detectText), UrlWindow.checkUrl(url: url) {
             return
         }
-        detectQRCode = true
+        RecognizeWindow.instance().presentWindow(text: detectText)
+    }
+
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        guard !didTakePhoto, qrcodeTipsView.isHidden else {
+            return
+        }
         guard metadataObjects.count > 0, let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject else {
-            detectQRCode = false
             return
         }
         guard let urlString = object.stringValue?.trimmingCharacters(in: .whitespacesAndNewlines), !urlString.isEmpty else {
-            detectQRCode = false
             return
         }
 
-        if fromWithdrawal {
-            addressCallback?(urlString)
+        if fromWithdrawal, let address = filterAddress(urlString: urlString) {
+            addressCallback?(address)
             navigationController?.popViewController(animated: true)
             return
         }
 
-        guard let url = URL(string: urlString), UrlWindow.checkUrl(url: url) else {
-            RecognizeWindow.instance().presentWindow(text: urlString)
-            navigationController?.popViewController(animated: true)
+        detectLock.lock()
+        guard !detectQRCodes.contains(urlString) else {
+            detectLock.unlock()
             return
         }
+        detectQRCodes.append(urlString)
+        detectLock.unlock()
 
+        detectText = urlString
+
+        if let url = URL(string: urlString), let mixinURL = MixinURL(url: url) {
+            switch mixinURL {
+            case .codes, .pay, .users, .transfer:
+                showNotification(text: Localized.CAMERA_QRCODE_CODES)
+            case .send:
+                showNotification(text: urlString)
+            case .unknown:
+                showNotification(text: urlString)
+            }
+        } else {
+            showNotification(text: urlString)
+        }
+    }
+
+    private func showNotification(text: String) {
+        let animateBlock = {
+            self.qrcodeContentLabel.text = text
+            self.qrcodeView.isHidden = false
+            self.qrcodeNotificationTopConstraint.constant = 12
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 5, options: [], animations: {
+                self.view.layoutIfNeeded()
+            }) { (_) in
+
+            }
+        }
+        if !qrcodeView.isHidden {
+            UIView.animate(withDuration: 0.15, animations: {
+                self.qrcodeView.transform = CGAffineTransform(translationX: 0, y: 10)
+            }, completion: { (finished) in
+                self.qrcodeContentLabel.text = text
+                UIView.animate(withDuration: 0.15, animations: {
+                    self.qrcodeView.transform = .identity
+                })
+            })
+        } else {
+            animateBlock()
+        }
+    }
+
+    private func hideNotification() {
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            self.qrcodeNotificationTopConstraint.constant = -86
+            self.view.layoutIfNeeded()
+        }) { (_) in
+            self.qrcodeView.isHidden = true
+        }
+    }
+
+    private func filterAddress(urlString: String) -> String? {
+        guard urlString.hasPrefix("iban:XE") || urlString.hasPrefix("IBAN:XE") else {
+            return urlString
+        }
+        guard urlString.count >= 20 else {
+            return nil
+        }
+
+        let endIndex = urlString.index(of: "?") ?? urlString.endIndex
+        let accountIdentifier = urlString[urlString.index(urlString.startIndex, offsetBy: 9)..<endIndex]
+
+        guard let address = accountIdentifier.lowercased().base36to16() else {
+            return nil
+        }
+        return "0x\(address)"
     }
     
+}
+
+fileprivate extension String {
+
+    static let base36Alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
+
+    static var base36AlphabetMap: [Character: Int] = {
+        var reverseLookup = [Character: Int]()
+        for characterIndex in 0..<String.base36Alphabet.count {
+            let character = base36Alphabet[base36Alphabet.index(base36Alphabet.startIndex, offsetBy: characterIndex)]
+            reverseLookup[character] = characterIndex
+        }
+        return reverseLookup
+    }()
+
+    func base36to16() -> String? {
+        var bytes = [Int]()
+        for character in self {
+            guard var carry = String.base36AlphabetMap[character] else {
+                return nil
+            }
+
+            for byteIndex in 0..<bytes.count {
+                carry += bytes[byteIndex] * 36
+                bytes[byteIndex] = carry & 0xff
+                carry >>= 8
+            }
+
+            while carry > 0 {
+                bytes.append(carry & 0xff)
+                carry >>= 8
+            }
+        }
+        return bytes.reversed().map { String(format: "%02hhx", $0) }.joined()
+    }
+
 }

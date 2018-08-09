@@ -7,15 +7,28 @@ public class Localized {
     public static let DIALOG_BUTTON_CANCEL = LocalizedString("dialog_button_cancel", comment: "Cancel")
     public static let DIALOG_BUTTON_CHANGE = LocalizedString("dialog_button_change", comment: "Change")
     public static let DIALOG_BUTTON_CONFIRM = LocalizedString("dialog_button_confirm", comment: "Confirm")
-    public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
-    public static let CONNECTION_HINT_WAITING = LocalizedString("connection_hint_waiting", comment: "Waiting to reconnect")
+    public static let DIALOG_BUTTON_DISABLE = LocalizedString("dialog_button_disable", comment: "Disable")
     public static let ACTION_NEXT = LocalizedString("action_next", comment: "Next")
+    public static let ACTION_REMOVE = LocalizedString("action_remove", comment: "Remove")
     public static let ACTION_CAMERA = LocalizedString("action_camera", comment: "Camera")
     public static let ACTION_DONE = LocalizedString("action_done", comment: "Done")
     public static let ACTION_CHOOSE_PHOTO = LocalizedString("action_choose_photo", comment: "Choose Photo")
     public static let ACTION_SAVE = LocalizedString("action_save", comment: "Save")
     public static let ACTION_SEE_MORE = LocalizedString("action_see_more", comment: "See more")
+    public static let ACTION_OPEN_SAFARI = LocalizedString("action_open_safari", comment: "Open in Safari")
+    public static let ACTION_REFRESH = LocalizedString("action_refresh", comment: "Refresh")
+    public static let ACTION_SELECT = LocalizedString("action_select", comment: "Select")
+    public static let ACTION_CLEAR = LocalizedString("action_clear", comment: "Clear")
+    public static let ACTION_SEND = LocalizedString("action_send", comment: "Send")
+    public static let ACTION_HIDE = LocalizedString("action_hide", comment: "Hide")
+    public static let ACTION_SHOW = LocalizedString("action_show", comment: "Show")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
+
+    public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
+    public static let CONNECTION_HINT_WAITING = LocalizedString("connection_hint_waiting", comment: "Waiting to reconnect")
+    public static func CONNECTION_HINT_PROGRESS(_ progress: Int) -> String {
+        return String(format: LocalizedString("connection_hint_progress", comment: "Syncing messages %@%%"), "\(progress)")
+    }
 
     public static let DATE_FORMAT_DAY = LocalizedString("date_format_day", comment: "hh:mm a")
     public static let DATE_FORMAT_DATE = LocalizedString("date_format_date", comment: "dd/MM/yyyy")
@@ -56,7 +69,10 @@ public class Localized {
     public static let TOAST_API_ERROR_PHONE_VERIFICATION_INVALID = LocalizedString("toast_api_error_phone_verification_invalid", comment: "Invalid verification code")
     public static let TOAST_API_ERROR_UNAVAILABLE_PHONE_NUMBER = LocalizedString("toast_api_error_unavailable_phone_number", comment: "This phone number is already associated with another account")
     public static let PERMISSION_DENIED_CAMERA = LocalizedString("permission_denied_camera", comment: "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.")
+    public static let PERMISSION_DENIED_PHOTO_LIBRARY = LocalizedString("permission_denied_photo_library", comment: "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.")
+    public static let PERMISSION_DENIED_MICROPHONE = LocalizedString("permission_denied_microphone", comment: "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.")
     public static let TOAST_OPERATION_FAILED = LocalizedString("toast_operation_failed", comment: "The operation failed, please try again later")
+    public static let TOAST_ADDED = LocalizedString("toast_added", comment: "Added")
 
     // Login
     public static func NAVIGATION_TITLE_ENTER_VERIFICATION_CODE(mobileNumber: String) -> String {
@@ -71,6 +87,9 @@ public class Localized {
     public static let BUTTON_TITLE_RESEND_CODE_PENDING = LocalizedString("button_title_resend_code_pending", comment: "Resend code in %@")
     public static let HEADER_TITLE_CURRENT_SELECTED = LocalizedString("header_title_current_selected", comment: "Current Selected")
     public static let HEADER_TITLE_CURRENT_LOCATION = LocalizedString("header_title_current_location", comment: "Current Location")
+    public static let TOAST_RECAPTCHA_TIMED_OUT = LocalizedString("toast_recaptcha_timed_out", comment: "Validation timed out")
+    public static let TOAST_RECAPTCHA_INVALID = LocalizedString("toast_recaptcha_invalid", comment: "Recaptcha is invalid.")
+    public static let TOAST_UPDATE_TIPS = LocalizedString("toast_update_tips", comment: "Please update Mixin from App Store to continue use the service.")
 
     // Contacts
     public static let CONTACT_TITLE_CHANGE_NAME = LocalizedString("contact_title_change_name", comment: "Change name")
@@ -110,6 +129,7 @@ public class Localized {
     public static let CHAT_MESSAGE_MENU_FORWARD = LocalizedString("chat_message_menu_forward", comment: "Forward")
     public static let CHAT_MESSAGE_MENU_COPY = LocalizedString("chat_message_menu_copy", comment: "Copy")
     public static let CHAT_MESSAGE_OPEN_URL = LocalizedString("chat_message_open_url", comment: "Open URL")
+    public static let CHAT_MESSAGE_ADD = LocalizedString("chat_message_sticker", comment: "Add to Stickers")
     public static let CHAT_TIME_TODAY = LocalizedString("chat_time_today", comment: "Today")
     public static let CHAT_MESSAGE_YOU = LocalizedString("chat_message_you", comment: "You")
     public static func CHAT_MESSAGE_CREATED(fullName: String) -> String {
@@ -144,18 +164,37 @@ public class Localized {
     public static let CHAT_DECRYPTION_FAILED_LINK = LocalizedString("chat_decryption_failed_link", comment: "learn more.")
     public static let CHAT_SEND_PHOTO_FAILED = LocalizedString("chat_send_photo_failed", comment: "Failed to send photo")
     public static let CHAT_SEND_FILE_FAILED = LocalizedString("chat_send_file_failed", comment: "Failed to send file")
+    public static let CHAT_SEND_VIDEO_FAILED = LocalizedString("chat_send_video_failed", comment: "Failed to send video")
+    public static let CHAT_SEND_AUDIO_FAILED = LocalizedString("chat_send_audio_failed", comment: "Failed to send audio")
     public static let CHAT_MENU_CAMERA = LocalizedString("chat_menu_camera", comment: "Camera")
-    public static let CHAT_MENU_PHOTO = LocalizedString("chat_menu_photo", comment: "Photo")
+    public static let CHAT_MENU_PHOTO = LocalizedString("chat_menu_photo", comment: "Photo & Video")
     public static let CHAT_MENU_FILE = LocalizedString("chat_menu_file", comment: "File")
     public static let CHAT_MENU_TRANSFER = LocalizedString("chat_menu_transfer", comment: "Transfer")
     public static let CHAT_MENU_CONTACT = LocalizedString("chat_menu_contact", comment: "Contact")
     public static let CHAT_PHOTO_SAVE = LocalizedString("chat_photo_save", comment: "Save to Camera Roll")
     public static let CHAT_FILE_EXPIRED = LocalizedString("chat_file_expired", comment: "Expired")
+    public static let CHAT_VOICE_RECORD_LONGPRESS_HINT = LocalizedString("chat_voice_record_longpress_hint", comment: "Hold to record, release to send.")
+    public static let CHAT_QUOTE_TYPE_STICKER = LocalizedString("chat_quote_type_sticker", comment: "Sticker")
+    public static let CHAT_QUOTE_TYPE_PHOTO = LocalizedString("chat_quote_type_photo", comment: "Photo")
+    public static let CHAT_QUOTE_TYPE_VIDEO = LocalizedString("chat_quote_type_video", comment: "Video")
+
+    // Sticker
+    public static let STICKER_MANAGER_TITLE = LocalizedString("sticker_manager_title", comment: "My Stickers")
+    public static let STICKER_ADD_TITLE = LocalizedString("sticker_add_title", comment: "Add Sticker")
+    public static let STICKER_REMOVE_TITLE = LocalizedString("sticker_remove_title", comment: "Delete Stickers")
+    public static let STICKER_ADD_FAILED = LocalizedString("sticker_add_failed", comment: "Failed to add sticker")
+    public static let STICKER_REMOVE_FAILED = LocalizedString("sticker_remove_failed", comment: "Failed to delete stickers")
+    public static let STICKER_ADD_REQUIRED = LocalizedString("sticker_add_required", comment: "Requires stickers file size larger than 1KB and less than 1MB, aspect ratio between 16:9 and 9:16.")
+    public static let STICKER_ADD_LIMIT = LocalizedString("sticker_add_limit", comment: "Too many stickers.")
 
     // Camera
     public static let CAMERA_SAVE_PHOTO_SUCCESS = LocalizedString("camera_save_photo_success", comment: "Photo saved.")
     public static let CAMERA_SAVE_PHOTO_FAILED = LocalizedString("camera_save_photo_failed", comment: "Unable to save photo.")
     public static let CAMERA_SEND_TO_TITLE = LocalizedString("camera_send_to_title", comment: "Send To")
+    public static let CAMERA_SAVE_VIDEO_SUCCESS = LocalizedString("camera_save_video_success", comment: "Video saved.")
+    public static let CAMERA_SAVE_VIDEO_FAILED = LocalizedString("camera_save_video_failed", comment: "Unable to save video.")
+    public static let IMAGE_PICKER_TITLE_ALBUMS = LocalizedString("image_picker_title_albums", comment: "Albums")
+    public static let CAMERA_QRCODE_CODES = LocalizedString("camera_qrcode_codes", comment: "Detected a Mixin QR code, tap to recognize")
 
     // Group
     public static let GROUP_NAVIGATION_TITLE_ADD_MEMBER = LocalizedString("group_navigation_title_add_member", comment: "Add Participants")
@@ -282,13 +321,21 @@ public class Localized {
         return String(format: LocalizedString("wallet_snapshot_to", comment: "To %@"), fullName)
     }
     public static let WALLET_DEPOSIT = LocalizedString("wallet_deposit", comment: "Deposit")
+    public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {
+        return String(format: LocalizedString("wallet_deposit_confirmations", comment: "Deposit will arrive after at least %@ block confirmations."), "\(confirmations)")
+    }
+    public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name")
+    public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo")
+    public static func WALLET_DEPOSIT_ACCOUNT_NOTICE(symbol: String, confirmations: Int) -> String {
+        return String(format: LocalizedString("wallet_deposit_account_notice", comment: "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin, deposit will arrive after at least %@ block confirmations."), symbol, "\(confirmations)")
+    }
     public static let WALLET_MENU_SHOW_HIDDEN_ASSETS = LocalizedString("wallet_menu_show_hidden_assets", comment: "Hidden assets")
     public static let WALLET_MENU_SHOW_ASSET = LocalizedString("wallet_menu_show_asset", comment: "Show asset")
     public static let WALLET_MENU_HIDE_ASSET = LocalizedString("wallet_menu_hide_asset", comment: "Hide asset")
     public static let WALLET_HIDE_ASSET_EMPTY = LocalizedString("wallet_hide_asset_empty", comment: "No hidden assets")
     public static let WALLET_MENU_WITHDRAW = LocalizedString("wallet_menu_withdraw", comment: "Withdraw")
-    public static func WALLET_HINT_TRANSACTION_FEE(feeRepresentation: String, symbol: String) -> String {
-        return String(format: LocalizedString("wallet_hint_transaction_fee", comment: "A transaction fee of %@ is required for withdrawing %@."), feeRepresentation, symbol)
+    public static func WALLET_HINT_TRANSACTION_FEE(feeRepresentation: String, name: String) -> String {
+        return String(format: LocalizedString("wallet_hint_transaction_fee", comment: "A transaction fee of %@ is required for withdrawing %@."), feeRepresentation, name)
     }
     public static let WALLET_PIN_TIPS_DESCRIPTION = LocalizedString("wallet_pin_tips_description", comment: "You'll be asked for it periodically to help you remember it.")
     public static let WALLET_PASSWORD_ADDRESS_TIPS = LocalizedString("wallet_password_address_tips", comment: "Confirm PIN to protect your address security.")
@@ -296,6 +343,9 @@ public class Localized {
         return String(format: LocalizedString("wallet_withdrawal_asset", comment: "%@ Withdrawal"), assetName)
     }
     public static let WALLET_WITHDRAWAL_PAY_PASSWORD = LocalizedString("wallet_withdrawal_pay_password", comment: "Withdrawal with PIN")
+    public static func WALLET_WITHDRAWAL_RESERVE(reserveRepresentation: String, name: String) -> String {
+        return String(format: LocalizedString("wallet_withdrawal_reserve", comment: " %@ has a minimum %@ reserve requirement."), name, reserveRepresentation)
+    }
     public static let WALLET_BLOCKCHIAN_NOT_IN_SYNC = LocalizedString("wallet_blockchian_not_in_sync", comment: "Blockchain not in sync.")
     public static let WALLET_NO_PRICE = LocalizedString("wallet_no_price", comment: "N/A")
     public static let WALLET_PIN_INIT_TIPS1 = LocalizedString("wallet_pin_init_tips1", comment: "Please set a 6 digit PIN.")
@@ -305,7 +355,38 @@ public class Localized {
     public static let WALLET_PIN_CHANGE_TIPS = LocalizedString("wallet_pin_change_tips", comment: "Please set a new 6 digit PIN.")
     public static let WALLET_PIN_INIT_TITLE = LocalizedString("wallet_pin_init_title", comment: "Set PIN")
     public static let WALLET_PIN_CONFIRM_TITLE = LocalizedString("wallet_pin_confirm_title", comment: "Confirm PIN")
+    public static let WALLET_PIN_NEW_TITLE = LocalizedString("wallet_pin_new_title", comment: "Set a new PIN")
     public static let WALLET_ALL_TRANSACTIONS_TITLE = LocalizedString("wallet_all_transactions_title", comment: "All Transactions")
+    public static let WALLET_SETTING = LocalizedString("wallet_setting", comment: "Wallet Setting")
+    public static let WALLET_PIN_TOUCH_ID_PROMPT = LocalizedString("wallet_pin_touch_id_prompt", comment: "Confirm PIN to enable Touch Pay")
+    public static let WALLET_PIN_FACE_ID_PROMPT = LocalizedString("wallet_pin_face_id_prompt", comment: "Confirm PIN to enable Face Pay")
+    public static let WALLET_TOUCH_ID = LocalizedString("wallet_touch_id", comment: "Touch ID")
+    public static let WALLET_FACE_ID = LocalizedString("wallet_face_id", comment: "Face ID")
+    public static func WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_enable_biometric_pay_title", comment: "Pay with %@"), biometricType)
+    }
+    public static func WALLET_ENABLE_BIOMETRIC_PAY_PROMPT(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_enable_biometric_pay_prompt", comment: "Once enabled, %@ can be used to make quick transfers"), biometricType)
+    }
+    public static func WALLET_STORE_ENCRYPTED_PIN(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_store_encrypted_pin", comment: "Enable %@ Pay"), biometricType)
+    }
+    public static func WALLET_BIOMETRIC_PAY_PROMPT(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_biometric_pay_prompt", comment: "Authorize payment via %@"), biometricType)
+    }
+    public static func WALLET_DISABLE_BIOMETRIC_PAY(biometricType: String) -> String {
+        return String(format: LocalizedString("wallet_disable_biometric_pay", comment: "Disable %@ Pay"), biometricType)
+    }
+    public static let WALLET_PIN_PAY_INTERVAL = LocalizedString("wallet_pin_pay_interval", comment: "Pay with PIN interval")
+    public static func WALLET_PIN_PAY_INTERVAL_MINUTES(_ minutes: Double) -> String {
+        return String(format: LocalizedString("wallet_pin_pay_interval_minutes", comment: "%@ Minutes"), "\(Int(minutes / 60))")
+    }
+    public static let WALLET_PIN_PAY_INTERVAL_HOUR = LocalizedString("wallet_pin_pay_interval_hour", comment: "1 Hour")
+    public static func WALLET_PIN_PAY_INTERVAL_HOURS(_ minutes: Double) -> String {
+        return String(format: LocalizedString("wallet_pin_pay_interval_hours", comment: "%@ Hours"), "\(Int(minutes / 3600))")
+    }
+    public static let WALLET_PIN_PAY_INTERVAL_CONFIRM = LocalizedString("wallet_pin_pay_interval_confirm", comment: "Confirm PIN to protect your settings security.")
+    public static let WALLET_PIN_PAY_INTERVAL_TIPS = LocalizedString("wallet_pin_pay_interval_tips", comment: "For the security of your assets, you will still need to pay the PIN when you transfer again when you have entered the payment PIN for more than the specified time")
 
     // Transaction
     public static let TRANSACTION_TITLE = LocalizedString("transaction_title", comment: "Transaction")
@@ -358,6 +439,7 @@ public class Localized {
     public static let SETTING_NOTIFICATION = LocalizedString("setting_notification", comment: "Notifications")
     public static let SETTING_CONVERSATION = LocalizedString("setting_conversation", comment: "Conversation")
     public static let SETTING_BLOCKED = LocalizedString("setting_blocked", comment: "Blocked Users")
+    public static let SETTING_BLOCKED_EMPTY = LocalizedString("setting_blocked_empty", comment: "No blocked users")
     public static let SETTING_PRIVACY_AND_SECURITY = LocalizedString("setting_privacy_and_security", comment: "Privacy and Security")
 
     public static let SETTING_NOTIFICATION_MESSAGE = LocalizedString("setting_notification_message", comment: "MESSAGE NOTIFICATIONS")
@@ -369,9 +451,12 @@ public class Localized {
     public static let SETTING_ABOUT = LocalizedString("setting_about", comment: "About")
     public static let SETTING_PRIVACY_AND_SECURITY_SUMMARY = LocalizedString("setting_privacy_and_security_summary", comment: "Change who can add you to conversation and groups.")
     public static let SETTING_PRIVACY_AND_SECURITY_TITLE = LocalizedString("setting_privacy_and_security_title", comment: "PRIVACY")
-    public static let SETTING_CONVERSATION_EVERYBODY = LocalizedString("setting_conversation_everybody", comment: "Everybody")
-    public static let SETTING_CONVERSATION_CONTACTS = LocalizedString("setting_conversation_contacts", comment: "My Contacts")
-    public static let SETTING_CONVERSATION_SUMMARY = LocalizedString("setting_conversation_summary", comment: "You can restrict who can send message to me or add me to group chats.")
+    public static let SETTING_HEADER_MESSAGE_SOURCE = LocalizedString("setting_header_message_source", comment: "WHO CAN SEND ME MESSAGES")
+    public static let SETTING_HEADER_CONVERSATION_SOURCE = LocalizedString("setting_header_conversation_source", comment: "WHO CAN ADD ME TO GROUP CHATS")
+    public static let SETTING_STORAGE_USAGE = LocalizedString("setting_storage_usage", comment: "Storage Usage")
+    public static func SETTING_STORAGE_USAGE_CLEAR(messageCount: Int, size: String) -> String {
+    return String(format: LocalizedString("setting_storage_usage_clear", comment: "Clear %@ messages (%@)?"), "\(messageCount)", size)
+    }
     public static let SETTING_LOGOUT = LocalizedString("setting_logout", comment: "Log Out")
 
     // Notifications
@@ -386,6 +471,41 @@ public class Localized {
     public static let NOTIFICATION_CONTENT_FEE = LocalizedString("notification_content_fee", comment: "[Fee]")
     public static let NOTIFICATION_CONTENT_WITHDRAWAL = LocalizedString("notification_content_withdrawal", comment: "[Withdrawal]")
     public static let NOTIFICATION_CONTENT_REBATE = LocalizedString("notification_content_rebate", comment: "[Rebate]")
+    public static let NOTIFICATION_CONTENT_VIDEO = LocalizedString("notification_content_video", comment: "[Video]")
+    public static let NOTIFICATION_CONTENT_AUDIO = LocalizedString("notification_content_audio", comment: "[Audio]")
+    public static func ALERT_KEY_GROUP_MESSAGE(fullname: String) -> String {
+        return String(format: LocalizedString("alert_key_group_message", comment: "%@ send a message"), fullname)
+    }
+    public static func ALERT_KEY_GROUP_TEXT_MESSAGE(fullname: String) -> String {
+        return String(format: LocalizedString("alert_key_group_text_message", comment: "%@ send a message"), fullname)
+    }
+    public static func ALERT_KEY_GROUP_IMAGE_MESSAGE(fullname: String) -> String {
+        return String(format: LocalizedString("alert_key_group_image_message", comment: "%@ send a photo"), fullname)
+    }
+    public static func ALERT_KEY_GROUP_VIDEO_MESSAGE(fullname: String) -> String {
+        return String(format: LocalizedString("alert_key_group_video_message", comment: "%@ send a video"), fullname)
+    }
+    public static func ALERT_KEY_GROUP_DATA_MESSAGE(fullname: String) -> String {
+        return String(format: LocalizedString("alert_key_group_data_message", comment: "%@ send a file"), fullname)
+    }
+    public static func ALERT_KEY_GROUP_STICKER_MESSAGE(fullname: String) -> String {
+        return String(format: LocalizedString("alert_key_group_sticker_message", comment: "%@ send a sticker"), fullname)
+    }
+    public static func ALERT_KEY_GROUP_CONTACT_MESSAGE(fullname: String) -> String {
+        return String(format: LocalizedString("alert_key_group_contact_message", comment: "%@ send a contact"), fullname)
+    }
+    public static func ALERT_KEY_GROUP_AUDIO_MESSAGE(fullname: String) -> String {
+        return String(format: LocalizedString("alert_key_group_audio_message", comment: "%@ send a audio"), fullname)
+    }
+    public static let ALERT_KEY_CONTACT_MESSAGE = LocalizedString("alert_key_contact_message", comment: "send you a message")
+    public static let ALERT_KEY_CONTACT_TEXT_MESSAGE = LocalizedString("alert_key_contact_text_message", comment: "send you a message")
+    public static let ALERT_KEY_CONTACT_IMAGE_MESSAGE = LocalizedString("alert_key_contact_image_message", comment: "send you a photo")
+    public static let ALERT_KEY_CONTACT_VIDEO_MESSAGE = LocalizedString("alert_key_contact_video_message", comment: "send you a video")
+    public static let ALERT_KEY_CONTACT_TRANSFER_MESSAGE = LocalizedString("alert_key_contact_transfer_message", comment: "send you a transfer")
+    public static let ALERT_KEY_CONTACT_DATA_MESSAGE = LocalizedString("alert_key_contact_data_message", comment: "send you a file")
+    public static let ALERT_KEY_CONTACT_STICKER_MESSAGE = LocalizedString("alert_key_contact_sticker_message", comment: "send you a sticker")
+    public static let ALERT_KEY_CONTACT_CONTACT_MESSAGE = LocalizedString("alert_key_contact_contact_message", comment: "send you a contact")
+    public static let ALERT_KEY_CONTACT_AUDIO_MESSAGE = LocalizedString("alert_key_contact_audio_message", comment: "send you a audio")
 
     // About
     public static let ABOUT_LOGOUT_TITLE = LocalizedString("about_logout_title", comment: "Do you want to log out?")

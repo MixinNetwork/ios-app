@@ -1,6 +1,7 @@
 import Foundation
 import Bugsnag
 import Zip
+import ImageIO
 
 extension FileManager {
 
@@ -17,6 +18,29 @@ extension FileManager {
 
     func compare(path1: String, path2: String) -> Bool {
         return fileSize(path1) == fileSize(path2) && contentsEqual(atPath: path1, andPath: path2)
+    }
+
+    func isStillImage(_ path: String) -> Bool {
+        guard let handler = FileHandle(forReadingAtPath: path) else {
+            return false
+        }
+        defer {
+            handler.closeFile()
+        }
+        guard let c = handler.readData(ofLength: 1).bytes.first else {
+            return false
+        }
+        // 0xFF => image/jpeg
+        // 0x89 => image/png
+        return c == 0x89 || c == 0xFF
+    }
+
+    func imageSize(_ path: String) -> CGSize {
+        let imageFileURL = URL(fileURLWithPath: path)
+        guard let imageSource = CGImageSourceCreateWithURL(imageFileURL as CFURL, nil), let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any], let width = properties[kCGImagePropertyPixelWidth] as? NSNumber, let height = properties[kCGImagePropertyPixelHeight] as? NSNumber else {
+            return UIImage(contentsOfFile: path)?.size ?? CGSize.zero
+        }
+        return CGSize(width: width.intValue, height: height.intValue)
     }
 
     func createNobackupDirectory(_ directory: URL) -> Bool {
@@ -176,48 +200,26 @@ extension FileManager {
 extension FileManager {
 
     private static let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.log")
-    private static let enableWriteFileLog = true
     private static var conversations = [String: Conversation]()
 
     func writeLog(log: String, newSection: Bool = false) {
         guard let files = try? FileManager.default.contentsOfDirectory(atPath: MixinFile.logPath.path) else {
             return
         }
-        #if DEBUG
-        print("======\(log)")
-        #endif
-
         for file in files {
             let filename = MixinFile.logPath.appendingPathComponent(file).lastPathComponent.substring(endChar: ".")
             if log.hasPrefix("No sender key for:") {
                 if log.contains(filename) {
-                    FileManager.default.writeLog(conversationId: filename, log: log, commomLog: false, newSection: newSection)
+                    FileManager.default.writeLog(conversationId: filename, log: log, newSection: newSection)
                 }
             } else {
-                FileManager.default.writeLog(conversationId: filename, log: log, commomLog: true, newSection: newSection)
+                FileManager.default.writeLog(conversationId: filename, log: log, newSection: newSection)
             }
         }
     }
 
-    func writeLog(conversationId: String, log: String, commomLog: Bool = false, newSection: Bool = false) {
+    func writeLog(conversationId: String, log: String, newSection: Bool = false) {
         guard !conversationId.isEmpty else {
-            return
-        }
-        #if DEBUG
-            if !log.hasPrefix("[Receive]") && !commomLog {
-                if FileManager.conversations[conversationId] == nil {
-                    FileManager.conversations[conversationId] = ConversationDAO.shared.getOriginalConversation(conversationId: conversationId)
-                }
-                if let conversation = FileManager.conversations[conversationId] {
-                    if conversation.category == ConversationCategory.GROUP.rawValue {
-                        print("======[\(conversation.name ?? "")]\(log)")
-                    } else {
-                        print("======[CONTACT]\(log)")
-                    }
-                }
-            }
-        #endif
-        guard FileManager.enableWriteFileLog else {
             return
         }
         FileManager.dispatchQueue.async {
@@ -270,7 +272,6 @@ extension FileManager {
             #if DEBUG
                 print("======FileManagerExtension...exportLog...error:\(error)")
             #endif
-            Bugsnag.notifyError(error)
         }
         return nil
     }

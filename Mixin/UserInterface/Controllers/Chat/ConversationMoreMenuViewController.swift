@@ -90,7 +90,7 @@ extension ConversationMoreMenuViewController: UICollectionViewDelegate {
             case .camera:
                 conversationViewController?.imagePickerController.presentCamera()
             case .photo:
-                conversationViewController?.imagePickerController.presentPhoto()
+                conversationViewController?.pickPhotoOrVideoAction()
             case .file:
                 conversationViewController?.documentAction()
             case .transfer:

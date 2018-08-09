@@ -10,21 +10,22 @@ class MessageItem: TableCodable {
     var category: String = ""
     var content = ""
     var mediaUrl: String? = nil
-    var mediaMineType: String? = nil
+    var mediaMimeType: String? = nil
     var mediaSize: Int64? = nil
-    var mediaDuration: Int? = nil
+    var mediaDuration: Int64? = nil
     var mediaWidth: Int? = nil
     var mediaHeight: Int? = nil
     var mediaHash: String? = nil
     var mediaKey: Data? = nil
     var mediaDigest: Data? = nil
     var mediaStatus: String? = nil
+    var mediaWaveform: Data? = nil
     var thumbImage: String? = nil
     var status: String = ""
     var participantId: String? = nil
     var snapshotId: String? = nil
     var name: String? = nil
-    var albumId: String? = nil
+    var stickerId: String? = nil
     var createdAt: String = ""
 
     var actionName: String? = nil
@@ -54,6 +55,9 @@ class MessageItem: TableCodable {
     var sharedUserAppId: String = ""
     var sharedUserIsVerified: Bool = false
 
+    var quoteMessageId: String? = nil
+    var quoteContent: Data? = nil
+
     var userIsBot: Bool {
         return !(appId?.isEmpty ?? true)
     }
@@ -70,6 +74,36 @@ class MessageItem: TableCodable {
             return nil
         }
         return try? MessageItem.jsonDecoder.decode(AppCardData.self, from: data)
+    }()
+    
+    lazy var quoteSubtitle: String = {
+        if category.hasSuffix("_TEXT") {
+            return content
+        } else if category.hasSuffix("_STICKER") {
+            return Localized.CHAT_QUOTE_TYPE_STICKER
+        } else if category.hasSuffix("_IMAGE") {
+            return Localized.CHAT_QUOTE_TYPE_PHOTO
+        } else if category.hasSuffix("_VIDEO") {
+            return Localized.CHAT_QUOTE_TYPE_VIDEO
+        } else if category.hasSuffix("_AUDIO") {
+            if let duration = mediaDuration {
+                return mediaDurationFormatter.string(from: TimeInterval(Double(duration) / millisecondsPerSecond)) ?? ""
+            } else {
+                return ""
+            }
+        } else if category.hasSuffix("_DATA") {
+            return name ?? ""
+        } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
+            return (snapshotAmount ?? "0") + " " + (assetSymbol ?? "")
+        } else if category.hasSuffix("_CONTACT") {
+            return sharedUserIdentityNumber
+        } else if category == MessageCategory.APP_CARD.rawValue {
+            return appCard?.description ?? ""
+        } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
+            return appButtons?.first?.label ?? ""
+        } else {
+            return ""
+        }
     }()
 
     var isExtensionMessage: Bool {
@@ -92,7 +126,7 @@ class MessageItem: TableCodable {
         case category
         case content
         case mediaUrl = "media_url"
-        case mediaMineType = "media_mine_type"
+        case mediaMimeType = "media_mime_type"
         case mediaSize = "media_size"
         case mediaDuration = "media_duration"
         case mediaWidth = "media_width"
@@ -101,12 +135,13 @@ class MessageItem: TableCodable {
         case mediaKey = "media_key"
         case mediaDigest = "media_digest"
         case mediaStatus = "media_status"
+        case mediaWaveform = "media_waveform"
         case thumbImage = "thumb_image"
         case status
         case participantId = "participant_id"
         case snapshotId = "snapshot_id"
         case name
-        case albumId = "album_id"
+        case stickerId = "sticker_id"
         case createdAt = "created_at"
 
         case userFullName
@@ -136,6 +171,9 @@ class MessageItem: TableCodable {
         case sharedUserAppId
         case sharedUserIsVerified
 
+        case quoteMessageId = "quote_message_id"
+        case quoteContent = "quote_content"
+
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
     }
 }
@@ -152,4 +190,17 @@ extension MessageItem {
         return message
     }
 
+}
+
+extension MessageItem {
+
+    func isRepresentativeMessage(conversation: ConversationItem) -> Bool {
+        guard userId != AccountAPI.shared.accountUserId else {
+            return false
+        }
+        guard conversation.category != ConversationCategory.GROUP.rawValue else {
+            return true
+        }
+        return conversation.ownerId != userId && conversation.category == ConversationCategory.CONTACT.rawValue
+    }
 }

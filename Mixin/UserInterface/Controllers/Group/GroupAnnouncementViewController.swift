@@ -66,14 +66,11 @@ extension GroupAnnouncementViewController: ContainerViewControllerDelegate {
                 let change = ConversationChange(conversationId: conversation.conversationId, action: .updateConversation(conversation: conversation))
                 NotificationCenter.default.post(name: .ConversationDidChange, object: change)
                 self?.navigationController?.popViewController(animated: true)
-            case let .failure(error, didHandled):
+            case .failure:
                 if let weakSelf = self {
                     weakSelf.container?.rightButton.isBusy = false
                     weakSelf.textView.isUserInteractionEnabled = true
                     weakSelf.textView.becomeFirstResponder()
-                }
-                if !didHandled {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.kind.localizedDescription ?? error.description)
                 }
             }
         }

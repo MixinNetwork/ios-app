@@ -57,8 +57,8 @@ struct UserItem: BaseCodable {
 
 extension UserItem {
 
-    static func createUser(userId: String, fullName: String, identityNumber: String, avatarUrl: String) -> UserItem {
-        return UserItem(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: avatarUrl, phone: nil, isVerified: false, muteUntil: nil, appId: nil, createdAt: nil, relationship: "", role: "", appDescription: nil, appCreatorId: nil)
+    static func createUser(userId: String, fullName: String, identityNumber: String, avatarUrl: String, appId: String?) -> UserItem {
+        return UserItem(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: avatarUrl, phone: nil, isVerified: false, muteUntil: nil, appId: appId, createdAt: nil, relationship: "", role: "", appDescription: nil, appCreatorId: nil)
     }
 
     static func createUser(from user: UserResponse) -> UserItem {

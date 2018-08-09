@@ -1,5 +1,4 @@
 import Foundation
-import KeychainAccess
 
 class AccountUserDefault {
 
@@ -42,13 +41,11 @@ class AccountUserDefault {
     func storePinToken(pinToken: String) {
         session.setValue(pinToken, forKey: keyPinToken)
         session.synchronize()
-        Keychain.removePinToken()
     }
 
     func storeToken(token: String) {
         session.setValue(token, forKey: keySessionSecret)
         session.synchronize()
-        Keychain.removeToken()
     }
 
     func getPinToken(callback: @escaping (String?) -> Void) {
@@ -72,26 +69,10 @@ class AccountUserDefault {
         }
     }
 
-    func upgrade() {
-        guard AccountAPI.shared.account != nil else {
-            Keychain.removePinToken()
-            Keychain.removeToken()
-            return
-        }
-        if let token = Keychain.getToken(), !token.isEmpty {
-            storeToken(token: token)
-        }
-        if let pinToken = Keychain.getPinToken(), !pinToken.isEmpty {
-            storePinToken(pinToken: pinToken)
-        }
-    }
-
     func clear() {
         if let appDomain = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: appDomain)
             UserDefaults.standard.synchronize()
         }
-        Keychain.removeToken()
-        Keychain.removePinToken()
     }
 }

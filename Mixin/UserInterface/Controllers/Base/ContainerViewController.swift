@@ -10,6 +10,8 @@ extension UIViewController {
 
 protocol ContainerViewControllerDelegate: class {
 
+    func barLeftButtonTappedAction()
+
     func barRightButtonTappedAction()
 
     func prepareBar(rightButton: StateResponsiveButton)
@@ -19,7 +21,7 @@ protocol ContainerViewControllerDelegate: class {
     func imageBarRightButton() -> UIImage?
 }
 
-extension ContainerViewControllerDelegate {
+extension ContainerViewControllerDelegate where Self: UIViewController {
 
     func prepareBar(rightButton: StateResponsiveButton) {
 
@@ -33,12 +35,21 @@ extension ContainerViewControllerDelegate {
         return nil
     }
 
+    func barLeftButtonTappedAction() {
+        navigationController?.popViewController(animated: true)
+    }
+
+    func barRightButtonTappedAction() {
+        
+    }
+
 }
 
 class ContainerViewController: UIViewController {
 
     @IBOutlet weak var navigationBar: UIView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var rightButton: StateResponsiveButton!
     @IBOutlet weak var leftButton: UIButton!
@@ -91,7 +102,11 @@ class ContainerViewController: UIViewController {
     }
 
     @IBAction func backAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        guard let delegate = self.delegate else {
+            navigationController?.popViewController(animated: true)
+            return
+        }
+        delegate.barLeftButtonTappedAction()
     }
 
     class func instance(viewController: UIViewController, title: String) -> UIViewController {

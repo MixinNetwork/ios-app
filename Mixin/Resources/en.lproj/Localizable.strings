@@ -7,10 +7,9 @@
 "dialog_button_change" = "Change";
 "dialog_button_confirm" = "Confirm";
 "dialog_button_got_it" = "Got It";
+"dialog_button_disable" = "Disable";
 "dialog_progress_logout" = "Log out...";
 "dialog_progress_connect" = "Connecting...";
-"connection_hint_connecting" = "Connecting";
-"connection_hint_waiting" = "Waiting to reconnect";
 "action_next" = "Next";
 "action_camera" = "Camera";
 "action_continue" = "Continue";
@@ -19,7 +18,18 @@
 "action_done" = "Done";
 "action_save" = "Save";
 "action_see_more" = "See more";
+"action_open_safari" = "Open in Safari";
+"action_refresh" = "Refresh";
+"action_select" = "Select";
+"action_clear" = "Clear";
+"action_send" = "Send";
+"action_hide" = "Hide";
+"action_show" = "Show";
 "menu_delete" = "Delete";
+
+"connection_hint_connecting" = "Connecting";
+"connection_hint_waiting" = "Waiting to reconnect";
+"connection_hint_progress" = "Syncing messages %@%%";
 
 "date_format_day" = "hh:mm a";
 "date_format_date" = "dd/MM/yyyy";
@@ -38,8 +48,12 @@
 "toast_api_error_too_many_requests" = "Rate limit exceeded";
 "toast_api_error_unavailable_phone_number" = "This phone number is already associated with another account";
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
+"permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "toast_operation_failed" = "The operation failed, please try again later";
 "toast_copied" = "Successfully copied to clipboard";
+"permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
+"toast_added" = "Added";
+
 
 // Login
 "navigation_title_select_country" = "Select a Country";
@@ -61,6 +75,9 @@
 "placeholder_search_bar" = "Search for a country";
 "placeholder_mobile_number" = "Phone number";
 "init_signal" = "Initializing";
+"toast_recaptcha_timed_out" = "Validation timed out";
+"toast_recaptcha_invalid" = "Recaptcha is invalid.";
+"toast_update_tips" = "Please update Mixin from App Store to continue use the service.";
 
 // Contacts
 "contact_title" = "Contacts";
@@ -85,6 +102,9 @@
 "contact_search_not_found" = "user not found";
 "contact_avatar_picking_fail" = "Failed to change your profile photo";
 "contact_change_name_fail" = "Failed to change your name";
+"contact_my_qr_code" = "My QR Code";
+"contact_receive_money" = "Receive Money";
+"contact_qr_code_save" = "Save Image";
 
 "button_title_search" = "Search";
 "placeholder_mixin_id_or_phone" = "Mixin ID or Phone number";
@@ -102,6 +122,7 @@
 "chat_message_menu_forward" = "Forward";
 "chat_message_menu_copy" = "Copy";
 "chat_message_open_url" = "Open URL";
+"chat_message_sticker" = "Add to Stickers";
 "chat_time_today" = "Today";
 "chat_cell_title_unread_messages" = "Unread messages";
 "chat_message_you" = "You";
@@ -121,18 +142,41 @@
 "chat_decryption_failed_link" = "Learn more.";
 "chat_send_photo_failed" = "Failed to send photo";
 "chat_send_file_failed" = "Failed to send file";
+"chat_send_video_failed" = "Failed to send video";
+"chat_send_audio_failed" = "Failed to send audio";
 "chat_menu_camera" = "Camera";
-"chat_menu_photo" = "Photo";
+"chat_menu_photo" = "Photo & Video";
 "chat_menu_file" = "File";
 "chat_menu_transfer" = "Transfer";
 "chat_menu_contact" = "Contact";
 "chat_photo_save" = "Save to Camera Roll";
 "chat_file_expired" = "Expired";
+"chat_voice_record_cancel" = "Slide to cancel";
+"chat_voice_record_longpress_hint" = "Hold to record, release to send.";
+"chat_quote_type_sticker" = "Sticker";
+"chat_quote_type_photo" = "Photo";
+"chat_quote_type_video" = "Video";
+
+// Sticker
+"sticker_manager_title" = "My Stickers";
+"sticker_add_title" = "Add Sticker";
+"sticker_remove_title" = "Delete Stickers";
+"sticker_add_failed" = "Failed to add sticker";
+"sticker_remove_failed" = "Failed to delete stickers";
+"sticker_add_required" = "Requires stickers file size larger than 1KB and less than 800KB, width and height between 64 and 512 pixels.";
+"sticker_add_limit" = "Too many stickers.";
 
 // Camera
 "camera_save_photo_success" = "Photo saved.";
 "camera_save_photo_failed" = "Unable to save photo.";
 "camera_send_to_title" = "Send To";
+"camera_save_video_success" = "Video saved.";
+"camera_save_video_failed" = "Unable to save video.";
+"image_picker_title_albums" = "Albums";
+"camera_qrcode_title" = "TEXT QR CODE";
+"camera_qrcode_codes" = "Detected a Mixin QR code, tap to recognize";
+"camera_qrcode_tips_title" = "QR Code Camera";
+"camera_qrcode_tips_summary" = "Use the built-in Camera to scan any QR Code. When a code is detected, tap the notification to view more information.";
 
 // Group
 "group_navigation_title_add_member" = "Add Participants";
@@ -188,6 +232,10 @@
 "wallet_snapshot_from" = "From %@";
 "wallet_snapshot_to" = "To %@";
 "wallet_deposit" = "Deposit";
+"wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
+"wallet_account_name" = "Account Name";
+"wallet_account_memo" = "Account Memo";
+"wallet_deposit_account_notice" = "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin, deposit will arrive after at least %@ block confirmations.";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";
@@ -200,9 +248,12 @@
 "wallet_password_address_tips" = "Confirm PIN to protect your address security.";
 "wallet_withdrawal_asset" = "%@ Withdrawal";
 "wallet_withdrawal_pay_password" = "Withdrawal with PIN";
+"wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";
 "wallet_blockchian_not_in_sync" = "Blockchain not in sync.";
 "wallet_no_price" = "N/A";
 "wallet_pin_init_title" = "Set PIN";
+"wallet_pin_confirm_title" = "Confirm PIN";
+"wallet_pin_new_title" = "Set a new PIN";
 "wallet_pin_init_tips1" = "Please set a 6 digit PIN.";
 "wallet_pin_init_tips2" = "Please confirm the 6 digit PIN and remember it. If lost, there is no way to recover your wallet.";
 "wallet_pin_init_tips3" = "Please confirm your 6 digit PIN again. It's rare to see a third confirmation somewhere else, so please remember the PIN is unrecoverable if lost.";
@@ -211,10 +262,26 @@
 "wallet_pin_verify_tips" = "Please enter the 6 digit PIN to verify.";
 "wallet_pin_inconsistency" = "The PIN is not the same twice, please reset it";
 "wallet_pin_too_simple" = "The PIN is too simple and insecure.";
-"wallet_pin_confirm_title" = "Confirm PIN";
 "wallet_pin_tips_title" = "Enter your Wallet PIN";
 "wallet_pin_tips_description" = "You'll be asked for it periodically to help you remember it.";
 "wallet_all_transactions_title" = "All Transactions";
+"wallet_pin_touch_id_prompt" = "Confirm PIN to enable Touch Pay";
+"wallet_pin_face_id_prompt" = "Confirm PIN to enable Face Pay";
+"wallet_setting" = "Wallet Setting";
+"wallet_touch_id" = "Touch ID";
+"wallet_face_id" = "Face ID";
+"wallet_enable_biometric_pay_title" = "Pay with %@";
+"wallet_enable_biometric_pay_prompt" = "Once enabled, %@ can be used to make quick transfers";
+"wallet_store_encrypted_pin" = "Enable %@ Pay";
+"wallet_biometric_pay_prompt" = "Authorize payment via %@";
+"wallet_disable_biometric_pay" = "Disable %@ Pay?";
+"wallet_pin_pay_interval_minutes" = "%@ Minutes";
+"wallet_pin_pay_interval_hour" = "1 Hour";
+"wallet_pin_pay_interval_hours" = "%@ Hours";
+"wallet_pin_pay_interval" = "Pay with PIN interval";
+"wallet_pin_pay_interval_confirm" = "Confirm PIN to protect your settings security.";
+"wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your Wallet PIN for the specified interval.";
+
 
 // Transaction
 "transaction_title" = "Transaction";
@@ -263,6 +330,7 @@
 // QRCode
 "myqrcode_title" = "My QR Code";
 "myqrcode_prompt" = "Scan the QR Code to add me on Mixin";
+"transfer_qrcode_prompt" = "Scan the QR Code to transfer me on Mixin";
 "not_mixin_qr_code" = "Not Mixin QR Code";
 "group_qr_code" = "Group QR Code";
 "group_qr_code_prompt" = "Scan the QR Code to join this group";
@@ -336,11 +404,20 @@
 "setting_blocked_user_count_none" = "None";
 "setting_about" = "About";
 "setting_blocked" = "Blocked Users";
+"setting_blocked_empty" = "No blocked users";
 "setting_blocked_summary" = "Blocked users can't send you messages or add you to groups.";
 "setting_conversation" = "Conversation";
-"setting_conversation_summary" = "You can restrict who can send message to me or add me to group chats.";
-"setting_conversation_everybody" = "Everybody";
-"setting_conversation_contacts" = "My Contacts";
+"setting_storage_usage" = "Storage Usage";
+"setting_storage_usage_clear" = "Clear %@ messages (%@)?";
+"setting_header_message_source" = "WHO CAN SEND ME MESSAGES";
+"setting_header_conversation_source" = "WHO CAN ADD ME TO GROUP CHATS";
+"setting_source_everybody" = "Everybody";
+"setting_source_contacts" = "My Contacts";
+"setting_storage_usage" = "Storage Usage";
+"setting_storage_photos" = "Photos";
+"setting_storage_videos" = "Videos";
+"setting_storage_audios" = "Audios";
+"setting_storage_files" = "Files";
 "setting_logout" = "Log Out";
 
 // Notifications
@@ -355,6 +432,8 @@
 "notification_content_fee" = "[Fee]";
 "notification_content_withdrawal" = "[Withdrawal]";
 "notification_content_rebate" = "[Rebate]";
+"notification_content_video" = "[Video]";
+"notification_content_audio" = "[Audio]";
 "alert_key_group_message" = "%@ send a message";
 "alert_key_group_text_message" = "%@ send a message";
 "alert_key_group_image_message" = "%@ send a photo";
@@ -362,6 +441,7 @@
 "alert_key_group_data_message" = "%@ send a file";
 "alert_key_group_sticker_message" = "%@ send a sticker";
 "alert_key_group_contact_message" = "%@ send a contact";
+"alert_key_group_audio_message" = "%@ send a audio";
 "alert_key_contact_message" = "send you a message";
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";
@@ -370,6 +450,8 @@
 "alert_key_contact_data_message" = "send you a file";
 "alert_key_contact_sticker_message" = "send you a sticker";
 "alert_key_contact_contact_message" = "send you a contact";
+"alert_key_contact_audio_message" = "send you a audio";
+
 
 // About
 "about_twitter" = "Follow us on Twitter";

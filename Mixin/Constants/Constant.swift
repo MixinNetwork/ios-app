@@ -17,6 +17,8 @@ extension NSNotification.Name {
 
     static let ToastMessageDidAppear = NSNotification.Name("one.mixin.ios.toast.message")
 
+    static let SyncMessageDidAppear = NSNotification.Name("one.mixin.ios.sync.message")
+
     static let ParticipantDidChange = NSNotification.Name("one.mixin.ios.participant.changed")
 
     static let AssetsDidChange = NSNotification.Name("one.mixin.ios.assets.changed")
@@ -25,12 +27,15 @@ extension NSNotification.Name {
 
     static let SnapshotDidChange = NSNotification.Name("one.mixin.ios.snapshot.changed")
 
-    static let WindowDidDisappear = NSNotification.Name("one.mixin.ios.window.disappear")
-
     static let AddressDidChange = NSNotification.Name("one.mixin.ios.addresses.changed")
 
     static let DefaultAddressDidChange = NSNotification.Name("one.mixin.ios.addresses.default.changed")
 
+    static let StickerDidChange = NSNotification.Name("one.mixin.ios.stickers.changed")
+
+    static let StorageUsageDidChange = NSNotification.Name("one.mixin.ios.storage.changed")
+    
+    static let HiddenAssetsDidChange = NSNotification.Name("one.mixin.ios.hidden.assets.changed")
 }
 
 enum NotificationIdentifier: String {
@@ -78,9 +83,17 @@ struct Storyboard {
     static let group = UIStoryboard(name: "Group", bundle: Bundle.main)
     static let wallet = UIStoryboard(name: "Wallet", bundle: Bundle.main)
     static let setting = UIStoryboard(name: "Setting", bundle: Bundle.main)
+    static let photo = UIStoryboard(name: "Photo", bundle: Bundle.main)
 }
 
 struct MixinFile {
+    
+    enum ChatDirectory: String {
+        case photos = "Photos"
+        case files = "Files"
+        case videos = "Videos"
+        case audios = "Audios"
+    }
 
     static var rootDirectory: URL {
         let dir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(AccountAPI.shared.accountIdentityNumber)
@@ -105,24 +118,12 @@ struct MixinFile {
         return dir.appendingPathComponent("signal.db").path
     }
 
-    static var chatPhotosUrl: URL {
-        let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent("Photos")
+    static func url(ofChatDirectory directory: ChatDirectory, filename: String) -> URL {
+        let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent(directory.rawValue)
         if !FileManager.default.fileExists(atPath: url.path) {
             try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
         }
-        return url
-    }
-
-    static var chatFilesUrl: URL {
-        let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent("Files")
-        if !FileManager.default.fileExists(atPath: url.path) {
-            try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
-        }
-        return url
-    }
-
-    static func chatPhotosUrl(_ appendingPath: String) -> URL {
-        return chatPhotosUrl.appendingPathComponent(appendingPath)
+        return url.appendingPathComponent(filename)
     }
 
     static var groupIconsUrl: URL {
@@ -137,21 +138,54 @@ struct MixinFile {
 
 enum MixinURL {
     
+    static let scheme = "mixin"
     static let host = "mixin.one"
     
+    struct Path {
+        static let codes = "codes"
+        static let pay = "pay"
+        static let users = "users"
+        static let transfer = "transfer"
+        static let send = "send"
+    }
+    typealias Host = Path
+    
     case codes(String)
+    case users(String)
     case pay
+    case transfer(String)
+    case send
     case unknown
     
-    init(url: URL) {
-        if url.host == "mixin.one" && url.pathComponents.count == 3 && url.pathComponents[1] == "codes" {
-            self = .codes(url.pathComponents[2])
-        } else if url.scheme == "mixin" && url.pathComponents.count == 2 && url.host == "codes" {
-            self = .codes(url.pathComponents[1])
-        } else if (url.host == "mixin.one" && url.pathComponents.count > 1 && url.pathComponents[1] == "pay") || (url.scheme == "mixin" && url.host == "pay") {
-            self = .pay
+    init?(url: URL) {
+        if url.scheme == MixinURL.scheme {
+            if url.host == Host.codes && url.pathComponents.count == 2 {
+                self = .codes(url.pathComponents[1])
+            } else if url.host == Host.pay {
+                self = .pay
+            } else if url.host == Host.users && url.pathComponents.count == 2 {
+                self = .users(url.pathComponents[1])
+            } else if url.host == Host.transfer && url.pathComponents.count == 2 {
+                self = .transfer(url.pathComponents[1])
+            } else if url.host == Host.send {
+                self = .send
+            } else {
+                self = .unknown
+            }
+        } else if url.host == MixinURL.host {
+            if url.pathComponents.count == 3 && url.pathComponents[1] == Path.codes {
+                self = .codes(url.pathComponents[2])
+            } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.pay {
+                self = .pay
+            } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.users {
+                self = .users(url.pathComponents[2])
+            } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.transfer {
+                self = .transfer(url.pathComponents[2])
+            } else {
+                self = .unknown
+            }
         } else {
-            self = .unknown
+            return nil
         }
     }
     
@@ -160,3 +194,16 @@ enum MixinURL {
 let muteDuration8H: Int64 = 8 * 60 * 60
 let muteDuration1Week: Int64 = 7 * 24 * 60 * 60
 let muteDuration1Year: Int64 = 365 * 24 * 60 * 60
+
+enum ExtensionName: String {
+    
+    case jpeg = "jpg"
+    case mp4 = "mp4"
+    case html = "html"
+    case ogg = "ogg"
+    
+    var withDot: String {
+        return "." + rawValue
+    }
+    
+}

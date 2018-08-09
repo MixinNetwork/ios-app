@@ -49,48 +49,63 @@ extension UNUserNotificationCenter {
 
     func sendMessageNotification(message: MessageItem, ownerUser: UserItem?, conversation: ConversationItem) {
         let notificationContent = UNMutableNotificationContent()
+        let isRepresentativeMessage = message.isRepresentativeMessage(conversation: conversation)
         if conversation.isGroup() {
             notificationContent.title = conversation.name
+        } else if isRepresentativeMessage {
+            notificationContent.title = conversation.ownerFullName
         } else {
             notificationContent.title = message.userFullName
         }
 
         if message.category.hasSuffix("_TEXT") {
-            if conversation.isGroup() {
+            if conversation.isGroup() || isRepresentativeMessage {
                 notificationContent.body = "\(message.userFullName): \(message.content)"
             } else {
                 notificationContent.body = message.content
             }
         } else if message.category.hasSuffix("_IMAGE") {
-            if conversation.isGroup() {
-                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_PHOTO)"
+            if conversation.isGroup() || isRepresentativeMessage {
+                notificationContent.body = Localized.ALERT_KEY_GROUP_IMAGE_MESSAGE(fullname: message.userFullName)
             } else {
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_PHOTO
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_IMAGE_MESSAGE
+            }
+        } else if message.category.hasSuffix("_VIDEO") {
+            if conversation.isGroup() || isRepresentativeMessage {
+                notificationContent.body = Localized.ALERT_KEY_GROUP_VIDEO_MESSAGE(fullname: message.userFullName)
+            } else {
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_VIDEO_MESSAGE
+            }
+        } else if message.category.hasSuffix("_AUDIO") {
+            if conversation.isGroup() || isRepresentativeMessage {
+                notificationContent.body = Localized.ALERT_KEY_GROUP_AUDIO_MESSAGE(fullname: message.userFullName)
+            } else {
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_AUDIO_MESSAGE
             }
         } else if message.category.hasSuffix("_DATA") {
-            if conversation.isGroup() {
-                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_FILE)"
+            if conversation.isGroup() || isRepresentativeMessage {
+                notificationContent.body = Localized.ALERT_KEY_GROUP_DATA_MESSAGE(fullname: message.userFullName)
             } else {
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_FILE
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_DATA_MESSAGE
             }
         } else if message.category.hasSuffix("_STICKER") {
-            if conversation.isGroup() {
-                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_STICKER)"
+            if conversation.isGroup() || isRepresentativeMessage {
+                notificationContent.body = Localized.ALERT_KEY_GROUP_STICKER_MESSAGE(fullname: message.userFullName)
             } else {
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_STICKER
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_STICKER_MESSAGE
             }
         } else if message.category.hasSuffix("_CONTACT") {
-            if conversation.isGroup() {
-                notificationContent.body = "\(message.userFullName): \(Localized.NOTIFICATION_CONTENT_CONTACT)"
+            if conversation.isGroup() || isRepresentativeMessage {
+                notificationContent.body = Localized.ALERT_KEY_GROUP_CONTACT_MESSAGE(fullname: message.userFullName)
             } else {
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_CONTACT
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_CONTACT_MESSAGE
             }
         } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             switch message.snapshotType {
             case SnapshotType.deposit.rawValue:
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_DEPOSIT
             case SnapshotType.transfer.rawValue:
-                notificationContent.body = Localized.NOTIFICATION_CONTENT_TRANSFER
+                notificationContent.body = Localized.ALERT_KEY_CONTACT_TRANSFER_MESSAGE
             case SnapshotType.withdrawal.rawValue:
                 notificationContent.body = Localized.NOTIFICATION_CONTENT_WITHDRAWAL
             case SnapshotType.fee.rawValue:
@@ -114,6 +129,7 @@ extension UNUserNotificationCenter {
             userInfo["userFullName"] = user.fullName
             userInfo["userAvatarUrl"] = user.avatarUrl
             userInfo["userIdentityNumber"] = user.identityNumber
+            userInfo["userAppId"] = user.appId
         }
         notificationContent.userInfo = userInfo
         notificationContent.sound = UNNotificationSound(named: "mixin.caf")

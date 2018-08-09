@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+        var postMessage = function(value) {
+            window.webkit.messageHandlers.recaptcha.postMessage({ message: value });
+        }
+
+        var postToken = function(value) {
+            window.webkit.messageHandlers.recaptcha.postMessage({ token: value });
+        }
+
+        var gReCaptchaExecute = function() {
+            var observer = new MutationObserver(function(mutations) { postMessage("challenge_change"); });
+            observer.observe(document.getElementsByTagName("div")[4], { attributes: true, attributeFilter: ['style'] });
+            grecaptcha.execute();
+        };
+
+        var reCaptchaRenderFinished = function(observer) {
+            observer.disconnect();
+            postMessage("did_load");
+        }
+
+        var onloadCallback = function() {
+            var observer = new MutationObserver(function(mutations) {
+                var inserted = false;
+                for (var i = 0; i < mutations.length; i++) {
+                    if (mutations[i].addedNodes[0].nodeName.toUpperCase() == 'div'.toUpperCase()) {
+                        inserted = true;
+                        break;
+                    }
+                }
+                if (inserted) {
+                    reCaptchaRenderFinished(observer);
+                }
+            })
+            observer.observe(document.getElementsByTagName("body")[0], { childList: true })
+            grecaptcha.render('html_element', {
+                'sitekey': '${api_key}',
+                'callback': postToken,
+                'size': 'invisible'
+            });
+        };
+        </script>
+    </head>
+    <body>
+        <form action="?" method="POST" style="hidden">
+            <div id="html_element"></div>
+        </form>
+        <script src="${script_url}?onload=onloadCallback&render=explicit" async defer>
+        </script>
+    </body>
+</html>

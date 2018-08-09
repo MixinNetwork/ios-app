@@ -32,13 +32,34 @@ final class ConversationDAO {
     LEFT JOIN users u ON u.user_id = m.user_id
     INNER JOIN users u1 ON u1.user_id = c.owner_id
     LEFT JOIN users u2 ON u2.user_id = m.participant_id
-    WHERE (m.category = 'SIGNAL_TEXT' AND m.content LIKE ?) OR (m.category = 'SIGNAL_DATA' AND m.name LIKE ?)
+    WHERE (m.category LIKE '%_TEXT' AND m.content LIKE ?) OR (m.category LIKE '%_DATA' AND m.name LIKE ?)
     ORDER BY c.pin_time DESC, m.created_at DESC
     """
     private static let sqlQueryConversationList = String(format: sqlQueryConversation, "")
     private static let sqlQueryConversationByOwnerId = String(format: sqlQueryConversation, " AND c.owner_id = ? AND c.category = 'CONTACT'")
     private static let sqlQueryConversationByCoversationId = String(format: sqlQueryConversation, " AND c.conversation_id = ? ")
     private static let sqlQueryConversationByName = String(format: sqlQueryConversation, "AND c.name LIKE ?") + " LIMIT 1"
+    private static let sqlQueryStorageUsage = """
+    SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name, u.identity_number as ownerIdentityNumber,
+    u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl, u.is_verified as ownerIsVerified, m.mediaSize
+    FROM conversations c
+    INNER JOIN (SELECT conversation_id, sum(media_size) as mediaSize FROM messages WHERE ifnull(media_size,'') != '' GROUP BY conversation_id) m
+        ON m.conversation_id = c.conversation_id
+    INNER JOIN users u ON u.user_id = c.owner_id
+    ORDER BY m.mediaSize DESC
+    """
+    private static let sqlQueryConversationStorageUsage = """
+    SELECT category, sum(media_size) as mediaSize, count(id) as messageCount  FROM messages
+    WHERE conversation_id = ? AND ifnull(media_size,'') != '' GROUP BY category
+    """
+
+    func getCategoryStorages(conversationId: String) -> [ConversationCategoryStorage] {
+        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationStorageUsage, values: [conversationId])
+    }
+
+    func storageUsageConversations() -> [ConversationStorageUsage] {
+        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryStorageUsage)
+    }
 
     func isExist(conversationId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Conversation.self, condition: Conversation.Properties.conversationId == conversationId)
@@ -65,11 +86,14 @@ final class ConversationDAO {
             let categoryColumn = Conversation.Properties.category.in(table: Conversation.tableName)
             let ownerUserIdColumn = Conversation.Properties.ownerId.in(table: Conversation.tableName)
             let lastMessageCreatedAtColumn = Conversation.Properties.lastMessageCreatedAt.in(table: Conversation.tableName)
+            let pinTimeColumn = Conversation.Properties.pinTime.in(table: Conversation.tableName)
             let ownerIdentityNumberColumn = User.Properties.identityNumber.in(table: User.tableName)
             let ownerAvatarUrlColumn = User.Properties.avatarUrl.in(table: User.tableName)
             let ownerFullName = User.Properties.fullName.in(table: User.tableName)
+            let ownerIsVerified = User.Properties.isVerified.in(table: User.tableName)
+            let ownerAppId = User.Properties.appId.in(table: User.tableName)
 
-            let columns = [conversationIdColumn, nameColumn, iconUrlColumn, categoryColumn, ownerUserIdColumn, ownerIdentityNumberColumn, ownerAvatarUrlColumn, ownerFullName]
+            let columns = [conversationIdColumn, nameColumn, iconUrlColumn, categoryColumn, ownerUserIdColumn, ownerIdentityNumberColumn, ownerAvatarUrlColumn, ownerFullName, ownerIsVerified, ownerAppId]
 
             let userIdColumn = User.Properties.userId.in(table: User.tableName)
             let statusColumn = Conversation.Properties.status.in(table: Conversation.tableName)
@@ -77,7 +101,7 @@ final class ConversationDAO {
                 .join(User.tableName, with: .left)
                 .on(userIdColumn == ownerUserIdColumn)
 
-            let statementSelect = StatementSelect().select(columns).from(joinClause).where(categoryColumn.isNotNull() && statusColumn != ConversationStatus.QUIT.rawValue).order(by: lastMessageCreatedAtColumn.asOrder(by: .descending))
+            let statementSelect = StatementSelect().select(columns).from(joinClause).where(categoryColumn.isNotNull() && statusColumn != ConversationStatus.QUIT.rawValue).order(by: [pinTimeColumn.asOrder(by: .descending), lastMessageCreatedAtColumn.asOrder(by: .descending)])
             let coreStatement = try db.prepare(statementSelect)
 
             var conversations = [ForwardUser]()
@@ -90,7 +114,9 @@ final class ConversationDAO {
                 let identityNumber = coreStatement.value(atIndex: 5).stringValue
                 let avatarUrl = coreStatement.value(atIndex: 6).stringValue
                 let fullName = coreStatement.value(atIndex: 7).stringValue
-                conversations.append(ForwardUser(name: name, iconUrl: iconUrl, userId: userId, identityNumber: identityNumber, fullName: fullName, ownerAvatarUrl: avatarUrl, category: category, conversationId: conversationId))
+                let isVerified = coreStatement.value(atIndex: 8).int32Value == 1
+                let appId = coreStatement.value(atIndex: 9).stringValue
+                conversations.append(ForwardUser(name: name, iconUrl: iconUrl, userId: userId, identityNumber: identityNumber, fullName: fullName, ownerAvatarUrl: avatarUrl, ownerAppId: appId, ownerIsVerified: isVerified, category: category, conversationId: conversationId))
             }
             return conversations
         }

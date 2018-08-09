@@ -1,4 +1,5 @@
 import UIKit
+import LocalAuthentication
 
 class WalletViewController: UIViewController {
 
@@ -7,11 +8,29 @@ class WalletViewController: UIViewController {
     private var assets = [AssetItem]()
     private var pinView: PinTipsView?
 
+    private lazy var assetAction: UITableViewRowAction = {
+        let action = UITableViewRowAction(style: .destructive, title: Localized.ACTION_HIDE, handler: { [weak self] (_, indexPath) in
+            guard let weakSelf = self else {
+                return
+            }
+            let assetId = weakSelf.assets[indexPath.row].assetId
+            weakSelf.assets.remove(at: indexPath.row)
+            weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
+            WalletUserDefault.shared.hiddenAssets[assetId] = assetId
+        })
+        action.backgroundColor = .actionBackground
+        return action
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareTableView()
         fetchAssets()
         fetchRemoteAssets()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -29,15 +48,12 @@ class WalletViewController: UIViewController {
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         tableView.reloadData()
-        NotificationCenter.default.addObserver(forName: .AssetsDidChange, object: nil, queue: .main) { [weak self] (_) in
-            self?.fetchAssets()
-        }
-        NotificationCenter.default.addObserver(forName: .AssetVisibleDidChange, object: nil, queue: .main) { [weak self] (_) in
-            self?.fetchAssets()
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
     }
 
-    private func fetchAssets() {
+    @objc private func fetchAssets() {
         DispatchQueue.global().async { [weak self] in
             let hiddenAssets = WalletUserDefault.shared.hiddenAssets
             let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
@@ -78,12 +94,36 @@ class WalletViewController: UIViewController {
         alc.addAction(UIAlertAction(title: Localized.WALLET_MENU_SHOW_HIDDEN_ASSETS, style: .default, handler: { [weak self](_) in
             self?.navigationController?.pushViewController(HiddenAssetViewController.instance(), animated: true)
         }))
-        alc.addAction(UIAlertAction(title: Localized.WALLET_CHANGE_PASSWORD, style: .default, handler: { [weak self](_) in
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
-            self?.navigationController?.pushViewController(vc, animated: true)
-        }))
+        if #available(iOS 11.0, *), let biometryType = getBiometryType() {
+            alc.addAction(UIAlertAction(title: Localized.WALLET_SETTING, style: .default, handler: { [weak self](_) in                self?.navigationController?.pushViewController(WalletSettingViewController.instance(biometryType: biometryType), animated: true)
+            }))
+        } else {
+            alc.addAction(UIAlertAction(title: Localized.WALLET_CHANGE_PASSWORD, style: .default, handler: { [weak self](_) in
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }))
+        }
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
+    }
+
+    @available(iOS 11.0, *)
+    private func getBiometryType() -> LABiometryType? {
+        guard AccountAPI.shared.account?.has_pin ?? false else {
+            return nil
+        }
+        guard !UIDevice.isJailbreak else {
+            return nil
+        }
+
+        let context = LAContext()
+        var error: NSError?
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            if context.biometryType == .touchID || context.biometryType == .faceID {
+                return context.biometryType
+            }
+        }
+        return nil
     }
 
     class func instance() -> UIViewController {
@@ -144,6 +184,17 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 10
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        guard indexPath.section == 1 else {
+            return []
+        }
+        return [assetAction]
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.section == 1
     }
 }
 

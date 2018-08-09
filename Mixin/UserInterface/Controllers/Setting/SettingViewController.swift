@@ -2,13 +2,30 @@ import UIKit
 
 class SettingViewController: UITableViewController {
 
-    @IBOutlet weak var logoutLoadingView: UIActivityIndicatorView!
-    @IBOutlet weak var logoutLabel: UILabel!
+    @IBOutlet weak var blockedUsersDetailLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        updateBlockedUserCell()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateBlockedUserCell), name: .UserDidChange, object: nil)
+    }
 
-        logoutLoadingView.isHidden = true
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc func updateBlockedUserCell() {
+        DispatchQueue.global().async {
+            let blocked = UserDAO.shared.getBlockUsers()
+            DispatchQueue.main.async {
+                if blocked.count > 0 {
+                    self.blockedUsersDetailLabel.text = String(blocked.count) + Localized.SETTING_BLOCKED_USER_COUNT_SUFFIX
+                } else {
+                    self.blockedUsersDetailLabel.text = Localized.SETTING_BLOCKED_USER_COUNT_NONE
+                }
+            }
+        }
     }
 
     class func instance() -> UIViewController {
@@ -20,34 +37,24 @@ extension SettingViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
-        switch indexPath.section {
-        case 0:
-            navigationController?.pushViewController(PrivacyViewController.instance(), animated: true)
-        case 2:
-            alert(Localized.ABOUT_LOGOUT_TITLE, message: Localized.ABOUT_LOGOUT_MESSAGE, actionTitle: Localized.SETTING_LOGOUT, handler: { [weak self] (action) in
-                self?.logoutAction()
-            })
-        default:
+        if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                navigationController?.pushViewController(BlockUserViewController.instance(), animated: true)
+            } else {
+                navigationController?.pushViewController(ConversationSettingViewController.instance(), animated: true)
+            }
+        } else if indexPath.section == 1 {
+            navigationController?.pushViewController(StorageUsageViewController.instance(), animated: true)
+        } else {
             navigationController?.pushViewController(AboutContainerViewController.instance(), animated: true)
         }
     }
 
-    private func logoutAction() {
-        logoutLoadingView.startAnimating()
-        logoutLabel.isHidden = true
-        logoutLoadingView.isHidden = false
-        AccountAPI.shared.logout(completion: { [weak self](result) in
-            self?.logoutLoadingView.stopAnimating()
-            self?.logoutLabel.isHidden = false
-            self?.logoutLoadingView.isHidden = true
-            
-            switch result {
-            case .success:
-                AccountAPI.shared.logout()
-            case .failure:
-                break
-            }
-        })
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return section == 0 ? Localized.SETTING_PRIVACY_AND_SECURITY_TITLE : nil
+    }
+
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return section == 0 ? Localized.SETTING_PRIVACY_AND_SECURITY_SUMMARY : nil
     }
 }

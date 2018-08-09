@@ -5,8 +5,12 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
     internal(set) var leadingConstant: CGFloat = 0
     internal(set) var trailingConstant: CGFloat = 0
     
+    override class var bubbleImageProvider: BubbleImageProvider.Type {
+        return LightRightBubbleImageProvider.self
+    }
+    
     var fullnameHeight: CGFloat {
-        return style.contains(.showFullname) ? fullnameFrame.height : 0
+        return style.contains(.fullname) ? fullnameFrame.height : 0
     }
     
     internal var size: CGSize {
@@ -27,14 +31,6 @@ class CardMessageViewModel: DetailInfoMessageViewModel {
     
     internal var rightTrailingMargin: CGFloat {
         return 30
-    }
-
-    override var rightBubbleImage: UIImage {
-        return #imageLiteral(resourceName: "ic_transfer_bubble_right")
-    }
-    
-    override var rightWithTailBubbleImage: UIImage {
-        return #imageLiteral(resourceName: "ic_transfer_bubble_right_tail")
     }
     
     override func didSetStyle() {

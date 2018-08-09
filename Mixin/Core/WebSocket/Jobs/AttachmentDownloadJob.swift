@@ -4,14 +4,21 @@ import Bugsnag
 
 class AttachmentDownloadJob: UploadOrDownloadJob {
 
-    private var stream: OutputStream!
+    private(set) var stream: OutputStream!
+    
     private var contentLength: Double?
     private var downloadedContentLength: Double = 0
-    
-    internal lazy var fileName = "\(messageId).jpg"
-    internal lazy var fileUrl = MixinFile.chatPhotosUrl(fileName)
+    private var mediaMimeType: String?
 
-    static func jobId(messageId: String) -> String {
+    internal lazy var fileName = "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ExtensionName.jpeg.rawValue))"
+    internal lazy var fileUrl = MixinFile.url(ofChatDirectory: .photos, filename: fileName)
+
+    init(messageId: String, mediaMimeType: String?) {
+        super.init(messageId: messageId)
+        self.mediaMimeType = mediaMimeType
+    }
+
+    class func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"
     }
     
@@ -32,17 +39,22 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
 
 
         self.message = message
-        switch MessageAPI.shared.getAttachment(id: attachmentId) {
-        case let .success(attachmentResponse):
-            guard downloadAttachment(attachResponse: attachmentResponse) else {
-                return false
+        repeat {
+            switch MessageAPI.shared.getAttachment(id: attachmentId) {
+            case let .success(attachmentResponse):
+                guard downloadAttachment(attachResponse: attachmentResponse) else {
+                    return false
+                }
+                return true
+            case let .failure(error):
+                guard error.isClientError || error.isServerError else {
+                    return false
+                }
+                checkNetworkAndWebSocket()
+                Thread.sleep(forTimeInterval: 2)
             }
-        case let .failure(error):
-            guard retry(error) else {
-                return false
-            }
-        }
-        return true
+        } while AccountAPI.shared.didLogin && !isCancelled
+        return false
     }
 
     private func downloadAttachment(attachResponse: AttachmentResponse) -> Bool {

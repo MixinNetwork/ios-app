@@ -47,33 +47,32 @@
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="trailing" secondItem="pSI-kF-iqb" secondAttribute="trailing" id="5rt-PG-h3Q"/>
-                                <constraint firstItem="pSI-kF-iqb" firstAttribute="leading" secondItem="Yeo-O0-Rbs" secondAttribute="leading" id="FIb-gQ-DRo"/>
-                                <constraint firstAttribute="bottom" secondItem="pSI-kF-iqb" secondAttribute="bottom" id="Ihs-6I-Fgo"/>
-                                <constraint firstItem="pSI-kF-iqb" firstAttribute="top" secondItem="gFl-e1-ivg" secondAttribute="bottom" constant="8" id="Oah-Lx-z5g"/>
-                                <constraint firstItem="gFl-e1-ivg" firstAttribute="top" secondItem="Yeo-O0-Rbs" secondAttribute="top" id="eGu-LR-G2R"/>
-                                <constraint firstItem="gFl-e1-ivg" firstAttribute="centerX" secondItem="Yeo-O0-Rbs" secondAttribute="centerX" id="rXc-KF-ZSm"/>
+                                <constraint firstItem="pSI-kF-iqb" firstAttribute="top" secondItem="gFl-e1-ivg" secondAttribute="bottom" constant="8" id="ZHA-bU-SWM"/>
+                                <constraint firstItem="pSI-kF-iqb" firstAttribute="leading" secondItem="Yeo-O0-Rbs" secondAttribute="leading" id="mqd-ol-EKA"/>
+                                <constraint firstItem="gFl-e1-ivg" firstAttribute="top" secondItem="Yeo-O0-Rbs" secondAttribute="top" id="t5f-6f-dD7"/>
+                                <constraint firstAttribute="bottom" secondItem="pSI-kF-iqb" secondAttribute="bottom" id="uGS-re-1Kl"/>
+                                <constraint firstAttribute="trailing" secondItem="pSI-kF-iqb" secondAttribute="trailing" id="xQk-CT-WMB"/>
+                                <constraint firstItem="gFl-e1-ivg" firstAttribute="centerX" secondItem="Yeo-O0-Rbs" secondAttribute="centerX" id="z6U-cF-bTu"/>
                             </constraints>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="Yeo-O0-Rbs" firstAttribute="centerX" secondItem="IMR-yj-ipG" secondAttribute="centerX" id="BxS-Gm-ios"/>
-                        <constraint firstItem="Yeo-O0-Rbs" firstAttribute="centerY" secondItem="IMR-yj-ipG" secondAttribute="centerY" id="VkO-iu-d6I"/>
-                        <constraint firstAttribute="width" constant="375" id="c26-1q-11N"/>
+                        <constraint firstItem="Yeo-O0-Rbs" firstAttribute="centerX" secondItem="IMR-yj-ipG" secondAttribute="centerX" id="BrG-LG-fOY"/>
+                        <constraint firstItem="Yeo-O0-Rbs" firstAttribute="centerY" secondItem="IMR-yj-ipG" secondAttribute="centerY" id="VUa-8t-9DN"/>
                     </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="SxA-r7-xeA" firstAttribute="top" secondItem="IMR-yj-ipG" secondAttribute="top" id="2cx-tC-Ubi"/>
-                <constraint firstItem="SxA-r7-xeA" firstAttribute="trailing" secondItem="IMR-yj-ipG" secondAttribute="trailing" id="3d4-Rr-Ubd"/>
-                <constraint firstItem="IMR-yj-ipG" firstAttribute="trailing" secondItem="0Ed-pV-qgx" secondAttribute="trailing" id="5HW-q1-mTn"/>
-                <constraint firstItem="IMR-yj-ipG" firstAttribute="leading" secondItem="0Ed-pV-qgx" secondAttribute="leading" id="Fx7-DA-wVG"/>
-                <constraint firstItem="SxA-r7-xeA" firstAttribute="leading" secondItem="IMR-yj-ipG" secondAttribute="leading" id="Nyl-PT-t6M"/>
-                <constraint firstItem="SxA-r7-xeA" firstAttribute="bottom" secondItem="IMR-yj-ipG" secondAttribute="bottom" id="Pq9-9K-QKw"/>
-                <constraint firstItem="IMR-yj-ipG" firstAttribute="top" secondItem="JEk-LU-tt6" secondAttribute="top" id="bmv-xu-R8Y"/>
-                <constraint firstAttribute="bottom" secondItem="IMR-yj-ipG" secondAttribute="bottom" id="uTR-DO-OGP"/>
+                <constraint firstItem="IMR-yj-ipG" firstAttribute="leading" secondItem="0Ed-pV-qgx" secondAttribute="leading" id="8yZ-MM-ylJ"/>
+                <constraint firstItem="SxA-r7-xeA" firstAttribute="top" secondItem="JEk-LU-tt6" secondAttribute="top" id="aIX-04-lXD"/>
+                <constraint firstItem="SxA-r7-xeA" firstAttribute="leading" secondItem="0Ed-pV-qgx" secondAttribute="leading" id="am0-px-SNf"/>
+                <constraint firstItem="SxA-r7-xeA" firstAttribute="bottom" secondItem="0Ed-pV-qgx" secondAttribute="bottom" id="h9o-Dt-8J9"/>
+                <constraint firstItem="SxA-r7-xeA" firstAttribute="trailing" secondItem="0Ed-pV-qgx" secondAttribute="trailing" id="jon-tL-7rF"/>
+                <constraint firstItem="IMR-yj-ipG" firstAttribute="top" secondItem="JEk-LU-tt6" secondAttribute="top" id="lwI-UK-LTB"/>
+                <constraint firstItem="IMR-yj-ipG" firstAttribute="bottom" secondItem="0Ed-pV-qgx" secondAttribute="bottom" id="pp9-bv-KyO"/>
+                <constraint firstItem="IMR-yj-ipG" firstAttribute="trailing" secondItem="0Ed-pV-qgx" secondAttribute="trailing" id="uHg-ve-VE4"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="0Ed-pV-qgx"/>
             <connections>

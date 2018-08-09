@@ -57,7 +57,7 @@
                             <rect key="frame" x="0.0" y="172.5" width="375" height="1"/>
                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="1" id="Sin-4c-TJk" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                <constraint firstAttribute="height" constant="1" id="Sin-4c-TJk" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                             </constraints>
                         </view>
                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Hd-Qg-9zl" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
@@ -79,7 +79,7 @@
                             <rect key="frame" x="0.0" y="229.5" width="375" height="1"/>
                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="1" id="OIw-CM-FGs" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                <constraint firstAttribute="height" constant="1" id="OIw-CM-FGs" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g5F-Rs-cCy">

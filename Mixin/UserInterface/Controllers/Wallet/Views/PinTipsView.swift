@@ -12,12 +12,18 @@ class PinTipsView: BottomSheetView {
 
     private var tips: String!
     private var successCallback: ((String) -> Void)?
+    private var dismissCallback: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
         pinField.delegate = self
         loadingView.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+    }
+
+    func presentPopupControllerAnimated(dismissCallback: @escaping () -> Void) {
+        self.dismissCallback = dismissCallback
+        presentPopupControllerAnimated()
     }
 
     override func presentPopupControllerAnimated() {
@@ -65,6 +71,10 @@ class PinTipsView: BottomSheetView {
             self.alpha = 0
         }
 
+        if targetConstraint == 0 {
+            dismissCallback?()
+        }
+
         UIView.animate(withDuration: duration, animations: {
             if self.errorView.isHidden {
                 self.alpha = targetAlpha
@@ -109,8 +119,8 @@ extension PinTipsView: PinFieldDelegate {
                 WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                 weakSelf.successCallback?(pin)
                 weakSelf.pinField.resignFirstResponder()
-            case let .failure(error, _):
-                if error.kind == .tooManyRequests {
+            case let .failure(error):
+                if error.code == 429 {
                     weakSelf.pinField.clear()
                     weakSelf.passwordView.isHidden = true
                     weakSelf.descriptionLabel.isHidden = true
@@ -121,7 +131,7 @@ extension PinTipsView: PinFieldDelegate {
                     weakSelf.pinField.clear()
                     weakSelf.pinField.isHidden = false
                     weakSelf.descriptionLabel.textColor = UIColor.red
-                    weakSelf.descriptionLabel.text = error.kind.localizedDescription ?? error.description
+                    weakSelf.descriptionLabel.text = error.localizedDescription
                 }
             }
         }

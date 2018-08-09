@@ -15,9 +15,16 @@ class ForwardViewController: UIViewController {
     private var searchResult = [ForwardUser]()
     private var message: MessageItem!
     internal var ownerUser: UserItem?
+    private var selections = [ForwardUser]() {
+        didSet {
+            container?.rightButton.isEnabled = !selections.isEmpty
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        tableView.register(UINib(nibName: "FowardCell", bundle: nil), forCellReuseIdentifier: FowardCell.cellIdentifier)
         tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
@@ -56,10 +63,8 @@ class ForwardViewController: UIViewController {
         tableView.reloadData()
     }
 
-    func forwardMessage(_ targetUser: ForwardUser) {
-        let oldConversationId = message.conversationId
-
-        var newMessage = Message.createMessage(category: message.category, conversationId: targetUser.conversationId, userId: AccountAPI.shared.accountUserId)
+    internal func sendMessage(_ conversation: ForwardUser) {
+        var newMessage = Message.createMessage(category: message.category, conversationId: conversation.conversationId, userId: AccountAPI.shared.accountUserId)
         if message.category.hasSuffix("_TEXT") {
             newMessage.content = message.content
         } else if message.category.hasSuffix("_IMAGE") {
@@ -67,51 +72,62 @@ class ForwardViewController: UIViewController {
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaWidth = message.mediaWidth
             newMessage.mediaHeight = message.mediaHeight
-            newMessage.mediaMineType = message.mediaMineType
+            newMessage.mediaMimeType = message.mediaMimeType
             newMessage.mediaUrl = message.mediaUrl
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_DATA") {
             newMessage.name = message.name
             newMessage.mediaSize = message.mediaSize
-            newMessage.mediaMineType = message.mediaMineType
+            newMessage.mediaMimeType = message.mediaMimeType
             newMessage.mediaUrl = message.mediaUrl
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
+        } else if message.category.hasSuffix("_AUDIO") {
+            newMessage.mediaSize = message.mediaSize
+            newMessage.mediaMimeType = message.mediaMimeType
+            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaWaveform = message.mediaWaveform
+            newMessage.mediaDuration = message.mediaDuration
+            newMessage.mediaStatus = MediaStatus.PENDING.rawValue
+        } else if message.category.hasSuffix("_VIDEO") {
+            newMessage.thumbImage = message.thumbImage
+            newMessage.mediaSize = message.mediaSize
+            newMessage.mediaWidth = message.mediaWidth
+            newMessage.mediaHeight = message.mediaHeight
+            newMessage.mediaMimeType = message.mediaMimeType
+            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaStatus = MediaStatus.PENDING.rawValue
+            newMessage.mediaDuration = message.mediaDuration
         } else if message.category.hasSuffix("_STICKER") {
-            newMessage.name = message.name
             newMessage.mediaUrl = message.mediaUrl
-            newMessage.albumId = message.albumId
+            newMessage.stickerId = message.stickerId
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
-            guard let stickerName = message.name, let albumId = message.albumId else {
-                UIApplication.trackError("ForwardViewController", action: "forward sticker failed")
-                return
-            }
-            let transferData = TransferStickerData(name: stickerName, albumId: albumId)
+            let transferData = TransferStickerData(stickerId: message.stickerId, name: nil, albumId: nil)
             newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
         } else if message.category.hasSuffix("_CONTACT") {
-            newMessage.sharedUserId = targetUser.userId
-            let transferData = TransferContactData(userId: targetUser.userId)
+            guard let sharedUserId = message.sharedUserId else {
+                return
+            }
+            newMessage.sharedUserId = sharedUserId
+            let transferData = TransferContactData(userId: sharedUserId)
             newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
         }
-        DispatchQueue.global().async { [weak self] in
-            SendMessageService.shared.sendMessage(message: newMessage, ownerUser: targetUser.toUser(), isGroupMessage: targetUser.isGroup)
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                if !weakSelf.message.conversationId.isEmpty && targetUser.conversationId == oldConversationId {
-                    weakSelf.navigationController?.popViewController(animated: true)
-                } else {
-                    weakSelf.gotoConversationVC(targetUser)
-                }
-            }
-        }
+
+        SendMessageService.shared.sendMessage(message: newMessage, ownerUser: conversation.toUser(), isGroupMessage: conversation.isGroup)
     }
 
-    internal func gotoConversationVC(_ targetUser: ForwardUser) {
-        if targetUser.conversationId.isEmpty {
-            navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: targetUser.toUser()))
+    internal func backToConversation(_ conversations: [ForwardUser]) {
+        if let conversation = conversations.first, conversations.count == 1 {
+            if conversation.conversationId.isEmpty {
+                if conversation.conversationId == message.conversationId {
+                    navigationController?.popViewController(animated: true)
+                } else {
+                    navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: conversation.toUser()))
+                }
+            } else {
+                navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(conversation: conversation.toConversation()))
+            }
         } else {
-            navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(conversation: targetUser.toConversation()))
+            navigationController?.popViewController(animated: true)
         }
     }
 
@@ -123,26 +139,28 @@ class ForwardViewController: UIViewController {
     }
 }
 
-class ForwardCell: UITableViewCell {
-    static let cellIdentifier = "ForwardCell"
-    @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var nameLabel: UILabel!
+extension ForwardViewController: ContainerViewControllerDelegate {
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        separatorInset.left = nameLabel.convert(.zero, to: self).x
+    func prepareBar(rightButton: StateResponsiveButton) {
+        rightButton.setTitleColor(.systemTint, for: .normal)
     }
 
-    func render(user: ForwardUser) {
-        switch user.category {
-        case ConversationCategory.GROUP.rawValue:
-            avatarImageView.setGroupImage(with: user.iconUrl, conversationId: user.conversationId)
-            nameLabel.text = user.name
-        default:
-            avatarImageView.setImage(with: user.ownerAvatarUrl, identityNumber: user.identityNumber, name: user.fullName)
-            nameLabel.text = user.fullName
+    func textBarRightButton() -> String? {
+        return Localized.ACTION_SEND
+    }
+
+    func barRightButtonTappedAction() {
+        let conversations = self.selections
+        DispatchQueue.global().async { [weak self] in
+            for conversation in conversations {
+                self?.sendMessage(conversation)
+            }
+            DispatchQueue.main.async {
+                self?.backToConversation(conversations)
+            }
         }
     }
+
 }
 
 extension ForwardViewController: UITableViewDataSource {
@@ -155,7 +173,7 @@ extension ForwardViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ForwardCell.cellIdentifier) as! ForwardCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: FowardCell.cellIdentifier) as! FowardCell
         let user: ForwardUser
         if isSearching {
             user = searchResult[indexPath.row]
@@ -163,6 +181,9 @@ extension ForwardViewController: UITableViewDataSource {
             user = sections[indexPath.section][indexPath.row]
         }
         cell.render(user: user)
+        if selections.contains(where: { $0.conversationId == user.conversationId }) {
+            cell.setSelected(true, animated: false)
+        }
         return cell
     }
 
@@ -194,9 +215,16 @@ extension ForwardViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isSearching {
-            forwardMessage(searchResult[indexPath.row])
+            selections.append(searchResult[indexPath.row])
         } else {
-            forwardMessage(sections[indexPath.section][indexPath.row])
+            selections.append(sections[indexPath.section][indexPath.row])
+        }
+    }
+
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let conversationId = isSearching ? searchResult[indexPath.row].conversationId : sections[indexPath.section][indexPath.row].conversationId
+        if let index = selections.index(where: { $0.conversationId == conversationId }) {
+            selections.remove(at: index)
         }
     }
 }
@@ -220,10 +248,18 @@ struct ForwardUser {
     let identityNumber: String
     let fullName: String
     let ownerAvatarUrl: String
+    let ownerAppId: String?
+    let ownerIsVerified: Bool
     let category: String
     let conversationId: String
     var isGroup: Bool {
         return category == ConversationCategory.GROUP.rawValue
+    }
+    var isBot: Bool {
+        guard let ownerAppId = self.ownerAppId else {
+            return false
+        }
+        return !ownerAppId.isEmpty
     }
 
     func toConversation() -> ConversationItem {
@@ -237,11 +273,13 @@ struct ForwardUser {
         conversation.ownerIdentityNumber = identityNumber
         conversation.ownerAvatarUrl = ownerAvatarUrl
         conversation.ownerId = userId
+        conversation.ownerIsVerified = ownerIsVerified
+        conversation.appId = ownerAppId
         conversation.status = ConversationStatus.SUCCESS.rawValue
         return conversation
     }
 
     func toUser() -> UserItem {
-        return UserItem.createUser(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: ownerAvatarUrl)
+        return UserItem.createUser(userId: userId, fullName: fullName, identityNumber: identityNumber, avatarUrl: ownerAvatarUrl, appId: ownerAppId)
     }
 }

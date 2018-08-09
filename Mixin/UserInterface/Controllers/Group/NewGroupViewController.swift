@@ -50,13 +50,15 @@ class NewGroupViewController: UIViewController {
         let members = self.members
 
         DispatchQueue.global().async { [weak self] in
-            guard ConversationDAO.shared.createConversation(conversationId: converstionId, name: name, members: members) else {
+            if ConversationDAO.shared.createConversation(conversationId: converstionId, name: name, members: members) || ConversationDAO.shared.isExist(conversationId: converstionId) {
+                DispatchQueue.main.async {
+                    self?.createConversation(name: name)
+                }
+            } else {
                 DispatchQueue.main.async {
                     self?.rightButton?.isBusy = false
                 }
-                return
             }
-            self?.createConversation(name: name)
         }
     }
 
@@ -72,11 +74,8 @@ class NewGroupViewController: UIViewController {
             switch result {
             case let .success(response):
                 weakSelf.saveConversation(conversation: response)
-            case let .failure(_, didHandled):
+            case .failure:
                 weakSelf.rightButton?.isBusy = false
-                guard !didHandled else {
-                    return
-                }
             }
         }
     }

@@ -6,7 +6,7 @@ struct BlazeMessage: Encodable {
     let action: String
     var params: BlazeMessageParam?
     let data: String?
-    let error: ResponseError?
+    let error: APIError?
 
     var fromPush: Bool? = nil
 
@@ -18,6 +18,7 @@ struct BlazeMessage: Encodable {
 enum BlazeMessageAction: String {
     case createMessage = "CREATE_MESSAGE"
     case acknowledgeMessageReceipt = "ACKNOWLEDGE_MESSAGE_RECEIPT"
+    case acknowledgeMessageReceipts = "ACKNOWLEDGE_MESSAGE_RECEIPTS"
     case listPendingMessages = "LIST_PENDING_MESSAGES"
     case error = "ERROR"
     case countSignalKeys = "COUNT_SIGNAL_KEYS"

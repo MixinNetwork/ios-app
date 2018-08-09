@@ -10,31 +10,26 @@ class SnapshotCell: UITableViewCell {
     @IBOutlet weak var detailLabel: UILabel!
     
     func render(snapshot: SnapshotItem) {
-        let symbol = snapshot.assetSymbol
         timeLabel.text = DateFormatter.MMMddHHmm.string(from: snapshot.createdAt.toUTCDate())
+        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always, symbol: .custom(snapshot.assetSymbol))
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
             amountLabel.textColor = .walletGreen
-            amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
             if let hash = snapshot.transactionHash {
                 detailLabel.text = hash.toSimpleKey()
             } else {
                 detailLabel.text = nil
             }
         case SnapshotType.transfer.rawValue:
-            let amount = snapshot.amount.toDouble()
-            if amount > 0 {
-                amountLabel.textColor = .walletGreen
-                detailLabel.text = Localized.WALLET_SNAPSHOT_FROM(fullName: snapshot.counterUserFullName ?? "")
-                amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
-            } else {
+            if snapshot.amount.hasMinusPrefix {
                 amountLabel.textColor = .walletRed
-                detailLabel.text = Localized.WALLET_SNAPSHOT_TO(fullName: snapshot.counterUserFullName ?? "")
-                amountLabel.text = "\(snapshot.amount.formatFullBalance()) \(symbol)"
+                detailLabel.text = Localized.WALLET_SNAPSHOT_TO(fullName: snapshot.opponentUserFullName ?? "")
+            } else {
+                amountLabel.textColor = .walletGreen
+                detailLabel.text = Localized.WALLET_SNAPSHOT_FROM(fullName: snapshot.opponentUserFullName ?? "")
             }
         case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue:
             amountLabel.textColor = .walletRed
-            amountLabel.text = "\(snapshot.amount.formatFullBalance()) \(symbol)"
             if let receiver = snapshot.receiver, !receiver.isEmpty {
                 detailLabel.text = receiver.toSimpleKey()
             } else {
@@ -42,7 +37,6 @@ class SnapshotCell: UITableViewCell {
             }
         case SnapshotType.rebate.rawValue:
             amountLabel.textColor = .walletGreen
-            amountLabel.text = "+\(snapshot.amount.formatFullBalance()) \(symbol)"
             if let receiver = snapshot.receiver, !receiver.isEmpty {
                 detailLabel.text = receiver.toSimpleKey()
             } else {

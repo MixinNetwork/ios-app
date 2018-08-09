@@ -11,7 +11,7 @@ struct Snapshot: BaseCodable {
     let amount: String
     let transactionHash: String?
     let sender: String?
-    let counterUserId: String?
+    let opponentId: String?
     let memo: String?
     let receiver: String?
     var createdAt: String
@@ -22,7 +22,7 @@ struct Snapshot: BaseCodable {
         case type
         case assetId = "asset_id"
         case amount
-        case counterUserId = "counter_user_id"
+        case opponentId = "opponent_id"
         case transactionHash = "transaction_hash"
         case sender
         case receiver

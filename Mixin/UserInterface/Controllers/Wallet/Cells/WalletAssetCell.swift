@@ -16,8 +16,8 @@ class WalletAssetCell: UITableViewCell {
     private let greenColor = UIColor(rgbValue: 0x66AA77)
 
     func render(asset: AssetItem) {
-        balanceLabel.text = String(format: "%@ %@", asset.balance.formatSimpleBalance(), asset.symbol)
-        exchangeLabel.text = asset.getUSDBalance()
+        balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never, symbol: .custom(asset.symbol))
+        exchangeLabel.text = asset.localizedUSDBalance
         iconImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
         if let chainIconUrl = asset.chainIconUrl {
             blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
@@ -26,10 +26,10 @@ class WalletAssetCell: UITableViewCell {
             blockchainImageView.isHidden = true
         }
 
-        if asset.priceUsd.toDouble() > 0 {
-            priceLabel.text = "$\(asset.priceUsd)"
-            priceChangeLabel.text = "\(asset.getUsdChange())%"
-            if asset.changeUsd.toDouble() > 0 {
+        if asset.priceUsd.doubleValue > 0 {
+            priceLabel.text = "$\(asset.localizedPriceUsd)"
+            priceChangeLabel.text = "\(asset.localizedUSDChange)%"
+            if asset.changeUsd.doubleValue > 0 {
                  priceChangeLabel.textColor = greenColor
             } else {
                 priceChangeLabel.textColor = redColor

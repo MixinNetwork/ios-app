@@ -34,12 +34,23 @@
                                             <action selector="backAction:" destination="wHN-no-HTy" eventType="touchUpInside" id="WJd-HZ-xyu"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Crossle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ABp-yv-qRY">
-                                        <rect key="frame" x="157" y="17" width="61" height="21.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="icw-0n-iSf">
+                                        <rect key="frame" x="60" y="17.5" width="255" height="21.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Crossle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ABp-yv-qRY">
+                                                <rect key="frame" x="97" y="0.0" width="61" height="21.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWA-GK-Nf0">
+                                                <rect key="frame" x="104" y="-37.5" width="47.5" height="0.0"/>
+                                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcg-t3-GeH" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="325" y="0.0" width="50" height="56"/>
                                         <constraints>
@@ -58,22 +69,21 @@
                                         <rect key="frame" x="0.0" y="55" width="375" height="1"/>
                                         <color key="backgroundColor" red="0.3529411764705882" green="0.35686274509803922" blue="0.40000000000000002" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="0.5" id="dWb-Od-1Rk" customClass="LayoutConstraintHairline" customModule="Mixin" customModuleProvider="target"/>
+                                            <constraint firstAttribute="height" constant="0.5" id="dWb-Od-1Rk" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                         </constraints>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="icw-0n-iSf" firstAttribute="leading" secondItem="y4k-Xv-8tX" secondAttribute="leading" constant="60" id="3ca-Xu-pgm"/>
                                     <constraint firstItem="7gt-Vj-HE4" firstAttribute="leading" secondItem="y4k-Xv-8tX" secondAttribute="leading" id="4Yb-be-jcG"/>
                                     <constraint firstAttribute="bottom" secondItem="7gt-Vj-HE4" secondAttribute="bottom" id="G3Z-nn-TwM"/>
-                                    <constraint firstItem="ABp-yv-qRY" firstAttribute="centerX" secondItem="y4k-Xv-8tX" secondAttribute="centerX" id="NhG-DE-eWs"/>
                                     <constraint firstAttribute="bottom" secondItem="aj9-pP-qsJ" secondAttribute="bottom" id="QYb-a7-H98"/>
                                     <constraint firstItem="aj9-pP-qsJ" firstAttribute="leading" secondItem="y4k-Xv-8tX" secondAttribute="leading" id="TWZ-nj-GUW"/>
                                     <constraint firstAttribute="height" constant="56" id="cTa-pB-Lph"/>
-                                    <constraint firstItem="gcg-t3-GeH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ABp-yv-qRY" secondAttribute="trailing" id="jGP-LX-xRt"/>
+                                    <constraint firstItem="icw-0n-iSf" firstAttribute="centerY" secondItem="y4k-Xv-8tX" secondAttribute="centerY" id="gBB-NB-evU"/>
                                     <constraint firstAttribute="trailing" secondItem="aj9-pP-qsJ" secondAttribute="trailing" id="mDh-LF-Nxv"/>
-                                    <constraint firstItem="ABp-yv-qRY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="7gt-Vj-HE4" secondAttribute="trailing" id="oC8-9M-uWc"/>
-                                    <constraint firstItem="ABp-yv-qRY" firstAttribute="centerY" secondItem="y4k-Xv-8tX" secondAttribute="centerY" id="p6v-ya-Fef"/>
+                                    <constraint firstAttribute="trailing" secondItem="icw-0n-iSf" secondAttribute="trailing" constant="60" id="ocg-2D-FJ0"/>
                                     <constraint firstItem="gcg-t3-GeH" firstAttribute="centerY" secondItem="y4k-Xv-8tX" secondAttribute="centerY" id="qlY-MA-hpu"/>
                                     <constraint firstAttribute="trailing" secondItem="gcg-t3-GeH" secondAttribute="trailing" id="uCO-kR-ANg"/>
                                     <constraint firstItem="7gt-Vj-HE4" firstAttribute="top" secondItem="y4k-Xv-8tX" secondAttribute="top" id="yJt-3l-fAZ"/>
@@ -107,6 +117,7 @@
                         <outlet property="rightButtonTrailingConstraint" destination="uCO-kR-ANg" id="bbb-HA-omX"/>
                         <outlet property="rightButtonWidthConstraint" destination="L2P-22-Ntf" id="MxH-lX-zvw"/>
                         <outlet property="rightbuttonHeightConstraint" destination="BEv-5s-60I" id="6VG-VQ-bob"/>
+                        <outlet property="subtitleLabel" destination="dWA-GK-Nf0" id="ubb-DS-k2m"/>
                         <outlet property="titleLabel" destination="ABp-yv-qRY" id="4zI-Fi-1uq"/>
                     </connections>
                 </viewController>

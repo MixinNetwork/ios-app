@@ -32,6 +32,10 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
         resendButton.releaseTimer()
     }
     
+    deinit {
+        ReCaptchaManager.shared.clean()
+    }
+    
     override func continueAction(_ sender: Any) {
         checkVerificationCodeAction(sender)
     }
@@ -61,15 +65,13 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
                     weakSelf.alert(nil, message: Localized.PROFILE_CHANGE_NUMBER_SUCCEEDED, handler: { (_) in
                         weakSelf.navigationController?.dismiss(animated: true, completion: nil)
                     })
-                case .failure(let error, let didHandled):
+                case let .failure(error):
                     weakSelf.bottomWrapperView.continueButton.isBusy = false
                     weakSelf.verificationCodeField.clear()
-                    if !didHandled {
-                        if error.kind == .invalidVerificationCode {
-                            weakSelf.invalidCodeLabel.isHidden = false
-                        } else {
-                            weakSelf.alert(error.kind.localizedDescription ?? error.description)
-                        }
+                    if error.code == 20113 {
+                        weakSelf.invalidCodeLabel.isHidden = false
+                    } else {
+                        weakSelf.alert(error.localizedDescription)
                     }
                 }
             })
@@ -78,18 +80,32 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
 
     @objc func resendAction(_ sender: Any) {
         resendButton.isBusy = true
-        AccountAPI.shared.sendCode(to: context.newNumber, purpose: .phone) { [weak self] (result) in
+        sendCode(reCaptchaToken: nil)
+    }
+    
+    private func sendCode(reCaptchaToken token: String?) {
+        AccountAPI.shared.sendCode(to: context.newNumber, reCaptchaToken: token, purpose: .phone) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.resendButton.isBusy = false
             switch result {
             case .success(let verification):
-                weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
                 weakSelf.context.verificationId = verification.id
-            case .failure(let error, let didHandled):
-                if !didHandled {
-                    weakSelf.alert(error.kind.localizedDescription ?? error.description)
+                weakSelf.resendButton.isBusy = false
+                weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
+            case let.failure(error):
+                if error.code == 10005 {
+                    ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+                        switch result {
+                        case .success(let token):
+                            self?.sendCode(reCaptchaToken: token)
+                        default:
+                            self?.resendButton.isBusy = false
+                        }
+                    }
+                } else {
+                    weakSelf.alert(error.localizedDescription)
+                    weakSelf.resendButton.isBusy = false
                 }
             }
         }

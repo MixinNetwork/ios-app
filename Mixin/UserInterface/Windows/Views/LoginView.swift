@@ -10,7 +10,7 @@ class LoginView: UIView {
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var zoomButton: UIButton!
 
-    @IBOutlet weak var contentHeightConstraint: LayoutConstraintCompat!
+    @IBOutlet weak var contentHeightConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var iconTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var iconBottomConstaint: NSLayoutConstraint!
 
@@ -120,7 +120,7 @@ class LoginView: UIView {
         iconBottomConstaint.constant = iconBottomConstaint.constant * scale
         contentHeightConstraint.constant = targetHeight
         UIView.animate(withDuration: 0.25) {
-            self.backgroundWindow?.zoomAnimation(targetHeight: self.contentHeightConstraint.constant)
+            self.backgroundWindow?.webViewHeight = targetHeight
             superView.layoutIfNeeded()
         }
     }
@@ -164,9 +164,9 @@ class LoginView: UIView {
                 }
 
                 UIApplication.shared.tryOpenThirdApp(response: response)
-            case let .failure(error, _):
+            case let .failure(error):
                 weakSelf.authButton.isBusy = false
-                SwiftMessages.showToast(message: error.kind.localizedDescription ?? error.description, backgroundColor: .hintRed)
+                SwiftMessages.showToast(message: error.localizedDescription, backgroundColor: .hintRed)
             }
         })
     }
@@ -175,9 +175,9 @@ class LoginView: UIView {
         guard assets.count > 0 else {
             return "0"
         }
-        var result = "\(assets[0].balance) \(assets[0].symbol)"
+        var result = "\(assets[0].localizedBalance) \(assets[0].symbol)"
         if assets.count > 1 {
-            result += ", \(assets[1].balance) \(assets[1].symbol)"
+            result += ", \(assets[1].localizedBalance) \(assets[1].symbol)"
         }
         if assets.count > 2 {
             result += Localized.AUTH_ASSETS_MORE
@@ -241,7 +241,7 @@ extension LoginView: UIScrollViewDelegate {
         let newConstant = contentHeightConstraint.constant + scrollView.contentOffset.y
         if newConstant <= maximumWebViewHeight {
             contentHeightConstraint.constant = newConstant
-            self.backgroundWindow?.zoomAnimation(targetHeight: self.contentHeightConstraint.constant)
+            self.backgroundWindow?.webViewHeight = newConstant
             superView.layoutIfNeeded()
             scrollView.contentOffset.y = 0
             let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
@@ -263,9 +263,10 @@ extension LoginView: UIScrollViewDelegate {
                 zoomButton.setImage(windowMaximum ? #imageLiteral(resourceName: "ic_titlebar_min") : #imageLiteral(resourceName: "ic_titlebar_max"), for: .normal)
             }
         }
-        contentHeightConstraint.constant = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        let contentHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
+        contentHeightConstraint.constant = contentHeight
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-            self.backgroundWindow?.zoomAnimation(targetHeight: self.contentHeightConstraint.constant)
+            self.backgroundWindow?.webViewHeight = contentHeight
             superView.layoutIfNeeded()
         }, completion: nil)
     }

@@ -1,6 +1,5 @@
 import Foundation
 import Alamofire
-import KeychainAccess
 import Goutils
 import DeviceGuru
 import UIKit
@@ -72,13 +71,25 @@ struct JSONArrayEncoding: ParameterEncoding {
 
 enum APIResult<ResultType: Codable> {
     case success(ResultType)
-    case failure(error: APIError, didHandled: Bool)
+    case failure(APIError)
+
+    var isSuccess: Bool {
+        switch self {
+        case .success:
+            return true
+        case .failure:
+            return false
+        }
+    }
 }
 
 class BaseAPI {
     
     static let jsonDecoder = JSONDecoder()
     static let jsonEncoder = JSONEncoder()
+    static let rootURLString = "https://api.mixin.one/"
+    static let rootURL = URL(string: rootURLString)!
+    
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")
 
     static func getJwtHeaders(request: URLRequest, uri: String) -> HTTPHeaders {
@@ -112,6 +123,7 @@ class BaseAPI {
         claims["exp"] = UInt64(Date().addingTimeInterval(60 * 30).timeIntervalSince1970)
         claims["jti"] = UUID().uuidString.lowercased()
         claims["sig"] = sig.sha256()
+        claims["scp"] = "FULL"
 
         let token = KeyUtil.stripRsaPrivateKeyHeaders(authenticationToken)
         let keyType = JWTCryptoKeyExtractor.privateKeyWithPEMBase64()
@@ -123,10 +135,9 @@ class BaseAPI {
     private static let baseHeaders: HTTPHeaders = [
         "Content-Type": "application/json",
         "Accept-Language": Locale.current.languageCode ?? "en",
-        "Mixin-Device-Id": Keychain.getDeviceId(),
+        "Mixin-Device-Id": Keychain.shared.getDeviceId(),
         "User-Agent": "Mixin/\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) (iOS \(UIDevice.current.systemVersion); \(DeviceGuru().hardware()); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
     ]
-    private static let rootURL = "https://api.mixin.one/"
     private static let jsonEncoding = JSONEncoding()
     
     private struct ResponseObject<ResultType: Codable>: Codable {
@@ -146,26 +157,47 @@ class BaseAPI {
         }
         var originalRequest: URLRequest?
         do {
-            originalRequest = try URLRequest(url: BaseAPI.rootURL + url, method: method)
+            originalRequest = try URLRequest(url: BaseAPI.rootURLString + url, method: method)
             var encodedURLRequest = try encoding.encode(originalRequest!, with: parameters)
             encodedURLRequest.allHTTPHeaderFields = BaseAPI.getJwtHeaders(request: encodedURLRequest, uri: url)
             return BaseAPI.sharedSessionManager.request(encodedURLRequest)
         } catch {
             Bugsnag.notifyError(error)
-            return BaseAPI.sharedSessionManager.request(BaseAPI.rootURL + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
+            return BaseAPI.sharedSessionManager.request(BaseAPI.rootURLString + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
         }
     }
 
     @discardableResult
-    func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, completion: @escaping (APIResult<ResultType>) -> Void) -> Request {
-        let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
+    func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, toastError: Bool = true, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
         if checkLogin && !AccountAPI.shared.didLogin {
-            completion(.failure(error: APIError(code: 401, status: 401, description: "Unauthorized, maybe invalid token."), didHandled: false))
-            return request
+            return nil
         }
+        let requestTime = DateFormatter.filename.string(from: Date())
+        let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
         return request.validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
                 let httpStatusCode = response.response?.statusCode ?? -1
+                let handerError = { (error: APIError) in
+                    switch error.code {
+                    case 401:
+                        var userInfo = UIApplication.getTrackUserInfo()
+                        userInfo["request"] = request.debugDescription
+                        userInfo["startRequestTime"] = requestTime
+                        UIApplication.trackError("BaseAPI async request", action: "401", userInfo: userInfo)
+                        AccountAPI.shared.logout()
+                        return
+                    case 429:
+                        if url != AccountAPI.url.verifyPin && !url.contains(AccountAPI.url.verifications) {
+                            UIApplication.currentActivity()?.alert(Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS)
+                            return
+                        }
+                    default:
+                        if toastError {
+                            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.localizedDescription)
+                        }
+                    }
+                    completion(.failure(error))
+                }
                 switch response.result {
                 case .success(let data):
                     do {
@@ -173,51 +205,19 @@ class BaseAPI {
                         if let data = responseObject.data {
                             completion(.success(data))
                         } else if let error = responseObject.error {
-                            completion(.failure(error: error, didHandled: BaseAPI.handle(error: error, url: url)))
+                            handerError(error)
                         } else {
-                            if let result = try? BaseAPI.jsonDecoder.decode(ResultType.self, from: data) {
-                                completion(.success(result))
-                            } else {
-                                let error = APIError.badResponse(status: httpStatusCode, description: Localized.TOAST_API_ERROR_SERVER_DATA_ERROR)
-                                completion(.failure(error: error, didHandled: BaseAPI.handle(error: error, url: url)))
-                            }
+                            completion(.success(try BaseAPI.jsonDecoder.decode(ResultType.self, from: data)))
                         }
-                    } catch let error {
-                        let apiError = APIError.jsonDecodingFailed(status: httpStatusCode, description: error.localizedDescription)
-                        completion(.failure(error: apiError, didHandled: BaseAPI.handle(error: apiError, url: url)))
+                    } catch {
+                        handerError(APIError.createError(error: error, status: httpStatusCode))
                     }
-                case .failure(let error):
-                    let nsError = error as NSError
-                    let apiError = APIError(code: nsError.code, status: httpStatusCode, description: nsError.description)
-                    completion(.failure(error: apiError, didHandled: BaseAPI.handle(error: apiError, url: url)))
+                case let .failure(error):
+                    handerError(APIError.createError(error: error, status: httpStatusCode))
                 }
             })
     }
 
-    // Return true if the error is handled, false if not
-    @discardableResult
-    static func handle(error: APIError, url: String) -> Bool {
-        if (url == AccountAPI.url.verifyPin || url.hasPrefix("addresses/")) && error.kind != .invalidAPITokenHeader {
-            return false
-        }
-        switch error.kind {
-        case .invalidAPITokenHeader:
-            UIApplication.trackError("BaseAPI", action: "401", userInfo: ["url": url])
-            AccountAPI.shared.logout()
-        case .internalServerError:
-            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_SERVER_ERROR)
-        case .timedOut:
-            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT)
-        case .forbidden:
-            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_API_ERROR_FORBIDDEN)
-        case .tooManyRequests:
-            UIApplication.currentActivity()?.alert(Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS)
-        default:
-            return false
-        }
-        return true
-    }
-    
 }
 
 extension BaseAPI {
@@ -229,67 +229,58 @@ extension BaseAPI {
     }()
 
     @discardableResult
-    func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> Result<T> {
-        guard AccountAPI.shared.didLogin else {
-            return .failure(JobError.clientError(code: 401))
-        }
-
-        var result: Result<T>?
-        var errorCode: Int?
-
-        dispatchQueue.sync {
-            let semaphore = DispatchSemaphore(value: 0)
+    func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> APIResult<T> {
+        return dispatchQueue.sync {
+            var result: APIResult<T> = .failure(APIError.createAuthenticationError())
+            var debugDescription = ""
+            let requestTime = Date()
             var errorMsg = ""
-
-            let req = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
-                .validate(statusCode: 200...299)
-                .responseData(completionHandler: { (response) in
-                    let httpStatusCode = response.response?.statusCode ?? -1
-                    switch response.result {
-                    case let .success(data):
-                        do {
-                            let responseObject = try BaseAPI.jsonDecoder.decode(ResponseObject<T>.self, from: data)
-                            if let data = responseObject.data {
-                                result = .success(data)
-                            } else if let error = responseObject.error {
-                                errorCode = error.code
-                                errorMsg = error.description
-                            } else {
-                                if let model = try? BaseAPI.jsonDecoder.decode(T.self, from: data) {
-                                    result = .success(model)
+            if AccountAPI.shared.didLogin {
+                let semaphore = DispatchSemaphore(value: 0)
+                let req = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
+                    .validate(statusCode: 200...299)
+                    .responseData(completionHandler: { (response) in
+                        let httpStatusCode = response.response?.statusCode ?? -1
+                        switch response.result {
+                        case let .success(data):
+                            do {
+                                let responseObject = try BaseAPI.jsonDecoder.decode(ResponseObject<T>.self, from: data)
+                                if let data = responseObject.data {
+                                    result = .success(data)
+                                } else if let error = responseObject.error {
+                                    result = .failure(error)
                                 } else {
-                                    errorCode = httpStatusCode
+                                    let model = try BaseAPI.jsonDecoder.decode(T.self, from: data)
+                                    result = .success(model)
                                 }
+                            } catch {
+                                errorMsg = "decode error:\(error)"
+                                result = .failure(APIError.createError(error: error, status: httpStatusCode))
                             }
-                        } catch {
-                            errorCode = error.errorCode
-                            errorMsg = error.localizedDescription
+                        case let .failure(error):
+                            errorMsg = "api error:\(error)"
+                            result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
-                    case let .failure(error):
-                        errorCode = httpStatusCode
-                        errorMsg = error.localizedDescription
-                    }
-                    semaphore.signal()
-                })
+                        semaphore.signal()
+                    })
 
-            if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut {
-                result = .failure(JobError.timeoutError)
+                if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut || Date().timeIntervalSince1970 - requestTime.timeIntervalSince1970 >= 8 {
+                    result = .failure(APIError(status: NSURLErrorTimedOut, code: -1, description: Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT))
+                }
+                debugDescription = req.debugDescription
             }
-            if errorCode == 401 {
-                var userInfo = UIApplication.getTrackUserInfo()
-                userInfo["request"] = req.debugDescription
-                userInfo["errorMsg"] = errorMsg
-                UIApplication.trackError("BaseAPI", action: "401", userInfo: userInfo)
+
+            if !result.isSuccess, case let .failure(error) = result, error.code == 401 {
+                if AccountAPI.shared.didLogin {
+                    var userInfo = UIApplication.getTrackUserInfo()
+                    userInfo["request"] = debugDescription
+                    userInfo["startRequestTime"] = DateFormatter.filename.string(from: requestTime)
+                    userInfo["errorMsg"] = errorMsg
+                    UIApplication.trackError("BaseAPI sync request", action: "401", userInfo: userInfo)
+                }
                 AccountAPI.shared.logout()
             }
-        }
-
-        if let result = result {
             return result
-        } else if let errorCode = errorCode {
-            return .failure(JobError.instance(code: errorCode))
-        } else {
-            return .failure(JobError.networkError)
         }
     }
 }

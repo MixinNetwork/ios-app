@@ -16,15 +16,6 @@ class RefreshUserJob: BaseJob {
         return "refresh-user-\(jobId)"
     }
 
-    override func shouldRetry(error: JobError) -> Bool {
-        if case let .clientError(code) = error, code == 404, userIds.count == 1 {
-            processNotFoundUser(userId: userIds[0])
-            return false
-        } else {
-            return super.shouldRetry(error: error)
-        }
-    }
-
     override func run() throws {
         guard userIds.count > 0 else {
             return
@@ -38,6 +29,10 @@ class RefreshUserJob: BaseJob {
                 case let .success(response):
                     UserDAO.shared.updateUsers(users: [response], updateParticipantStatus: updateParticipantStatus)
                 case let .failure(error):
+                    guard error.code != 401 else {
+                        processNotFoundUser(userId: userIds[0])
+                        return
+                    }
                     throw error
             }
         } else {

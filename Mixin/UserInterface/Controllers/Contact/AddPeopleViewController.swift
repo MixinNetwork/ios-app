@@ -43,12 +43,8 @@ class AddPeopleViewController: UIViewController {
             case let .success(user):
                 UserDAO.shared.updateUsers(users: [user])
                 UserWindow.instance().updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentView()
-            case let .failure(error, didHandled):
-                guard !didHandled else {
-                    return
-                }
-
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.kind == .notFound ? Localized.CONTACT_SEARCH_NOT_FOUND : error.description)
+            case let .failure(error):
+                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
             }
         }
     }

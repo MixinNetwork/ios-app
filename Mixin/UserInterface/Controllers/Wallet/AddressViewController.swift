@@ -55,7 +55,7 @@ extension AddressViewController: ContainerViewControllerDelegate {
     }
 
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_chat_more")
+        return #imageLiteral(resourceName: "ic_titlebar_add")
     }
 
 }
@@ -90,12 +90,8 @@ extension AddressViewController {
             switch result {
             case .success:
                 AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
-            case let .failure(error, didHandled):
-                guard !didHandled else {
-                    return
-                }
-
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.description)
+            case .failure:
+                break
             }
         }
     }
@@ -109,7 +105,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: AddressCell.cellReuseId) as! AddressCell
-        cell.render(address: addresses[indexPath.row])
+        cell.render(address: addresses[indexPath.row], asset: asset)
         cell.accessoryType = .disclosureIndicator
         return cell
     }

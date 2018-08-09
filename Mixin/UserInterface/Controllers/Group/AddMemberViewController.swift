@@ -71,15 +71,8 @@ class AddMemberViewController: UIViewController {
                 switch result {
                 case .success:
                     weakSelf.navigationController?.popViewController(animated: true)
-                case let .failure(error, didHandled):
-                    guard !didHandled else {
-                        return
-                    }
-                    if error.code == 20116 {
-                        NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.GROUP_JOIN_FAIL_FULL)
-                    } else {
-                        NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_OPERATION_FAILED)
-                    }
+                case .failure:
+                    break
                 }
             })
         } else {

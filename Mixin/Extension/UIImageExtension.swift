@@ -1,14 +1,17 @@
 import UIKit
 import CoreGraphics
+import AVFoundation
+
+let jpegCompressionQuality: CGFloat = 0.75
 
 extension UIImage {
     
     var base64: String? {
-        let data = UIImageJPEGRepresentation(self, 0.75)
+        let data = UIImageJPEGRepresentation(self, jpegCompressionQuality)
         return data?.base64EncodedString()
     }
 
-    convenience init?(qrcode: String, size: CGFloat) {
+    convenience init?(qrcode: String, size: CGSize, foregroundColor: UIColor? = nil) {
         guard let filter = CIFilter(name: "CIQRCodeGenerator"), !qrcode.isEmpty else {
             return nil
         }
@@ -18,29 +21,49 @@ extension UIImage {
         let data = qrcode.data(using: String.Encoding.isoLatin1)
         filter.setValue(data, forKey: "inputMessage")
 
-        if let outputImage = filter.outputImage {
-            let extent = outputImage.extent
-            let scale = min(size / extent.width, size / extent.height)
-            let width = size_t(size)
-            let height = size_t(size)
-            UIGraphicsBeginImageContext(CGSize(width: width, height: height))
-            defer {
-                UIGraphicsEndImageContext()
+        var outputImage: CIImage?
+        if let foregroundColor = foregroundColor {
+            guard let colorFilter = CIFilter(name: "CIFalseColor") else {
+                return nil
             }
-            if let bitmapContextRef = UIGraphicsGetCurrentContext() {
-                let context = CIContext(options: nil)
-                if let bitmapImage = context.createCGImage(outputImage, from: extent) {
-                    bitmapContextRef.interpolationQuality = .none
-                    bitmapContextRef.scaleBy(x: scale, y: scale)
-                    bitmapContextRef.draw(bitmapImage, in: extent)
-                    if let targetImage = bitmapContextRef.makeImage() {
-                        self.init(cgImage: targetImage)
-                        return
-                    }
-                }
-            }
+            colorFilter.setValue(filter.outputImage, forKey: "inputImage")
+            colorFilter.setValue(CIColor(red: 1, green: 1, blue: 1), forKey: "inputColor1")
+            colorFilter.setValue(CIColor(color: foregroundColor), forKey: "inputColor0")
+            outputImage = colorFilter.outputImage
+        } else {
+            outputImage = filter.outputImage
         }
-        return nil
+
+        if let ciImage = outputImage {
+            let transform = CGAffineTransform(scaleX: size.width * UIScreen.main.scale / ciImage.extent.width,
+                                              y: size.height * UIScreen.main.scale / ciImage.extent.height)
+            self.init(ciImage: ciImage.transformed(by: transform))
+        } else {
+            return nil
+        }
+    }
+
+    convenience init?(withFirstFrameOfVideoAtAsset asset: AVAsset) {
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        do {
+            let cgImage = try generator.copyCGImage(at: CMTime(value: 0, timescale: 1), actualTime: nil)
+            self.init(cgImage: cgImage)
+        } catch {
+            return nil
+        }
+    }
+
+    convenience init?(withFirstFrameOfVideoAtURL url: URL) {
+        let asset = AVURLAsset(url: url)
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        do {
+            let cgImage = try generator.copyCGImage(at: CMTime(value: 0, timescale: 1), actualTime: nil)
+            self.init(cgImage: cgImage)
+        } catch {
+            return nil
+        }
     }
 
     func drawText(text: String, offset: CGPoint, fontSize: CGFloat) -> UIImage {
@@ -68,6 +91,14 @@ extension UIImage {
             return self
         }
         return newImage
+    }
+
+    func scaledToSticker() -> UIImage {
+        let maxWH: CGFloat = 360
+        let scale = CGFloat(size.width) / CGFloat(size.height)
+        let targetWidth: CGFloat = size.width > size.height ? maxWH : maxWH * scale
+        let targetHeight: CGFloat = size.width > size.height ? maxWH / scale : maxWH
+        return scaledToSize(newSize: CGSize(width: targetWidth, height: targetHeight))
     }
 
     func scaledToSize(newSize: CGSize) -> UIImage {
@@ -99,7 +130,7 @@ extension UIImage {
     }
 
     func scaleForUpload() -> UIImage {
-        let maxWH: CGFloat = 1080
+        let maxWH: CGFloat = 1920
 
         if size.width < maxWH && size.height < maxWH {
             return self
@@ -111,7 +142,8 @@ extension UIImage {
         return scaledToSize(newSize: CGSize(width: targetWidth, height: targetHeight))
     }
 
-    func saveToFile(path: URL, quality: CGFloat = 0.75) -> Bool {
+    @discardableResult
+    func saveToFile(path: URL, quality: CGFloat = jpegCompressionQuality) -> Bool {
         guard let data = UIImageJPEGRepresentation(self, quality) else {
             return false
         }

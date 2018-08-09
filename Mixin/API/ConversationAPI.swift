@@ -36,7 +36,7 @@ class ConversationAPI : BaseAPI {
         request(method: .post, url: url.conversations, parameters: conversation.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>(), completion: completion)
     }
 
-    func createConversation(conversation: ConversationRequest) -> Result<ConversationResponse> {
+    func createConversation(conversation: ConversationRequest) -> APIResult<ConversationResponse> {
         return request(method: .post, url: url.conversations, parameters: conversation.toParameters(), encoding: EncodableParameterEncoding<ConversationRequest>())
     }
 
@@ -44,7 +44,7 @@ class ConversationAPI : BaseAPI {
         request(method: .get, url: url.conversations(id: conversationId), completion: completion)
     }
 
-    func getConversation(conversationId: String) -> Result<ConversationResponse> {
+    func getConversation(conversationId: String) -> APIResult<ConversationResponse> {
         return request(method: .get, url: url.conversations(id: conversationId))
     }
 
@@ -52,12 +52,12 @@ class ConversationAPI : BaseAPI {
         request(method: .post, url: url.exit(id: conversationId), completion: completion)
     }
 
-    func exitConversation(conversationId: String) -> Result<EmptyResponse> {
+    func exitConversation(conversationId: String) -> APIResult<EmptyResponse> {
         return request(method: .post, url: url.exit(id: conversationId))
     }
 
     func joinConversation(codeId: String, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
-        request(method: .post, url: url.join(codeId: codeId), completion: completion)
+        request(method: .post, url: url.join(codeId: codeId), toastError: false, completion: completion)
     }
 
     func addParticipant(conversationId: String, participants: [GroupUser], completion: @escaping (APIResult<ConversationResponse>) -> Void) {

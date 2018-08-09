@@ -80,36 +80,8 @@ extension Job {
 
 extension Job {
 
-    init?(job: MessageJob) {
-        switch job.action {
-        case MessageJobAction.RESEND_KEY.rawValue:
-            self.action = JobAction.RESEND_KEY.rawValue
-        case MessageJobAction.RESEND_KEY_MESSAGE.rawValue:
-            self.action = JobAction.REQUEST_RESEND_KEY.rawValue
-        case MessageJobAction.NO_KEY.rawValue:
-            self.action = JobAction.SEND_NO_KEY.rawValue
-        case MessageJobAction.RESEND_MESSAGES.rawValue:
-            self.action = JobAction.REQUEST_RESEND_MESSAGES.rawValue
-        case MessageJobAction.SEND_KEY.rawValue:
-            self.action = JobAction.SEND_KEY.rawValue
-        default:
-            return nil
-        }
-        self.jobId = job.jobId
-        self.blazeMessage = job.blazeMessage
-        self.conversationId = job.conversationId
-        self.userId = job.userId
-        self.priority = job.priority
-        self.resendMessageId = nil
-    }
-
-    init(ack: MessageAck) {
-        let blazeMessage = BlazeMessage(ackBlazeMessage: ack.messageId, status: ack.status)
-        self.init(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage)
-    }
-
     init(message: Message) {
-        let blazeParam = BlazeMessageParam(conversationId: message.conversationId, recipientId: nil, category: message.category, data: nil, offset: nil, status: MessageStatus.SENT.rawValue, messageId: message.messageId, keys: nil, recipients: nil, messages: nil)
+        let blazeParam = BlazeMessageParam(conversationId: message.conversationId, recipientId: nil, category: message.category, data: nil, offset: nil, status: MessageStatus.SENT.rawValue, messageId: message.messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
         let blazeMessage = BlazeMessage(params: blazeParam, action: BlazeMessageAction.createMessage.rawValue)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
     }

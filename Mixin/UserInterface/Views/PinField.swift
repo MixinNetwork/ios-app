@@ -29,7 +29,9 @@ class PinField: UIControl, UITextInputTraits {
     @IBInspectable
     var cellLength: CGFloat = 12 {
         didSet {
+            setupSubviews()
             setNeedsLayout()
+            layoutIfNeeded()
         }
     }
 

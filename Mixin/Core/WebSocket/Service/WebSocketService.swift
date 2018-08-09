@@ -86,7 +86,7 @@ extension WebSocketService: SRWebSocketDelegate {
         if let error = blazeMessage.error {
             if let transaction = transactions[blazeMessage.id] {
                 transactions.removeValue(forKey: blazeMessage.id)
-                transaction.callback(.failure(error.toError()))
+                transaction.callback(.failure(error))
             }
             if blazeMessage.action == BlazeMessageAction.error.rawValue && error.code == 401 {
                 AccountAPI.shared.logout()
@@ -156,8 +156,8 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     @objc func writePingFrame() {
-        let failedPing = awaitingPong ? sentPingCount : -1;
-        sentPingCount += 1;
+        let failedPing = awaitingPong ? sentPingCount : -1
+        sentPingCount += 1
         awaitingPong = true
         if failedPing != -1 {
             #if DEBUG
@@ -175,7 +175,7 @@ extension WebSocketService: SRWebSocketDelegate {
         let ids = transactions.keys
         for transactionId in ids {
             let transaction = transactions[transactionId]
-            transaction?.callback(.failure(JobError.networkError))
+            transaction?.callback(.failure(APIError.createTimeoutError()))
             transactions.removeValue(forKey: transactionId)
         }
     }
@@ -269,8 +269,6 @@ extension WebSocketService {
                 return
             }
 
-            FileManager.default.writeLog(log: "WebSocketService...sendPendingMessage...success")
-
             if !WebSocketService.shared.recoverJobs {
                 WebSocketService.shared.recoverJobs = true
 
@@ -284,13 +282,13 @@ extension WebSocketService {
         sendData(message: message)
     }
 
-    func syncSendMessage(blazeMessage: BlazeMessage) throws -> BlazeMessage {
+    func syncSendMessage(blazeMessage: BlazeMessage) throws -> BlazeMessage? {
         return try sendDispatchQueue.sync {
             guard AccountAPI.shared.didLogin else {
-                throw JobError.clientError(code: 401)
+                return nil
             }
             var result: BlazeMessage?
-            var err: JobError?
+            var err = APIError.createTimeoutError()
 
             let semaphore = DispatchSemaphore(value: 0)
             let transaction = SendJobTransaction(callback: { (jobResult) in
@@ -298,47 +296,38 @@ extension WebSocketService {
                 case let .success(blazeMessage):
                     result = blazeMessage
                 case let .failure(error):
-                    if let responseError = error as? APIError {
-                        if responseError.code == 10002 {
-                            var userInfo = UIApplication.getTrackUserInfo()
-                            if let param = blazeMessage.params {
-                                userInfo["category"] = param.category ?? ""
-                                userInfo["conversationId"] = param.conversationId ?? ""
-                                userInfo["status"] = param.status ?? ""
-                                userInfo["recipientId"] = param.recipientId ?? ""
-                                userInfo["data"] = param.data ?? ""
-                                if let messageId = param.messageId {
-                                    userInfo["messageId"] = messageId
-                                    userInfo["messageCreatedAt"] = MessageDAO.shared.getMessage(messageId: messageId)?.createdAt
-                                    if messageId != messageId.lowercased() {
-                                        MessageDAO.shared.deleteMessage(id: messageId)
-                                    }
+                    if error.code == 10002 {
+                        var userInfo = UIApplication.getTrackUserInfo()
+                        if let param = blazeMessage.params {
+                            userInfo["category"] = param.category ?? ""
+                            userInfo["conversationId"] = param.conversationId ?? ""
+                            userInfo["status"] = param.status ?? ""
+                            userInfo["recipientId"] = param.recipientId ?? ""
+                            userInfo["data"] = param.data ?? ""
+                            if let messageId = param.messageId {
+                                userInfo["messageId"] = messageId
+                                userInfo["messageCreatedAt"] = MessageDAO.shared.getMessage(messageId: messageId)?.createdAt
+                                if messageId != messageId.lowercased() {
+                                    MessageDAO.shared.deleteMessage(id: messageId)
+                                    JobDAO.shared.removeJob(jobId: blazeMessage.id)
                                 }
                             }
-                            UIApplication.trackError("The request data has invalid field", action: blazeMessage.action, userInfo: userInfo)
                         }
-                        err = responseError.toJobError()
-                    } else {
-                        err = error.toJobError()
+                        UIApplication.trackError("The request data has invalid field", action: blazeMessage.action, userInfo: userInfo)
                     }
+                    err = error
                 }
                 semaphore.signal()
             })
             transactions[blazeMessage.id] = transaction
             if !sendData(message: blazeMessage) {
                 transactions.removeValue(forKey: blazeMessage.id)
-                throw JobError.networkError
+                throw err
             }
-            if semaphore.wait(timeout: .now() + .seconds(5)) == .timedOut {
-                if result == nil {
-                    err = JobError.timeoutError
-                }
-            }
-            if let error = err {
-                throw error
-            }
+            _ = semaphore.wait(timeout: .now() + .seconds(5))
+
             guard let blazeMessage = result else {
-                throw JobError.timeoutError
+                throw err
             }
             return blazeMessage
         }
@@ -348,6 +337,6 @@ extension WebSocketService {
 
 private struct SendJobTransaction {
 
-    let callback: (Result<BlazeMessage>) -> Void
+    let callback: (APIResult<BlazeMessage>) -> Void
 
 }

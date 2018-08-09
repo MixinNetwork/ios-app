@@ -19,10 +19,18 @@ class WalletUserDefault {
     private var keyWithdrawalAddresses: String {
         return "withdrawal_addresses_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyIsBiometricPay: String {
+        return "is_biometric_pay_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyPINInterval: String {
+        return "is_pin_interval_\(AccountAPI.shared.accountIdentityNumber)"
+    }
 
     let session = UserDefaults(suiteName: SuiteName.wallet)!
     let checkMaxInterval: Double = 60 * 60 * 24
     let checkMinInterval: Double = 60 * 10
+    let pinMinInterval: Double = 60 * 15
+    let pinDefaultInterval: Double = 60 * 120
 
     var defalutTransferAssetId: String? {
         get {
@@ -70,6 +78,7 @@ class WalletUserDefault {
         }
         set {
             session.set(newValue, forKey: keyHiddenAssets)
+            NotificationCenter.default.postOnMain(name: .HiddenAssetsDidChange)
         }
     }
 
@@ -80,6 +89,25 @@ class WalletUserDefault {
         set {
             session.set(newValue, forKey: keyWithdrawalAddresses)
             NotificationCenter.default.afterPostOnMain(name: .DefaultAddressDidChange)
+        }
+    }
+
+    var isBiometricPay: Bool {
+        get {
+            return session.bool(forKey: keyIsBiometricPay)
+        }
+        set {
+            session.set(newValue, forKey: keyIsBiometricPay)
+        }
+    }
+
+    var pinInterval: Double {
+        get {
+            let interval = session.double(forKey: keyPINInterval)
+            return interval < pinMinInterval ? pinDefaultInterval : interval
+        }
+        set {
+            session.set(newValue, forKey: keyPINInterval)
         }
     }
 }

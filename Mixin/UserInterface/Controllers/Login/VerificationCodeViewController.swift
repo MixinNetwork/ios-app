@@ -1,5 +1,4 @@
 import UIKit
-import KeychainAccess
 import Bugsnag
 
 class VerificationCodeViewController: LoginViewController {
@@ -36,6 +35,10 @@ class VerificationCodeViewController: LoginViewController {
         resendButton.releaseTimer()
     }
 
+    deinit {
+        ReCaptchaManager.shared.clean()
+    }
+    
     @IBAction func checkVerificationCodeAction(_ sender: Any) {
         guard let verificationId = loginInfo.verificationId else {
             return
@@ -78,15 +81,15 @@ class VerificationCodeViewController: LoginViewController {
                         ContactAPI.shared.syncContacts()
                         AppDelegate.current.window?.rootViewController = HomeViewController.instance()
                     }
-                case let .failure(error, _):
+                case let .failure(error):
                     weakSelf.continueButton.isEnabled = true
                     weakSelf.continueButton.isBusy = false
-                    if error.kind == .invalidVerificationCode {
+                    if error.code == 20113 {
                         weakSelf.verificationCodeField.clear()
                         weakSelf.verificationCodeField.showError()
                         weakSelf.invalidCodeLabel.isHidden = false
                     } else {
-                        weakSelf.alert(error.kind.localizedDescription ?? error.description)
+                        weakSelf.alert(error.localizedDescription)
                     }
                 }
             })
@@ -99,12 +102,34 @@ class VerificationCodeViewController: LoginViewController {
     
     @objc func resendAction(_ sender: Any) {
         resendButton.isBusy = true
-        AccountAPI.shared.sendCode(to: loginInfo.fullNumber, purpose: .session) { [weak self] (verification) in
+        sendCode(reCaptchaToken: nil)
+    }
+    
+    private func sendCode(reCaptchaToken token: String?) {
+        AccountAPI.shared.sendCode(to: loginInfo.fullNumber, reCaptchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.resendButton.isBusy = false
-            weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
+            switch result {
+            case let .success(verification):
+                weakSelf.loginInfo.verificationId = verification.id
+                weakSelf.resendButton.isBusy = false
+                weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
+            case let .failure(error):
+                if error.code == 10005 {
+                    ReCaptchaManager.shared.validate(onViewController: weakSelf) { (result) in
+                        switch result {
+                        case .success(let token):
+                            self?.sendCode(reCaptchaToken: token)
+                        default:
+                            self?.resendButton.isBusy = false
+                        }
+                    }
+                } else {
+                    weakSelf.alert(error.localizedDescription)
+                    weakSelf.resendButton.isBusy = false
+                }
+            }
         }
     }
     

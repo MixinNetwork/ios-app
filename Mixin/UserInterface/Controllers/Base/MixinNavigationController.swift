@@ -70,13 +70,13 @@ extension MixinNavigationController: UINavigationControllerDelegate {
                 targetVC = (fromVC as! ContainerViewController).viewController
             }
             if let targetVC = targetVC as? MixinNavigationAnimating {
-                switch targetVC.pushAnimation {
-                case .push:
+                switch targetVC.popAnimation {
+                case .pop:
                     return nil
-                case .reversedPush :
+                case .reversedPop :
                     pushFromLeftAnimator.operation = operation
                     return pushFromLeftAnimator
-                case .present:
+                case .dismiss:
                     presentFromBottomAnimator.operation = operation
                     return presentFromBottomAnimator
                 }

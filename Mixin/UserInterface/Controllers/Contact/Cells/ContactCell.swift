@@ -16,22 +16,27 @@ class ContactCell: UITableViewCell {
     }
     
     func render(user: UserItem) {
-        avatarImageView.setImage(with: user.avatarUrl, identityNumber: user.identityNumber, name: user.fullName)
-        nameLabel.text = user.fullName
-        if user.isVerified {
+        render(avatarUrl: user.avatarUrl, identityNumber: user.identityNumber, fullName: user.fullName, isVerified: user.isVerified, isBot: user.isBot)
+    }
+    
+    func render(user: GroupUser) {
+        render(avatarUrl: user.avatarUrl, identityNumber: user.identityNumber, fullName: user.fullName, isVerified: user.isVerified, isBot: user.isBot)
+    }
+
+    private func render(avatarUrl: String, identityNumber: String, fullName: String, isVerified: Bool, isBot: Bool, isGroup: Bool = false) {
+        if !isGroup {
+            avatarImageView.setImage(with: avatarUrl, identityNumber: identityNumber, name: fullName)
+        }
+        nameLabel.text = fullName
+        if isVerified {
             verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")
             verifiedImageView.isHidden = false
-        } else if user.isBot {
+        } else if isBot {
             verifiedImageView.image = #imageLiteral(resourceName: "ic_user_bot")
             verifiedImageView.isHidden = false
         } else {
             verifiedImageView.isHidden = true
         }
-    }
-    
-    func render(user: GroupUser) {
-        avatarImageView.setImage(with: user.avatarUrl, identityNumber: user.identityNumber, name: user.fullName)
-        nameLabel.text = user.fullName
     }
     
 }

@@ -6,14 +6,8 @@ extension Error {
         return (self as NSError).code
     }
 
-    func toJobError() -> JobError {
-        switch errorCode {
-        case 400..<500:
-            return JobError.clientError(code: errorCode)
-        case 500..<600:
-            return JobError.serverError(code: errorCode)
-        default:
-            return JobError.networkError
-        }
+    var localizedDescription: String {
+        return  (self as NSError).localizedDescription
     }
 }
+

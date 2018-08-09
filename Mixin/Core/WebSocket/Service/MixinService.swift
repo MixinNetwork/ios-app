@@ -19,14 +19,13 @@ class MixinService {
     }
 
     internal func sendBatchSenderKey(conversationId: String, participants: [Participant], from: String) throws {
-        FileManager.default.writeLog(conversationId: conversationId, log: "[SendBatchSenderKey]...start...participants:\(participants.count)...from:\(from)")
         var requestSignalKeyUsers = [String]()
-        var signalKeyMessages = [BlazeSignalMessage]()
+        var signalKeyMessages = [TransferMessage]()
         for p in participants {
             if SignalProtocol.shared.containsSession(recipient: p.userId) {
                 FileManager.default.writeLog(conversationId: conversationId, log: "[SendGroupSenderKey]...containsSession...\(p.userId)")
                 let cipherText = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, senderId: currentAccountId, recipientId: p.userId)
-                signalKeyMessages.append(BlazeSignalMessage(recipientId: p.userId, data: cipherText))
+                signalKeyMessages.append(TransferMessage(recipientId: p.userId, data: cipherText))
             } else {
                 requestSignalKeyUsers.append(p.userId)
             }
@@ -36,7 +35,7 @@ class MixinService {
         var signalKeys = [SignalKeyResponse]()
 
         if !requestSignalKeyUsers.isEmpty {
-            signalKeys = signalKeysChannel(conversationId: conversationId, requestSignalKeyUsers: requestSignalKeyUsers)
+            signalKeys = signalKeysChannel(requestSignalKeyUsers: requestSignalKeyUsers)
             var keys = [String]()
             for signalKey in signalKeys {
                 guard let recipientId = signalKey.userId else {
@@ -44,7 +43,7 @@ class MixinService {
                 }
                 try SignalProtocol.shared.buildSession(conversationId: conversationId, recipientId: recipientId, signalKey: signalKey)
                 let cipherText = try SignalProtocol.shared.encryptSenderKey(conversationId: conversationId, senderId: AccountAPI.shared.accountUserId, recipientId: recipientId)
-                signalKeyMessages.append(BlazeSignalMessage(recipientId: recipientId, data: cipherText))
+                signalKeyMessages.append(TransferMessage(recipientId: recipientId, data: cipherText))
                 keys.append(recipientId)
             }
 
@@ -71,7 +70,7 @@ class MixinService {
 
     internal func checkSignalSession(conversationId: String, recipientId: String) throws -> Bool {
         if !SignalProtocol.shared.containsSession(recipient: recipientId) {
-            let signalKeys = signalKeysChannel(conversationId: nil, requestSignalKeyUsers: [recipientId])
+            let signalKeys = signalKeysChannel(requestSignalKeyUsers: [recipientId])
             guard signalKeys.count > 0 else {
                 return false
             }
@@ -82,10 +81,10 @@ class MixinService {
 
     @discardableResult
     internal func resendSenderKey(conversationId: String, recipientId: String, resendKey: Bool = false) throws -> Bool {
-        let signalKeys = signalKeysChannel(conversationId: conversationId, requestSignalKeyUsers: [recipientId])
+        let signalKeys = signalKeysChannel(requestSignalKeyUsers: [recipientId])
         guard signalKeys.count > 0 else {
             SentSenderKeyDAO.shared.replace(SentSenderKey(conversationId: conversationId, userId: recipientId, sentToServer: SentSenderKeyStatus.UNKNOWN.rawValue))
-            FileManager.default.writeLog(conversationId: conversationId, log: "[SendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
+            FileManager.default.writeLog(conversationId: conversationId, log: "[ResendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
             if resendKey {
                 sendNoKeyMessage(conversationId: conversationId, recipientId: recipientId)
             }
@@ -98,7 +97,7 @@ class MixinService {
     @discardableResult
     internal func sendSenderKey(conversationId: String, recipientId: String, resendKey: Bool = false) throws -> Bool {
         if !SignalProtocol.shared.containsSession(recipient: recipientId) {
-            let signalKeys = signalKeysChannel(conversationId: conversationId, requestSignalKeyUsers: [recipientId])
+            let signalKeys = signalKeysChannel(requestSignalKeyUsers: [recipientId])
             guard signalKeys.count > 0 else {
                 SentSenderKeyDAO.shared.replace(SentSenderKey(conversationId: conversationId, userId: recipientId, sentToServer: SentSenderKeyStatus.UNKNOWN.rawValue))
                 FileManager.default.writeLog(conversationId: conversationId, log: "[SendSenderKey]...recipientId:\(recipientId)...No any group signal key from server")
@@ -118,7 +117,7 @@ class MixinService {
         }
         let plainData = TransferPlainData(action: PlainDataAction.NO_KEY.rawValue, messageId: nil, messages: nil)
         let encoded = (try? jsonEncoder.encode(plainData))?.base64EncodedString() ?? ""
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased(), keys: nil, recipients: nil, messages: nil)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased(), quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: recipientId, blazeMessage: blazeMessage, action: .SEND_NO_KEY)
     }
@@ -134,26 +133,21 @@ class MixinService {
         return result
     }
 
-    private func signalKeysChannel(conversationId: String?, requestSignalKeyUsers: [String]) -> [SignalKeyResponse] {
+    private func signalKeysChannel(requestSignalKeyUsers: [String]) -> [SignalKeyResponse] {
         let blazeMessage = BlazeMessage(params: BlazeMessageParam(consumeSignalKeys: requestSignalKeyUsers), action: BlazeMessageAction.consumeSignalKeys.rawValue)
-        return deliverKeys(conversationId: conversationId, blazeMessage: blazeMessage)?.toConsumeSignalKeys() ?? []
+        return deliverKeys(blazeMessage: blazeMessage)?.toConsumeSignalKeys() ?? []
     }
 
     @discardableResult
-    internal func deliverKeys(conversationId: String? = nil, blazeMessage: BlazeMessage) -> BlazeMessage? {
+    internal func deliverKeys(blazeMessage: BlazeMessage) -> BlazeMessage? {
         repeat {
             do {
                 return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage)
             } catch {
-                if let conversationId = conversationId {
-                    FileManager.default.writeLog(conversationId: conversationId, log: "[DeliverKeys][\(blazeMessage.action)]...error\(error)")
-                } else {
-                    FileManager.default.writeLog(log: "[DeliverKeys][\(blazeMessage.action)]...error\(error)")
-                }
-                if let err = error as? JobError, case let .clientError(code) = err {
-                    if code == 401 {
+                if let err = error as? APIError {
+                    if err.code == 401 {
                         return nil
-                    } else if code == 403 {
+                    } else if err.code == 403 {
                         return nil
                     }
                 }
@@ -169,13 +163,12 @@ class MixinService {
     internal func deliverNoThrow(blazeMessage: BlazeMessage) -> Bool {
         repeat {
             do {
-                _ = try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage)
-                return true
+                return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
             } catch {
-                if let err = error as? JobError, case let .clientError(code) = err {
-                    if code == 403 {
+                if let err = error as? APIError {
+                    if err.code == 403 {
                         return true
-                    } else if code == 401 {
+                    } else if err.code == 401 {
                         return false
                     }
                 }
@@ -190,25 +183,24 @@ class MixinService {
     internal func deliver(blazeMessage: BlazeMessage) throws -> Bool {
         repeat {
             do {
-                _ = try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage)
-                return true
+                return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
             } catch {
-                if let err = error as? JobError, case let .clientError(code) = err {
-                    if code == 403 {
-                        return true
-                    } else if code == 401 {
-                        return false
-                    }
+                guard let err = error as? APIError else {
+                    Thread.sleep(forTimeInterval: 2)
+                    return false
                 }
+
+                if err.code == 403 {
+                    return true
+                } else if err.code == 401 {
+                    return false
+                }
+
                 checkNetworkAndWebSocket()
-                if let err = error as? JobError {
-                    switch err {
-                    case .networkError, .timeoutError:
-                        Thread.sleep(forTimeInterval: 2)
-                        continue
-                    default:
-                        break
-                    }
+
+                if err.isClientError {
+                    Thread.sleep(forTimeInterval: 2)
+                    continue
                 }
                 throw error
             }

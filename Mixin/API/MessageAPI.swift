@@ -19,15 +19,15 @@ class MessageAPI: BaseAPI {
         }
     }
 
-    func messageStatus(offset: Int64) -> Result<[BlazeMessageData]> {
+    func messageStatus(offset: Int64) -> APIResult<[BlazeMessageData]> {
         return request(method: .get, url: url.messageStatus(offset: offset))
     }
 
-    func requestAttachment() -> Result<AttachmentResponse> {
+    func requestAttachment() -> APIResult<AttachmentResponse> {
          return request(method: .post, url: url.attachments)
     }
 
-    func getAttachment(id: String) -> Result<AttachmentResponse> {
+    func getAttachment(id: String) -> APIResult<AttachmentResponse> {
         return request(method: .get, url: url.attachments(id: id))
     }
 }

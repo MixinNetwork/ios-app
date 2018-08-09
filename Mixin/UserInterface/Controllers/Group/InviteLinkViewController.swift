@@ -62,15 +62,12 @@ class InviteLinkViewController: UIViewController {
                 DispatchQueue.global().async {
                     ConversationDAO.shared.updateCodeUrl(conversation: response)
                     DispatchQueue.main.async {
-                        weakSelf.conversation = ConversationItem.createConversation(from: response)
+                        weakSelf.conversation = ConversationItem(response: response)
                         weakSelf.updateUI()
                     }
                 }
-            case let .failure(_, didHandled):
-                guard !didHandled else {
-                    return
-                }
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.TOAST_OPERATION_FAILED)
+            case .failure:
+                break
             }
         }
     }

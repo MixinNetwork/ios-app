@@ -28,6 +28,7 @@ class SignalLoadingView: BottomSheetView {
                         guard let weakSelf = self else {
                             return
                         }
+                        MixinWebView.clearCookies()
                         WebSocketService.shared.connect()
                         let time = Date().timeIntervalSince(startTime)
                         if time < 2 {
@@ -40,7 +41,7 @@ class SignalLoadingView: BottomSheetView {
                     }
                     return
                 case let .failure(error):
-                    guard error.errorCode != 401 else {
+                    guard error.code != 401 else {
                         return
                     }
                     while AccountAPI.shared.didLogin && !NetworkManager.shared.isReachable {

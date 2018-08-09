@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initBugsnag()
         FirebaseApp.configure()
         #endif
-        AccountUserDefault.shared.upgrade()
         if let account = AccountAPI.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
         }
@@ -30,19 +29,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         checkLogin()
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
+        checkJailbreak()
         return true
     }
 
+    private func checkJailbreak() {
+        guard UIDevice.isJailbreak else {
+            return
+        }
+        Keychain.shared.clearPIN()
+    }
+
     private func initBugsnag() {
-        guard let path = Bundle.main.path(forResource: "Mixin-Info", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject], let apiKey = dict["BugsnagKey"] as? String else {
+        guard let apiKey = MixinKeys.bugsnag else {
             return
         }
         Bugsnag.start(withApiKey: apiKey)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+        MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -68,7 +74,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         MixinDatabase.shared.close()
         SignalDatabase.shared.close()
-        FileManager.default.writeLog(log: "AppDelegate...applicationWillTerminate", newSection: true)
     }
 
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -174,7 +179,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
             var ownerUser: UserItem?
             if let userId = userInfo["user_id"] as? String, let userFullName = userInfo["userFullName"] as? String, let userAvatarUrl = userInfo["userAvatarUrl"] as? String, let userIdentityNumber = userInfo["userIdentityNumber"] as? String {
-                ownerUser = UserItem.createUser(userId: userId, fullName: userFullName, identityNumber: userIdentityNumber, avatarUrl: userAvatarUrl)
+                ownerUser = UserItem.createUser(userId: userId, fullName: userFullName, identityNumber: userIdentityNumber, avatarUrl: userAvatarUrl, appId: userInfo["userAppId"] as? String)
             }
             var newMsg = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue, conversationId: conversationId, createdAt: Date().toUTCString(), userId: AccountAPI.shared.accountUserId)
             newMsg.content = text

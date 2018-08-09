@@ -13,6 +13,7 @@ class SnapshotViewController: UITableViewController {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "SnapshotCell", bundle: .main),
                            forCellReuseIdentifier: SnapshotCell.cellIdentifier)
+        fetchRemoteSnapshots()
         fetchSnapshots()
     }
 
@@ -38,6 +39,17 @@ class SnapshotViewController: UITableViewController {
                 }
                 weakSelf.tableView.reloadData()
                 weakSelf.fetching = false
+            }
+        }
+    }
+
+    private func fetchRemoteSnapshots() {
+        AssetAPI.shared.snapshots { (result) in
+            switch result {
+            case let .success(snapshots):
+                SnapshotDAO.shared.insertOrUpdateSnapshots(snapshots: snapshots)
+            case .failure:
+                break
             }
         }
     }

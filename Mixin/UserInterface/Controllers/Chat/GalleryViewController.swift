@@ -1,5 +1,6 @@
 import UIKit
 import SwiftMessages
+import AVKit
 
 protocol GalleryViewControllerDelegate: class {
     func galleryViewController(_ viewController: GalleryViewController, placeholderForItemOfMessageId id: String) -> UIImage?
@@ -24,7 +25,6 @@ class GalleryViewController: UIViewController {
     var item: GalleryItem?
     
     private let scrollViewContentView = UIView()
-    private let transitionDummyView = ImageClippingView()
     private let animationDuration: TimeInterval = 0.25
     private let itemsCountPerFetch = 20
     private let queue = DispatchQueue(label: "one.mixin.ios.gallery")
@@ -40,8 +40,10 @@ class GalleryViewController: UIViewController {
     private var didLoadEarliestItem = false
     private var isLoadingBefore = false
     private var isLoadingAfter = false
+    private var transitionView: UIView!
     private var snapshotView: UIView?
     
+    private let imageClippingTransitionView = ImageClippingView()
     private lazy var separatorWidth = scrollViewTrailingConstraint.constant
     
     private var safeAreaInsets: UIEdgeInsets {
@@ -98,15 +100,14 @@ class GalleryViewController: UIViewController {
         let progress = min(1, max(0, panToDismissDistance / (view.bounds.height / 3)))
         switch recognizer.state {
         case .began:
-            prepareTransitionDummyViewForDismissing()
-            view.addSubview(transitionDummyView)
+            prepareTransitionViewForDismissing()
             scrollView.isHidden = true
             if let messageId = item?.messageId {
                 snapshotView = delegate?.galleryViewController(self, snapshotForItemOfMessageId: messageId)
                 delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .began, forItemOfMessageId: messageId)
             }
         case .changed:
-            transitionDummyView.frame.origin.y += recognizer.translation(in: view).y
+            transitionView.frame.origin.y += recognizer.translation(in: view).y
             backgroundDimmingView.alpha = 1 - progress
             recognizer.setTranslation(.zero, in: view)
         case .cancelled, .ended:
@@ -115,14 +116,16 @@ class GalleryViewController: UIViewController {
                 dismiss()
             } else {
                 let safeAreaInsets = self.safeAreaInsets
-                let y = max(0, (view.frame.height - safeAreaInsets.vertical - transitionDummyView.frame.height) / 2 + safeAreaInsets.top)
+                let y = max(0, (view.frame.height - safeAreaInsets.vertical - transitionView.frame.height) / 2 + safeAreaInsets.top)
                 UIView.animate(withDuration: animationDuration, animations: {
                     self.backgroundDimmingView.alpha = 1
-                    self.transitionDummyView.frame.origin.y = y
+                    self.transitionView.frame.origin.y = y
                 }, completion: { (_) in
                     self.scrollView.isHidden = false
-                    self.transitionDummyView.transform = .identity
-                    self.transitionDummyView.removeFromSuperview()
+                    self.transitionView.removeFromSuperview()
+                    if let videoView = self.transitionView as? GalleryVideoView {
+                        self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
+                    }
                     if let messageId = self.item?.messageId {
                         self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .cancelled, forItemOfMessageId: messageId)
                     }
@@ -174,18 +177,17 @@ class GalleryViewController: UIViewController {
         reload()
         backgroundDimmingView.alpha = 0
         scrollView.isHidden = true
-        var imageFinalFrame = CGRect.zero
         var sourceViewSnapshotView: UIView?
         self.delegate?.galleryViewController(self, transition: .show, stateDidChangeTo: .began, forItemOfMessageId: item.messageId)
         if let sourceRect = delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {
-            transitionDummyView.frame = sourceRect.insetBy(dx: ImageClippingView.clippingMargin.dx,
-                                                            dy: ImageClippingView.clippingMargin.dy)
-            transitionDummyView.imageView.image = delegate?.galleryViewController(self, placeholderForItemOfMessageId: item.messageId)
-            transitionDummyView.imageView.frame = CGRect(x: -ImageClippingView.clippingMargin.dx,
-                                                         y: -ImageClippingView.clippingMargin.dy,
-                                                         width: sourceRect.width,
-                                                         height: sourceRect.height)
-            view.addSubview(transitionDummyView)
+            imageClippingTransitionView.frame = sourceRect.insetBy(dx: ImageClippingView.clippingMargin.dx,
+                                                                   dy: ImageClippingView.clippingMargin.dy)
+            imageClippingTransitionView.imageView.image = delegate?.galleryViewController(self, placeholderForItemOfMessageId: item.messageId)
+            imageClippingTransitionView.imageView.frame = CGRect(x: -ImageClippingView.clippingMargin.dx,
+                                                                 y: -ImageClippingView.clippingMargin.dy,
+                                                                 width: sourceRect.width,
+                                                                 height: sourceRect.height)
+            view.addSubview(imageClippingTransitionView)
             if let snapshot = delegate?.galleryViewController(self, snapshotForItemOfMessageId: item.messageId) {
                 snapshot.frame = sourceRect
                 view.addSubview(snapshot)
@@ -195,17 +197,7 @@ class GalleryViewController: UIViewController {
         let safeAreaInsets = self.safeAreaInsets
         let containerSize = CGSize(width: view.frame.width - safeAreaInsets.horizontal,
                                    height: view.frame.height - safeAreaInsets.vertical)
-        let containerRatio = containerSize.width / containerSize.height
-        let itemRatio = item.size.width / item.size.height
-        let size: CGSize, origin: CGPoint
-        if itemRatio > containerRatio {
-            size = CGSize(width: containerSize.width, height: ceil(containerSize.width / itemRatio))
-            origin = CGPoint(x: 0, y: (containerSize.height - size.height) / 2)
-        } else {
-            size = CGSize(width: ceil(containerSize.height * itemRatio), height: containerSize.height)
-            origin = CGPoint(x: (containerSize.width - size.width) / 2, y: 0)
-        }
-        imageFinalFrame = CGRect(origin: origin, size: size)
+        let imageFinalFrame = item.size.rect(fittingSize: containerSize, byContentMode: .scaleAspectFit)
         let safeAreaOrigin = CGPoint(x: safeAreaInsets.left, y: safeAreaInsets.top)
         UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
             if let itemSize = self.item?.size, let snapshot = sourceViewSnapshotView {
@@ -221,67 +213,76 @@ class GalleryViewController: UIViewController {
                 snapshot.alpha = 0
             }
             self.backgroundDimmingView.alpha = 1
-            self.transitionDummyView.frame = CGRect(origin: safeAreaOrigin, size: containerSize)
-            self.transitionDummyView.imageView.frame = imageFinalFrame
+            self.imageClippingTransitionView.frame = CGRect(origin: safeAreaOrigin, size: containerSize)
+            self.imageClippingTransitionView.imageView.frame = imageFinalFrame
             self.delegate?.animateAlongsideGalleryViewController(self, transition: .show)
         }, completion: { (_) in
             sourceViewSnapshotView?.removeFromSuperview()
-            self.transitionDummyView.removeFromSuperview()
+            self.imageClippingTransitionView.removeFromSuperview()
             self.scrollView.isHidden = false
             self.delegate?.galleryViewController(self, transition: .show, stateDidChangeTo: .ended, forItemOfMessageId: item.messageId)
         })
     }
     
     func dismiss() {
+        if currentPage.item?.category == .video {
+            currentPage.videoView.player.rate = 0
+        }
         scrollView.isHidden = true
         let messageId = item?.messageId
         if let messageId = messageId {
             self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .began, forItemOfMessageId: messageId)
         }
-        if transitionDummyView.superview == nil {
-            prepareTransitionDummyViewForDismissing()
-        } else {
-            transitionDummyView.removeFromSuperview()
+        if transitionView == nil {
+            prepareTransitionViewForDismissing()
         }
-        view.addSubview(transitionDummyView)
         var sourceViewSnapshotView: UIView?
         if let messageId = messageId, let snapshot = snapshotView ?? delegate?.galleryViewController(self, snapshotForItemOfMessageId: messageId) {
-            let imageViewSize = transitionDummyView.frame.size
+            let imageViewSize = transitionView.frame.size
             let size = CGSize(width: imageViewSize.width, height: imageViewSize.width * snapshot.frame.height / snapshot.frame.width)
             let origin = CGPoint(x: (imageViewSize.width - size.width) / 2, y: (imageViewSize.height - size.height) / 2)
-                + transitionDummyView.imageView.frame.origin
-                + transitionDummyView.frame.origin
+                + ((transitionView as? ImageClippingView)?.imageView.frame.origin ?? .zero)
+                + transitionView.frame.origin
             snapshot.frame = CGRect(origin: origin, size: size)
-            view.insertSubview(snapshot, belowSubview: transitionDummyView)
+            view.insertSubview(snapshot, belowSubview: transitionView)
             sourceViewSnapshotView = snapshot
         }
-        let frame = transitionDummyView.frame
-        transitionDummyView.transform = .identity
-        transitionDummyView.frame = frame
-        transitionDummyView.imageView.frame = transitionDummyView.bounds
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+        let frame = transitionView.frame
+        transitionView.transform = .identity
+        transitionView.frame = frame
+        (transitionView as? ImageClippingView)?.imageView.frame = transitionView.bounds
+        UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
             self.backgroundDimmingView.alpha = 0
             if let item = self.item, let sourceRect = self.delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {
                 sourceViewSnapshotView?.frame = sourceRect
-                self.transitionDummyView.frame = sourceRect
-                if self.currentItemIsVerticallyOversized {
-                    let itemRatio = item.size.width / item.size.height
-                    let size = CGSize(width: sourceRect.width, height: sourceRect.width / itemRatio)
-                    let origin = CGPoint(x: 0, y: (sourceRect.height - size.height) / 2)
-                    self.transitionDummyView.imageView.frame = CGRect(origin: origin, size: size)
-                } else {
-                    self.transitionDummyView.imageView.frame = self.transitionDummyView.bounds
+                self.transitionView.frame = sourceRect
+                if item.category == .image {
+                    if self.currentItemIsVerticallyOversized {
+                        let itemRatio = item.size.width / item.size.height
+                        let size = CGSize(width: sourceRect.width, height: sourceRect.width / itemRatio)
+                        let origin = CGPoint(x: 0, y: (sourceRect.height - size.height) / 2)
+                        self.imageClippingTransitionView.imageView.frame = CGRect(origin: origin, size: size)
+                    } else {
+                        self.imageClippingTransitionView.imageView.frame = self.transitionView.bounds
+                    }
                 }
             }
-            self.transitionDummyView.alpha = 0
+            self.transitionView.alpha = 0
             self.delegate?.animateAlongsideGalleryViewController(self, transition: .dismiss)
         }, completion: { (_) in
             sourceViewSnapshotView?.removeFromSuperview()
-            self.transitionDummyView.removeFromSuperview()
+            self.transitionView.removeFromSuperview()
+            if let videoView = self.transitionView as? GalleryVideoView {
+                self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
+            }
             self.scrollView.isHidden = false
-            self.transitionDummyView.alpha = 1
+            self.transitionView.alpha = 1
+            self.transitionView = nil
             self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .ended, forItemOfMessageId: messageId)
             self.snapshotView = nil
+            for page in self.pages {
+                page.item = nil
+            }
         })
     }
     
@@ -293,6 +294,7 @@ class GalleryViewController: UIViewController {
     
 }
 
+// MARK: - UIScrollViewDelegate
 extension GalleryViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -300,7 +302,6 @@ extension GalleryViewController: UIScrollViewDelegate {
         let conversationId = self.conversationId!
         let itemsCountPerFetch = self.itemsCountPerFetch
         if x > pageSize.width * 1.5 + separatorWidth && x > lastContentOffsetX, let item = pages[2].item {
-            // Scrolling rightwards
             if let itemAfter = items.element(after: item) {
                 let page = pages.remove(at: 0)
                 page.item = itemAfter
@@ -313,7 +314,7 @@ extension GalleryViewController: UIScrollViewDelegate {
                     guard self != nil else {
                         return
                     }
-                    let itemsAfter = MessageDAO.shared.getPhotos(conversationId: conversationId, location: lastItem, count: itemsCountPerFetch)
+                    let itemsAfter = MessageDAO.shared.getGalleryItems(conversationId: conversationId, location: lastItem, count: itemsCountPerFetch)
                     DispatchQueue.main.sync {
                         if itemsAfter.count > 0 {
                             self?.items += itemsAfter
@@ -323,7 +324,6 @@ extension GalleryViewController: UIScrollViewDelegate {
                 }
             }
         } else if x < pageSize.width * 0.5 && x < lastContentOffsetX, let item = pages[0].item {
-            // Scrolling leftwards
             if let itemBefore = items.element(before: item) {
                 let page = pages.remove(at: 2)
                 page.item = itemBefore
@@ -336,7 +336,7 @@ extension GalleryViewController: UIScrollViewDelegate {
                     guard self != nil else {
                         return
                     }
-                    let itemsBefore = MessageDAO.shared.getPhotos(conversationId: conversationId, location: firstItem, count: -itemsCountPerFetch)
+                    let itemsBefore = MessageDAO.shared.getGalleryItems(conversationId: conversationId, location: firstItem, count: -itemsCountPerFetch)
                     DispatchQueue.main.sync {
                         if itemsBefore.count > 0 {
                             self?.items.insert(contentsOf: itemsBefore, at: 0)
@@ -346,6 +346,9 @@ extension GalleryViewController: UIScrollViewDelegate {
                     }
                 }
             }
+        }
+        for page in pages {
+            page.isFocused = page == currentPage
         }
         lastContentOffsetX = x
     }
@@ -362,6 +365,7 @@ extension GalleryViewController: UIScrollViewDelegate {
     
 }
 
+// MARK: - UIGestureRecognizerDelegate
 extension GalleryViewController: UIGestureRecognizerDelegate {
     
     var pageDidReachTopEdge: Bool {
@@ -388,6 +392,7 @@ extension GalleryViewController: UIGestureRecognizerDelegate {
     
 }
 
+// MARK: - Private works
 extension GalleryViewController {
     
     private var currentItemIsVerticallyOversized: Bool {
@@ -422,19 +427,20 @@ extension GalleryViewController {
         }
         isLoadingBefore = true
         isLoadingAfter = true
+        pages[0].isFocused = true
         pages[0].item = item
         scrollViewContentView.frame = CGRect(origin: .zero, size: pageSize)
-        scrollView.contentSize = pageSize
         lastContentOffsetX = 0
         scrollView.contentOffset.x = 0
+        scrollView.contentSize = pageSize
         let conversationId = self.conversationId!
         let itemsCountPerFetch = self.itemsCountPerFetch
         queue.async { [weak self] in
             guard self != nil else {
                 return
             }
-            let itemsBefore = MessageDAO.shared.getPhotos(conversationId: conversationId, location: item, count: -itemsCountPerFetch / 2)
-            let itemsAfter = MessageDAO.shared.getPhotos(conversationId: conversationId, location: item, count: itemsCountPerFetch / 2)
+            let itemsBefore = MessageDAO.shared.getGalleryItems(conversationId: conversationId, location: item, count: -itemsCountPerFetch / 2)
+            let itemsAfter = MessageDAO.shared.getGalleryItems(conversationId: conversationId, location: item, count: itemsCountPerFetch / 2)
             DispatchQueue.main.sync {
                 self?.items = itemsBefore + [item] + itemsAfter
                 self?.reloadPages()
@@ -465,30 +471,44 @@ extension GalleryViewController {
                 pageItems.append(afterAfter)
             }
         }
+        if let loadedIndex = pageItems.index(of: item) {
+            // Reuse loaded page
+            pages.swapAt(0, loadedIndex)
+            layoutPages()
+        }
         let scrollViewContentWidth = CGFloat(pageItems.count) * (pageSize.width + separatorWidth)
         scrollViewContentView.frame = CGRect(x: 0, y: 0, width: scrollViewContentWidth, height: pageSize.height)
         scrollView.contentSize = scrollViewContentView.frame.size
         lastContentOffsetX = CGFloat(initialIndex) * (pageSize.width + separatorWidth)
         scrollView.contentOffset.x = lastContentOffsetX
+
         for (index, item) in pageItems.enumerated() {
+            pages[index].isFocused = index == initialIndex
             pages[index].item = item
         }
     }
     
-    private func prepareTransitionDummyViewForDismissing() {
-        transitionDummyView.transform = .identity
-        let image = currentPage.imageView.image
-        transitionDummyView.imageView.image = image
-        if let image = image {
-            transitionDummyView.frame.size = image.size
-            transitionDummyView.imageView.frame = CGRect(origin: .zero, size: image.size)
-            transitionDummyView.transform = CGAffineTransform(scaleX: currentPage.imageView.frame.width / image.size.width,
-                                                              y: currentPage.imageView.frame.height / image.size.height)
-            transitionDummyView.frame.origin = currentPage.imageView.convert(CGPoint.zero, to: view)
+    private func prepareTransitionViewForDismissing() {
+        if item?.category == .image || item?.url == nil {
+            imageClippingTransitionView.transform = .identity
+            let image = currentPage.imageView.image
+            imageClippingTransitionView.imageView.image = image
+            if let image = image {
+                imageClippingTransitionView.frame.size = image.size
+                imageClippingTransitionView.imageView.frame = CGRect(origin: .zero, size: image.size)
+                imageClippingTransitionView.transform = CGAffineTransform(scaleX: currentPage.imageView.frame.width / image.size.width,
+                                                                          y: currentPage.imageView.frame.height / image.size.height)
+                imageClippingTransitionView.frame.origin = currentPage.imageView.convert(CGPoint.zero, to: view)
+            } else {
+                imageClippingTransitionView.frame = view.bounds
+                imageClippingTransitionView.imageView.frame = view.bounds
+            }
+            transitionView = imageClippingTransitionView
         } else {
-            transitionDummyView.frame = view.bounds
-            transitionDummyView.imageView.frame = view.bounds
+            currentPage.videoView.removeFromSuperview()
+            transitionView = currentPage.videoView
         }
+        view.addSubview(transitionView)
     }
     
     private func updateMessage(messageId: String) {
@@ -517,7 +537,7 @@ extension GalleryViewController {
         guard let page = pages.first(where: { $0.item?.messageId == messageId }) else {
             return
         }
-        page.operationButton.style = .busy(progress)
+        page.operationButton.style = .busy(progress: progress)
     }
     
     private func updateMediaStatus(messageId: String, mediaStatus: MediaStatus) {
@@ -532,6 +552,7 @@ extension GalleryViewController {
     
 }
 
+// MARK: - Embedded classes
 extension GalleryViewController {
     
     enum Transition {

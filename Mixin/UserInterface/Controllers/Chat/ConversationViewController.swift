@@ -35,8 +35,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
     
     @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var inputTextViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var inputTextViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewLeadingShrinkConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewLeadingExpandedConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperBottomConstraint: NSLayoutConstraint!
@@ -78,6 +81,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var asset: AssetItem?
     private var quoteMessageId: String?
     private var quotingMessageId: String?
+    private var didInitData = false
     private var isShowingMenu = false
     private var isShowingStickerPanel = false
     private var isAppearanceAnimating = true
@@ -175,6 +179,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         backgroundImageView.snp.makeConstraints { (make) in
             make.height.equalTo(UIScreen.main.bounds.height)
         }
+        tableView.snp.makeConstraints { (make) in
+            make.height.equalTo(UIScreen.main.bounds.height)
+        }
         showLoading()
         if let swipeBackRecognizer = navigationController?.interactivePopGestureRecognizer {
             tableView.gestureRecognizers?.forEach {
@@ -203,15 +210,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         tableView.delegate = self
         tableView.actionDelegate = self
         tableView.viewController = self
-        let bottomSafeAreaInset: CGFloat
-        if #available(iOS 11.0, *) {
-            bottomSafeAreaInset = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
-        } else {
-            view.layoutIfNeeded()
-            bottomSafeAreaInset = 0
-        }
-        tableView.contentInset.bottom = inputWrapperView.frame.height + bottomSafeAreaInset + MessageViewModel.bottomSeparatorHeight
-        tableView.scrollIndicatorInsets.bottom = inputWrapperView.frame.height
         keyboardManager.delegate = self
         inputTextView.delegate = self
         inputTextView.layer.cornerRadius = inputTextViewHeightConstraint.constant / 2
@@ -221,15 +219,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
-        dataSource.initData {
-            self.updateAccessoryButtons(animated: false)
-        }
         updateMoreMenuFixedJobs()
         updateMoreMenuApps()
         updateStrangerTipsView()
         updateBottomView()
         inputWrapperView.isHidden = false
-        loadDraft()
         updateNavigationBar()
         reloadParticipants()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
@@ -240,7 +234,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddedMessagesOutsideVisibleBounds(_:)), name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
-        hideLoading()
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeStatusBarFrame(_:)), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
     }
 
     @objc func showReportMenuAction() {
@@ -314,6 +308,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         super.viewSafeAreaInsetsDidChange()
         if inputWrapperBottomConstraint.constant == 0 {
             inputWrapperBottomConstraint.constant = bottomSafeAreaInset
+            updateTableViewContentInset()
         }
     }
     
@@ -335,6 +330,22 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isAppearanceAnimating = true
+        if !didInitData {
+            didInitData = true
+            if let draft = CommonUserDefault.shared.getConversationDraft(self.conversationId) {
+                inputTextView.text = draft
+                view.layoutIfNeeded()
+                UIView.performWithoutAnimation {
+                    textViewDidChange(inputTextView)
+                }
+            } else {
+                updateTableViewContentInset()
+            }
+            dataSource.initData {
+                self.updateAccessoryButtons(animated: false)
+                self.hideLoading()
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -357,15 +368,15 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         saveDraft()
         MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
-            if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath) {
+            if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath), tableView.rectForRow(at: lastIndexPath).origin.y < tableView.contentOffset.y + dataSource.layoutSize.height {
                 ConversationViewController.positions[conversationId] = nil
             } else {
                 for indexPath in visibleIndexPaths {
-                    guard let message = dataSource?.viewModel(for: indexPath)?.message, !message.isExtensionMessage else {
+                    guard let message = dataSource?.viewModel(for: indexPath)?.message, message.category != MessageCategory.EXT_UNREAD.rawValue else {
                         continue
                     }
                     let rect = tableView.rectForRow(at: indexPath)
-                    let offset = tableView.contentOffset.y - rect.origin.y
+                    let offset = tableView.contentInset.top + tableView.contentOffset.y - rect.origin.y
                     ConversationViewController.positions[conversationId] = Position(messageId: message.messageId, offset: offset)
                     break
                 }
@@ -735,6 +746,10 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         unreadBadgeValue += count
     }
     
+    @objc func didChangeStatusBarFrame(_ notification: Notification) {
+        updateTableViewContentInset()
+    }
+    
     @objc func applicationWillTerminate(_ notification: Notification) {
         saveDraft()
     }
@@ -876,8 +891,9 @@ extension ConversationViewController: UITextViewDelegate {
             inputTextViewHeightConstraint.constant = newHeight
             let newContentOffset = tableView.contentOffset.y + heightDifference
             UIView.animate(withDuration: animationDuration, animations: {
+                self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
-                self.updateBottomInset()
+                self.updateTableViewContentInset()
                 self.tableView.setContentOffsetYSafely(newContentOffset)
             }, completion: { (_) in
                 self.keyboardManager.inputAccessoryViewHeight = self.inputWrapperView.frame.height
@@ -891,7 +907,7 @@ extension ConversationViewController: UITextViewDelegate {
 extension ConversationViewController: ConnectionHintViewDelegate {
     
     func animateAlongsideConnectionHintView(_ view: ConnectionHintView, changingHeightWithDifference heightDifference: CGFloat) {
-        tableView.contentOffset.y += heightDifference
+        tableView.contentInset.top += heightDifference
     }
     
 }
@@ -1353,7 +1369,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
         lastInputWrapperBottomConstant = inputWrapperBottomConstraint.constant
         view.layoutIfNeeded()
         let contentOffsetY = tableView.contentOffset.y
-        updateBottomInset()
+        updateTableViewContentInset()
         if !isShowingQuotePreviewView && shouldChangeTableViewContentOffset {
             tableView.setContentOffsetYSafely(contentOffsetY - inputWrapperDisplacement)
         }
@@ -1486,7 +1502,7 @@ extension ConversationViewController {
             }
             self.view.layoutIfNeeded()
             let contentOffsetY = self.tableView.contentOffset.y
-            self.updateBottomInset()
+            self.updateTableViewContentInset()
             self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
         }) { (_) in
             self.isShowingStickerPanel = !self.isShowingStickerPanel
@@ -1540,11 +1556,26 @@ extension ConversationViewController {
         }
     }
     
-    private func updateBottomInset() {
+    private func updateTableViewContentInset() {
+        var inset: UIEdgeInsets
+        if #available(iOS 11.0, *), let safeAreaInsets = UIApplication.shared.keyWindow?.rootViewController?.view.safeAreaInsets {
+            inset = safeAreaInsets
+            let statusBarHeight = max(statusBarPlaceholderHeightConstraint.constant, UIApplication.shared.statusBarFrame.height)
+            inset.top = max(statusBarHeight, inset.top)
+        } else {
+            inset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
+        }
+        inset.top += titleViewHeightConstraint.constant
         let quotePreviewViewHeight = isShowingQuotePreviewView ? quotePreviewView.frame.height : 0
-        let bottomOutsideWrapperHeight = inputWrapperBottomConstraint.constant + inputWrapperView.frame.height
-        tableView.contentInset.bottom = bottomOutsideWrapperHeight + MessageViewModel.bottomSeparatorHeight + quotePreviewViewHeight
-        tableView.scrollIndicatorInsets.bottom = bottomOutsideWrapperHeight
+        let inputWrapperHeight = ceil(inputTextViewTopConstraint.constant
+            + inputTextViewHeightConstraint.constant
+            + inputTextViewBottomConstraint.constant)
+        inset.bottom = max(inputWrapperBottomConstraint.constant, inset.bottom)
+            + quotePreviewViewHeight
+            + inputWrapperHeight
+        tableView.scrollIndicatorInsets = inset
+        inset.bottom += MessageViewModel.bottomSeparatorHeight
+        tableView.contentInset = inset
     }
     
     private func setQuoteViewHidden(_ hidden: Bool) {
@@ -1559,7 +1590,7 @@ extension ConversationViewController {
         stickerKeyboardSwitcherButton.isHidden = !hidden
         sendButton.isHidden = false
         UIView.animate(withDuration: animationDuration) {
-            self.updateBottomInset()
+            self.updateTableViewContentInset()
             self.view.layoutIfNeeded()
         }
     }
@@ -1628,14 +1659,6 @@ extension ConversationViewController {
             return
         }
         CommonUserDefault.shared.setConversationDraft(conversationId, draft: trimmedMessageDraft)
-    }
-    
-    private func loadDraft() {
-        let draft = CommonUserDefault.shared.getConversationDraft(conversationId)
-        if !draft.isEmpty {
-            inputTextView.text = draft
-            textViewDidChange(inputTextView)
-        }
     }
     
     private func reloadParticipants() {

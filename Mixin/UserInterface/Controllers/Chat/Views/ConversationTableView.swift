@@ -57,8 +57,6 @@ class ConversationTableView: UITableView {
     weak var viewController: ConversationViewController?
     weak var actionDelegate: ConversationTableViewActionDelegate?
     
-    private var longPressRecognizer: UILongPressGestureRecognizer!
-    
     override var canBecomeFirstResponder: Bool {
         return true
     }
@@ -72,6 +70,12 @@ class ConversationTableView: UITableView {
             }
         }
         return headerViews
+    }
+    
+    private var longPressRecognizer: UILongPressGestureRecognizer!
+    private var bottomContentOffset: CGPoint {
+        let y = contentSize.height + contentInset.bottom - frame.height
+        return CGPoint(x: contentOffset.x, y: max(-contentInset.top, y))
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -180,18 +184,13 @@ class ConversationTableView: UITableView {
     }
     
     func scrollToBottom(animated: Bool) {
-        guard contentSize.height > bounds.height else {
-            return
-        }
-        let bottomOffset = CGPoint(x: contentOffset.x,
-                                   y: contentSize.height - bounds.height + contentInset.bottom)
-        setContentOffset(bottomOffset, animated: animated)
+        setContentOffset(bottomContentOffset, animated: animated)
     }
     
     func setContentOffsetYSafely(_ y: CGFloat) {
-        let maxContentOffsetY = contentSize.height - (frame.height - contentInset.vertical)
-        if maxContentOffsetY > 0 {
-            contentOffset.y = min(maxContentOffsetY, max(0, y))
+        let bottomContentOffsetY = bottomContentOffset.y
+        if bottomContentOffsetY > 0 {
+            contentOffset.y = min(bottomContentOffsetY, max(-contentInset.top, y))
         }
     }
     

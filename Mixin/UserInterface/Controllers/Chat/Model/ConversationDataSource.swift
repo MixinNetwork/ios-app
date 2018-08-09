@@ -169,10 +169,16 @@ class ConversationDataSource {
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
             var (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
-            if shouldInsertEncryptionHint, let firstDate = dates.first {
+            if shouldInsertEncryptionHint {
                 let hint = MessageItem.encryptionHintMessage(conversationId: conversationId)
+                messages.insert(hint, at: 0)
                 let encryptionHintViewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
-                viewModels[firstDate]?.insert(encryptionHintViewModel, at: 0)
+                if let firstDate = dates.first {
+                    viewModels[firstDate]?.insert(encryptionHintViewModel, at: 0)
+                } else if let firstDate = self.dates.first {
+                    dates = [firstDate]
+                    viewModels[firstDate] = [encryptionHintViewModel]
+                }
             }
             if let lastDate = dates.last, let viewModelsBeforeInsertion = self.viewModels[lastDate] {
                 let messagesBeforeInsertion = Array(viewModelsBeforeInsertion.prefix(2)).map({ $0.message })

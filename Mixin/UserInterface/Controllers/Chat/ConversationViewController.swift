@@ -338,6 +338,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                 UIView.performWithoutAnimation {
                     textViewDidChange(inputTextView)
                 }
+                inputTextView.contentOffset.y = inputTextView.contentSize.height - inputTextView.frame.height
             } else {
                 updateTableViewContentInset()
             }

@@ -8,12 +8,9 @@ extension URL {
 
     func getKeyVals() -> Dictionary<String, String>? {
         var results = [String: String]()
-        if let keyValues = self.query?.components(separatedBy: "&"), keyValues.count > 0 {
-            for pair in keyValues {
-                let kv = pair.components(separatedBy: "=")
-                if kv.count > 1 {
-                    results.updateValue(kv[1], forKey: kv[0])
-                }
+        if let components = URLComponents(url: self, resolvingAgainstBaseURL: true), let queryItems = components.queryItems {
+            for item in queryItems {
+                results.updateValue(item.value ?? "", forKey: item.name)
             }
         }
         return results

@@ -11,7 +11,7 @@ struct Sticker: BaseCodable {
     let assetType: String
     let assetWidth: Int
     let assetHeight: Int
-    let lastUseAt: String?
+    var lastUseAt: String?
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Sticker

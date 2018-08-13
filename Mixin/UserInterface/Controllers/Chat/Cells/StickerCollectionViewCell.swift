@@ -3,7 +3,15 @@ import FLAnimatedImage
 
 class StickerCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var imageView: FLAnimatedImageView!
+    lazy var imageView: FLAnimatedImageView = {
+        let view = FLAnimatedImageView()
+        addSubview(view)
+        view.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
     
     override func prepareForReuse() {
         super.prepareForReuse()

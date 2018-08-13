@@ -19,7 +19,7 @@ class StickerManagerViewController: UICollectionViewController {
         super.viewDidLoad()
         fetchStickers()
 
-        NotificationCenter.default.addObserver(forName: .StickerDidChange, object: nil, queue: .main) { [weak self] (_) in
+        NotificationCenter.default.addObserver(forName: .FavoriteStickersDidChange, object: nil, queue: .main) { [weak self] (_) in
             self?.fetchStickers()
         }
     }

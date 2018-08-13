@@ -317,9 +317,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         isAppearanceAnimating = true
         if !didInitData {
             didInitData = true
+            view.layoutIfNeeded()
             if let draft = CommonUserDefault.shared.getConversationDraft(self.conversationId) {
                 inputTextView.text = draft
-                view.layoutIfNeeded()
                 UIView.performWithoutAnimation {
                     textViewDidChange(inputTextView)
                 }

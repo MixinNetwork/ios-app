@@ -189,7 +189,7 @@ class ConversationTableView: UITableView {
     
     func setContentOffsetYSafely(_ y: CGFloat) {
         let bottomContentOffsetY = bottomContentOffset.y
-        if bottomContentOffsetY > 0 {
+        if bottomContentOffsetY > -contentInset.top {
             contentOffset.y = min(bottomContentOffsetY, max(-contentInset.top, y))
         }
     }

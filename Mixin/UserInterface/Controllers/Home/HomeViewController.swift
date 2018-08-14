@@ -2,9 +2,12 @@ import UIKit
 import UserNotifications
 import Bugsnag
 import AVFoundation
+import StoreKit
 
 class HomeViewController: UIViewController {
 
+    static var hasTriedToRequestReview = false
+    
     @IBOutlet weak var searchContainerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var guideView: UIView!
@@ -69,6 +72,20 @@ class HomeViewController: UIViewController {
         showBottomNav()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if #available(iOS 10.3, *) {
+            let sevenDays: Double = 7 * 24 * 60 * 60
+            let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
+                && CommonUserDefault.shared.hasPerformedTransfer
+                && Date().timeIntervalSince1970 - CommonUserDefault.shared.firstLaunchTimeIntervalSince1970 > sevenDays
+            if shouldRequestReview {
+                SKStoreReviewController.requestReview()
+            }
+            HomeViewController.hasTriedToRequestReview = true
+        }
+    }
+    
     private func fetchConversations() {
         refreshing = true
         needRefresh = false

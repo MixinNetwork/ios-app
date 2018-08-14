@@ -236,6 +236,7 @@ extension PayView: PinFieldDelegate {
         if isWithdrawal {
             WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
         } else {
+            CommonUserDefault.shared.hasPerformedTransfer = true
             AssetAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
         }
     }

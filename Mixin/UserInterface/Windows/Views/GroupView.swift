@@ -87,9 +87,9 @@ class GroupView: CornerView {
 
         avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
         nameLabel.text = conversation.name
+        announcementLabel.text = conversation.announcement
         announcementLabel.mode = initialAnnouncementMode
         announcementLabel.isHidden = conversation.announcement.isEmpty
-        announcementLabel.text = conversation.announcement
         announcementScrollViewHeightConstraint.constant = announcementLabel.intrinsicContentSize.height
         announcementScrollViewBottomConstraint.constant = conversation.announcement.isEmpty ? 15 : 30
     }

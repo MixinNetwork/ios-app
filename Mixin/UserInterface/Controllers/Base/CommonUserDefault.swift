@@ -19,6 +19,9 @@ class CommonUserDefault {
     private var keyCameraQRCodeTips: String {
         return "default_camera_qrcode_tips_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyHasPerformedQRCodeScanning : String {
+        return "has_scanned_qr_code_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
 
@@ -32,6 +35,15 @@ class CommonUserDefault {
         }
     }
 
+    var hasPerformedQRCodeScanning: Bool {
+        get {
+            return session.bool(forKey: keyHasPerformedQRCodeScanning)
+        }
+        set {
+            session.set(newValue, forKey: keyHasPerformedQRCodeScanning)
+        }
+    }
+    
     private var conversationDraft: [String: Any] {
         get {
             return session.dictionary(forKey: keyConversationDraft) ?? [:]

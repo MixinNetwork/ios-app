@@ -559,7 +559,7 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
 
     @objc func tapAction(_ recognizer: UIPanGestureRecognizer) {
         hideNotification()
-
+        CommonUserDefault.shared.hasPerformedQRCodeScanning = true
         if let url = URL(string: detectText), UrlWindow.checkUrl(url: url) {
             return
         }

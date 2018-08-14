@@ -9,6 +9,8 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var guideView: UIView!
     @IBOutlet weak var bottomNavView: UIView!
+    @IBOutlet weak var cameraButton: BouncingButton!
+    @IBOutlet weak var qrcodeImageView: UIImageView!
     
     @IBOutlet weak var bottomNavConstraint: NSLayoutConstraint!
 
@@ -60,7 +62,7 @@ class HomeViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        qrcodeImageView.isHidden = CommonUserDefault.shared.hasPerformedQRCodeScanning
         if needRefresh {
             fetchConversations()
         }

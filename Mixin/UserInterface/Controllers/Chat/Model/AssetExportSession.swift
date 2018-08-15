@@ -17,6 +17,7 @@ class AssetExportSession {
     private(set) var progress: Double = 0
     
     private let queue = DispatchQueue(label: "one.mixin.asset.export")
+    private let epsilon = CGFloat(Double.ulpOfOne)
     
     private var completionHandler: CompletionHandler?
     private var reader: AVAssetReader!
@@ -63,18 +64,27 @@ class AssetExportSession {
                     var naturalSize = track.naturalSize
                     var transform = track.preferredTransform
                     
-                    // Workaround for AVFoundation's bug
-                    if transform.tx == -560 {
-                        transform.tx = 0
+                    let rotation = atan2(transform.b, transform.a)
+                    if abs(rotation - .pi / 2) < epsilon {
+                        if abs(transform.tx) < epsilon {
+                            transform.tx = naturalSize.height
+                        }
+                    } else if abs(rotation + .pi / 2) < epsilon {
+                        if abs(transform.ty) < epsilon {
+                            transform.ty = naturalSize.width
+                        }
+                    } else if abs(rotation - .pi) < epsilon {
+                        if abs(transform.tx) < epsilon {
+                            transform.tx = naturalSize.width
+                        }
+                        if abs(transform.ty) < epsilon {
+                            transform.ty = naturalSize.height
+                        }
                     }
-                    if transform.ty == -560 {
-                        transform.ty = 0
-                    }
-                    
-                    let rotation = atan2(transform.b, transform.a) * 180 / .pi
-                    if abs(rotation - 90) < 0.1 || abs(rotation + 90) < 0.1 {
+                    if abs(rotation - .pi / 2) < epsilon || abs(rotation + .pi / 2) < epsilon {
                         swap(&naturalSize.width, &naturalSize.height)
                     }
+                    
                     composition.renderSize = naturalSize
                     
                     let targetWidth = CGFloat((videoSettings[AVVideoWidthKey] as! NSNumber).floatValue)

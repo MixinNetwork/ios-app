@@ -37,6 +37,8 @@ class WebWindow: BottomSheetView {
     private var minimumWebViewHeight: CGFloat = 428
     private var scrollViewBeganDraggingOffset = CGPoint.zero
     private var imageDownloadTask: URLSessionDataTask?
+    private var scrollViewContentOffsetYHasBeenGreaterThanZero = false
+    private var titleBarDidBecomeVisible = true
     
     private lazy var maximumWebViewHeight: CGFloat = {
         let minStatusBarHeight: CGFloat = 20
@@ -268,16 +270,23 @@ extension WebWindow: WKScriptMessageHandler {
 extension WebWindow: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.isTracking {
+        if scrollView.isTracking && scrollViewBeganDraggingOffset.y < 0.1 {
             if scrollView.panGestureRecognizer.velocity(in: scrollView).y < 0 {
-                let newHeight = webViewHeight + (scrollView.contentOffset.y - scrollViewBeganDraggingOffset.y)
-                if newHeight <= maximumWebViewHeight {
-                    webViewHeight = newHeight
-                    scrollView.contentOffset = scrollViewBeganDraggingOffset
-                    isMaximized = newHeight > medianWebViewHeight
+                if scrollView.contentOffset.y > 0 {
+                    let newHeight = webViewHeight + (scrollView.contentOffset.y - scrollViewBeganDraggingOffset.y)
+                    if newHeight <= maximumWebViewHeight {
+                        webViewHeight = newHeight
+                        scrollView.contentOffset = scrollViewBeganDraggingOffset
+                    } else if webViewHeight < maximumWebViewHeight {
+                        webViewHeight = maximumWebViewHeight
+                    }
+                    isMaximized = webViewHeight > medianWebViewHeight
+                    if abs(webViewHeight - maximumWebViewHeight) < 0.1 && scrollView.contentOffset.y > 0 {
+                        scrollViewContentOffsetYHasBeenGreaterThanZero = true
+                    }
                 }
-            } else if scrollView.contentOffset.y < 0.1 {
-                scrollViewBeganDraggingOffset = .zero
+            } else if scrollView.contentOffset.y < 0.1 && (!scrollViewContentOffsetYHasBeenGreaterThanZero || titleBarDidBecomeVisible) {
+                titleBarDidBecomeVisible = true
                 webViewHeight += scrollView.contentOffset.y
                 scrollView.contentOffset.y = 0
                 isMaximized = webViewHeight > medianWebViewHeight
@@ -287,10 +296,12 @@ extension WebWindow: UIScrollViewDelegate {
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        scrollViewContentOffsetYHasBeenGreaterThanZero = false
         swipeToZoomAnimator?.stopAnimation(true)
         swipeToZoomAnimator = nil
         scrollViewBeganDraggingOffset = scrollView.contentOffset
         webViewHeight = webViewWrapperView.frame.height
+        titleBarDidBecomeVisible = !isMaximized
     }
 
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
@@ -302,13 +313,13 @@ extension WebWindow: UIScrollViewDelegate {
         } else {
             if abs(velocity.y) > 0.01 {
                 let suggestedWindowMaximum = velocity.y > 0
-                if isMaximized != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
+                if suggestedWindowMaximum || (scrollViewBeganDraggingOffset.y < 0.1 && targetContentOffset.pointee.y < 0) {
                     isMaximized = suggestedWindowMaximum
                 }
             }
             let webViewHeight = (isMaximized ? maximumWebViewHeight : minimumWebViewHeight)
             webViewWrapperHeightConstraint.constant = webViewHeight
-            let animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeOut, animations: {
+            let animator = UIViewPropertyAnimator(duration: 0.3, curve: .easeOut, animations: {
                 self.layoutIfNeeded()
                 self.updateBackgroundColor()
             })

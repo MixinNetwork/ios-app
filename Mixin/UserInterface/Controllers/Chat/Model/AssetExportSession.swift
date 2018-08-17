@@ -64,22 +64,29 @@ class AssetExportSession {
                 var transform = track.preferredTransform
                 
                 let rotation = atan2(transform.b, transform.a)
-                if abs(rotation - .pi / 2) < epsilon {
-                    if abs(transform.tx) < epsilon {
-                        transform.tx = naturalSize.height
-                    }
-                } else if abs(rotation + .pi / 2) < epsilon {
-                    if abs(transform.ty) < epsilon {
-                        transform.ty = naturalSize.width
-                    }
-                } else if abs(rotation - .pi) < epsilon {
-                    if abs(transform.tx) < epsilon {
-                        transform.tx = naturalSize.width
-                    }
-                    if abs(transform.ty) < epsilon {
-                        transform.ty = naturalSize.height
+                if transform.tx == -560 { // Workaround for iPhone's front camera
+                    transform.tx = 0
+                } else if transform.ty == -560 {
+                    transform.ty = 0
+                } else {
+                    if abs(rotation - .pi / 2) < epsilon {
+                        if abs(transform.tx) < epsilon {
+                            transform.tx = naturalSize.height
+                        }
+                    } else if abs(rotation + .pi / 2) < epsilon {
+                        if abs(transform.ty) < epsilon {
+                            transform.ty = naturalSize.width
+                        }
+                    } else if abs(rotation - .pi) < epsilon {
+                        if abs(transform.tx) < epsilon {
+                            transform.tx = naturalSize.width
+                        }
+                        if abs(transform.ty) < epsilon {
+                            transform.ty = naturalSize.height
+                        }
                     }
                 }
+                
                 if abs(rotation - .pi / 2) < epsilon || abs(rotation + .pi / 2) < epsilon {
                     swap(&naturalSize.width, &naturalSize.height)
                 }

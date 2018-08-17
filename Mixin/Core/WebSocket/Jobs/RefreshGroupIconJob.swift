@@ -30,7 +30,6 @@ class RefreshGroupIconJob: AsynchronousJob {
             return false
         }
 
-        let group = DispatchGroup()
         var images = [UIImage]()
         let relativeTextSize: [CGSize]
         let rectangleSize = CGSize(width: rectangleRect.width * sqrt(2) / 2, height: rectangleRect.height * sqrt(2))
@@ -47,18 +46,16 @@ class RefreshGroupIconJob: AsynchronousJob {
         default:
             relativeTextSize = [squareSize, squareSize, squareSize, squareSize]
         }
+        let semaphore = DispatchSemaphore(value: 0)
         for (index, participant) in participants.enumerated() {
             if !participant.userAvatarUrl.isEmpty, let url = URL(string: participant.userAvatarUrl) {
-                group.enter()
                 SDWebImageManager.shared().loadImage(with: url, options: .lowPriority, progress: nil, completed: { (image, data, error, cacheType, finished, imageURL) in
-                    defer {
-                        group.leave()
+                    if error == nil, let image = image {
+                        images.append(image)
                     }
-                    guard error == nil, let image = image else {
-                        return
-                    }
-                    images.append(image)
+                    semaphore.signal()
                 })
+                semaphore.wait()
             } else {
                 let colorIndex = participant.userIdentityNumber.integerValue % 24 + 1
                 if let image = UIImage(named: "color\(colorIndex)"), let firstLetter = participant.userFullName.first {
@@ -75,19 +72,10 @@ class RefreshGroupIconJob: AsynchronousJob {
                 }
             }
         }
-
-        group.notify(queue: .global()) { [weak self] in
-            guard let weakSelf = self else {
-                return
-            }
-            guard images.count == participantIds.count else {
-                weakSelf.finishJob()
-                return
-            }
-
+        
+        if !images.isEmpty {
             do {
-                let conversationId = weakSelf.conversationId
-                let groupImage = images.count == 1 ? images[0] : weakSelf.puzzleImages(images: images)
+                let groupImage = images.count == 1 ? images[0] : puzzleImages(images: images)
                 try? FileManager.default.removeItem(atPath: imageUrl.path)
                 if let data = UIImagePNGRepresentation(groupImage) {
                     try data.write(to: imageUrl)
@@ -96,8 +84,9 @@ class RefreshGroupIconJob: AsynchronousJob {
             } catch {
                 Bugsnag.notifyError(error)
             }
-            weakSelf.finishJob()
         }
+
+        finishJob()
 
         return true
     }

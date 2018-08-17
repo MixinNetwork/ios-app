@@ -80,7 +80,9 @@ class HomeViewController: UIViewController {
                 && CommonUserDefault.shared.hasPerformedTransfer
                 && Date().timeIntervalSince1970 - CommonUserDefault.shared.firstLaunchTimeIntervalSince1970 > sevenDays
             if shouldRequestReview {
-                SKStoreReviewController.requestReview()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                    SKStoreReviewController.requestReview()
+                })
             }
             HomeViewController.hasTriedToRequestReview = true
         }

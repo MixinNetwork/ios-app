@@ -118,7 +118,7 @@ class ForwardViewController: UIViewController {
     internal func backToConversation(_ conversations: [ForwardUser]) {
         if let conversation = conversations.first, conversations.count == 1 {
             if conversation.conversationId.isEmpty {
-                if conversation.conversationId == message.conversationId {
+                if conversation.conversationId == message?.conversationId {
                     navigationController?.popViewController(animated: true)
                 } else {
                     navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: conversation.toUser()))

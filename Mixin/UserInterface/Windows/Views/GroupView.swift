@@ -31,7 +31,7 @@ class GroupView: CornerView {
     private var isAdmin = false
 
     private lazy var participantViews = [participantView1, participantView2, participantView3, participantView4]
-
+    private lazy var participantsTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(participentsAction(_:)))
     private lazy var changeNameController: UIAlertController = {
         let vc = UIApplication.currentActivity()!.alertInput(title: Localized.CONTACT_TITLE_CHANGE_NAME, placeholder: Localized.PLACEHOLDER_NEW_NAME, handler: { [weak self] (_) in
             self?.changeNameAction()
@@ -47,7 +47,7 @@ class GroupView: CornerView {
     override func awakeFromNib() {
         super.awakeFromNib()
         announcementLabel.delegate = self
-        participantsView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(participentsAction(_:))))
+        participantsView.addGestureRecognizer(participantsTapRecognizer)
     }
     
     func render(codeId: String, conversation: ConversationResponse, ownerUser: UserItem, participants: [ParticipantUser], alreadyInTheGroup: Bool, superView: BottomSheetView) {
@@ -84,12 +84,13 @@ class GroupView: CornerView {
         joinButton.isHidden = alreadyInTheGroup
         moreButton.isHidden = !alreadyInTheGroup || showViewGroup
         viewButton.isHidden = !showViewGroup
-
+        participantsTapRecognizer.isEnabled = alreadyInTheGroup
+        
         avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
         nameLabel.text = conversation.name
+        announcementLabel.text = conversation.announcement
         announcementLabel.mode = initialAnnouncementMode
         announcementLabel.isHidden = conversation.announcement.isEmpty
-        announcementLabel.text = conversation.announcement
         announcementScrollViewHeightConstraint.constant = announcementLabel.intrinsicContentSize.height
         announcementScrollViewBottomConstraint.constant = conversation.announcement.isEmpty ? 15 : 30
     }

@@ -40,7 +40,7 @@
                     <rect key="frame" x="30" y="145.5" width="325" height="50.5"/>
                     <subviews>
                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="f3U-ow-eCY" customClass="CollapsingLabel" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="325" height="128"/>
+                            <rect key="frame" x="6" y="0.0" width="313" height="128"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                     </subviews>
@@ -48,10 +48,10 @@
                         <constraint firstItem="f3U-ow-eCY" firstAttribute="top" secondItem="Z1B-ee-Nrm" secondAttribute="top" id="7lZ-wh-2md"/>
                         <constraint firstAttribute="bottom" secondItem="f3U-ow-eCY" secondAttribute="bottom" id="Zb4-i6-qs2"/>
                         <constraint firstAttribute="height" priority="750" constant="60" id="egz-w2-F17"/>
-                        <constraint firstAttribute="trailing" secondItem="f3U-ow-eCY" secondAttribute="trailing" id="fqi-xF-to0"/>
-                        <constraint firstItem="f3U-ow-eCY" firstAttribute="width" secondItem="Z1B-ee-Nrm" secondAttribute="width" id="kzE-n4-7yp"/>
+                        <constraint firstAttribute="trailing" secondItem="f3U-ow-eCY" secondAttribute="trailing" constant="6" id="fqi-xF-to0"/>
+                        <constraint firstItem="f3U-ow-eCY" firstAttribute="width" secondItem="Z1B-ee-Nrm" secondAttribute="width" constant="-12" id="kzE-n4-7yp"/>
                         <constraint firstAttribute="height" relation="lessThanOrEqual" constant="320" id="qjq-S0-KGD"/>
-                        <constraint firstItem="f3U-ow-eCY" firstAttribute="leading" secondItem="Z1B-ee-Nrm" secondAttribute="leading" id="udM-CY-0jP"/>
+                        <constraint firstItem="f3U-ow-eCY" firstAttribute="leading" secondItem="Z1B-ee-Nrm" secondAttribute="leading" constant="6" id="udM-CY-0jP"/>
                     </constraints>
                 </scrollView>
                 <stackView opaque="NO" alpha="0.84999999999999998" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hww-Vd-bce">

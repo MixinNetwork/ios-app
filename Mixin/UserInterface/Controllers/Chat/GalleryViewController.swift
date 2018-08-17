@@ -148,7 +148,7 @@ class GalleryViewController: UIViewController {
         if let url = currentPage.urlFromQRCode {
             alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
                 if !UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
-                    SwiftMessages.showToast(message: Localized.NOT_MIXIN_QR_CODE, backgroundColor: .hintRed)
+                    RecognizeWindow.instance().presentWindow(text: url.absoluteString)
                 }
             }))
         }

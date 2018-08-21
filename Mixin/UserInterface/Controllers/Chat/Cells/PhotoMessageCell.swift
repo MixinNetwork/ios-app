@@ -24,7 +24,8 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         if let viewModel = viewModel as? PhotoMessageViewModel {
             renderOperationButtonAndExpiredHintLabel(viewModel: viewModel)
             if let mediaUrl = viewModel.message.mediaUrl, !mediaUrl.isEmpty {
-                contentImageView.sd_setImage(with: MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl))
+                contentImageView.setImage(with: MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl),
+                                          ratio: viewModel.aspectRatio)
             } else {
                 contentImageView.image = viewModel.thumbnail
             }

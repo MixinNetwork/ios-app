@@ -8,6 +8,8 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
     static let rightShadowImage = #imageLiteral(resourceName: "ic_chat_shadow_right")
     static let rightWithTailShadowImage = #imageLiteral(resourceName: "ic_chat_shadow_right_tail")
     
+    let aspectRatio: CGSize
+    
     internal(set) var contentFrame = CGRect.zero
     internal(set) var shadowImage: UIImage?
     internal(set) var shadowImageOrigin = CGPoint.zero
@@ -33,6 +35,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         let ratio = mediaWidth / mediaHeight
         contentSize = CGSize(width: contentWidth,
                              height: min(PhotoRepresentableMessageViewModel.maxHeight, contentWidth / ratio))
+        aspectRatio = CGSize(width: mediaWidth, height: mediaHeight)
         super.init(message: message, style: style, fits: layoutWidth)
     }
     

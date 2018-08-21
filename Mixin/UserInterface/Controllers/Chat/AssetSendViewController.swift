@@ -189,7 +189,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     do {
                         try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
 
-                        message.thumbImage = image.getBlurThumbnail().toBase64()
+                        message.thumbImage = image.base64Thumbnail()
                         message.mediaSize = FileManager.default.fileSize(targetUrl.path)
                         message.mediaWidth = Int(image.size.width)
                         message.mediaHeight = Int(image.size.height)
@@ -207,7 +207,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
                     let targetPhoto = image.scaleForUpload()
                     if targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
-                        message.thumbImage = targetPhoto.getBlurThumbnail().toBase64()
+                        message.thumbImage = targetPhoto.base64Thumbnail()
                         message.mediaSize = FileManager.default.fileSize(targetUrl.path)
                         message.mediaWidth = Int(targetPhoto.size.width)
                         message.mediaHeight = Int(targetPhoto.size.height)

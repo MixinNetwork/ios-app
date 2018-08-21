@@ -54,7 +54,7 @@ extension SendToViewController {
             NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_PHOTO_FAILED)
             return nil
         }
-        message.thumbImage = photo.getBlurThumbnail().toBase64()
+        message.thumbImage = photo.base64Thumbnail()
         message.mediaSize = FileManager.default.fileSize(path.path)
         message.mediaWidth = Int(photo.size.width)
         message.mediaHeight = Int(photo.size.height)
@@ -87,7 +87,7 @@ extension SendToViewController {
         if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
             let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: thumbnailFilename)
             thumbnail.saveToFile(path: thumbnailURL)
-            message.thumbImage = thumbnail.getBlurThumbnail().toBase64()
+            message.thumbImage = thumbnail.base64Thumbnail()
         } else {
             return nil
         }

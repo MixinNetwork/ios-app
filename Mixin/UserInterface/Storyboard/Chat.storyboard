@@ -134,7 +134,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_eth" translatesAutoresizingMaskIntoConstraints="NO" id="Sad-ex-764" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Sad-ex-764" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="150" y="14" width="40" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="40" id="MPo-CU-tg6"/>
@@ -2515,7 +2515,6 @@
         <image name="ic_chat_sticker" width="44" height="44"/>
         <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_down" width="44" height="44"/>
-        <image name="ic_eth" width="40" height="40"/>
         <image name="ic_play" width="38" height="38"/>
         <image name="ic_search" width="12" height="12"/>
         <image name="ic_sticker_frame" width="325" height="325"/>

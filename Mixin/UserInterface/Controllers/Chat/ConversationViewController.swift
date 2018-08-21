@@ -368,7 +368,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         saveDraft()
         MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
-            if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath), tableView.rectForRow(at: lastIndexPath).origin.y < tableView.contentOffset.y + dataSource.layoutSize.height {
+            if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath), tableView.rectForRow(at: lastIndexPath).origin.y < tableView.contentOffset.y + tableView.frame.height - tableView.contentInset.bottom {
                 ConversationViewController.positions[conversationId] = nil
             } else {
                 for indexPath in visibleIndexPaths {

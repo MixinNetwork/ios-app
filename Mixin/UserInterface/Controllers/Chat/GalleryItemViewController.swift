@@ -506,7 +506,7 @@ extension GalleryItemViewController {
         guard let item = item, (scrollView.zoomScale - 1) < 0.1 else {
             return
         }
-        var imageRect = item.size.rect(fittingSize: contentSize, byContentMode: .scaleAspectFit)
+        var imageRect = item.size.rect(fittingSize: contentSize)
         imageRect.origin = CGPoint(x: imageRect.origin.x + fullScreenSafeAreaInsets.left,
                                    y: imageRect.origin.y + fullScreenSafeAreaInsets.top)
         imageView.frame = imageRect

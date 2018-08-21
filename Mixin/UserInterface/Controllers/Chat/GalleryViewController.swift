@@ -197,7 +197,7 @@ class GalleryViewController: UIViewController {
         let safeAreaInsets = self.safeAreaInsets
         let containerSize = CGSize(width: view.frame.width - safeAreaInsets.horizontal,
                                    height: view.frame.height - safeAreaInsets.vertical)
-        let imageFinalFrame = item.size.rect(fittingSize: containerSize, byContentMode: .scaleAspectFit)
+        let imageFinalFrame = item.size.rect(fittingSize: containerSize)
         let safeAreaOrigin = CGPoint(x: safeAreaInsets.left, y: safeAreaInsets.top)
         UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
             if let itemSize = self.item?.size, let snapshot = sourceViewSnapshotView {

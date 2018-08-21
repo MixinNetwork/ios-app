@@ -506,7 +506,7 @@ extension ConversationDataSource {
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
                     let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: thumbnailFilename)
                     thumbnail.saveToFile(path: thumbnailURL)
-                    message.thumbImage = thumbnail.getBlurThumbnail().toBase64()
+                    message.thumbImage = thumbnail.base64Thumbnail()
                 } else {
                     NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
                     return

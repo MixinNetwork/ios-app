@@ -131,15 +131,14 @@ extension UIImage {
     }
 
     func scaleForUpload() -> UIImage {
-        let maxWH: CGFloat = 1920
-
-        if size.width < maxWH && size.height < maxWH {
+        let maxShortSideLength: CGFloat = 1440
+        guard min(size.width, size.height) >= maxShortSideLength else {
             return self
         }
-
+        let maxLongSideLength: CGFloat = 1920
         let scale = CGFloat(size.width) / CGFloat(size.height)
-        let targetWidth: CGFloat = size.width > size.height ? maxWH : maxWH * scale
-        let targetHeight: CGFloat = size.width > size.height ? maxWH / scale : maxWH
+        let targetWidth: CGFloat = size.width > size.height ? maxLongSideLength : maxLongSideLength * scale
+        let targetHeight: CGFloat = size.width > size.height ? maxLongSideLength / scale : maxLongSideLength
         return scaledToSize(newSize: CGSize(width: targetWidth, height: targetHeight))
     }
 

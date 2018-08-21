@@ -16,8 +16,6 @@ class ConversationKeyboardManager {
     
     weak var delegate: ConversationKeyboardManagerDelegate?
     
-    private var justChangedInputAccessoryViewHeight = false
-    
     var inputAccessoryViewHeight: CGFloat {
         get {
             return inputAccessoryView.frame.height
@@ -26,9 +24,8 @@ class ConversationKeyboardManager {
             guard let heightConstraint = inputAccessoryView.constraints.filter({ ($0.firstItem as? UIView) == inputAccessoryView && $0.firstAttribute == .height }).first, heightConstraint.constant != newValue else {
                 return
             }
-            justChangedInputAccessoryViewHeight = true
             heightConstraint.constant = newValue
-            inputAccessoryView.window?.rootViewController?.view.layoutIfNeeded()
+            inputAccessoryView.frame.size.height = newValue
         }
     }
     
@@ -62,13 +59,13 @@ class ConversationKeyboardManager {
     }
     
     func inputAccessoryViewSuperviewFrameDidChange(to newFrame: CGRect) {
-        guard isShowingKeyboard else {
+        guard isShowingKeyboard, !keyboardFrameIsInvisible(newFrame), let delegate = delegate else {
             return
         }
-        if justChangedInputAccessoryViewHeight {
-            justChangedInputAccessoryViewHeight = false
-        } else if !keyboardFrameIsInvisible(newFrame) {
-            delegate?.conversationKeyboardManager(self, keyboardWillChangeFrameTo: newFrame, intent: .changeFrame)
+        if delegate.conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(self).isTracking {
+            delegate.conversationKeyboardManager(self, keyboardWillChangeFrameTo: newFrame, intent: .interactivelyChangeFrame)
+        } else {
+            delegate.conversationKeyboardManager(self, keyboardWillChangeFrameTo: newFrame, intent: .changeFrame)
         }
     }
     
@@ -84,6 +81,7 @@ extension ConversationKeyboardManager {
         case show
         case hide
         case changeFrame
+        case interactivelyChangeFrame
     }
     
     class FrameObservingInputAccessoryView: UIView {

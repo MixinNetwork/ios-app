@@ -1332,11 +1332,11 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
             return
         }
-        let shouldChangeTableViewContentOffset = (intent == .show || intent == .hide )
+        let shouldChangeTableViewContentOffset = intent != .interactivelyChangeFrame
             && tableViewContentOffsetShouldFollowInputWrapperPosition
         let windowHeight = AppDelegate.current.window!.bounds.height
-        let inputAccessoryViewHeight = inputTextView.inputAccessoryView?.frame.height ?? 0
-        inputWrapperBottomConstraint.constant = max(windowHeight - newFrame.origin.y - inputAccessoryViewHeight, bottomSafeAreaInset)
+        inputWrapperBottomConstraint.constant = max(windowHeight - newFrame.origin.y - manager.inputAccessoryViewHeight,
+                                                    bottomSafeAreaInset)
         let inputWrapperDisplacement = lastInputWrapperBottomConstant - inputWrapperBottomConstraint.constant
         if intent == .show {
             if isShowingStickerPanel {

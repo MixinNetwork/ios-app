@@ -52,11 +52,7 @@ class GalleryViewController: UIViewController {
     
     private var safeAreaInsets: UIEdgeInsets {
         if #available(iOS 11.0, *) {
-            var insets = view.safeAreaInsets
-            if abs(insets.top - 20) < 0.1 {
-                insets.top = max(0, insets.top - 20)
-            }
-            return insets
+            return view.safeAreaInsets
         } else {
             return .zero
         }
@@ -66,6 +62,15 @@ class GalleryViewController: UIViewController {
         assert(pages.count > 0)
         let i = pageIndex(ofContentOffsetX: scrollView.contentOffset.x)
         return pages[i]
+    }
+    
+    private var shouldLayoutCurrentItemAsArticle: Bool {
+        return item?.shouldLayoutAsArticle ?? false
+    }
+    
+    var shouldPerformMagicMoveTransitionForCurrentItem: Bool {
+        return !shouldLayoutCurrentItemAsArticle
+            || self.currentPage.scrollView.contentOffset.y <= 1
     }
     
     override func viewDidLoad() {
@@ -119,8 +124,7 @@ class GalleryViewController: UIViewController {
             if progress > 0.6 || recognizer.velocity(in: view).y > 800 {
                 dismiss()
             } else {
-                let safeAreaInsets = self.safeAreaInsets
-                let y = max(0, (view.frame.height - safeAreaInsets.vertical - transitionView.frame.height) / 2 + safeAreaInsets.top)
+                let y = max(-currentPage.scrollView.contentOffset.y, (view.frame.height - transitionView.frame.height) / 2)
                 UIView.animate(withDuration: animationDuration, animations: {
                     self.backgroundDimmingView.alpha = 1
                     self.transitionView.frame.origin.y = y
@@ -183,11 +187,19 @@ class GalleryViewController: UIViewController {
         if let sourceRect = delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {
             imageClippingTransitionView.frame = sourceRect.insetBy(dx: ImageClippingView.clippingMargin.dx,
                                                                    dy: ImageClippingView.clippingMargin.dy)
-            imageClippingTransitionView.imageView.image = delegate?.galleryViewController(self, placeholderForItemOfMessageId: item.messageId)
-            imageClippingTransitionView.imageView.frame = CGRect(x: -ImageClippingView.clippingMargin.dx,
-                                                                 y: -ImageClippingView.clippingMargin.dy,
-                                                                 width: sourceRect.width,
-                                                                 height: sourceRect.height)
+            let placeholder = delegate?.galleryViewController(self, placeholderForItemOfMessageId: item.messageId)
+            imageClippingTransitionView.imageView.image = placeholder
+            if let ratio = placeholder?.size {
+                imageClippingTransitionView.imageView.frame.size = CGSize(width: sourceRect.width, height: sourceRect.width * ratio.height / ratio.width)
+            } else {
+                imageClippingTransitionView.imageView.frame.size = sourceRect.size
+            }
+            imageClippingTransitionView.imageView.frame.origin.x = -ImageClippingView.clippingMargin.dx
+            if item.shouldLayoutAsArticle {
+                imageClippingTransitionView.imageView.frame.origin.y = -ImageClippingView.clippingMargin.dy
+            } else {
+                imageClippingTransitionView.imageView.frame.origin.y = -max(0, (imageClippingTransitionView.imageView.frame.height - imageClippingTransitionView.frame.height) / 2)
+            }
             view.addSubview(imageClippingTransitionView)
             if let snapshot = delegate?.galleryViewController(self, snapshotForItemOfMessageId: item.messageId) {
                 snapshot.frame = sourceRect
@@ -195,27 +207,32 @@ class GalleryViewController: UIViewController {
                 sourceViewSnapshotView = snapshot
             }
         }
-        let safeAreaInsets = self.safeAreaInsets
-        let containerSize = CGSize(width: UIScreen.main.bounds.width - safeAreaInsets.horizontal,
-                                   height: UIScreen.main.bounds.height - safeAreaInsets.vertical)
-        let imageFinalFrame = item.size.rect(fittingSize: containerSize)
-        let safeAreaOrigin = CGPoint(x: safeAreaInsets.left, y: safeAreaInsets.top)
+        let containerSize = UIScreen.main.bounds.size
+        let imageFinalFrame: CGRect
+        if item.shouldLayoutAsArticle {
+            imageFinalFrame = CGRect(x: 0, y: 0, width: containerSize.width, height: containerSize.width * item.size.height / item.size.width)
+        } else {
+            imageFinalFrame = item.size.rect(fittingSize: containerSize)
+        }
         UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
             self.delegate?.galleryViewController(self, willShowForItemOfMessageId: item.messageId)
             if let itemSize = self.item?.size, let snapshot = sourceViewSnapshotView {
-                if self.currentItemIsVerticallyOversized {
+                if item.shouldLayoutAsArticle {
+                    let snapshotHeight = imageFinalFrame.width * snapshot.frame.height / snapshot.frame.width
+                    snapshot.frame = CGRect(x: 0, y: 0, width: imageFinalFrame.width, height: snapshotHeight)
+                } else if self.currentItemIsVerticallyOversized {
                     let width = containerSize.height * (itemSize.width / itemSize.height)
                     let height = width * (snapshot.frame.height / snapshot.frame.width)
-                    let x = (containerSize.width - width) / 2 + self.safeAreaInsets.left
-                    let y = (containerSize.height - height) / 2 + self.safeAreaInsets.top
+                    let x = (containerSize.width - width) / 2
+                    let y = (containerSize.height - height) / 2
                     snapshot.frame = CGRect(x: x, y: y, width: width, height: height)
                 } else {
-                    snapshot.frame = CGRect(origin: safeAreaOrigin, size: containerSize)
+                    snapshot.frame = CGRect(origin: .zero, size: containerSize)
                 }
                 snapshot.alpha = 0
             }
             self.backgroundDimmingView.alpha = 1
-            self.imageClippingTransitionView.frame = CGRect(origin: safeAreaOrigin, size: containerSize)
+            self.imageClippingTransitionView.frame = CGRect(origin: .zero, size: containerSize)
             self.imageClippingTransitionView.imageView.frame = imageFinalFrame
         }, completion: { (_) in
             sourceViewSnapshotView?.removeFromSuperview()
@@ -229,16 +246,21 @@ class GalleryViewController: UIViewController {
         currentPage.stopVideoPlayingAndRemoveObservers()
         scrollView.isHidden = true
         let messageId = item?.messageId
+        let shouldLayoutAsArticle = self.shouldLayoutCurrentItemAsArticle
+        let shouldPerformMagicMoveTransition = self.shouldPerformMagicMoveTransitionForCurrentItem
         if transitionView == nil {
             prepareTransitionViewForDismissing()
         }
         var sourceViewSnapshotView: UIView?
-        if let messageId = messageId, let snapshot = snapshotView ?? delegate?.galleryViewController(self, snapshotForItemOfMessageId: messageId) {
+        if shouldPerformMagicMoveTransitionForCurrentItem, let messageId = messageId, let snapshot = snapshotView ?? delegate?.galleryViewController(self, snapshotForItemOfMessageId: messageId) {
             let imageViewSize = transitionView.frame.size
             let size = CGSize(width: imageViewSize.width, height: imageViewSize.width * snapshot.frame.height / snapshot.frame.width)
-            let origin = CGPoint(x: (imageViewSize.width - size.width) / 2, y: (imageViewSize.height - size.height) / 2)
-                + ((transitionView as? ImageClippingView)?.imageView.frame.origin ?? .zero)
+            var origin = ((transitionView as? ImageClippingView)?.imageView.frame.origin ?? .zero)
                 + transitionView.frame.origin
+            if !shouldLayoutAsArticle {
+                origin = origin + CGPoint(x: (imageViewSize.width - size.width) / 2,
+                                          y: (imageViewSize.height - size.height) / 2)
+            }
             snapshot.frame = CGRect(origin: origin, size: size)
             view.insertSubview(snapshot, belowSubview: transitionView)
             sourceViewSnapshotView = snapshot
@@ -250,11 +272,15 @@ class GalleryViewController: UIViewController {
         UIView.animate(withDuration: animationDuration, delay: 0, options: [.curveEaseInOut, .layoutSubviews], animations: {
             self.delegate?.galleryViewController(self, willDismissForItemOfMessageId: messageId)
             self.backgroundDimmingView.alpha = 0
-            if let item = self.item, let sourceRect = self.delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {
+            if shouldPerformMagicMoveTransition, let item = self.item, let sourceRect = self.delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {
                 sourceViewSnapshotView?.frame = sourceRect
                 self.transitionView.frame = sourceRect
                 if item.category == .image {
-                    if self.currentItemIsVerticallyOversized {
+                    if shouldLayoutAsArticle {
+                        let size = CGSize(width: self.transitionView.bounds.width,
+                                          height: self.transitionView.bounds.width * item.size.height / item.size.width)
+                        self.imageClippingTransitionView.imageView.frame = CGRect(origin: .zero, size: size)
+                    } else if self.currentItemIsVerticallyOversized {
                         let itemRatio = item.size.width / item.size.height
                         let size = CGSize(width: sourceRect.width, height: sourceRect.width / itemRatio)
                         let origin = CGPoint(x: 0, y: (sourceRect.height - size.height) / 2)
@@ -364,22 +390,18 @@ extension GalleryViewController: UIScrollViewDelegate {
 // MARK: - UIGestureRecognizerDelegate
 extension GalleryViewController: UIGestureRecognizerDelegate {
     
-    var pageDidReachTopEdge: Bool {
-        return currentPage.scrollView.contentOffset.y <= 0.1
-    }
-    
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard gestureRecognizer == panRecognizer else {
             return true
         }
         return panRecognizer.velocity(in: view).y > 0
             && abs(panRecognizer.velocity(in: view).y) > abs(panRecognizer.velocity(in: view).x)
-            && pageDidReachTopEdge
+            && currentPage.canPerformInteractiveDismissing
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         let otherGestureRecognizerIsOneOfScrollViewRecognizers = scrollView.gestureRecognizers?.contains(otherGestureRecognizer) ?? false
-        if gestureRecognizer == panRecognizer, pageDidReachTopEdge, !otherGestureRecognizerIsOneOfScrollViewRecognizers {
+        if gestureRecognizer == panRecognizer, currentPage.canPerformInteractiveDismissing, !otherGestureRecognizerIsOneOfScrollViewRecognizers {
             return true
         } else {
             return false
@@ -565,6 +587,7 @@ extension GalleryViewController {
     class ImageClippingView: UIView {
         
         static let clippingMargin = CGVector(dx: 10, dy: 10)
+        
         let imageView = UIImageView()
         
         required init?(coder aDecoder: NSCoder) {

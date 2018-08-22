@@ -1279,7 +1279,9 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShowForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: true)
+        if viewController.shouldPerformMagicMoveTransitionForCurrentItem {
+            setCell(ofMessageId: id, contentViewHidden: true)
+        }
         if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
             UIView.performWithoutAnimation {
                 self.statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.inCall
@@ -1291,18 +1293,24 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didShowForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: false)
+        if viewController.shouldPerformMagicMoveTransitionForCurrentItem {
+            setCell(ofMessageId: id, contentViewHidden: false)
+        }
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willDismissForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: true)
+        if viewController.shouldPerformMagicMoveTransitionForCurrentItem {
+            setCell(ofMessageId: id, contentViewHidden: true)
+        }
         if statusBarPlaceholderHeightConstraint.constant != StatusBarHeight.inCall {
             statusBarHidden = false
         }
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didDismissForItemOfMessageId id: String?) {
-        setCell(ofMessageId: id, contentViewHidden: false)
+        if viewController.shouldPerformMagicMoveTransitionForCurrentItem {
+            setCell(ofMessageId: id, contentViewHidden: false)
+        }
         if statusBarPlaceholderHeightConstraint.constant == StatusBarHeight.inCall {
             statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.normal
             statusBarHidden = false

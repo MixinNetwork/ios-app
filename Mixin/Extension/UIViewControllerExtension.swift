@@ -1,19 +1,6 @@
 import UIKit
 
 extension UIViewController {
-
-    var fullScreenSafeAreaInsets: UIEdgeInsets {
-        if #available(iOS 11.0, *), let window = UIApplication.shared.keyWindow {
-            let originalSafeAreaInsets = window.safeAreaInsets
-            if originalSafeAreaInsets.top < 20.1 {
-                return .zero
-            } else {
-                return originalSafeAreaInsets
-            }
-        } else {
-            return .zero
-        }
-    }
     
     public func isPad() -> Bool {
         return UIDevice.current.userInterfaceIdiom == .pad

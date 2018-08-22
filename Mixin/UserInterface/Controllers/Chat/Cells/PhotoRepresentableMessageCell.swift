@@ -28,6 +28,7 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
+            contentImageView.position = viewModel.layoutPosition
             contentImageView.frame = viewModel.contentFrame
             selectedOverlapView.frame = contentImageView.bounds
 

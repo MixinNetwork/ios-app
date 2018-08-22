@@ -67,6 +67,13 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             setNeedsStatusBarAppearanceUpdate()
         }
     }
+    var homeIndicatorAutoHidden = false {
+        didSet {
+            if #available(iOS 11.0, *) {
+                setNeedsUpdateOfHomeIndicatorAutoHidden()
+            }
+        }
+    }
     
     private let maxInputRow = 6
     private let showScrollToBottomButtonThreshold: CGFloat = 150
@@ -301,6 +308,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         } else if segue.identifier == audioInputSegueId, let destination = segue.destination as? AudioInputViewController {
             audioInputViewController = destination
         }
+    }
+    
+    @available(iOS 11.0, *)
+    override func prefersHomeIndicatorAutoHidden() -> Bool {
+        return homeIndicatorAutoHidden
     }
     
     @available(iOS 11.0, *)
@@ -644,6 +656,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                 tableViewContentOffsetShouldFollowInputWrapperPosition = true
                 view.bringSubview(toFront: galleryWrapperView)
                 galleryViewController.show(item: item)
+                homeIndicatorAutoHidden = true
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue {
                     makeInputTextViewResignFirstResponderIfItIs()
@@ -1316,6 +1329,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
             statusBarHidden = false
         }
         view.sendSubview(toBack: galleryWrapperView)
+        homeIndicatorAutoHidden = false
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willBeginInteractivelyDismissingForItemOfMessageId id: String?) {

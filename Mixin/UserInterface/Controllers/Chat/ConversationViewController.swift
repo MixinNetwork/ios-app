@@ -88,6 +88,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var isStickerPanelMax = false
     private var inputWrapperShouldFollowKeyboardPosition = true
     private var tableViewContentOffsetShouldFollowInputWrapperPosition = true
+    private var didManuallyStoppedTableViewDecelerating = false
     private var isShowingQuotePreviewView: Bool {
         return quoteMessageId != nil
     }
@@ -989,7 +990,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                             weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
                         }
                     }
-                    weakSelf.updateHeaderViews(animated: true)
+                    weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
                 }
             }
         case .forward:
@@ -1037,23 +1038,24 @@ extension ConversationViewController: UITableViewDelegate {
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        didManuallyStoppedTableViewDecelerating = false
         UIView.animate(withDuration: animationDuration) {
-            self.updateHeaderViews(animated: false)
+            self.tableView.setFloatingHeaderViewsHidden(false, animated: false)
             self.dismissMenu(animated: false)
         }
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            updateHeaderViews(animated: true)
+            didManuallyStoppedTableViewDecelerating = true
+            tableView.setFloatingHeaderViewsHidden(true, animated: true, delay: 0.5)
         }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        guard !tableView.isTracking else {
-            return
+        if !tableView.isTracking && !didManuallyStoppedTableViewDecelerating {
+            tableView.setFloatingHeaderViewsHidden(true, animated: true)
         }
-        updateHeaderViews(animated: true)
     }
     
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
@@ -1062,7 +1064,9 @@ extension ConversationViewController: UITableViewDelegate {
     }
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        updateHeaderViews(animated: true)
+        DispatchQueue.main.async {
+            self.tableView.setFloatingHeaderViewsHidden(true, animated: true)
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -1275,8 +1279,8 @@ extension ConversationViewController: GalleryViewControllerDelegate {
         setCell(ofMessageId: id, contentViewHidden: true)
         if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
             UIView.performWithoutAnimation {
-                self.statusBarHidden = true
                 self.statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.inCall
+                self.statusBarHidden = true
             }
         } else {
             self.statusBarHidden = true
@@ -1508,35 +1512,6 @@ extension ConversationViewController {
         }) { (_) in
             self.isShowingStickerPanel = !self.isShowingStickerPanel
             self.lastInputWrapperBottomConstant = self.inputWrapperBottomConstraint.constant
-        }
-    }
-    
-    private func updateHeaderViews(animated: Bool) {
-        if animated {
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(animationDuration)
-        }
-        var headerViews = tableView.headerViews
-        if tableView.isTracking {
-            headerViews.forEach {
-                $0.contentAlpha = 1
-            }
-        } else {
-            if let firstIndexPath = tableView.indexPathsForVisibleRows?.first,
-                let firstCell = tableView.cellForRow(at: firstIndexPath),
-                let headerView = tableView.headerView(forSection: firstIndexPath.section) as? ConversationDateHeaderView,
-                headerView.frame.intersects(firstCell.frame) {
-                if let index = headerViews.index(of: headerView) {
-                    headerViews.remove(at: index)
-                }
-                headerView.contentAlpha = 0
-            }
-            headerViews.forEach {
-                $0.contentAlpha = 1
-            }
-        }
-        if animated {
-            UIView.commitAnimations()
         }
     }
     

@@ -6,12 +6,10 @@ class ConversationDateHeaderView: UITableViewHeaderFooterView {
     
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var label: UILabel!
-
-    var contentAlpha: CGFloat = 1 {
-        didSet {
-            backgroundImageView.alpha = contentAlpha
-            label.alpha = contentAlpha
-        }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        alpha = 1
     }
     
 }

@@ -27,13 +27,11 @@ class KeyUtil {
     }
 
     static func aesEncrypt<ResultType>(pin: String, completion: @escaping (APIResult<ResultType>) -> Void, callback: @escaping (String) -> Void) {
-        AccountUserDefault.shared.getPinToken { (pinToken: String?) in
-            guard let pinToken = pinToken, let encryptedPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: pin) else {
-                completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
-                return
-            }
-            callback(encryptedPin)
+        guard let pinToken = AccountUserDefault.shared.getPinToken(), let encryptedPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: pin) else {
+            completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
+            return
         }
+        callback(encryptedPin)
     }
 
     static func aesEncrypt(pinToken: String, pin: String) -> String? {

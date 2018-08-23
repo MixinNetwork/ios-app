@@ -48,27 +48,6 @@ class AccountUserDefault {
         session.synchronize()
     }
 
-    func getPinToken(callback: @escaping (String?) -> Void) {
-        if let pinToken = getPinToken() {
-            callback(pinToken)
-        } else {
-            AccountAPI.shared.getPinToken(completion: { (result) in
-                guard let sessionId = AccountAPI.shared.account?.session_id, let token = AccountUserDefault.shared.getToken(), !token.isEmpty else {
-                    callback(nil)
-                    return
-                }
-                switch result {
-                case let .success(response):
-                    let pinToken = KeyUtil.rsaDecrypt(pkString: token, sessionId: sessionId, pinToken: response.pinToken)
-                    AccountUserDefault.shared.storePinToken(pinToken: pinToken)
-                    callback(pinToken)
-                case .failure:
-                    callback(nil)
-                }
-            })
-        }
-    }
-
     func clear() {
         if let appDomain = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: appDomain)

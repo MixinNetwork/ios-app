@@ -907,7 +907,8 @@ extension ConversationViewController: UITextViewDelegate {
 extension ConversationViewController: ConnectionHintViewDelegate {
     
     func animateAlongsideConnectionHintView(_ view: ConnectionHintView, changingHeightWithDifference heightDifference: CGFloat) {
-        tableView.contentInset.top += heightDifference
+        updateTableViewContentInset()
+        tableView.contentInset.top += view.connectionHintViewHeightConstraint.constant
     }
     
 }

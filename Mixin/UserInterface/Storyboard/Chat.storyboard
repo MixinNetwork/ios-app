@@ -939,7 +939,7 @@
                             <constraint firstAttribute="bottom" secondItem="v0e-5f-Xnl" secondAttribute="bottom" id="7AD-Ab-ka0"/>
                             <constraint firstItem="Zve-bN-jsA" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="8Ra-zT-gjT"/>
                             <constraint firstItem="b5P-d4-dTD" firstAttribute="trailing" secondItem="6MP-pq-xci" secondAttribute="trailing" id="Avh-vb-EGW"/>
-                            <constraint firstItem="MYg-f9-MjM" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" id="CQr-Zn-bzE"/>
+                            <constraint firstItem="MYg-f9-MjM" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" placeholder="YES" id="CQr-Zn-bzE"/>
                             <constraint firstItem="tke-V3-5nw" firstAttribute="leading" secondItem="N4V-uq-LHc" secondAttribute="leading" id="Cwi-uX-EZ6"/>
                             <constraint firstItem="N4V-uq-LHc" firstAttribute="trailing" secondItem="v0e-5f-Xnl" secondAttribute="trailing" id="EI4-Zq-Pq8"/>
                             <constraint firstItem="6MP-pq-xci" firstAttribute="top" secondItem="Kz9-vn-J0b" secondAttribute="bottom" id="FFA-rM-8ED"/>
@@ -982,6 +982,7 @@
                         <outlet property="audioInputContainerView" destination="b5P-d4-dTD" id="ozX-fT-gj0"/>
                         <outlet property="audioInputContainerWidthConstraint" destination="Rxf-D8-RRS" id="RVY-kA-voc"/>
                         <outlet property="avatarImageView" destination="tCB-t3-VXy" id="tSV-HN-6ST"/>
+                        <outlet property="backgroundImageView" destination="MYg-f9-MjM" id="1WJ-qd-DbP"/>
                         <outlet property="botButton" destination="Lc3-ZI-RQf" id="A9x-oK-w1g"/>
                         <outlet property="bottomOutsideWrapperView" destination="6MP-pq-xci" id="6rZ-Vb-0CM"/>
                         <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
@@ -1008,6 +1009,7 @@
                         <outlet property="scrollToBottomWrapperHeightConstraint" destination="iai-L8-XoW" id="F9Z-Pn-XNa"/>
                         <outlet property="scrollToBottomWrapperView" destination="enU-Jm-AWl" id="kR8-6F-tEk"/>
                         <outlet property="sendButton" destination="4sU-2a-lMZ" id="gkB-0g-9ur"/>
+                        <outlet property="statusBarPlaceholderHeightConstraint" destination="zpg-10-Eec" id="ivj-pa-2FX"/>
                         <outlet property="stickerKeyboardSwitcherButton" destination="JTL-Jf-Smd" id="ZXj-Dl-yTy"/>
                         <outlet property="stickerPanelContainerHeightConstraint" destination="fUe-nX-Ano" id="e5w-7t-FQm"/>
                         <outlet property="stickerPanelContainerView" destination="OCN-L0-tlY" id="qw6-7P-w3t"/>
@@ -1963,7 +1965,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZFL-0v-HBy">
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZFL-0v-HBy">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>

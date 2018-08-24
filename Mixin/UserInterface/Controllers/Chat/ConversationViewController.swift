@@ -6,6 +6,7 @@ import Photos
 class ConversationViewController: UIViewController, StatusBarStyleSwitchableViewController {
     
     @IBOutlet weak var galleryWrapperView: UIView!
+    @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var connectionHintView: ConnectionHintView!
     @IBOutlet weak var tableView: ConversationTableView!
@@ -33,6 +34,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var audioInputContainerView: UIView!
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
     
+    @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewLeadingShrinkConstraint: NSLayoutConstraint!
@@ -57,6 +59,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             setNeedsStatusBarAppearanceUpdate()
         }
     }
+    var statusBarHidden = false {
+        didSet {
+            setNeedsStatusBarAppearanceUpdate()
+        }
+    }
     
     private let maxInputRow = 6
     private let showScrollToBottomButtonThreshold: CGFloat = 150
@@ -76,7 +83,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var isShowingStickerPanel = false
     private var isAppearanceAnimating = true
     private var isStickerPanelMax = false
-    private var hideStatusBar = false
     private var inputWrapperShouldFollowKeyboardPosition = true
     private var isShowingQuotePreviewView: Bool {
         return quoteMessageId != nil
@@ -156,7 +162,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
     
     override var prefersStatusBarHidden: Bool {
-        return hideStatusBar
+        return statusBarHidden
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -166,6 +172,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        backgroundImageView.snp.makeConstraints { (make) in
+            make.height.equalTo(UIScreen.main.bounds.height)
+        }
         showLoading()
         if let swipeBackRecognizer = navigationController?.interactivePopGestureRecognizer {
             tableView.gestureRecognizers?.forEach {
@@ -1281,43 +1290,13 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, sourceRectForItemOfMessageId id: String) -> CGRect? {
         if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
-            return cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
+            var rect = cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
+            if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
+                rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
+            }
+            return rect
         } else {
             return nil
-        }
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition, stateDidChangeTo state: GalleryViewController.TransitionState, forItemOfMessageId id: String?) {
-        var contentViews = [UIView]()
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }) {
-            let cell = tableView.cellForRow(at: indexPath)
-            if let cell = cell as? PhotoRepresentableMessageCell {
-                contentViews = [cell.contentImageView,
-                                cell.shadowImageView,
-                                cell.timeLabel,
-                                cell.statusImageView]
-            }
-            if let cell = cell as? AttachmentExpirationHintingMessageCell {
-                contentViews.append(cell.operationButton)
-            }
-            if let cell = cell as? VideoMessageCell {
-                contentViews.append(cell.lengthLabel)
-            }
-        }
-        switch state {
-        case .began:
-            contentViews.forEach {
-                $0.isHidden = true
-            }
-        case .ended:
-            if transition == .dismiss {
-                view.sendSubview(toBack: galleryWrapperView)
-            }
-            fallthrough
-        case .cancelled:
-            contentViews.forEach {
-                $0.isHidden = false
-            }
         }
     }
     
@@ -1329,16 +1308,46 @@ extension ConversationViewController: GalleryViewControllerDelegate {
         }
     }
     
-    func animateAlongsideGalleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition) {
-        switch transition {
-        case .show:
-            hideStatusBar = true
-        case .dismiss:
-            hideStatusBar = false
+    func galleryViewController(_ viewController: GalleryViewController, willShowForItemOfMessageId id: String?) {
+        setCell(ofMessageId: id, contentViewHidden: true)
+        if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
+            UIView.performWithoutAnimation {
+                self.statusBarHidden = true
+                self.statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.inCall
+            }
+        } else {
+            self.statusBarHidden = true
         }
-        setNeedsStatusBarAppearanceUpdate()
     }
     
+    func galleryViewController(_ viewController: GalleryViewController, didShowForItemOfMessageId id: String?) {
+        setCell(ofMessageId: id, contentViewHidden: false)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, willDismissForItemOfMessageId id: String?) {
+        setCell(ofMessageId: id, contentViewHidden: true)
+        if statusBarPlaceholderHeightConstraint.constant != StatusBarHeight.inCall {
+            statusBarHidden = false
+        }
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didDismissForItemOfMessageId id: String?) {
+        setCell(ofMessageId: id, contentViewHidden: false)
+        if statusBarPlaceholderHeightConstraint.constant == StatusBarHeight.inCall {
+            statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.normal
+            statusBarHidden = false
+        }
+        view.sendSubview(toBack: galleryWrapperView)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, willBeginInteractivelyDismissingForItemOfMessageId id: String?) {
+        setCell(ofMessageId: id, contentViewHidden: true)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didCancelInteractivelyDismissingForItemOfMessageId id: String?) {
+        setCell(ofMessageId: id, contentViewHidden: false)
+    }
+
 }
 
 // MARK: - PhotoAssetPickerDelegate
@@ -1563,6 +1572,29 @@ extension ConversationViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
                 animation(indexPath)
             })
+        }
+    }
+    
+    private func setCell(ofMessageId id: String?, contentViewHidden hidden: Bool) {
+        guard let id = id, let indexPath = dataSource?.indexPath(where: { $0.messageId == id }) else {
+            return
+        }
+        var contentViews = [UIView]()
+        let cell = tableView.cellForRow(at: indexPath)
+        if let cell = cell as? PhotoRepresentableMessageCell {
+            contentViews = [cell.contentImageView,
+                            cell.shadowImageView,
+                            cell.timeLabel,
+                            cell.statusImageView]
+        }
+        if let cell = cell as? AttachmentExpirationHintingMessageCell {
+            contentViews.append(cell.operationButton)
+        }
+        if let cell = cell as? VideoMessageCell {
+            contentViews.append(cell.lengthLabel)
+        }
+        contentViews.forEach {
+            $0.isHidden = hidden
         }
     }
     

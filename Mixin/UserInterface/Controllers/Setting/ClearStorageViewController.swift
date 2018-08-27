@@ -107,16 +107,16 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
         container?.rightButton.isBusy = true
         DispatchQueue.global().async { [weak self] in
             if clearPhotos {
-                self?.clearCategoryData(directory: .photos, category: "_IMAGE")
+                self?.clean(chatDirectory: .photos)
             }
             if clearVideos {
-                self?.clearCategoryData(directory: .videos, category: "_VIDEO")
+                self?.clean(chatDirectory: .videos)
             }
             if clearAudios {
-                self?.clearCategoryData(directory: .audios, category: "_AUDIO")
+                self?.clean(chatDirectory: .audios)
             }
             if clearFiles {
-                self?.clearCategoryData(directory: .files, category: "_DATA")
+                self?.clean(chatDirectory: .files)
             }
 
             DispatchQueue.main.async {
@@ -129,12 +129,9 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
         }
     }
 
-    private func clearCategoryData(directory: MixinFile.ChatDirectory, category: String) {
-        let dict = MessageDAO.shared.storageUsageMessages(conversationId: conversation.conversationId, category: category)
-        for filename in dict.values {
-            try? FileManager.default.removeItem(at: MixinFile.url(ofChatDirectory: directory, filename: filename))
-        }
-        MessageDAO.shared.deleteMessages(conversationId: conversation.conversationId, category: category)
+    private func clean(chatDirectory: MixinFile.ChatDirectory) {
+        MessageDAO.shared.deleteMessages(conversationId: conversation.conversationId, category: chatDirectory.messageCategorySuffix)
+        MixinFile.clean(chatDirectory: chatDirectory)
     }
 
     func textBarRightButton() -> String? {

@@ -111,8 +111,11 @@ final class MessageDAO {
     ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''
     """
     
-    func storageUsageMessages(conversationId: String, category: String) -> [String: String] {
-        return MixinDatabase.shared.getDictionary(key: Message.Properties.messageId.asColumnResult(), value: Message.Properties.mediaUrl.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.category.like("%\(category)"))
+    func getMediaUrls(likeCategory category: String) -> [String] {
+        return MixinDatabase.shared.getStringValues(column: Message.Properties.mediaUrl.asColumnResult(),
+                                                    tableName: Message.tableName,
+                                                    condition: Message.Properties.category.like("%\(category)"),
+                                                    inTransaction: false)
     }
 
     func deleteMessages(conversationId: String, category: String) {

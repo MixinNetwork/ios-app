@@ -76,6 +76,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private let audioInputSegueId = "AudioInputSegueId"
     
     private var ownerUser: UserItem?
+    private var ownerUserApp: App?
     private var participants = [Participant]()
     private var role = ""
     private var asset: AssetItem?
@@ -99,7 +100,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var moreMenuViewController: ConversationMoreMenuViewController?
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
-    private var userBot: App?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
     private lazy var userWindow = UserWindow.instance()
@@ -464,7 +464,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
 
     @IBAction func botAction(_ sender: Any) {
-        guard let user = ownerUser, user.isBot, let app = self.userBot else {
+        guard let user = ownerUser, user.isBot, let app = self.ownerUserApp else {
             return
         }
         guard let url = URL(string: app.homeUri), !conversationId.isEmpty else {
@@ -1428,7 +1428,7 @@ extension ConversationViewController {
     private func updateMoreMenuFixedJobs() {
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
             moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
-        } else if let userBot = userBot, userBot.creatorId == AccountAPI.shared.accountUserId {
+        } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
             moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
         } else {
             moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
@@ -1443,11 +1443,9 @@ extension ConversationViewController {
         } else {
             if dataSource?.category == .group {
                 moreMenuViewController?.apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
-            } else {
-                guard let ownerId = ownerUser?.userId, let userBot = AppDAO.shared.getUserBot(userId: ownerId) else {
-                    return
-                }
-                self.userBot = userBot
+            } else if let ownerId = ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
+                self.ownerUserApp = app
+                DispatchQueue.main.async(execute: updateMoreMenuFixedJobs)
             }
         }
     }

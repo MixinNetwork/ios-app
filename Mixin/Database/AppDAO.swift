@@ -10,7 +10,7 @@ final class AppDAO {
         WHERE p.conversation_id = ? AND p.user_id = u.user_id AND a.app_id = u.app_id
     """
     static let sqlQueryAppsByUser = """
-        SELECT \(sqlQueryColumns) FROM apps a, users u
+        SELECT a.* FROM apps a, users u
         WHERE u.user_id = ? AND a.app_id = u.app_id
     """
 
@@ -20,7 +20,8 @@ final class AppDAO {
         })
     }
 
-    func getUserBot(userId: String) -> App? {
+    func getApp(ofUserId userId: String) -> App? {
         return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryAppsByUser, values: [userId], inTransaction: false).first
     }
+    
 }

@@ -342,7 +342,7 @@ class UserView: CornerView {
             conversationId = self.conversationId
         }
         DispatchQueue.global().async { [weak self] in
-            guard let app = AppDAO.shared.getUserBot(userId: userId), let url = URL(string: app.homeUri) else {
+            guard let app = AppDAO.shared.getApp(ofUserId: userId), let url = URL(string: app.homeUri) else {
                 return
             }
             DispatchQueue.main.async {

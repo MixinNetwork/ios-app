@@ -334,7 +334,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         if !didInitData {
             didInitData = true
             view.layoutIfNeeded()
-            if let draft = CommonUserDefault.shared.getConversationDraft(self.conversationId) {
+            if let draft = CommonUserDefault.shared.getConversationDraft(conversationId) {
                 inputTextView.text = draft
                 UIView.performWithoutAnimation {
                     textViewDidChange(inputTextView)
@@ -1656,7 +1656,7 @@ extension ConversationViewController {
                     }
                     weakSelf.unblockButton.isHidden = true
                     weakSelf.deleteConversationButton.isHidden = true
-                    weakSelf.audioInputContainerView.isHidden = false
+                    weakSelf.audioInputContainerView.isHidden = CommonUserDefault.shared.getConversationDraft(conversationId) != nil
                     if weakSelf.dataSource?.category == .group {
                         weakSelf.participantsLabel.text = Localized.GROUP_SECTION_TITLE_MEMBERS(count: weakSelf.participants.count)
                     }

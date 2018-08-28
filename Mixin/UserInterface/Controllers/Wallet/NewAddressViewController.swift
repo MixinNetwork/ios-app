@@ -35,6 +35,7 @@ class NewAddressViewController: UIViewController {
                 addressTextView.text = address.publicKey
             }
             checkLabelAndAddressAction(self)
+            view.layoutIfNeeded()
             textViewDidChange(addressTextView)
         }
 

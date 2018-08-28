@@ -56,6 +56,12 @@ final class MessageDAO {
     LEFT JOIN stickers st ON m.sticker_id = st.sticker_id
     LEFT JOIN users su ON m.shared_user_id = su.user_id
     """
+    private static let sqlQueryFirstNMessages = """
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ?
+    ORDER BY m.created_at ASC
+    LIMIT ?
+    """
     private static let sqlQueryLastNMessages = """
     \(sqlQueryFullMessage)
     WHERE m.conversation_id = ?
@@ -315,6 +321,10 @@ final class MessageDAO {
                                                 values: [conversationId, location.createdAt, count])
     }
 
+    func getFirstNMessages(conversationId: String, count: Int) -> [MessageItem] {
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFirstNMessages, values: [conversationId, count], inTransaction: false)
+    }
+    
     func getLastNMessages(conversationId: String, count: Int) -> [MessageItem] {
         let messages: [MessageItem] =  MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values: [conversationId, count], inTransaction: false)
         return messages.reversed()

@@ -207,3 +207,8 @@ enum ExtensionName: String {
     }
     
 }
+
+enum StatusBarHeight {
+    static let normal: CGFloat = 20
+    static let inCall: CGFloat = 40
+}

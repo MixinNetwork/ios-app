@@ -57,21 +57,25 @@ class ConversationTableView: UITableView {
     weak var viewController: ConversationViewController?
     weak var actionDelegate: ConversationTableViewActionDelegate?
     
-    private var longPressRecognizer: UILongPressGestureRecognizer!
-    
     override var canBecomeFirstResponder: Bool {
         return true
     }
     
-    var headerViews: [ConversationDateHeaderView] {
-        var headerViews = [ConversationDateHeaderView]()
-        let numberOfSections = dataSource?.numberOfSections?(in: self) ?? 0
-        for section in 0..<numberOfSections {
-            if let headerView = headerView(forSection: section) as? ConversationDateHeaderView {
-                headerViews.append(headerView)
-            }
+    var indicesForVisibleSectionHeaders: [Int] {
+        guard let indexPaths = indexPathsForVisibleRows else {
+            return []
         }
-        return headerViews
+        let indices = indexPaths.map{ $0.section }
+        return Array(Set(indices)).sorted(by: <)
+    }
+    
+    private let animationDuration: TimeInterval = 0.3
+    
+    private var headerViewsAnimator: UIViewPropertyAnimator?
+    private var longPressRecognizer: UILongPressGestureRecognizer!
+    private var bottomContentOffset: CGPoint {
+        let y = contentSize.height + contentInset.bottom - frame.height
+        return CGPoint(x: contentOffset.x, y: max(-contentInset.top, y))
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -180,18 +184,59 @@ class ConversationTableView: UITableView {
     }
     
     func scrollToBottom(animated: Bool) {
-        guard contentSize.height > bounds.height else {
-            return
-        }
-        let bottomOffset = CGPoint(x: contentOffset.x,
-                                   y: contentSize.height - bounds.height + contentInset.bottom)
-        setContentOffset(bottomOffset, animated: animated)
+        setContentOffset(bottomContentOffset, animated: animated)
     }
     
     func setContentOffsetYSafely(_ y: CGFloat) {
-        let maxContentOffsetY = contentSize.height - (frame.height - contentInset.vertical)
-        if maxContentOffsetY > 0 {
-            contentOffset.y = min(maxContentOffsetY, max(0, y))
+        let bottomContentOffsetY = bottomContentOffset.y
+        if bottomContentOffsetY > -contentInset.top {
+            contentOffset.y = min(bottomContentOffsetY, max(-contentInset.top, y))
+        }
+    }
+    
+    func setFloatingHeaderViewsHidden(_ hidden: Bool, animated: Bool, delay: TimeInterval = 0) {
+        headerViewsAnimator?.stopAnimation(true)
+        headerViewsAnimator?.finishAnimation(at: .current)
+        if animated {
+            headerViewsAnimator = UIViewPropertyAnimator(duration: animationDuration, curve: .linear, animations: {
+                self.setFloatingHeaderViewsHidden(hidden)
+            })
+            headerViewsAnimator?.startAnimation(afterDelay: delay)
+        } else {
+            if delay > 0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
+                    self.setFloatingHeaderViewsHidden(hidden)
+                })
+            } else {
+                setFloatingHeaderViewsHidden(hidden)
+            }
+        }
+    }
+    
+    private func setFloatingHeaderViewsHidden(_ hidden: Bool) {
+        var sections = indicesForVisibleSectionHeaders
+        if hidden {
+            var firstVisibleSection: Int?
+            var firstVisibleHeaderView: UITableViewHeaderFooterView?
+            for section in sections {
+                if let headerView = headerView(forSection: section), headerView.frame.maxY >= contentOffset.y + contentInset.top {
+                    firstVisibleSection = section
+                    firstVisibleHeaderView = headerView
+                    break
+                }
+            }
+            if let firstVisibleSection = firstVisibleSection, let firstVisibleHeaderView = firstVisibleHeaderView {
+                let fixedRect = rectForHeader(inSection: firstVisibleSection)
+                let actualRect = firstVisibleHeaderView.frame
+                if abs(fixedRect.origin.y - actualRect.origin.y) > 1, let index = sections.index(of: firstVisibleSection) {
+                    // header is floating
+                    sections.remove(at: index)
+                    firstVisibleHeaderView.alpha = 0
+                }
+            }
+        }
+        for header in sections.flatMap({ headerView(forSection: $0) }) {
+            header.alpha = 1
         }
     }
     

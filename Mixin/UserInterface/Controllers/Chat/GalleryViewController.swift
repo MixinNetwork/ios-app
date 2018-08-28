@@ -5,9 +5,13 @@ import AVKit
 protocol GalleryViewControllerDelegate: class {
     func galleryViewController(_ viewController: GalleryViewController, placeholderForItemOfMessageId id: String) -> UIImage?
     func galleryViewController(_ viewController: GalleryViewController, sourceRectForItemOfMessageId id: String) -> CGRect?
-    func galleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition, stateDidChangeTo state: GalleryViewController.TransitionState, forItemOfMessageId id: String?)
     func galleryViewController(_ viewController: GalleryViewController, snapshotForItemOfMessageId id: String) -> UIView?
-    func animateAlongsideGalleryViewController(_ viewController: GalleryViewController, transition: GalleryViewController.Transition)
+    func galleryViewController(_ viewController: GalleryViewController, willShowForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController, didShowForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController, willDismissForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController, didDismissForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController, willBeginInteractivelyDismissingForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController, didCancelInteractivelyDismissingForItemOfMessageId id: String?)
 }
 
 class GalleryViewController: UIViewController {
@@ -100,11 +104,11 @@ class GalleryViewController: UIViewController {
         let progress = min(1, max(0, panToDismissDistance / (view.bounds.height / 3)))
         switch recognizer.state {
         case .began:
+            delegate?.galleryViewController(self, willBeginInteractivelyDismissingForItemOfMessageId: item?.messageId)
             prepareTransitionViewForDismissing()
             scrollView.isHidden = true
             if let messageId = item?.messageId {
                 snapshotView = delegate?.galleryViewController(self, snapshotForItemOfMessageId: messageId)
-                delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .began, forItemOfMessageId: messageId)
             }
         case .changed:
             transitionView.frame.origin.y += recognizer.translation(in: view).y
@@ -126,10 +130,8 @@ class GalleryViewController: UIViewController {
                     if let videoView = self.transitionView as? GalleryVideoView {
                         self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
                     }
-                    if let messageId = self.item?.messageId {
-                        self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .cancelled, forItemOfMessageId: messageId)
-                    }
                     self.snapshotView = nil
+                    self.delegate?.galleryViewController(self, didCancelInteractivelyDismissingForItemOfMessageId: self.item?.messageId)
                 })
             }
         case .possible, .failed:
@@ -178,7 +180,6 @@ class GalleryViewController: UIViewController {
         backgroundDimmingView.alpha = 0
         scrollView.isHidden = true
         var sourceViewSnapshotView: UIView?
-        self.delegate?.galleryViewController(self, transition: .show, stateDidChangeTo: .began, forItemOfMessageId: item.messageId)
         if let sourceRect = delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {
             imageClippingTransitionView.frame = sourceRect.insetBy(dx: ImageClippingView.clippingMargin.dx,
                                                                    dy: ImageClippingView.clippingMargin.dy)
@@ -195,11 +196,12 @@ class GalleryViewController: UIViewController {
             }
         }
         let safeAreaInsets = self.safeAreaInsets
-        let containerSize = CGSize(width: view.frame.width - safeAreaInsets.horizontal,
-                                   height: view.frame.height - safeAreaInsets.vertical)
+        let containerSize = CGSize(width: UIScreen.main.bounds.width - safeAreaInsets.horizontal,
+                                   height: UIScreen.main.bounds.height - safeAreaInsets.vertical)
         let imageFinalFrame = item.size.rect(fittingSize: containerSize)
         let safeAreaOrigin = CGPoint(x: safeAreaInsets.left, y: safeAreaInsets.top)
         UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
+            self.delegate?.galleryViewController(self, willShowForItemOfMessageId: item.messageId)
             if let itemSize = self.item?.size, let snapshot = sourceViewSnapshotView {
                 if self.currentItemIsVerticallyOversized {
                     let width = containerSize.height * (itemSize.width / itemSize.height)
@@ -215,24 +217,18 @@ class GalleryViewController: UIViewController {
             self.backgroundDimmingView.alpha = 1
             self.imageClippingTransitionView.frame = CGRect(origin: safeAreaOrigin, size: containerSize)
             self.imageClippingTransitionView.imageView.frame = imageFinalFrame
-            self.delegate?.animateAlongsideGalleryViewController(self, transition: .show)
         }, completion: { (_) in
             sourceViewSnapshotView?.removeFromSuperview()
             self.imageClippingTransitionView.removeFromSuperview()
             self.scrollView.isHidden = false
-            self.delegate?.galleryViewController(self, transition: .show, stateDidChangeTo: .ended, forItemOfMessageId: item.messageId)
+            self.delegate?.galleryViewController(self, didShowForItemOfMessageId: item.messageId)
         })
     }
     
     func dismiss() {
-        if currentPage.item?.category == .video {
-            currentPage.videoView.player.rate = 0
-        }
+        currentPage.stopVideoPlayingAndRemoveObservers()
         scrollView.isHidden = true
         let messageId = item?.messageId
-        if let messageId = messageId {
-            self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .began, forItemOfMessageId: messageId)
-        }
         if transitionView == nil {
             prepareTransitionViewForDismissing()
         }
@@ -252,6 +248,7 @@ class GalleryViewController: UIViewController {
         transitionView.frame = frame
         (transitionView as? ImageClippingView)?.imageView.frame = transitionView.bounds
         UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
+            self.delegate?.galleryViewController(self, willDismissForItemOfMessageId: messageId)
             self.backgroundDimmingView.alpha = 0
             if let item = self.item, let sourceRect = self.delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {
                 sourceViewSnapshotView?.frame = sourceRect
@@ -268,7 +265,6 @@ class GalleryViewController: UIViewController {
                 }
             }
             self.transitionView.alpha = 0
-            self.delegate?.animateAlongsideGalleryViewController(self, transition: .dismiss)
         }, completion: { (_) in
             sourceViewSnapshotView?.removeFromSuperview()
             self.transitionView.removeFromSuperview()
@@ -278,7 +274,7 @@ class GalleryViewController: UIViewController {
             self.scrollView.isHidden = false
             self.transitionView.alpha = 1
             self.transitionView = nil
-            self.delegate?.galleryViewController(self, transition: .dismiss, stateDidChangeTo: .ended, forItemOfMessageId: messageId)
+            self.delegate?.galleryViewController(self, didDismissForItemOfMessageId: messageId)
             self.snapshotView = nil
             for page in self.pages {
                 page.item = nil

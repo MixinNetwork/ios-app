@@ -114,18 +114,7 @@ class GalleryItemViewController: UIViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-        if isObservingRate {
-            videoView.player.removeObserver(self, forKeyPath: rateKey)
-        }
-        if let observer = timeLabelObserver {
-            videoView.player.removeTimeObserver(observer)
-        }
-        timeLabelObserver = nil
-        if let observer = sliderObserver {
-            videoView.player.removeTimeObserver(observer)
-        }
-        sliderObserver = nil
-        stopDownload()
+        stopVideoPlayingAndRemoveObservers()
     }
     
     @objc func applicationWillResignActive(_ notification: Notification) {
@@ -237,6 +226,26 @@ class GalleryItemViewController: UIViewController {
             }
             self?.performSavingToLibrary()
         }
+    }
+    
+    func stopVideoPlayingAndRemoveObservers() {
+        guard item?.category == .video else {
+            return
+        }
+        videoView.player.rate = 0
+        if isObservingRate {
+            isObservingRate = false
+            videoView.player.removeObserver(self, forKeyPath: rateKey)
+        }
+        if let observer = timeLabelObserver {
+            videoView.player.removeTimeObserver(observer)
+        }
+        timeLabelObserver = nil
+        if let observer = sliderObserver {
+            videoView.player.removeTimeObserver(observer)
+        }
+        sliderObserver = nil
+        stopDownload()
     }
     
     class func instance() -> GalleryItemViewController {

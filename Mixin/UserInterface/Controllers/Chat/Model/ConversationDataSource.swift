@@ -20,17 +20,16 @@ class ConversationDataSource {
         return options
     }()
     
-    let queue = DispatchQueue(label: "one.mixin.ios.message.processing")
+    let queue = DispatchQueue(label: "one.mixin.ios.conversation.datasource")
     
     var ownerUser: UserItem?
     var firstUnreadMessageId: String?
     weak var tableView: ConversationTableView?
     
+    private let windowRect = AppDelegate.current.window!.bounds
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 30
-    private let layoutWidth = AppDelegate.current.window!.bounds.width
     private let me = AccountAPI.shared.account!
-    private let semaphore = DispatchSemaphore(value: 1)
 
     private(set) var conversation: ConversationItem {
         didSet {
@@ -51,6 +50,22 @@ class ConversationDataSource {
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
     private var pendingChanges = [ConversationChange]()
+    private var tableViewContentInset: UIEdgeInsets {
+        var inset = UIEdgeInsets.zero
+        let closure = {
+            inset = self.tableView?.contentInset ?? .zero
+        }
+        if Thread.isMainThread {
+            closure()
+        } else {
+            DispatchQueue.main.sync(execute: closure)
+        }
+        return inset
+    }
+    
+    var layoutSize: CGSize {
+        return UIEdgeInsetsInsetRect(windowRect, tableViewContentInset).size
+    }
     
     var conversationId: String {
         return conversation.conversationId
@@ -83,8 +98,6 @@ class ConversationDataSource {
     
     func cancelMessageProcessing() {
         messageProcessingIsCancelled = true
-        semaphore.signal()
-        semaphore.signal()
     }
     
     func scrollToFirstUnreadMessageOrBottom() {
@@ -144,12 +157,11 @@ class ConversationDataSource {
         isLoadingAbove = true
         let requiredCount = self.numberOfMessagesOnPaging
         let conversationId = self.conversationId
-        let layoutWidth = self.layoutWidth
+        let layoutWidth = self.layoutSize.width
         queue.async {
             guard !self.messageProcessingIsCancelled, let firstDate = self.dates.first, let location = self.viewModels[firstDate]?.first?.message else {
                 return
             }
-            self.semaphore.wait()
             var messages = MessageDAO.shared.getMessages(conversationId: conversationId, aboveMessage: location, count: requiredCount)
             let didLoadEarliestMessage = messages.count < requiredCount
             self.didLoadEarliestMessage = didLoadEarliestMessage
@@ -157,17 +169,23 @@ class ConversationDataSource {
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
             var (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
-            if shouldInsertEncryptionHint, let firstDate = dates.first {
+            if shouldInsertEncryptionHint {
                 let hint = MessageItem.encryptionHintMessage(conversationId: conversationId)
+                messages.insert(hint, at: 0)
                 let encryptionHintViewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
-                viewModels[firstDate]?.insert(encryptionHintViewModel, at: 0)
+                if let firstDate = dates.first {
+                    viewModels[firstDate]?.insert(encryptionHintViewModel, at: 0)
+                } else if let firstDate = self.dates.first {
+                    dates = [firstDate]
+                    viewModels[firstDate] = [encryptionHintViewModel]
+                }
             }
             if let lastDate = dates.last, let viewModelsBeforeInsertion = self.viewModels[lastDate] {
                 let messagesBeforeInsertion = Array(viewModelsBeforeInsertion.prefix(2)).map({ $0.message })
                 let messagesForTheDate = Array(messages.suffix(2)) + messagesBeforeInsertion
                 let styles = Array(0..<messagesForTheDate.count).map{ self.style(forIndex: $0, messages: messagesForTheDate)}
                 viewModels[lastDate]?.last?.style = styles[styles.count - messagesBeforeInsertion.count - 1]
-                DispatchQueue.main.async {
+                DispatchQueue.main.sync {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                         return
                     }
@@ -181,7 +199,7 @@ class ConversationDataSource {
                     }
                 }
             }
-            DispatchQueue.main.async {
+            DispatchQueue.main.sync {
                 guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                     return
                 }
@@ -199,7 +217,6 @@ class ConversationDataSource {
                 tableView.contentOffset = CGPoint(x: tableView.contentOffset.x,
                                                   y: tableView.contentSize.height - bottomDistance)
                 self.isLoadingAbove = false
-                self.semaphore.signal()
             }
         }
     }
@@ -212,12 +229,11 @@ class ConversationDataSource {
         highlight = nil
         let conversationId = self.conversationId
         let requiredCount = self.numberOfMessagesOnPaging
-        let layoutWidth = self.layoutWidth
+        let layoutWidth = self.layoutSize.width
         queue.async {
             guard !self.messageProcessingIsCancelled, let lastDate = self.dates.last, let location = self.viewModels[lastDate]?.last?.message else {
                 return
             }
-            self.semaphore.wait()
             var messages = MessageDAO.shared.getMessages(conversationId: conversationId, belowMessage: location, count: requiredCount)
             self.didLoadLatestMessage = messages.count < requiredCount
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
@@ -234,7 +250,7 @@ class ConversationDataSource {
                 let messagesForTheDate = messagesBeforeAppend + messages.prefix(2)
                 let styles = Array(0..<messagesForTheDate.count).map{ self.style(forIndex: $0, messages: messagesForTheDate)}
                 viewModels[firstDate]?.first?.style = styles[messagesBeforeAppend.count]
-                DispatchQueue.main.async {
+                DispatchQueue.main.sync {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                         return
                     }
@@ -248,7 +264,7 @@ class ConversationDataSource {
                     }
                 }
             }
-            DispatchQueue.main.async {
+            DispatchQueue.main.sync {
                 guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                     return
                 }
@@ -270,7 +286,6 @@ class ConversationDataSource {
                     tableView.reloadData()
                 }
                 self.isLoadingBelow = false
-                self.semaphore.signal()
             }
         }
     }
@@ -369,7 +384,7 @@ extension ConversationDataSource {
                     guard !self.messageProcessingIsCancelled else {
                         return
                     }
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.sync {
                         self.scrollToBottomAndReload()
                     }
                 }
@@ -434,18 +449,16 @@ extension ConversationDataSource {
                 SendMessageService.shared.sendReadMessage(messageId: message.messageId)
             }
             
-            self.semaphore.wait()
-            DispatchQueue.main.async {
+            DispatchQueue.main.sync {
                 guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                     return
                 }
                 let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
                 if let style = self.viewModels[date]?[indexPath.row].style {
-                    let viewModel = self.viewModel(withMessage: message, style: style, fits: self.layoutWidth)
+                    let viewModel = self.viewModel(withMessage: message, style: style, fits: self.layoutSize.width)
                     self.viewModels[date]?[indexPath.row] = viewModel
                     tableView.reloadRows(at: [indexPath], with: .automatic)
                 }
-                self.semaphore.signal()
             }
         }
     }
@@ -568,10 +581,6 @@ extension ConversationDataSource {
     }
     
     private func reload(initialMessageId: String? = nil, completion: (() -> Void)? = nil) {
-        let isLoadingOnBackgroundThread = !Thread.isMainThread
-        if isLoadingOnBackgroundThread {
-            semaphore.wait()
-        }
         canInsertUnreadHint = true
         var didLoadEarliestMessage = false
         var didLoadLatestMessage = false
@@ -582,7 +591,11 @@ extension ConversationDataSource {
         let initialMessageId = initialMessageId
             ?? highlight?.messageId
             ?? ConversationViewController.positions[conversationId]?.messageId
-        if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: numberOfMessagesOnReloading) {
+        if let initialMessageId = initialMessageId, initialMessageId == MessageItem.encryptionHintMessageId {
+            messages = MessageDAO.shared.getFirstNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
+            didLoadEarliestMessage = true
+            didLoadLatestMessage = messages.count < numberOfMessagesOnReloading
+        } else if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: numberOfMessagesOnReloading) {
             (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
             if highlight == nil, initialMessageId != firstUnreadMessageId {
                 firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId
@@ -604,7 +617,7 @@ extension ConversationDataSource {
             self.firstUnreadMessageId = nil
             canInsertUnreadHint = false
         }
-        var (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
+        var (dates, viewModels) = self.viewModels(with: messages, fits: layoutSize.width)
         if canInsertEncryptionHint && didLoadEarliestMessage {
             let date: String
             if let firstDate = dates.first {
@@ -614,7 +627,7 @@ extension ConversationDataSource {
                 dates.append(date)
             }
             let hint = MessageItem.encryptionHintMessage(conversationId: self.conversationId)
-            let viewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
+            let viewModel = self.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutSize.width)
             if viewModels[date] != nil {
                 viewModels[date]?.insert(viewModel, at: 0)
             } else {
@@ -650,11 +663,10 @@ extension ConversationDataSource {
             self.didLoadEarliestMessage = didLoadEarliestMessage
             self.didLoadLatestMessage = didLoadLatestMessage
             if let initialIndexPath = initialIndexPath {
-                if tableView.contentSize.height - tableView.bounds.height > 0 {
+                if tableView.contentSize.height > self.layoutSize.height {
                     let rect = tableView.rectForRow(at: initialIndexPath)
-                    let maxY = tableView.contentSize.height - tableView.bounds.height + tableView.contentInset.bottom
-                    let y = ceil(min(maxY, max(0, rect.origin.y + offset)))
-                    tableView.setContentOffset(CGPoint(x: 0, y: y), animated: false)
+                    let y = rect.origin.y + offset - tableView.contentInset.top
+                    tableView.setContentOffsetYSafely(y)
                 }
             } else {
                 tableView.scrollToBottom(animated: false)
@@ -669,15 +681,12 @@ extension ConversationDataSource {
                 self.perform(change: change)
             }
             self.pendingChanges = []
-            if isLoadingOnBackgroundThread {
-                self.semaphore.signal()
-            }
             completion?()
         }
-        if isLoadingOnBackgroundThread {
-            DispatchQueue.main.async(execute: updateUI)
-        } else {
+        if Thread.isMainThread {
             updateUI()
+        } else {
+            DispatchQueue.main.sync(execute: updateUI)
         }
     }
     
@@ -801,7 +810,6 @@ extension ConversationDataSource {
     
     private func addMessageAndDisplay(message: MessageItem) {
         loadedMessageIds.insert(message.messageId)
-        semaphore.wait()
         let messageIsSentByMe = message.userId == me.user_id
         let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
         let lastIndexPathBeforeInsertion = lastIndexPath
@@ -843,7 +851,7 @@ extension ConversationDataSource {
                 if message.isRepresentativeMessage(conversation: conversation) && style.contains(.received) && previousViewModelIsFromDifferentUser {
                     style.insert(.fullname)
                 }
-                DispatchQueue.main.async {
+                DispatchQueue.main.sync {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                         return
                     }
@@ -852,7 +860,7 @@ extension ConversationDataSource {
                     }
                 }
             }
-            viewModel = self.viewModel(withMessage: message, style: style, fits: layoutWidth)
+            viewModel = self.viewModel(withMessage: message, style: style, fits: layoutSize.width)
             if !isLastCell {
                 let nextViewModel = viewModels[row]
                 if viewModel.message.userId != nextViewModel.message.userId {
@@ -866,7 +874,7 @@ extension ConversationDataSource {
                     viewModel.style.remove(.bottomSeparator)
                     nextViewModel.style.remove(.fullname)
                 }
-                DispatchQueue.main.async {
+                DispatchQueue.main.sync {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                         return
                     }
@@ -884,9 +892,9 @@ extension ConversationDataSource {
             if style.contains(.received) && message.isRepresentativeMessage(conversation: conversation) {
                 style.insert(.fullname)
             }
-            viewModel = self.viewModel(withMessage: message, style: style, fits: layoutWidth)
+            viewModel = self.viewModel(withMessage: message, style: style, fits: layoutSize.width)
         }
-        DispatchQueue.main.async {
+        DispatchQueue.main.sync {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                 return
             }
@@ -917,14 +925,9 @@ extension ConversationDataSource {
                 && isLastCell
                 && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)
             if shouldScrollToNewMessage {
-                CATransaction.perform(blockWithTransaction: {
-                    tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-                }, completion: {
-                    self.semaphore.signal()
-                })
+                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             } else {
                 NotificationCenter.default.postOnMain(name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: 1)
-                self.semaphore.signal()
             }
         }
     }
@@ -948,10 +951,16 @@ extension ConversationDataSource {
 
 extension MessageItem {
     
+    static let encryptionHintMessageId = "encryption_hint"
+    
     static func encryptionHintMessage(conversationId: String) -> MessageItem {
-        let message = MessageItem.createMessage(category: MessageCategory.EXT_ENCRYPTION.rawValue, conversationId: conversationId, createdAt: "")
-        message.content = Localized.CHAT_CELL_TITLE_ENCRYPTION
+        let message = MessageItem()
+        message.messageId = encryptionHintMessageId
         message.status = MessageStatus.READ.rawValue
+        message.category = MessageCategory.EXT_ENCRYPTION.rawValue
+        message.conversationId = conversationId
+        message.createdAt = ""
+        message.content = Localized.CHAT_CELL_TITLE_ENCRYPTION
         return message
     }
     

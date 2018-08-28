@@ -36,7 +36,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private let captureVideoOutput = AVCaptureMovieFileOutput()
     private var capturePhotoOutput = AVCapturePhotoOutput()
     private var videoDeviceInput: AVCaptureDeviceInput!
-    private var audioDeviceInput: AVCaptureDeviceInput!
+    private var audioDeviceInput: AVCaptureDeviceInput?
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     private var didTakePhoto = false
     private var photoCaptureProcessor: PhotoCaptureProcessor?
@@ -49,7 +49,9 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var detectLock = NSLock()
     private var detectText = ""
     private var recordTimer: Timer?
-    private var isGrantedAudioRecordPermission = false
+    private var audioRecordPermissionIsGranted: Bool {
+        return AVAudioSession.sharedInstance().recordPermission() == .granted
+    }
 
     private lazy var videoDeviceDiscoverySession: AVCaptureDevice.DiscoverySession = {
         if #available(iOS 10.2, *) {
@@ -316,21 +318,24 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
     @objc func recordViewAction(gestureRecognizer: UILongPressGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
-            startRecordingIfGranted()
-            takeButton.startAnimation { [weak self] in
-                self?.startRecord()
+            if !audioRecordPermissionIsGranted {
+                askForAudioRecordPermission()
+            } else {
+                takeButton.startAnimation { [weak self] in
+                    self?.startRecord()
+                }
+                timeLabel.text = mediaDurationFormatter.string(from: 0)
+                displayMainUI(false)
+                self.recordTimer?.invalidate()
+                let timer = Timer(timeInterval: 0.5,
+                                  target: self,
+                                  selector: #selector(updateTimeLabelAction(_:)),
+                                  userInfo: nil,
+                                  repeats: true)
+                RunLoop.main.add(timer, forMode: .commonModes)
+                recordTimer = timer
+                startRedDotAnimation()
             }
-            timeLabel.text = mediaDurationFormatter.string(from: 0)
-            displayMainUI(false)
-            self.recordTimer?.invalidate()
-            let timer = Timer(timeInterval: 0.5,
-                              target: self,
-                              selector: #selector(updateTimeLabelAction(_:)),
-                              userInfo: nil,
-                              repeats: true)
-            RunLoop.main.add(timer, forMode: .commonModes)
-            recordTimer = timer
-            startRedDotAnimation()
         case .ended, .cancelled, .failed:
             takeButton.resetAnimation { [weak self] in
                 self?.stopRecord()
@@ -344,15 +349,20 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
         }
     }
 
-    private func startRecordingIfGranted() {
-        isGrantedAudioRecordPermission = false
+    private func askForAudioRecordPermission() {
         switch AVAudioSession.sharedInstance().recordPermission() {
         case .denied:
             alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
-        case .granted:
-            isGrantedAudioRecordPermission = true
         case .undetermined:
-            AVAudioSession.sharedInstance().requestRecordPermission({ (_) in })
+            AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
+                if granted {
+                    DispatchQueue.main.async {
+                        self.addAudioDeviceInputIfNeeded()
+                    }
+                }
+            })
+        case .granted:
+            break
         }
     }
 
@@ -375,7 +385,7 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
         defer {
             takeButton.autoStopAction()
         }
-        guard error == nil, isGrantedAudioRecordPermission else {
+        guard error == nil, audioRecordPermissionIsGranted else {
             try? FileManager.default.removeItem(at: outputFileURL)
             return
         }
@@ -427,11 +437,8 @@ extension CameraViewController {
             }
         }
 
-        if let device = AVCaptureDevice.default(for: .audio), let deviceInput = try? AVCaptureDeviceInput(device: device) {
-            if session.canAddInput(deviceInput) {
-                session.addInput(deviceInput)
-                audioDeviceInput = deviceInput
-            }
+        if audioRecordPermissionIsGranted {
+            addAudioDeviceInputIfNeeded()
         }
 
         if session.canAddOutput(metadataOutput) {
@@ -455,6 +462,14 @@ extension CameraViewController {
         }
 
         session.commitConfiguration()
+    }
+    
+    private func addAudioDeviceInputIfNeeded() {
+        guard audioDeviceInput == nil, let device = AVCaptureDevice.default(for: .audio), let deviceInput = try? AVCaptureDeviceInput(device: device), session.canAddInput(deviceInput) else {
+            return
+        }
+        session.addInput(deviceInput)
+        audioDeviceInput = deviceInput
     }
 
     private func displaySnapshotView(show: Bool) {

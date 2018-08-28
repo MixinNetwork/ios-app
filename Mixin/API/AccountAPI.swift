@@ -22,7 +22,6 @@ final class AccountAPI: BaseAPI {
 
         static let verifyPin = "pin/verify"
         static let updatePin = "pin/update"
-        static let tokenPin = "pin/token"
     }
     
     private lazy var jsonEncoder = JSONEncoder()
@@ -110,30 +109,24 @@ final class AccountAPI: BaseAPI {
     }
     
     func updatePin(old: String?, new: String, completion: @escaping (APIResult<Account>) -> Void) {
-        AccountUserDefault.shared.getPinToken { [weak self](pinToken: String?) in
-            guard let pinToken = pinToken else {
-                completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
-                return
-            }
-            var param: [String: String] = [:]
-            if let old = old {
-                guard let encryptedOldPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: old) else {
-                    completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
-                    return
-                }
-                param["old_pin"] = encryptedOldPin
-            }
-            guard let encryptedNewPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: new) else {
-                completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
-                return
-            }
-            param["pin"] = encryptedNewPin
-            self?.request(method: .post, url: url.updatePin, parameters: param, toastError: false, completion: completion)
+        guard let pinToken = AccountUserDefault.shared.getPinToken() else {
+            completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
+            return
         }
-    }
-
-    func getPinToken(completion: @escaping (APIResult<PinTokenResponse>) -> Void) {
-        request(method: .get, url: url.tokenPin, completion: completion)
+        var param: [String: String] = [:]
+        if let old = old {
+            guard let encryptedOldPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: old) else {
+                completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
+                return
+            }
+            param["old_pin"] = encryptedOldPin
+        }
+        guard let encryptedNewPin = KeyUtil.aesEncrypt(pinToken: pinToken, pin: new) else {
+            completion(.failure(APIError(status: 200, code: 400, description: Localized.TOAST_OPERATION_FAILED)))
+            return
+        }
+        param["pin"] = encryptedNewPin
+        request(method: .post, url: url.updatePin, parameters: param, toastError: false, completion: completion)
     }
     
     func logout(completion: @escaping (APIResult<EmptyResponse>) -> Void) {

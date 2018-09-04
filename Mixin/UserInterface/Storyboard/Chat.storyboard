@@ -1889,7 +1889,7 @@
         <!--Gallery Item View Controller-->
         <scene sceneID="ndf-Gh-0RX">
             <objects>
-                <viewController storyboardIdentifier="photo_preview_page" id="iRr-jh-RO2" customClass="GalleryItemViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="photo_preview_page" automaticallyAdjustsScrollViewInsets="NO" id="iRr-jh-RO2" customClass="GalleryItemViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sor-nY-lJl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

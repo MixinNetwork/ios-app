@@ -75,6 +75,7 @@ class GalleryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.layoutIfNeeded()
         scrollViewContentView.backgroundColor = .clear
         scrollView.addSubview(scrollViewContentView)
         for page in pages {

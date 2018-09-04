@@ -81,6 +81,7 @@ class GalleryItemViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.layoutIfNeeded()
         scrollView.addSubview(imageView)
         scrollView.delegate = self
         tapRecognizer.delegate = self
@@ -98,12 +99,6 @@ class GalleryItemViewController: UIViewController {
             label.layer.shadowOffset = .zero
         }
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive(_:)), name: .UIApplicationWillResignActive, object: nil)
-    }
-    
-    @available(iOS 11.0, *)
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        layoutImageView()
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -280,16 +275,21 @@ extension GalleryItemViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        let offset = CGPoint(x: max(0, (scrollView.frame.width - scrollView.contentSize.width) / 2),
-                             y: max(0, (scrollView.frame.height - scrollView.contentSize.height) / 2))
-        imageView.center = CGPoint(x: scrollView.contentSize.width / 2 + offset.x,
-                                   y: scrollView.contentSize.height / 2 + offset.y)
+        let visibleSize: CGSize
         if #available(iOS 11.0, *) {
-            if scrollView.zoomScale > scrollView.minimumZoomScale {
-                scrollView.contentInset = view.safeAreaInsets
-            } else {
-                scrollView.contentInset = .zero
-            }
+            visibleSize = UIEdgeInsetsInsetRect(scrollView.frame, scrollView.adjustedContentInset).size
+        } else {
+            visibleSize = scrollView.frame.size
+        }
+        if scrollView.contentSize.width < visibleSize.width {
+            imageView.center.x = visibleSize.width / 2
+        } else {
+            imageView.center.x = scrollView.contentSize.width / 2
+        }
+        if scrollView.contentSize.height < visibleSize.height {
+            imageView.center.y = visibleSize.height / 2
+        } else {
+            imageView.center.y = scrollView.contentSize.height / 2
         }
     }
     
@@ -531,9 +531,6 @@ extension GalleryItemViewController {
         let imageRect: CGRect
         if item.shouldLayoutAsArticle {
             imageRect = CGRect(x: 0, y: 0, width: pageSize.width, height: pageSize.width * item.size.height / item.size.width)
-            if #available(iOS 11.0, *) {
-                scrollView.contentInset = view.safeAreaInsets
-            }
         } else {
             imageRect = item.size.rect(fittingSize: pageSize)
         }

@@ -87,6 +87,9 @@ extension StickerInputViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedIndex = indexPath.item
+        guard selectedIndex != currentIndex, !isScrollingByAlbumSelection else {
+            return
+        }
         guard let viewController = modelController.dequeueReusableStickersViewController(withIndex: selectedIndex) else {
             return
         }
@@ -136,6 +139,9 @@ extension StickerInputViewController: UIScrollViewDelegate {
         var maxWidth: CGFloat = 0
         var focusedIndex = currentIndex
         for case let vc as StickersViewController in pageViewController.childViewControllers {
+            guard vc.view.superview != nil else {
+                continue
+            }
             let convertedFrame = vc.view.convert(vc.view.bounds, to: view)
             let width = view.frame.intersection(convertedFrame).width
             if width > maxWidth {

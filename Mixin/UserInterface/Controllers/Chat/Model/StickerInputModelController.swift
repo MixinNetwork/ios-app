@@ -14,8 +14,11 @@ class StickerInputModelController: NSObject {
     private var reusableStickerViewControllers = Set<StickersViewController>()
     
     var initialViewController: StickersViewController? {
-        return dequeueReusableStickersViewController(withIndex: 2)
-            ?? dequeueReusableStickersViewController(withIndex: 0)
+        if let vc = dequeueReusableStickersViewController(withIndex: 0), !vc.stickers.isEmpty {
+            return vc
+        } else {
+            return dequeueReusableStickersViewController(withIndex: 2)
+        }
     }
     
     func reloadRecentFavoriteStickers() {

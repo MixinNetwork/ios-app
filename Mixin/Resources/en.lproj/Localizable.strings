@@ -281,7 +281,8 @@
 "wallet_pin_pay_interval" = "Pay with PIN interval";
 "wallet_pin_pay_interval_confirm" = "Confirm PIN to protect your settings security.";
 "wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your Wallet PIN for the specified interval.";
-
+"withdrawal_amount_too_small" = "Withdraw amount too small";
+"withdrawal_minimum_amount" = "Minimum withdraw amount is %@";
 
 // Transaction
 "transaction_title" = "Transaction";

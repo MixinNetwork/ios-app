@@ -279,7 +279,8 @@
 "wallet_pin_pay_interval" = "支付密码使用间隔";
 "wallet_pin_pay_interval_confirm" = "确认钱包密码保护设置安全";
 "wallet_pin_pay_interval_tips" = "为了你的资产安全，距离上次输入支付密码的时间超过以上指定时间时，再次转账时仍然需要支付密码";
-
+"withdrawal_amount_too_small" = "提现金额太少了";
+"withdrawal_minimum_amount" = "最小提现金额 %@";
 
 // Transaction
 "transaction_title" = "交易详情";

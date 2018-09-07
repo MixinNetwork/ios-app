@@ -968,14 +968,21 @@
                                     </constraint>
                                 </constraints>
                             </view>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="KFl-me-jl5" customClass="ConnectionHintView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="76" width="414" height="0.0"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="KFl-me-jl5" secondAttribute="trailing" id="0hJ-TU-Szk"/>
+                            <constraint firstItem="KFl-me-jl5" firstAttribute="top" secondItem="moA-QP-bvY" secondAttribute="bottom" id="2kD-7O-R9b"/>
                             <constraint firstItem="moA-QP-bvY" firstAttribute="leading" secondItem="4a2-lX-Qlm" secondAttribute="leading" id="35p-7F-6jB"/>
+                            <constraint firstItem="EnG-pA-Td2" firstAttribute="top" secondItem="moA-QP-bvY" secondAttribute="bottom" id="EK9-jM-zSi"/>
                             <constraint firstItem="moA-QP-bvY" firstAttribute="top" secondItem="4a2-lX-Qlm" secondAttribute="top" id="LiS-x3-sHr"/>
                             <constraint firstAttribute="bottom" secondItem="EnG-pA-Td2" secondAttribute="bottom" id="UNc-Jb-XE7"/>
                             <constraint firstAttribute="trailing" secondItem="EnG-pA-Td2" secondAttribute="trailing" id="ch0-aj-hah"/>
-                            <constraint firstItem="EnG-pA-Td2" firstAttribute="top" secondItem="moA-QP-bvY" secondAttribute="bottom" id="d5t-As-fib"/>
+                            <constraint firstItem="KFl-me-jl5" firstAttribute="leading" secondItem="gaG-Kd-bwS" secondAttribute="leading" id="czG-yC-1YY"/>
                             <constraint firstItem="EnG-pA-Td2" firstAttribute="leading" secondItem="gaG-Kd-bwS" secondAttribute="leading" id="kWR-5C-A2n"/>
                             <constraint firstItem="JSy-1p-Qkl" firstAttribute="bottom" secondItem="4a2-lX-Qlm" secondAttribute="bottom" id="lJ9-s2-1d1"/>
                             <constraint firstItem="moA-QP-bvY" firstAttribute="trailing" secondItem="4a2-lX-Qlm" secondAttribute="trailing" id="rgk-1t-ubW"/>

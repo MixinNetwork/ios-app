@@ -106,10 +106,15 @@ class WithdrawalViewController: UIViewController {
     @IBAction func nextAction(_ sender: Any) {
         let memo = memoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let amount = amountTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        guard amount.isNumeric && address != nil else {
+        guard let address = address else {
             return
         }
-        PayWindow.shared.presentPopupControllerAnimated(isTransfer: false, asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+        if self.amount(amount, isGreaterThanOrEqualToDust: address.dust) {
+            PayWindow.shared.presentPopupControllerAnimated(isTransfer: false, asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+        } else {
+            let str = Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust)
+            NotificationCenter.default.post(name: .ErrorMessageDidAppear, object: str)
+        }
     }
     
     @IBAction func addAddressAction(_ sender: Any) {
@@ -231,6 +236,13 @@ extension WithdrawalViewController {
                 weakSelf.displayFeeHint(loading: false)
             }
         }
+    }
+    
+    private func amount(_ amount: String, isGreaterThanOrEqualToDust dust: String) -> Bool {
+        guard let amount = Decimal(string: amount, locale: .current), let dust = Decimal(string: dust, locale: .us) else {
+            return false
+        }
+        return amount >= dust
     }
     
 }

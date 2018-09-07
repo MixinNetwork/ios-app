@@ -124,7 +124,11 @@ class WithdrawalViewController: UIViewController {
     @IBAction func amountTextFieldChangedAction(_ sender: Any) {
         let amount = amountTextField.text ?? ""
         amountTextField.font = amount.isEmpty ? placeholderFont : digitsFont
-        nextButton.isEnabled = amount.isNumeric && address != nil
+        if address != nil, let amountDecimal = Decimal(string: amount, locale: .current), amountDecimal > 0 {
+            nextButton.isEnabled = true
+        } else {
+            nextButton.isEnabled = false
+        }
     }
     
     @IBAction func amountTextFieldDidEndOnExitAction(_ sender: Any) {

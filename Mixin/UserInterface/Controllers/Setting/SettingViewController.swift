@@ -45,6 +45,8 @@ extension SettingViewController {
             }
         } else if indexPath.section == 1 {
             navigationController?.pushViewController(StorageUsageViewController.instance(), animated: true)
+        } else if indexPath.section == 2 {
+            navigationController?.pushViewController(NotificationSettingsViewController.instance(), animated: true)
         } else {
             navigationController?.pushViewController(AboutContainerViewController.instance(), animated: true)
         }

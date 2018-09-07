@@ -95,10 +95,34 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection id="WLC-eG-EBm">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="1Rr-AL-5Wq" style="IBUITableViewCellStyleDefault" id="3Ed-7I-miw">
+                                        <rect key="frame" x="0.0" y="271.5" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Ed-7I-miw" id="HpU-T8-eDP">
+                                            <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Notifications" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1Rr-AL-5Wq">
+                                                    <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_notification"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                             <tableViewSection id="7n5-bn-GTn">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="qZr-kt-ydb" style="IBUITableViewCellStyleDefault" id="D0O-Pa-B9e">
-                                        <rect key="frame" x="0.0" y="271.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="351.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="D0O-Pa-B9e" id="PYV-pG-ww5">
                                             <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
@@ -509,150 +533,46 @@
             </objects>
             <point key="canvasLocation" x="1468" y="663"/>
         </scene>
-        <!--Notification View Controller-->
+        <!--Notification Settings View Controller-->
         <scene sceneID="YfC-Qx-uTf">
             <objects>
-                <tableViewController storyboardIdentifier="notification" id="TsT-pu-fb1" customClass="NotificationViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="notification" id="TsT-pu-fb1" customClass="NotificationSettingsViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="CqK-B5-9xa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
-                            <tableViewSection headerTitle="MESSAGE NOTIFICATIONS" footerTitle="You can set custom notifications for specific users on their Contact page." id="VVh-xO-Idg">
+                            <tableViewSection id="7YS-nD-uoT">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="JfG-gV-6Bb">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="eIL-bR-iAP">
+                                        <rect key="frame" x="0.0" y="35" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JfG-gV-6Bb" id="fM2-NC-Qtp">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eIL-bR-iAP" id="uKg-cH-plI">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Show Notification" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="avT-dJ-9IY">
-                                                    <rect key="frame" x="15" y="11" width="135" height="21"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Message Preview" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FZk-CU-EAm">
+                                                    <rect key="frame" x="16" y="11" width="133.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_notification_show"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_notification_message_preview"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="jeo-cx-hVi">
-                                                    <rect key="frame" x="325" y="11" width="20" height="20"/>
-                                                </activityIndicatorView>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mdx-CR-Oyc">
-                                                    <rect key="frame" x="311" y="6" width="51" height="31"/>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ccq-vy-TTE">
+                                                    <rect key="frame" x="310" y="6" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="switchMessagePreview:" destination="TsT-pu-fb1" eventType="valueChanged" id="4n2-sf-F5B"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="avT-dJ-9IY" firstAttribute="centerY" secondItem="fM2-NC-Qtp" secondAttribute="centerY" id="3ZG-dg-TW0"/>
-                                                <constraint firstItem="mdx-CR-Oyc" firstAttribute="centerY" secondItem="fM2-NC-Qtp" secondAttribute="centerY" id="9oj-lb-dy5"/>
-                                                <constraint firstItem="jeo-cx-hVi" firstAttribute="centerX" secondItem="mdx-CR-Oyc" secondAttribute="centerX" id="L0X-2s-kFh"/>
-                                                <constraint firstItem="avT-dJ-9IY" firstAttribute="leading" secondItem="fM2-NC-Qtp" secondAttribute="leading" constant="15" id="Meb-QQ-cCd"/>
-                                                <constraint firstAttribute="trailing" secondItem="mdx-CR-Oyc" secondAttribute="trailing" constant="15" id="YFQ-Nc-eda"/>
-                                                <constraint firstItem="jeo-cx-hVi" firstAttribute="centerY" secondItem="mdx-CR-Oyc" secondAttribute="centerY" id="oBj-jx-Skj"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="BVk-Yu-alJ">
-                                        <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BVk-Yu-alJ" id="c9H-cB-w7a">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Sound" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RPL-Vn-DNB">
-                                                    <rect key="frame" x="15" y="11" width="50" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_notification_sound"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Mjb-G7-z4L">
-                                                    <rect key="frame" x="325" y="11" width="20" height="20"/>
-                                                </activityIndicatorView>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rid-dc-PN6">
-                                                    <rect key="frame" x="311" y="6" width="51" height="31"/>
-                                                </switch>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="RPL-Vn-DNB" firstAttribute="centerY" secondItem="c9H-cB-w7a" secondAttribute="centerY" id="4Fd-9F-6wG"/>
-                                                <constraint firstAttribute="trailing" secondItem="rid-dc-PN6" secondAttribute="trailing" constant="15" id="ISz-2O-e5v"/>
-                                                <constraint firstItem="rid-dc-PN6" firstAttribute="centerY" secondItem="c9H-cB-w7a" secondAttribute="centerY" id="X2U-Br-Ez2"/>
-                                                <constraint firstItem="Mjb-G7-z4L" firstAttribute="centerY" secondItem="rid-dc-PN6" secondAttribute="centerY" id="kps-Dj-eYB"/>
-                                                <constraint firstItem="RPL-Vn-DNB" firstAttribute="leading" secondItem="c9H-cB-w7a" secondAttribute="leading" constant="15" id="q08-2g-Db4"/>
-                                                <constraint firstItem="Mjb-G7-z4L" firstAttribute="centerX" secondItem="rid-dc-PN6" secondAttribute="centerX" id="z2z-Zj-uDC"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                            <tableViewSection headerTitle="GROUP NOTIFICATIONS" footerTitle="You can set custom notifications for specific groups on their Group Info page." id="6A9-Bx-6rs">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="VJU-99-wI1">
-                                        <rect key="frame" x="0.0" y="235" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VJU-99-wI1" id="FSZ-dE-T25">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Show Notification" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zaW-cR-zTI">
-                                                    <rect key="frame" x="15" y="11" width="135" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_notification_show"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QCj-Tj-zNS">
-                                                    <rect key="frame" x="325" y="11" width="20" height="20"/>
-                                                </activityIndicatorView>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1zw-GI-Txn">
-                                                    <rect key="frame" x="311" y="6" width="51" height="31"/>
-                                                </switch>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="QCj-Tj-zNS" firstAttribute="centerY" secondItem="1zw-GI-Txn" secondAttribute="centerY" id="86U-jQ-2qf"/>
-                                                <constraint firstItem="1zw-GI-Txn" firstAttribute="centerY" secondItem="FSZ-dE-T25" secondAttribute="centerY" id="Efx-BI-2Cb"/>
-                                                <constraint firstItem="zaW-cR-zTI" firstAttribute="centerY" secondItem="FSZ-dE-T25" secondAttribute="centerY" id="GFH-kM-MS1"/>
-                                                <constraint firstAttribute="trailing" secondItem="1zw-GI-Txn" secondAttribute="trailing" constant="15" id="S2x-MO-bYy"/>
-                                                <constraint firstItem="zaW-cR-zTI" firstAttribute="leading" secondItem="FSZ-dE-T25" secondAttribute="leading" constant="15" id="Ycj-PP-1Ra"/>
-                                                <constraint firstItem="QCj-Tj-zNS" firstAttribute="centerX" secondItem="1zw-GI-Txn" secondAttribute="centerX" id="u6H-5E-kPQ"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="58G-Ok-XXe">
-                                        <rect key="frame" x="0.0" y="279" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="58G-Ok-XXe" id="SeX-jE-6kF">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Sound" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dXn-MI-7uE">
-                                                    <rect key="frame" x="15" y="11" width="50" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_notification_sound"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="DPe-bu-0o9">
-                                                    <rect key="frame" x="325" y="11" width="20" height="20"/>
-                                                </activityIndicatorView>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GZe-PE-TsE">
-                                                    <rect key="frame" x="311" y="6" width="51" height="31"/>
-                                                </switch>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="DPe-bu-0o9" firstAttribute="centerY" secondItem="GZe-PE-TsE" secondAttribute="centerY" id="0hl-7m-Tiu"/>
-                                                <constraint firstItem="DPe-bu-0o9" firstAttribute="centerX" secondItem="GZe-PE-TsE" secondAttribute="centerX" id="BSV-Pq-0nj"/>
-                                                <constraint firstItem="dXn-MI-7uE" firstAttribute="leading" secondItem="SeX-jE-6kF" secondAttribute="leading" constant="15" id="WJI-tr-kKu"/>
-                                                <constraint firstItem="GZe-PE-TsE" firstAttribute="centerY" secondItem="SeX-jE-6kF" secondAttribute="centerY" id="bGv-xh-qTg"/>
-                                                <constraint firstItem="dXn-MI-7uE" firstAttribute="centerY" secondItem="SeX-jE-6kF" secondAttribute="centerY" id="bNv-ef-Ghv"/>
-                                                <constraint firstAttribute="trailing" secondItem="GZe-PE-TsE" secondAttribute="trailing" constant="15" id="yyK-Eq-N9q"/>
+                                                <constraint firstItem="FZk-CU-EAm" firstAttribute="leading" secondItem="uKg-cH-plI" secondAttribute="leadingMargin" id="5Oy-ce-k4n"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ccq-vy-TTE" secondAttribute="trailing" id="B9k-jW-bYs"/>
+                                                <constraint firstItem="FZk-CU-EAm" firstAttribute="centerY" secondItem="uKg-cH-plI" secondAttribute="centerY" id="BFS-NL-v9j"/>
+                                                <constraint firstItem="ccq-vy-TTE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="FZk-CU-EAm" secondAttribute="trailing" constant="8" id="Vxd-Uk-5w0"/>
+                                                <constraint firstItem="ccq-vy-TTE" firstAttribute="centerY" secondItem="uKg-cH-plI" secondAttribute="centerY" id="eMV-7U-WGy"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -664,6 +584,9 @@
                             <outlet property="delegate" destination="TsT-pu-fb1" id="KJs-O9-zFp"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="messagePreviewSwitch" destination="ccq-vy-TTE" id="k3I-ha-sV0"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ha2-XG-uOZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -779,7 +702,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_mixin" translatesAutoresizingMaskIntoConstraints="NO" id="1PS-Cb-fAg">
-                                                    <rect key="frame" x="-27.5" y="50" width="375" height="280"/>
+                                                    <rect key="frame" x="0.0" y="50" width="375" height="280"/>
                                                 </imageView>
                                             </subviews>
                                             <constraints>

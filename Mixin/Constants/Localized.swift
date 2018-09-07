@@ -466,6 +466,7 @@ public class Localized {
     // Notifications
     public static let NOTIFICATION_REPLY = LocalizedString("notification_reply", comment: "Reply")
     public static let NOTIFICATION_MUTE = LocalizedString("notification_mute", comment: "Mute")
+    public static let NOTIFICATION_CONTENT_GENERAL = LocalizedString("notification_content_general", comment: "You have a new message")
     public static let NOTIFICATION_CONTENT_PHOTO = LocalizedString("notification_content_photo", comment: "[Photo]")
     public static let NOTIFICATION_CONTENT_TRANSFER = LocalizedString("notification_content_transfer", comment: "[Transfer]")
     public static let NOTIFICATION_CONTENT_FILE = LocalizedString("notification_content_file", comment: "[File]")

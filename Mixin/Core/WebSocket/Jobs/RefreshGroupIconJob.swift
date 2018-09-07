@@ -49,7 +49,7 @@ class RefreshGroupIconJob: AsynchronousJob {
         let semaphore = DispatchSemaphore(value: 0)
         for (index, participant) in participants.enumerated() {
             if !participant.userAvatarUrl.isEmpty, let url = URL(string: participant.userAvatarUrl) {
-                SDWebImageManager.shared().loadImage(with: url, options: .lowPriority, progress: nil, completed: { (image, data, error, cacheType, finished, imageURL) in
+                SDWebImageManager.shared.loadImage(with: url, options: .lowPriority, progress: nil, completed: { (image, _, error, _, _, _) in
                     if error == nil, let image = image {
                         images.append(image)
                     }

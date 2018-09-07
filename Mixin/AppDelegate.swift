@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-        SDImageCache.shared().clearMemory()
+        SDImageCache.shared.clearMemory()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

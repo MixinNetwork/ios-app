@@ -1,10 +1,10 @@
 import UIKit
-import FLAnimatedImage
+import YYImage
 
 class StickerCollectionViewCell: UICollectionViewCell {
     
-    lazy var imageView: FLAnimatedImageView = {
-        let view = FLAnimatedImageView()
+    lazy var imageView: YYAnimatedImageView = {
+        let view = YYAnimatedImageView()
         addSubview(view)
         view.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()

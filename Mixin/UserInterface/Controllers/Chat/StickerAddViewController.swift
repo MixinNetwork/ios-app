@@ -1,11 +1,11 @@
 import UIKit
-import FLAnimatedImage
+import YYImage
 import Photos
 import SDWebImage
 
 class StickerAddViewController: UIViewController {
 
-    @IBOutlet weak var stickerImageView: FLAnimatedImageView!
+    @IBOutlet weak var stickerImageView: YYAnimatedImageView!
 
     private var message: MessageItem?
     private var asset: PHAsset?
@@ -100,7 +100,9 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
             StickerAPI.shared.addSticker(stickerBase64: stickerBase64, completion: { [weak self](result) in
                 switch result {
                 case let .success(sticker):
-                    SDWebImageManager.shared().imageCache?.storeImageData(toDisk: Data(base64Encoded: stickerBase64), forKey: sticker.assetUrl)
+                    if let data = Data(base64Encoded: stickerBase64), let image = UIImage(data: data) {
+                        SDWebImageManager.shared.imageCache.store(image, imageData: data, forKey: sticker.assetUrl, cacheType: .disk, completion: nil)
+                    }
                     DispatchQueue.global().async {
                         StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                         DispatchQueue.main.async {

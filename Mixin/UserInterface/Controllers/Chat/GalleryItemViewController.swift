@@ -1,7 +1,7 @@
 import UIKit
 import Photos
 import SwiftMessages
-import FLAnimatedImage
+import YYImage
 import SnapKit
 
 class GalleryItemViewController: UIViewController {
@@ -23,7 +23,7 @@ class GalleryItemViewController: UIViewController {
     
     private static let qrCodeDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
     
-    let imageView = FLAnimatedImageView()
+    let imageView = YYAnimatedImageView()
     
     private let animationDuration: TimeInterval = 0.3
     private let maximumZoomScale: CGFloat = 3

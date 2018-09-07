@@ -1,10 +1,10 @@
 import UIKit
 import SDWebImage
-import FLAnimatedImage
+import YYImage
 
 class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     
-    let contentImageView = FLAnimatedImageView()
+    let contentImageView = YYAnimatedImageView()
     let shadowImageView = UIImageView()
     lazy var selectedOverlapView: UIView = {
         let view = SelectedOverlapView()

@@ -1,5 +1,5 @@
 import UIKit
-import FLAnimatedImage
+import YYImage
 import Photos
 
 class StickerManagerViewController: UICollectionViewController {
@@ -164,7 +164,7 @@ extension StickerManagerViewController: PhotoAssetPickerDelegate {
 class FavoriteStickerCell: UICollectionViewCell {
 
     @IBOutlet weak var selectionImageView: UIImageView!
-    @IBOutlet weak var stickerImageView: FLAnimatedImageView!
+    @IBOutlet weak var stickerImageView: YYAnimatedImageView!
     @IBOutlet weak var selectionMaskView: UIView!
     
 

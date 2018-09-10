@@ -421,10 +421,12 @@
 "setting_storage_audios" = "音频";
 "setting_storage_files" = "文件";
 "setting_logout" = "退出登录";
+"setting_notification_message_preview" = "显示消息内容";
 
 // Notifications
 "notification_reply" = "回复";
 "notification_mute" = "屏蔽";
+"notification_content_general" = "你收到了一条消息";
 "notification_content_photo" = "[图片]";
 "notification_content_transfer" = "[转账]";
 "notification_content_file" = "[文件]";

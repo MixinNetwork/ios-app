@@ -420,10 +420,12 @@
 "setting_storage_audios" = "Audios";
 "setting_storage_files" = "Files";
 "setting_logout" = "Log Out";
+"setting_notification_message_preview" = "Message Preview";
 
 // Notifications
 "notification_reply" = "Reply";
 "notification_mute" = "Mute";
+"notification_content_general" = "You have a new message";
 "notification_content_photo" = "[Photo]";
 "notification_content_transfer" = "[Transfer]";
 "notification_content_file" = "[File]";

@@ -655,7 +655,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                 MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
                 tableViewContentOffsetShouldFollowInputWrapperPosition = true
                 view.bringSubview(toFront: galleryWrapperView)
-                galleryViewController.show(item: item)
+                if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, case let .relativeOffset(offset) = viewModel.layoutPosition {
+                    galleryViewController.show(item: item, offset: offset)
+                } else {
+                    galleryViewController.show(item: item, offset: 0)
+                }
                 homeIndicatorAutoHidden = true
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue {
@@ -1292,9 +1296,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShowForItemOfMessageId id: String?) {
-        if viewController.shouldPerformMagicMoveTransitionForCurrentItem {
-            setCell(ofMessageId: id, contentViewHidden: true)
-        }
+        setCell(ofMessageId: id, contentViewHidden: true)
         if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
             UIView.performWithoutAnimation {
                 self.statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.inCall
@@ -1306,24 +1308,27 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didShowForItemOfMessageId id: String?) {
-        if viewController.shouldPerformMagicMoveTransitionForCurrentItem {
-            setCell(ofMessageId: id, contentViewHidden: false)
+        setCell(ofMessageId: id, contentViewHidden: false)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, willDismissArticleForItemOfMessageId id: String?, atRelativeOffset offset: CGFloat) {
+        guard let id = id, let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell else {
+            return
         }
+        (dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel)?.layoutPosition = .relativeOffset(offset)
+        cell.contentImageView.position = .relativeOffset(offset)
+        cell.contentImageView.layoutIfNeeded()
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willDismissForItemOfMessageId id: String?) {
-        if viewController.shouldPerformMagicMoveTransitionForCurrentItem {
-            setCell(ofMessageId: id, contentViewHidden: true)
-        }
+        setCell(ofMessageId: id, contentViewHidden: true)
         if statusBarPlaceholderHeightConstraint.constant != StatusBarHeight.inCall {
             statusBarHidden = false
         }
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didDismissForItemOfMessageId id: String?) {
-        if viewController.shouldPerformMagicMoveTransitionForCurrentItem {
-            setCell(ofMessageId: id, contentViewHidden: false)
-        }
+        setCell(ofMessageId: id, contentViewHidden: false)
         if statusBarPlaceholderHeightConstraint.constant == StatusBarHeight.inCall {
             statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.normal
             statusBarHidden = false

@@ -65,9 +65,14 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         let view = UIImageView(frame: contentFrame)
         view.contentMode = .scaleAspectFit
         UIGraphicsBeginImageContextWithOptions(contentFrame.size, false, UIScreen.main.scale)
-        for view in contentSnapshotViews {
-            let rect = view.convert(view.bounds, to: contentImageView)
-            view.drawHierarchy(in: rect, afterScreenUpdates: afterScreenUpdates)
+        if let context = UIGraphicsGetCurrentContext() {
+            for view in contentSnapshotViews {
+                let origin = view.convert(CGPoint.zero, to: contentImageView)
+                context.saveGState()
+                context.translateBy(x: origin.x, y: origin.y)
+                view.layer.render(in: context)
+                context.restoreGState()
+            }
         }
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -107,7 +112,8 @@ extension PhotoRepresentableMessageCell {
     class VerticalPositioningImageView: UIView {
         
         enum Position {
-            case top, center
+            case relativeOffset(CGFloat)
+            case center
         }
         
         let imageView = YYAnimatedImageView()
@@ -146,12 +152,13 @@ extension PhotoRepresentableMessageCell {
             if aspectRatio.width <= 1 {
                 aspectRatio = CGSize(width: 1, height: 1)
             }
-            imageView.bounds.size = CGSize(width: bounds.width, height: bounds.width * aspectRatio.height / aspectRatio.width)
+            imageView.frame.size = CGSize(width: bounds.width, height: bounds.width * aspectRatio.height / aspectRatio.width)
             switch position {
             case .center:
                 imageView.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
-            case .top:
-                imageView.frame.origin = .zero
+            case .relativeOffset(let offset):
+                let y = offset * imageView.bounds.size.height
+                imageView.frame.origin = CGPoint(x: 0, y: y)
             }
         }
         

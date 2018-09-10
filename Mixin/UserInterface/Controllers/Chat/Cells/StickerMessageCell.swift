@@ -1,9 +1,9 @@
 import UIKit
-import FLAnimatedImage
+import YYImage
 
 class StickerMessageCell: DetailInfoMessageCell {
 
-    let contentImageView = FLAnimatedImageView()
+    let contentImageView = YYAnimatedImageView()
     
     lazy var selectedOverlapImageView: UIImageView = {
         let imageView = UIImageView()

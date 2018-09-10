@@ -1,5 +1,5 @@
 import Foundation
-import FLAnimatedImage
+import SDWebImage
 
 class RefreshStickerJob: BaseJob {
 
@@ -58,9 +58,7 @@ class RefreshStickerJob: BaseJob {
         guard let url = URL(string: urlString) else {
             return
         }
-        DispatchQueue.main.async {
-            FLAnimatedImageView().sd_setImage(with: url, placeholderImage: nil, options: [.continueInBackground, .retryFailed, .refreshCached], completed: nil)
-        }
+        SDWebImagePrefetcher.shared.prefetchURLs([url])
     }
 }
 

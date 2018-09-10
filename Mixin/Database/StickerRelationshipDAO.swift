@@ -8,7 +8,7 @@ final class StickerRelationshipDAO {
         MixinDatabase.shared.delete(table: StickerRelationship.tableName, condition: StickerRelationship.Properties.albumId == albumId
             && StickerRelationship.Properties.stickerId.in(stickerIds))
 
-        NotificationCenter.default.afterPostOnMain(name: .StickerDidChange)
+        NotificationCenter.default.afterPostOnMain(name: .FavoriteStickersDidChange)
     }
 
 }

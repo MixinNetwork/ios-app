@@ -26,7 +26,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var participantsLabel: UILabel!
     @IBOutlet weak var unblockButton: StateResponsiveButton!
     @IBOutlet weak var deleteConversationButton: StateResponsiveButton!
-    @IBOutlet weak var stickerPanelContainerView: UIView!
+    @IBOutlet weak var stickerInputContainerView: UIView!
     @IBOutlet weak var moreMenuContainerView: UIView!
     @IBOutlet weak var dismissPanelsButton: UIButton!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
@@ -106,15 +106,15 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private lazy var groupWindow = GroupWindow.instance()
     private lazy var lastInputWrapperBottomConstant = bottomSafeAreaInset
     
-    private lazy var stickerPanelViewController: StickerPanelViewController = {
-        let controller = StickerPanelViewController.instance()
+    private lazy var stickerInputViewController: StickerInputViewController = {
+        let controller = StickerInputViewController.instance()
         addChildViewController(controller)
-        stickerPanelContainerView.addSubview(controller.view)
+        stickerInputContainerView.addSubview(controller.view)
         controller.view.snp.makeConstraints({ (make) in
             make.edges.equalToSuperview()
         })
         controller.didMove(toParentViewController: self)
-        stickerPanelContainerView.layoutIfNeeded()
+        stickerInputContainerView.layoutIfNeeded()
         return controller
     }()
     private lazy var galleryViewController: GalleryViewController = {
@@ -216,7 +216,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         inputTextView.layer.cornerRadius = inputTextViewHeightConstraint.constant / 2
         inputTextView.inputAccessoryView = keyboardManager.inputAccessoryView
         connectionHintView.delegate = self
-        loadStickerAndAsset()
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
@@ -344,6 +343,10 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             updateTableViewContentInset()
             dataSource.initData {
                 self.updateAccessoryButtons(animated: false)
+                self.stickerInputViewController.reload()
+                DispatchQueue.global().async { [weak self] in
+                    self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
+                }
                 self.hideLoading()
             }
         }
@@ -1351,7 +1354,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
                 isShowingStickerPanel = false
                 toggleStickerPanelSizeButton.isHidden = true
                 stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_sticker"), for: .normal)
-                stickerPanelContainerView.alpha = 0
+                stickerInputContainerView.alpha = 0
             }
             if inputTextView.hasText || isShowingQuotePreviewView {
                 sendButton.isHidden = false
@@ -1498,7 +1501,7 @@ extension ConversationViewController {
         let offset = inputWrapperBottomConstraint.constant - lastInputWrapperBottomConstant
         UIView.animate(withDuration: 0, delay: delay, options: [], animations: {
             UIView.setAnimationCurve(.overdamped)
-            self.stickerPanelContainerView.alpha = newAlpha
+            self.stickerInputContainerView.alpha = newAlpha
             self.audioInputContainerView.isHidden = !self.isShowingStickerPanel
             if self.isShowingStickerPanel {
                 self.dismissPanelsButton.alpha = 0
@@ -1669,22 +1672,6 @@ extension ConversationViewController {
                     weakSelf.audioInputContainerView.isHidden = true
                 }
             }
-        }
-    }
-    
-    private func loadStickerAndAsset() {
-        let containerWidth = AppDelegate.current.window!.bounds.width
-        DispatchQueue.global().async { [weak self] in
-            let albums = AlbumDAO.shared.getAlbums()
-            var stickers = albums.map{ StickerDAO.shared.getStickers(albumId: $0.albumId) }
-            let limit = StickerPageViewController.numberOfRecentStickers(forLayoutWidth: containerWidth)
-            stickers.insert(StickerDAO.shared.recentUsedStickers(limit: limit), at: 0)
-            stickers.insert(StickerDAO.shared.getFavoriteStickers(), at: 1)
-            DispatchQueue.main.async {
-                self?.stickerPanelViewController.reload(albums: albums, stickers: stickers)
-            }
-            
-            self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
         }
     }
     

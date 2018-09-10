@@ -1,7 +1,7 @@
 import Foundation
 import Bugsnag
 import UIKit
-import FLAnimatedImage
+import SDWebImage
 
 class ReceiveMessageService: MixinService {
 
@@ -313,9 +313,7 @@ class ReceiveMessageService: MixinService {
                 case let .success(sticker):
                     StickerDAO.shared.insertOrUpdateSticker(sticker: sticker)
                     if let stickerUrl = URL(string: sticker.assetUrl) {
-                        DispatchQueue.main.async {
-                            FLAnimatedImageView().sd_setImage(with: stickerUrl, placeholderImage: nil, options: [.continueInBackground, .retryFailed, .refreshCached], completed: nil)
-                        }
+                        SDWebImagePrefetcher.shared.prefetchURLs([stickerUrl])
                     }
                     return transferStickerData
                 case let .failure(error):

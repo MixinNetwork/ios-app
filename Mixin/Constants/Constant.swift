@@ -31,8 +31,10 @@ extension NSNotification.Name {
 
     static let DefaultAddressDidChange = NSNotification.Name("one.mixin.ios.addresses.default.changed")
 
-    static let StickerDidChange = NSNotification.Name("one.mixin.ios.stickers.changed")
-
+    static let FavoriteStickersDidChange = NSNotification.Name("one.mixin.ios.favorite.stickers.changed")
+    
+    static let StickerUsedAtDidUpdate = NSNotification.Name("one.mixin.ios.sticker.usedat.changed")
+    
     static let StorageUsageDidChange = NSNotification.Name("one.mixin.ios.storage.changed")
     
     static let HiddenAssetsDidChange = NSNotification.Name("one.mixin.ios.hidden.assets.changed")

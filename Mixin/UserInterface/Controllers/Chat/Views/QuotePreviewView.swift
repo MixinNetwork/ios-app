@@ -57,7 +57,7 @@ class QuotePreviewView: UIView, XibDesignable {
             contentImageView.setImage(with: message.sharedUserAvatarUrl, identityNumber: message.sharedUserIdentityNumber, name: message.sharedUserFullName)
         }
         UIView.performWithoutAnimation {
-            contentImageWrapperView.isHidden = (contentImageView.image == nil && contentImageView.sd_imageURL() == nil)
+            contentImageWrapperView.isHidden = (contentImageView.image == nil && contentImageView.sd_imageURL == nil)
             iconImageView.image = MessageCategory.iconImage(forMessageCategoryString: message.category)
             iconImageView.isHidden = (iconImageView.image == nil)
         }

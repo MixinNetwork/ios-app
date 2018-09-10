@@ -112,7 +112,7 @@ class WithdrawalViewController: UIViewController {
         if self.amount(amount, isGreaterThanOrEqualToDust: address.dust) {
             PayWindow.shared.presentPopupControllerAnimated(isTransfer: false, asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
         } else {
-            let str = Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust)
+            let str = Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol)
             NotificationCenter.default.post(name: .ErrorMessageDidAppear, object: str)
         }
     }

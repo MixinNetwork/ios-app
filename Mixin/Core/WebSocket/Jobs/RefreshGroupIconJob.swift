@@ -49,13 +49,18 @@ class RefreshGroupIconJob: AsynchronousJob {
         let semaphore = DispatchSemaphore(value: 0)
         for (index, participant) in participants.enumerated() {
             if !participant.userAvatarUrl.isEmpty, let url = URL(string: participant.userAvatarUrl) {
-                SDWebImageManager.shared().loadImage(with: url, options: .lowPriority, progress: nil, completed: { (image, data, error, cacheType, finished, imageURL) in
+                var isSucceed = false
+                SDWebImageManager.shared.loadImage(with: url, options: .lowPriority, progress: nil, completed: { (image, _, error, _, _, _) in
                     if error == nil, let image = image {
                         images.append(image)
+                        isSucceed = true
                     }
                     semaphore.signal()
                 })
                 semaphore.wait()
+                if !isSucceed {
+                    return false
+                }
             } else {
                 let colorIndex = participant.userIdentityNumber.integerValue % 24 + 1
                 if let image = UIImage(named: "color\(colorIndex)"), let firstLetter = participant.userFullName.first {

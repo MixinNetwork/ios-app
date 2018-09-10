@@ -15,6 +15,7 @@ struct Address: BaseCodable {
     let label: String?
     let accountName: String?
     let accountTag: String?
+    let dust: String
     
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Address
@@ -28,6 +29,7 @@ struct Address: BaseCodable {
         case reserve
         case accountName = "account_name"
         case accountTag = "account_tag"
+        case dust
         
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {

@@ -1,9 +1,17 @@
 import UIKit
-import FLAnimatedImage
+import YYImage
 
 class StickerCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var imageView: FLAnimatedImageView!
+    lazy var imageView: YYAnimatedImageView = {
+        let view = YYAnimatedImageView()
+        addSubview(view)
+        view.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
     
     override func prepareForReuse() {
         super.prepareForReuse()

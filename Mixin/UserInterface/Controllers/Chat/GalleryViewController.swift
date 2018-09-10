@@ -247,7 +247,7 @@ class GalleryViewController: UIViewController {
         transitionView.transform = .identity
         transitionView.frame = frame
         (transitionView as? ImageClippingView)?.imageView.frame = transitionView.bounds
-        UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: animationDuration, delay: 0, options: [.curveEaseInOut, .layoutSubviews], animations: {
             self.delegate?.galleryViewController(self, willDismissForItemOfMessageId: messageId)
             self.backgroundDimmingView.alpha = 0
             if let item = self.item, let sourceRect = self.delegate?.galleryViewController(self, sourceRectForItemOfMessageId: item.messageId) {

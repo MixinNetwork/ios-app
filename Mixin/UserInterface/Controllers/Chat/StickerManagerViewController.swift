@@ -1,5 +1,5 @@
 import UIKit
-import FLAnimatedImage
+import YYImage
 import Photos
 
 class StickerManagerViewController: UICollectionViewController {
@@ -19,7 +19,7 @@ class StickerManagerViewController: UICollectionViewController {
         super.viewDidLoad()
         fetchStickers()
 
-        NotificationCenter.default.addObserver(forName: .StickerDidChange, object: nil, queue: .main) { [weak self] (_) in
+        NotificationCenter.default.addObserver(forName: .FavoriteStickersDidChange, object: nil, queue: .main) { [weak self] (_) in
             self?.fetchStickers()
         }
     }
@@ -164,7 +164,7 @@ extension StickerManagerViewController: PhotoAssetPickerDelegate {
 class FavoriteStickerCell: UICollectionViewCell {
 
     @IBOutlet weak var selectionImageView: UIImageView!
-    @IBOutlet weak var stickerImageView: FLAnimatedImageView!
+    @IBOutlet weak var stickerImageView: YYAnimatedImageView!
     @IBOutlet weak var selectionMaskView: UIView!
     
 

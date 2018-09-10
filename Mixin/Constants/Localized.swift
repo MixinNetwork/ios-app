@@ -387,6 +387,10 @@ public class Localized {
     }
     public static let WALLET_PIN_PAY_INTERVAL_CONFIRM = LocalizedString("wallet_pin_pay_interval_confirm", comment: "Confirm PIN to protect your settings security.")
     public static let WALLET_PIN_PAY_INTERVAL_TIPS = LocalizedString("wallet_pin_pay_interval_tips", comment: "For the security of your assets, you will still need to pay the PIN when you transfer again when you have entered the payment PIN for more than the specified time")
+    public static let WITHDRAWAL_AMOUNT_TOO_SMALL = LocalizedString("withdrawal_amount_too_small", comment: "Withdraw amount too small")
+    public static func WITHDRAWAL_MINIMUM_AMOUNT(amount: String, symbol: String) -> String {
+        return String(format: LocalizedString("withdrawal_minimum_amount", comment: "Minimum withdraw amount is %@"), amount, symbol)
+    }
 
     // Transaction
     public static let TRANSACTION_TITLE = LocalizedString("transaction_title", comment: "Transaction")
@@ -462,6 +466,7 @@ public class Localized {
     // Notifications
     public static let NOTIFICATION_REPLY = LocalizedString("notification_reply", comment: "Reply")
     public static let NOTIFICATION_MUTE = LocalizedString("notification_mute", comment: "Mute")
+    public static let NOTIFICATION_CONTENT_GENERAL = LocalizedString("notification_content_general", comment: "You have a new message")
     public static let NOTIFICATION_CONTENT_PHOTO = LocalizedString("notification_content_photo", comment: "[Photo]")
     public static let NOTIFICATION_CONTENT_TRANSFER = LocalizedString("notification_content_transfer", comment: "[Transfer]")
     public static let NOTIFICATION_CONTENT_FILE = LocalizedString("notification_content_file", comment: "[File]")

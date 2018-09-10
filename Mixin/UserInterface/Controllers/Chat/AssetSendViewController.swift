@@ -1,11 +1,11 @@
 import UIKit
 import WebKit
 import Photos
-import FLAnimatedImage
+import YYImage
 
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
-    @IBOutlet weak var photoImageView: FLAnimatedImageView!
+    @IBOutlet weak var photoImageView: YYAnimatedImageView!
     @IBOutlet weak var videoView: GalleryVideoView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var sendButton: StateResponsiveButton!

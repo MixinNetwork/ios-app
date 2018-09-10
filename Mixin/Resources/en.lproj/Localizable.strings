@@ -281,7 +281,8 @@
 "wallet_pin_pay_interval" = "Pay with PIN interval";
 "wallet_pin_pay_interval_confirm" = "Confirm PIN to protect your settings security.";
 "wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your Wallet PIN for the specified interval.";
-
+"withdrawal_amount_too_small" = "Withdraw amount too small";
+"withdrawal_minimum_amount" = "Minimum withdraw amount is %@ %@";
 
 // Transaction
 "transaction_title" = "Transaction";
@@ -419,10 +420,12 @@
 "setting_storage_audios" = "Audios";
 "setting_storage_files" = "Files";
 "setting_logout" = "Log Out";
+"setting_notification_message_preview" = "Message Preview";
 
 // Notifications
 "notification_reply" = "Reply";
 "notification_mute" = "Mute";
+"notification_content_general" = "You have a new message";
 "notification_content_photo" = "[Photo]";
 "notification_content_transfer" = "[Transfer]";
 "notification_content_file" = "[File]";

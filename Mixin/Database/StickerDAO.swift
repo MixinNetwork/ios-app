@@ -65,7 +65,7 @@ final class StickerDAO {
         MixinDatabase.shared.transaction { (database) in
             try database.insertOrReplace(objects: stickers.map { StickerRelationship(albumId: albumId, stickerId: $0.stickerId, createdAt: $0.createdAt) }, intoTable: StickerRelationship.tableName)
             try database.insertOrReplace(objects: stickers.map { Sticker.createSticker(from: $0) }, on: propertyList, intoTable: Sticker.tableName)
-            NotificationCenter.default.afterPostOnMain(name: .StickerDidChange)
+            NotificationCenter.default.afterPostOnMain(name: .FavoriteStickersDidChange)
         }
     }
 

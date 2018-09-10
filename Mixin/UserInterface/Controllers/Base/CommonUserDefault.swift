@@ -24,6 +24,9 @@ class CommonUserDefault {
     private var keyHasPerformedQRCodeScanning : String {
         return "has_scanned_qr_code_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyMessageNotificationShowPreview: String {
+        return "msg_notification_preview_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
 
@@ -52,6 +55,19 @@ class CommonUserDefault {
         }
         set {
             session.set(newValue, forKey: keyHasPerformedTransfer)
+        }
+    }
+
+    var shouldShowPreviewForMessageNotification: Bool {
+        get {
+            if session.object(forKey: keyMessageNotificationShowPreview) != nil {
+                return session.bool(forKey: keyMessageNotificationShowPreview)
+            } else {
+                return true
+            }
+        }
+        set {
+            session.set(newValue, forKey: keyMessageNotificationShowPreview)
         }
     }
     

@@ -387,6 +387,10 @@ public class Localized {
     }
     public static let WALLET_PIN_PAY_INTERVAL_CONFIRM = LocalizedString("wallet_pin_pay_interval_confirm", comment: "Confirm PIN to protect your settings security.")
     public static let WALLET_PIN_PAY_INTERVAL_TIPS = LocalizedString("wallet_pin_pay_interval_tips", comment: "For the security of your assets, you will still need to pay the PIN when you transfer again when you have entered the payment PIN for more than the specified time")
+    public static let WITHDRAWAL_AMOUNT_TOO_SMALL = LocalizedString("withdrawal_amount_too_small", comment: "Withdraw amount too small")
+    public static func WITHDRAWAL_MINIMUM_AMOUNT(amount: String, symbol: String) -> String {
+        return String(format: LocalizedString("withdrawal_minimum_amount", comment: "Minimum withdraw amount is %@"), amount, symbol)
+    }
 
     // Transaction
     public static let TRANSACTION_TITLE = LocalizedString("transaction_title", comment: "Transaction")

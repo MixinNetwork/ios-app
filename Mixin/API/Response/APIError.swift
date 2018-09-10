@@ -51,6 +51,8 @@ extension APIError {
             return Localized.TRANSFER_ERROR_FEE_INSUFFICIENT
         case 20126:
             return Localized.STICKER_ADD_LIMIT
+        case 20127:
+            return Localized.WITHDRAWAL_AMOUNT_TOO_SMALL
         case 30100:
             return Localized.WALLET_BLOCKCHIAN_NOT_IN_SYNC
         case 30102:

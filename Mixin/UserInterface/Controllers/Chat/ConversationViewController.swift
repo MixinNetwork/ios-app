@@ -1287,9 +1287,9 @@ extension ConversationViewController: GalleryViewControllerDelegate {
         }
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, snapshotForItemOfMessageId id: String) -> UIView? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
-            return cell.contentSnapshotView(afterScreenUpdates: false)
+    func galleryViewController(_ viewController: GalleryViewController, styleForItemOfMessageId id: String) -> MessageViewModel.Style? {
+        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let style = dataSource.viewModel(for: indexPath)?.style {
+            return style
         } else {
             return nil
         }

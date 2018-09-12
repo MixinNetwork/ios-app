@@ -8,14 +8,6 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     let expiredHintLabel = UILabel()
     let lengthLabel = InsetLabel()
     
-    override lazy var contentSnapshotViews = [
-        contentImageView,
-        shadowImageView,
-        timeLabel,
-        statusImageView,
-        lengthLabel
-    ]
-    
     override func prepare() {
         super.prepare()
         prepareOperationButtonAndExpiredHintLabel()

@@ -37,19 +37,25 @@ extension SettingViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 {
-            if indexPath.row == 0 {
-                navigationController?.pushViewController(BlockUserViewController.instance(), animated: true)
-            } else {
-                navigationController?.pushViewController(ConversationSettingViewController.instance(), animated: true)
+        let vc: UIViewController
+        switch indexPath.section {
+        case 0:
+            switch indexPath.row {
+            case 0:
+                vc = BlockUserViewController.instance()
+            default:
+                vc = ConversationSettingViewController.instance()
             }
-        } else if indexPath.section == 1 {
-            navigationController?.pushViewController(StorageUsageViewController.instance(), animated: true)
-        } else if indexPath.section == 2 {
-            navigationController?.pushViewController(NotificationSettingsViewController.instance(), animated: true)
-        } else {
-            navigationController?.pushViewController(AboutContainerViewController.instance(), animated: true)
+        case 1:
+            vc = AuthorizationsViewController.instance()
+        case 2:
+            vc = StorageUsageViewController.instance()
+        case 3:
+            vc = NotificationSettingsViewController.instance()
+        default:
+            vc = AboutContainerViewController.instance()
         }
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

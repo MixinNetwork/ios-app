@@ -157,11 +157,12 @@ final class ConversationDAO {
     }
 
     func deleteAndExitConversation(conversationId: String, autoNotification: Bool = true) {
-        guard MixinDatabase.shared.delete(table: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId, cascadeDelete: true) > 0, autoNotification else {
-            return
+        MessageDAO.shared.clearChat(conversationId: conversationId, autoNotification: false)
+        MixinFile.cleanAllChatDirectories()
+        let changes = MixinDatabase.shared.delete(table: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId, cascadeDelete: true)
+        if changes > 0 && autoNotification {
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
         }
-
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
     }
 
     func getConversation(ownerUserId: String) -> ConversationItem? {

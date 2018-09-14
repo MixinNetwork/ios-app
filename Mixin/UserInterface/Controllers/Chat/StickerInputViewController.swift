@@ -161,9 +161,6 @@ extension StickerInputViewController {
             return
         }
         let indexPath = IndexPath(item: index, section: 0)
-        if let selectedIndexPaths = albumsCollectionView.indexPathsForSelectedItems, selectedIndexPaths.contains(indexPath) {
-            return
-        }
         if let position = suggestScrollPosition(forItemAt: indexPath) {
             if index == 0 {
                 albumsCollectionView.setContentOffset(.zero, animated: true)
@@ -176,7 +173,13 @@ extension StickerInputViewController {
                 albumsCollectionView.scrollToItem(at: indexPath, at: position, animated: true)
             }
         }
-        albumsCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+        var indexPathIsAlreadySelected = false
+        if let selectedIndexPaths = albumsCollectionView.indexPathsForSelectedItems, selectedIndexPaths.contains(indexPath) {
+            indexPathIsAlreadySelected = true
+        }
+        if !indexPathIsAlreadySelected {
+            albumsCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+        }
     }
     
     private func suggestScrollPosition(forItemAt indexPath: IndexPath) -> UICollectionViewScrollPosition? {

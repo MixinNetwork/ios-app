@@ -3,6 +3,7 @@ import Bugsnag
 import UserNotifications
 import Firebase
 import SDWebImage
+import YYImage
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,6 +20,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         initBugsnag()
         FirebaseApp.configure()
         #endif
+        if SDWebImagePrefetcher.shared.context != nil {
+            SDWebImagePrefetcher.shared.context![.animatedImageClass] = YYImage.self
+        } else {
+            SDWebImagePrefetcher.shared.context = [.animatedImageClass: YYImage.self]
+        }
         CommonUserDefault.shared.updateFirstLaunchDateIfNeeded()
         if let account = AccountAPI.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)

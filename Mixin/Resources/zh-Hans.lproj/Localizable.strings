@@ -25,6 +25,7 @@
 "action_send" = "发送";
 "action_hide" = "隐藏";
 "action_show" = "显示";
+"action_deauthorize" = "取消授权";
 "menu_delete" = "删除";
 
 "connection_hint_connecting" = "正在连接";
@@ -409,6 +410,7 @@
 "setting_blocked_empty" = "没有人被屏蔽";
 "setting_blocked_summary" = "被屏蔽的用户不能给你发消息也不能邀请你入群。";
 "setting_conversation" = "会话";
+"setting_authorizations" = "授权";
 "setting_storage_usage" = "存储空间";
 "setting_storage_usage_clear" = "清除 %@ 个消息（%@）吗？";
 "setting_header_message_source" = "谁可以给我发消息";

@@ -22,6 +22,7 @@ public class Localized {
     public static let ACTION_SEND = LocalizedString("action_send", comment: "Send")
     public static let ACTION_HIDE = LocalizedString("action_hide", comment: "Hide")
     public static let ACTION_SHOW = LocalizedString("action_show", comment: "Show")
+    public static let ACTION_DEAUTHORIZE = LocalizedString("action_deauthorize", comment: "Deauthorize")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
 
     public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
@@ -457,6 +458,7 @@ public class Localized {
     public static let SETTING_PRIVACY_AND_SECURITY_TITLE = LocalizedString("setting_privacy_and_security_title", comment: "PRIVACY")
     public static let SETTING_HEADER_MESSAGE_SOURCE = LocalizedString("setting_header_message_source", comment: "WHO CAN SEND ME MESSAGES")
     public static let SETTING_HEADER_CONVERSATION_SOURCE = LocalizedString("setting_header_conversation_source", comment: "WHO CAN ADD ME TO GROUP CHATS")
+    public static let SETTING_AUTHORIZATIONS = LocalizedString("setting_authorizations", comment: "Authorizations")
     public static let SETTING_STORAGE_USAGE = LocalizedString("setting_storage_usage", comment: "Storage Usage")
     public static func SETTING_STORAGE_USAGE_CLEAR(messageCount: Int, size: String) -> String {
     return String(format: LocalizedString("setting_storage_usage_clear", comment: "Clear %@ messages (%@)?"), "\(messageCount)", size)

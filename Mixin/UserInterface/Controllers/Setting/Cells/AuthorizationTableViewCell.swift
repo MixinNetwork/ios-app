@@ -9,5 +9,9 @@ class AuthorizationTableViewCell: UITableViewCell {
         super.prepareForReuse()
         iconImageView.sd_cancelCurrentImageLoad()
     }
-    
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        separatorInset.left = label.frame.origin.x
+    }
 }

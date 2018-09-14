@@ -39,6 +39,7 @@ struct GalleryItem: Equatable {
     let thumbnail: UIImage?
     let mediaMimeType: String?
     let createdAt: String
+    let shouldLayoutAsArticle: Bool
     var mediaStatus: MediaStatus?
     
     init?(message: GalleryItemRepresentable) {
@@ -70,6 +71,7 @@ struct GalleryItem: Equatable {
             thumbnail = nil
         }
         createdAt = message.createdAt
+        shouldLayoutAsArticle = GalleryItem.shouldLayoutImageOfRatioAsAriticle(size)
         mediaStatus = MediaStatus(rawValue: message.mediaStatus ?? "")
     }
     
@@ -77,6 +79,10 @@ struct GalleryItem: Equatable {
         return lhs.messageId == rhs.messageId
             && lhs.url == rhs.url
             && lhs.mediaStatus == rhs.mediaStatus
+    }
+    
+    static func shouldLayoutImageOfRatioAsAriticle(_ ratio: CGSize) -> Bool {
+        return ratio.height / ratio.width > 3
     }
     
 }

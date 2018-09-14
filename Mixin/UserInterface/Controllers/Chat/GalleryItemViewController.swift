@@ -40,6 +40,7 @@ class GalleryItemViewController: UIViewController {
     private var rateBeforeScrubbing: Float = 0
     private var seekToZeroBeforePlaying = false
     private var isObservingRate = false
+    private var scrollViewDidDragAfterLoading = false
     
     struct ObserveContext {
         static var rateObservingContext = 0
@@ -71,14 +72,22 @@ class GalleryItemViewController: UIViewController {
         return rateBeforeScrubbing > 0 || videoView.player.rate > 0
     }
 
+    var canPerformInteractiveDismissing: Bool {
+        let didReachTopEdge = (scrollViewDidDragAfterLoading && scrollView.contentOffset.y <= -scrollView.contentInset.top)
+            || (!scrollViewDidDragAfterLoading && scrollView.contentOffset.y <= 0)
+        return scrollView.zoomScale <= scrollView.minimumZoomScale
+            && didReachTopEdge
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.layoutIfNeeded()
         scrollView.addSubview(imageView)
         scrollView.delegate = self
         tapRecognizer.delegate = self
         videoControlPanelView.translatesAutoresizingMaskIntoConstraints = false
         videoControlPanelView.snp.makeConstraints { (make) in
-            videoControlPanelEdgesConstraint = make.edges.equalToSuperview().inset(fullScreenSafeAreaInsets).constraint
+            videoControlPanelEdgesConstraint = make.edges.equalToSuperview().constraint
         }
         mediaStatusView.translatesAutoresizingMaskIntoConstraints = false
         mediaStatusView.snp.makeConstraints { (make) in
@@ -90,13 +99,6 @@ class GalleryItemViewController: UIViewController {
             label.layer.shadowOffset = .zero
         }
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive(_:)), name: .UIApplicationWillResignActive, object: nil)
-    }
-    
-    @available(iOS 11.0, *)
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        layoutImageView()
-        videoControlPanelEdgesConstraint.update(inset: fullScreenSafeAreaInsets)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -268,11 +270,27 @@ extension GalleryItemViewController: UIGestureRecognizerDelegate {
 
 extension GalleryItemViewController: UIScrollViewDelegate {
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        scrollViewDidDragAfterLoading = true
+    }
+    
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        let offset = CGPoint(x: max(0, (scrollView.frame.width - scrollView.contentSize.width) / 2),
-                             y: max(0, (scrollView.frame.height - scrollView.contentSize.height) / 2))
-        imageView.center = CGPoint(x: scrollView.contentSize.width / 2 + offset.x,
-                                   y: scrollView.contentSize.height / 2 + offset.y)
+        let visibleSize: CGSize
+        if #available(iOS 11.0, *) {
+            visibleSize = UIEdgeInsetsInsetRect(scrollView.frame, scrollView.adjustedContentInset).size
+        } else {
+            visibleSize = scrollView.frame.size
+        }
+        if scrollView.contentSize.width < visibleSize.width {
+            imageView.center.x = visibleSize.width / 2
+        } else {
+            imageView.center.x = scrollView.contentSize.width / 2
+        }
+        if scrollView.contentSize.height < visibleSize.height {
+            imageView.center.y = visibleSize.height / 2
+        } else {
+            imageView.center.y = scrollView.contentSize.height / 2
+        }
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -289,12 +307,6 @@ extension GalleryItemViewController {
 
     private var pageSize: CGSize {
         return UIScreen.main.bounds.size
-    }
-    
-    private var contentSize: CGSize {
-        let insets = self.fullScreenSafeAreaInsets
-        return CGSize(width: pageSize.width - insets.horizontal,
-                      height: pageSize.height - insets.vertical)
     }
     
     private var playerItemDuration: CMTime? {
@@ -327,6 +339,7 @@ extension GalleryItemViewController {
             videoView.player.removeObserver(self, forKeyPath: rateKey)
             isObservingRate = false
         }
+        scrollViewDidDragAfterLoading = false
     }
     
     private func loadItem(_ item: GalleryItem?) {
@@ -384,7 +397,7 @@ extension GalleryItemViewController {
             videoView.isHidden = false
             videoControlPanelView.isHidden = false
             tapRecognizer.isEnabled = true
-            videoView.frame = UIEdgeInsetsInsetRect(view.bounds, fullScreenSafeAreaInsets)
+            videoView.frame = view.bounds
             let playAfterLoaded = isFocused
             playButton.setImage(playAfterLoaded ? #imageLiteral(resourceName: "ic_pause") : #imageLiteral(resourceName: "ic_play"), for: .normal)
             setPlayButtonHidden(playAfterLoaded, otherControlsHidden: true, animated: false)
@@ -515,9 +528,12 @@ extension GalleryItemViewController {
         guard let item = item, (scrollView.zoomScale - 1) < 0.1 else {
             return
         }
-        var imageRect = item.size.rect(fittingSize: contentSize)
-        imageRect.origin = CGPoint(x: imageRect.origin.x + fullScreenSafeAreaInsets.left,
-                                   y: imageRect.origin.y + fullScreenSafeAreaInsets.top)
+        let imageRect: CGRect
+        if item.shouldLayoutAsArticle {
+            imageRect = CGRect(x: 0, y: 0, width: pageSize.width, height: pageSize.width * item.size.height / item.size.width)
+        } else {
+            imageRect = item.size.rect(fittingSize: pageSize)
+        }
         imageView.frame = imageRect
         scrollView.contentSize = imageView.frame.size
         let fittingScale: CGFloat
@@ -527,6 +543,7 @@ extension GalleryItemViewController {
             fittingScale = max(1, pageSize.width / imageView.frame.width)
         }
         scrollView.maximumZoomScale = max(fittingScale, maximumZoomScale)
+        scrollView.contentOffset = .zero
     }
     
     private func syncScrubberPosition() {

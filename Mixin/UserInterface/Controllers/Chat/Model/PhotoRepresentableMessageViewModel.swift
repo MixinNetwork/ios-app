@@ -8,10 +8,13 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
     static let rightShadowImage = #imageLiteral(resourceName: "ic_chat_shadow_right")
     static let rightWithTailShadowImage = #imageLiteral(resourceName: "ic_chat_shadow_right_tail")
     
+    let aspectRatio: CGSize
+    
     internal(set) var contentFrame = CGRect.zero
     internal(set) var shadowImage: UIImage?
     internal(set) var shadowImageOrigin = CGPoint.zero
     internal(set) var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
+    internal(set) var layoutPosition = PhotoMessageCell.VerticalPositioningImageView.Position.center
     
     override lazy var contentMargin: Margin = {
         Margin(leading: 9, trailing: 5, top: 4, bottom: 6)
@@ -33,6 +36,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         let ratio = mediaWidth / mediaHeight
         contentSize = CGSize(width: contentWidth,
                              height: min(PhotoRepresentableMessageViewModel.maxHeight, contentWidth / ratio))
+        aspectRatio = CGSize(width: mediaWidth, height: mediaHeight)
         super.init(message: message, style: style, fits: layoutWidth)
     }
     

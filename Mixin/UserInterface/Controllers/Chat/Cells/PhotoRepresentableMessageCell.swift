@@ -67,7 +67,10 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
                 let origin = view.convert(CGPoint.zero, to: contentImageView)
                 context.saveGState()
                 context.translateBy(x: origin.x, y: origin.y)
+                let viewWasHidden = view.isHidden
+                view.isHidden = false
                 view.layer.render(in: context)
+                view.isHidden = viewWasHidden
                 context.restoreGState()
             }
         }

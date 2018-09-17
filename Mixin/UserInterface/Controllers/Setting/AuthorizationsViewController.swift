@@ -38,7 +38,8 @@ extension AuthorizationsViewController: UITableViewDataSource {
         if let url = URL(string: auth.app.iconUrl) {
             cell.iconImageView.sd_setImage(with: url, completed: nil)
         }
-        cell.label.text = auth.app.name
+        cell.titleLabel.text = auth.app.name
+        cell.subtitleLabel.text = auth.app.appNumber
         return cell
     }
     

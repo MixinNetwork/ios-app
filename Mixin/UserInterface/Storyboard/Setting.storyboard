@@ -353,7 +353,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="15" height="71.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Kl2-Ng-MO9">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Kl2-Ng-MO9" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="15" y="11" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="Kl2-Ng-MO9" secondAttribute="height" multiplier="1:1" id="5XG-q2-MVz"/>

@@ -34,12 +34,10 @@ extension AuthorizationsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! AuthorizationTableViewCell
-        let auth = authorizations[indexPath.row]
-        if let url = URL(string: auth.app.iconUrl) {
-            cell.iconImageView.sd_setImage(with: url, completed: nil)
-        }
-        cell.titleLabel.text = auth.app.name
-        cell.subtitleLabel.text = auth.app.appNumber
+        let app = authorizations[indexPath.row].app
+        cell.iconImageView.setImage(with: app.iconUrl, identityNumber: app.appNumber, name: app.name)
+        cell.titleLabel.text = app.name
+        cell.subtitleLabel.text = app.appNumber
         return cell
     }
     

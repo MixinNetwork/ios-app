@@ -18,8 +18,10 @@ class BubbleLayer: CAShapeLayer {
     
     private(set) var bubble = Bubble.none
     
+    private(set) var bubbleFrame = CGRect.zero
+    
     func setBubble(_ bubble: Bubble, frame: CGRect, animationDuration: TimeInterval) {
-        guard bubble != self.bubble || bubble == .none else {
+        guard bubble != self.bubble || frame != bubbleFrame else {
             return
         }
         let oldPath = path
@@ -34,6 +36,7 @@ class BubbleLayer: CAShapeLayer {
             add(anim, forKey: "pathAnim")
         }
         self.bubble = bubble
+        self.bubbleFrame = frame
     }
 
 }

@@ -84,6 +84,16 @@ extension AuthorizationsViewController {
     }
     
     private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        let app = authorizations[indexPath.row].app
+        let alert = UIAlertController(title: Localized.SETTING_DEAUTHORIZE_CONFIRMATION(name: app.name), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .destructive, handler: { (action) in
+            self.removeAuthorization(at: indexPath)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func removeAuthorization(at indexPath: IndexPath) {
         let auth = authorizations.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
         AuthorizeAPI.shared.cancel(clientId: auth.app.appId) { (_) in }

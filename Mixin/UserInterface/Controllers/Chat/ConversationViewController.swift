@@ -1267,32 +1267,27 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
 // MARK: - GalleryViewControllerDelegate
 extension ConversationViewController: GalleryViewControllerDelegate {
     
-    func galleryViewController(_ viewController: GalleryViewController, placeholderForItemOfMessageId id: String) -> UIImage? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
-            return cell.contentImageView.image
-        } else {
+    func galleryViewController(_ viewController: GalleryViewController, showContextForItemOfMessageId id: String) -> GalleryViewController.ShowContext? {
+        guard let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let viewModel = dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel, let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell else {
             return nil
         }
+        return GalleryViewController.ShowContext(sourceFrame: frameOfPhotoRepresentableCell(cell),
+                                                 placeholder: cell.contentImageView.image,
+                                                 viewModel: viewModel,
+                                                 statusSnapshot: cell.statusSnapshot())
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, sourceRectForItemOfMessageId id: String) -> CGRect? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
-            var rect = cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
-            if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
-                rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
-            }
-            return rect
-        } else {
+    func galleryViewController(_ viewController: GalleryViewController, dismissContextForItemOfMessageId id: String) -> GalleryViewController.DismissContext? {
+        guard let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let viewModel = dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel else {
             return nil
         }
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, styleForItemOfMessageId id: String) -> MessageViewModel.Style? {
-        if let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let style = dataSource.viewModel(for: indexPath)?.style {
-            return style
-        } else {
-            return nil
+        var frame: CGRect?
+        var snapshot: UIImage?
+        if let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
+            frame = frameOfPhotoRepresentableCell(cell)
+            snapshot = cell.statusSnapshot()
         }
+        return GalleryViewController.DismissContext(sourceFrame: frame, viewModel: viewModel, statusSnapshot: snapshot)
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShowForItemOfMessageId id: String?) {
@@ -1647,6 +1642,14 @@ extension ConversationViewController {
         }
         keyboardManager.inputAccessoryViewHeight = 0
         inputTextView.resignFirstResponder()
+    }
+    
+    private func frameOfPhotoRepresentableCell(_ cell: PhotoRepresentableMessageCell) -> CGRect {
+        var rect = cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
+        if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
+            rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
+        }
+        return rect
     }
     
 }

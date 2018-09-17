@@ -14,6 +14,12 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         return view
     }()
     
+    internal lazy var statusViews = [
+        shadowImageView,
+        timeLabel,
+        statusImageView
+    ]
+    
     override var contentFrame: CGRect {
         return contentImageView.frame
     }
@@ -52,6 +58,22 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         UIView.animate(withDuration: animated ? highlightAnimationDuration : 0) {
             self.selectedOverlapView.alpha = highlight ? 1 : 0
         }
+    }
+    
+    func statusSnapshot() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(contentFrame.size, false, UIScreen.main.scale)
+        if let context = UIGraphicsGetCurrentContext() {
+            for view in statusViews {
+                let origin = view.convert(CGPoint.zero, to: contentImageView)
+                context.saveGState()
+                context.translateBy(x: origin.x, y: origin.y)
+                view.layer.render(in: context)
+                context.restoreGState()
+            }
+        }
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
     
 }

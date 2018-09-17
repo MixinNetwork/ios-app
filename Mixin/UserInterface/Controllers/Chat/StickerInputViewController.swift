@@ -173,11 +173,7 @@ extension StickerInputViewController {
                 albumsCollectionView.scrollToItem(at: indexPath, at: position, animated: true)
             }
         }
-        var indexPathIsAlreadySelected = false
-        if let selectedIndexPaths = albumsCollectionView.indexPathsForSelectedItems, selectedIndexPaths.contains(indexPath) {
-            indexPathIsAlreadySelected = true
-        }
-        if !indexPathIsAlreadySelected {
+        if !(albumsCollectionView.indexPathsForSelectedItems?.contains(indexPath) ?? false) {
             albumsCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
         }
     }

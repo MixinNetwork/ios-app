@@ -1,7 +1,7 @@
 PODS:
-  - Alamofire (4.7.2)
+  - Alamofire (4.7.3)
   - Base64 (1.1.2)
-  - Bugsnag (5.15.6)
+  - Bugsnag (5.16.4)
   - DeviceGuru (4.0.4)
   - Firebase/Analytics (5.1.0):
     - Firebase/Core
@@ -127,9 +127,9 @@ CHECKOUT OPTIONS:
     :git: "git@github.com:over140/wcdb.git"
 
 SPEC CHECKSUMS:
-  Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
-  Bugsnag: 7382eb9b85b46e369be536bf08267a91a56d2753
+  Bugsnag: c284912353b72113b549e9bcedb1277ab08a0ecc
   DeviceGuru: 7b66c69ad373db7d8288993e4b8aacc6eb625265
   Firebase: e08fb0795f35707aeb1d8a715c731c45bdf6fd56
   FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
@@ -154,4 +154,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9306d9ceb118317579a80790e1caf79fef0932f5
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0.beta.1

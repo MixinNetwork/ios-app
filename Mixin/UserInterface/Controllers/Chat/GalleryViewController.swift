@@ -291,6 +291,9 @@ class GalleryViewController: UIViewController {
         } else {
             sourceFrame = nil
         }
+        if imageClippingTransitionView.frame.height - UIScreen.main.bounds.height > -0.1 {
+            backgroundDimmingView.alpha = min(0.4, backgroundDimmingView.alpha)
+        }
         UIView.animate(withDuration: animationDuration, delay: 0, options: [.curveEaseInOut, .layoutSubviews], animations: {
             self.delegate?.galleryViewController(self, willDismissForItemOfMessageId: messageId)
             self.backgroundDimmingView.alpha = 0

@@ -128,6 +128,7 @@ class GalleryViewController: UIViewController {
                     if let videoView = self.transitionView as? GalleryVideoView {
                         self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
                     }
+                    self.transitionView = nil
                     self.delegate?.galleryViewController(self, didCancelInteractivelyDismissingForItemOfMessageId: self.item?.messageId)
                 })
             }

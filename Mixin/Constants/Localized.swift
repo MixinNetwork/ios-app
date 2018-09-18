@@ -459,6 +459,9 @@ public class Localized {
     public static let SETTING_HEADER_MESSAGE_SOURCE = LocalizedString("setting_header_message_source", comment: "WHO CAN SEND ME MESSAGES")
     public static let SETTING_HEADER_CONVERSATION_SOURCE = LocalizedString("setting_header_conversation_source", comment: "WHO CAN ADD ME TO GROUP CHATS")
     public static let SETTING_AUTHORIZATIONS = LocalizedString("setting_authorizations", comment: "Authorizations")
+    public static func SETTING_DEAUTHORIZE_CONFIRMATION(name: String) -> String {
+        return String(format: LocalizedString("setting_deauthorize_confirmation", comment: "Deauthorize %@?"), name)
+    }
     public static let SETTING_STORAGE_USAGE = LocalizedString("setting_storage_usage", comment: "Storage Usage")
     public static func SETTING_STORAGE_USAGE_CLEAR(messageCount: Int, size: String) -> String {
     return String(format: LocalizedString("setting_storage_usage_clear", comment: "Clear %@ messages (%@)?"), "\(messageCount)", size)

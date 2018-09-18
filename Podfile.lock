@@ -38,13 +38,6 @@ PODS:
     - PhoneNumberKit/PhoneNumberKitCore
   - RSKImageCropper (2.0.1)
   - SDWebImage/Core (5.0.0-beta3)
-  - SDWebImageYYPlugin (0.1.1):
-    - SDWebImage/Core (>= 5.0.0-beta3)
-    - SDWebImageYYPlugin/YYCache (= 0.1.1)
-    - SDWebImageYYPlugin/YYImage (= 0.1.1)
-  - SDWebImageYYPlugin/YYCache (0.1.1):
-    - SDWebImage/Core (>= 5.0.0-beta3)
-    - YYCache
   - SDWebImageYYPlugin/YYImage (0.1.1):
     - SDWebImage/Core (>= 5.0.0-beta3)
     - YYImage/Core
@@ -57,7 +50,6 @@ PODS:
   - WCDB.swift (1.0.6):
     - WCDB.swift/sqlcipher (= 1.0.6)
   - WCDB.swift/sqlcipher (1.0.6)
-  - YYCache (1.0.4)
   - YYImage/Core (1.0.4)
   - YYImage/WebP (1.0.4):
     - YYImage/Core
@@ -73,7 +65,7 @@ DEPENDENCIES:
   - JWT (~> 3.0.0-beta.7)
   - PhoneNumberKit
   - RSKImageCropper
-  - SDWebImageYYPlugin
+  - SDWebImageYYPlugin/YYImage
   - "SignalProtocolC (from `git@github.com:MixinMessenger/SignalProtocolC.git`)"
   - SnapKit (~> 4.0.0)
   - SocketRocket
@@ -103,7 +95,6 @@ SPEC REPOS:
     - SnapKit
     - SocketRocket
     - SwiftMessages
-    - YYCache
     - YYImage
     - Zip
 
@@ -145,10 +136,9 @@ SPEC CHECKSUMS:
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SwiftMessages: 2c33fdee8b8f38dfc7e1036684456b505891da8c
   WCDB.swift: 5bb038bc5bb46067cccc7c48392e8f4c4a15def0
-  YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 7a983cc3ece850a360ed192c45a2a1b1f6ddff6a
+PODFILE CHECKSUM: dcbb21002d3c150ab4a2b656ace322a7f7dbdcd3
 
 COCOAPODS: 1.6.0.beta.1

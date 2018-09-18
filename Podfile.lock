@@ -37,8 +37,6 @@ PODS:
   - PhoneNumberKit/UIKit (2.1.0):
     - PhoneNumberKit/PhoneNumberKitCore
   - RSKImageCropper (2.0.1)
-  - SDWebImage (5.0.0-beta3):
-    - SDWebImage/Core (= 5.0.0-beta3)
   - SDWebImage/Core (5.0.0-beta3)
   - SDWebImageYYPlugin (0.1.1):
     - SDWebImage/Core (>= 5.0.0-beta3)
@@ -75,7 +73,6 @@ DEPENDENCIES:
   - JWT (~> 3.0.0-beta.7)
   - PhoneNumberKit
   - RSKImageCropper
-  - SDWebImage
   - SDWebImageYYPlugin
   - "SignalProtocolC (from `git@github.com:MixinMessenger/SignalProtocolC.git`)"
   - SnapKit (~> 4.0.0)
@@ -152,6 +149,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 9306d9ceb118317579a80790e1caf79fef0932f5
+PODFILE CHECKSUM: 7a983cc3ece850a360ed192c45a2a1b1f6ddff6a
 
 COCOAPODS: 1.6.0.beta.1

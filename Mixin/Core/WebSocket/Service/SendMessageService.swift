@@ -411,6 +411,9 @@ extension SendMessageService {
         case let .success(response):
             ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
         case let .failure(error):
+            if error.code == 10002 {
+                MessageDAO.shared.clearChat(conversationId: conversation.conversationId, autoNotification: false)
+            }
             throw error
         }
     }

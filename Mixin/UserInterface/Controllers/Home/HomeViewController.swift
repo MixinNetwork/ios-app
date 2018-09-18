@@ -202,8 +202,13 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        conversations[indexPath.row].unseenMessageCount = 0
-        navigationController?.pushViewController(ConversationViewController.instance(conversation: conversations[indexPath.row]), animated: true)
+        let conversation = conversations[indexPath.row]
+        if conversation.status == ConversationStatus.START.rawValue {
+            ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: conversation.conversationId))
+        } else {
+            conversation.unseenMessageCount = 0
+            navigationController?.pushViewController(ConversationViewController.instance(conversation: conversations[indexPath.row]), animated: true)
+        }
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

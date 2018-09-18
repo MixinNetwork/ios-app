@@ -45,28 +45,10 @@ class NewGroupViewController: UIViewController {
 
         rightButton.isBusy = true
 
-        let converstionId = self.conversationId
-        let name = self.groupName
-        let members = self.members
-
-        DispatchQueue.global().async { [weak self] in
-            if ConversationDAO.shared.createConversation(conversationId: converstionId, name: name, members: members) || ConversationDAO.shared.isExist(conversationId: converstionId) {
-                DispatchQueue.main.async {
-                    self?.createConversation(name: name)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self?.rightButton?.isBusy = false
-                }
-            }
-        }
-    }
-
-    private func createConversation(name: String) {
-        let participants = members.flatMap { (user) -> ParticipantRequest in
+        let participants = self.members.flatMap { (user) -> ParticipantRequest in
             return ParticipantRequest(userId: user.userId, role: "")
         }
-        let request = ConversationRequest(conversationId: conversationId, name: name, category: ConversationCategory.GROUP.rawValue, participants: participants, duration: nil, announcement: nil)
+        let request = ConversationRequest(conversationId: self.conversationId, name: self.groupName, category: ConversationCategory.GROUP.rawValue, participants: participants, duration: nil, announcement: nil)
         ConversationAPI.shared.createConversation(conversation: request) { [weak self](result) in
             guard let weakSelf = self else {
                 return
@@ -75,7 +57,26 @@ class NewGroupViewController: UIViewController {
             case let .success(response):
                 weakSelf.saveConversation(conversation: response)
             case .failure:
-                weakSelf.rightButton?.isBusy = false
+                if !NetworkManager.shared.isReachable {
+                    weakSelf.saveOfflineConversation()
+                } else {
+                    weakSelf.rightButton?.isBusy = false
+                }
+            }
+        }
+    }
+
+    private func saveOfflineConversation() {
+        let converstionId = self.conversationId
+        let name = self.groupName
+        let members = self.members
+
+        DispatchQueue.global().async { [weak self] in
+            if ConversationDAO.shared.createConversation(conversationId: converstionId, name: name, members: members) {
+                DispatchQueue.main.async {
+                    NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
+                    self?.navigationController?.backToHome()
+                }
             }
         }
     }

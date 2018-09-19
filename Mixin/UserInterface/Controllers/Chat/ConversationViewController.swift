@@ -1408,6 +1408,9 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
         } else if intent == .hide {
             manager.inputAccessoryViewHeight = 0
         }
+        DispatchQueue.main.async {
+            self.tableView.setFloatingHeaderViewsHidden(true, animated: true)
+        }
     }
 
 }

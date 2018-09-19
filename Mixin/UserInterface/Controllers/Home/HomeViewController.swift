@@ -369,7 +369,7 @@ extension HomeViewController {
     private func checkNotificationAuthorizationStatus() {
         UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
             switch authorizationStatus {
-            case .authorized, .notDetermined:
+            case .authorized, .notDetermined, .provisional:
                 UNUserNotificationCenter.current().registerForRemoteNotifications()
             case .denied:
                 break

@@ -28,16 +28,18 @@ extension AttachmentExpirationHintingMessageCell where Self: PhotoRepresentableM
         contentView.addSubview(expiredHintLabel)
     }
     
-    func renderOperationButtonAndExpiredHintLabel(viewModel: PhotoRepresentableMessageViewModel & AttachmentLoadingViewModel) {
+    func renderOperationButtonAndExpiredHintLabel(viewModel: PhotoRepresentableMessageViewModel) {
         operationButton.center = CGPoint(x: viewModel.contentFrame.midX, y: viewModel.contentFrame.midY)
-        operationButton.style = viewModel.operationButtonStyle
-        if viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue {
-            expiredHintLabel.isHidden = false
-            operationButton.center.y -= expiredHintLabel.frame.height
-            expiredHintLabel.center.x = operationButton.center.x
-            expiredHintLabel.frame.origin.y = operationButton.frame.maxY
-        } else {
-            expiredHintLabel.isHidden = true
+        if let viewModel = viewModel as? AttachmentLoadingViewModel {
+            operationButton.style = viewModel.operationButtonStyle
+            if viewModel.mediaStatus == MediaStatus.EXPIRED.rawValue {
+                expiredHintLabel.isHidden = false
+                operationButton.center.y -= expiredHintLabel.frame.height
+                expiredHintLabel.center.x = operationButton.center.x
+                expiredHintLabel.frame.origin.y = operationButton.frame.maxY
+            } else {
+                expiredHintLabel.isHidden = true
+            }
         }
     }
     

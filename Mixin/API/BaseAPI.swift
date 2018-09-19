@@ -127,8 +127,11 @@ class BaseAPI {
 
         let token = KeyUtil.stripRsaPrivateKeyHeaders(authenticationToken)
         let keyType = JWTCryptoKeyExtractor.privateKeyWithPEMBase64()
-        let dataHolder = JWTAlgorithmRSFamilyDataHolder().keyExtractorType(keyType?.type)?.algorithmName("RS512")?.secret(token)
-        return JWTEncodingBuilder.encodePayload(claims).addHolder(dataHolder)?.result?.successResult?.encoded
+        var holder: JWTAlgorithmRSFamilyDataHolder? = JWTAlgorithmRSFamilyDataHolder()
+        holder = holder?.keyExtractorType(keyType?.type)
+        holder = holder?.algorithmName("RS512") as? JWTAlgorithmRSFamilyDataHolder
+        holder = holder?.secret(token) as? JWTAlgorithmRSFamilyDataHolder
+        return JWTEncodingBuilder.encodePayload(claims).addHolder(holder)?.result?.successResult?.encoded
     }
 
     private static let headersAuthroizationKey = "Authorization"

@@ -58,7 +58,9 @@ class ForwardViewController: UIViewController {
         if keyword.isEmpty {
             searchResult = []
         } else {
-            searchResult = sections.flatMap({ $0 }).filter({ $0.fullName.uppercased().contains(keyword) || (!$0.name.isEmpty && $0.name.uppercased().contains(keyword)) })
+            searchResult = sections
+                .flatMap({ $0 })
+                .filter({ $0.fullName.uppercased().contains(keyword) || (!$0.name.isEmpty && $0.name.uppercased().contains(keyword)) })
         }
         tableView.reloadData()
     }

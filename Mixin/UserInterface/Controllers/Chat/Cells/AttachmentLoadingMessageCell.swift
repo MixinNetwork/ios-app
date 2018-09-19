@@ -5,7 +5,7 @@ protocol AttachmentLoadingMessageCellDelegate: class {
 }
 
 protocol AttachmentLoadingMessageCell: class {
-    weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate? { get set }
+    var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate? { get set }
     func updateProgress(viewModel: AttachmentLoadingViewModel)
 }
 

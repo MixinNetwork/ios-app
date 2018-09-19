@@ -119,14 +119,14 @@ extension WebSocketService: SRWebSocketDelegate {
 
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
         #if DEBUG
-        print("======WebSocketService...didFailWithError...error:\(error)")
+        print("======WebSocketService...didFailWithError...error:\(String(describing: error))")
         #endif
         reconnect(didClose: false, afterReconnect: true)
     }
 
     func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
         #if DEBUG
-        print("======WebSocketService...didCloseWithCode...code:\(code)...reason:\(reason)")
+        print("======WebSocketService...didCloseWithCode...code:\(code)...reason:\(String(describing: reason))")
         #endif
         guard code != exitCode && code != failCode else {
             return

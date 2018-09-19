@@ -10,9 +10,14 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     private var downloadedContentLength: Double = 0
     private var mediaMimeType: String?
 
-    internal lazy var fileName = "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ExtensionName.jpeg.rawValue))"
-    internal lazy var fileUrl = MixinFile.url(ofChatDirectory: .photos, filename: fileName)
-
+    internal var fileName: String {
+        return "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ExtensionName.jpeg.rawValue))"
+    }
+    
+    internal var fileUrl: URL {
+        return MixinFile.url(ofChatDirectory: .photos, filename: fileName)
+    }
+    
     init(messageId: String, mediaMimeType: String?) {
         super.init(messageId: messageId)
         self.mediaMimeType = mediaMimeType

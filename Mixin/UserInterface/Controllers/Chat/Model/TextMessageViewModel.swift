@@ -103,7 +103,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         // Make Links
         var links = [Link]()
         for link in linksMap {
-            let linkRects: [CGRect] = lines.enumerated().flatMap({ (index, line) -> CGRect? in
+            let linkRects: [CGRect] = lines.enumerated().compactMap({ (index, line) -> CGRect? in
                 let lineOrigin = lineOrigins[index]
                 let lineRange = NSRange(cfRange: lineRanges[index])
                 if let intersection = lineRange.intersection(link.key) {

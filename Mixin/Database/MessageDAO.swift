@@ -370,7 +370,7 @@ final class MessageDAO {
                                                         limit: -count,
                                                         inTransaction: false).reversed()
         }
-        return messages.flatMap{ GalleryItem(message: $0) }
+        return messages.compactMap(GalleryItem.init)
     }
 
     func insertMessage(message: Message, messageSource: String) {

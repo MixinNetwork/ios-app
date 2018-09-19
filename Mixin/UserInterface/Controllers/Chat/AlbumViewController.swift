@@ -23,7 +23,7 @@ class AlbumViewController: UITableViewController {
             PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil).enumerateObjects { (collection, _, _) in
                 allAlbums.append(SmartAlbum(collection: collection))
             }
-            self.allAlbums = allAlbums.flatMap { $0 }.sorted(by: { (preAlbum, nextAlbum) -> Bool in
+            self.allAlbums = allAlbums.compactMap{ $0 }.sorted(by: { (preAlbum, nextAlbum) -> Bool in
                 guard preAlbum.order == nextAlbum.order else {
                     return preAlbum.order > nextAlbum.order
                 }

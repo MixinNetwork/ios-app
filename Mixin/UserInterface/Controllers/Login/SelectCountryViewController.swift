@@ -55,9 +55,9 @@ class SelectCountryViewController: UIViewController {
         if searchText.isEmpty {
             filteredCountries = []
         } else {
-            filteredCountries = sections.flatMap({ $0 }).filter {
-                $0.localizedName.uppercased().hasPrefix(searchText)
-            }
+            filteredCountries = sections
+                .flatMap{ $0 }
+                .filter{ $0.localizedName.uppercased().hasPrefix(searchText) }
         }
         tableView.reloadData()
         DispatchQueue.main.async {

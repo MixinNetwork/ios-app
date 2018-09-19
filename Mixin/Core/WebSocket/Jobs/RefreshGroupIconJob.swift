@@ -22,7 +22,13 @@ class RefreshGroupIconJob: AsynchronousJob {
 
     override func execute() -> Bool {
         let participants = ParticipantDAO.shared.getGroupIconParticipants(conversationId: conversationId)
-        let participantIds: [String] = participants.flatMap { $0.userAvatarUrl.isEmpty ? String([$0.userFullName.first ?? Character(" ")]) : $0.userAvatarUrl }
+        let participantIds: [String] = participants.map { (participant) in
+            if participant.userAvatarUrl.isEmpty {
+                return String(participant.userFullName.prefix(1))
+            } else {
+                return participant.userAvatarUrl
+            }
+        }
         let imageFile = conversationId + "-" + participantIds.joined().md5() + ".png"
         let imageUrl = MixinFile.groupIconsUrl.appendingPathComponent(imageFile)
         guard !FileManager.default.fileExists(atPath: imageUrl.path) else {

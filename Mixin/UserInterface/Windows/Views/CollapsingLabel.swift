@@ -263,7 +263,7 @@ extension CollapsingLabel {
     private func links(fromLinksMap linksMap: [NSRange: URL], forLines lines: [CTLine], lineOrigins: [CGPoint]) -> [Link] {
         var links = [Link]()
         for link in linksMap {
-            let linkRects: [CGRect] = lines.enumerated().flatMap({ (index, line) -> CGRect? in
+            let linkRects: [CGRect] = lines.enumerated().compactMap({ (index, line) -> CGRect? in
                 let lineOrigin = lineOrigins[index]
                 let cfLineRange = CTLineGetStringRange(line)
                 let lineRange = NSRange(cfRange: cfLineRange)

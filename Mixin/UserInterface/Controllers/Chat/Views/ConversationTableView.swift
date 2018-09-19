@@ -235,7 +235,7 @@ class ConversationTableView: UITableView {
                 }
             }
         }
-        for header in sections.flatMap({ headerView(forSection: $0) }) {
+        for header in sections.compactMap(headerView) {
             header.alpha = 1
         }
     }

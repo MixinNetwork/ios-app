@@ -8,9 +8,9 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     
     internal(set) var contentFrame = CGRect.zero
 
-    override lazy var contentMargin: Margin = {
-        Margin(leading: 17, trailing: 0, top: 2, bottom: 2)
-    }()
+    override var contentMargin: Margin {
+        return Margin(leading: 17, trailing: 0, top: 2, bottom: 2)
+    }
     
     private let contentSize: CGSize
 

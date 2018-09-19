@@ -20,7 +20,7 @@ class NewGroupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "GroupMemberCell", bundle: .main), forCellReuseIdentifier: groupMemberCellReuseId)
-        groupNameCell = tableView.dequeueReusableCell(withIdentifier: groupNameCellReuseId) as! GroupNameCell
+        groupNameCell = tableView.dequeueReusableCell(withIdentifier: groupNameCellReuseId) as? GroupNameCell
         staticCells = [groupNameCell]
         tableView.dataSource = self
         tableView.delegate = self
@@ -45,8 +45,8 @@ class NewGroupViewController: UIViewController {
 
         rightButton.isBusy = true
 
-        let participants = self.members.flatMap { (user) -> ParticipantRequest in
-            return ParticipantRequest(userId: user.userId, role: "")
+        let participants = members.map {
+            ParticipantRequest(userId: $0.userId, role: "")
         }
         let request = ConversationRequest(conversationId: self.conversationId, name: self.groupName, category: ConversationCategory.GROUP.rawValue, participants: participants, duration: nil, announcement: nil)
         ConversationAPI.shared.createConversation(conversation: request) { [weak self](result) in

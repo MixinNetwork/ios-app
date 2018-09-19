@@ -86,7 +86,9 @@ class AddMemberViewController: UIViewController {
         if keyword.isEmpty {
             searchResult = []
         } else {
-            searchResult = sections.flatMap({ $0 }).filter({ $0.fullName.uppercased().contains(keyword) })
+            searchResult = sections
+                .flatMap({ $0 })
+                .filter({ $0.fullName.uppercased().contains(keyword) })
         }
         reloadTableViewAndSetSelections()
     }

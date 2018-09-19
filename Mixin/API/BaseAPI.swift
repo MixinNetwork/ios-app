@@ -231,7 +231,7 @@ extension BaseAPI {
     @discardableResult
     func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> APIResult<T> {
         return dispatchQueue.sync {
-            var result: APIResult<T> = .failure(APIError.createAuthenticationError())
+            var result: APIResult<T> = .failure(APIError.createTimeoutError())
             var debugDescription = ""
             let requestTime = Date()
             var errorMsg = ""

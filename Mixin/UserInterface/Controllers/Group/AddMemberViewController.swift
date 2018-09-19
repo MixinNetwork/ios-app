@@ -18,11 +18,7 @@ class AddMemberViewController: UIViewController {
     private var searchResult = [GroupUser]()
     private var selections = [GroupUser]() {
         didSet {
-            if conversationId?.isEmpty ?? true {
-                nextButton.isEnabled = selections.count > 1
-            } else {
-                nextButton.isEnabled = !selections.isEmpty
-            }
+            nextButton.isEnabled = !selections.isEmpty
             participantsLabel.text = "\(selections.count + oldParticipantCount)/256"
         }
     }

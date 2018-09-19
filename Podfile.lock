@@ -47,9 +47,9 @@ PODS:
   - SwiftMessages (4.1.4):
     - SwiftMessages/App (= 4.1.4)
   - SwiftMessages/App (4.1.4)
-  - WCDB.swift (1.0.6):
-    - WCDB.swift/sqlcipher (= 1.0.6)
-  - WCDB.swift/sqlcipher (1.0.6)
+  - WCDB.swift (1.0.6.2):
+    - WCDB.swift/sqlcipher (= 1.0.6.2)
+  - WCDB.swift/sqlcipher (1.0.6.2)
   - YYImage/Core (1.0.4)
   - YYImage/WebP (1.0.4):
     - YYImage/Core
@@ -70,7 +70,7 @@ DEPENDENCIES:
   - SnapKit (~> 4.0.0)
   - SocketRocket
   - SwiftMessages
-  - "WCDB.swift (from `git@github.com:over140/wcdb.git`)"
+  - "WCDB.swift (from `git@github.com:wuyuehyang/wcdb.git`)"
   - YYImage/WebP
   - Zip (~> 1.1)
 
@@ -103,7 +103,7 @@ EXTERNAL SOURCES:
     :git: "git@github.com:MixinMessenger/SignalProtocolC.git"
     :submodules: true
   WCDB.swift:
-    :git: "git@github.com:over140/wcdb.git"
+    :git: "git@github.com:wuyuehyang/wcdb.git"
 
 CHECKOUT OPTIONS:
   SignalProtocolC:
@@ -111,8 +111,8 @@ CHECKOUT OPTIONS:
     :git: "git@github.com:MixinMessenger/SignalProtocolC.git"
     :submodules: true
   WCDB.swift:
-    :commit: bb13d3e560173c37352207e08c3de4653d8da920
-    :git: "git@github.com:over140/wcdb.git"
+    :commit: b58ca8b6e8558ae488e96190625e06497848a7ef
+    :git: "git@github.com:wuyuehyang/wcdb.git"
 
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
@@ -135,10 +135,10 @@ SPEC CHECKSUMS:
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SwiftMessages: 2c33fdee8b8f38dfc7e1036684456b505891da8c
-  WCDB.swift: 5bb038bc5bb46067cccc7c48392e8f4c4a15def0
+  WCDB.swift: 4f0f3e19085546ef85a69b5087ec5e1dec0f88b1
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: dcbb21002d3c150ab4a2b656ace322a7f7dbdcd3
+PODFILE CHECKSUM: d5ed9a0a0a4b6c3df2e23141c8747814651cee99
 
 COCOAPODS: 1.6.0.beta.1

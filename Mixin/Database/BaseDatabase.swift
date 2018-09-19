@@ -118,7 +118,7 @@ class BaseDatabase {
         }
     }
 
-    func getCodables<T: TableCodable>(on propertyConvertibleList: [PropertyConvertible] = T.Properties.all, sql: String, values: [ColumnEncodableBase] = [], inTransaction: Bool = true) -> [T] {
+    func getCodables<T: TableCodable>(on propertyConvertibleList: [PropertyConvertible] = T.Properties.all, sql: String, values: [ColumnEncodable] = [], inTransaction: Bool = true) -> [T] {
         if inTransaction {
             var result = [T]()
             try! database.runTransaction {
@@ -211,9 +211,9 @@ class BaseDatabase {
     }
 
     @discardableResult
-    func update(maps: [(PropertyConvertible, ColumnEncodableBase?)], tableName: String, condition: Condition? = nil) -> Bool {
+    func update(maps: [(PropertyConvertible, ColumnEncodable?)], tableName: String, condition: Condition? = nil) -> Bool {
         var keys = [PropertyConvertible]()
-        var values = [ColumnEncodableBase]()
+        var values = [ColumnEncodable]()
         for (key, value) in maps {
             guard let val = value else {
                 continue
@@ -348,7 +348,7 @@ fileprivate extension Database {
         }
     }
 
-    func execQuery(on propertyConvertibleList: [PropertyConvertible], sql: String, values: [ColumnEncodableBase] = []) throws -> SelectSQL {
+    func execQuery(on propertyConvertibleList: [PropertyConvertible], sql: String, values: [ColumnEncodable] = []) throws -> SelectSQL {
         do {
             return try prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values)
         } catch {

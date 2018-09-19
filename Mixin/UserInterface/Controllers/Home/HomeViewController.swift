@@ -74,18 +74,9 @@ class HomeViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if #available(iOS 10.3, *) {
-            let sevenDays: Double = 7 * 24 * 60 * 60
-            let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
-                && CommonUserDefault.shared.hasPerformedTransfer
-                && Date().timeIntervalSince1970 - CommonUserDefault.shared.firstLaunchTimeIntervalSince1970 > sevenDays
-            if shouldRequestReview {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-                    SKStoreReviewController.requestReview()
-                })
-            }
-            HomeViewController.hasTriedToRequestReview = true
-        }
+        #if RELEASE
+        requestAppStoreReviewIfNeeded()
+        #endif
     }
     
     private func fetchConversations() {
@@ -345,6 +336,23 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
+    
+    private func requestAppStoreReviewIfNeeded() {
+        guard #available(iOS 10.3, *) else {
+            return
+        }
+        let sevenDays: Double = 7 * 24 * 60 * 60
+        let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
+            && CommonUserDefault.shared.hasPerformedTransfer
+            && Date().timeIntervalSince1970 - CommonUserDefault.shared.firstLaunchTimeIntervalSince1970 > sevenDays
+        if shouldRequestReview {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                SKStoreReviewController.requestReview()
+            })
+        }
+        HomeViewController.hasTriedToRequestReview = true
+    }
+    
 }
 
 extension HomeViewController {

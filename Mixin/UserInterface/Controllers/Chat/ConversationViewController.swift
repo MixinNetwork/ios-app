@@ -1359,6 +1359,9 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
     }
     
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
+        guard UIApplication.shared.applicationState == .active else {
+            return
+        }
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
             return
         }

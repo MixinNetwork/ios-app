@@ -88,7 +88,7 @@ class RefreshGroupIconJob: AsynchronousJob {
             do {
                 let groupImage = images.count == 1 ? images[0] : puzzleImages(images: images)
                 try? FileManager.default.removeItem(atPath: imageUrl.path)
-                if let data = UIImagePNGRepresentation(groupImage) {
+                if let data = groupImage.pngData() {
                     try data.write(to: imageUrl)
                     RefreshGroupIconJob.updateAndRemoveOld(conversationId: conversationId, imageFile: imageFile)
                 }
@@ -107,8 +107,8 @@ class RefreshGroupIconJob: AsynchronousJob {
         let minFontSize = 12
         let nsText = text as NSString
         for i in minFontSize...maxFontSize {
-            let attributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: CGFloat(i))]
-            let size = nsText.boundingRect(with: UILayoutFittingCompressedSize, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: CGFloat(i))]
+            let size = nsText.boundingRect(with: UIView.layoutFittingCompressedSize, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
             if size.width > greatestSize.width || size.height > greatestSize.height {
                 return CGFloat(i - 1)
             }

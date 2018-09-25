@@ -68,7 +68,7 @@ class MobileNumberViewController: LoginViewController {
             self?.checkMobileNumber()
         }))
 
-        if let window = UIApplication.shared.windows.last, window.windowLevel == 10000001.0 {
+        if let window = UIApplication.shared.windows.last, window.windowLevel.rawValue == 10000001.0 {
             window.rootViewController?.present(alert, animated: true, completion: nil)
         } else {
             present(alert, animated: true, completion: nil)

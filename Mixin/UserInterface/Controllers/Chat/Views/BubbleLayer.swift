@@ -32,7 +32,7 @@ class BubbleLayer: CAShapeLayer {
             anim.fromValue = from ?? oldPath
             anim.toValue = to
             anim.duration = animationDuration
-            anim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             add(anim, forKey: "pathAnim")
         }
         self.bubble = bubble

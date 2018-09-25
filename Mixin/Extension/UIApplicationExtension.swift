@@ -61,7 +61,7 @@ extension UIApplication {
 extension UIApplication {
 
     public static func openAppSettings() {
-        guard let settingsURL = URL(string: UIApplicationOpenSettingsURLString) else {
+        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
             return
         }
         UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)

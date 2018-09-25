@@ -73,11 +73,11 @@ class AttachmentEncryptingInputStream: InputStream {
         return inputStream.setProperty(property, forKey: key)
     }
     
-    override func schedule(in aRunLoop: RunLoop, forMode mode: RunLoopMode) {
+    override func schedule(in aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
         inputStream.schedule(in: aRunLoop, forMode: mode)
     }
     
-    override func remove(from aRunLoop: RunLoop, forMode mode: RunLoopMode) {
+    override func remove(from aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
         inputStream.remove(from: aRunLoop, forMode: mode)
     }
     

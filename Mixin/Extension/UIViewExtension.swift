@@ -41,9 +41,9 @@ extension UIView {
     }
 }
 
-extension UIViewAnimationCurve {
+extension UIView.AnimationCurve {
     
-    static let overdamped = UIViewAnimationCurve(rawValue: 7) ?? .easeOut
+    static let overdamped = UIView.AnimationCurve(rawValue: 7) ?? .easeOut
     
 }
 

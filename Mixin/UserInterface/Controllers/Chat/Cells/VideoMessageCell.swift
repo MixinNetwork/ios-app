@@ -18,7 +18,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         lengthLabel.numberOfLines = 1
         lengthLabel.layer.cornerRadius = 4
         lengthLabel.clipsToBounds = true
-        lengthLabel.contentInset = UIEdgeInsetsMake(1, 4, 1, 4)
+        lengthLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
         addSubview(lengthLabel)
     }
     

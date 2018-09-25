@@ -178,7 +178,7 @@ extension AudioInputViewController: UIGestureRecognizerDelegate {
 extension AudioInputViewController {
     
     private func startRecordingIfGranted() {
-        switch AVAudioSession.sharedInstance().recordPermission() {
+        switch AVAudioSession.sharedInstance().recordPermission {
         case .denied:
             alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
         case .granted:
@@ -205,7 +205,7 @@ extension AudioInputViewController {
                                       selector: #selector(AudioInputViewController.updateTimeLabelAction(_:)),
                                       userInfo: nil,
                                       repeats: true)
-                    RunLoop.main.add(timer, forMode: .commonModes)
+                    RunLoop.main.add(timer, forMode: .common)
                     self.recordDurationTimer = timer
                     self.startRedDotAnimation()
                 case .interrupted:

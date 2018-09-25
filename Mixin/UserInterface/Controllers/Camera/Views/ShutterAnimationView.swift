@@ -60,7 +60,7 @@ class ShutterAnimationView: UIView {
         let transformAnimations = [pathAnimation, strokeColorAnimation, lineWidthAnimation]
         for anim in transformAnimations {
             anim.duration = duration * 0.7
-            anim.fillMode = kCAFillModeBoth
+            anim.fillMode = .both
             anim.isRemovedOnCompletion = false
             shutterLayer.add(anim, forKey: anim.keyPath)
         }
@@ -73,7 +73,7 @@ class ShutterAnimationView: UIView {
         for anim in alphaAnimations {
             anim.beginTime = CACurrentMediaTime() + duration * 0.7
             anim.duration = duration * 0.3
-            anim.fillMode = kCAFillModeBoth
+            anim.fillMode = .both
             anim.isRemovedOnCompletion = false
         }
         shutterLayer.add(shutterAlphaAnimation, forKey: shutterAlphaAnimation.keyPath)
@@ -97,7 +97,7 @@ class ShutterAnimationView: UIView {
         let alphaAnimations = [shutterAlphaAnimation, sendAlphaAnimation]
         for anim in alphaAnimations {
             anim.duration = duration * 0.3
-            anim.fillMode = kCAFillModeBoth
+            anim.fillMode = .both
             anim.isRemovedOnCompletion = false
         }
         shutterLayer.add(shutterAlphaAnimation, forKey: shutterAlphaAnimation.keyPath)
@@ -113,7 +113,7 @@ class ShutterAnimationView: UIView {
         for anim in transformAnimations {
             anim.beginTime = CACurrentMediaTime() + duration * 0.3
             anim.duration = duration * 0.7
-            anim.fillMode = kCAFillModeBoth
+            anim.fillMode = .both
             anim.isRemovedOnCompletion = false
             shutterLayer.add(anim, forKey: anim.keyPath)
         }

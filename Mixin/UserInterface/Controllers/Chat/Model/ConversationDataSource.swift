@@ -64,7 +64,7 @@ class ConversationDataSource {
     }
     
     var layoutSize: CGSize {
-        return UIEdgeInsetsInsetRect(windowRect, tableViewContentInset).size
+        return windowRect.inset(by: tableViewContentInset).size
     }
     
     var conversationId: String {

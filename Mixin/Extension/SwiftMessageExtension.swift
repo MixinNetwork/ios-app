@@ -19,7 +19,7 @@ extension SwiftMessages {
         config.presentationStyle = .top
         config.shouldAutorotate = true
         config.interactiveHide = true
-        config.presentationContext = .window(windowLevel: UIWindowLevelStatusBar + 2)
+        config.presentationContext = .window(windowLevel: .statusBar + 2)
         config.duration = duration
 
         SwiftMessages.show(config: config, view: view)

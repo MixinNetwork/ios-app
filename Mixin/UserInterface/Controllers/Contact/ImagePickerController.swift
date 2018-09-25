@@ -10,10 +10,10 @@ protocol ImagePickerControllerDelegate {
 class ImagePickerController: NSObject {
     
     weak var viewController: (UIViewController & ImagePickerControllerDelegate)?
-    var initialCameraPosition = UIImagePickerControllerCameraDevice.rear
+    var initialCameraPosition = UIImagePickerController.CameraDevice.rear
     var cropImageAfterPicked = false
     
-    init(initialCameraPosition: UIImagePickerControllerCameraDevice, cropImageAfterPicked: Bool, parent: (UIViewController & ImagePickerControllerDelegate)) {
+    init(initialCameraPosition: UIImagePickerController.CameraDevice, cropImageAfterPicked: Bool, parent: (UIViewController & ImagePickerControllerDelegate)) {
         self.initialCameraPosition = initialCameraPosition
         self.cropImageAfterPicked = cropImageAfterPicked
         self.viewController = parent
@@ -89,7 +89,7 @@ class ImagePickerController: NSObject {
 
 extension ImagePickerController: UIImagePickerControllerDelegate {
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let completion = { [weak self] (image: UIImage) in
             guard let weakSelf = self else {
                 return
@@ -104,9 +104,9 @@ extension ImagePickerController: UIImagePickerControllerDelegate {
             }
         }
         
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        if let image = info[.originalImage] as? UIImage {
             completion(image)
-        } else if let imageURL = info[UIImagePickerControllerReferenceURL] as? URL, let asset = PHAsset.fetchAssets(withALAssetURLs: [imageURL], options: nil).firstObject {
+        } else if let imageURL = info[.referenceURL] as? URL, let asset = PHAsset.fetchAssets(withALAssetURLs: [imageURL], options: nil).firstObject {
             PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: nil, resultHandler: { (image, _) in
                 if let image = image {
                     completion(image)

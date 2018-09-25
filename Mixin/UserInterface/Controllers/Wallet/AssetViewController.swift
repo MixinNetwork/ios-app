@@ -179,7 +179,7 @@ extension AssetViewController {
         if indexPath.section == 1 {
             return SnapshotCell.cellHeight
         } else {
-            return UITableViewAutomaticDimension
+            return UITableView.automaticDimension
         }
     }
     

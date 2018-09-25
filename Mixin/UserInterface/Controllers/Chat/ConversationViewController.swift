@@ -115,24 +115,24 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     private lazy var stickerInputViewController: StickerInputViewController = {
         let controller = StickerInputViewController.instance()
-        addChildViewController(controller)
+        addChild(controller)
         stickerInputContainerView.addSubview(controller.view)
         controller.view.snp.makeConstraints({ (make) in
             make.edges.equalToSuperview()
         })
-        controller.didMove(toParentViewController: self)
+        controller.didMove(toParent: self)
         stickerInputContainerView.layoutIfNeeded()
         return controller
     }()
     private lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController.instance(conversationId: conversationId)
         controller.delegate = self
-        addChildViewController(controller)
+        addChild(controller)
         galleryWrapperView.addSubview(controller.view)
         controller.view.snp.makeConstraints({ (make) in
             make.edges.equalToSuperview()
         })
-        controller.didMove(toParentViewController: self)
+        controller.didMove(toParent: self)
         return controller
     }()
     private lazy var strangerTipsView: StrangerTipsView = {
@@ -235,13 +235,13 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         reloadParticipants()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: .UIMenuControllerDidShowMenu, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: .UIMenuControllerDidHideMenu, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddedMessagesOutsideVisibleBounds(_:)), name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeStatusBarFrame(_:)), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeStatusBarFrame(_:)), name: UIApplication.didChangeStatusBarFrameNotification, object: nil)
     }
 
     @objc func showReportMenuAction() {
@@ -311,7 +311,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
     
     @available(iOS 11.0, *)
-    override func prefersHomeIndicatorAutoHidden() -> Bool {
+    override var prefersHomeIndicatorAutoHidden: Bool {
         return homeIndicatorAutoHidden
     }
     
@@ -654,7 +654,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                 makeInputTextViewResignFirstResponderIfItIs()
                 MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
                 tableViewContentOffsetShouldFollowInputWrapperPosition = true
-                view.bringSubview(toFront: galleryWrapperView)
+                view.bringSubviewToFront(galleryWrapperView)
                 if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, case let .relativeOffset(offset) = viewModel.layoutPosition {
                     galleryViewController.show(item: item, offset: offset)
                 } else {
@@ -895,7 +895,7 @@ extension ConversationViewController: UITextViewDelegate {
             return
         }
         let maxHeight = ceil(lineHeight * CGFloat(maxInputRow) + textView.textContainerInset.top + textView.textContainerInset.bottom)
-        let contentSize = textView.sizeThatFits(CGSize(width: textView.bounds.width, height: UILayoutFittingExpandedSize.height))
+        let contentSize = textView.sizeThatFits(CGSize(width: textView.bounds.width, height: UIView.layoutFittingExpandedSize.height))
         inputTextView.isScrollEnabled = contentSize.height > maxHeight
         if !trimmedMessageDraft.isEmpty || isShowingQuotePreviewView {
             sendButton.isHidden = false
@@ -1328,7 +1328,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
             statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.normal
             statusBarHidden = false
         }
-        view.sendSubview(toBack: galleryWrapperView)
+        view.sendSubviewToBack(galleryWrapperView)
         homeIndicatorAutoHidden = false
     }
     

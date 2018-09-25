@@ -46,7 +46,7 @@ class MixinNavigationController: UINavigationController {
 
 extension MixinNavigationController: UINavigationControllerDelegate {
 
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         if operation == .push {
             var targetVC = toVC
             if toVC is ContainerViewController {
@@ -104,7 +104,7 @@ extension MixinNavigationController: UIGestureRecognizerDelegate {
 
 fileprivate class PresentFromBottomAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
-    var operation: UINavigationControllerOperation = .none
+    var operation: UINavigationController.Operation = .none
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.25
@@ -146,7 +146,7 @@ fileprivate class PresentFromBottomAnimator: NSObject, UIViewControllerAnimatedT
 
 fileprivate class PushFromLeftAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
-    var operation: UINavigationControllerOperation = .none
+    var operation: UINavigationController.Operation = .none
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.25

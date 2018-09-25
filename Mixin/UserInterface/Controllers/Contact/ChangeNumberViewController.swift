@@ -41,7 +41,7 @@ class ChangeNumberViewController: UIViewController {
         bottomWrapperView.continueButton.addTarget(self, action: #selector(continueAction(_:)), for: .touchUpInside)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillChangeFrame(notification:)),
-                                               name: .UIKeyboardWillChangeFrame,
+                                               name: UIResponder.keyboardWillChangeFrameNotification,
                                                object: nil)
     }
     
@@ -50,7 +50,7 @@ class ChangeNumberViewController: UIViewController {
     }
     
     @objc func keyboardWillChangeFrame(notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         ChangeNumberViewController.lastKeyboardFrame = endFrame
         updateBottomWrapperViewPosition(keyboardFrame: endFrame)
     }

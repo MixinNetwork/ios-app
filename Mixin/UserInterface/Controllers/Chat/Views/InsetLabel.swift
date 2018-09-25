@@ -15,13 +15,13 @@ class InsetLabel: UILabel {
     private var invertedContentInset = UIEdgeInsets(top: -1, left: -6, bottom: -1, right: -6)
 
     override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
-        let layoutBounds = UIEdgeInsetsInsetRect(bounds, contentInset)
+        let layoutBounds = bounds.inset(by: contentInset)
         let textRect = super.textRect(forBounds: layoutBounds, limitedToNumberOfLines: numberOfLines)
-        return UIEdgeInsetsInsetRect(textRect, invertedContentInset)
+        return textRect.inset(by: invertedContentInset)
     }
     
     override func drawText(in rect: CGRect) {
-        super.drawText(in: UIEdgeInsetsInsetRect(rect, contentInset))
+        super.drawText(in: rect.inset(by: contentInset))
     }
 
 }

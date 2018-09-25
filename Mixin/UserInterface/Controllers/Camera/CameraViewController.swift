@@ -50,7 +50,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var detectText = ""
     private var recordTimer: Timer?
     private var audioRecordPermissionIsGranted: Bool {
-        return AVAudioSession.sharedInstance().recordPermission() == .granted
+        return AVAudioSession.sharedInstance().recordPermission == .granted
     }
 
     private lazy var videoDeviceDiscoverySession: AVCaptureDevice.DiscoverySession = {
@@ -332,7 +332,7 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
                                   selector: #selector(updateTimeLabelAction(_:)),
                                   userInfo: nil,
                                   repeats: true)
-                RunLoop.main.add(timer, forMode: .commonModes)
+                RunLoop.main.add(timer, forMode: .common)
                 recordTimer = timer
                 startRedDotAnimation()
             }
@@ -350,7 +350,7 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
     }
 
     private func askForAudioRecordPermission() {
-        switch AVAudioSession.sharedInstance().recordPermission() {
+        switch AVAudioSession.sharedInstance().recordPermission {
         case .denied:
             alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
         case .undetermined:

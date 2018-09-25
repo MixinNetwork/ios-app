@@ -73,7 +73,7 @@ class LoginView: UIView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        authButton.activityIndicator.activityIndicatorViewStyle = .white
+        authButton.activityIndicator.style = .white
     }
 
     func render(authInfo: AuthorizationResponse, assets: [AssetItem], superView: UrlWindow) {

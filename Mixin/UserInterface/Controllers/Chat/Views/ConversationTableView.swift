@@ -83,7 +83,7 @@ class ConversationTableView: UITableView {
         prepare()
     }
     
-    override init(frame: CGRect, style: UITableViewStyle) {
+    override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         prepare()
     }
@@ -266,7 +266,7 @@ class ConversationTableView: UITableView {
             UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_FORWARD, action: #selector(forwardAction(_:))),
             UIMenuItem(title: Localized.CHAT_MESSAGE_MENU_COPY, action: #selector(copyAction(_:))),
             UIMenuItem(title: Localized.MENU_DELETE, action: #selector(deleteAction(_:)))]
-        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerWillHideMenu(_:)), name: .UIMenuControllerWillHideMenu, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(menuControllerWillHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
     }
     
 }

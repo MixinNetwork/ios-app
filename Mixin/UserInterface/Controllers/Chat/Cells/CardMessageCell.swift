@@ -17,7 +17,7 @@ class CardMessageCell: DetailInfoMessageCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentView.sendSubview(toBack: backgroundImageView)
+        contentView.sendSubviewToBack(backgroundImageView)
         timeLabel.textColor = .infoGray
         leftView.snp.makeConstraints { (make) in
             leftViewLeadingConstraint = make.leading

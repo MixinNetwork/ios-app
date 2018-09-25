@@ -6,8 +6,8 @@ class AlbumViewController: UITableViewController {
     private var allAlbums = [SmartAlbum]()
     private var isFilterCustomSticker = false
     
-    override func didMove(toParentViewController parent: UIViewController?) {
-        super.didMove(toParentViewController: parent)
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
         container?.leftButton.setImage(#imageLiteral(resourceName: "ic_titlebar_close"), for: .normal)
     }
     

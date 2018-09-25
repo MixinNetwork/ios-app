@@ -102,7 +102,7 @@ class WebWindow: BottomSheetView {
         }
         dismissButton.imageView?.contentMode = .scaleAspectFit
         moreButton.imageView?.contentMode = .scaleAspectFit
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
     deinit {

@@ -2,8 +2,8 @@ import UIKit
 
 class AppCardMessageViewModel: CardMessageViewModel {
 
-    static let titleAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17)]
-    static let descriptionAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]
+    static let titleAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)]
+    static let descriptionAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
     static let emptyLabelWidth: CGFloat = 2
     
     override class var bubbleImageProvider: BubbleImageProvider.Type {

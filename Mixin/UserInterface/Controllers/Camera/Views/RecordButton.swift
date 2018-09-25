@@ -73,7 +73,7 @@ class RecordButton: UIButton {
         autoStopTimer = Timer.scheduledTimer(timeInterval: maxDuration / 1000, target: self, selector: #selector(autoStopAction), userInfo: nil, repeats: false)
 
         self.progressLastTime = CFAbsoluteTimeGetCurrent()
-        self.progressTimer?.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        self.progressTimer?.add(to: .main, forMode: .default)
 
         let scaleX = self.bounds.width * 0.8
         UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseOut, .beginFromCurrentState], animations: {

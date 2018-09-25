@@ -45,7 +45,7 @@ class NewAddressViewController: UIViewController {
             accountNameButton.isHidden = false
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     deinit {
@@ -83,7 +83,7 @@ class NewAddressViewController: UIViewController {
 
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         keyboardPlaceholderHeightConstraint.constant = endFrame.height
         view.layoutIfNeeded()
     }
@@ -152,7 +152,7 @@ extension NewAddressViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         container?.rightButton.isEnabled = !addressValue.isEmpty && !label.isEmpty
-        let sizeToFit = CGSize(width: addressTextView.bounds.width, height: UILayoutFittingExpandedSize.height)
+        let sizeToFit = CGSize(width: addressTextView.bounds.width, height: UIView.layoutFittingExpandedSize.height)
         let height = addressTextView.sizeThatFits(sizeToFit).height
         addressTextViewHeightConstraint.constant = height
         view.layoutIfNeeded()

@@ -44,8 +44,8 @@ class PayView: UIStackView {
             blockchainImageView.cornerRadius = 4
         }
         pinField.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     deinit {
@@ -122,16 +122,16 @@ extension PayView {
         guard let info = sender.userInfo, let superView = self.superView, superView.isShowing else {
             return
         }
-        guard let duration = (info[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
+        guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
             return
         }
-        guard let endKeyboardRect = (info[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard let endKeyboardRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
-        guard let animation = (info[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue else {
+        guard let animation = (info[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue else {
             return
         }
-        let options = UIViewAnimationOptions(rawValue: UInt(animation << 16))
+        let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
         UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
             superView.contentBottomConstraint.constant = endKeyboardRect.height
             (superView as? UrlWindow)?.contentHeightConstraint.constant = 318
@@ -144,13 +144,13 @@ extension PayView {
         guard let info = sender.userInfo, let superView = self.superView, superView.isShowing else {
             return
         }
-        guard let duration = (info[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
+        guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
             return
         }
-        guard let animation = (info[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue else {
+        guard let animation = (info[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue else {
             return
         }
-        let options = UIViewAnimationOptions(rawValue: UInt(animation << 16))
+        let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
 
         if paySuccessImageView.isHidden {
             UIView.animate(withDuration: duration, delay: 0, options: options, animations: {

@@ -21,6 +21,6 @@ target 'Mixin' do
   pod 'SwiftMessages'
   pod 'Zip', '~> 1.1'
   pod 'SignalProtocolC', :git => 'git@github.com:MixinMessenger/SignalProtocolC.git', :submodules => true
-  pod 'WCDB.swift', :git => 'git@github.com:wuyuehyang/wcdb.git'
+  pod 'WCDB.swift', :git => 'git@github.com:wuyuehyang/wcdb.git', :branch => 'swift4.2'
 
 end

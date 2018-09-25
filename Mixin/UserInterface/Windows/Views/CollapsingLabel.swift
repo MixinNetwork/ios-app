@@ -210,7 +210,7 @@ extension CollapsingLabel {
                                                     valueSize: MemoryLayout<CGFloat>.size,
                                                     value: &lineHeight)]
             let paragraphStyle = CTParagraphStyleCreate(settings, settings.count)
-            let attr: [NSAttributedStringKey: Any] = [
+            let attr: [NSAttributedString.Key: Any] = [
                 .ctFont: ctFont,
                 .ctParagraphStyle: paragraphStyle,
                 .ctForegroundColor: textColor.cgColor
@@ -221,7 +221,7 @@ extension CollapsingLabel {
             }
             // Make CTLine and Origins
             let framesetter = CTFramesetterCreateWithAttributedString(str as CFAttributedString)
-            let layoutSize = CGSize(width: bounds.width, height: UILayoutFittingExpandedSize.height)
+            let layoutSize = CGSize(width: bounds.width, height: UIView.layoutFittingExpandedSize.height)
             normalTextSize = ceil(CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, layoutSize, nil))
             let normalPath = CGPath(rect: CGRect(origin: .zero, size: normalTextSize), transform: nil)
             let normalFrame = CTFramesetterCreateFrame(framesetter, .zero, normalPath, nil)

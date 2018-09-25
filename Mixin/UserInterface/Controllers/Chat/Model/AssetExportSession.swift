@@ -9,10 +9,10 @@ class AssetExportSession {
     let videoSettings: [String: Any]
     let audioSettings: [String: Any]
     let fileType = AVFileType.mp4
-    let timeRange = CMTimeRange(start: kCMTimeZero, end: kCMTimePositiveInfinity)
+    let timeRange = CMTimeRange(start: .zero, end: .positiveInfinity)
     let shouldOptimizeForNetworkUse = true
     
-    private(set) var status = AVAssetExportSessionStatus.unknown
+    private(set) var status = AVAssetExportSession.Status.unknown
     private(set) var error: Error?
     private(set) var progress: Double = 0
     
@@ -118,9 +118,9 @@ class AssetExportSession {
                 transform = transform.concatenating(matrix)
                 
                 let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: track)
-                layerInstruction.setTransform(transform, at: kCMTimeZero)
+                layerInstruction.setTransform(transform, at: .zero)
                 let instruction = AVMutableVideoCompositionInstruction()
-                instruction.timeRange = CMTimeRange(start: kCMTimeZero, duration: asset.duration)
+                instruction.timeRange = CMTimeRange(start: .zero, duration: asset.duration)
                 instruction.layerInstructions = [layerInstruction]
                 composition.instructions = [instruction]
                 

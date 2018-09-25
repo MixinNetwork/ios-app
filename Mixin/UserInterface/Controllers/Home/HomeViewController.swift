@@ -28,13 +28,13 @@ class HomeViewController: UIViewController {
     private lazy var unpinAction = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_UNPIN, handler: tableViewCommitPinAction)
     private lazy var searchViewController: SearchViewController? = {
         let vc = SearchViewController.instance()
-        addChildViewController(vc)
+        addChild(vc)
         searchContainerView.addSubview(vc.view)
         vc.view.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         searchContainerView.layoutIfNeeded()
-        vc.didMove(toParentViewController: self)
+        vc.didMove(toParent: self)
         vc.cancelButton.addTarget(self, action: #selector(dismissSearch(_:)), for: .touchUpInside)
         return vc
     }()

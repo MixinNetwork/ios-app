@@ -74,7 +74,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         fullnameWidth = (message.userFullName as NSString)
-            .boundingRect(with: UILayoutFittingExpandedSize, options: [], attributes: [.font: DetailInfoMessageViewModel.fullnameFont], context: nil)
+            .boundingRect(with: UIView.layoutFittingExpandedSize, options: [], attributes: [.font: DetailInfoMessageViewModel.fullnameFont], context: nil)
             .width
         super.init(message: message, style: style, fits: layoutWidth)
         status = message.status

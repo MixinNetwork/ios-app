@@ -12,7 +12,7 @@ class PreKeyUtil {
         CryptoUserDefault.shared.prekeyOffset = preKeyIdOffset + UInt32(BATCH_SIZE) + 1
         let store = MixinPreKeyStore()
         var dict = [UInt32 : SessionPreKey]()
-        let preKeys = records.flatMap { (record) -> (PreKey)? in
+        let preKeys = records.compactMap { (record) -> PreKey? in
             guard let data = try? record.data() else {
                 return nil
             }

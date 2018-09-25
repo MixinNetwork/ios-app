@@ -62,7 +62,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         titleWidth = min(maxTitleWidth, titleWidth)
         
         var subtitleSize = CGSize.zero
-        let subtitleFittingSize = CGSize(width: maxSubtitleWidth, height: UILayoutFittingExpandedSize.height)
+        let subtitleFittingSize = CGSize(width: maxSubtitleWidth, height: UIView.layoutFittingExpandedSize.height)
         subtitleSize = (quote.subtitle as NSString)
             .boundingRect(with: subtitleFittingSize, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [.font: Quote.subtitleFont], context: nil)
             .size

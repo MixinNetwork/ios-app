@@ -18,7 +18,7 @@ extension UIButton {
             }
             let localText = LocalizedString(text, comment: text)
             if localText != text {
-                self.setTitle(localText, for: UIControlState.normal)
+                self.setTitle(localText, for: .normal)
             }
         }
     }

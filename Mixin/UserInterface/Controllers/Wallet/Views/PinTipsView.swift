@@ -18,7 +18,7 @@ class PinTipsView: BottomSheetView {
         super.awakeFromNib()
         pinField.delegate = self
         loadingView.isHidden = true
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
 
     func presentPopupControllerAnimated(dismissCallback: @escaping () -> Void) {
@@ -48,10 +48,10 @@ class PinTipsView: BottomSheetView {
         guard let info = sender.userInfo else {
             return
         }
-        guard let duration = (info[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
+        guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
             return
         }
-        guard let endKeyboardRect = (info[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard let endKeyboardRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
         guard isVisibleInScreen else {

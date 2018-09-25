@@ -260,7 +260,9 @@ extension UrlWindow {
             var participants = [ParticipantUser]()
             switch UserAPI.shared.showUsers(userIds: userIds) {
             case let .success(users):
-                participants = users.flatMap { ParticipantUser.createParticipantUser(conversationId: conversationId, user: $0) }
+                participants = users.map {
+                    ParticipantUser.createParticipantUser(conversationId: conversationId, user: $0)
+                }
             case let .failure(error):
                 DispatchQueue.main.async {
                     self?.failedHandler(error.localizedDescription)

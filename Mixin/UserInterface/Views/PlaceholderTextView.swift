@@ -66,7 +66,7 @@ class PlaceholderTextView: UITextView {
         placeholderLabel.font = font
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(textViewDidChange(_:)),
-                                               name: .UITextViewTextDidChange,
+                                               name: UITextView.textDidChangeNotification,
                                                object: nil)
     }
     

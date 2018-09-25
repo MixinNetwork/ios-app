@@ -39,7 +39,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         transferToLabel.text = Localized.TRANSFER_TITLE_TO(fullName: user.fullName)
         updateUI()
         fetchAssets()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetsDidChange, object: nil)
     }
     
@@ -49,8 +49,8 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         amountTextField.becomeFirstResponder()
     }
     
-    override func willMove(toParentViewController parent: UIViewController?) {
-        super.willMove(toParentViewController: parent)
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
         isDidAppear = false
     }
 
@@ -122,7 +122,7 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
     }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        guard let userInfo = notification.userInfo, let keyboardBeginFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? CGRect, let keyboardEndFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else {
+        guard let userInfo = notification.userInfo, let keyboardBeginFrame = userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect, let keyboardEndFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
         guard continueButtonFollowsKeyboardPosition else {

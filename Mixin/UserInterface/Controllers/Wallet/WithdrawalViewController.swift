@@ -41,12 +41,12 @@ class WithdrawalViewController: UIViewController {
         return view
     }()
 
-    private lazy var transactionLabelAttribute: [NSAttributedStringKey: Any] = {
+    private lazy var transactionLabelAttribute: [NSAttributedString.Key: Any] = {
         return [.font: transactionFeeHintLabel.font,
                 .foregroundColor: transactionFeeHintLabel.textColor]
     }()
     
-    private lazy var transactionLabelBoldAttribute: [NSAttributedStringKey: Any] = {
+    private lazy var transactionLabelBoldAttribute: [NSAttributedString.Key: Any] = {
         let normalFont = transactionFeeHintLabel.font!
         let boldFont: UIFont
         if let descriptor = normalFont.fontDescriptor.withSymbolicTraits(.traitBold) {

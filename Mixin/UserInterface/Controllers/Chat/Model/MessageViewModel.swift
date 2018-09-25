@@ -15,9 +15,9 @@ class MessageViewModel: CustomDebugStringConvertible {
     internal(set) var backgroundImageFrame = CGRect.zero
     internal(set) var cellHeight: CGFloat = 44
 
-    internal lazy var contentMargin: Margin = {
-        Margin(leading: 16, trailing: 10, top: 7, bottom: 7)
-    }()
+    internal var contentMargin: Margin {
+        return Margin(leading: 16, trailing: 10, top: 7, bottom: 7)
+    }
     
     public var debugDescription: String {
         return "MessageViewModel for message: \(message), layoutWidth: \(layoutWidth), cellHeight: \(cellHeight)"

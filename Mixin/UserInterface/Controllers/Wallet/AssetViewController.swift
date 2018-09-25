@@ -51,11 +51,9 @@ class AssetViewController: UITableViewController {
             }
 
             let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId)
-            let userIds: [String] = snapshots.filter({ (snapshot) -> Bool in
-                return snapshot.opponentUserFullName == nil && snapshot.opponentId != nil
-            }).flatMap({ (snapshot) -> String in
-                return snapshot.opponentId!
-            })
+            let userIds: [String] = snapshots
+                .filter({ $0.opponentUserFullName == nil })
+                .compactMap({ $0.opponentId })
             if userIds.count > 0 {
                 for userId in userIds {
                     ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [userId]))
@@ -181,7 +179,7 @@ extension AssetViewController {
         if indexPath.section == 1 {
             return SnapshotCell.cellHeight
         } else {
-            return UITableViewAutomaticDimension
+            return UITableView.automaticDimension
         }
     }
     

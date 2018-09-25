@@ -93,7 +93,7 @@ extension StickerInputViewController: UICollectionViewDelegate {
         guard let viewController = modelController.dequeueReusableStickersViewController(withIndex: selectedIndex) else {
             return
         }
-        let direction: UIPageViewControllerNavigationDirection = selectedIndex > currentIndex ? .forward : .reverse
+        let direction: UIPageViewController.NavigationDirection = selectedIndex > currentIndex ? .forward : .reverse
         pageViewController.view.isUserInteractionEnabled = false
         isScrollingByAlbumSelection = true
         pageViewController.setViewControllers([viewController], direction: direction, animated: true) { (_) in
@@ -138,7 +138,7 @@ extension StickerInputViewController: UIScrollViewDelegate {
         }
         var maxWidth: CGFloat = 0
         var focusedIndex = currentIndex
-        for case let vc as StickersViewController in pageViewController.childViewControllers {
+        for case let vc as StickersViewController in pageViewController.children {
             guard vc.view.superview != nil else {
                 continue
             }
@@ -178,7 +178,7 @@ extension StickerInputViewController {
         }
     }
     
-    private func suggestScrollPosition(forItemAt indexPath: IndexPath) -> UICollectionViewScrollPosition? {
+    private func suggestScrollPosition(forItemAt indexPath: IndexPath) -> UICollectionView.ScrollPosition? {
         guard var frame = albumsCollectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame else {
             return nil
         }

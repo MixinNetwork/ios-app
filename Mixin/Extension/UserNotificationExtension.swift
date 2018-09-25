@@ -2,6 +2,12 @@ import Foundation
 import UserNotifications
 import UIKit
 
+extension UNNotificationSoundName {
+    
+    static let mixin = UNNotificationSoundName(rawValue: "mixin.caf")
+    
+}
+
 extension UNUserNotificationCenter {
 
     func checkNotificationSettings(completionHandler: @escaping (_ authorizationStatus: UNAuthorizationStatus) -> Void) {
@@ -70,7 +76,7 @@ extension UNUserNotificationCenter {
             userInfo["userAppId"] = user.appId
         }
         notificationContent.userInfo = userInfo
-        notificationContent.sound = UNNotificationSound(named: "mixin.caf")
+        notificationContent.sound = UNNotificationSound(named: .mixin)
         notificationContent.categoryIdentifier = NotificationIdentifier.actionCategory.rawValue
 
         if UIApplication.shared.applicationState == .active {

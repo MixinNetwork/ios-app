@@ -210,7 +210,7 @@ extension CollapsingLabel {
                                                     valueSize: MemoryLayout<CGFloat>.size,
                                                     value: &lineHeight)]
             let paragraphStyle = CTParagraphStyleCreate(settings, settings.count)
-            let attr: [NSAttributedStringKey: Any] = [
+            let attr: [NSAttributedString.Key: Any] = [
                 .ctFont: ctFont,
                 .ctParagraphStyle: paragraphStyle,
                 .ctForegroundColor: textColor.cgColor
@@ -221,7 +221,7 @@ extension CollapsingLabel {
             }
             // Make CTLine and Origins
             let framesetter = CTFramesetterCreateWithAttributedString(str as CFAttributedString)
-            let layoutSize = CGSize(width: bounds.width, height: UILayoutFittingExpandedSize.height)
+            let layoutSize = CGSize(width: bounds.width, height: UIView.layoutFittingExpandedSize.height)
             normalTextSize = ceil(CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, layoutSize, nil))
             let normalPath = CGPath(rect: CGRect(origin: .zero, size: normalTextSize), transform: nil)
             let normalFrame = CTFramesetterCreateFrame(framesetter, .zero, normalPath, nil)
@@ -263,7 +263,7 @@ extension CollapsingLabel {
     private func links(fromLinksMap linksMap: [NSRange: URL], forLines lines: [CTLine], lineOrigins: [CGPoint]) -> [Link] {
         var links = [Link]()
         for link in linksMap {
-            let linkRects: [CGRect] = lines.enumerated().flatMap({ (index, line) -> CGRect? in
+            let linkRects: [CGRect] = lines.enumerated().compactMap({ (index, line) -> CGRect? in
                 let lineOrigin = lineOrigins[index]
                 let cfLineRange = CTLineGetStringRange(line)
                 let lineRange = NSRange(cfRange: cfLineRange)

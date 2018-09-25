@@ -7,7 +7,7 @@ let jpegCompressionQuality: CGFloat = 0.75
 extension UIImage {
     
     var base64: String? {
-        let data = UIImageJPEGRepresentation(self, jpegCompressionQuality)
+        let data = self.jpegData(compressionQuality: jpegCompressionQuality)
         return data?.base64EncodedString()
     }
 
@@ -74,7 +74,7 @@ extension UIImage {
         let targetHeight = self.size.height
         let textColor = UIColor.white
         let textFont = UIFont.systemFont(ofSize: fontSize)
-        let textFontAttributes = [NSAttributedStringKey.font: textFont, NSAttributedStringKey.foregroundColor: textColor]
+        let textFontAttributes = [NSAttributedString.Key.font: textFont, NSAttributedString.Key.foregroundColor: textColor]
         let string = text as NSString
         let stringSize = string.size(withAttributes: textFontAttributes)
         let textRect = CGRect(x: (targetWidth - stringSize.width) / 2 + offset.x,
@@ -144,7 +144,7 @@ extension UIImage {
 
     @discardableResult
     func saveToFile(path: URL, quality: CGFloat = jpegCompressionQuality) -> Bool {
-        guard let data = UIImageJPEGRepresentation(self, quality) else {
+        guard let data = self.jpegData(compressionQuality: quality) else {
             return false
         }
         do {

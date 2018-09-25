@@ -60,7 +60,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
             }
             container?.rightButton.isBusy = true
 
-            let stickerIds: [String] = selectionCells.flatMap { (indexPath) -> String? in
+            let stickerIds: [String] = selectionCells.compactMap { (indexPath) -> String? in
                 guard indexPath.row < stickers.count else {
                     return nil
                 }

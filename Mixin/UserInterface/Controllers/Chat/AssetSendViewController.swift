@@ -100,13 +100,13 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     @IBAction func playAction(_ sender: Any) {
         if seekToZero {
             seekToZero = false
-            videoView.seek(to: kCMTimeZero)
+            videoView.seek(to: .zero)
         }
         videoView.play()
     }
 
     private func loadAsset(asset: AVAsset, thumbnail: UIImage?) {
-        self.sendButton.activityIndicator.activityIndicatorViewStyle = .white
+        self.sendButton.activityIndicator.style = .white
         self.videoAsset = asset
         self.playButton.isHidden = false
         self.videoView.isHidden = false
@@ -115,7 +115,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         videoView.loadVideo(asset: asset, thumbnail: thumbnail)
         videoView.player.addObserver(self, forKeyPath: rateKey, options: [.initial, .new], context: nil)
         isObservingRate = true
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive(_:)), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive(_:)), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(_:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
 

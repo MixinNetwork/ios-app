@@ -5,7 +5,7 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
     static let titleFont = UIFont.boldSystemFont(ofSize: 16)
     
     private static let titleMargin = Margin(leading: 16, trailing: 16, top: 10, bottom: 12)
-    private static let titleAttribute = [NSAttributedStringKey.font: AppButtonGroupViewModel.titleFont]
+    private static let titleAttribute = [NSAttributedString.Key.font: AppButtonGroupViewModel.titleFont]
     
     var frames = [(button: CGRect, label: CGRect)]()
     
@@ -14,7 +14,7 @@ class AppButtonGroupViewModel: DetailInfoMessageViewModel {
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         let boundingSize = CGSize(width: layoutWidth - AppButtonGroupViewModel.titleMargin.horizontal - margin.horizontal,
-                                  height: UILayoutFittingExpandedSize.height)
+                                  height: UIView.layoutFittingExpandedSize.height)
         buttonSizes = message.appButtons?.map({
             let titleSize = ($0.label as NSString).boundingRect(with: boundingSize,
                                                                 options: [.usesLineFragmentOrigin, .usesFontLeading],

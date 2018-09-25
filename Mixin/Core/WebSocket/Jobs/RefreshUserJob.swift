@@ -39,13 +39,9 @@ class RefreshUserJob: BaseJob {
             switch UserAPI.shared.showUsers(userIds: userIds) {
             case let .success(users):
                 if users.count != userIds.count {
-                    let serverUserIds: [String] = users.flatMap({ (user) -> String in
-                        return user.userId
-                    })
-                    for userId in userIds {
-                        if !serverUserIds.contains(userId) {
-                            processNotFoundUser(userId: userId)
-                        }
+                    let serverUserIds = users.map{ $0.userId }
+                    for userId in userIds where !serverUserIds.contains(userId) {
+                        processNotFoundUser(userId: userId)
                     }
                 }
                 UserDAO.shared.updateUsers(users: users, updateParticipantStatus: updateParticipantStatus)

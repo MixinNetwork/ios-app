@@ -75,10 +75,10 @@ class GalleryViewController: UIViewController {
         scrollViewContentView.backgroundColor = .clear
         scrollView.addSubview(scrollViewContentView)
         for page in pages {
-            addChildViewController(page)
+            addChild(page)
             page.view.autoresizingMask = []
             scrollViewContentView.addSubview(page.view)
-            page.didMove(toParentViewController: self)
+            page.didMove(toParent: self)
         }
         layoutPages()
         scrollView.delegate = self

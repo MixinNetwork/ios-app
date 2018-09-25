@@ -27,7 +27,7 @@ class GroupAnnouncementViewController: UIViewController {
         view.layoutIfNeeded()
         updateTextViewHeight()
         textView.contentOffset.y = max(0, (textViewHeightConstraint.constant - textView.bounds.height))
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     deinit {
@@ -35,7 +35,7 @@ class GroupAnnouncementViewController: UIViewController {
     }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         keyboardPlaceholderHeightConstraint.constant = endFrame.height
         CATransaction.performWithoutAnimation {
             view.layoutIfNeeded()
@@ -93,7 +93,7 @@ extension GroupAnnouncementViewController: UITextViewDelegate {
 extension GroupAnnouncementViewController {
     
     private func updateTextViewHeight() {
-        let sizeToFit = CGSize(width: textView.bounds.width, height: UILayoutFittingExpandedSize.height)
+        let sizeToFit = CGSize(width: textView.bounds.width, height: UIView.layoutFittingExpandedSize.height)
         let height = textView.sizeThatFits(sizeToFit).height
         textViewHeightConstraint.constant = height
         view.layoutIfNeeded()

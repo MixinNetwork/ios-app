@@ -120,10 +120,10 @@ extension String {
     
 }
 
-extension NSAttributedStringKey {
-    static let ctFont = kCTFontAttributeName as NSAttributedStringKey
-    static let ctForegroundColor = kCTForegroundColorAttributeName as NSAttributedStringKey
-    static let ctParagraphStyle = kCTParagraphStyleAttributeName as NSAttributedStringKey
+extension NSAttributedString.Key {
+    static let ctFont = kCTFontAttributeName as NSAttributedString.Key
+    static let ctForegroundColor = kCTForegroundColorAttributeName as NSAttributedString.Key
+    static let ctParagraphStyle = kCTParagraphStyleAttributeName as NSAttributedString.Key
 }
 
 extension NSMutableAttributedString {

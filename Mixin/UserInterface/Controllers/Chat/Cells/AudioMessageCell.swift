@@ -28,7 +28,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
                 timer = Timer(timeInterval: waveformUpdateInterval, repeats: true, block: { [weak self] (_) in
                     self?.updateWaveformProgress()
                 })
-                RunLoop.main.add(timer!, forMode: .commonModes)
+                RunLoop.main.add(timer!, forMode: .common)
             } else {
                 MXNAudioPlayer.shared().removeObserver(self)
                 waveformMaskView.frame = .zero

@@ -28,13 +28,13 @@ class HomeViewController: UIViewController {
     private lazy var unpinAction = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_UNPIN, handler: tableViewCommitPinAction)
     private lazy var searchViewController: SearchViewController? = {
         let vc = SearchViewController.instance()
-        addChildViewController(vc)
+        addChild(vc)
         searchContainerView.addSubview(vc.view)
         vc.view.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         searchContainerView.layoutIfNeeded()
-        vc.didMove(toParentViewController: self)
+        vc.didMove(toParent: self)
         vc.cancelButton.addTarget(self, action: #selector(dismissSearch(_:)), for: .touchUpInside)
         return vc
     }()
@@ -74,18 +74,9 @@ class HomeViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if #available(iOS 10.3, *) {
-            let sevenDays: Double = 7 * 24 * 60 * 60
-            let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
-                && CommonUserDefault.shared.hasPerformedTransfer
-                && Date().timeIntervalSince1970 - CommonUserDefault.shared.firstLaunchTimeIntervalSince1970 > sevenDays
-            if shouldRequestReview {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-                    SKStoreReviewController.requestReview()
-                })
-            }
-            HomeViewController.hasTriedToRequestReview = true
-        }
+        #if RELEASE
+        requestAppStoreReviewIfNeeded()
+        #endif
     }
     
     private func fetchConversations() {
@@ -345,6 +336,23 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
+    
+    private func requestAppStoreReviewIfNeeded() {
+        guard #available(iOS 10.3, *) else {
+            return
+        }
+        let sevenDays: Double = 7 * 24 * 60 * 60
+        let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
+            && CommonUserDefault.shared.hasPerformedTransfer
+            && Date().timeIntervalSince1970 - CommonUserDefault.shared.firstLaunchTimeIntervalSince1970 > sevenDays
+        if shouldRequestReview {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                SKStoreReviewController.requestReview()
+            })
+        }
+        HomeViewController.hasTriedToRequestReview = true
+    }
+    
 }
 
 extension HomeViewController {
@@ -369,7 +377,7 @@ extension HomeViewController {
     private func checkNotificationAuthorizationStatus() {
         UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
             switch authorizationStatus {
-            case .authorized, .notDetermined:
+            case .authorized, .notDetermined, .provisional:
                 UNUserNotificationCenter.current().registerForRemoteNotifications()
             case .denied:
                 break

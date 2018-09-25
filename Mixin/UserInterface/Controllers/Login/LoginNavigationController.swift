@@ -36,7 +36,7 @@ class LoginNavigationController: UINavigationController {
         }
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillChangeFrame(notification:)),
-                                               name: .UIKeyboardWillChangeFrame,
+                                               name: UIResponder.keyboardWillChangeFrameNotification,
                                                object: nil)
     }
     
@@ -49,7 +49,7 @@ class LoginNavigationController: UINavigationController {
     }
     
     @objc func keyboardWillChangeFrame(notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         lastKeyboardFrame = endFrame
         viewControllers.forEach {
             if let vc = $0 as? LoginViewController {

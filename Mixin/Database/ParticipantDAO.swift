@@ -133,9 +133,9 @@ final class ParticipantDAO {
 
     func participantRequests(conversationId: String, currentAccountId: String) -> [ParticipantRequest] {
         let participants = ParticipantDAO.shared.participants(conversationId: conversationId)
-        return participants.filter({ $0.userId != currentAccountId }).flatMap({ (participant) -> ParticipantRequest in
-            return ParticipantRequest(userId: participant.userId, role: participant.role)
-        })
+        return participants
+            .filter({ $0.userId != currentAccountId })
+            .map({ ParticipantRequest(userId: $0.userId, role: $0.role) })
     }
 
 }

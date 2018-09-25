@@ -32,7 +32,7 @@ class ConversationKeyboardManager {
     init() {
         inputAccessoryView = FrameObservingInputAccessoryView(height: 0)
         inputAccessoryView.manager = self
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: .UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     deinit {
@@ -40,7 +40,7 @@ class ConversationKeyboardManager {
     }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        guard let endFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard let endFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
         ConversationKeyboardManager.lastKeyboardHeight = max(ConversationKeyboardManager.minReasonableKeyboardHeight,

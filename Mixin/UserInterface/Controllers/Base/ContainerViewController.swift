@@ -67,12 +67,12 @@ class ContainerViewController: UIViewController {
         prepareBarRightButton()
         navigationBar.layoutIfNeeded()
         titleLabel.text = controllerTitle
-        addChildViewController(viewController)
+        addChild(viewController)
         containerView.addSubview(viewController.view)
         viewController.view.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        viewController.didMove(toParentViewController: self)
+        viewController.didMove(toParent: self)
     }
 
     @IBAction func rightAction(_ sender: Any) {

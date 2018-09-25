@@ -344,12 +344,9 @@ class ReceiveMessageService: MixinService {
         } else {
             switch ConversationAPI.shared.getConversation(conversationId: data.conversationId) {
             case let .success(response):
-                let userIds = response.participants.flatMap({ (participant) -> String in
-                    return participant.userId
-                }).filter({ (userId) -> Bool in
-                    return userId != currentAccountId
-                })
-
+                let userIds = response.participants
+                    .map{ $0.userId }
+                    .filter{ $0 != currentAccountId }
                 var updatedUsers = true
                 if userIds.count > 0 {
                     switch UserAPI.shared.showUsers(userIds: userIds) {

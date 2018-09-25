@@ -94,18 +94,14 @@ class MixinDatabase: BaseDatabase {
 
 extension MixinDatabase {
     
-    class NullValue: FundamentalColumnType, ColumnEncodableBase {
+    class NullValue: ColumnEncodable {
         
         static var columnType: ColumnType {
             return .null
         }
         
-        var columnType: ColumnType {
-            return .null
-        }
-        
-        func archivedFundamentalValue() -> FundamentalColumnType? {
-            return self
+        func archivedValue() -> FundamentalValue {
+            return FundamentalValue(nil)
         }
         
     }

@@ -62,7 +62,7 @@ class GalleryItemViewController: UIViewController {
             }
             if !isFocused, item?.category == .video {
                 videoView.player.rate = 0
-                videoView.player.seek(to: kCMTimeZero)
+                videoView.player.seek(to: .zero)
                 setPlayButtonHidden(false, otherControlsHidden: true, animated: false)
             }
         }
@@ -98,7 +98,7 @@ class GalleryItemViewController: UIViewController {
             label.layer.shadowOpacity = 0.6
             label.layer.shadowOffset = .zero
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive(_:)), name: .UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive(_:)), name: UIApplication.willResignActiveNotification, object: nil)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -129,7 +129,7 @@ class GalleryItemViewController: UIViewController {
     
     @IBAction func playAction(_ sender: Any) {
         if seekToZeroBeforePlaying {
-            videoView.player.seek(to: kCMTimeZero)
+            videoView.player.seek(to: .zero)
             seekToZeroBeforePlaying = false
         }
         videoView.player.rate = round(abs(1 - videoView.player.rate))
@@ -277,7 +277,7 @@ extension GalleryItemViewController: UIScrollViewDelegate {
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         let visibleSize: CGSize
         if #available(iOS 11.0, *) {
-            visibleSize = UIEdgeInsetsInsetRect(scrollView.frame, scrollView.adjustedContentInset).size
+            visibleSize = scrollView.frame.inset(by: scrollView.adjustedContentInset).size
         } else {
             visibleSize = scrollView.frame.size
         }
@@ -331,7 +331,7 @@ extension GalleryItemViewController {
         imageView.sd_cancelCurrentImageLoad()
         scrollView.contentSize = pageSize
         videoView.player.rate = 0
-        videoView.player.seek(to: kCMTimeZero)
+        videoView.player.seek(to: .zero)
         if let item = videoView.player.currentItem {
             NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: item)
         }

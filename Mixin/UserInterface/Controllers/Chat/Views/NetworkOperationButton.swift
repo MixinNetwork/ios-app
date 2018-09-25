@@ -70,7 +70,7 @@ class NetworkOperationButton: UIButton {
         layer.strokeColor = UIColor(rgbValue: 0x007AFF).cgColor
         layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         layer.lineWidth = NetworkOperationButton.indicatorLineWidth
-        layer.lineCap = kCALineCapRound
+        layer.lineCap = .round
         layer.path = UIBezierPath(arcCenter: .zero,
                                   radius: NetworkOperationButton.indicatorLength / 2,
                                   startAngle: -.pi / 2,

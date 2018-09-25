@@ -18,12 +18,12 @@ class LoginIntroViewController: UIViewController {
         let attributedText = NSMutableAttributedString(string: intro)
         let paragraphSytle = NSMutableParagraphStyle()
         paragraphSytle.alignment = .center
-        attributedText.setAttributes([NSAttributedStringKey.paragraphStyle: paragraphSytle], range: fullRange)
+        attributedText.setAttributes([NSAttributedString.Key.paragraphStyle: paragraphSytle], range: fullRange)
         if let font = font {
-            attributedText.addAttributes([NSAttributedStringKey.font: font], range: fullRange)
+            attributedText.addAttributes([NSAttributedString.Key.font: font], range: fullRange)
         }
-        attributedText.addAttributes([NSAttributedStringKey.link: URL.terms], range: termsRange)
-        attributedText.addAttributes([NSAttributedStringKey.link: URL.privacy], range: privacyRange)
+        attributedText.addAttributes([NSAttributedString.Key.link: URL.terms], range: termsRange)
+        attributedText.addAttributes([NSAttributedString.Key.link: URL.privacy], range: privacyRange)
         introTextView.attributedText = attributedText
     }
     

@@ -289,9 +289,7 @@ final class ConversationDAO {
             return
         }
         let oldUserIds = MixinDatabase.shared.getStringValues(column: Participant.Properties.userId, tableName: Participant.tableName, condition: Participant.Properties.conversationId == conversationId)
-        let newUserIds: [String] = participants.flatMap({ (participant) -> String in
-            return participant.userId
-        })
+        let newUserIds = participants.map{ $0.userId }
         if oldConversation.announcement != conversation.announcement, !conversation.announcement.isEmpty {
             CommonUserDefault.shared.setHasUnreadAnnouncement(true, forConversationId: conversationId)
         }

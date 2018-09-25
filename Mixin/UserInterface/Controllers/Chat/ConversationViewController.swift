@@ -1359,6 +1359,9 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
     }
     
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
+        guard UIApplication.shared.applicationState == .active else {
+            return
+        }
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
             return
         }
@@ -1407,6 +1410,9 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
             manager.inputAccessoryViewHeight = inputWrapperView.frame.height
         } else if intent == .hide {
             manager.inputAccessoryViewHeight = 0
+        }
+        DispatchQueue.main.async {
+            self.tableView.setFloatingHeaderViewsHidden(true, animated: true)
         }
     }
 

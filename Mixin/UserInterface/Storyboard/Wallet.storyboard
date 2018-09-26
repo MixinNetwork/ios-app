@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7b5-hR-M5c">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7b5-hR-M5c">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -90,9 +88,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="1Bd-So-GRm" secondAttribute="bottom" id="0EW-qV-6Jd"/>
                             <constraint firstItem="e9G-zt-tMB" firstAttribute="trailing" secondItem="Vuf-zQ-qkL" secondAttribute="trailing" id="0RT-2R-bio"/>
                             <constraint firstItem="e9G-zt-tMB" firstAttribute="top" secondItem="Vuf-zQ-qkL" secondAttribute="top" id="A7P-S4-a7u"/>
-                            <constraint firstItem="Vuf-zQ-qkL" firstAttribute="bottom" secondItem="1Bd-So-GRm" secondAttribute="bottom" id="LUR-fw-n3w"/>
                             <constraint firstAttribute="trailing" secondItem="1Bd-So-GRm" secondAttribute="trailing" id="Njw-LW-Qzm"/>
                             <constraint firstItem="9do-Bk-P5H" firstAttribute="top" secondItem="e9G-zt-tMB" secondAttribute="bottom" id="htW-xd-Gj5"/>
                             <constraint firstItem="1Bd-So-GRm" firstAttribute="leading" secondItem="zXf-Wz-enF" secondAttribute="leading" id="qp9-lL-D7i"/>

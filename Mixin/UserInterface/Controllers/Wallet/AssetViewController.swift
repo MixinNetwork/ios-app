@@ -29,7 +29,7 @@ class AssetViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: asset.assetId))
-        ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(assetId: asset.assetId))
+        ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(key: .assetId(asset.assetId)))
     }
     
     deinit {
@@ -44,7 +44,7 @@ class AssetViewController: UITableViewController {
     }
     
     @objc func snapshotsDidChange(_ notification: Notification) {
-        guard let assetId = notification.object as? String, assetId == asset.assetId else {
+        guard let change = notification.object as? SnapshotChange, case let .assetId(assetId) = change, assetId == asset.assetId else {
             return
         }
         fetchAsset(showEmptyIndicatorIfEmpty: true)

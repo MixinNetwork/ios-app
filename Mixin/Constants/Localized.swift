@@ -268,6 +268,7 @@ public class Localized {
         return String(format: LocalizedString("profile_reputation_score", comment: "Reputation Score: %@"), String(reputation))
     }
     public static let PROFILE_SHARE_CARD = LocalizedString("profile_share_card", comment: "Share Contact")
+    public static let PROFILE_TRANSACTIONS = LocalizedString("profile_transactions", comment: "Transactions")
     public static let PROFILE_ADD = LocalizedString("profile_add", comment: "Add Contact")
     public static let PROFILE_REMOVE = LocalizedString("profile_remove", comment: "Remove Contact")
     public static let PROFILE_BLOCK = LocalizedString("profile_block", comment: "Block")

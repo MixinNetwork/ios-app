@@ -356,6 +356,7 @@
 "profile_title" = "Info";
 "profile_send_message" = "Send Message";
 "profile_share_card" = "Share Contact";
+"profile_transactions" = "Transactions";
 "profile_open_bot" = "Open App";
 "profile_notification" = "Notifications";
 "profile_add" = "Add Contact";

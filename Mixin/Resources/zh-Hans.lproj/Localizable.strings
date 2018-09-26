@@ -356,6 +356,7 @@
 "profile_send_message" = "发消息";
 "profile_open_bot" = "打开小程序";
 "profile_share_card" = "分享他的名片";
+"profile_transactions" = "转账记录";
 "profile_notification" = "通知";
 "profile_add" = "添加联系人";
 "profile_remove" = "删除联系人";

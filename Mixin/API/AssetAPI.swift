@@ -19,7 +19,10 @@ final class AssetAPI: BaseAPI {
         static func snapshots(assetId: String) -> String {
             return "assets/\(assetId)/snapshots"
         }
-
+        static func snapshots(opponentId: String) -> String {
+            return "mutual_snapshots/\(opponentId)"
+        }
+        
         static let transfers = "transfers"
         static let payments = "payments"
     }
@@ -62,6 +65,10 @@ final class AssetAPI: BaseAPI {
 
     func snapshots(assetId: String) -> APIResult<[Snapshot]> {
         return request(method: .get, url: url.snapshots(assetId: assetId))
+    }
+    
+    func snapshots(opponentId: String) -> APIResult<[Snapshot]> {
+        return request(method: .get, url: url.snapshots(opponentId: opponentId))
     }
     
     func fee(assetId: String, completion: @escaping (APIResult<Fee>) -> Void) {

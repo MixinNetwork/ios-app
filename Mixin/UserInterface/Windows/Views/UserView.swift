@@ -166,6 +166,9 @@ class UserView: CornerView {
         alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
             self?.shareAction()
         }))
+        alc.addAction(UIAlertAction(title: Localized.PROFILE_TRANSACTIONS, style: .default, handler: { [weak self](action) in
+            self?.transactionsAction()
+        }))
         switch user.relationship {
         case Relationship.FRIEND.rawValue:
             alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
@@ -240,6 +243,10 @@ class UserView: CornerView {
 
     private func shareAction() {
         UIApplication.rootNavigationController()?.pushViewController(ShareContactViewController.instance(ownerUser: user), animated: true)
+    }
+    
+    private func transactionsAction() {
+        UIApplication.rootNavigationController()?.pushViewController(PeerTransactionsViewController.instance(opponentId: user.userId), animated: true)
     }
 
     private func blockAction() {

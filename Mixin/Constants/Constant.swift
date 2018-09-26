@@ -68,6 +68,11 @@ struct ConversationChange {
     
 }
 
+enum SnapshotChange {
+    case assetId(String)
+    case opponentId(String)
+}
+
 struct SuiteName {
     static var crypto = "one.mixin.ios.crypto"
     static var common = "one.mixin.ios.common"

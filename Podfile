@@ -11,7 +11,7 @@ target 'Mixin' do
   pod 'Firebase/Analytics'
   pod 'SDWebImageYYPlugin/YYImage'
   pod 'YYImage/WebP'
-  pod 'SnapKit', '~> 4.0.0'
+  pod 'SnapKit', '~> 4.0.1'
   pod 'SocketRocket'
   pod 'PhoneNumberKit'
   pod 'GzipSwift'

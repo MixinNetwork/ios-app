@@ -17,22 +17,30 @@ class AssetViewController: UITableViewController {
                            forCellReuseIdentifier: SnapshotCell.cellIdentifier)
         updateUI()
         fetchAsset()
-        addObservers()
+        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: asset.assetId))
-        ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(assetId: asset.assetId))
+        ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(key: .assetId(asset.assetId)))
     }
-
-    private func addObservers() {
-        let callback = { [weak self] (notification: Notification) in
-            guard let weakSelf = self, let assetId = notification.object as? String, assetId == weakSelf.asset.assetId else {
-                return
-            }
-            self?.fetchAsset()
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func assetsDidChange(_ notification: Notification) {
+        guard let assetId = notification.object as? String, assetId == asset.assetId else {
+            return
         }
-        NotificationCenter.default.addObserver(forName: .AssetsDidChange, object: nil, queue: .main, using: callback)
-        NotificationCenter.default.addObserver(forName: .SnapshotDidChange, object: nil, queue: .main, using: callback)
+        fetchAsset()
     }
-
+    
+    @objc func snapshotsDidChange(_ notification: Notification) {
+        guard let change = notification.object as? SnapshotChange, case let .assetId(assetId) = change, assetId == asset.assetId else {
+            return
+        }
+        fetchAsset()
+    }
+    
     @IBAction func depositAction(_ sender: Any) {
         guard !depositButton.isBusy else {
             return

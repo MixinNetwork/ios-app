@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WzX-DS-F3g">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WzX-DS-F3g">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,23 +13,68 @@
         <!--Mixin Navigation Controller-->
         <scene sceneID="qAV-Lg-xFU">
             <objects>
-                <navigationController navigationBarHidden="YES" id="WzX-DS-F3g" customClass="MixinNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navigation" navigationBarHidden="YES" id="WzX-DS-F3g" customClass="MixinNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="FRb-qT-qP6">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </navigationBar>
-                    <connections>
-                        <segue destination="hQE-mj-dkd" kind="relationship" relationship="rootViewController" id="EnS-on-o5o"/>
-                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cq4-TF-sA1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1632" y="-276"/>
         </scene>
+        <!--Signal Loading View Controller-->
+        <scene sceneID="eMo-hJ-NTg">
+            <objects>
+                <viewController storyboardIdentifier="signal" id="Krq-VR-KSE" customClass="SignalLoadingViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZqP-GY-CaJ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5H-wm-sMW">
+                                <rect key="frame" x="144" y="309" width="87" height="69"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="SjO-gI-OJq">
+                                        <rect key="frame" x="25" y="0.0" width="37" height="37"/>
+                                        <color key="color" white="0.080000000000000002" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="06d-qi-tW3">
+                                        <rect key="frame" x="0.0" y="45" width="87" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_signal"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="SjO-gI-OJq" firstAttribute="top" secondItem="d5H-wm-sMW" secondAttribute="top" id="CtU-3h-qks"/>
+                                    <constraint firstAttribute="bottom" secondItem="06d-qi-tW3" secondAttribute="bottom" id="V1r-YX-cz6"/>
+                                    <constraint firstItem="06d-qi-tW3" firstAttribute="leading" secondItem="d5H-wm-sMW" secondAttribute="leading" id="baK-zQ-d1g"/>
+                                    <constraint firstItem="SjO-gI-OJq" firstAttribute="centerX" secondItem="d5H-wm-sMW" secondAttribute="centerX" id="iah-Qh-65l"/>
+                                    <constraint firstAttribute="trailing" secondItem="06d-qi-tW3" secondAttribute="trailing" id="ils-Md-fzV"/>
+                                    <constraint firstItem="06d-qi-tW3" firstAttribute="top" secondItem="SjO-gI-OJq" secondAttribute="bottom" constant="8" id="odH-Me-WXk"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="d5H-wm-sMW" firstAttribute="centerY" secondItem="ZqP-GY-CaJ" secondAttribute="centerY" constant="10" id="DNQ-Jd-Czh"/>
+                            <constraint firstItem="d5H-wm-sMW" firstAttribute="centerX" secondItem="ZqP-GY-CaJ" secondAttribute="centerX" id="WIM-as-nH3"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="bf8-lR-in3"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vP1-rB-aYd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-910" y="-277"/>
+        </scene>
         <!--Home View Controller-->
         <scene sceneID="YIH-fQ-ORs">
             <objects>
-                <viewController id="hQE-mj-dkd" customClass="HomeViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="home" id="hQE-mj-dkd" customClass="HomeViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="J91-yj-SMd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -266,7 +310,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rdn-hv-2gX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-895.20000000000005" y="-277.51124437781112"/>
+            <point key="canvasLocation" x="-196" y="-278"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="7d4-TS-VFr">
@@ -412,7 +456,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FYX-l7-xTH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-151" y="-277"/>
+            <point key="canvasLocation" x="529" y="-277"/>
         </scene>
     </scenes>
     <resources>

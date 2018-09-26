@@ -1,4 +1,6 @@
 import UIKit
+import UserNotifications
+import Bugsnag
 
 enum MixinNavigationPushAnimation {
     case push
@@ -40,8 +42,19 @@ class MixinNavigationController: UINavigationController {
         self.interactivePopGestureRecognizer?.delegate = self
         self.isNavigationBarHidden = true
         self.delegate = self
+        if CryptoUserDefault.shared.isLoaded {
+            WebSocketService.shared.connect()
+            checkUser()
+        } else {
+            // Not expected to happen
+            AppDelegate.current.window?.rootViewController = makeInitialViewController()
+        }
     }
-
+    
+    class func instance() -> MixinNavigationController {
+        return Storyboard.home.instantiateViewController(withIdentifier: "navigation") as! MixinNavigationController
+    }
+    
 }
 
 extension MixinNavigationController: UINavigationControllerDelegate {
@@ -100,6 +113,35 @@ extension MixinNavigationController: UIGestureRecognizerDelegate {
         }
     }
 
+}
+
+extension MixinNavigationController {
+    
+    private func checkUser() {
+        guard AccountAPI.shared.didLogin else {
+            return
+        }
+        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+        ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
+        if let account = AccountAPI.shared.account {
+            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            self?.checkNotificationAuthorizationStatus()
+        }
+    }
+    
+    private func checkNotificationAuthorizationStatus() {
+        UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
+            switch authorizationStatus {
+            case .authorized, .notDetermined, .provisional:
+                UNUserNotificationCenter.current().registerForRemoteNotifications()
+            case .denied:
+                break
+            }
+        }
+    }
+    
 }
 
 fileprivate class PresentFromBottomAnimator: NSObject, UIViewControllerAnimatedTransitioning {

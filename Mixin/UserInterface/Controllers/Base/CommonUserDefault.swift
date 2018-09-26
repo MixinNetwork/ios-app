@@ -27,6 +27,9 @@ class CommonUserDefault {
     private var keyMessageNotificationShowPreview: String {
         return "msg_notification_preview_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyHasConversation: String {
+        return "has_conversation_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
 
@@ -68,6 +71,15 @@ class CommonUserDefault {
         }
         set {
             session.set(newValue, forKey: keyMessageNotificationShowPreview)
+        }
+    }
+    
+    var hasConversation: Bool {
+        get {
+            return session.bool(forKey: keyHasConversation)
+        }
+        set {
+            session.set(newValue, forKey: keyHasConversation)
         }
     }
     

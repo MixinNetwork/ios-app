@@ -32,7 +32,7 @@ class UsernameViewController: LoginViewController {
                 DispatchQueue.global().async {
                     UserDAO.shared.updateAccount(account: account)
                 }
-                AppDelegate.current.window?.rootViewController = HomeViewController.instance()
+                AppDelegate.current.window?.rootViewController = makeInitialViewController()
             case .failure:
                 break
             }

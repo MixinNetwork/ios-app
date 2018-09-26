@@ -409,10 +409,13 @@ extension ConversationDataSource {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }) else {
             return
         }
-        if let viewModel = viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel {
+        if let viewModel = viewModel(for: indexPath) as? AttachmentLoadingViewModel {
             viewModel.mediaStatus = mediaStatus.rawValue
-            if let cell = tableView?.cellForRow(at: indexPath) as? MessageCell {
-                cell.render(viewModel: viewModel)
+            let cell = tableView?.cellForRow(at: indexPath)
+            if let cell = cell as? (PhotoRepresentableMessageCell & AttachmentExpirationHintingMessageCell) {
+                cell.updateOperationButtonAndExpiredHintLabel()
+            } else if let cell = cell as? AttachmentLoadingMessageCell {
+                cell.updateOperationButtonStyle()
             }
         }
     }
@@ -423,7 +426,7 @@ extension ConversationDataSource {
         }
         viewModel.progress = progress
         if let cell = tableView?.cellForRow(at: indexPath) as? AttachmentLoadingMessageCell {
-            cell.updateProgress(viewModel: viewModel)
+            cell.updateProgress()
         }
     }
     

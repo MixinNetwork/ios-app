@@ -4,7 +4,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
     
-    let operationButton = NetworkOperationButton(type: .custom)
+    let operationButton: NetworkOperationButton! = NetworkOperationButton(type: .custom)
     let expiredHintLabel = UILabel()
     let lengthLabel = InsetLabel()
     
@@ -25,7 +25,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? VideoMessageViewModel {
-            renderOperationButtonAndExpiredHintLabel(viewModel: viewModel)
+            updateOperationButtonAndExpiredHintLabel()
             contentImageView.image = viewModel.thumbnail
             if viewModel.duration != nil || viewModel.fileSize != nil {
                 lengthLabel.text = viewModel.duration ?? viewModel.fileSize
@@ -40,10 +40,6 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     @objc func networkOperationAction(_ sender: Any) {
         attachmentLoadingDelegate?.attachmentLoadingCellDidSelectNetworkOperation(self)
-    }
-    
-    func updateProgress(viewModel: AttachmentLoadingViewModel) {
-        operationButton.style = .busy(progress: viewModel.progress ?? 0)
     }
     
 }

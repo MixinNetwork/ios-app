@@ -401,7 +401,7 @@ extension ConversationDataSource {
         }
         viewModel.status = status.rawValue
         if let cell = tableView?.cellForRow(at: indexPath) as? DetailInfoMessageCell {
-            cell.render(viewModel: viewModel)
+            cell.updateStatusImageView()
         }
     }
     

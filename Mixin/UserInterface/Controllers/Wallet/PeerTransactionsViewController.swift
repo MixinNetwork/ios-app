@@ -43,9 +43,6 @@ class PeerTransactionsViewController: UITableViewController {
     }
     
     @objc func snapshotsDidChange(_ notification: Notification) {
-        guard let change = notification.object as? SnapshotChange, case let .opponentId(opponentId) = change, opponentId == self.opponentId else {
-            return
-        }
         reload()
     }
     

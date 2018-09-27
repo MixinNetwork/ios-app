@@ -44,9 +44,6 @@ class AssetViewController: UITableViewController {
     }
     
     @objc func snapshotsDidChange(_ notification: Notification) {
-        guard let change = notification.object as? SnapshotChange, case let .assetId(assetId) = change, assetId == asset.assetId else {
-            return
-        }
         fetchAsset(showEmptyIndicatorIfEmpty: true)
     }
     

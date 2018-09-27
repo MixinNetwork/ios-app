@@ -277,7 +277,12 @@ extension WalletPasswordViewController: MixinNavigationAnimating {
     }
     
     var popAnimation: MixinNavigationPopAnimation {
-        return .pop
+        switch walletPasswordType {
+        case .changePinStep1, .initPinStep1:
+            return .dismiss
+        default:
+            return .pop
+        }
     }
 
 }

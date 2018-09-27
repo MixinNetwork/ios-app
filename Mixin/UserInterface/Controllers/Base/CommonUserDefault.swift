@@ -76,7 +76,13 @@ class CommonUserDefault {
     
     var hasConversation: Bool {
         get {
-            return session.bool(forKey: keyHasConversation)
+            if session.object(forKey: keyHasConversation) == nil {
+                let hasValidConversation = ConversationDAO.shared.hasValidConversation()
+                session.set(hasValidConversation, forKey: keyHasConversation)
+                return hasValidConversation
+            } else {
+                return session.bool(forKey: keyHasConversation)
+            }
         }
         set {
             session.set(newValue, forKey: keyHasConversation)

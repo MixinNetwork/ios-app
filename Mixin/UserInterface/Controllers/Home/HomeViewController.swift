@@ -1,8 +1,7 @@
 import UIKit
-import UserNotifications
-import Bugsnag
 import AVFoundation
 import StoreKit
+import UserNotifications
 
 class HomeViewController: UIViewController {
 
@@ -20,7 +19,6 @@ class HomeViewController: UIViewController {
     private var conversations = [ConversationItem]()
     private var needRefresh = true
     private var refreshing = false
-    private lazy var signalLoadingView = SignalLoadingView.instance()
     private var currentOffset: CGFloat = 0
     
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
@@ -41,16 +39,6 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if CryptoUserDefault.shared.isLoaded {
-            WebSocketService.shared.connect()
-            checkUser()
-        } else {
-            signalLoadingView.presentPopupControllerAnimated { [weak self] in
-                self?.checkUser()
-            }
-        }
-
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "ConversationCell", bundle: nil), forCellReuseIdentifier: ConversationCell.cellIdentifier)
@@ -60,6 +48,16 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
             self?.searchViewController?.prepare()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
+                switch authorizationStatus {
+                case .authorized, .notDetermined, .provisional:
+                    UNUserNotificationCenter.current().registerForRemoteNotifications()
+                case .denied:
+                    break
+                }
+            }
         }
     }
 
@@ -82,10 +80,9 @@ class HomeViewController: UIViewController {
     private func fetchConversations() {
         refreshing = true
         needRefresh = false
-
-
         DispatchQueue.global().async { [weak self] in
             let conversations = ConversationDAO.shared.conversationList()
+            CommonUserDefault.shared.hasConversation = !conversations.isEmpty
             let groupIcons = conversations.filter({ $0.isNeedCachedGroupIcon() })
             for conversation in groupIcons {
                 ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))
@@ -173,8 +170,8 @@ class HomeViewController: UIViewController {
         navigationController?.pushViewController(ContactViewController.instance(), animated: true)
     }
 
-    class func instance() -> UIViewController {
-        return Storyboard.home.instantiateInitialViewController()!
+    class func instance() -> HomeViewController {
+        return Storyboard.home.instantiateViewController(withIdentifier: "home") as! HomeViewController
     }
     
 }
@@ -351,38 +348,6 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             })
         }
         HomeViewController.hasTriedToRequestReview = true
-    }
-    
-}
-
-extension HomeViewController {
-
-    private func checkUser() {
-        guard AccountAPI.shared.didLogin else {
-            return
-        }
-
-        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
-        ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
-
-        if let account = AccountAPI.shared.account {
-            Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.checkNotificationAuthorizationStatus()
-        }
-    }
-
-    private func checkNotificationAuthorizationStatus() {
-        UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
-            switch authorizationStatus {
-            case .authorized, .notDetermined, .provisional:
-                UNUserNotificationCenter.current().registerForRemoteNotifications()
-            case .denied:
-                break
-            }
-        }
     }
     
 }

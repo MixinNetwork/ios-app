@@ -79,7 +79,7 @@ class VerificationCodeViewController: LoginViewController {
                         weakSelf.navigationController?.pushViewController(vc, animated: true)
                     } else {
                         ContactAPI.shared.syncContacts()
-                        AppDelegate.current.window?.rootViewController = HomeViewController.instance()
+                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
                     }
                 case let .failure(error):
                     weakSelf.continueButton.isEnabled = true

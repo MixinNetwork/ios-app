@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WzX-DS-F3g">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WzX-DS-F3g">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,14 +13,11 @@
         <!--Mixin Navigation Controller-->
         <scene sceneID="qAV-Lg-xFU">
             <objects>
-                <navigationController navigationBarHidden="YES" id="WzX-DS-F3g" customClass="MixinNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navigation" navigationBarHidden="YES" id="WzX-DS-F3g" customClass="MixinNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="FRb-qT-qP6">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </navigationBar>
-                    <connections>
-                        <segue destination="hQE-mj-dkd" kind="relationship" relationship="rootViewController" id="EnS-on-o5o"/>
-                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cq4-TF-sA1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -30,7 +26,7 @@
         <!--Home View Controller-->
         <scene sceneID="YIH-fQ-ORs">
             <objects>
-                <viewController id="hQE-mj-dkd" customClass="HomeViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="home" id="hQE-mj-dkd" customClass="HomeViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="J91-yj-SMd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -266,7 +262,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rdn-hv-2gX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-895.20000000000005" y="-277.51124437781112"/>
+            <point key="canvasLocation" x="-196" y="-278"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="7d4-TS-VFr">
@@ -412,10 +408,78 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FYX-l7-xTH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-151" y="-277"/>
+            <point key="canvasLocation" x="529" y="-277"/>
+        </scene>
+        <!--Signal Loading View Controller-->
+        <scene sceneID="Df6-Sj-4cc">
+            <objects>
+                <viewController storyboardIdentifier="signal" id="7vZ-oK-FgP" customClass="SignalLoadingViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SG3-Ll-hpy">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_mixin" translatesAutoresizingMaskIntoConstraints="NO" id="CZJ-hH-T5C">
+                                <rect key="frame" x="0.0" y="120" width="375" height="280"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="CZJ-hH-T5C" secondAttribute="height" multiplier="75:56" id="peh-TJ-LPZ"/>
+                                </constraints>
+                            </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="wZL-Va-cvk">
+                                <rect key="frame" x="0.0" y="497" width="375" height="80"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="9Se-cC-O8P">
+                                        <rect key="frame" x="169" y="0.0" width="37" height="37"/>
+                                        <color key="color" white="0.080000000000000002" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UZU-WD-WHb">
+                                        <rect key="frame" x="144" y="56" width="87" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_signal"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="G5m-8U-XPN" firstAttribute="bottom" secondItem="wZL-Va-cvk" secondAttribute="bottom" constant="90" id="Et8-dH-OpN" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="G5m-8U-XPN" firstAttribute="trailing" secondItem="CZJ-hH-T5C" secondAttribute="trailing" id="IQR-jn-NLt"/>
+                            <constraint firstItem="CZJ-hH-T5C" firstAttribute="leading" secondItem="G5m-8U-XPN" secondAttribute="leading" id="Ldq-EN-sHb"/>
+                            <constraint firstItem="CZJ-hH-T5C" firstAttribute="top" secondItem="G5m-8U-XPN" secondAttribute="top" constant="100" id="NeD-o1-DZd" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="wZL-Va-cvk" firstAttribute="leading" secondItem="G5m-8U-XPN" secondAttribute="leading" id="R9e-gj-fDZ"/>
+                            <constraint firstItem="G5m-8U-XPN" firstAttribute="trailing" secondItem="wZL-Va-cvk" secondAttribute="trailing" id="V5W-Jj-Gac"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="G5m-8U-XPN"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0qg-MT-HpR" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-919" y="-277"/>
         </scene>
     </scenes>
     <resources>
+        <image name="bg_mixin" width="375" height="280"/>
         <image name="ic_home_bottom_shadow" width="375" height="122"/>
         <image name="ic_home_camera" width="44" height="44"/>
         <image name="ic_qr_code" width="22" height="22"/>

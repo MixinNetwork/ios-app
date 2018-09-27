@@ -19,6 +19,7 @@ class LoginNavigationController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        UIApplication.shared.keyWindow?.endEditing(true)
         SignalProtocol.shared.initSignal()
         backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
         backButton.addTarget(self, action: #selector(backAction(sender:)), for: .touchUpInside)

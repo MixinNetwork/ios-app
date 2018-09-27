@@ -95,7 +95,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.backgroundColor = .black
         if AccountAPI.shared.didLogin {
-            window.rootViewController = HomeViewController.instance()
+            window.rootViewController = makeInitialViewController()
             if ContactsManager.shared.authorization == .authorized {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts)

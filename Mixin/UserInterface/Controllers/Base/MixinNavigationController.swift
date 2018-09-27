@@ -126,20 +126,6 @@ extension MixinNavigationController {
         if let account = AccountAPI.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.checkNotificationAuthorizationStatus()
-        }
-    }
-    
-    private func checkNotificationAuthorizationStatus() {
-        UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
-            switch authorizationStatus {
-            case .authorized, .notDetermined, .provisional:
-                UNUserNotificationCenter.current().registerForRemoteNotifications()
-            case .denied:
-                break
-            }
-        }
     }
     
 }

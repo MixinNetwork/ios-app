@@ -1,6 +1,7 @@
 import UIKit
 import AVFoundation
 import StoreKit
+import UserNotifications
 
 class HomeViewController: UIViewController {
 
@@ -47,6 +48,16 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
             self?.searchViewController?.prepare()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
+                switch authorizationStatus {
+                case .authorized, .notDetermined, .provisional:
+                    UNUserNotificationCenter.current().registerForRemoteNotifications()
+                case .denied:
+                    break
+                }
+            }
         }
     }
 

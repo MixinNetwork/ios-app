@@ -23,54 +23,6 @@
             </objects>
             <point key="canvasLocation" x="-1632" y="-276"/>
         </scene>
-        <!--Signal Loading View Controller-->
-        <scene sceneID="eMo-hJ-NTg">
-            <objects>
-                <viewController storyboardIdentifier="signal" id="Krq-VR-KSE" customClass="SignalLoadingViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ZqP-GY-CaJ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5H-wm-sMW">
-                                <rect key="frame" x="144" y="309" width="87" height="69"/>
-                                <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="SjO-gI-OJq">
-                                        <rect key="frame" x="25" y="0.0" width="37" height="37"/>
-                                        <color key="color" white="0.080000000000000002" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
-                                    </activityIndicatorView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="06d-qi-tW3">
-                                        <rect key="frame" x="0.0" y="45" width="87" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <color key="textColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_signal"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="SjO-gI-OJq" firstAttribute="top" secondItem="d5H-wm-sMW" secondAttribute="top" id="CtU-3h-qks"/>
-                                    <constraint firstAttribute="bottom" secondItem="06d-qi-tW3" secondAttribute="bottom" id="V1r-YX-cz6"/>
-                                    <constraint firstItem="06d-qi-tW3" firstAttribute="leading" secondItem="d5H-wm-sMW" secondAttribute="leading" id="baK-zQ-d1g"/>
-                                    <constraint firstItem="SjO-gI-OJq" firstAttribute="centerX" secondItem="d5H-wm-sMW" secondAttribute="centerX" id="iah-Qh-65l"/>
-                                    <constraint firstAttribute="trailing" secondItem="06d-qi-tW3" secondAttribute="trailing" id="ils-Md-fzV"/>
-                                    <constraint firstItem="06d-qi-tW3" firstAttribute="top" secondItem="SjO-gI-OJq" secondAttribute="bottom" constant="8" id="odH-Me-WXk"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="d5H-wm-sMW" firstAttribute="centerY" secondItem="ZqP-GY-CaJ" secondAttribute="centerY" constant="10" id="DNQ-Jd-Czh"/>
-                            <constraint firstItem="d5H-wm-sMW" firstAttribute="centerX" secondItem="ZqP-GY-CaJ" secondAttribute="centerX" id="WIM-as-nH3"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="bf8-lR-in3"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vP1-rB-aYd" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-910" y="-277"/>
-        </scene>
         <!--Home View Controller-->
         <scene sceneID="YIH-fQ-ORs">
             <objects>
@@ -458,8 +410,76 @@
             </objects>
             <point key="canvasLocation" x="529" y="-277"/>
         </scene>
+        <!--Signal Loading View Controller-->
+        <scene sceneID="Df6-Sj-4cc">
+            <objects>
+                <viewController storyboardIdentifier="signal" id="7vZ-oK-FgP" customClass="SignalLoadingViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SG3-Ll-hpy">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_mixin" translatesAutoresizingMaskIntoConstraints="NO" id="CZJ-hH-T5C">
+                                <rect key="frame" x="0.0" y="120" width="375" height="280"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="CZJ-hH-T5C" secondAttribute="height" multiplier="75:56" id="peh-TJ-LPZ"/>
+                                </constraints>
+                            </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="wZL-Va-cvk">
+                                <rect key="frame" x="0.0" y="497" width="375" height="80"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="9Se-cC-O8P">
+                                        <rect key="frame" x="169" y="0.0" width="37" height="37"/>
+                                        <color key="color" white="0.080000000000000002" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UZU-WD-WHb">
+                                        <rect key="frame" x="144" y="56" width="87" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="init_signal"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="G5m-8U-XPN" firstAttribute="bottom" secondItem="wZL-Va-cvk" secondAttribute="bottom" constant="90" id="Et8-dH-OpN" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="G5m-8U-XPN" firstAttribute="trailing" secondItem="CZJ-hH-T5C" secondAttribute="trailing" id="IQR-jn-NLt"/>
+                            <constraint firstItem="CZJ-hH-T5C" firstAttribute="leading" secondItem="G5m-8U-XPN" secondAttribute="leading" id="Ldq-EN-sHb"/>
+                            <constraint firstItem="CZJ-hH-T5C" firstAttribute="top" secondItem="G5m-8U-XPN" secondAttribute="top" constant="100" id="NeD-o1-DZd" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="wZL-Va-cvk" firstAttribute="leading" secondItem="G5m-8U-XPN" secondAttribute="leading" id="R9e-gj-fDZ"/>
+                            <constraint firstItem="G5m-8U-XPN" firstAttribute="trailing" secondItem="wZL-Va-cvk" secondAttribute="trailing" id="V5W-Jj-Gac"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="G5m-8U-XPN"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0qg-MT-HpR" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-919" y="-277"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="bg_mixin" width="375" height="280"/>
         <image name="ic_home_bottom_shadow" width="375" height="122"/>
         <image name="ic_home_camera" width="44" height="44"/>
         <image name="ic_qr_code" width="22" height="22"/>

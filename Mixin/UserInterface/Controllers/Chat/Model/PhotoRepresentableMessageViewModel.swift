@@ -4,14 +4,11 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
 
     static let contentWidth: CGFloat = 220
     static let maxHeight: CGFloat = UIScreen.main.bounds.height / 2
-    static let leftShadowImage = #imageLiteral(resourceName: "ic_chat_shadow_left")
-    static let rightShadowImage = #imageLiteral(resourceName: "ic_chat_shadow_right")
-    static let rightWithTailShadowImage = #imageLiteral(resourceName: "ic_chat_shadow_right_tail")
+    static let shadowImage = UIImage(named: "ic_chat_shadow")
     
     let aspectRatio: CGSize
     
     internal(set) var contentFrame = CGRect.zero
-    internal(set) var shadowImage: UIImage?
     internal(set) var shadowImageOrigin = CGPoint.zero
     internal(set) var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
     internal(set) var layoutPosition = PhotoMessageCell.VerticalPositioningImageView.Position.center
@@ -44,16 +41,7 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         let backgroundImageMargin = MessageViewModel.backgroundImageMargin
         let bottomSeparatorHeight = style.contains(.bottomSeparator) ? MessageViewModel.bottomSeparatorHeight : 0
         let fullnameHeight = style.contains(.fullname) ? fullnameFrame.height : 0
-        if style.contains(.received) {
-            shadowImage = PhotoRepresentableMessageViewModel.leftShadowImage
-        } else {
-            if style.contains(.tail) {
-                shadowImage = PhotoRepresentableMessageViewModel.rightWithTailShadowImage
-            } else {
-                shadowImage = PhotoRepresentableMessageViewModel.rightShadowImage
-            }
-        }
-        let shadowImageSize = shadowImage?.size ?? .zero
+        let shadowImageSize = PhotoRepresentableMessageViewModel.shadowImage?.size ?? .zero
         if style.contains(.received) {
             contentFrame = CGRect(x: backgroundImageMargin.leading,
                                   y: backgroundImageMargin.top,
@@ -73,15 +61,9 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
             shadowImageOrigin = CGPoint(x: contentFrame.maxX - shadowImageSize.width,
                                         y: contentFrame.maxY - shadowImageSize.height)
         }
-        backgroundImageFrame = CGRect(origin: .zero, size: contentFrame.size)
+        backgroundImageFrame = contentFrame
         cellHeight = fullnameHeight + backgroundImageFrame.size.height + bottomSeparatorHeight
         super.didSetStyle()
-        timeFrame.origin.x += contentFrame.origin.x
-        timeFrame.origin.y += fullnameHeight
-        if !style.contains(.received) {
-            statusFrame.origin.x = timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin
-        }
-        statusFrame.origin.y += fullnameHeight
     }
 
 }

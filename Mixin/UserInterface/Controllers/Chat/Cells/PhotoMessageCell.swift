@@ -5,7 +5,7 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
 
-    let operationButton = NetworkOperationButton(type: .custom)
+    let operationButton: NetworkOperationButton! = NetworkOperationButton(type: .custom)
     let expiredHintLabel = UILabel()
     
     override func prepareForReuse() {
@@ -22,10 +22,10 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoMessageViewModel {
-            renderOperationButtonAndExpiredHintLabel(viewModel: viewModel)
+            updateOperationButtonAndExpiredHintLabel()
             if let mediaUrl = viewModel.message.mediaUrl, !mediaUrl.isEmpty {
-                contentImageView.setImage(with: MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl),
-                                          ratio: viewModel.aspectRatio)
+                let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+                contentImageView.setImage(with: url, ratio: viewModel.aspectRatio)
             } else {
                 contentImageView.image = viewModel.thumbnail
             }
@@ -34,10 +34,6 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     @objc func networkOperationAction(_ sender: Any) {
         attachmentLoadingDelegate?.attachmentLoadingCellDidSelectNetworkOperation(self)
-    }
-    
-    func updateProgress(viewModel: AttachmentLoadingViewModel) {
-        operationButton.style = .busy(progress: viewModel.progress ?? 0)
     }
     
 }

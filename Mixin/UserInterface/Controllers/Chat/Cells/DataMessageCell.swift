@@ -13,7 +13,7 @@ class DataMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? DataMessageViewModel {
-            operationButton.style = viewModel.operationButtonStyle
+            updateOperationButtonStyle()
             if let mediaMimeType = viewModel.message.mediaMimeType {
                 extensionNameLabel.text = FileManager.default.pathExtension(mimeType: mediaMimeType)
             }
@@ -27,7 +27,10 @@ class DataMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
         attachmentLoadingDelegate?.attachmentLoadingCellDidSelectNetworkOperation(self)
     }
     
-    func updateProgress(viewModel: AttachmentLoadingViewModel) {
+    func updateProgress() {
+        guard let viewModel = viewModel as? AttachmentLoadingViewModel else {
+            return
+        }
         operationButton.style = .busy(progress: viewModel.progress ?? 0)
         sizeLabel.text = viewModel.sizeRepresentation
     }

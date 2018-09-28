@@ -2,15 +2,9 @@ import UIKit
 import AVKit
 import Photos
 
-extension Notification.Name {
-    
-    public enum ConversationDataSource {
-        static let DidAddedMessagesOutsideVisibleBounds = Notification.Name("one.mixin.ios.conversation.datasource.add.message.outside.visible.bounds")
-    }
-    
-}
-
 class ConversationDataSource {
+    
+    static let didAddMessageOutOfBoundsNotification = Notification.Name("one.mixin.ios.conversation.datasource.add.message.outside.visible.bounds")
     
     private static let videoRequestOptions: PHVideoRequestOptions = {
         let options = PHVideoRequestOptions()
@@ -389,7 +383,7 @@ extension ConversationDataSource {
                     }
                 }
             } else {
-                NotificationCenter.default.postOnMain(name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: 1)
+                NotificationCenter.default.postOnMain(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: 1)
             }
         } else {
             queue.async {
@@ -407,7 +401,7 @@ extension ConversationDataSource {
         }
         viewModel.status = status.rawValue
         if let cell = tableView?.cellForRow(at: indexPath) as? DetailInfoMessageCell {
-            cell.render(viewModel: viewModel)
+            cell.updateStatusImageView()
         }
     }
     
@@ -415,10 +409,13 @@ extension ConversationDataSource {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }) else {
             return
         }
-        if let viewModel = viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel {
+        if let viewModel = viewModel(for: indexPath) as? AttachmentLoadingViewModel {
             viewModel.mediaStatus = mediaStatus.rawValue
-            if let cell = tableView?.cellForRow(at: indexPath) as? MessageCell {
-                cell.render(viewModel: viewModel)
+            let cell = tableView?.cellForRow(at: indexPath)
+            if let cell = cell as? (PhotoRepresentableMessageCell & AttachmentExpirationHintingMessageCell) {
+                cell.updateOperationButtonAndExpiredHintLabel()
+            } else if let cell = cell as? AttachmentLoadingMessageCell {
+                cell.updateOperationButtonStyle()
             }
         }
     }
@@ -429,7 +426,7 @@ extension ConversationDataSource {
         }
         viewModel.progress = progress
         if let cell = tableView?.cellForRow(at: indexPath) as? AttachmentLoadingMessageCell {
-            cell.updateProgress(viewModel: viewModel)
+            cell.updateProgress()
         }
     }
     
@@ -672,7 +669,7 @@ extension ConversationDataSource {
                 tableView.scrollToBottom(animated: false)
             }
             if ConversationViewController.positions[self.conversationId] != nil && !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
-                NotificationCenter.default.post(name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: unreadMessagesCount)
+                NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)
             }
             ConversationViewController.positions[self.conversationId] = nil
             SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
@@ -927,7 +924,7 @@ extension ConversationDataSource {
             if shouldScrollToNewMessage {
                 tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             } else {
-                NotificationCenter.default.postOnMain(name: Notification.Name.ConversationDataSource.DidAddedMessagesOutsideVisibleBounds, object: 1)
+                NotificationCenter.default.postOnMain(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: 1)
             }
         }
     }

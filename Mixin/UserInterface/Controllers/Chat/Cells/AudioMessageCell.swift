@@ -68,7 +68,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
             lengthLabel.text = viewModel.length
             waveformView.waveform = viewModel.waveform
             highlightedWaveformView.waveform = viewModel.waveform
-            operationButton.style = viewModel.operationButtonStyle
+            updateOperationButtonStyle()
             operationButton.isHidden = viewModel.operationButtonIsHidden
             playbackStateImageView.isHidden = viewModel.playbackStateIsHidden
             duration = Float64(viewModel.message.mediaDuration ?? 0)
@@ -81,10 +81,6 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     
     @IBAction func operationAction(_ sender: Any) {
         attachmentLoadingDelegate?.attachmentLoadingCellDidSelectNetworkOperation(self)
-    }
-    
-    func updateProgress(viewModel: AttachmentLoadingViewModel) {
-        operationButton.style = .busy(progress: viewModel.progress ?? 0)
     }
     
     private func updateWaveformProgress() {

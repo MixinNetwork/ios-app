@@ -31,9 +31,7 @@ class DetailInfoMessageCell: MessageCell {
             }
             timeLabel.frame = viewModel.timeFrame
             timeLabel.text = viewModel.time
-            statusImageView.frame = viewModel.statusFrame
-            statusImageView.image = viewModel.statusImage
-            statusImageView.tintColor = viewModel.statusTintColor
+            updateStatusImageView()
             if viewModel.message.userIsBot {
                 identityIconImageView.frame = viewModel.identityIconFrame
             }
@@ -84,6 +82,15 @@ class DetailInfoMessageCell: MessageCell {
         } else {
             transition()
         }
+    }
+    
+    func updateStatusImageView() {
+        guard let viewModel = viewModel as? DetailInfoMessageViewModel else {
+            return
+        }
+        statusImageView.frame = viewModel.statusFrame
+        statusImageView.image = viewModel.statusImage
+        statusImageView.tintColor = viewModel.statusTintColor
     }
     
 }

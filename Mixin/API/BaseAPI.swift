@@ -131,7 +131,10 @@ class BaseAPI {
         holder = holder?.keyExtractorType(keyType?.type)
         holder = holder?.algorithmName("RS512") as? JWTAlgorithmRSFamilyDataHolder
         holder = holder?.secret(token) as? JWTAlgorithmRSFamilyDataHolder
-        return JWTEncodingBuilder.encodePayload(claims).addHolder(holder)?.result?.successResult?.encoded
+        var builder = JWTEncodingBuilder.encodePayload(claims)
+        builder = builder?.addHolder(holder) as? JWTEncodingBuilder
+        let result = builder?.result?.successResult?.encoded
+        return result
     }
 
     private static let headersAuthroizationKey = "Authorization"

@@ -219,7 +219,9 @@ class GalleryViewController: UIViewController {
             imageClippingTransitionView.bottomRightImageView.alpha = 1
             let scale = imageFinalFrame.width / imageClippingTransitionView.frame.width
             let size = CGSize(width: snapshot.size.width * scale, height: snapshot.size.height * scale)
-            let origin = CGPoint(x: 0, y: max(0, containerSize.height - imageFinalFrame.size.height) / 2)
+            let maxY = min(imageFinalFrame.maxY, containerSize.height)
+            let origin = CGPoint(x: (containerSize.width - size.width) / 2,
+                                 y: maxY - size.height)
             bottomRightImageViewFinalFrame = CGRect(origin: origin, size: size)
         } else {
             bottomRightImageViewFinalFrame = nil
@@ -284,9 +286,13 @@ class GalleryViewController: UIViewController {
                 bubbleMaskLayer.setBubble(bubble, frame: frame, animationDuration: animationDuration)
             }
             if let snapshot = context.statusSnapshot {
-                imageClippingTransitionView.bottomRightImageView.image = snapshot
-                let size = CGSize(width: transitionView.frame.width, height: transitionView.frame.width * snapshot.size.height / snapshot.size.width)
-                imageClippingTransitionView.bottomRightImageView.frame = CGRect(origin: .zero, size: size)
+                let imageView = imageClippingTransitionView.bottomRightImageView
+                imageView.image = snapshot
+                let size = CGSize(width: transitionView.frame.width,
+                                  height: transitionView.frame.width * snapshot.size.height / snapshot.size.width)
+                let origin = CGPoint(x: imageClippingTransitionView.frame.width - size.width,
+                                     y: imageClippingTransitionView.frame.height - size.height)
+                imageView.frame = CGRect(origin: origin, size: size)
             }
         } else {
             sourceFrame = nil
@@ -548,6 +554,9 @@ extension GalleryViewController {
                 } else {
                     imageClippingTransitionView.center = CGPoint(x: view.frame.width / 2,
                                                                  y: view.frame.height / 2)
+                }
+                if imageClippingTransitionView.frame.size.width > UIScreen.main.bounds.width {
+                    imageClippingTransitionView.frame.size.width = UIScreen.main.bounds.width
                 }
                 view.addSubview(imageClippingTransitionView)
                 let origin = currentPage.imageView.convert(CGPoint.zero, to: imageClippingTransitionView)

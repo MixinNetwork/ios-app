@@ -4,8 +4,9 @@ import YYImage
 
 class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     
+    let maskingContentView = UIView()
     let contentImageView = VerticalPositioningImageView()
-    let shadowImageView = UIImageView()
+    let shadowImageView = UIImageView(image: PhotoRepresentableMessageViewModel.shadowImage)
     
     lazy var selectedOverlapView: UIView = {
         let view = SelectedOverlapView()
@@ -30,28 +31,27 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
             contentImageView.position = viewModel.layoutPosition
             contentImageView.frame = viewModel.contentFrame
             selectedOverlapView.frame = contentImageView.bounds
-
-            shadowImageView.image = viewModel.shadowImage
             shadowImageView.frame = CGRect(origin: viewModel.shadowImageOrigin,
-                                           size: viewModel.shadowImage?.size ?? .zero)
+                                           size: shadowImageView.image?.size ?? .zero)
         }
     }
     
     override func prepare() {
+        contentView.addSubview(maskingContentView)
+        maskingContentView.frame = contentView.bounds
+        maskingContentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         contentImageView.contentMode = .scaleAspectFill
-        contentImageView.clipsToBounds = true
-        contentImageView.layer.cornerRadius = 6
-        contentView.addSubview(contentImageView)
+        maskingContentView.addSubview(contentImageView)
         shadowImageView.contentMode = .scaleToFill
-        shadowImageView.layer.cornerRadius = 6
         shadowImageView.clipsToBounds = true
-        contentView.addSubview(shadowImageView)
+        maskingContentView.addSubview(shadowImageView)
         timeLabel.textColor = .white
         updateAppearance(highlight: false, animated: false)
         contentImageView.addSubview(selectedOverlapView)
         super.prepare()
         backgroundImageView.removeFromSuperview()
-        contentImageView.layer.mask = backgroundImageView.layer
+        maskingContentView.layer.masksToBounds = true
+        maskingContentView.layer.mask = backgroundImageView.layer
     }
     
     override func updateAppearance(highlight: Bool, animated: Bool) {

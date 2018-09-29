@@ -33,7 +33,7 @@ class StickersViewController: StickersCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! StickerCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
         if let url = URL(string: stickers[indexPath.row].assetUrl) {
             cell.imageView.sd_setImage(with: url, completed: nil)
         }

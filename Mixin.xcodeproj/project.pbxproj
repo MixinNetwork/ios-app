@@ -157,7 +157,7 @@
 		7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */; };
 		7B97BA0A2019D42C0013D58F /* StickerRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA092019D42C0013D58F /* StickerRelationship.swift */; };
 		7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA0B2019D7570013D58F /* AlbumCollectionViewCell.swift */; };
-		7B97BA0E2019F1A90013D58F /* StickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA0D2019F1A90013D58F /* StickerCollectionViewCell.swift */; };
+		7B97BA0E2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA0D2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift */; };
 		7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */; };
 		7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B9863901FA313E300D4B16C /* BottomWrapperView.xib */; };
 		7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9863921FA3141F00D4B16C /* XibDesignable.swift */; };
@@ -706,7 +706,7 @@
 		7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateResponsiveButton.swift; sourceTree = "<group>"; };
 		7B97BA092019D42C0013D58F /* StickerRelationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerRelationship.swift; sourceTree = "<group>"; };
 		7B97BA0B2019D7570013D58F /* AlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewCell.swift; sourceTree = "<group>"; };
-		7B97BA0D2019F1A90013D58F /* StickerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerCollectionViewCell.swift; sourceTree = "<group>"; };
+		7B97BA0D2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomWrapperView.swift; sourceTree = "<group>"; };
 		7B9863901FA313E300D4B16C /* BottomWrapperView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomWrapperView.xib; sourceTree = "<group>"; };
 		7B9863921FA3141F00D4B16C /* XibDesignable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XibDesignable.swift; sourceTree = "<group>"; };
@@ -2091,7 +2091,7 @@
 				7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */,
 				7B5EF7E320BE9EAC009A7972 /* AudioMessageCell.swift */,
 				7B97BA0B2019D7570013D58F /* AlbumCollectionViewCell.swift */,
-				7B97BA0D2019F1A90013D58F /* StickerCollectionViewCell.swift */,
+				7B97BA0D2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift */,
 				7B8E01E8202069C600D2C05E /* ConversationExtensionCell.swift */,
 				7B8E01E9202069C600D2C05E /* ConversationExtensionCell.xib */,
 				7BC26533207B595500EA7DFF /* ContactMessageCell.swift */,
@@ -2527,7 +2527,7 @@
 				DF2209301FFFE96500D470EF /* SessionRequest.swift in Sources */,
 				DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */,
 				DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */,
-				7B97BA0E2019F1A90013D58F /* StickerCollectionViewCell.swift in Sources */,
+				7B97BA0E2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift in Sources */,
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				DF114B0C2020B56E00EA8F9C /* WebWindow.swift in Sources */,

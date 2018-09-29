@@ -14,6 +14,18 @@ class StickersViewController: UIViewController {
         return true
     }
     
+    var animated: Bool = false {
+        didSet {
+            for case let cell as StickerCollectionViewCell in collectionView.visibleCells {
+                if animated {
+                    cell.imageView.startAnimating()
+                } else {
+                    cell.imageView.stopAnimating()
+                }
+            }
+        }
+    }
+    
     internal var stickers = [Sticker]()
     
     private var conversationViewController: ConversationViewController? {
@@ -79,6 +91,22 @@ extension StickersViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         send(sticker: stickers[indexPath.row])
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let cell = cell as? StickerCollectionViewCell else {
+            return
+        }
+        if animated {
+            cell.imageView.startAnimating()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let cell = cell as? StickerCollectionViewCell else {
+            return
+        }
+        cell.imageView.stopAnimating()
     }
     
 }

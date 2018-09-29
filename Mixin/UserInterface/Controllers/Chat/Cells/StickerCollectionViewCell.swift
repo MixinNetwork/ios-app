@@ -5,11 +5,12 @@ class StickerCollectionViewCell: UICollectionViewCell {
     
     lazy var imageView: YYAnimatedImageView = {
         let view = YYAnimatedImageView()
+        view.autoPlayAnimatedImage = false
+        view.contentMode = .scaleAspectFit
         addSubview(view)
         view.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
-        view.contentMode = .scaleAspectFit
         return view
     }()
     

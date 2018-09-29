@@ -16,6 +16,18 @@ class StickerInputViewController: UIViewController {
         return officialAlbums.count + 2
     }
     
+    var animated = false {
+        didSet {
+            if animated {
+                updatePagesAnimation()
+            } else {
+                for case let vc as StickersViewController in pageViewController.children {
+                    vc.animated = false
+                }
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         pageViewController.delegate = self
@@ -97,6 +109,7 @@ extension StickerInputViewController: UICollectionViewDelegate {
         pageViewController.view.isUserInteractionEnabled = false
         isScrollingByAlbumSelection = true
         pageViewController.setViewControllers([viewController], direction: direction, animated: true) { (_) in
+            self.updatePagesAnimation()
             self.pageViewController.view.isUserInteractionEnabled = true
             self.isScrollingByAlbumSelection = false
         }
@@ -138,10 +151,7 @@ extension StickerInputViewController: UIScrollViewDelegate {
         }
         var maxWidth: CGFloat = 0
         var focusedIndex = currentIndex
-        for case let vc as StickersViewController in pageViewController.children {
-            guard vc.view.superview != nil else {
-                continue
-            }
+        for case let vc as StickersViewController in pageViewController.children where vc.view.superview != nil {
             let convertedFrame = vc.view.convert(vc.view.bounds, to: view)
             let width = view.frame.intersection(convertedFrame).width
             if width > maxWidth {
@@ -150,6 +160,13 @@ extension StickerInputViewController: UIScrollViewDelegate {
             }
         }
         selectAlbum(at: focusedIndex)
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard scrollView == pageScrollView else {
+            return
+        }
+        updatePagesAnimation()
     }
     
 }
@@ -189,6 +206,16 @@ extension StickerInputViewController {
             return .right
         } else {
             return nil
+        }
+    }
+    
+    private func updatePagesAnimation() {
+        for case let vc as StickersViewController in pageViewController.children {
+            if vc.index == currentIndex {
+                vc.animated = true
+            } else {
+                vc.animated = false
+            }
         }
     }
     

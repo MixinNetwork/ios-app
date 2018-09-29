@@ -1540,6 +1540,7 @@ extension ConversationViewController {
             self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
         }) { (_) in
             self.isShowingStickerPanel = !self.isShowingStickerPanel
+            self.stickerInputViewController.animated = self.isShowingStickerPanel
             self.lastInputWrapperBottomConstant = self.inputWrapperBottomConstraint.constant
         }
     }

@@ -4,7 +4,15 @@ class AssetViewController: UITableViewController {
 
     private var asset: AssetItem!
     private var snapshots = [SnapshotItem]()
-
+    
+    private lazy var noTransactionIndicator: UIView = {
+        guard let view = Bundle.main.loadNibNamed("NoTransactionIndicator", owner: self, options: nil)?.first as? UIView else {
+            return UIView()
+        }
+        view.layoutMargins = .zero
+        return view
+    }()
+    
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var blockchainImageView: CornerImageView!
     @IBOutlet weak var balanceLabel: UILabel!
@@ -16,23 +24,31 @@ class AssetViewController: UITableViewController {
         tableView.register(UINib(nibName: "SnapshotCell", bundle: .main),
                            forCellReuseIdentifier: SnapshotCell.cellIdentifier)
         updateUI()
-        fetchAsset()
-        addObservers()
+        fetchAsset(showEmptyIndicatorIfEmpty: false)
+        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: asset.assetId))
         ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(assetId: asset.assetId))
     }
-
-    private func addObservers() {
-        let callback = { [weak self] (notification: Notification) in
-            guard let weakSelf = self, let assetId = notification.object as? String, assetId == weakSelf.asset.assetId else {
-                return
-            }
-            self?.fetchAsset()
-        }
-        NotificationCenter.default.addObserver(forName: .AssetsDidChange, object: nil, queue: .main, using: callback)
-        NotificationCenter.default.addObserver(forName: .SnapshotDidChange, object: nil, queue: .main, using: callback)
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
-
+    
+    @objc func assetsDidChange(_ notification: Notification) {
+        guard let assetId = notification.object as? String, assetId == asset.assetId else {
+            return
+        }
+        fetchAsset(showEmptyIndicatorIfEmpty: false)
+    }
+    
+    @objc func snapshotsDidChange(_ notification: Notification) {
+        guard let assetId = notification.object as? String, assetId == asset.assetId else {
+            return
+        }
+        fetchAsset(showEmptyIndicatorIfEmpty: true)
+    }
+    
     @IBAction func depositAction(_ sender: Any) {
         guard !depositButton.isBusy else {
             return
@@ -40,7 +56,7 @@ class AssetViewController: UITableViewController {
         navigationController?.pushViewController(DepositViewController.instance(asset: asset), animated: true)
     }
     
-    private func fetchAsset() {
+    private func fetchAsset(showEmptyIndicatorIfEmpty: Bool) {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
             if let asset = AssetDAO.shared.getAsset(assetId: assetId) {
@@ -66,6 +82,20 @@ class AssetViewController: UITableViewController {
                 weakSelf.snapshots = snapshots
                 UIView.performWithoutAnimation {
                     weakSelf.tableView.reloadSections(IndexSet(integer: 1), with: .none)
+                }
+                if showEmptyIndicatorIfEmpty && snapshots.isEmpty {
+                    weakSelf.tableView.tableFooterView = weakSelf.noTransactionIndicator
+                    let inset: CGFloat
+                    if #available(iOS 11.0, *) {
+                        inset = weakSelf.tableView.adjustedContentInset.vertical
+                    } else {
+                        inset = 0
+                    }
+                    weakSelf.noTransactionIndicator.frame.size.height = weakSelf.tableView.frame.height
+                        - inset
+                        - weakSelf.noTransactionIndicator.frame.minY
+                } else {
+                    weakSelf.tableView.tableFooterView = UIView()
                 }
             }
         }

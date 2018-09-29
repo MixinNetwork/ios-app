@@ -845,6 +845,10 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
     }
     
+    func presentGiphySearch() {
+        
+    }
+    
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController

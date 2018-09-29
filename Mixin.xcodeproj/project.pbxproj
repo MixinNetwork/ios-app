@@ -149,6 +149,8 @@
 		7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47B21197F220039946B /* RecentStickersViewController.swift */; };
 		7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */; };
 		7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47F21198EC20039946B /* StickerInputModelController.swift */; };
+		7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */; };
+		7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F6B215F32A500A562C6 /* GiphyViewController.swift */; };
 		7B92F8251FA1A7D5000B838B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8241FA1A7D5000B838B /* LoginViewController.swift */; };
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F8291FA1B80A000B838B /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */; };
@@ -696,6 +698,8 @@
 		7B8ED47B21197F220039946B /* RecentStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47F21198EC20039946B /* StickerInputModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputModelController.swift; sourceTree = "<group>"; };
+		7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersCollectionViewController.swift; sourceTree = "<group>"; };
+		7B915F6B215F32A500A562C6 /* GiphyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyViewController.swift; sourceTree = "<group>"; };
 		7B92F8241FA1A7D5000B838B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
@@ -1430,9 +1434,11 @@
 				DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */,
 				7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */,
 				7B1ABADF21186BF2009FAA6C /* StickerInputViewController.swift */,
+				7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */,
 				7B1ABB05211968D1009FAA6C /* StickersViewController.swift */,
 				7B8ED47B21197F220039946B /* RecentStickersViewController.swift */,
 				7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */,
+				7B915F6B215F32A500A562C6 /* GiphyViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2388,6 +2394,7 @@
 				"${BUILT_PRODUCTS_DIR}/Base64/Base64.framework",
 				"${BUILT_PRODUCTS_DIR}/Bugsnag/Bugsnag.framework",
 				"${BUILT_PRODUCTS_DIR}/DeviceGuru/DeviceGuru.framework",
+				"${BUILT_PRODUCTS_DIR}/GiphyCoreSDK/GiphyCoreSDK.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/GzipSwift/Gzip.framework",
 				"${BUILT_PRODUCTS_DIR}/JWT/JWT.framework",
@@ -2412,6 +2419,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Base64.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bugsnag.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeviceGuru.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GiphyCoreSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gzip.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JWT.framework",
@@ -2709,6 +2717,7 @@
 				DF114B062020551900EA8F9C /* AppDAO.swift in Sources */,
 				DFD659C620501858000696B0 /* BaseDatabase.swift in Sources */,
 				DFD2943D1FA706E100FADAAD /* ContactMeCell.swift in Sources */,
+				7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */,
 				7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */,
 				DF84777820DA5A1200DE5163 /* RecordButton.swift in Sources */,
 				DF30D7481FA2BDD200683C1A /* CodableExtension.swift in Sources */,
@@ -2763,6 +2772,7 @@
 				273FACC5205FB9A800513327 /* KeyStoreWrapper.swift in Sources */,
 				DF05F0151FE6759B00F98479 /* PieChartView.swift in Sources */,
 				DF9E66ED205C16AD00F1A0B9 /* WithdrawalRequest.swift in Sources */,
+				7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */,
 				DF3C47501FA18EE900A07C71 /* Message.swift in Sources */,
 				DF138975200493C300869685 /* QRCodeResponse.swift in Sources */,
 				DF1A9A7A1FF206F500A95188 /* RefreshSnapshotsJob.swift in Sources */,

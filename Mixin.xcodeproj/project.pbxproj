@@ -149,7 +149,6 @@
 		7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47B21197F220039946B /* RecentStickersViewController.swift */; };
 		7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */; };
 		7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47F21198EC20039946B /* StickerInputModelController.swift */; };
-		7B915F70215F52E100A562C6 /* NoTransactionIndicator.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B915F6F215F52E100A562C6 /* NoTransactionIndicator.xib */; };
 		7B92F8251FA1A7D5000B838B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8241FA1A7D5000B838B /* LoginViewController.swift */; };
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F8291FA1B80A000B838B /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */; };
@@ -696,7 +695,6 @@
 		7B8ED47B21197F220039946B /* RecentStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47F21198EC20039946B /* StickerInputModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputModelController.swift; sourceTree = "<group>"; };
-		7B915F6F215F52E100A562C6 /* NoTransactionIndicator.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTransactionIndicator.xib; sourceTree = "<group>"; };
 		7B92F8241FA1A7D5000B838B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
@@ -1488,7 +1486,6 @@
 				DFAA4B3A2010AE0300C696D3 /* PinTipsView.xib */,
 				7B4D1121205A9EF80074BF60 /* AddressBookView.swift */,
 				7B4D1123205A9F170074BF60 /* AddressBookView.xib */,
-				7B915F6F215F52E100A562C6 /* NoTransactionIndicator.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2339,7 +2336,6 @@
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
 				DFAB3B4520B85A0C00886838 /* ReceiveMoneyWindow.xib in Resources */,
 				DF2F089520B688DB005786CB /* UserView.xib in Resources */,
-				7B915F70215F52E100A562C6 /* NoTransactionIndicator.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -325,6 +325,7 @@ public class Localized {
     public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {
         return String(format: LocalizedString("wallet_deposit_confirmations", comment: "Deposit will arrive after at least %@ block confirmations."), "\(confirmations)")
     }
+    public static let WALLET_NO_TRANSACTION = LocalizedString("wallet_no_transaction", comment: "No transaction")
     public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name")
     public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo")
     public static func WALLET_DEPOSIT_ACCOUNT_NOTICE(symbol: String, confirmations: Int) -> String {

@@ -27,6 +27,7 @@
 "action_show" = "Show";
 "action_deauthorize" = "Deauthorize";
 "menu_delete" = "Delete";
+"no_result" = "No result";
 
 "connection_hint_connecting" = "Connecting";
 "connection_hint_waiting" = "Waiting to reconnect";

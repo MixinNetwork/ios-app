@@ -5,7 +5,7 @@ class TilingCollectionViewFlowLayout: UICollectionViewFlowLayout {
     @IBInspectable var numberOfItemsPerRow: Int = 3
     @IBInspectable var spacing: CGFloat = 8
     
-    init(numberOfItemsPerRow: Int, spacing: CGFloat) {
+    required init(numberOfItemsPerRow: Int, spacing: CGFloat) {
         self.numberOfItemsPerRow = numberOfItemsPerRow
         self.spacing = spacing
         super.init()

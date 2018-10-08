@@ -6,6 +6,10 @@ class StickersCollectionViewController: UIViewController {
     
     var index = NSNotFound
     
+    var layoutClass: TilingCollectionViewFlowLayout.Type {
+        return TilingCollectionViewFlowLayout.self
+    }
+    
     var collectionView: UICollectionView {
         return view as! UICollectionView
     }
@@ -37,7 +41,7 @@ class StickersCollectionViewController: UIViewController {
     
     override func loadView() {
         let frame = CGRect(x: 0, y: 0, width: 375, height: 200)
-        let layout = TilingCollectionViewFlowLayout(numberOfItemsPerRow: StickerInputModelController.numberOfItemsPerRow, spacing: 8)
+        let layout = layoutClass.init(numberOfItemsPerRow: StickerInputModelController.numberOfItemsPerRow, spacing: 8)
         let view = UICollectionView(frame: frame, collectionViewLayout: layout)
         view.showsHorizontalScrollIndicator = false
         view.showsVerticalScrollIndicator = false
@@ -69,7 +73,7 @@ extension StickersCollectionViewController: UICollectionViewDataSource {
 extension StickersCollectionViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

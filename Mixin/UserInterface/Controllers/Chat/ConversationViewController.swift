@@ -112,7 +112,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
     private lazy var lastInputWrapperBottomConstant = bottomSafeAreaInset
-    
+    private lazy var giphySearchViewController: GiphySearchViewController = {
+        let controller = GiphySearchViewController.instance()
+        controller.conversationViewController = self
+        return controller
+    }()
     private lazy var stickerInputViewController: StickerInputViewController = {
         let controller = StickerInputViewController.instance()
         addChild(controller)
@@ -845,8 +849,13 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
     }
     
-    func presentGiphySearch() {
-        
+    func presentGiphySearch(onDisappear: @escaping (() -> Void)) {
+        UIView.animate(withDuration: 0.5) {
+            self.dismissPanelsButton.alpha = 0.3
+        }
+        giphySearchViewController.onDisappear = onDisappear
+        giphySearchViewController.prepareForReuse()
+        present(giphySearchViewController, animated: true, completion: nil)
     }
     
     // MARK: - Class func

@@ -7,6 +7,7 @@ class AnimatedImageCollectionViewCell: UICollectionViewCell {
         let view = YYAnimatedImageView()
         view.autoPlayAnimatedImage = false
         view.contentMode = .scaleAspectFit
+        view.clipsToBounds = true
         addSubview(view)
         view.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()

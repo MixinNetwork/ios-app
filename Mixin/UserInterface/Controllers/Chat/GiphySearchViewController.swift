@@ -155,6 +155,7 @@ extension GiphySearchViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
+        cell.imageView.contentMode = .scaleAspectFill
         cell.imageView.sd_setImage(with: urls[indexPath.row], completed: nil)
         return cell
     }

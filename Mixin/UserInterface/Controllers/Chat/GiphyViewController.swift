@@ -29,6 +29,7 @@ class GiphyViewController: StickersCollectionViewController {
         collectionView.register(UINib(nibName: "GiphyPoweredFooterView", bundle: .main),
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                                 withReuseIdentifier: footerReuseId)
+        (collectionView.collectionViewLayout as? TilingCollectionViewFlowLayout)?.contentRatio = 4 / 3
         let numberOfCells = StickerInputModelController.maxNumberOfRecentStickers - 1
         GiphyCore.shared.trending(limit: numberOfCells) { [weak self] (response, error) in
             guard let weakSelf = self, let data = response?.data, error == nil else {
@@ -49,8 +50,10 @@ class GiphyViewController: StickersCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
         if indexPath.row == 0 {
+            cell.imageView.contentMode = .center
             cell.imageView.image = UIImage(named: "ic_giphy_search")
         } else {
+            cell.imageView.contentMode = .scaleAspectFill
             cell.imageView.sd_setImage(with: urls[indexPath.row - 1], completed: nil)
         }
         return cell

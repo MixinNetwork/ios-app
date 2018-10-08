@@ -1517,6 +1517,9 @@
                                                 <userDefinedRuntimeAttribute type="number" keyPath="numberOfItemsPerRow">
                                                     <integer key="value" value="3"/>
                                                 </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="contentRatio">
+                                                    <real key="value" value="1.3333333333333333"/>
+                                                </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </collectionViewFlowLayout>
                                         <cells/>

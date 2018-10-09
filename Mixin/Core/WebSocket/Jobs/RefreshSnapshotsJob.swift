@@ -1,28 +1,50 @@
 import Foundation
 
 class RefreshSnapshotsJob: BaseJob {
-    private let assetId: String
-
-    init(assetId: String) {
-        self.assetId = assetId
+    
+    enum Key {
+        case assetId(String)
+        case opponentId(String)
     }
-
+    
+    private let key: Key
+    
+    init(key: Key) {
+        self.key = key
+    }
+    
     override func getJobId() -> String {
-        return "refresh-snapshot-\(assetId)"
+        switch key {
+        case let .assetId(assetId):
+            return "refresh-snapshot-asset-\(assetId)"
+        case let .opponentId(opponentId):
+            return "refresh-snapshot-opponent-\(opponentId)"
+        }
     }
-
+    
     override func run() throws {
-        guard !self.assetId.isEmpty else {
-            return
+        switch key {
+        case let .assetId(assetId):
+            guard !assetId.isEmpty else {
+                return
+            }
+            switch AssetAPI.shared.snapshots(assetId: assetId) {
+            case let .success(snapshots):
+                SnapshotDAO.shared.updateSnapshots(snapshots: snapshots)
+            case let .failure(error):
+                throw error
+            }
+        case let .opponentId(opponentId):
+            guard !opponentId.isEmpty else {
+                return
+            }
+            switch AssetAPI.shared.snapshots(opponentId: opponentId) {
+            case let .success(snapshots):
+                SnapshotDAO.shared.updateSnapshots(snapshots: snapshots)
+            case let .failure(error):
+                throw error
+            }
         }
-
-        switch AssetAPI.shared.snapshots(assetId: assetId) {
-        case let .success(snapshots):
-            SnapshotDAO.shared.updateSnapshots(assetId: assetId, snapshots: snapshots)
-        case let .failure(error):
-            throw error
-        }
-
     }
+    
 }
-

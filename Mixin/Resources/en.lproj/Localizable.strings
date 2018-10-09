@@ -234,6 +234,7 @@
 "wallet_snapshot_to" = "To %@";
 "wallet_deposit" = "Deposit";
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
+"wallet_no_transaction" = "No transaction";
 "wallet_account_name" = "Account Name";
 "wallet_account_memo" = "Account Memo";
 "wallet_deposit_account_notice" = "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin, deposit will arrive after at least %@ block confirmations.";
@@ -355,6 +356,7 @@
 "profile_title" = "Info";
 "profile_send_message" = "Send Message";
 "profile_share_card" = "Share Contact";
+"profile_transactions" = "Transactions";
 "profile_open_bot" = "Open App";
 "profile_notification" = "Notifications";
 "profile_add" = "Add Contact";

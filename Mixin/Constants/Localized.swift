@@ -268,6 +268,7 @@ public class Localized {
         return String(format: LocalizedString("profile_reputation_score", comment: "Reputation Score: %@"), String(reputation))
     }
     public static let PROFILE_SHARE_CARD = LocalizedString("profile_share_card", comment: "Share Contact")
+    public static let PROFILE_TRANSACTIONS = LocalizedString("profile_transactions", comment: "Transactions")
     public static let PROFILE_ADD = LocalizedString("profile_add", comment: "Add Contact")
     public static let PROFILE_REMOVE = LocalizedString("profile_remove", comment: "Remove Contact")
     public static let PROFILE_BLOCK = LocalizedString("profile_block", comment: "Block")
@@ -325,6 +326,7 @@ public class Localized {
     public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {
         return String(format: LocalizedString("wallet_deposit_confirmations", comment: "Deposit will arrive after at least %@ block confirmations."), "\(confirmations)")
     }
+    public static let WALLET_NO_TRANSACTION = LocalizedString("wallet_no_transaction", comment: "No transaction")
     public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name")
     public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo")
     public static func WALLET_DEPOSIT_ACCOUNT_NOTICE(symbol: String, confirmations: Int) -> String {

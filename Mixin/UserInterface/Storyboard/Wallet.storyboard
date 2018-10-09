@@ -129,7 +129,7 @@
                             <constraint firstItem="hg6-2u-DnI" firstAttribute="top" secondItem="G4c-Yr-pYU" secondAttribute="top" id="3Pn-2Z-QPe"/>
                             <constraint firstAttribute="trailing" secondItem="hg6-2u-DnI" secondAttribute="trailing" id="7uy-xe-Xmo"/>
                             <constraint firstItem="hg6-2u-DnI" firstAttribute="leading" secondItem="uhb-p1-3GT" secondAttribute="leading" id="drx-nG-QEm"/>
-                            <constraint firstItem="G4c-Yr-pYU" firstAttribute="bottom" secondItem="hg6-2u-DnI" secondAttribute="bottom" id="ekb-sw-vHh"/>
+                            <constraint firstAttribute="bottom" secondItem="hg6-2u-DnI" secondAttribute="bottom" id="yVQ-3d-hMJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="G4c-Yr-pYU"/>
                     </view>
@@ -157,10 +157,11 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="n3U-Zp-vXX" firstAttribute="top" secondItem="g62-P6-VCS" secondAttribute="top" id="AoC-5P-dOt"/>
+                            <constraint firstItem="n3U-Zp-vXX" firstAttribute="top" secondItem="cl2-IT-9lz" secondAttribute="top" id="06n-RF-ZaO"/>
+                            <constraint firstAttribute="bottom" secondItem="n3U-Zp-vXX" secondAttribute="bottom" id="6gP-RW-NNd"/>
                             <constraint firstItem="n3U-Zp-vXX" firstAttribute="leading" secondItem="cl2-IT-9lz" secondAttribute="leading" id="Onm-2o-0gj"/>
+                            <constraint firstAttribute="bottom" secondItem="n3U-Zp-vXX" secondAttribute="bottom" id="ZZz-44-XSP"/>
                             <constraint firstAttribute="trailing" secondItem="n3U-Zp-vXX" secondAttribute="trailing" id="csD-F4-QIs"/>
-                            <constraint firstItem="g62-P6-VCS" firstAttribute="bottom" secondItem="n3U-Zp-vXX" secondAttribute="bottom" id="zrf-49-vrC"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="g62-P6-VCS"/>
                     </view>
@@ -1035,6 +1036,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ASE-0H-YBK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-520.28985507246375" y="2273.6413043478265"/>
+        </scene>
+        <!--Peer Transactions View Controller-->
+        <scene sceneID="Z9R-Jm-PPj">
+            <objects>
+                <tableViewController storyboardIdentifier="peer_transaction" id="eh5-r3-2ZY" customClass="PeerTransactionsViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Ilm-jY-j7J">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <connections>
+                            <outlet property="dataSource" destination="eh5-r3-2ZY" id="qnC-i4-VUw"/>
+                            <outlet property="delegate" destination="eh5-r3-2ZY" id="kul-om-4rq"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QaG-EY-fZP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-520" y="2989"/>
         </scene>
         <!--New Address View Controller-->
         <scene sceneID="gpe-l0-tIj">

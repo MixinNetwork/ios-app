@@ -1372,7 +1372,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
     }
     
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
-        guard !(intent == .show && !inputTextView.isFirstResponder) else {
+        guard inputTextView.isFirstResponder else {
             return
         }
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {

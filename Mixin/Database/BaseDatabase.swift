@@ -229,6 +229,9 @@ class BaseDatabase {
 
     @discardableResult
     func insert<T: BaseCodable>(objects: [T], on propertyConvertibleList: [PropertyConvertible]? = nil) -> Bool {
+        guard objects.count > 0 else {
+            return true
+        }
         try! database.runTransaction {
             try database.insert(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
         }
@@ -237,6 +240,9 @@ class BaseDatabase {
 
     @discardableResult
     func insertOrReplace<T: BaseCodable>(objects: [T], on propertyConvertibleList: [PropertyConvertible]? = nil) -> Bool {
+        guard objects.count > 0 else {
+            return true
+        }
         try! database.runTransaction {
             try database.insertOrReplace(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
         }

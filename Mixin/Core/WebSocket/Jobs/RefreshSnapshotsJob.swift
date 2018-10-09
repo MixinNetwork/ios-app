@@ -30,7 +30,7 @@ class RefreshSnapshotsJob: BaseJob {
             }
             switch AssetAPI.shared.snapshots(assetId: assetId) {
             case let .success(snapshots):
-                SnapshotDAO.shared.updateSnapshots(assetId: assetId, snapshots: snapshots)
+                SnapshotDAO.shared.updateSnapshots(snapshots: snapshots)
             case let .failure(error):
                 throw error
             }
@@ -40,7 +40,7 @@ class RefreshSnapshotsJob: BaseJob {
             }
             switch AssetAPI.shared.snapshots(opponentId: opponentId) {
             case let .success(snapshots):
-                SnapshotDAO.shared.updateSnapshots(opponentId: opponentId, snapshots: snapshots)
+                SnapshotDAO.shared.updateSnapshots(snapshots: snapshots)
             case let .failure(error):
                 throw error
             }

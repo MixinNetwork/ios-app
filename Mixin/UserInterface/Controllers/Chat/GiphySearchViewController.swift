@@ -26,7 +26,6 @@ class GiphySearchViewController: UIViewController {
     private let noResultFooterReuseId = "no_result"
     private let giphyPoweredFooterReuseId = "giphy"
     private let limit = 24
-    private let lang = GPHLanguageType(rawValue: Locale.isoLanguageCodes.first ?? "") ?? .english
 
     private var status = Status.loading
     private var urls = [URL]()
@@ -197,7 +196,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
             return
         }
         if let keyword = keywordTextField.text, !keyword.isEmpty {
-            lastGiphyOperation = GiphyCore.shared.search(keyword, offset: urls.count, limit: limit, lang: lang, completionHandler: loadMoreHandler)
+            lastGiphyOperation = GiphyCore.shared.search(keyword, offset: urls.count, limit: limit, lang: .current, completionHandler: loadMoreHandler)
         } else {
             lastGiphyOperation = GiphyCore.shared.trending(offset: urls.count, limit: limit, completionHandler: loadMoreHandler)
         }
@@ -238,7 +237,7 @@ extension GiphySearchViewController {
     
     private func search(_ keyword: String) {
         prepareCollectionViewForReuse()
-        lastGiphyOperation = GiphyCore.shared.search(keyword, limit: limit, lang: lang, completionHandler: reloadHandler)
+        lastGiphyOperation = GiphyCore.shared.search(keyword, limit: limit, lang: .current, completionHandler: reloadHandler)
     }
     
 }

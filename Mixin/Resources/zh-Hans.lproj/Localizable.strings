@@ -154,6 +154,7 @@
 "chat_quote_type_sticker" = "贴纸";
 "chat_quote_type_photo" = "图片";
 "chat_quote_type_video" = "视频";
+"chat_search_giphy" = "在 GIPHY 上搜索";
 
 // Sticker
 "sticker_manager_title" = "我收藏的贴纸";

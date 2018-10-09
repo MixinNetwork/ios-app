@@ -19,7 +19,8 @@ class StickerInputModelController: NSObject {
         if let vc = dequeueReusableStickersViewController(withIndex: 0), !vc.isEmpty {
             return vc
         } else {
-            return dequeueReusableStickersViewController(withIndex: 2)
+            let index = officialStickers.isEmpty ? numberOfFixedControllers - 1 : numberOfFixedControllers
+            return dequeueReusableStickersViewController(withIndex: index)
         }
     }
     

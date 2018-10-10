@@ -154,6 +154,7 @@
 "chat_menu_file" = "File";
 "chat_menu_transfer" = "Transfer";
 "chat_menu_contact" = "Contact";
+"chat_menu_call" = "Call";
 "chat_photo_save" = "Save to Camera Roll";
 "chat_file_expired" = "Expired";
 "chat_voice_record_cancel" = "Slide to cancel";

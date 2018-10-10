@@ -175,6 +175,7 @@ public class Localized {
     public static let CHAT_MENU_FILE = LocalizedString("chat_menu_file", comment: "File")
     public static let CHAT_MENU_TRANSFER = LocalizedString("chat_menu_transfer", comment: "Transfer")
     public static let CHAT_MENU_CONTACT = LocalizedString("chat_menu_contact", comment: "Contact")
+    public static let CHAT_MENU_CALL = LocalizedString("chat_menu_call", comment: "Call")
     public static let CHAT_PHOTO_SAVE = LocalizedString("chat_photo_save", comment: "Save to Camera Roll")
     public static let CHAT_FILE_EXPIRED = LocalizedString("chat_file_expired", comment: "Expired")
     public static let CHAT_VOICE_RECORD_LONGPRESS_HINT = LocalizedString("chat_voice_record_longpress_hint", comment: "Hold to record, release to send.")

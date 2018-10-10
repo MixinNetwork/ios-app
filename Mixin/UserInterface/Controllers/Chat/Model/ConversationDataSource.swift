@@ -567,9 +567,7 @@ extension ConversationDataSource {
     }
     
     func sendGif(at url: URL) {
-        guard let ownerUser = self.ownerUser else {
-            return
-        }
+        let ownerUser = self.ownerUser
         let categoryIsGroup = category == .group
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: conversationId,

@@ -593,7 +593,7 @@ extension ConversationDataSource {
                         message.mediaUrl = filename
                     }
                 } catch {
-                    
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
                 }
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: categoryIsGroup)
             }

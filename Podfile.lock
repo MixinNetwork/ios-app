@@ -50,6 +50,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (5.3.0):
     - GoogleUtilities/Logger
+  - GoogleWebRTC (1.1.25461)
   - GzipSwift (4.0.4)
   - JWT (3.0.0-beta.11):
     - Base64 (~> 1.1.2)
@@ -93,6 +94,7 @@ DEPENDENCIES:
   - Firebase/Analytics
   - Firebase/Core
   - GiphyCoreSDK
+  - GoogleWebRTC
   - GzipSwift
   - JWT (~> 3.0.0-beta.7)
   - PhoneNumberKit
@@ -118,6 +120,7 @@ SPEC REPOS:
     - GiphyCoreSDK
     - GoogleAppMeasurement
     - GoogleUtilities
+    - GoogleWebRTC
     - GzipSwift
     - JWT
     - nanopb
@@ -173,6 +176,7 @@ SPEC CHECKSUMS:
   GiphyCoreSDK: 1fe401c5fc65f182e7aa8b7fb2c9005f2a523374
   GoogleAppMeasurement: 2b3a023a61239c8d002e6e4fcf4abce8eddce0e0
   GoogleUtilities: 760ccb53b7c7f40f9c02d8c241f76f841a7a6162
+  GoogleWebRTC: e394e249f74e1dc1830a509ee1b5c0ba57715ff1
   GzipSwift: 1a5bc5f7827e09846b0635b5079f1224bc3b1c3a
   JWT: 05028b9624591bba9681bb57df2c5f95fa258bad
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
@@ -190,6 +194,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: d4932393e9830ce2a2be4a68e6dcdeeeec55b26a
+PODFILE CHECKSUM: aabcfc7f84a1f1e51051be4e49131939a4071fee
 
 COCOAPODS: 1.6.0.beta.1

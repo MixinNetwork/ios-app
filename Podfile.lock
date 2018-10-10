@@ -25,6 +25,7 @@ PODS:
     - FirebaseCore (~> 5.1)
     - GoogleUtilities/Environment (~> 5.3)
     - GoogleUtilities/UserDefaults (~> 5.3)
+  - GiphyCoreSDK (1.4.0)
   - GoogleAppMeasurement (5.2.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
     - GoogleUtilities/MethodSwizzler (~> 5.2)
@@ -91,6 +92,7 @@ DEPENDENCIES:
   - DeviceGuru
   - Firebase/Analytics
   - Firebase/Core
+  - GiphyCoreSDK
   - GzipSwift
   - JWT (~> 3.0.0-beta.7)
   - PhoneNumberKit
@@ -114,6 +116,7 @@ SPEC REPOS:
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseInstanceID
+    - GiphyCoreSDK
     - GoogleAppMeasurement
     - GoogleUtilities
     - GzipSwift
@@ -157,6 +160,7 @@ SPEC CHECKSUMS:
   FirebaseAnalytics: 831f1f127f4a75698e9875a87bf7e2668730d953
   FirebaseCore: 2a84b6b325792a4319ef71ee18819dcba08d2fd7
   FirebaseInstanceID: 78ba376fcd5b94c001f9999b2cbd3d1f1e56e78d
+  GiphyCoreSDK: 1fe401c5fc65f182e7aa8b7fb2c9005f2a523374
   GoogleAppMeasurement: 2b3a023a61239c8d002e6e4fcf4abce8eddce0e0
   GoogleUtilities: 760ccb53b7c7f40f9c02d8c241f76f841a7a6162
   GzipSwift: 1a5bc5f7827e09846b0635b5079f1224bc3b1c3a
@@ -176,6 +180,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 9991929e98296a198e1d32422316b87f267bac4d
+PODFILE CHECKSUM: 5b33c28d8158997eda0873d8867062cfcaad0a76
 
 COCOAPODS: 1.6.0.beta.1

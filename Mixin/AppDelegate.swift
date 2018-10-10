@@ -4,6 +4,7 @@ import UserNotifications
 import Firebase
 import SDWebImage
 import YYImage
+import GiphyCoreSDK
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -37,6 +38,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         checkJailbreak()
+        if let key = MixinKeys.giphy {
+            GiphyCore.configure(apiKey: key)
+        }
         return true
     }
 

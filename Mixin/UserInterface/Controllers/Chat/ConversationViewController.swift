@@ -112,7 +112,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
     private lazy var lastInputWrapperBottomConstant = bottomSafeAreaInset
-    
+    private lazy var giphySearchViewController: GiphySearchViewController = {
+        let controller = GiphySearchViewController.instance()
+        controller.conversationViewController = self
+        return controller
+    }()
     private lazy var stickerInputViewController: StickerInputViewController = {
         let controller = StickerInputViewController.instance()
         addChild(controller)
@@ -845,6 +849,15 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
     }
     
+    func presentGiphySearch(onDisappear: @escaping (() -> Void)) {
+        UIView.animate(withDuration: 0.5) {
+            self.dismissPanelsButton.alpha = 0.3
+        }
+        giphySearchViewController.onDisappear = onDisappear
+        giphySearchViewController.prepareForReuse()
+        present(giphySearchViewController, animated: true, completion: nil)
+    }
+    
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
@@ -1359,7 +1372,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
     }
     
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
-        guard !(intent == .show && !inputTextView.isFirstResponder) else {
+        guard inputTextView.isFirstResponder else {
             return
         }
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
@@ -1540,6 +1553,7 @@ extension ConversationViewController {
             self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
         }) { (_) in
             self.isShowingStickerPanel = !self.isShowingStickerPanel
+            self.stickerInputViewController.animated = self.isShowingStickerPanel
             self.lastInputWrapperBottomConstant = self.inputWrapperBottomConstraint.constant
         }
     }

@@ -11,5 +11,6 @@ enum MixinKeys {
     
     static let bugsnag = keys["Bugsnag"] as? String
     static let reCaptcha = keys["ReCaptcha"] as? String
+    static let giphy = keys["Giphy"] as? String
     
 }

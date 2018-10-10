@@ -31,7 +31,7 @@ class FavoriteStickersViewController: StickersViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! StickerCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
         if indexPath.row == 0 {
             cell.imageView.image = #imageLiteral(resourceName: "ic_sticker_add")
         } else if let url = URL(string: stickers[indexPath.row - 1].assetUrl)  {

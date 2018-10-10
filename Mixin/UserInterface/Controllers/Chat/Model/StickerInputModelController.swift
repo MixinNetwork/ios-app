@@ -8,16 +8,19 @@ class StickerInputModelController: NSObject {
     
     let recentStickersViewController = RecentStickersViewController(index: 0)
     let favoriteStickersViewController = FavoriteStickersViewController(index: 1)
+    let giphyViewController = GiphyViewController(index: 2)
+    let numberOfFixedControllers = 3
     
     private var officialStickers = [[Sticker]]()
     
     private var reusableStickerViewControllers = Set<StickersViewController>()
     
-    var initialViewController: StickersViewController? {
-        if let vc = dequeueReusableStickersViewController(withIndex: 0), !vc.stickers.isEmpty {
+    var initialViewController: StickersCollectionViewController? {
+        if let vc = dequeueReusableStickersViewController(withIndex: 0), !vc.isEmpty {
             return vc
         } else {
-            return dequeueReusableStickersViewController(withIndex: 2)
+            let index = officialStickers.isEmpty ? numberOfFixedControllers - 1 : numberOfFixedControllers
+            return dequeueReusableStickersViewController(withIndex: index)
         }
     }
     
@@ -35,8 +38,8 @@ class StickerInputModelController: NSObject {
         officialStickers = albums.map{ StickerDAO.shared.getStickers(albumId: $0.albumId) }
     }
     
-    func dequeueReusableStickersViewController(withIndex index: Int) -> StickersViewController? {
-        guard index >= 0 && index - 2 < officialStickers.count else {
+    func dequeueReusableStickersViewController(withIndex index: Int) -> StickersCollectionViewController? {
+        guard index >= 0 && index - numberOfFixedControllers < officialStickers.count else {
             return nil
         }
         switch index {
@@ -44,6 +47,8 @@ class StickerInputModelController: NSObject {
             return recentStickersViewController
         case 1:
             return favoriteStickersViewController
+        case 2:
+            return giphyViewController
         default:
             let viewController: StickersViewController
             if let vc = reusableStickerViewControllers.first(where: { $0.parent == nil }) {
@@ -53,7 +58,7 @@ class StickerInputModelController: NSObject {
                 reusableStickerViewControllers.insert(viewController)
             }
             viewController.index = index
-            viewController.load(stickers: officialStickers[index - 2])
+            viewController.load(stickers: officialStickers[index - numberOfFixedControllers])
             return viewController
         }
     }
@@ -63,7 +68,7 @@ class StickerInputModelController: NSObject {
 extension StickerInputModelController: UIPageViewControllerDataSource {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if let index = (viewController as? StickersViewController)?.index {
+        if let index = (viewController as? StickersCollectionViewController)?.index {
             return dequeueReusableStickersViewController(withIndex: index - 1)
         } else {
             return nil
@@ -71,7 +76,7 @@ extension StickerInputModelController: UIPageViewControllerDataSource {
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if let index = (viewController as? StickersViewController)?.index {
+        if let index = (viewController as? StickersCollectionViewController)?.index {
             return dequeueReusableStickersViewController(withIndex: index + 1)
         } else {
             return nil

@@ -27,6 +27,7 @@
 "action_show" = "Show";
 "action_deauthorize" = "Deauthorize";
 "menu_delete" = "Delete";
+"no_result" = "No result";
 
 "connection_hint_connecting" = "Connecting";
 "connection_hint_waiting" = "Waiting to reconnect";
@@ -157,6 +158,7 @@
 "chat_quote_type_sticker" = "Sticker";
 "chat_quote_type_photo" = "Photo";
 "chat_quote_type_video" = "Video";
+"chat_search_giphy" = "Search GIPHY";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";

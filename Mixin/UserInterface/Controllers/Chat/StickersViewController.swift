@@ -1,40 +1,11 @@
 import UIKit
 
-class StickersViewController: UIViewController {
+class StickersViewController: StickersCollectionViewController {
     
-    let cellReuseId = "StickerCell"
+    var stickers = [Sticker]()
     
-    var index = NSNotFound
-    
-    var collectionView: UICollectionView {
-        return view as! UICollectionView
-    }
-    
-    var updateUsedAtAfterSent: Bool {
-        return true
-    }
-    
-    internal var stickers = [Sticker]()
-    
-    private var conversationViewController: ConversationViewController? {
-        return parent?.parent?.parent as? ConversationViewController
-    }
-    
-    override func loadView() {
-        let frame = CGRect(x: 0, y: 0, width: 375, height: 200)
-        let layout = StickersCollectionViewFlowLayout(numberOfItemsPerRow: StickerInputModelController.numberOfItemsPerRow)
-        let view = UICollectionView(frame: frame, collectionViewLayout: layout)
-        view.showsHorizontalScrollIndicator = false
-        view.showsVerticalScrollIndicator = false
-        view.backgroundColor = .white
-        self.view = view
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        collectionView.register(StickerCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseId)
-        collectionView.dataSource = self
-        collectionView.delegate = self
+    override var isEmpty: Bool {
+        return stickers.isEmpty
     }
     
     func load(stickers: [Sticker]) {
@@ -57,27 +28,19 @@ class StickersViewController: UIViewController {
         }
     }
     
-}
-
-extension StickersViewController: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return stickers.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! StickerCollectionViewCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
         if let url = URL(string: stickers[indexPath.row].assetUrl) {
             cell.imageView.sd_setImage(with: url, completed: nil)
         }
         return cell
     }
     
-}
-
-extension StickersViewController: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         send(sticker: stickers[indexPath.row])
     }
     

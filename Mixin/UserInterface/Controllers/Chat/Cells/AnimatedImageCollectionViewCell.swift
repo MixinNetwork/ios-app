@@ -1,15 +1,17 @@
 import UIKit
 import YYImage
 
-class StickerCollectionViewCell: UICollectionViewCell {
+class AnimatedImageCollectionViewCell: UICollectionViewCell {
     
     lazy var imageView: YYAnimatedImageView = {
         let view = YYAnimatedImageView()
+        view.autoPlayAnimatedImage = false
+        view.contentMode = .scaleAspectFit
+        view.clipsToBounds = true
         addSubview(view)
         view.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
-        view.contentMode = .scaleAspectFit
         return view
     }()
     

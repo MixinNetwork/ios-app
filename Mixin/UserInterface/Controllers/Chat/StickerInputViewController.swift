@@ -13,7 +13,19 @@ class StickerInputViewController: UIViewController {
     private var isScrollingByAlbumSelection = false
     
     var numberOfAllAlbums: Int {
-        return officialAlbums.count + 2
+        return officialAlbums.count + modelController.numberOfFixedControllers
+    }
+    
+    var animated = false {
+        didSet {
+            if animated {
+                updatePagesAnimation()
+            } else {
+                for case let vc as StickersCollectionViewController in pageViewController.children {
+                    vc.animated = false
+                }
+            }
+        }
     }
     
     override func viewDidLoad() {
@@ -68,14 +80,20 @@ extension StickerInputViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: albumCellReuseId, for: indexPath) as! AlbumCollectionViewCell
-        if indexPath.row == 0 {
+        switch indexPath.row {
+        case 0:
             cell.imageView.image = #imageLiteral(resourceName: "ic_recent_stickers")
             cell.imageView.contentMode = .center
-        } else if indexPath.row == 1 {
+        case 1:
             cell.imageView.image = #imageLiteral(resourceName: "ic_sticker_favorite")
             cell.imageView.contentMode = .center
-        } else if let url = URL(string: officialAlbums[indexPath.row - 2].iconUrl) {
-            cell.imageView.sd_setImage(with: url, completed: nil)
+        case 2:
+            cell.imageView.image = #imageLiteral(resourceName: "ic_gif")
+            cell.imageView.contentMode = .center
+        default:
+            if let url = URL(string: officialAlbums[indexPath.row - modelController.numberOfFixedControllers].iconUrl) {
+                cell.imageView.sd_setImage(with: url, completed: nil)
+            }
             cell.imageView.contentMode = .scaleAspectFit
         }
         return cell
@@ -97,6 +115,7 @@ extension StickerInputViewController: UICollectionViewDelegate {
         pageViewController.view.isUserInteractionEnabled = false
         isScrollingByAlbumSelection = true
         pageViewController.setViewControllers([viewController], direction: direction, animated: true) { (_) in
+            self.updatePagesAnimation()
             self.pageViewController.view.isUserInteractionEnabled = true
             self.isScrollingByAlbumSelection = false
         }
@@ -123,7 +142,7 @@ extension StickerInputViewController: UIPageViewControllerDelegate {
         if finished {
             albumsCollectionView.isUserInteractionEnabled = true
         }
-        if let viewController = pageViewController.viewControllers?.first as? StickersViewController {
+        if let viewController = pageViewController.viewControllers?.first as? StickersCollectionViewController {
             currentIndex = viewController.index
         }
     }
@@ -138,10 +157,7 @@ extension StickerInputViewController: UIScrollViewDelegate {
         }
         var maxWidth: CGFloat = 0
         var focusedIndex = currentIndex
-        for case let vc as StickersViewController in pageViewController.children {
-            guard vc.view.superview != nil else {
-                continue
-            }
+        for case let vc as StickersCollectionViewController in pageViewController.children where vc.view.superview != nil {
             let convertedFrame = vc.view.convert(vc.view.bounds, to: view)
             let width = view.frame.intersection(convertedFrame).width
             if width > maxWidth {
@@ -150,6 +166,13 @@ extension StickerInputViewController: UIScrollViewDelegate {
             }
         }
         selectAlbum(at: focusedIndex)
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard scrollView == pageScrollView else {
+            return
+        }
+        updatePagesAnimation()
     }
     
 }
@@ -189,6 +212,16 @@ extension StickerInputViewController {
             return .right
         } else {
             return nil
+        }
+    }
+    
+    private func updatePagesAnimation() {
+        for case let vc as StickersCollectionViewController in pageViewController.children {
+            if vc.index == currentIndex {
+                vc.animated = true
+            } else {
+                vc.animated = false
+            }
         }
     }
     

@@ -1,6 +1,8 @@
 import UIKit
 import AVKit
 import Photos
+import SDWebImage
+import YYImage
 
 class ConversationDataSource {
     
@@ -560,6 +562,38 @@ extension ConversationDataSource {
                 let transferData = TransferStickerData(stickerId: sticker.stickerId, name: sticker.name, albumId: albumId)
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+            }
+        }
+    }
+    
+    func sendGif(at url: URL) {
+        let ownerUser = self.ownerUser
+        let categoryIsGroup = category == .group
+        var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
+                                            conversationId: conversationId,
+                                            userId: AccountAPI.shared.accountUserId)
+        message.mediaStatus = MediaStatus.PENDING.rawValue
+        SDWebImageManager.shared.loadImage(with: url, options: .highPriority, progress: nil) { (image, _, _, _, _, _) in
+            guard let image = image as? YYImage, let data = image.animatedImageData else {
+                return
+            }
+            DispatchQueue.global().async {
+                let filename = message.messageId + ExtensionName.gif.withDot
+                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                do {
+                    try data.write(to: targetUrl)
+                    if FileManager.default.fileSize(targetUrl.path) > 0 {
+                        message.thumbImage = image.base64Thumbnail()
+                        message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+                        message.mediaWidth = Int(image.size.width)
+                        message.mediaHeight = Int(image.size.height)
+                        message.mediaMimeType = "image/gif"
+                        message.mediaUrl = filename
+                    }
+                } catch {
+                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
+                }
+                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: categoryIsGroup)
             }
         }
     }

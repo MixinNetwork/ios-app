@@ -63,7 +63,8 @@ static const int outputBitRate = 16 * 1024;
 }
 
 - (void)writePCMData:(NSData *)pcmData {
-    ope_encoder_write(_encoder, pcmData.bytes, pcmData.length / 2);
+    NSParameterAssert((pcmData.length / 2) <= INT_MAX);
+    ope_encoder_write(_encoder, pcmData.bytes, (int)(pcmData.length / 2));
 }
 
 @end

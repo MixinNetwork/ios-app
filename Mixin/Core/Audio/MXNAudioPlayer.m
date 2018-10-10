@@ -7,7 +7,7 @@ const NSErrorDomain MXNAudioPlayerErrorDomain = @"MXNAudioRecorderErrorDomain";
 
 static const Float64 sampleRate = 48000;
 static const int numberOfAudioQueueBuffers = 3;
-static const UInt32 audioQueueBufferSize = 65536;
+static const UInt32 audioQueueBufferSize = 65536; // Should be smaller than UINT32_MAX (type of AudioQueueBufferRef.mAudioDataByteSize)
 
 NS_INLINE NSError* ErrorWithCodeAndOSStatus(MXNAudioPlayerErrorCode code, OSStatus status);
 NS_INLINE AudioStreamBasicDescription CreateFormat(void);
@@ -287,8 +287,9 @@ void AQBufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRef 
         return;
     }
     NSData *pcmData = [player->_reader pcmDataWithMaxLength:audioQueueBufferSize error:nil];
+    NSCAssert(pcmData.length <= audioQueueBufferSize,  @"Too many PCM data");
     if (pcmData && pcmData.length > 0) {
-        inBuffer->mAudioDataByteSize = pcmData.length;
+        inBuffer->mAudioDataByteSize = (UInt32)pcmData.length;
         [pcmData getBytes:inBuffer->mAudioData length:pcmData.length];
         AudioQueueEnqueueBuffer(player->_audioQueue, inBuffer, 0, NULL);
     } else {

@@ -222,12 +222,15 @@ extension FileManager {
         guard !conversationId.isEmpty else {
             return
         }
+
+        let logPath = MixinFile.logPath
+
         FileManager.dispatchQueue.async {
             var log = log + "...\(DateFormatter.filename.string(from: Date()))\n"
             if newSection {
                 log += "------------------------------\n"
             }
-            let url = MixinFile.logPath.appendingPathComponent("\(conversationId).txt")
+            let url = logPath.appendingPathComponent("\(conversationId).txt")
             let path = url.path
             do {
                 if FileManager.default.fileExists(atPath: path) && FileManager.default.fileSize(path) > 1024 * 1024 * 2 {

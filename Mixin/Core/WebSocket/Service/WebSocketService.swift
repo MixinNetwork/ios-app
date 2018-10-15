@@ -89,6 +89,8 @@ extension WebSocketService: SRWebSocketDelegate {
                 transaction.callback(.failure(error))
             }
             if blazeMessage.action == BlazeMessageAction.error.rawValue && error.code == 401 {
+                FileManager.default.writeLog(log: "\n>>>>>>>>>>>>>>WebSocketService...didReceiveMessage...401", newSection: true)
+                UIApplication.trackError("WebSocketService didReceiveMessage", action: "401", userInfo: UIApplication.getTrackUserInfo())
                 AccountAPI.shared.logout()
             }
         } else {

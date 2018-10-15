@@ -190,6 +190,7 @@ class BaseAPI {
                         userInfo["request"] = request.debugDescription
                         userInfo["startRequestTime"] = requestTime
                         UIApplication.trackError("BaseAPI async request", action: "401", userInfo: userInfo)
+                        FileManager.default.writeLog(log: "\n>>>>>>>>>>> BaseAPI async request didLogin:\(AccountAPI.shared.didLogin) requestTime:\(requestTime) \n\(request.debugDescription)", newSection: true)
                         AccountAPI.shared.logout()
                         return
                     case 429:
@@ -277,6 +278,7 @@ extension BaseAPI {
             }
 
             if !result.isSuccess, case let .failure(error) = result, error.code == 401 {
+                FileManager.default.writeLog(log: "\n>>>>>>>>>>> BaseAPI sync request 401 didLogin:\(AccountAPI.shared.didLogin) requestTime:\(requestTime) \n\(debugDescription)\n(errorMsg)", newSection: true)
                 if AccountAPI.shared.didLogin {
                     var userInfo = UIApplication.getTrackUserInfo()
                     userInfo["request"] = debugDescription

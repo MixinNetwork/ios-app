@@ -3,16 +3,30 @@ import UIKit
 class AssetViewController: UITableViewController {
 
     private var asset: AssetItem!
-    private var snapshots = [SnapshotItem]()
+    private var filteredSnapshots = [SnapshotItem]()
+    private var snapshots = [SnapshotItem]() {
+        didSet {
+            updateFilteredSnapshots()
+        }
+    }
     
+    private let headerReuseId = "header"
+    
+    private lazy var filterWindow: AssetFilterWindow = {
+        let window = AssetFilterWindow.instance()
+        window.delegate = self
+        return window
+    }()
     private lazy var noTransactionIndicator: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.textColor = .lightGray
         label.text = Localized.WALLET_NO_TRANSACTION
         label.sizeToFit()
+        label.frame.size.height += 40
         return label
     }()
+    private lazy var emptyFooterView = UIView()
     
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var blockchainImageView: CornerImageView!
@@ -24,6 +38,8 @@ class AssetViewController: UITableViewController {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "SnapshotCell", bundle: .main),
                            forCellReuseIdentifier: SnapshotCell.cellIdentifier)
+        tableView.register(FilterableHeaderView.self,
+                           forHeaderFooterViewReuseIdentifier: headerReuseId)
         updateUI()
         fetchAsset(showEmptyIndicatorIfEmpty: false)
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
@@ -81,10 +97,10 @@ class AssetViewController: UITableViewController {
                 UIView.performWithoutAnimation {
                     weakSelf.tableView.reloadSections(IndexSet(integer: 1), with: .none)
                 }
-                if showEmptyIndicatorIfEmpty && snapshots.isEmpty {
+                if showEmptyIndicatorIfEmpty && weakSelf.filteredSnapshots.isEmpty {
                     weakSelf.tableView.tableFooterView = weakSelf.noTransactionIndicator
                 } else {
-                    weakSelf.tableView.tableFooterView = UIView()
+                    weakSelf.tableView.tableFooterView = weakSelf.emptyFooterView
                 }
             }
         }
@@ -105,7 +121,29 @@ class AssetViewController: UITableViewController {
         exchangeLabel.text = asset.localizedUSDBalance
         depositButton.isBusy = !(asset.isAccount || asset.isAddress)
     }
-
+    
+    private func updateFilteredSnapshots() {
+        let visibleSnapshotTypes = filterWindow.filters
+            .flatMap({ $0.snapshotTypes })
+            .map({ $0.rawValue })
+        filteredSnapshots = snapshots.filter({
+            visibleSnapshotTypes.contains($0.type)
+        }).sorted(by: { (one, another) -> Bool in
+            switch self.filterWindow.sort {
+            case .time:
+                return one.createdAt < another.createdAt
+            case .amount:
+                let oneValue = Double(one.amount) ?? 0
+                let anotherValue = Double(another.amount) ?? 0
+                if abs(oneValue) == abs(anotherValue), oneValue.sign != anotherValue.sign {
+                    return oneValue > 0
+                } else {
+                    return abs(oneValue) > abs(anotherValue)
+                }
+            }
+        })
+    }
+    
     class func instance(asset: AssetItem) -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "asset") as! AssetViewController
         vc.asset = asset
@@ -158,7 +196,7 @@ extension AssetViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 1 {
-            return snapshots.count
+            return filteredSnapshots.count
         } else {
             return super.tableView(tableView, numberOfRowsInSection: section)
         }
@@ -167,7 +205,7 @@ extension AssetViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: SnapshotCell.cellIdentifier, for: indexPath) as! SnapshotCell
-            cell.render(snapshot: snapshots[indexPath.row])
+            cell.render(snapshot: filteredSnapshots[indexPath.row])
             return cell
         } else {
             return super.tableView(tableView, cellForRowAt: indexPath)
@@ -176,22 +214,24 @@ extension AssetViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard indexPath.section == 1 else {
-            return
+        if indexPath.section == 1 {
+            let vc = TransactionViewController.instance(asset: asset, snapshot: filteredSnapshots[indexPath.row])
+            navigationController?.pushViewController(vc, animated: true)
         }
-        
-        navigationController?.pushViewController(TransactionViewController.instance(asset: asset, snapshot: snapshots[indexPath.row]), animated: true)
-
     }
 }
     
 extension AssetViewController {
-
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard section == 1 && snapshots.count > 0 else {
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard section == 1 else {
             return nil
         }
-        return Localized.TRANSFER_TRANSACTIONS
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseId) as! FilterableHeaderView
+        header.filterAction = { [weak self] in
+            self?.filterWindow.presentPopupControllerAnimated()
+        }
+        return header
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -217,4 +257,17 @@ extension AssetViewController {
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 10
     }
+    
+}
+
+extension AssetViewController: AssetFilterWindowDelegate {
+    
+    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: AssetFilterWindow.Sort, filter: Set<AssetFilterWindow.Filter>) {
+        tableView.setContentOffset(.zero, animated: false)
+        tableView.layoutIfNeeded()
+        updateFilteredSnapshots()
+        tableView.reloadData()
+        tableView.tableFooterView = filteredSnapshots.isEmpty ? noTransactionIndicator : emptyFooterView
+    }
+    
 }

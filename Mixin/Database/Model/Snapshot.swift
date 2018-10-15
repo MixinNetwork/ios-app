@@ -38,7 +38,7 @@ struct Snapshot: BaseCodable {
     }
 }
 
-enum SnapshotType: String {
+enum SnapshotType: String, CaseIterable {
     case deposit
     case transfer
     case withdrawal

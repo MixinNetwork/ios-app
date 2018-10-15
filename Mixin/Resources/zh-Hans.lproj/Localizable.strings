@@ -25,6 +25,8 @@
 "action_send" = "发送";
 "action_hide" = "隐藏";
 "action_show" = "显示";
+"action_apply" = "应用";
+"action_filter" = "筛选";
 "action_deauthorize" = "取消授权";
 "menu_delete" = "删除";
 "no_result" = "未找到相关内容";
@@ -285,6 +287,11 @@
 "wallet_pin_pay_interval_tips" = "为了你的资产安全，距离上次输入支付密码的时间超过以上指定时间时，再次转账时仍然需要支付密码";
 "withdrawal_amount_too_small" = "提现金额太少了";
 "withdrawal_minimum_amount" = "提现金额最小 %@ %@";
+"transactions_filter_sort_by" = "顺序";
+"transactions_filter_sort_by_time" = "时间";
+"transactions_filter_sort_by_amount" = "金额";
+"transactions_filter_filter_by" = "筛选";
+"transactions_filter_filter_by_all" = "全部";
 
 // Transaction
 "transaction_title" = "交易详情";

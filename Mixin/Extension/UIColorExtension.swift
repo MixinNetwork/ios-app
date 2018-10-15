@@ -13,7 +13,8 @@ extension UIColor {
     static let systemTint = UIColor(rgbValue: 0x007AFF)
     static let cameraSendBlue = UIColor(rgbValue: 0x0a5ffe)
     static let selection = UIColor(rgbValue: 0xEDEEEE)
-
+    static let headerGray = UIColor(red: 0.43, green: 0.43, blue: 0.45, alpha: 1)
+    
     static let walletGreen = UIColor(rgbValue: 0x00B56E)
     static let walletRed = UIColor(rgbValue: 0xE55541)
 

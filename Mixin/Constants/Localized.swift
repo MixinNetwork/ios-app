@@ -394,6 +394,11 @@ public class Localized {
     public static func WITHDRAWAL_MINIMUM_AMOUNT(amount: String, symbol: String) -> String {
         return String(format: LocalizedString("withdrawal_minimum_amount", comment: "Minimum withdraw amount is %@"), amount, symbol)
     }
+    public static let TRANSACTIONS_FILTER_SORT_BY = LocalizedString("transactions_filter_sort_by", comment: "Sort by")
+    public static let TRANSACTIONS_FILTER_SORT_BY_TIME = LocalizedString("transactions_filter_sort_by_time", comment: "Time")
+    public static let TRANSACTIONS_FILTER_SORT_BY_AMOUNT = LocalizedString("transactions_filter_sort_by_amount", comment: "Amount")
+    public static let TRANSACTIONS_FILTER_FILTER_BY = LocalizedString("transactions_filter_filter_by", comment: "Filter by")
+    public static let TRANSACTIONS_FILTER_FILTER_BY_ALL = LocalizedString("transactions_filter_filter_by_all", comment: "All")
 
     // Transaction
     public static let TRANSACTION_TITLE = LocalizedString("transaction_title", comment: "Transaction")

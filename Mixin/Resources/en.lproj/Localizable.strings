@@ -25,6 +25,8 @@
 "action_send" = "Send";
 "action_hide" = "Hide";
 "action_show" = "Show";
+"action_apply" = "Apply";
+"action_filter" = "Filter";
 "action_deauthorize" = "Deauthorize";
 "menu_delete" = "Delete";
 "no_result" = "No result";
@@ -287,6 +289,11 @@
 "wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your Wallet PIN for the specified interval.";
 "withdrawal_amount_too_small" = "Withdraw amount too small";
 "withdrawal_minimum_amount" = "Minimum withdraw amount is %@ %@";
+"transactions_filter_sort_by" = "Sort by";
+"transactions_filter_sort_by_time" = "Time";
+"transactions_filter_sort_by_amount" = "Amount";
+"transactions_filter_filter_by" = "Filter by";
+"transactions_filter_filter_by_all" = "All";
 
 // Transaction
 "transaction_title" = "Transaction";

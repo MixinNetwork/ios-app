@@ -306,7 +306,7 @@
 "transaction_receiver" = "Receiver";
 "transaction_transaction_hash" = "Transaction Hash";
 "transaction_type_deposit" = "Deposit";
-"transaction_type_transfer" = "Tansfer";
+"transaction_type_transfer" = "Transfer";
 "transaction_type_withdrawal" = "Withdrawal";
 "transaction_type_fee" = "Fee";
 "transaction_type_rebate" = "Rebate";

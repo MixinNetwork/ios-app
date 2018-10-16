@@ -40,8 +40,8 @@ class AssetViewController: UITableViewController {
                            forCellReuseIdentifier: SnapshotCell.cellIdentifier)
         tableView.register(FilterableHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: headerReuseId)
-        updateUI()
-        fetchAsset(showEmptyIndicatorIfEmpty: false)
+        reloadAssetSection()
+        reloadData(showEmptyIndicatorIfEmpty: false)
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: asset.assetId))
@@ -56,11 +56,11 @@ class AssetViewController: UITableViewController {
         guard let assetId = notification.object as? String, assetId == asset.assetId else {
             return
         }
-        fetchAsset(showEmptyIndicatorIfEmpty: false)
+        reloadData(showEmptyIndicatorIfEmpty: false)
     }
     
     @objc func snapshotsDidChange(_ notification: Notification) {
-        fetchAsset(showEmptyIndicatorIfEmpty: true)
+        reloadData(showEmptyIndicatorIfEmpty: true)
     }
     
     @IBAction func depositAction(_ sender: Any) {
@@ -70,13 +70,13 @@ class AssetViewController: UITableViewController {
         navigationController?.pushViewController(DepositViewController.instance(asset: asset), animated: true)
     }
     
-    private func fetchAsset(showEmptyIndicatorIfEmpty: Bool) {
+    private func reloadData(showEmptyIndicatorIfEmpty: Bool) {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
             if let asset = AssetDAO.shared.getAsset(assetId: assetId) {
                 self?.asset = asset
                 DispatchQueue.main.async {
-                    self?.updateUI()
+                    self?.reloadAssetSection()
                 }
             }
 
@@ -106,7 +106,7 @@ class AssetViewController: UITableViewController {
         }
     }
 
-    private func updateUI() {
+    private func reloadAssetSection() {
         guard let asset = asset else {
             return
         }

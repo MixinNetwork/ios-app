@@ -399,6 +399,13 @@ public class Localized {
     public static let TRANSACTIONS_FILTER_SORT_BY_AMOUNT = LocalizedString("transactions_filter_sort_by_amount", comment: "Amount")
     public static let TRANSACTIONS_FILTER_FILTER_BY = LocalizedString("transactions_filter_filter_by", comment: "Filter by")
     public static let TRANSACTIONS_FILTER_FILTER_BY_ALL = LocalizedString("transactions_filter_filter_by_all", comment: "All")
+    public static func PENDING_DEPOSIT_CONFIRMATION(numerator: Int, denominator: Int?) -> String {
+        var progress = String(numerator)
+        if let denominator = denominator {
+            progress += "/\(denominator)"
+        }
+        return String(format: LocalizedString("pending_deposit_confirmation", comment: "%@ confirmations"), progress)
+    }
 
     // Transaction
     public static let TRANSACTION_TITLE = LocalizedString("transaction_title", comment: "Transaction")

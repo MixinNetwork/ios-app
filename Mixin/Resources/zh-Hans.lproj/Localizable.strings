@@ -30,6 +30,7 @@
 "action_deauthorize" = "取消授权";
 "menu_delete" = "删除";
 "no_result" = "未找到相关内容";
+"pending" = "确认中";
 
 "connection_hint_connecting" = "正在连接";
 "connection_hint_waiting" = "等待重连";
@@ -292,6 +293,7 @@
 "transactions_filter_sort_by_amount" = "金额";
 "transactions_filter_filter_by" = "筛选";
 "transactions_filter_filter_by_all" = "全部";
+"pending_deposit_confirmation" = "%@ 区块确认数";
 
 // Transaction
 "transaction_title" = "交易详情";

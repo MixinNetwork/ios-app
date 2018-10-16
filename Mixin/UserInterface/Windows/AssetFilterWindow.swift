@@ -167,7 +167,7 @@ extension AssetFilterWindow {
             case .all:
                 return SnapshotType.allCases
             case .deposit:
-                return [.deposit]
+                return [.deposit, .pendingDeposit]
             case .transfer:
                 return [.transfer]
             case .withdrawal:

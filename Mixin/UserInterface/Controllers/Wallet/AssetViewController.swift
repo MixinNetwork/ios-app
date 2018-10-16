@@ -45,7 +45,8 @@ class AssetViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: asset.assetId))
-        ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(key: .assetId(asset.assetId)))
+        let snapshotsRefreshingKey = RefreshSnapshotsJob.Key.asset(id: asset.assetId, key: asset.publicKey ?? asset.accountTag)
+        ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(key: snapshotsRefreshingKey))
     }
     
     deinit {
@@ -68,80 +69,6 @@ class AssetViewController: UITableViewController {
             return
         }
         navigationController?.pushViewController(DepositViewController.instance(asset: asset), animated: true)
-    }
-    
-    private func reloadData(showEmptyIndicatorIfEmpty: Bool) {
-        let assetId = asset.assetId
-        DispatchQueue.global().async { [weak self] in
-            if let asset = AssetDAO.shared.getAsset(assetId: assetId) {
-                self?.asset = asset
-                DispatchQueue.main.async {
-                    self?.reloadAssetSection()
-                }
-            }
-
-            let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId)
-            let userIds: [String] = snapshots
-                .filter({ $0.opponentUserFullName == nil })
-                .compactMap({ $0.opponentId })
-            if userIds.count > 0 {
-                for userId in userIds {
-                    ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [userId]))
-                }
-            }
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.snapshots = snapshots
-                UIView.performWithoutAnimation {
-                    weakSelf.tableView.reloadSections(IndexSet(integer: 1), with: .none)
-                }
-                if showEmptyIndicatorIfEmpty && weakSelf.filteredSnapshots.isEmpty {
-                    weakSelf.tableView.tableFooterView = weakSelf.noTransactionIndicator
-                } else {
-                    weakSelf.tableView.tableFooterView = weakSelf.emptyFooterView
-                }
-            }
-        }
-    }
-
-    private func reloadAssetSection() {
-        guard let asset = asset else {
-            return
-        }
-        if let url = URL(string: asset.iconUrl) {
-            iconImageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "ic_place_holder"), options: [], completed: nil)
-        }
-        if let chainIconUrl  = asset.chainIconUrl,  let chainUrl = URL(string: chainIconUrl) {
-            blockchainImageView.sd_setImage(with: chainUrl)
-            blockchainImageView.isHidden = false
-        }
-        balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never, symbol: .custom(asset.symbol))
-        exchangeLabel.text = asset.localizedUSDBalance
-        depositButton.isBusy = !(asset.isAccount || asset.isAddress)
-    }
-    
-    private func updateFilteredSnapshots() {
-        let visibleSnapshotTypes = filterWindow.filters
-            .flatMap({ $0.snapshotTypes })
-            .map({ $0.rawValue })
-        filteredSnapshots = snapshots.filter({
-            visibleSnapshotTypes.contains($0.type)
-        }).sorted(by: { (one, another) -> Bool in
-            switch self.filterWindow.sort {
-            case .time:
-                return one.createdAt < another.createdAt
-            case .amount:
-                let oneValue = Double(one.amount) ?? 0
-                let anotherValue = Double(another.amount) ?? 0
-                if abs(oneValue) == abs(anotherValue), oneValue.sign != anotherValue.sign {
-                    return oneValue > 0
-                } else {
-                    return abs(oneValue) > abs(anotherValue)
-                }
-            }
-        })
     }
     
     class func instance(asset: AssetItem) -> UIViewController {
@@ -205,7 +132,7 @@ extension AssetViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: SnapshotCell.cellIdentifier, for: indexPath) as! SnapshotCell
-            cell.render(snapshot: filteredSnapshots[indexPath.row])
+            cell.render(snapshot: filteredSnapshots[indexPath.row], asset: asset)
             return cell
         } else {
             return super.tableView(tableView, cellForRowAt: indexPath)
@@ -215,8 +142,11 @@ extension AssetViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 1 {
-            let vc = TransactionViewController.instance(asset: asset, snapshot: filteredSnapshots[indexPath.row])
-            navigationController?.pushViewController(vc, animated: true)
+            let snapshot = filteredSnapshots[indexPath.row]
+            if snapshot.type != SnapshotType.pendingDeposit.rawValue {
+                let vc = TransactionViewController.instance(asset: asset, snapshot: snapshot)
+                navigationController?.pushViewController(vc, animated: true)
+            }
         }
     }
 }
@@ -268,6 +198,85 @@ extension AssetViewController: AssetFilterWindowDelegate {
         updateFilteredSnapshots()
         tableView.reloadData()
         tableView.tableFooterView = filteredSnapshots.isEmpty ? noTransactionIndicator : emptyFooterView
+    }
+    
+}
+
+extension AssetViewController {
+    
+    private func reloadData(showEmptyIndicatorIfEmpty: Bool) {
+        let assetId = asset.assetId
+        DispatchQueue.global().async { [weak self] in
+            if let asset = AssetDAO.shared.getAsset(assetId: assetId) {
+                self?.asset = asset
+                DispatchQueue.main.async {
+                    self?.reloadAssetSection()
+                }
+            }
+            
+            let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId)
+            let userIds: [String] = snapshots
+                .filter({ $0.opponentUserFullName == nil })
+                .compactMap({ $0.opponentId })
+            if userIds.count > 0 {
+                for userId in userIds {
+                    ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [userId]))
+                }
+            }
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.snapshots = snapshots
+                UIView.performWithoutAnimation {
+                    weakSelf.tableView.reloadSections(IndexSet(integer: 1), with: .none)
+                }
+                if showEmptyIndicatorIfEmpty && weakSelf.filteredSnapshots.isEmpty {
+                    weakSelf.tableView.tableFooterView = weakSelf.noTransactionIndicator
+                } else {
+                    weakSelf.tableView.tableFooterView = weakSelf.emptyFooterView
+                }
+            }
+        }
+    }
+    
+    private func reloadAssetSection() {
+        guard let asset = asset else {
+            return
+        }
+        if let url = URL(string: asset.iconUrl) {
+            iconImageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "ic_place_holder"), options: [], completed: nil)
+        }
+        if let chainIconUrl  = asset.chainIconUrl,  let chainUrl = URL(string: chainIconUrl) {
+            blockchainImageView.sd_setImage(with: chainUrl)
+            blockchainImageView.isHidden = false
+        }
+        balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never, symbol: .custom(asset.symbol))
+        exchangeLabel.text = asset.localizedUSDBalance
+        depositButton.isBusy = !(asset.isAccount || asset.isAddress)
+    }
+    
+    private func updateFilteredSnapshots() {
+        let visibleSnapshotTypes = filterWindow.filters
+            .flatMap({ $0.snapshotTypes })
+            .map({ $0.rawValue })
+        filteredSnapshots = snapshots
+            .filter({ visibleSnapshotTypes.contains($0.type) })
+            .sorted(by: filterWindow.sort == .time ? timeSorter : amountSorter)
+    }
+    
+    private func timeSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
+        return one.createdAt > another.createdAt
+    }
+    
+    private func amountSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
+        let oneValue = Double(one.amount) ?? 0
+        let anotherValue = Double(another.amount) ?? 0
+        if abs(oneValue) == abs(anotherValue), oneValue.sign != anotherValue.sign {
+            return oneValue > 0
+        } else {
+            return abs(oneValue) > abs(anotherValue)
+        }
     }
     
 }

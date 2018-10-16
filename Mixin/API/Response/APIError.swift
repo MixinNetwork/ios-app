@@ -24,6 +24,14 @@ extension APIError {
     }
 
     var localizedDescription: String {
+        guard let description = serverErrorDescription else {
+            return Localized.TOAST_ERROR(errorCode: status, errorMessage: httpErrorDescription)
+        }
+        
+        return Localized.TOAST_ERROR(errorCode: code, errorMessage: description)
+    }
+
+    private var serverErrorDescription: String? {
         switch code {
         case 403:
             return Localized.TOAST_API_ERROR_FORBIDDEN
@@ -58,22 +66,26 @@ extension APIError {
         case 30102:
             return Localized.ADDRESS_FORMAT_ERROR
         default:
-            switch status {
-            case NSURLErrorNotConnectedToInternet, NSURLErrorCannotConnectToHost:
-                return Localized.TOAST_API_ERROR_NO_CONNECTION
-            case NSURLErrorTimedOut:
-                return Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
-            case NSURLErrorNetworkConnectionLost:
-                return Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST
-            case 403:
-                return Localized.TOAST_API_ERROR_FORBIDDEN
-            case 429:
-                return Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS
-            case 500:
-                return Localized.TOAST_API_ERROR_SERVER_5XX
-            default:
-                return description
-            }
+            return nil
+        }
+    }
+
+    private var httpErrorDescription: String {
+        switch status {
+        case NSURLErrorNotConnectedToInternet, NSURLErrorCannotConnectToHost:
+            return Localized.TOAST_API_ERROR_NO_CONNECTION
+        case NSURLErrorTimedOut:
+            return Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT
+        case NSURLErrorNetworkConnectionLost:
+            return Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST
+        case 403:
+            return Localized.TOAST_API_ERROR_FORBIDDEN
+        case 429:
+            return Localized.TOAST_API_ERROR_TOO_MANY_REQUESTS
+        case 500:
+            return Localized.TOAST_API_ERROR_SERVER_5XX
+        default:
+            return description
         }
     }
 

@@ -55,6 +55,7 @@
 "toast_copied" = "Successfully copied to clipboard";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_added" = "Added";
+"toast_error" = "ERROR %@: %@";
 
 
 // Login

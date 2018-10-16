@@ -54,6 +54,7 @@
 "toast_copied" = "已复制到剪贴板";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "toast_added" = "已添加";
+"toast_error" = "错误 %@：%@";
 
 // Login
 "navigation_title_select_country" = "选择一个国家";

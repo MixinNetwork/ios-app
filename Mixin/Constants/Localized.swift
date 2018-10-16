@@ -74,6 +74,9 @@ public class Localized {
     public static let PERMISSION_DENIED_MICROPHONE = LocalizedString("permission_denied_microphone", comment: "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.")
     public static let TOAST_OPERATION_FAILED = LocalizedString("toast_operation_failed", comment: "The operation failed, please try again later")
     public static let TOAST_ADDED = LocalizedString("toast_added", comment: "Added")
+    public static func TOAST_ERROR(errorCode: Int, errorMessage: String) -> String {
+        return String(format: LocalizedString("toast_error", comment: "ERROR %@: %@"), "\(errorCode)", errorMessage)
+    }
 
     // Login
     public static func NAVIGATION_TITLE_ENTER_VERIFICATION_CODE(mobileNumber: String) -> String {

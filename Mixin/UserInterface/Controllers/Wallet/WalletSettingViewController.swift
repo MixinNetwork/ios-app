@@ -1,26 +1,45 @@
 import UIKit
 import LocalAuthentication
 
-@available(iOS 11.0, *)
 class WalletSettingViewController: UITableViewController {
 
     @IBOutlet weak var payTitleLabel: UILabel!
     @IBOutlet weak var biometricsPaySwitch: UISwitch!
     @IBOutlet weak var pinIntervalLabel: UILabel!
     
-    private let context = LAContext()
-    private var biometryType: LABiometryType!
+    private let biometryType: BiometryType = {
+        guard #available(iOS 11.0, *), !UIDevice.isJailbreak else {
+            return .none
+        }
+        guard AccountAPI.shared.account?.has_pin ?? false else {
+            return .none
+        }
+        let context = LAContext()
+        var error: NSError?
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            switch context.biometryType {
+            case .touchID:
+                return .touchID
+            case .faceID:
+                return .faceID
+            default:
+                return .none
+            }
+        } else {
+            return .none
+        }
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        biometricsPaySwitch.isOn = WalletUserDefault.shared.isBiometricPay
-        payTitleLabel.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
+        if biometryType != .none {
+            biometricsPaySwitch.isOn = WalletUserDefault.shared.isBiometricPay
+            payTitleLabel.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: biometryType.localizedName)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         refreshPinIntervalUI()
     }
 
@@ -71,36 +90,73 @@ class WalletSettingViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard section == 0 else {
+        if section == 0 {
+            if biometryType == .none {
+                return 0
+            } else {
+                return WalletUserDefault.shared.isBiometricPay ? 2 : 1
+            }
+        } else {
             return super.tableView(tableView, numberOfRowsInSection: section)
         }
-        return WalletUserDefault.shared.isBiometricPay ? 2 : 1
     }
 
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        guard section == 0 else {
+        if section == 0, biometryType != .none {
+            return Localized.WALLET_ENABLE_BIOMETRIC_PAY_PROMPT(biometricType: biometryType.localizedName)
+        } else {
             return nil
         }
-        return Localized.WALLET_ENABLE_BIOMETRIC_PAY_PROMPT(biometricType: biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
         if indexPath.section == 0 && indexPath.row == 1 {
-            navigationController?.pushViewController(PinIntervalViewController.instance(), animated: true)
+            let vc = PinIntervalViewController.instance()
+            navigationController?.pushViewController(vc, animated: true)
         } else if indexPath.section == 1 {
-            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .changePinStep1), animated: true)
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0, biometryType == .none {
+            return .leastNormalMagnitude
+        } else {
+            return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
 
     @IBAction func changePINAction(_ sender: Any) {
-        navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .changePinStep1), animated: true)
+        let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
+        navigationController?.pushViewController(vc, animated: true)
     }
 
-    class func instance(biometryType: LABiometryType) -> UIViewController {
+    class func instance() -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "wallet_setting") as! WalletSettingViewController
-        vc.biometryType = biometryType
         return ContainerViewController.instance(viewController: vc, title: Localized.WALLET_SETTING)
     }
+    
+}
+
+extension WalletSettingViewController {
+    
+    enum BiometryType {
+        case faceID
+        case touchID
+        case none
+        
+        var localizedName: String {
+            switch self {
+            case .faceID:
+                return Localized.WALLET_FACE_ID
+            case .touchID:
+                return Localized.WALLET_TOUCH_ID
+            case .none:
+                return ""
+            }
+        }
+    }
+    
 }

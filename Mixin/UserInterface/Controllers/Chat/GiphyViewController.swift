@@ -6,6 +6,7 @@ class GiphyViewController: StickersCollectionViewController {
     var urls = [URL]()
     
     private let footerReuseId = "footer"
+    private let loadingIndicator = UIActivityIndicatorView(style: .gray)
     
     init(index: Int) {
         super.init(nibName: nil, bundle: nil)
@@ -30,6 +31,11 @@ class GiphyViewController: StickersCollectionViewController {
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                                 withReuseIdentifier: footerReuseId)
         (collectionView.collectionViewLayout as? TilingCollectionViewFlowLayout)?.contentRatio = 4 / 3
+        loadingIndicator.backgroundColor = .white
+        loadingIndicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        loadingIndicator.frame = view.bounds
+        loadingIndicator.startAnimating()
+        view.addSubview(loadingIndicator)
         let numberOfCells = StickerInputModelController.maxNumberOfRecentStickers - 1
         GiphyCore.shared.trending(limit: numberOfCells) { [weak self] (response, error) in
             guard let weakSelf = self, let data = response?.data, error == nil else {
@@ -37,6 +43,7 @@ class GiphyViewController: StickersCollectionViewController {
             }
             let urls = data.compactMap({ $0.mixinImageURL })
             DispatchQueue.main.async {
+                weakSelf.loadingIndicator.stopAnimating()
                 weakSelf.urls = urls
                 weakSelf.collectionView.reloadData()
             }

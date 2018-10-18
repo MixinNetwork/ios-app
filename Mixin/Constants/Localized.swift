@@ -317,10 +317,10 @@ public class Localized {
     public static let WALLET_SET_PASSWORD_SUCCESS = LocalizedString("wallet_set_password_success", comment: "Set wallet PIN successfully")
     public static let WALLET_SNAPSHOT_FROM = LocalizedString("wallet_snapshot_from", comment: "Set wallet PIN successfully")
     public static func WALLET_SNAPSHOT_FROM(fullName: String) -> String {
-        return String(format: LocalizedString("wallet_snapshot_from", comment: "From %@"), fullName)
+        return String(format: LocalizedString("wallet_snapshot_from", comment: "Transfer from %@"), fullName)
     }
     public static func WALLET_SNAPSHOT_TO(fullName: String) -> String {
-        return String(format: LocalizedString("wallet_snapshot_to", comment: "To %@"), fullName)
+        return String(format: LocalizedString("wallet_snapshot_to", comment: "Transfer to %@"), fullName)
     }
     public static let WALLET_DEPOSIT = LocalizedString("wallet_deposit", comment: "Deposit")
     public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {

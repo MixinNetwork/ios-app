@@ -235,8 +235,8 @@
 "wallet_change_password" = "Change PIN";
 "wallet_change_password_success" = "Change wallet PIN successfully";
 "wallet_set_password_success" = "Set wallet PIN successfully";
-"wallet_snapshot_from" = "From %@";
-"wallet_snapshot_to" = "To %@";
+"wallet_snapshot_from" = "Transfer from %@";
+"wallet_snapshot_to" = "Transfer to %@";
 "wallet_deposit" = "Deposit";
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_no_transaction" = "No transaction";

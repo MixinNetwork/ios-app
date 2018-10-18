@@ -234,7 +234,7 @@
 "wallet_change_password_success" = "修改支付密码成功";
 "wallet_set_password_success" = "设置支付密码成功";
 "wallet_snapshot_from" = "转账来自%@";
-"wallet_snapshot_to" = "你转账给%@";
+"wallet_snapshot_to" = "转账给%@";
 "wallet_deposit" = "充值";
 "wallet_deposit_confirmations" = "充值到账至少需要 %@ 个区块确认";
 "wallet_no_transaction" = "暂无转账记录";

@@ -94,36 +94,11 @@ class WalletViewController: UIViewController {
         alc.addAction(UIAlertAction(title: Localized.WALLET_MENU_SHOW_HIDDEN_ASSETS, style: .default, handler: { [weak self](_) in
             self?.navigationController?.pushViewController(HiddenAssetViewController.instance(), animated: true)
         }))
-        if #available(iOS 11.0, *), let biometryType = getBiometryType() {
-            alc.addAction(UIAlertAction(title: Localized.WALLET_SETTING, style: .default, handler: { [weak self](_) in                self?.navigationController?.pushViewController(WalletSettingViewController.instance(biometryType: biometryType), animated: true)
-            }))
-        } else {
-            alc.addAction(UIAlertAction(title: Localized.WALLET_CHANGE_PASSWORD, style: .default, handler: { [weak self](_) in
-                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
-                self?.navigationController?.pushViewController(vc, animated: true)
-            }))
-        }
+        alc.addAction(UIAlertAction(title: Localized.WALLET_SETTING, style: .default, handler: { [weak self](_) in
+            self?.navigationController?.pushViewController(WalletSettingViewController.instance(), animated: true)
+        }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
-    }
-
-    @available(iOS 11.0, *)
-    private func getBiometryType() -> LABiometryType? {
-        guard AccountAPI.shared.account?.has_pin ?? false else {
-            return nil
-        }
-        guard !UIDevice.isJailbreak else {
-            return nil
-        }
-
-        let context = LAContext()
-        var error: NSError?
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            if context.biometryType == .touchID || context.biometryType == .faceID {
-                return context.biometryType
-            }
-        }
-        return nil
     }
 
     class func instance() -> UIViewController {

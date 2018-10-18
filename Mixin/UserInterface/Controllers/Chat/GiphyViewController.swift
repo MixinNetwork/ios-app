@@ -6,7 +6,7 @@ class GiphyViewController: StickersCollectionViewController {
     var urls = [URL]()
     
     private let footerReuseId = "footer"
-    private let loadingIndicator = UIActivityIndicatorView(style: .gray)
+    private let loadingIndicator = UIActivityIndicatorView(style: .whiteLarge)
     
     init(index: Int) {
         super.init(nibName: nil, bundle: nil)
@@ -31,6 +31,7 @@ class GiphyViewController: StickersCollectionViewController {
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                                 withReuseIdentifier: footerReuseId)
         (collectionView.collectionViewLayout as? TilingCollectionViewFlowLayout)?.contentRatio = 4 / 3
+        loadingIndicator.color = .gray
         loadingIndicator.backgroundColor = .white
         loadingIndicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         loadingIndicator.frame = view.bounds

@@ -1,7 +1,7 @@
 import UIKit
 
 protocol AssetFilterWindowDelegate: class {
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: AssetFilterWindow.Sort, filter: Set<AssetFilterWindow.Filter>)
+    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: AssetFilterWindow.Sort, filter: AssetFilterWindow.Filter)
 }
 
 class AssetFilterWindow: BottomSheetView {
@@ -14,10 +14,10 @@ class AssetFilterWindow: BottomSheetView {
     weak var delegate: AssetFilterWindowDelegate?
 
     private(set) var sort = Sort.time
-    private(set) var filters = Set<Filter>(arrayLiteral: .all)
+    private(set) var filter = Filter.all
     
     private lazy var sortDraft = sort
-    private lazy var filtersDraft = filters
+    private lazy var filterDraft = filter
     
     private let cellReuseId = "cell"
     private let headers = [
@@ -62,15 +62,15 @@ class AssetFilterWindow: BottomSheetView {
     
     override func presentPopupControllerAnimated() {
         sortDraft = sort
-        filtersDraft = filters
+        filterDraft = filter
         reloadSelection()
         super.presentPopupControllerAnimated()
     }
     
     @IBAction func applyAction(_ sender: Any) {
         sort = sortDraft
-        filters = filtersDraft
-        delegate?.assetFilterWindow(self, didApplySort: sort, filter: filters)
+        filter = filterDraft
+        delegate?.assetFilterWindow(self, didApplySort: sort, filter: filter)
         dismissPopupControllerAnimated()
     }
     
@@ -106,39 +106,18 @@ extension AssetFilterWindow: UITableViewDelegate {
             tableView.deselectRow(at: indexPathToDeselect, animated: true)
             sortDraft = indexPath.row == 0 ? .time : .amount
         } else {
-            if indexPath.row == 0 {
-                filtersDraft = Set(arrayLiteral: .all)
-                for row in 1...5 {
-                    let indexPath = IndexPath(row: row, section: indexPath.section)
-                    tableView.deselectRow(at: indexPath, animated: true)
+            for indexPathToDeselect in tableView.indexPathsForSelectedRows ?? [] {
+                guard indexPathToDeselect.section == 1 && indexPathToDeselect != indexPath else {
+                    continue
                 }
-            } else if let filter = filter(for: indexPath.row) {
-                if filtersDraft.contains(.all) {
-                    tableView.deselectRow(at: IndexPath(row: 0, section: 1), animated: true)
-                    filtersDraft = Set(arrayLiteral: filter)
-                } else {
-                    filtersDraft.insert(filter)
-                }
+                tableView.deselectRow(at: indexPathToDeselect, animated: true)
             }
+            filterDraft = filter(for: indexPath.row)
         }
     }
     
     func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
-        if indexPath.section == 0 {
-            return nil
-        } else {
-            if indexPath == IndexPath(row: 0, section: 1) || filtersDraft.count == 1 {
-                return nil
-            } else {
-                return indexPath
-            }
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if indexPath.section == 1, let filter = filter(for: indexPath.row) {
-            filtersDraft.remove(filter)
-        }
+        return nil
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -181,36 +160,28 @@ extension AssetFilterWindow {
     }
     
     private func reloadSelection() {
-        switch sort {
-        case .time:
-            tableView.deselectRow(at: IndexPath(row: 1, section: 0), animated: false)
-            tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
-        case .amount:
-            tableView.deselectRow(at: IndexPath(row: 0, section: 0), animated: false)
-            tableView.selectRow(at: IndexPath(row: 1, section: 0), animated: false, scrollPosition: .none)
-        }
-        for row in 0...5 {
-            let indexPath = IndexPath(row: row, section: 1)
+        for indexPath in tableView.indexPathsForSelectedRows ?? [] {
             tableView.deselectRow(at: indexPath, animated: false)
         }
-        if filters.contains(.all) {
+        switch sort {
+        case .time:
+            tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+        case .amount:
+            tableView.selectRow(at: IndexPath(row: 1, section: 0), animated: false, scrollPosition: .none)
+        }
+        switch filter {
+        case .all:
             tableView.selectRow(at: IndexPath(row: 0, section: 1), animated: false, scrollPosition: .none)
-        } else {
-            if filters.contains(.transfer) {
-                tableView.selectRow(at: IndexPath(row: 1, section: 1), animated: false, scrollPosition: .none)
-            }
-            if filters.contains(.deposit) {
-                tableView.selectRow(at: IndexPath(row: 2, section: 1), animated: false, scrollPosition: .none)
-            }
-            if filters.contains(.withdrawal) {
-                tableView.selectRow(at: IndexPath(row: 3, section: 1), animated: false, scrollPosition: .none)
-            }
-            if filters.contains(.fee) {
-                tableView.selectRow(at: IndexPath(row: 4, section: 1), animated: false, scrollPosition: .none)
-            }
-            if filters.contains(.rebate) {
-                tableView.selectRow(at: IndexPath(row: 5, section: 1), animated: false, scrollPosition: .none)
-            }
+        case .transfer:
+            tableView.selectRow(at: IndexPath(row: 1, section: 1), animated: false, scrollPosition: .none)
+        case .deposit:
+            tableView.selectRow(at: IndexPath(row: 2, section: 1), animated: false, scrollPosition: .none)
+        case .withdrawal:
+            tableView.selectRow(at: IndexPath(row: 3, section: 1), animated: false, scrollPosition: .none)
+        case .fee:
+            tableView.selectRow(at: IndexPath(row: 4, section: 1), animated: false, scrollPosition: .none)
+        case .rebate:
+            tableView.selectRow(at: IndexPath(row: 5, section: 1), animated: false, scrollPosition: .none)
         }
     }
     
@@ -219,11 +190,10 @@ extension AssetFilterWindow {
         tableView.isScrollEnabled = tableView.contentSize.height >= tableView.frame.height
     }
     
-    private func filter(for row: Int) -> Filter? {
-        guard (1...5).contains(row) else {
-            return nil
-        }
+    private func filter(for row: Int) -> Filter {
         switch row {
+        case 0:
+            return .all
         case 1:
             return .transfer
         case 2:

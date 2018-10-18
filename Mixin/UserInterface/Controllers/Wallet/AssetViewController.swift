@@ -192,7 +192,7 @@ extension AssetViewController {
 
 extension AssetViewController: AssetFilterWindowDelegate {
     
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: AssetFilterWindow.Sort, filter: Set<AssetFilterWindow.Filter>) {
+    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: AssetFilterWindow.Sort, filter: AssetFilterWindow.Filter) {
         tableView.setContentOffset(.zero, animated: false)
         tableView.layoutIfNeeded()
         updateFilteredSnapshots()
@@ -257,8 +257,9 @@ extension AssetViewController {
     }
     
     private func updateFilteredSnapshots() {
-        let visibleSnapshotTypes = filterWindow.filters
-            .flatMap({ $0.snapshotTypes })
+        let visibleSnapshotTypes = filterWindow
+            .filter
+            .snapshotTypes
             .map({ $0.rawValue })
         filteredSnapshots = snapshots
             .filter({ visibleSnapshotTypes.contains($0.type) })

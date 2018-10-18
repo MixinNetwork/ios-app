@@ -31,7 +31,7 @@ class RefreshSnapshotsJob: BaseJob {
                 case let .success(deposits):
                     SnapshotDAO.shared.replacePendingDeposits(assetId: id, pendingDeposits: deposits)
                 case let .failure(error):
-                    UIApplication.trackError(getJobId(), action: "Get pending deposits", userInfo: ["error": error])
+                    UIApplication.trackError(getJobId(), action: "Get pending deposits", userInfo: ["error": error.description])
                 }
             }
             switch AssetAPI.shared.snapshots(assetId: id) {

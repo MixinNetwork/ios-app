@@ -30,7 +30,8 @@
                     </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="s8A-aV-cKV" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="2NC-AD-tBe"/>
+                    <constraint firstItem="s8A-aV-cKV" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" priority="750" id="1Wo-Hs-xLi"/>
+                    <constraint firstItem="s8A-aV-cKV" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="2NC-AD-tBe"/>
                     <constraint firstItem="s8A-aV-cKV" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="55W-tl-92D"/>
                     <constraint firstAttribute="trailing" secondItem="pn5-Ed-pEY" secondAttribute="trailing" id="EQC-dg-gcd"/>
                     <constraint firstAttribute="bottom" secondItem="pn5-Ed-pEY" secondAttribute="bottom" id="MIZ-3v-Sd0"/>

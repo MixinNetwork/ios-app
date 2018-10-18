@@ -12,6 +12,24 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     var returnKeyType: UIReturnKeyType = .default
     var enablesReturnKeyAutomatically: Bool = true
     var keyboardType: UIKeyboardType = .numberPad
+    var textContentType: UITextContentType! {
+        get {
+            if #available(iOS 12.0, *) {
+                return .oneTimeCode
+            } else {
+                return nil
+            }
+        }
+        set {
+            
+        }
+    }
+    
+    // UITextInput
+    var selectedTextRange: UITextRange?
+    var markedTextStyle: [NSAttributedString.Key : Any]?
+    var inputDelegate: UITextInputDelegate?
+    lazy var internalTokenizer = UITextInputStringTokenizer()
     
     @IBInspectable
     var spacing: CGFloat = 12 {
@@ -61,7 +79,17 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     var indicatorErrorColor: UIColor = .error
     
     var text: String {
-        return digits.joined()
+        get {
+            return digits.joined()
+        }
+        set {
+            if let value = Int(text.prefix(numberOfDigits)) {
+                digits = String(value).compactMap(String.init)
+            } else {
+                digits = []
+            }
+            updateCursor()
+        }
     }
     
     private var tapRecognizer: UITapGestureRecognizer!
@@ -115,6 +143,183 @@ class VerificationCodeField: UIControl, UITextInputTraits {
         }
     }
     
+}
+
+extension VerificationCodeField: UIKeyInput {
+    
+    var hasText: Bool {
+        return !text.isEmpty
+    }
+    
+    func insertText(_ text: String) {
+        let numberOfUnfilleds = numberOfDigits - digits.count
+        let newDigits = text.digits()
+        let endIndexOfNewDigits = min(numberOfUnfilleds, newDigits.count)
+        let digitsToAppend = Array(newDigits)[0..<endIndexOfNewDigits].map{ String($0) }
+        if digitsToAppend.count > 0 {
+            digits += digitsToAppend
+        }
+        updateCursor()
+    }
+    
+    func deleteBackward() {
+        guard digits.count > 0 else {
+            return
+        }
+        digits = Array(digits.dropLast())
+        updateCursor()
+    }
+    
+}
+
+extension VerificationCodeField: UITextInput {
+    
+    func text(in range: UITextRange) -> String? {
+        guard let range = range as? TextRange else {
+            return nil
+        }
+        return String(text[range.start.value...range.end.value])
+    }
+    
+    func replace(_ range: UITextRange, withText text: String) {
+        guard let range = range as? TextRange else {
+            return
+        }
+        self.text.replaceSubrange(range.start.value...range.end.value, with: text)
+    }
+    
+    var markedTextRange: UITextRange? {
+        return nil
+    }
+    
+    func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
+        
+    }
+    
+    func unmarkText() {
+        
+    }
+    
+    var beginningOfDocument: UITextPosition {
+        return TextPosition(value: text.startIndex)
+    }
+    
+    var endOfDocument: UITextPosition {
+        return TextPosition(value: text.endIndex)
+    }
+    
+    func textRange(from fromPosition: UITextPosition, to toPosition: UITextPosition) -> UITextRange? {
+        guard let from = fromPosition as? TextPosition, let to = toPosition as? TextPosition else {
+            return nil
+        }
+        return TextRange(start: from, end: to)
+    }
+    
+    func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
+        guard let position = position as? TextPosition else {
+            return nil
+        }
+        let advancedPosition = text.index(position.value, offsetBy: offset)
+        return TextPosition(value: advancedPosition)
+    }
+    
+    func position(from position: UITextPosition, in direction: UITextLayoutDirection, offset: Int) -> UITextPosition? {
+        switch direction {
+        case .left:
+            return self.position(from: position, offset: -offset)
+        case .right:
+            return self.position(from: position, offset: offset)
+        case .up, .down:
+            return position
+        }
+    }
+    
+    func compare(_ position: UITextPosition, to other: UITextPosition) -> ComparisonResult {
+        guard let position = position as? TextPosition, let other = other as? TextPosition else {
+            return .orderedSame
+        }
+        if position.value > other.value {
+            return .orderedAscending
+        } else if position.value < other.value {
+            return .orderedDescending
+        } else {
+            return .orderedSame
+        }
+    }
+    
+    func offset(from: UITextPosition, to toPosition: UITextPosition) -> Int {
+        guard let from = from as? TextPosition, let to = toPosition as? TextPosition else {
+            return 0
+        }
+        return text.distance(from: from.value, to: to.value)
+    }
+    
+    var tokenizer: UITextInputTokenizer {
+        return internalTokenizer
+    }
+    
+    func position(within range: UITextRange, farthestIn direction: UITextLayoutDirection) -> UITextPosition? {
+        guard let range = range as? TextRange, let str = self.text(in: range) else {
+            return nil
+        }
+        switch direction {
+        case .right, .down:
+            return TextPosition(value: str.endIndex)
+        case .left, .up:
+            return TextPosition(value: str.startIndex)
+        }
+    }
+    
+    func characterRange(byExtending position: UITextPosition, in direction: UITextLayoutDirection) -> UITextRange? {
+        guard let position = position as? TextPosition else {
+            return nil
+        }
+        switch direction {
+        case .right:
+            return TextRange(start: position, end: TextPosition(value: text.endIndex))
+        case .left:
+            return TextRange(start: TextPosition(value: text.startIndex), end: position)
+        case .up, .down:
+            return TextRange(start: position, end: position)
+        }
+    }
+    
+    func baseWritingDirection(for position: UITextPosition, in direction: UITextStorageDirection) -> UITextWritingDirection {
+        return .natural
+    }
+    
+    func setBaseWritingDirection(_ writingDirection: UITextWritingDirection, for range: UITextRange) {
+        
+    }
+    
+    func firstRect(for range: UITextRange) -> CGRect {
+        return .zero
+    }
+    
+    func caretRect(for position: UITextPosition) -> CGRect {
+        return .zero
+    }
+    
+    func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
+        return []
+    }
+    
+    func closestPosition(to point: CGPoint) -> UITextPosition? {
+        return nil
+    }
+    
+    func closestPosition(to point: CGPoint, within range: UITextRange) -> UITextPosition? {
+        return nil
+    }
+    
+    func characterRange(at point: CGPoint) -> UITextRange? {
+        return nil
+    }
+    
+}
+
+extension VerificationCodeField {
+    
     private func prepare() {
         setupSubviews()
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tap(recognizer:)))
@@ -150,32 +355,38 @@ class VerificationCodeField: UIControl, UITextInputTraits {
         indicators[position].backgroundColor = indicatorHighlightedColor
     }
     
-}
-
-extension VerificationCodeField: UIKeyInput {
-    
-    var hasText: Bool {
-        return !text.isEmpty
-    }
-    
-    func insertText(_ text: String) {
-        let numberOfUnfilleds = numberOfDigits - digits.count
-        let newDigits = text.digits()
-        let endIndexOfNewDigits = min(numberOfUnfilleds, newDigits.count)
-        let digitsToAppend = Array(newDigits)[0..<endIndexOfNewDigits].map{ String($0) }
-        if digitsToAppend.count > 0 {
-            digits += digitsToAppend
+    class TextPosition: UITextPosition {
+        
+        let value: String.Index
+        
+        init(value: String.Index) {
+            self.value = value
         }
-        updateCursor()
+        
     }
     
-    func deleteBackward() {
-        guard digits.count > 0 else {
-            return
+    class TextRange: UITextRange {
+        
+        private let internalStart: TextPosition
+        private let internalEnd: TextPosition
+        
+        override var isEmpty: Bool {
+            return true
         }
-        digits = Array(digits.dropLast())
-        updateCursor()
+        
+        override var start: TextPosition {
+            return internalStart
+        }
+        
+        override var end: TextPosition {
+            return internalEnd
+        }
+        
+        init(start: TextPosition, end: TextPosition) {
+            self.internalStart = start
+            self.internalEnd = end
+        }
+        
     }
     
 }
-

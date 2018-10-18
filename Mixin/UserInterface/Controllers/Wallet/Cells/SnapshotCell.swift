@@ -17,11 +17,7 @@ class SnapshotCell: UITableViewCell {
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
             amountLabel.textColor = .walletGreen
-            if let hash = snapshot.transactionHash {
-                detailLabel.text = hash.toSimpleKey()
-            } else {
-                detailLabel.text = nil
-            }
+            detailLabel.text = Localized.TRANSACTION_TYPE_DEPOSIT
         case SnapshotType.transfer.rawValue:
             if snapshot.amount.hasMinusPrefix {
                 amountLabel.textColor = .walletRed
@@ -30,20 +26,15 @@ class SnapshotCell: UITableViewCell {
                 amountLabel.textColor = .walletGreen
                 detailLabel.text = Localized.WALLET_SNAPSHOT_FROM(fullName: snapshot.opponentUserFullName ?? "")
             }
-        case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue:
+        case SnapshotType.withdrawal.rawValue:
             amountLabel.textColor = .walletRed
-            if let receiver = snapshot.receiver, !receiver.isEmpty {
-                detailLabel.text = receiver.toSimpleKey()
-            } else {
-                detailLabel.text = nil
-            }
+            detailLabel.text = Localized.TRANSACTION_TYPE_WITHDRAWAL
+        case SnapshotType.fee.rawValue:
+            amountLabel.textColor = .walletRed
+            detailLabel.text = Localized.TRANSACTION_TYPE_FEE
         case SnapshotType.rebate.rawValue:
             amountLabel.textColor = .walletGreen
-            if let receiver = snapshot.receiver, !receiver.isEmpty {
-                detailLabel.text = receiver.toSimpleKey()
-            } else {
-                detailLabel.text = nil
-            }
+            detailLabel.text = Localized.TRANSACTION_TYPE_REBATE
         case SnapshotType.pendingDeposit.rawValue:
             amountLabel.textColor = .walletGray
             if let confirmations = snapshot.confirmations {

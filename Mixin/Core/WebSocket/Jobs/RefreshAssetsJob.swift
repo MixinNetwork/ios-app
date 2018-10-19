@@ -57,7 +57,7 @@ class RefreshAssetsJob: BaseJob {
         case let .failure(error):
             UIApplication.trackError("RefreshAssetsJob",
                                      action: "Get pending deposits",
-                                     userInfo: ["error": error.description])
+                                     userInfo: ["error": error.debugDescription])
         }
     }
     
@@ -68,7 +68,7 @@ class RefreshAssetsJob: BaseJob {
         case let .failure(error):
             UIApplication.trackError("RefreshAssetsJob",
                                      action: "Get snapshots",
-                                     userInfo: ["error": error.description])
+                                     userInfo: ["error": error.debugDescription])
         }
     }
     

@@ -45,7 +45,7 @@
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="pending"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="pending_deposit_hint"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
                         </subviews>

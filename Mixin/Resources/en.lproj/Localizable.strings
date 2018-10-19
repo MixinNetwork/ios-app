@@ -30,7 +30,6 @@
 "action_deauthorize" = "Deauthorize";
 "menu_delete" = "Delete";
 "no_result" = "No result";
-"pending" = "Pending";
 
 "connection_hint_connecting" = "Connecting";
 "connection_hint_waiting" = "Waiting to reconnect";
@@ -296,6 +295,7 @@
 "transactions_filter_filter_by" = "Filter by";
 "transactions_filter_filter_by_all" = "All";
 "pending_deposit_confirmation" = "%@ confirmations";
+"pending_deposit_hint" = "Pending";
 
 // Transaction
 "transaction_title" = "Transaction";

@@ -31,10 +31,11 @@ class RefreshAssetsJob: BaseJob {
                 }
                 AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
                 if asset.isAddress, let key = asset.publicKey {
-                    updateSnapshots(assetId: assetId, key: key)
+                    updatePendingDeposits(assetId: assetId, key: key)
                 } else if asset.isAccount, let key = asset.accountTag {
-                    updateSnapshots(assetId: assetId, key: key)
+                    updatePendingDeposits(assetId: assetId, key: key)
                 }
+                updateSnapshots(assetId: assetId)
             case let .failure(error):
                 throw error
             }
@@ -48,7 +49,7 @@ class RefreshAssetsJob: BaseJob {
         }
     }
     
-    private func updateSnapshots(assetId: String, key: String) {
+    private func updatePendingDeposits(assetId: String, key: String) {
         switch AssetAPI.shared.pendingDeposits(key: key, assetId: assetId) {
         case let .success(deposits):
             SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits)
@@ -57,6 +58,9 @@ class RefreshAssetsJob: BaseJob {
                                      action: "Get pending deposits",
                                      userInfo: ["error": error.description])
         }
+    }
+    
+    private func updateSnapshots(assetId: String) {
         switch AssetAPI.shared.snapshots(assetId: assetId) {
         case let .success(snapshots):
             SnapshotDAO.shared.updateSnapshots(snapshots: snapshots)
@@ -68,6 +72,3 @@ class RefreshAssetsJob: BaseJob {
     }
     
 }
-
-
-

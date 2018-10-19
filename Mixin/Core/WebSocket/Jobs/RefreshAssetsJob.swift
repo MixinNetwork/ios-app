@@ -31,10 +31,23 @@ class RefreshAssetsJob: BaseJob {
                 }
                 AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
                 if asset.isAddress, let key = asset.publicKey {
-                    updatePendingDeposits(assetId: assetId, key: key)
+                    switch AssetAPI.shared.pendingDeposits(assetId: assetId, publicKey: key) {
+                    case let .success(deposits):
+                        SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits)
+                    case let .failure(error):
+                        UIApplication.trackError("RefreshAssetsJob",
+                                                 action: "Get pending deposits",
+                                                 userInfo: ["error": error.debugDescription])
+                    }
                 } else if asset.isAccount, let name = asset.accountName, let tag = asset.accountTag {
-                    let key = name + ":" + tag
-                    updatePendingDeposits(assetId: assetId, key: key)
+                    switch AssetAPI.shared.pendingDeposits(assetId: assetId, accountName: name, accountTag: tag) {
+                    case let .success(deposits):
+                        SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits)
+                    case let .failure(error):
+                        UIApplication.trackError("RefreshAssetsJob",
+                                                 action: "Get pending deposits",
+                                                 userInfo: ["error": error.debugDescription])
+                    }
                 }
                 updateSnapshots(assetId: assetId)
             case let .failure(error):
@@ -49,18 +62,7 @@ class RefreshAssetsJob: BaseJob {
             }
         }
     }
-    
-    private func updatePendingDeposits(assetId: String, key: String) {
-        switch AssetAPI.shared.pendingDeposits(key: key, assetId: assetId) {
-        case let .success(deposits):
-            SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits)
-        case let .failure(error):
-            UIApplication.trackError("RefreshAssetsJob",
-                                     action: "Get pending deposits",
-                                     userInfo: ["error": error.debugDescription])
-        }
-    }
-    
+
     private func updateSnapshots(assetId: String) {
         switch AssetAPI.shared.snapshots(assetId: assetId) {
         case let .success(snapshots):

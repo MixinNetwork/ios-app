@@ -30,6 +30,11 @@ class RefreshAssetsJob: BaseJob {
                     UIApplication.trackError("RefreshAssetsJob", action: "asset deposit data bad", userInfo: userInfo)
                 }
                 AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
+                if asset.isAddress, let key = asset.publicKey {
+                    updateSnapshots(assetId: assetId, key: key)
+                } else if asset.isAccount, let key = asset.accountTag {
+                    updateSnapshots(assetId: assetId, key: key)
+                }
             case let .failure(error):
                 throw error
             }
@@ -42,7 +47,26 @@ class RefreshAssetsJob: BaseJob {
             }
         }
     }
-
+    
+    private func updateSnapshots(assetId: String, key: String) {
+        switch AssetAPI.shared.pendingDeposits(key: key, assetId: assetId) {
+        case let .success(deposits):
+            SnapshotDAO.shared.replacePendingDeposits(assetId: assetId, pendingDeposits: deposits)
+        case let .failure(error):
+            UIApplication.trackError("RefreshAssetsJob",
+                                     action: "Get pending deposits",
+                                     userInfo: ["error": error.description])
+        }
+        switch AssetAPI.shared.snapshots(assetId: assetId) {
+        case let .success(snapshots):
+            SnapshotDAO.shared.updateSnapshots(snapshots: snapshots)
+        case let .failure(error):
+            UIApplication.trackError("RefreshAssetsJob",
+                                     action: "Get snapshots",
+                                     userInfo: ["error": error.description])
+        }
+    }
+    
 }
 
 

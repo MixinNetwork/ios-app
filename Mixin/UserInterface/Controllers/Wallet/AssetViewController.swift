@@ -45,8 +45,6 @@ class AssetViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: asset.assetId))
-        let snapshotsRefreshingKey = RefreshSnapshotsJob.Key.asset(id: asset.assetId, key: asset.publicKey ?? asset.accountTag)
-        ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(key: snapshotsRefreshingKey))
     }
     
     deinit {

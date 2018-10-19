@@ -12,7 +12,7 @@ class PeerTransactionsViewController: UITableViewController {
         tableView.tableFooterView = UIView()
         reload()
         NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
-        ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(key: .opponentId(opponentId)))
+        ConcurrentJobQueue.shared.addJob(job: RefreshSnapshotsJob(opponentId: opponentId))
     }
     
     deinit {

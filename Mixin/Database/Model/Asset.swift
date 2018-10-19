@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-struct Asset: BaseCodable {
+struct Asset: BaseCodable, AssetKeyConvertible {
 
     static var tableName: String = "assets"
 

@@ -66,8 +66,9 @@ final class SnapshotDAO {
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Snapshot.tableName,
                           where: Snapshot.Properties.assetId == assetId && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue)
-            try db.insert(objects: pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )}),
-                          intoTable: Snapshot.tableName)
+            if pendingDeposits.count > 0 {
+                try db.insert(objects: pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )}), intoTable: Snapshot.tableName)
+            }
         }
     }
     

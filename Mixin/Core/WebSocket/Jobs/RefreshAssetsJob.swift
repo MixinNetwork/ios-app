@@ -32,7 +32,8 @@ class RefreshAssetsJob: BaseJob {
                 AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
                 if asset.isAddress, let key = asset.publicKey {
                     updatePendingDeposits(assetId: assetId, key: key)
-                } else if asset.isAccount, let key = asset.accountTag {
+                } else if asset.isAccount, let name = asset.accountName, let tag = asset.accountTag {
+                    let key = name + ":" + tag
                     updatePendingDeposits(assetId: assetId, key: key)
                 }
                 updateSnapshots(assetId: assetId)

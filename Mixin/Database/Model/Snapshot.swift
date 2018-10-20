@@ -14,6 +14,7 @@ struct Snapshot: BaseCodable {
     let opponentId: String?
     let memo: String?
     let receiver: String?
+    let confirmations: Int?
     var createdAt: String
 
     enum CodingKeys: String, CodingTableKey {
@@ -27,6 +28,7 @@ struct Snapshot: BaseCodable {
         case sender
         case receiver
         case memo
+        case confirmations
         case createdAt = "created_at"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -36,12 +38,28 @@ struct Snapshot: BaseCodable {
             ]
         }
     }
+    
+    init(snapshotId: String, type: String, assetId: String, amount: String, transactionHash: String?, sender: String?, opponentId: String?, memo: String?, receiver: String?, confirmations: Int?, createdAt: String) {
+        self.snapshotId = snapshotId
+        self.type = type
+        self.assetId = assetId
+        self.amount = amount
+        self.transactionHash = transactionHash
+        self.sender = sender
+        self.opponentId = opponentId
+        self.memo = memo
+        self.receiver = receiver
+        self.confirmations = confirmations
+        self.createdAt = createdAt
+    }
+    
 }
 
-enum SnapshotType: String {
+enum SnapshotType: String, CaseIterable {
     case deposit
     case transfer
     case withdrawal
     case fee
     case rebate
+    case pendingDeposit = "pending_deposit"
 }

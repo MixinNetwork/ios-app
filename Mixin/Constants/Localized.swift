@@ -320,10 +320,10 @@ public class Localized {
     public static let WALLET_SET_PASSWORD_SUCCESS = LocalizedString("wallet_set_password_success", comment: "Set wallet PIN successfully")
     public static let WALLET_SNAPSHOT_FROM = LocalizedString("wallet_snapshot_from", comment: "Set wallet PIN successfully")
     public static func WALLET_SNAPSHOT_FROM(fullName: String) -> String {
-        return String(format: LocalizedString("wallet_snapshot_from", comment: "From %@"), fullName)
+        return String(format: LocalizedString("wallet_snapshot_from", comment: "Transfer from %@"), fullName)
     }
     public static func WALLET_SNAPSHOT_TO(fullName: String) -> String {
-        return String(format: LocalizedString("wallet_snapshot_to", comment: "To %@"), fullName)
+        return String(format: LocalizedString("wallet_snapshot_to", comment: "Transfer to %@"), fullName)
     }
     public static let WALLET_DEPOSIT = LocalizedString("wallet_deposit", comment: "Deposit")
     public static func WALLET_DEPOSIT_CONFIRMATIONS(confirmations: Int) -> String {
@@ -396,6 +396,18 @@ public class Localized {
     public static let WITHDRAWAL_AMOUNT_TOO_SMALL = LocalizedString("withdrawal_amount_too_small", comment: "Withdraw amount too small")
     public static func WITHDRAWAL_MINIMUM_AMOUNT(amount: String, symbol: String) -> String {
         return String(format: LocalizedString("withdrawal_minimum_amount", comment: "Minimum withdraw amount is %@"), amount, symbol)
+    }
+    public static let TRANSACTIONS_FILTER_SORT_BY = LocalizedString("transactions_filter_sort_by", comment: "Sort by")
+    public static let TRANSACTIONS_FILTER_SORT_BY_TIME = LocalizedString("transactions_filter_sort_by_time", comment: "Time")
+    public static let TRANSACTIONS_FILTER_SORT_BY_AMOUNT = LocalizedString("transactions_filter_sort_by_amount", comment: "Amount")
+    public static let TRANSACTIONS_FILTER_FILTER_BY = LocalizedString("transactions_filter_filter_by", comment: "Filter by")
+    public static let TRANSACTIONS_FILTER_FILTER_BY_ALL = LocalizedString("transactions_filter_filter_by_all", comment: "All")
+    public static func PENDING_DEPOSIT_CONFIRMATION(numerator: Int, denominator: Int?) -> String {
+        var progress = String(numerator)
+        if let denominator = denominator {
+            progress += "/\(denominator)"
+        }
+        return String(format: LocalizedString("pending_deposit_confirmation", comment: "%@ confirmations"), progress)
     }
 
     // Transaction

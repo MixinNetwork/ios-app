@@ -25,6 +25,15 @@ final class AssetAPI: BaseAPI {
         
         static let transfers = "transfers"
         static let payments = "payments"
+        
+        static func pendingDeposits(assetId: String, publicKey: String) -> String {
+            return "external/transactions?asset=\(assetId)&public_key=\(publicKey)"
+        }
+
+        static func pendingDeposits(assetId: String, accountName: String, accountTag: String) -> String {
+            return "external/transactions?asset=\(assetId)&account_name=\(accountName)&account_tag=\(accountTag)"
+        }
+        
     }
 
     func assets(completion: @escaping (APIResult<[Asset]>) -> Void) {
@@ -73,6 +82,14 @@ final class AssetAPI: BaseAPI {
     
     func fee(assetId: String, completion: @escaping (APIResult<Fee>) -> Void) {
         request(method: .get, url: url.fee(assetId: assetId), completion: completion)
+    }
+    
+    func pendingDeposits(assetId: String, publicKey: String) -> APIResult<[PendingDeposit]> {
+        return request(method: .get, url: url.pendingDeposits(assetId: assetId, publicKey: publicKey))
+    }
+
+    func pendingDeposits(assetId: String, accountName: String, accountTag: String) -> APIResult<[PendingDeposit]> {
+        return request(method: .get, url: url.pendingDeposits(assetId: assetId, accountName: accountName, accountTag: accountTag))
     }
     
 }

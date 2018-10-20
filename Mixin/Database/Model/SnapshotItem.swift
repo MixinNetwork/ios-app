@@ -14,6 +14,7 @@ struct SnapshotItem: TableCodable {
     let createdAt: String
     let opponentUserFullName: String?
     let receiver: String?
+    let confirmations: Int?
 
     let memo: String?
 
@@ -30,6 +31,7 @@ struct SnapshotItem: TableCodable {
         case createdAt = "created_at"
         case opponentUserFullName
         case receiver
+        case confirmations
         case memo
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)

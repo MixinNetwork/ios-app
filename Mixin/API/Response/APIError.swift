@@ -103,3 +103,11 @@ extension APIError {
     }
 
 }
+
+extension APIError: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        return "status: \(status), code: \(code), description: \(description)"
+    }
+
+}

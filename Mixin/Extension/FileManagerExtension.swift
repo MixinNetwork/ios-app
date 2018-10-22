@@ -172,6 +172,7 @@ extension FileManager {
         "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "apk": "application/vnd.android.package-archive",
         "mid": "audio/midi",
         "midi": "audio/midi",
         "kar": "audio/midi",

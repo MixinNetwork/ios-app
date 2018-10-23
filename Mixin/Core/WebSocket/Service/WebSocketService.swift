@@ -223,10 +223,7 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     private func instanceWebSocket() -> SRWebSocket {
-        var request = URLRequest(url: URL(string: "wss://blaze.mixin.one")!)
-        request.allHTTPHeaderFields = BaseAPI.getJwtHeaders(request: request, uri: "/")
-        request.timeoutInterval = 5
-        return SRWebSocket(urlRequest: request)
+        return SRWebSocket(urlRequest: MixinRequest.getSignedRequest(url: "wss://blaze.mixin.one", timeoutInterval: 5))
     }
 }
 

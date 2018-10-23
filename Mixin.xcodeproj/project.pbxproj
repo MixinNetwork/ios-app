@@ -341,6 +341,7 @@
 		DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */; };
 		DF46B4091FA9E79700243A8B /* PhoneContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF46B4081FA9E79700243A8B /* PhoneContactCell.xib */; };
 		DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B40A1FA9E7CF00243A8B /* CornerView.swift */; };
+		DF4D15CC217EE93200CA602F /* MixinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF4D15CB217EE93200CA602F /* MixinRequest.swift */; };
 		DF503D251FECE54100C008E7 /* IdentityDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D241FECE54100C008E7 /* IdentityDAO.swift */; };
 		DF503D2A1FECEACB00C008E7 /* Identity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D291FECEACB00C008E7 /* Identity.swift */; };
 		DF503D2C1FECF12A00C008E7 /* PreKeyDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D2B1FECF12A00C008E7 /* PreKeyDAO.swift */; };
@@ -919,6 +920,7 @@
 		DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactCell.swift; sourceTree = "<group>"; };
 		DF46B4081FA9E79700243A8B /* PhoneContactCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactCell.xib; sourceTree = "<group>"; };
 		DF46B40A1FA9E7CF00243A8B /* CornerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerView.swift; sourceTree = "<group>"; };
+		DF4D15CB217EE93200CA602F /* MixinRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinRequest.swift; sourceTree = "<group>"; };
 		DF503D241FECE54100C008E7 /* IdentityDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityDAO.swift; sourceTree = "<group>"; };
 		DF503D291FECEACB00C008E7 /* Identity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identity.swift; sourceTree = "<group>"; };
 		DF503D2B1FECF12A00C008E7 /* PreKeyDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreKeyDAO.swift; sourceTree = "<group>"; };
@@ -2219,6 +2221,7 @@
 				DFEE215B200CAD8800D9B3F7 /* AuthorizationRequest.swift */,
 				DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */,
 				DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */,
+				DF4D15CB217EE93200CA602F /* MixinRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -2540,6 +2543,7 @@
 				273FACC6205FB9A800513327 /* SessionStoreWrapper.swift in Sources */,
 				7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */,
 				7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */,
+				DF4D15CC217EE93200CA602F /* MixinRequest.swift in Sources */,
 				DFE356B31FB498D600E0E3A8 /* PhoneContactAPI.swift in Sources */,
 				7B09664620E0B018007DC179 /* PhotoAssetPickerNavigationController.swift in Sources */,
 				DF6ED3EE1FE37D0400E958A3 /* ConcurrentJobQueue.swift in Sources */,

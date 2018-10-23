@@ -91,59 +91,6 @@ class BaseAPI {
     static let rootURL = URL(string: rootURLString)!
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.api")
-
-    static func getJwtHeaders(request: URLRequest, uri: String) -> HTTPHeaders {
-        var headers = baseHeaders
-        if let account = AccountAPI.shared.account, let token = AccountUserDefault.shared.getToken(), !token.isEmpty {
-            if let signedToken = signToken(sessionId: account.session_id, userId: account.user_id, authenticationToken: token, request: request, uri: uri) {
-                headers[headersAuthroizationKey] = "Bearer " + signedToken
-            } else {
-                UIApplication.trackError("BaseAPI", action: "Will 401", userInfo: ["authenticationToken": token, "session_id": account.session_id, "user_id": account.user_id, "didLogin": "\(AccountAPI.shared.didLogin)"])
-            }
-        }
-        return headers
-    }
-
-    private static func signToken(sessionId: String, userId: String, authenticationToken: String, request: URLRequest, uri: String) -> String? {
-        var sig = ""
-        if let method = request.httpMethod {
-            sig += method
-        }
-        if !uri.hasPrefix("/") {
-            sig += "/"
-        }
-        sig += uri
-        if let body = request.httpBody, let content = String(data: body, encoding: .utf8), content.count > 0 {
-            sig += content
-        }
-        var claims: [AnyHashable: Any] = [:]
-        claims["uid"] = userId
-        claims["sid"] = sessionId
-        claims["iat"] = UInt64(Date().timeIntervalSince1970)
-        claims["exp"] = UInt64(Date().addingTimeInterval(60 * 30).timeIntervalSince1970)
-        claims["jti"] = UUID().uuidString.lowercased()
-        claims["sig"] = sig.sha256()
-        claims["scp"] = "FULL"
-
-        let token = KeyUtil.stripRsaPrivateKeyHeaders(authenticationToken)
-        let keyType = JWTCryptoKeyExtractor.privateKeyWithPEMBase64()
-        var holder: JWTAlgorithmRSFamilyDataHolder? = JWTAlgorithmRSFamilyDataHolder()
-        holder = holder?.keyExtractorType(keyType?.type)
-        holder = holder?.algorithmName("RS512") as? JWTAlgorithmRSFamilyDataHolder
-        holder = holder?.secret(token) as? JWTAlgorithmRSFamilyDataHolder
-        var builder = JWTEncodingBuilder.encodePayload(claims)
-        builder = builder?.addHolder(holder) as? JWTEncodingBuilder
-        let result = builder?.result?.successResult?.encoded
-        return result
-    }
-
-    private static let headersAuthroizationKey = "Authorization"
-    private static let baseHeaders: HTTPHeaders = [
-        "Content-Type": "application/json",
-        "Accept-Language": Locale.current.languageCode ?? "en",
-        "Mixin-Device-Id": Keychain.shared.getDeviceId(),
-        "User-Agent": "Mixin/\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion)) (iOS \(UIDevice.current.systemVersion); \(DeviceGuru().hardware()); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
-    ]
     private static let jsonEncoding = JSONEncoding()
     
     private struct ResponseObject<ResultType: Codable>: Codable {
@@ -153,7 +100,9 @@ class BaseAPI {
     private static let sharedSessionManager: SessionManager = {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
-        return Alamofire.SessionManager(configuration: configuration)
+        let session = Alamofire.SessionManager(configuration: configuration)
+        session.adapter = AccessTokenAdapter()
+        return session
     }()
 
     private func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> DataRequest {
@@ -161,12 +110,9 @@ class BaseAPI {
             assertionFailure("======BaseAPI get request url failed")
             UIApplication.trackError("BaseAPI", action: "get request url failed", userInfo: ["url": url])
         }
-        var originalRequest: URLRequest?
+        
         do {
-            originalRequest = try URLRequest(url: BaseAPI.rootURLString + url, method: method)
-            var encodedURLRequest = try encoding.encode(originalRequest!, with: parameters)
-            encodedURLRequest.allHTTPHeaderFields = BaseAPI.getJwtHeaders(request: encodedURLRequest, uri: url)
-            return BaseAPI.sharedSessionManager.request(encodedURLRequest)
+            return BaseAPI.sharedSessionManager.request(try MixinRequest(url: BaseAPI.rootURLString + url, method: method, parameters: parameters, encoding: encoding))
         } catch {
             Bugsnag.notifyError(error)
             return BaseAPI.sharedSessionManager.request(BaseAPI.rootURLString + url, method: method, parameters: parameters, encoding: encoding, headers: nil)

@@ -2,7 +2,7 @@ PODS:
   - Alamofire (4.7.3)
   - Base64 (1.1.2)
   - Bugsnag (5.17.0)
-  - DeviceGuru (4.0.4)
+  - DeviceGuru (4.0.5)
   - Firebase/Analytics (5.9.0):
     - Firebase/Core
   - Firebase/Core (5.9.0):
@@ -155,7 +155,7 @@ SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   Bugsnag: 9c904fdb98c8f4af3ee0c5235bb3b19cd23fa19b
-  DeviceGuru: 7b66c69ad373db7d8288993e4b8aacc6eb625265
+  DeviceGuru: a2d65bf7733941f7a10a4365661cb47dc65e02fc
   Firebase: 383fa29aca93e371cab776b48a5c66544d3c2003
   FirebaseAnalytics: 831f1f127f4a75698e9875a87bf7e2668730d953
   FirebaseCore: 2a84b6b325792a4319ef71ee18819dcba08d2fd7

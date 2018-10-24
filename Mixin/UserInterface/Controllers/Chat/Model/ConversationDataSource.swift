@@ -47,16 +47,9 @@ class ConversationDataSource {
     private var didInitializedData = false
     private var pendingChanges = [ConversationChange]()
     private var tableViewContentInset: UIEdgeInsets {
-        var inset = UIEdgeInsets.zero
-        let closure = {
-            inset = self.tableView?.contentInset ?? .zero
+        return performSynchronouslyOnMainThread {
+            self.tableView?.contentInset ?? .zero
         }
-        if Thread.isMainThread {
-            closure()
-        } else {
-            DispatchQueue.main.sync(execute: closure)
-        }
-        return inset
     }
     
     var layoutSize: CGSize {
@@ -714,11 +707,7 @@ extension ConversationDataSource {
             self.pendingChanges = []
             completion?()
         }
-        if Thread.isMainThread {
-            updateUI()
-        } else {
-            DispatchQueue.main.sync(execute: updateUI)
-        }
+        performSynchronouslyOnMainThread(updateUI)
     }
     
     private func indexPath(ofDates dates: [String], viewModels: [String: [MessageViewModel]], where predicate: (MessageItem) -> Bool) -> IndexPath? {

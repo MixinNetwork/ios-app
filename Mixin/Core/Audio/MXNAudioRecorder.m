@@ -247,17 +247,17 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 - (NSData *)waveform {
     uint8_t *intensities = malloc(numberOfWaveformIntensities);
     memset(intensities, 0, numberOfWaveformIntensities);
-    int numberOfRawSamples = _waveformSamples.length / 2;
+    NSUInteger numberOfRawSamples = _waveformSamples.length / 2;
     int16_t *rawSamples = (int16_t *)_waveformSamples.bytes;
     int16_t minRawSample = INT16_MAX;
     int16_t maxRawSample = 0;
-    for (int i = 0; i < numberOfRawSamples; i++) {
+    for (NSUInteger i = 0; i < numberOfRawSamples; i++) {
         minRawSample = MIN(minRawSample, rawSamples[i]);
         maxRawSample = MAX(maxRawSample, rawSamples[i]);
     }
     float delta = (float)UINT8_MAX / (float)(maxRawSample - minRawSample);
-    for (int i = 0; i < numberOfRawSamples; i++) {
-        int index = i * numberOfWaveformIntensities / numberOfRawSamples;
+    for (NSUInteger i = 0; i < numberOfRawSamples; i++) {
+        NSUInteger index = i * numberOfWaveformIntensities / numberOfRawSamples;
         intensities[index] = rawSamples[i] * delta;
     }
     return [NSData dataWithBytesNoCopy:intensities length:numberOfWaveformIntensities freeWhenDone:YES];
@@ -265,8 +265,8 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 
 - (void)processWaveformSamplesWithPCMData:(NSData *)data {
     [data enumerateByteRangesUsingBlock:^(const void * _Nonnull bytes, NSRange byteRange, BOOL * _Nonnull stop) {
-        int numberOfSamples = byteRange.length / 2;
-        for (int i = 0; i < numberOfSamples; i++) {
+        NSUInteger numberOfSamples = byteRange.length / 2;
+        for (NSUInteger i = 0; i < numberOfSamples; i++) {
             int16_t sample = ((const int16_t *)bytes)[i];
             sample = abs(sample);
             self->_waveformPeak = MAX(sample, self->_waveformPeak);

@@ -36,13 +36,14 @@
 
 - (NSData * _Nullable)pcmDataWithMaxLength:(NSUInteger)maxLength
                                      error:(NSError * _Nullable *)outError {
+    NSParameterAssert((maxLength / 2) <= INT_MAX);
     if (!_outputBuffer) {
         _outputBuffer = [NSMutableData dataWithLength:maxLength];
     }
     if (_outputBuffer.length < maxLength) {
         _outputBuffer.length = maxLength;
     }
-    int result = op_read(_file, (opus_int16 *)_outputBuffer.mutableBytes, maxLength / 2, NULL);
+    int result = op_read(_file, (opus_int16 *)_outputBuffer.mutableBytes, (int)(maxLength / 2), NULL);
     int bytesRead = 0;
     if (result < 0) {
         if (outError) {

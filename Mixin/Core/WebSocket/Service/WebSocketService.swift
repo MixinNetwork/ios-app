@@ -1,6 +1,7 @@
 import Foundation
 import SocketRocket
 import Gzip
+import Bugsnag
 import Alamofire
 
 class WebSocketService: NSObject {
@@ -33,7 +34,7 @@ class WebSocketService: NSObject {
             return
         }
         client = instanceWebSocket()
-        client?.setDelegateDispatchQueue(websocketDispatchQueue)
+        client?.delegateDispatchQueue = websocketDispatchQueue
         client?.delegate = self
         client?.open()
     }
@@ -67,14 +68,19 @@ extension WebSocketService {
         guard let jsonData = try? jsonEncoder.encode(message), let gzipData = try? jsonData.gzipped() else {
             return false
         }
-        websocket.send(gzipData)
+
+        do {
+            try websocket.send(data: gzipData)
+        } catch {
+            Bugsnag.notifyError(error)
+        }
         return true
     }
 }
 
 extension WebSocketService: SRWebSocketDelegate {
 
-    func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
+    func webSocket(_ webSocket: SRWebSocket, didReceiveMessage message: Any) {
         guard let data = message as? Data, data.isGzipped, let unzipJson = try? data.gunzipped() else {
             return
         }
@@ -104,7 +110,14 @@ extension WebSocketService: SRWebSocketDelegate {
         }
     }
 
-    func webSocketDidOpen(_ webSocket: SRWebSocket!) {
+    func webSocketWillOpen(_ request: URLRequest) -> URLRequest {
+        FileManager.default.writeLog(log: "WebSocketService...webSocketWillOpen")
+        var request = request
+        request.allHTTPHeaderFields = MixinRequest.getHeaders(request: request)
+        return request
+    }
+
+    func webSocketDidOpen(_ webSocket: SRWebSocket) {
         guard client != nil else {
             return
         }
@@ -119,14 +132,14 @@ extension WebSocketService: SRWebSocketDelegate {
         pingRunnable()
     }
 
-    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
+    func webSocket(_ webSocket: SRWebSocket, didFailWithError error: Error) {
         #if DEBUG
         print("======WebSocketService...didFailWithError...error:\(String(describing: error))")
         #endif
         reconnect(didClose: false, afterReconnect: true)
     }
 
-    func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
+    func webSocket(_ webSocket: SRWebSocket, didCloseWithCode code: Int, reason: String?, wasClean: Bool) {
         #if DEBUG
         print("======WebSocketService...didCloseWithCode...code:\(code)...reason:\(String(describing: reason))")
         #endif
@@ -137,7 +150,7 @@ extension WebSocketService: SRWebSocketDelegate {
         reconnect(didClose: true, afterReconnect: true)
     }
 
-    func webSocket(_ webSocket: SRWebSocket!, didReceivePong pongPayload: Data!) {
+    func webSocket(_ webSocket: SRWebSocket, didReceivePong pongData: Data?) {
         receivedPongCount += 1
         awaitingPong = false
     }
@@ -169,7 +182,11 @@ extension WebSocketService: SRWebSocketDelegate {
             return
         }
         if let client = client, client.readyState == .OPEN {
-            client.sendPing(Data())
+            do {
+                try client.sendPing(Data())
+            } catch {
+                Bugsnag.notifyError(error)
+            }
         }
     }
 
@@ -218,12 +235,14 @@ extension WebSocketService: SRWebSocketDelegate {
         reconnect(didClose: false)
     }
 
-    func webSocketShouldConvertTextFrame(toString webSocket: SRWebSocket!) -> Bool {
+    func webSocketShouldConvertTextFrameToString(_ webSocket: SRWebSocket) -> Bool {
         return false
     }
 
     private func instanceWebSocket() -> SRWebSocket {
-        return SRWebSocket(urlRequest: MixinRequest.getSignedRequest(url: "wss://blaze.mixin.one", timeoutInterval: 5))
+        var request = URLRequest(url: URL(string: "wss://blaze.mixin.one")!)
+        request.timeoutInterval = 5
+        return SRWebSocket(urlRequest: request)
     }
 }
 

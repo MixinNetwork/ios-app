@@ -12,7 +12,7 @@ target 'Mixin' do
   pod 'SDWebImageYYPlugin/YYImage'
   pod 'YYImage/WebP'
   pod 'SnapKit'
-  pod 'SocketRocket'
+  pod 'SocketRocket', :git => 'git@github.com:over140/SocketRocket.git'
   pod 'PhoneNumberKit'
   pod 'GzipSwift'
   pod 'RSKImageCropper'

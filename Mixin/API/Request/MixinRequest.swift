@@ -25,19 +25,16 @@ class MixinRequest {
         self.request = try encoding.encode(request, with: parameters)
     }
 
-    static func getSignedRequest(url: String, timeoutInterval: TimeInterval) -> URLRequest {
-        var request = URLRequest(url: URL(string: url)!)
-        request.timeoutInterval = timeoutInterval
+    static func getHeaders(request: URLRequest) -> HTTPHeaders {
         var headers = MixinRequest.baseHeaders
         if let signedToken = MixinRequest.getAuthenticationToken(request: request) {
             headers[MixinRequest.headersAuthroizationKey] = signedToken
         } else {
             UIApplication.trackError("MixinRequest", action: "getSignedRequest Will 401", userInfo: UIApplication.getTrackUserInfo())
         }
-        request.allHTTPHeaderFields = headers
-        return request
+        return headers
     }
-
+    
     private static func signToken(sessionId: String, userId: String, authenticationToken: String, request: URLRequest) -> String? {
         let uri = request.url!.path
         var sig = ""

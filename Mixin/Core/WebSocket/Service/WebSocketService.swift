@@ -34,7 +34,7 @@ class WebSocketService: NSObject {
             return
         }
         client = instanceWebSocket()
-        client?.delegateDispatchQueue = websocketDispatchQueue
+        client?.setDelegateDispatchQueue(websocketDispatchQueue)
         client?.delegate = self
         client?.open()
     }
@@ -69,18 +69,14 @@ extension WebSocketService {
             return false
         }
 
-        do {
-            try websocket.send(data: gzipData)
-        } catch {
-            Bugsnag.notifyError(error)
-        }
+        websocket.send(gzipData)
         return true
     }
 }
 
 extension WebSocketService: SRWebSocketDelegate {
 
-    func webSocket(_ webSocket: SRWebSocket, didReceiveMessage message: Any) {
+    func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
         guard let data = message as? Data, data.isGzipped, let unzipJson = try? data.gunzipped() else {
             return
         }
@@ -110,14 +106,12 @@ extension WebSocketService: SRWebSocketDelegate {
         }
     }
 
-    func webSocketWillOpen(_ request: URLRequest) -> URLRequest {
+    func webSocketRequestHeaders(_ request: URLRequest!) -> [String : String]! {
         FileManager.default.writeLog(log: "WebSocketService...webSocketWillOpen")
-        var request = request
-        request.allHTTPHeaderFields = MixinRequest.getHeaders(request: request)
-        return request
+        return MixinRequest.getHeaders(request: request)
     }
 
-    func webSocketDidOpen(_ webSocket: SRWebSocket) {
+    func webSocketDidOpen(_ webSocket: SRWebSocket!) {
         guard client != nil else {
             return
         }
@@ -132,14 +126,14 @@ extension WebSocketService: SRWebSocketDelegate {
         pingRunnable()
     }
 
-    func webSocket(_ webSocket: SRWebSocket, didFailWithError error: Error) {
+    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
         #if DEBUG
         print("======WebSocketService...didFailWithError...error:\(String(describing: error))")
         #endif
         reconnect(didClose: false, afterReconnect: true)
     }
 
-    func webSocket(_ webSocket: SRWebSocket, didCloseWithCode code: Int, reason: String?, wasClean: Bool) {
+    func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
         #if DEBUG
         print("======WebSocketService...didCloseWithCode...code:\(code)...reason:\(String(describing: reason))")
         #endif
@@ -150,7 +144,7 @@ extension WebSocketService: SRWebSocketDelegate {
         reconnect(didClose: true, afterReconnect: true)
     }
 
-    func webSocket(_ webSocket: SRWebSocket, didReceivePong pongData: Data?) {
+    func webSocket(_ webSocket: SRWebSocket!, didReceivePong pongPayload: Data!) {
         receivedPongCount += 1
         awaitingPong = false
     }
@@ -182,11 +176,7 @@ extension WebSocketService: SRWebSocketDelegate {
             return
         }
         if let client = client, client.readyState == .OPEN {
-            do {
-                try client.sendPing(Data())
-            } catch {
-                Bugsnag.notifyError(error)
-            }
+            client.sendPing(Data())
         }
     }
 
@@ -235,7 +225,7 @@ extension WebSocketService: SRWebSocketDelegate {
         reconnect(didClose: false)
     }
 
-    func webSocketShouldConvertTextFrameToString(_ webSocket: SRWebSocket) -> Bool {
+    func webSocketShouldConvertTextFrame(toString webSocket: SRWebSocket!) -> Bool {
         return false
     }
 

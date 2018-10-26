@@ -100,7 +100,7 @@ DEPENDENCIES:
   - SDWebImageYYPlugin/YYImage
   - "SignalProtocolC (from `git@github.com:MixinMessenger/SignalProtocolC.git`)"
   - SnapKit
-  - "SocketRocket (from `git@github.com:over140/SocketRocket.git`)"
+  - "SocketRocket (from `git@github.com:over140/SocketRocket.git`, branch `feature/request`)"
   - SwiftMessages
   - "WCDB.swift (from `git@github.com:wuyuehyang/wcdb.git`, branch `swift4.2`)"
   - YYImage/WebP
@@ -138,6 +138,7 @@ EXTERNAL SOURCES:
     :git: "git@github.com:MixinMessenger/SignalProtocolC.git"
     :submodules: true
   SocketRocket:
+    :branch: feature/request
     :git: "git@github.com:over140/SocketRocket.git"
   WCDB.swift:
     :branch: swift4.2
@@ -149,7 +150,7 @@ CHECKOUT OPTIONS:
     :git: "git@github.com:MixinMessenger/SignalProtocolC.git"
     :submodules: true
   SocketRocket:
-    :commit: cc0ea648c22bf12e8f88a8ef64c873d6c83306aa
+    :commit: ad8bd27edf6ef32ecf9f4a675588e6f628362969
     :git: "git@github.com:over140/SocketRocket.git"
   WCDB.swift:
     :commit: 9142b4718ec371893f5ae5c4387b62bdb8c3adea
@@ -176,7 +177,7 @@ SPEC CHECKSUMS:
   SDWebImageYYPlugin: 9d51da357b0d810ecfe63501e2d65ca87dc7334d
   SignalProtocolC: d46237ab35954a8d1213faabf4baa783591c49ab
   SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
-  SocketRocket: dbb1554b8fc288ef8ef370d6285aeca7361be31e
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SQLiteRepairKit: 4d21bab9eff6a273f63da6815a0d1659e53f5bde
   SwiftMessages: da7c981256a65b3e58022d9027a36584cf4eccf5
   WCDB.swift: 87aee41f5ca3aded9c6f9b68b0ef3e88918a5ee2
@@ -184,6 +185,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: c13c5c9307cc4b3dc17de165ab92df49daab9fc8
+PODFILE CHECKSUM: 8549b073c34c0e24c3b5f56315e4c6dbff9ae111
 
 COCOAPODS: 1.6.0.beta.1

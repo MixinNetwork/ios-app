@@ -38,10 +38,7 @@ class ConcurrentJobQueue: JobQueue {
         }
     }
 
-    func sendNotifaction(message: MessageItem, messageSource: String) {
-        guard messageSource != BlazeMessageAction.listPendingMessages.rawValue else {
-            return
-        }
+    func sendNotifaction(message: MessageItem) {
         guard message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId else {
             return
         }

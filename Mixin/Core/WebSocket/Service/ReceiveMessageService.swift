@@ -29,7 +29,7 @@ class ReceiveMessageService: MixinService {
             if blazeMessage.action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue {
                 MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
                 CryptoUserDefault.shared.statusOffset = data.updatedAt.toUTCDate().nanosecond()
-            } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue {
+            } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                 if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
                 } else {
@@ -86,6 +86,7 @@ class ReceiveMessageService: MixinService {
                     ReceiveMessageService.shared.processPlainMessage(data: data)
                     ReceiveMessageService.shared.processSignalMessage(data: data)
                     ReceiveMessageService.shared.processAppButton(data: data)
+                    ReceiveMessageService.shared.processWebRTCMessage(data: data)
                     BlazeMessageDAO.shared.delete(data: data)
                 }
 
@@ -93,7 +94,40 @@ class ReceiveMessageService: MixinService {
             } while true
         }
     }
-
+    
+    private func processWebRTCMessage(data: BlazeMessageData) {
+        guard data.category.hasPrefix("WEBRTC_") else {
+            return
+        }
+        _ = syncUser(userId: data.getSenderId())
+        updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
+        if data.source == BlazeMessageAction.listPendingMessages.rawValue {
+            if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
+                let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
+                MessageDAO.shared.insertMessage(message: msg, shouldSendNotification: true)
+            }
+        } else {
+            switch data.category {
+            case MessageCategory.WEBRTC_AUDIO_OFFER.rawValue:
+                do {
+                    try CallManager.shared.handleIncomingCall(data: data)
+                } catch CallError.busy {
+                    CallManager.insertOfferAndSendWebRTCBusyMessage(against: data)
+                } catch {
+                    CallManager.insertOfferAndSendWebRTCFailedMessage(against: data)
+                }
+            case MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue:
+                CallManager.shared.handleIncomingIceCandidateIfNeeded(data: data)
+            default:
+                if !CallManager.shared.handleCallStatusChange(data: data) {
+                    MessageDAO.shared.updateMessageCategory(category: data.category,
+                                                            messageId: data.quoteMessageId,
+                                                            conversationId: data.conversationId)
+                }
+            }
+        }
+    }
+    
     private func processAppButton(data: BlazeMessageData) {
         guard data.category == MessageCategory.APP_BUTTON_GROUP.rawValue || data.category == MessageCategory.APP_CARD.rawValue else {
             return

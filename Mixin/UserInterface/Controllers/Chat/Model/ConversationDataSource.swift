@@ -774,6 +774,8 @@ extension ConversationDataSource {
                 viewModel = AudioMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category.hasSuffix("_CONTACT") {
                 viewModel = ContactMessageViewModel(message: message, style: style, fits: layoutWidth)
+            } else if message.category.hasPrefix("WEBRTC_") {
+                viewModel = CallMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 viewModel = TransferMessageViewModel(message: message, style: style, fits: layoutWidth)
             } else if message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue {

@@ -24,7 +24,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     internal(set) var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
     internal(set) var fullnameColor = UIColor.darkTheme
     internal(set) var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
-    internal(set) var statusFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.statusImageSize)
+    internal(set) var statusFrame = CGRect.zero
     internal(set) var fullnameWidth: CGFloat = 0
     internal(set) var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
     
@@ -38,19 +38,16 @@ class DetailInfoMessageViewModel: MessageViewModel {
             - contentMargin.horizontal
     }
     
+    internal var showStatusImage: Bool {
+        return !style.contains(.received)
+    }
+    
     var status: String {
         get {
             return message.status
         }
         set {
-            if style.contains(.received) {
-                if newValue == MessageStatus.FAILED.rawValue {
-                    statusImage = DetailInfoMessageViewModel.pendingImage
-                    statusTintColor = statusNormalTintColor
-                } else {
-                    statusImage = nil
-                }
-            } else {
+            if showStatusImage {
                 switch newValue {
                 case MessageStatus.SENDING.rawValue, MessageStatus.FAILED.rawValue, MessageStatus.UNKNOWN.rawValue:
                     statusImage = DetailInfoMessageViewModel.pendingImage
@@ -66,6 +63,13 @@ class DetailInfoMessageViewModel: MessageViewModel {
                     statusTintColor = DetailInfoMessageViewModel.statusHighlightTintColor
                 default:
                     return
+                }
+            } else {
+                if newValue == MessageStatus.FAILED.rawValue {
+                    statusImage = DetailInfoMessageViewModel.pendingImage
+                    statusTintColor = statusNormalTintColor
+                } else {
+                    statusImage = nil
                 }
             }
             message.status = newValue
@@ -89,6 +93,11 @@ class DetailInfoMessageViewModel: MessageViewModel {
                            width: timeSize.width,
                            height: timeSize.height)
         backgroundImage = type(of: self).bubbleImageProvider.bubbleImage(forStyle: style, highlight: false)
+        if showStatusImage {
+            statusFrame.size = DetailInfoMessageViewModel.statusImageSize
+        } else {
+            statusFrame.size = .zero
+        }
         if style.contains(.received) {
             if message.status == MessageStatus.FAILED.rawValue {
                 timeFrame.origin.x -= (margin.trailing + DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width)

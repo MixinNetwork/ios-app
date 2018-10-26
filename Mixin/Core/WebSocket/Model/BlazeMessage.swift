@@ -11,12 +11,15 @@ struct BlazeMessage: Encodable {
     var fromPush: Bool? = nil
 
     func isReceiveMessageAction() -> Bool {
-        return action == BlazeMessageAction.createMessage.rawValue || action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue
+        return action == BlazeMessageAction.createMessage.rawValue
+            || action == BlazeMessageAction.createCall.rawValue
+            || action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue
     }
 }
 
 enum BlazeMessageAction: String {
     case createMessage = "CREATE_MESSAGE"
+    case createCall = "CREATE_CALL"
     case acknowledgeMessageReceipt = "ACKNOWLEDGE_MESSAGE_RECEIPT"
     case acknowledgeMessageReceipts = "ACKNOWLEDGE_MESSAGE_RECEIPTS"
     case listPendingMessages = "LIST_PENDING_MESSAGES"
@@ -99,7 +102,7 @@ extension BlazeMessage: Decodable {
         switch action {
         case BlazeMessageAction.listPendingMessages.rawValue:
             data = nil
-        case BlazeMessageAction.createMessage.rawValue, BlazeMessageAction.acknowledgeMessageReceipt.rawValue:
+        case BlazeMessageAction.createMessage.rawValue, BlazeMessageAction.acknowledgeMessageReceipt.rawValue, BlazeMessageAction.createCall.rawValue:
             let messageData: BlazeMessageData? = container.getCodable(key: .data)
             data = messageData != nil ? String(data: try JSONEncoder().encode(messageData), encoding: .utf8) : nil
         case BlazeMessageAction.countSignalKeys.rawValue:

@@ -825,6 +825,13 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     func contactAction() {
         navigationController?.pushViewController(ConversationShareContactViewController.instance(ownerUser: ownerUser, conversationId: conversationId), animated: true)
     }
+    
+    func callAction() {
+        guard let ownerUser = dataSource.ownerUser else {
+            return
+        }
+        CallManager.shared.call(opponentUser: ownerUser)
+    }
 
     func pickPhotoOrVideoAction() {
         PHPhotoLibrary.checkAuthorization { [weak self](authorized) in
@@ -1471,7 +1478,7 @@ extension ConversationViewController {
     
     private func updateMoreMenuFixedJobs() {
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
+            moreMenuViewController?.fixedJobs = [.transfer, .call, .camera, .photo, .file, .contact]
         } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
             moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
         } else {

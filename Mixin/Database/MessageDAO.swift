@@ -145,6 +145,14 @@ final class MessageDAO {
     func updateMessageQuoteContent(quoteMessageId: String, quoteContent: Data) {
         MixinDatabase.shared.update(maps: [(Message.Properties.quoteContent, quoteContent)], tableName: Message.tableName, condition: Message.Properties.quoteMessageId == quoteContent)
     }
+    
+    func updateMessageCategory(category: String, messageId: String, conversationId: String) {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.category, category)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+            return
+        }
+        let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+    }
 
     func updateMessageContentAndStatus(content: String, status: String, messageId: String, conversationId: String) {
         guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
@@ -374,31 +382,42 @@ final class MessageDAO {
     }
 
     func insertMessage(message: Message, messageSource: String) {
+        let shouldSendNotification = messageSource != BlazeMessageAction.listPendingMessages.rawValue
+        insertMessage(message: message, shouldSendNotification: shouldSendNotification)
+    }
+    
+    func insertMessage(message: Message, shouldSendNotification: Bool) {
         var message = message
         if let quoteMessageId = message.quoteMessageId, let quoteContent = getQuoteMessage(messageId: quoteMessageId) {
             message.quoteContent = quoteContent
         }
-
         MixinDatabase.shared.transaction { (db) in
-            try insertMessage(database: db, message: message, messageSource: messageSource)
+            try insertMessage(database: db, message: message, shouldSendNotification: shouldSendNotification)
         }
     }
-
+    
     func insertMessage(database: Database, message: Message, messageSource: String) throws {
+        let shouldSendNotification = messageSource != BlazeMessageAction.listPendingMessages.rawValue
+        try insertMessage(database: database, message: message, shouldSendNotification: shouldSendNotification)
+    }
+    
+    func insertMessage(database: Database, message: Message, shouldSendNotification: Bool) throws {
         if message.category.hasPrefix("SIGNAL_") {
             try database.insert(objects: message, intoTable: Message.tableName)
         } else {
             try database.insertOrReplace(objects: message, intoTable: Message.tableName)
         }
-
+        
         guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [message.messageId]).allObjects().first else {
             return
         }
         let change = ConversationChange(conversationId: newMessage.conversationId, action: .addMessage(message: newMessage))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        ConcurrentJobQueue.shared.sendNotifaction(message: newMessage, messageSource: messageSource)
+        if shouldSendNotification {
+            ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
+        }
     }
-
+    
     @discardableResult
     func deleteMessage(id: String) -> Bool {
         return MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.messageId == id) > 0

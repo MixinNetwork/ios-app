@@ -134,6 +134,16 @@ public class Localized {
     public static let CHAT_MESSAGE_MENU_COPY = LocalizedString("chat_message_menu_copy", comment: "Copy")
     public static let CHAT_MESSAGE_OPEN_URL = LocalizedString("chat_message_open_url", comment: "Open URL")
     public static let CHAT_MESSAGE_ADD = LocalizedString("chat_message_sticker", comment: "Add to Stickers")
+    public static let CHAT_MESSAGE_CALL_CANCELLED = LocalizedString("chat_message_call_cancelled", comment: "Cancelled")
+    public static let CHAT_MESSAGE_CALL_REMOTE_CANCELLED = LocalizedString("chat_message_call_remote_cancelled", comment: "Cancelled by caller")
+    public static let CHAT_MESSAGE_CALL_DECLINED = LocalizedString("chat_message_call_declined", comment: "Declined")
+    public static let CHAT_MESSAGE_CALL_REMOTE_DECLINED = LocalizedString("chat_message_call_remote_declined", comment: "Declined")
+    public static let CHAT_MESSAGE_CALL_BUSY = LocalizedString("chat_message_call_busy", comment: "Line busy")
+    public static let CHAT_MESSAGE_CALL_REMOTE_BUSY = LocalizedString("chat_message_call_remote_busy", comment: "Line busy")
+    public static let CHAT_MESSAGE_CALL_FAILED = LocalizedString("chat_message_call_failed", comment: "Failed")
+    public static func CHAT_MESSAGE_CALL_DURATION(duration: String) -> String {
+        return String(format: LocalizedString("chat_message_call_duration", comment: "Duration %@"), duration)
+    }
     public static let CHAT_TIME_TODAY = LocalizedString("chat_time_today", comment: "Today")
     public static let CHAT_MESSAGE_YOU = LocalizedString("chat_message_you", comment: "You")
     public static func CHAT_MESSAGE_CREATED(fullName: String) -> String {
@@ -183,6 +193,15 @@ public class Localized {
     public static let CHAT_QUOTE_TYPE_PHOTO = LocalizedString("chat_quote_type_photo", comment: "Photo")
     public static let CHAT_QUOTE_TYPE_VIDEO = LocalizedString("chat_quote_type_video", comment: "Video")
 
+    // Call
+    public static let CALL_HINT_ON_ANOTHER_CALL = LocalizedString("call_hint_on_another_call", comment: "You are already on another call. Try after it was ended.")
+    public static let CALL_STATUS_CALLING = LocalizedString("call_status_calling", comment: "Calling...")
+    public static let CALL_STATUS_BEING_CALLING = LocalizedString("call_status_being_calling", comment: "Calling...")
+    public static let CALL_STATUS_CONNECTING = LocalizedString("call_status_connecting", comment: "Connecting")
+    public static let CALL_STATUS_DISCONNECTING = LocalizedString("call_status_disconnecting", comment: "Disconnecting")
+    public static let CALL_FUNC_HANGUP = LocalizedString("call_func_hangup", comment: "Hang Up")
+    public static let CALL_FUNC_DECLINE = LocalizedString("call_func_decline", comment: "Decline")
+    
     // Sticker
     public static let STICKER_MANAGER_TITLE = LocalizedString("sticker_manager_title", comment: "My Stickers")
     public static let STICKER_ADD_TITLE = LocalizedString("sticker_add_title", comment: "Add Sticker")
@@ -501,6 +520,7 @@ public class Localized {
     public static let NOTIFICATION_CONTENT_REBATE = LocalizedString("notification_content_rebate", comment: "[Rebate]")
     public static let NOTIFICATION_CONTENT_VIDEO = LocalizedString("notification_content_video", comment: "[Video]")
     public static let NOTIFICATION_CONTENT_AUDIO = LocalizedString("notification_content_audio", comment: "[Audio]")
+    public static let NOTIFICATION_CONTENT_VOICE_CALL = LocalizedString("notification_content_voice_call", comment: "[Voice Call]")
     public static func ALERT_KEY_GROUP_MESSAGE(fullname: String) -> String {
         return String(format: LocalizedString("alert_key_group_message", comment: "%@ send a message"), fullname)
     }

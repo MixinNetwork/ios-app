@@ -138,6 +138,14 @@
 "chat_message_left" = "%@ left";
 "chat_message_admin" = "%@ now an admin";
 "chat_message_changed_title" = "%@ changed the subject to %@";
+"chat_message_call_cancelled" = "Cancelled";
+"chat_message_call_remote_cancelled" = "Cancelled by caller";
+"chat_message_call_declined" = "Declined";
+"chat_message_call_remote_declined" = "Declined";
+"chat_message_call_busy" = "Line busy";
+"chat_message_call_remote_busy" = "Line busy";
+"chat_message_call_failed" = "Failed";
+"chat_message_call_duration" = "Duration %@";
 "chat_cell_title_encryption" = "Messages to this conversation are encrypted end-to-end, click for more information";
 "chat_cell_title_unknown_category" = "This type of message is not supported, please upgrade Mixin to the latest version.";
 "chat_forward_title" = "Forward";
@@ -163,6 +171,18 @@
 "chat_quote_type_photo" = "Photo";
 "chat_quote_type_video" = "Video";
 "chat_search_giphy" = "Search GIPHY";
+
+// Call
+"call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
+"call_status_calling" = "Calling...";
+"call_status_being_calling" = "Calling...";
+"call_status_connecting" = "Connecting";
+"call_status_disconnecting" = "Disconnecting";
+"call_func_hangup" = "Hang Up";
+"call_func_decline" = "Decline";
+"call_func_accept" = "Accept";
+"call_func_mute" = "Mute";
+"call_func_speaker" = "Speaker";
 
 // Sticker
 "sticker_manager_title" = "My Stickers";
@@ -455,6 +475,7 @@
 "notification_content_rebate" = "[Rebate]";
 "notification_content_video" = "[Video]";
 "notification_content_audio" = "[Audio]";
+"notification_content_voice_call" = "[Voice Call]";
 "alert_key_group_message" = "%@ send a message";
 "alert_key_group_text_message" = "%@ send a message";
 "alert_key_group_image_message" = "%@ send a photo";

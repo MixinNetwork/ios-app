@@ -9,6 +9,7 @@ class CallManager {
     private let rtcClient = WebRTCClient()
     private let unansweredTimeoutInterval: TimeInterval = 60
     private let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
+    private let ringtonePlayer = try? AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "Ringtone", withExtension: "m4r")!)
     
     private(set) var call: Call?
     
@@ -50,6 +51,7 @@ class CallManager {
     init() {
         RTCSetMinDebugLogLevel(.error)
         rtcClient.delegate = self
+        ringtonePlayer?.numberOfLoops = -1
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(audioSessionRouteChange(_:)),
                                                name: AVAudioSession.routeChangeNotification,
@@ -78,6 +80,7 @@ class CallManager {
                                                       userInfo: nil,
                                                       repeats: false)
         queue.async {
+            self.playRingtone(usesSpeaker: false)
             self.rtcClient.offer { (sdp, error) in
                 guard let sdp = sdp else {
                     self.failCurrentCall(sendFailedMesasgeToRemote: false,
@@ -118,6 +121,7 @@ class CallManager {
             category = .WEBRTC_AUDIO_DECLINE
         }
         queue.async {
+            self.ringtonePlayer?.stop()
             self.rtcClient.close()
             let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
                                                   category: category,
@@ -158,6 +162,7 @@ class CallManager {
             view.style = .calling
             view.show()
         }
+        playRingtone(usesSpeaker: true)
     }
     
     func acceptCurrentCall() {
@@ -165,6 +170,8 @@ class CallManager {
             return
         }
         queue.async {
+            self.ringtonePlayer?.stop()
+            self.usesSpeaker = false
             self.rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
                     self.failCurrentCall(sendFailedMesasgeToRemote: true,
@@ -199,6 +206,8 @@ class CallManager {
         }
         if call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
             invalidateUnansweredTimeoutTimerAndSetNil()
+            self.ringtonePlayer?.stop()
+            self.usesSpeaker = false
             call.hasReceivedRemoteAnswer = true
             sendCandidates(pendingCandidates)
             rtcClient.set(remoteSdp: sdp) { (error) in
@@ -210,6 +219,7 @@ class CallManager {
             }
             return true
         } else if let category = MessageCategory(rawValue: data.category), CallManager.completeCallCategories.contains(category) {
+            ringtonePlayer?.stop()
             performSynchronouslyOnMainThread {
                 view.style = .disconnecting
             }
@@ -394,6 +404,15 @@ extension CallManager {
         isMuted = false
         usesSpeaker = false
         invalidateUnansweredTimeoutTimerAndSetNil()
+    }
+    
+    private func playRingtone(usesSpeaker: Bool) {
+        if usesSpeaker {
+            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+        } else {
+            try? AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .voiceChat, options: [])
+        }
+        ringtonePlayer?.play()
     }
     
 }

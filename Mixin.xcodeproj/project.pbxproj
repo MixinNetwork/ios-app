@@ -77,6 +77,8 @@
 		7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */; };
 		7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA17201196F80023B28D /* DataMessageCell.swift */; };
 		7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */; };
+		7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */; };
+		7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */; };
 		7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B2E3E471FA07F2E00DDDDEB /* Login.storyboard */; };
 		7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E4A1FA07F4500DDDDEB /* SelectCountryViewController.swift */; };
 		7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */; };
@@ -160,6 +162,7 @@
 		7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */; };
 		7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F6B215F32A500A562C6 /* GiphyViewController.swift */; };
 		7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */; };
+		7B9243D12188181B007E3D6F /* CallUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9243D02188181B007E3D6F /* CallUserDefaults.swift */; };
 		7B92F8251FA1A7D5000B838B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8241FA1A7D5000B838B /* LoginViewController.swift */; };
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F8291FA1B80A000B838B /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */; };
@@ -654,6 +657,8 @@
 		7B28FA17201196F80023B28D /* DataMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageCell.swift; sourceTree = "<group>"; };
 		7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXNFastURLDetector.h; sourceTree = "<group>"; };
 		7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXNFastURLDetector.m; sourceTree = "<group>"; };
+		7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
+		7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TurnServer.swift; sourceTree = "<group>"; };
 		7B2E3E471FA07F2E00DDDDEB /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		7B2E3E4A1FA07F4500DDDDEB /* SelectCountryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCountryViewController.swift; sourceTree = "<group>"; };
 		7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HairlineLayoutConstraint.swift; sourceTree = "<group>"; };
@@ -735,6 +740,7 @@
 		7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersCollectionViewController.swift; sourceTree = "<group>"; };
 		7B915F6B215F32A500A562C6 /* GiphyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyViewController.swift; sourceTree = "<group>"; };
 		7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchViewController.swift; sourceTree = "<group>"; };
+		7B9243D02188181B007E3D6F /* CallUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallUserDefaults.swift; sourceTree = "<group>"; };
 		7B92F8241FA1A7D5000B838B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
@@ -1423,6 +1429,7 @@
 				7B08CD2B2178700C00FB8CCF /* CallManager.swift */,
 				7B7E7143217D87860052C7DD /* CallView.xib */,
 				7B7E7145217D89790052C7DD /* CallView.swift */,
+				7B9243D02188181B007E3D6F /* CallUserDefaults.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -1869,6 +1876,7 @@
 				DF68F1852014CF5E001C4225 /* StickerAPI.swift */,
 				DF8DA1A71FD6783200425CEC /* ConversationAPI.swift */,
 				7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */,
+				7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */,
 				DFD87C861FDA9DD300BBCFFC /* NetworkManager.swift */,
 				DFD9959F207C9D6100621FFA /* AccountUserDefault.swift */,
 			);
@@ -1900,6 +1908,7 @@
 				DF5D9F381F9C998F0036D5FD /* Account.swift */,
 				7BBF395D205A624F00390712 /* Fee.swift */,
 				7B5843442175D3EC0053332F /* PendingDeposit.swift */,
+				7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2610,6 +2619,7 @@
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
 				DF503D411FED162300C008E7 /* MixinPreKeyStore.swift in Sources */,
 				273FACBA205FB9A800513327 /* SenderKeyStore.swift in Sources */,
+				7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */,
 				DFE48AE020EBD7F3003E0BF8 /* ConversationCategoryStorage.swift in Sources */,
 				DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
@@ -2862,6 +2872,7 @@
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				DF8DA1981FD5301200425CEC /* Participant.swift in Sources */,
 				7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */,
+				7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
@@ -2916,6 +2927,7 @@
 				27D6E8D22045473300BA678A /* TransferMessage.swift in Sources */,
 				7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */,
 				7B84358920D8DC2E00237242 /* QuoteTextMessageCell.swift in Sources */,
+				7B9243D12188181B007E3D6F /* CallUserDefaults.swift in Sources */,
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DF16681E20A6F84200C45E31 /* SnapshotViewController.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,

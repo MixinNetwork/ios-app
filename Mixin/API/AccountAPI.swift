@@ -140,6 +140,7 @@ final class AccountAPI: BaseAPI {
             WebSocketService.shared.disconnect()
             AccountUserDefault.shared.clear()
             MixinDatabase.shared.logout()
+            CallUserDefaults.shared.clear()
             SignalDatabase.shared.logout(onClosed: {
                 UIApplication.shared.applicationIconBadgeNumber = 1
                 UIApplication.shared.applicationIconBadgeNumber = 0

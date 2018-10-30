@@ -119,20 +119,20 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
 
 extension WebRTCClient {
     
-    private static let sharedConfig: RTCConfiguration = {
+    private var sharedConfig: RTCConfiguration {
         let config = RTCConfiguration()
         config.iceServers = RTCIceServer.sharedServers
         config.sdpSemantics = .unifiedPlan
         config.continualGatheringPolicy = .gatherContinually
         return config
-    }()
+    }
     
     private func makePeerConnectionIfNeeded() {
         guard self.peerConnection == nil else {
             return
         }
         let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: [:])
-        let peerConnection = factory.peerConnection(with: WebRTCClient.sharedConfig,
+        let peerConnection = factory.peerConnection(with: sharedConfig,
                                                     constraints: constraints,
                                                     delegate: nil)
         let audioTrack: RTCAudioTrack = {

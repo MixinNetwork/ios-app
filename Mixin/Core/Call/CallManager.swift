@@ -85,22 +85,26 @@ class CallManager {
     }
     
     func completeCurrentCall() {
-        guard let call = call else {
-            view.style = .disconnecting
-            view.dismiss()
-            return
-        }
-        invalidateUnansweredTimeoutTimerAndSetNil()
-        view.style = .disconnecting
-        let category: MessageCategory
-        if rtcClient.iceConnectionState == .connected {
-            category = .WEBRTC_AUDIO_END
-        } else if call.isOutgoing {
-            category = .WEBRTC_AUDIO_CANCEL
-        } else {
-            category = .WEBRTC_AUDIO_DECLINE
-        }
         queue.async {
+            guard let call = self.call else {
+                DispatchQueue.main.sync {
+                    self.view.style = .disconnecting
+                    self.view.dismiss()
+                }
+                return
+            }
+            self.invalidateUnansweredTimeoutTimerAndSetNil()
+            DispatchQueue.main.sync {
+                self.view.style = .disconnecting
+            }
+            let category: MessageCategory
+            if self.rtcClient.iceConnectionState == .connected {
+                category = .WEBRTC_AUDIO_END
+            } else if call.isOutgoing {
+                category = .WEBRTC_AUDIO_CANCEL
+            } else {
+                category = .WEBRTC_AUDIO_DECLINE
+            }
             self.ringtonePlayer?.stop()
             self.rtcClient.close()
             let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
@@ -112,42 +116,46 @@ class CallManager {
             CallManager.insertCallCompletedMessage(call: call,
                                                    markMessageAsRead: true,
                                                    category: category)
-            DispatchQueue.main.async {
+            DispatchQueue.main.sync {
                 self.view.dismiss()
                 self.isMuted = false
                 self.usesSpeaker = false
-                self.call = nil
             }
+            self.call = nil
         }
     }
     
     func acceptCurrentCall() {
-        guard let call = call, let sdp = pendingRemoteSdp else {
-            return
-        }
         queue.async {
+            guard let call = self.call, let sdp = self.pendingRemoteSdp else {
+                return
+            }
             self.ringtonePlayer?.stop()
             self.usesSpeaker = false
             self.rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
-                    self.failCurrentCall(sendFailedMesasgeToRemote: true,
-                                         reportAction: "Set remote Sdp",
-                                         description: error.localizedDescription)
+                    self.queue.async {
+                        self.failCurrentCall(sendFailedMesasgeToRemote: true,
+                                             reportAction: "Set remote Sdp",
+                                             description: error.localizedDescription)
+                    }
                 } else {
                     self.rtcClient.answer(completion: { (sdp, error) in
-                        if let sdp = sdp, let content = sdp.jsonString {
-                            let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                                                  category: .WEBRTC_AUDIO_ANSWER,
-                                                                  content: content,
-                                                                  status: .SENDING,
-                                                                  quoteMessageId: call.uuidString)
-                            SendMessageService.shared.sendMessage(message: msg,
-                                                                  ownerUser: call.opponentUser,
-                                                                  isGroupMessage: false)
-                        } else {
-                            self.failCurrentCall(sendFailedMesasgeToRemote: true,
-                                                 reportAction: "Answer construction",
-                                                 description: error.debugDescription)
+                        self.queue.async {
+                            if let sdp = sdp, let content = sdp.jsonString {
+                                let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+                                                                      category: .WEBRTC_AUDIO_ANSWER,
+                                                                      content: content,
+                                                                      status: .SENDING,
+                                                                      quoteMessageId: call.uuidString)
+                                SendMessageService.shared.sendMessage(message: msg,
+                                                                      ownerUser: call.opponentUser,
+                                                                      isGroupMessage: false)
+                            } else {
+                                self.failCurrentCall(sendFailedMesasgeToRemote: true,
+                                                     reportAction: "Answer construction",
+                                                     description: error.debugDescription)
+                            }
                         }
                     })
                 }
@@ -220,8 +228,8 @@ extension CallManager {
             throw CallError.preconditionFailed
         }
         let completeCurrentCallAndAlertNoMicrophonePermission = {
+            self.completeCurrentCall()
             DispatchQueue.main.async {
-                self.completeCurrentCall()
                 self.alertNoMicrophonePermission()
             }
         }
@@ -279,20 +287,22 @@ extension CallManager {
             sendCandidates(pendingCandidates)
             rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
-                    self.failCurrentCall(sendFailedMesasgeToRemote: true,
-                                         reportAction: "Set remote answer",
-                                         description: error.localizedDescription)
+                    self.queue.async {
+                        self.failCurrentCall(sendFailedMesasgeToRemote: true,
+                                             reportAction: "Set remote answer",
+                                             description: error.localizedDescription)
+                    }
                 }
             }
             return true
         } else if let category = MessageCategory(rawValue: data.category), CallManager.completeCallCategories.contains(category) {
             ringtonePlayer?.stop()
-            performSynchronouslyOnMainThread {
+            DispatchQueue.main.sync {
                 view.style = .disconnecting
             }
             CallManager.insertCallCompletedMessage(call: call, markMessageAsRead: false, category: category)
-            self.clean()
-            performSynchronouslyOnMainThread {
+            clean()
+            DispatchQueue.main.sync {
                 view.dismiss()
             }
             return true
@@ -348,7 +358,7 @@ extension CallManager {
         view.dismiss()
         rtcClient.close()
         isMuted = false
-        DispatchQueue.global().async {
+        queue.async {
             let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
                                                   category: .WEBRTC_AUDIO_CANCEL,
                                                   status: .SENDING,
@@ -379,35 +389,43 @@ extension CallManager {
     }
     
     private func call(opponentUser: UserItem) {
-        guard canMakeCalls else {
-            alertCantMakeCalls()
-            return
-        }
-        view.style = .calling
-        view.reload(user: opponentUser)
-        view.show()
-        let uuid = UUID()
-        let call = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
-        let conversationId = call.conversationId
-        self.call = call
-        unansweredTimeoutTimer = Timer.scheduledTimer(timeInterval: CallManager.unansweredTimeoutInterval,
-                                                      target: self,
-                                                      selector: #selector(unansweredTimeout),
-                                                      userInfo: nil,
-                                                      repeats: false)
         queue.async {
+            guard self.canMakeCalls else {
+                DispatchQueue.main.sync {
+                    self.alertCantMakeCalls()
+                }
+                return
+            }
+            DispatchQueue.main.sync {
+                self.view.style = .calling
+                self.view.reload(user: opponentUser)
+                self.view.show()
+            }
+            let uuid = UUID()
+            let call = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
+            let conversationId = call.conversationId
+            self.call = call
+            self.unansweredTimeoutTimer = Timer.scheduledTimer(timeInterval: CallManager.unansweredTimeoutInterval,
+                                                               target: self,
+                                                               selector: #selector(self.unansweredTimeout),
+                                                               userInfo: nil,
+                                                               repeats: false)
             self.playRingtone(usesSpeaker: false)
             self.rtcClient.offer { (sdp, error) in
                 guard let sdp = sdp else {
-                    self.failCurrentCall(sendFailedMesasgeToRemote: false,
-                                         reportAction: "SDP Construction",
-                                         description: error.debugDescription)
+                    self.queue.async {
+                        self.failCurrentCall(sendFailedMesasgeToRemote: false,
+                                             reportAction: "SDP Construction",
+                                             description: error.debugDescription)
+                    }
                     return
                 }
                 guard let content = sdp.jsonString else {
-                    self.failCurrentCall(sendFailedMesasgeToRemote: false,
-                                         reportAction: "SDP Serialization",
-                                         description: sdp.debugDescription)
+                    self.queue.async {
+                        self.failCurrentCall(sendFailedMesasgeToRemote: false,
+                                             reportAction: "SDP Serialization",
+                                             description: sdp.debugDescription)
+                    }
                     return
                 }
                 let msg = Message.createWebRTCMessage(messageId: call.uuidString,

@@ -128,7 +128,7 @@ class CallManager {
                                                   status: .SENDING,
                                                   quoteMessageId: call.uuidString)
             SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.opponentUser.userId)
-            CallManager.insertCallCompletedMessage(call: call, category: category)
+            CallManager.insertCallCompletedMessage(call: call, markMessageAsRead: true, category: category)
             DispatchQueue.main.async {
                 self.view.dismiss()
                 self.isMuted = false
@@ -208,14 +208,13 @@ extension CallManager {
         .WEBRTC_AUDIO_DECLINE
     ]
     
-    static func insertCallCompletedMessage(call: Call, completeByUserId userId: String = AccountAPI.shared.accountUserId, category: MessageCategory?) {
+    static func insertCallCompletedMessage(call: Call, markMessageAsRead: Bool, category: MessageCategory?) {
         let timeIntervalSinceNow = call.connectedDate?.timeIntervalSinceNow ?? 0
         let duration = abs(timeIntervalSinceNow * millisecondsPerSecond)
         let category = category ?? .WEBRTC_AUDIO_FAILED
-        let shouldMarkMessageAsRead = userId == AccountAPI.shared.accountUserId || category == .WEBRTC_AUDIO_END
-        let status: MessageStatus = shouldMarkMessageAsRead ? .READ : .DELIVERED
+        let status: MessageStatus = markMessageAsRead ? .READ : .DELIVERED
         let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
-                                              userId: userId,
+                                              userId: call.raisedByUserId,
                                               category: category,
                                               mediaDuration: Int64(duration),
                                               status: status)
@@ -288,9 +287,7 @@ extension CallManager {
             performSynchronouslyOnMainThread {
                 view.style = .disconnecting
             }
-            CallManager.insertCallCompletedMessage(call: call,
-                                                   completeByUserId: data.userId,
-                                                   category: category)
+            CallManager.insertCallCompletedMessage(call: call, markMessageAsRead: false, category: category)
             self.clean()
             performSynchronouslyOnMainThread {
                 view.dismiss()
@@ -354,7 +351,7 @@ extension CallManager {
                                                   status: .SENDING,
                                                   quoteMessageId: call.uuidString)
             SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.opponentUser.userId)
-            CallManager.insertCallCompletedMessage(call: call, category: .WEBRTC_AUDIO_CANCEL)
+            CallManager.insertCallCompletedMessage(call: call, markMessageAsRead: true, category: .WEBRTC_AUDIO_CANCEL)
             self.call = nil
         }
     }

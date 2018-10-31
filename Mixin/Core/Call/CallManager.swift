@@ -5,9 +5,9 @@ import CallKit
 class CallManager {
     
     static let shared = CallManager()
+    static let unansweredTimeoutInterval: TimeInterval = 60
     
     private let rtcClient = WebRTCClient()
-    private let unansweredTimeoutInterval: TimeInterval = 60
     private let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
     private let ringtonePlayer = try? AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "Ringtone", withExtension: "m4r")!)
     
@@ -74,7 +74,7 @@ class CallManager {
         let call = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
         let conversationId = call.conversationId
         self.call = call
-        unansweredTimeoutTimer = Timer.scheduledTimer(timeInterval: unansweredTimeoutInterval,
+        unansweredTimeoutTimer = Timer.scheduledTimer(timeInterval: CallManager.unansweredTimeoutInterval,
                                                       target: self,
                                                       selector: #selector(unansweredTimeout),
                                                       userInfo: nil,
@@ -138,33 +138,6 @@ class CallManager {
         }
     }
     
-    func handleIncomingCall(data: BlazeMessageData) throws {
-        guard canMakeCalls else {
-            alertCantMakeCalls()
-            throw CallError.permissionDenied
-        }
-        guard call == nil else {
-            throw CallError.busy
-        }
-        guard let uuid = UUID(uuidString: data.messageId) else {
-            throw CallError.invalidUUID(uuid: data.messageId)
-        }
-        guard let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) else {
-            throw CallError.invalidSdp(sdp: data.data)
-        }
-        guard let user = UserDAO.shared.getUser(userId: data.userId) else {
-            throw CallError.missingUser(userId: data.userId)
-        }
-        pendingRemoteSdp = sdp
-        call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
-        performSynchronouslyOnMainThread {
-            view.reload(user: user)
-            view.style = .calling
-            view.show()
-        }
-        playRingtone(usesSpeaker: true)
-    }
-    
     func acceptCurrentCall() {
         guard let call = call, let sdp = pendingRemoteSdp else {
             return
@@ -199,51 +172,27 @@ class CallManager {
         }
     }
     
-    // Return true if data is handled, false if not
-    func handleCallStatusChange(data: BlazeMessageData) -> Bool {
-        guard let call = call, data.quoteMessageId == call.uuidString else {
-            return false
-        }
-        if call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
-            invalidateUnansweredTimeoutTimerAndSetNil()
-            self.ringtonePlayer?.stop()
-            self.usesSpeaker = false
-            call.hasReceivedRemoteAnswer = true
-            sendCandidates(pendingCandidates)
-            rtcClient.set(remoteSdp: sdp) { (error) in
-                if let error = error {
-                    self.failCurrentCall(sendFailedMesasgeToRemote: true,
-                                         reportAction: "Set remote answer",
-                                         description: error.localizedDescription)
+    func handleIncomingBlazeMessageData(_ data: BlazeMessageData) {
+        queue.async {
+            switch data.category {
+            case MessageCategory.WEBRTC_AUDIO_OFFER.rawValue:
+                do {
+                    try self.handleIncomingCall(data: data)
+                } catch CallError.busy {
+                    CallManager.insertOfferAndSendWebRTCBusyMessage(against: data)
+                } catch {
+                    CallManager.insertOfferAndSendWebRTCFailedMessage(against: data)
+                }
+            case MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue:
+                self.handleIncomingIceCandidateIfNeeded(data: data)
+            default:
+                if !self.handleCallStatusChange(data: data) {
+                    MessageDAO.shared.updateMessageCategory(category: data.category,
+                                                            messageId: data.quoteMessageId,
+                                                            conversationId: data.conversationId)
                 }
             }
-            return true
-        } else if let category = MessageCategory(rawValue: data.category), CallManager.completeCallCategories.contains(category) {
-            ringtonePlayer?.stop()
-            performSynchronouslyOnMainThread {
-                view.style = .disconnecting
-            }
-            CallManager.insertCallCompletedMessage(call: call,
-                                                   completeByUserId: data.userId,
-                                                   category: category)
-            self.clean()
-            performSynchronouslyOnMainThread {
-                view.dismiss()
-            }
-            return true
-        } else {
-            return false
         }
-    }
-    
-    func handleIncomingIceCandidateIfNeeded(data: BlazeMessageData) {
-        guard let call = call, data.quoteMessageId == call.uuidString else {
-            return
-        }
-        guard let candidatesString = data.data.base64Decoded() else {
-            return
-        }
-        [RTCIceCandidate](jsonString: candidatesString).forEach(rtcClient.add)
     }
     
 }
@@ -286,6 +235,80 @@ extension CallManager {
         MessageDAO.shared.insertMessage(message: messageToInsert, messageSource: "")
         let messageToSend = Message.createWebRTCMessage(quote: data, category: category, status: .SENDING)
         SendMessageService.shared.sendWebRTCMessage(message: messageToSend, recipientId: data.getSenderId())
+    }
+    
+    private func handleIncomingCall(data: BlazeMessageData) throws {
+        guard canMakeCalls else {
+            alertCantMakeCalls()
+            throw CallError.permissionDenied
+        }
+        guard call == nil else {
+            throw CallError.busy
+        }
+        guard let uuid = UUID(uuidString: data.messageId) else {
+            throw CallError.invalidUUID(uuid: data.messageId)
+        }
+        guard let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) else {
+            throw CallError.invalidSdp(sdp: data.data)
+        }
+        guard let user = UserDAO.shared.getUser(userId: data.userId) else {
+            throw CallError.missingUser(userId: data.userId)
+        }
+        pendingRemoteSdp = sdp
+        call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
+        performSynchronouslyOnMainThread {
+            view.reload(user: user)
+            view.style = .calling
+            view.show()
+        }
+        playRingtone(usesSpeaker: true)
+    }
+    
+    // Return true if data is handled, false if not
+    private func handleCallStatusChange(data: BlazeMessageData) -> Bool {
+        guard let call = call, data.quoteMessageId == call.uuidString else {
+            return false
+        }
+        if call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
+            invalidateUnansweredTimeoutTimerAndSetNil()
+            self.ringtonePlayer?.stop()
+            self.usesSpeaker = false
+            call.hasReceivedRemoteAnswer = true
+            sendCandidates(pendingCandidates)
+            rtcClient.set(remoteSdp: sdp) { (error) in
+                if let error = error {
+                    self.failCurrentCall(sendFailedMesasgeToRemote: true,
+                                         reportAction: "Set remote answer",
+                                         description: error.localizedDescription)
+                }
+            }
+            return true
+        } else if let category = MessageCategory(rawValue: data.category), CallManager.completeCallCategories.contains(category) {
+            ringtonePlayer?.stop()
+            performSynchronouslyOnMainThread {
+                view.style = .disconnecting
+            }
+            CallManager.insertCallCompletedMessage(call: call,
+                                                   completeByUserId: data.userId,
+                                                   category: category)
+            self.clean()
+            performSynchronouslyOnMainThread {
+                view.dismiss()
+            }
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    private func handleIncomingIceCandidateIfNeeded(data: BlazeMessageData) {
+        guard let call = call, data.quoteMessageId == call.uuidString else {
+            return
+        }
+        guard let candidatesString = data.data.base64Decoded() else {
+            return
+        }
+        [RTCIceCandidate](jsonString: candidatesString).forEach(rtcClient.add)
     }
     
 }

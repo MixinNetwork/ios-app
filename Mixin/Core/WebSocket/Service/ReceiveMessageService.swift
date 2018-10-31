@@ -10,7 +10,9 @@ class ReceiveMessageService: MixinService {
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive")
     private let prekeyMiniNum = 500
-
+    private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
+    private var listPendingCallWorkItems = [String: DispatchWorkItem]()
+    
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
 
@@ -103,28 +105,31 @@ class ReceiveMessageService: MixinService {
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
         if data.source == BlazeMessageAction.listPendingMessages.rawValue {
             if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
-                let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
-                MessageDAO.shared.insertMessage(message: msg, shouldSendNotification: true)
+                if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= CallManager.unansweredTimeoutInterval {
+                    let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
+                    MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+                } else {
+                    let workItem = DispatchWorkItem(block: {
+                        CallManager.shared.handleIncomingBlazeMessageData(data)
+                    })
+                    listPendingCallWorkItems[data.messageId] = workItem
+                    DispatchQueue.global().asyncAfter(deadline: .now() + listPendingCallDelay, execute: workItem)
+                }
+            } else if let workItem = listPendingCallWorkItems[data.quoteMessageId] {
+                workItem.cancel()
+                listPendingCallWorkItems.removeValue(forKey: data.quoteMessageId)
+                let category = MessageCategory(rawValue: data.category) ?? .WEBRTC_AUDIO_FAILED
+                let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                      conversationId: data.conversationId,
+                                                      userId: data.userId,
+                                                      category: category,
+                                                      status: .DELIVERED)
+                MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+            } else {
+                CallManager.shared.handleIncomingBlazeMessageData(data)
             }
         } else {
-            switch data.category {
-            case MessageCategory.WEBRTC_AUDIO_OFFER.rawValue:
-                do {
-                    try CallManager.shared.handleIncomingCall(data: data)
-                } catch CallError.busy {
-                    CallManager.insertOfferAndSendWebRTCBusyMessage(against: data)
-                } catch {
-                    CallManager.insertOfferAndSendWebRTCFailedMessage(against: data)
-                }
-            case MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue:
-                CallManager.shared.handleIncomingIceCandidateIfNeeded(data: data)
-            default:
-                if !CallManager.shared.handleCallStatusChange(data: data) {
-                    MessageDAO.shared.updateMessageCategory(category: data.category,
-                                                            messageId: data.quoteMessageId,
-                                                            conversationId: data.conversationId)
-                }
-            }
+            CallManager.shared.handleIncomingBlazeMessageData(data)
         }
     }
     

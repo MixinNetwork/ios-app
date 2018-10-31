@@ -96,6 +96,7 @@
 		7B402F88214692C300383687 /* BubbleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B402F87214692C200383687 /* BubbleLayer.swift */; };
 		7B40A89920B84BF500CEA42E /* NumberStringLocalizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */; };
 		7B4375C32170CA6900846DC5 /* TransactionsFilterConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4375C22170CA6900846DC5 /* TransactionsFilterConditionCell.swift */; };
+		7B45A51C2189F28E0008F894 /* call.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* call.caf */; };
 		7B481A022020712000843B1D /* HorizontalSingleLineFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B481A012020712000843B1D /* HorizontalSingleLineFlowLayout.swift */; };
 		7B4A430620AC9ABA007D6936 /* GalleryVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */; };
 		7B4D1122205A9EF80074BF60 /* AddressBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1121205A9EF80074BF60 /* AddressBookView.swift */; };
@@ -163,7 +164,6 @@
 		7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F6B215F32A500A562C6 /* GiphyViewController.swift */; };
 		7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */; };
 		7B9243D12188181B007E3D6F /* CallUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9243D02188181B007E3D6F /* CallUserDefaults.swift */; };
-		7B9243D521883835007E3D6F /* Ringtone.m4r in Resources */ = {isa = PBXBuildFile; fileRef = 7B9243D421883835007E3D6F /* Ringtone.m4r */; };
 		7B92F8251FA1A7D5000B838B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8241FA1A7D5000B838B /* LoginViewController.swift */; };
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F8291FA1B80A000B838B /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */; };
@@ -675,6 +675,7 @@
 		7B402F87214692C200383687 /* BubbleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleLayer.swift; sourceTree = "<group>"; };
 		7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberStringLocalizable.swift; sourceTree = "<group>"; };
 		7B4375C22170CA6900846DC5 /* TransactionsFilterConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsFilterConditionCell.swift; sourceTree = "<group>"; };
+		7B45A51B2189F28A0008F894 /* call.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = call.caf; sourceTree = "<group>"; };
 		7B481A012020712000843B1D /* HorizontalSingleLineFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalSingleLineFlowLayout.swift; sourceTree = "<group>"; };
 		7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryVideoView.swift; sourceTree = "<group>"; };
 		7B4D1121205A9EF80074BF60 /* AddressBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookView.swift; sourceTree = "<group>"; };
@@ -742,7 +743,6 @@
 		7B915F6B215F32A500A562C6 /* GiphyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyViewController.swift; sourceTree = "<group>"; };
 		7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchViewController.swift; sourceTree = "<group>"; };
 		7B9243D02188181B007E3D6F /* CallUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallUserDefaults.swift; sourceTree = "<group>"; };
-		7B9243D421883835007E3D6F /* Ringtone.m4r */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ringtone.m4r; sourceTree = "<group>"; };
 		7B92F8241FA1A7D5000B838B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
@@ -1918,9 +1918,9 @@
 		DF5D9F481F9CDBDE0036D5FD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				7B45A51B2189F28A0008F894 /* call.caf */,
 				274264A820011BB0000A8808 /* mixin.caf */,
 				DF8EF6BB2034737F00E99CE8 /* payment_success.caf */,
-				7B9243D421883835007E3D6F /* Ringtone.m4r */,
 				7BBD8A3220C1D51C00DF2735 /* recaptcha.html */,
 				277FF7101F909A1200DBB2EB /* Info.plist */,
 				DF8CECCE1FC2B1C900E40064 /* Mixin-Bridging-Header.h */,
@@ -2408,6 +2408,7 @@
 				DFD294431FA7076600FADAAD /* ContactMeCell.xib in Resources */,
 				7BA4A1CF1FF347130086CD56 /* GroupParticipantCell.xib in Resources */,
 				DF87949A20750596004A1E55 /* TransactionCell.xib in Resources */,
+				7B45A51C2189F28E0008F894 /* call.caf in Resources */,
 				DFF2145B209ABBB400612234 /* GroupWindow.xib in Resources */,
 				7B4D1124205A9F170074BF60 /* AddressBookView.xib in Resources */,
 				7BFF3B021FAAE92F0039A1C5 /* SearchResultContactCell.xib in Resources */,
@@ -2430,7 +2431,6 @@
 				DF114B0E2020B85600EA8F9C /* WebWindow.xib in Resources */,
 				DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */,
 				DF736F8A1FC08C49001DB063 /* WalletTotalBalanceCell.xib in Resources */,
-				7B9243D521883835007E3D6F /* Ringtone.m4r in Resources */,
 				DF3F6D6920EF2618006D0CBC /* DepositWindow.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
 				DFD294451FA7087800FADAAD /* ContactNavCell.xib in Resources */,

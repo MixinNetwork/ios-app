@@ -495,6 +495,7 @@
 "alert_key_contact_sticker_message" = "发来了一个贴纸";
 "alert_key_contact_contact_message" = "发来了一个联系人";
 "alert_key_contact_audio_message" = "发来了一个语音";
+"alert_key_contact_audio_call_message" = "邀请你进行语音通话";
 
 // About
 "about_twitter" = "关注我们的 Twitter";

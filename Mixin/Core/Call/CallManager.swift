@@ -9,7 +9,7 @@ class CallManager {
     
     private let rtcClient = WebRTCClient()
     private let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
-    private let ringtonePlayer = try? AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "Ringtone", withExtension: "m4r")!)
+    private let ringtonePlayer = try? AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "call", withExtension: "caf")!)
     
     private(set) var call: Call?
     

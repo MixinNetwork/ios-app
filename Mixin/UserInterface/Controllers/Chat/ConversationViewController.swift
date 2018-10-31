@@ -830,7 +830,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         guard let ownerUser = dataSource.ownerUser else {
             return
         }
-        CallManager.shared.call(opponentUser: ownerUser)
+        CallManager.shared.checkPreconditionsAndCallIfPossible(opponentUser: ownerUser)
     }
 
     func pickPhotoOrVideoAction() {

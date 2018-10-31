@@ -201,6 +201,7 @@ public class Localized {
     public static let CALL_STATUS_DISCONNECTING = LocalizedString("call_status_disconnecting", comment: "Disconnecting")
     public static let CALL_FUNC_HANGUP = LocalizedString("call_func_hangup", comment: "Hang Up")
     public static let CALL_FUNC_DECLINE = LocalizedString("call_func_decline", comment: "Decline")
+    public static let CALL_NO_MICROPHONE_PERMISSION = LocalizedString("call_no_microphone_permission", comment: "To make voice calls, Mixin needs access to your microphone. Please tap Setting to open system settings.")
     
     // Sticker
     public static let STICKER_MANAGER_TITLE = LocalizedString("sticker_manager_title", comment: "My Stickers")

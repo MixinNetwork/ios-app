@@ -24,7 +24,6 @@ class CallManager {
     private var pendingCandidates = [RTCIceCandidate]()
     private var canMakeCalls: Bool {
         return CallManager.callObserver.calls.isEmpty
-            && AVAudioSession.sharedInstance().recordPermission == .granted
             && WebSocketService.shared.connected
     }
     
@@ -62,45 +61,26 @@ class CallManager {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func call(opponentUser: UserItem) {
+    func checkPreconditionsAndCallIfPossible(opponentUser: UserItem) {
         guard canMakeCalls else {
             alertCantMakeCalls()
             return
         }
-        view.style = .calling
-        view.reload(user: opponentUser)
-        view.show()
-        let uuid = UUID()
-        let call = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
-        let conversationId = call.conversationId
-        self.call = call
-        unansweredTimeoutTimer = Timer.scheduledTimer(timeInterval: CallManager.unansweredTimeoutInterval,
-                                                      target: self,
-                                                      selector: #selector(unansweredTimeout),
-                                                      userInfo: nil,
-                                                      repeats: false)
-        queue.async {
-            self.playRingtone(usesSpeaker: false)
-            self.rtcClient.offer { (sdp, error) in
-                guard let sdp = sdp else {
-                    self.failCurrentCall(sendFailedMesasgeToRemote: false,
-                                         reportAction: "SDP Construction",
-                                         description: error.debugDescription)
-                    return
+        switch AVAudioSession.sharedInstance().recordPermission {
+        case .undetermined:
+            AVAudioSession.sharedInstance().requestRecordPermission { (granted) in
+                DispatchQueue.main.async {
+                    if granted {
+                        self.call(opponentUser: opponentUser)
+                    } else {
+                        self.alertNoMicrophonePermission()
+                    }
                 }
-                guard let content = sdp.jsonString else {
-                    self.failCurrentCall(sendFailedMesasgeToRemote: false,
-                                         reportAction: "SDP Serialization",
-                                         description: sdp.debugDescription)
-                    return
-                }
-                let msg = Message.createWebRTCMessage(messageId: call.uuidString,
-                                                      conversationId: conversationId,
-                                                      category: .WEBRTC_AUDIO_OFFER,
-                                                      content: content,
-                                                      status: .SENDING)
-                SendMessageService.shared.sendMessage(message: msg, ownerUser: opponentUser, isGroupMessage: false)
             }
+        case .denied:
+            alertNoMicrophonePermission()
+        case .granted:
+            call(opponentUser: opponentUser)
         }
     }
     
@@ -127,8 +107,11 @@ class CallManager {
                                                   category: category,
                                                   status: .SENDING,
                                                   quoteMessageId: call.uuidString)
-            SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.opponentUser.userId)
-            CallManager.insertCallCompletedMessage(call: call, markMessageAsRead: true, category: category)
+            SendMessageService.shared.sendWebRTCMessage(message: msg,
+                                                        recipientId: call.opponentUser.userId)
+            CallManager.insertCallCompletedMessage(call: call,
+                                                   markMessageAsRead: true,
+                                                   category: category)
             DispatchQueue.main.async {
                 self.view.dismiss()
                 self.isMuted = false
@@ -177,11 +160,14 @@ class CallManager {
             switch data.category {
             case MessageCategory.WEBRTC_AUDIO_OFFER.rawValue:
                 do {
-                    try self.handleIncomingCall(data: data)
+                    try self.checkPreconditionsAndHandleIncomingCallIfPossible(data: data)
                 } catch CallError.busy {
-                    CallManager.insertOfferAndSendWebRTCBusyMessage(against: data)
+                    CallManager.insertOfferAndSendWebRTCMessage(against: data, category: .WEBRTC_AUDIO_BUSY)
+                } catch CallError.microphonePermissionDenied {
+                    CallManager.insertOfferAndSendWebRTCMessage(against: data, category: .WEBRTC_AUDIO_DECLINE)
+                    self.alertNoMicrophonePermission()
                 } catch {
-                    CallManager.insertOfferAndSendWebRTCFailedMessage(against: data)
+                    CallManager.insertOfferAndSendWebRTCMessage(against: data, category: .WEBRTC_AUDIO_FAILED)
                 }
             case MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue:
                 self.handleIncomingIceCandidateIfNeeded(data: data)
@@ -221,14 +207,6 @@ extension CallManager {
         MessageDAO.shared.insertMessage(message: msg, messageSource: "")
     }
     
-    static func insertOfferAndSendWebRTCBusyMessage(against data: BlazeMessageData) {
-        insertOfferAndSendWebRTCMessage(against: data, category: .WEBRTC_AUDIO_BUSY)
-    }
-    
-    static func insertOfferAndSendWebRTCFailedMessage(against data: BlazeMessageData) {
-        insertOfferAndSendWebRTCMessage(against: data, category: .WEBRTC_AUDIO_FAILED)
-    }
-    
     private static func insertOfferAndSendWebRTCMessage(against data: BlazeMessageData, category: MessageCategory) {
         let messageToInsert = Message.createWebRTCMessage(data: data, category: category, status: .DELIVERED)
         MessageDAO.shared.insertMessage(message: messageToInsert, messageSource: "")
@@ -236,11 +214,34 @@ extension CallManager {
         SendMessageService.shared.sendWebRTCMessage(message: messageToSend, recipientId: data.getSenderId())
     }
     
-    private func handleIncomingCall(data: BlazeMessageData) throws {
+    private func checkPreconditionsAndHandleIncomingCallIfPossible(data: BlazeMessageData) throws {
         guard canMakeCalls else {
             alertCantMakeCalls()
-            throw CallError.permissionDenied
+            throw CallError.preconditionFailed
         }
+        let completeCurrentCallAndAlertNoMicrophonePermission = {
+            DispatchQueue.main.async {
+                self.completeCurrentCall()
+                self.alertNoMicrophonePermission()
+            }
+        }
+        switch AVAudioSession.sharedInstance().recordPermission {
+        case .undetermined:
+            try handleIncomingCall(data: data, reportIncomingCallToInterface: true)
+            AVAudioSession.sharedInstance().requestRecordPermission { (granted) in
+                if !granted {
+                    completeCurrentCallAndAlertNoMicrophonePermission()
+                }
+            }
+        case .denied:
+            try handleIncomingCall(data: data, reportIncomingCallToInterface: false)
+            completeCurrentCallAndAlertNoMicrophonePermission()
+        case .granted:
+            try handleIncomingCall(data: data, reportIncomingCallToInterface: true)
+        }
+    }
+    
+    private func handleIncomingCall(data: BlazeMessageData, reportIncomingCallToInterface: Bool) throws {
         guard call == nil else {
             throw CallError.busy
         }
@@ -255,12 +256,14 @@ extension CallManager {
         }
         pendingRemoteSdp = sdp
         call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
-        performSynchronouslyOnMainThread {
-            view.reload(user: user)
-            view.style = .calling
-            view.show()
+        if reportIncomingCallToInterface {
+            performSynchronouslyOnMainThread {
+                view.reload(user: user)
+                view.style = .calling
+                view.show()
+            }
+            playRingtone(usesSpeaker: true)
         }
-        playRingtone(usesSpeaker: true)
     }
     
     // Return true if data is handled, false if not
@@ -364,15 +367,56 @@ extension CallManager {
     }
     
     private func alertCantMakeCalls() {
-        let recordPermission = AVAudioSession.sharedInstance().recordPermission
         if !CallManager.callObserver.calls.isEmpty {
             AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
-        } else if recordPermission == .undetermined {
-            AVAudioSession.sharedInstance().requestRecordPermission { (_) in }
-        } else if recordPermission == .denied {
-            AppDelegate.current.window?.rootViewController?.alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
         } else if !WebSocketService.shared.connected {
             AppDelegate.current.window?.rootViewController?.alert(Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST)
+        }
+    }
+    
+    private func alertNoMicrophonePermission() {
+        AppDelegate.current.window?.rootViewController?.alertSettings(Localized.CALL_NO_MICROPHONE_PERMISSION)
+    }
+    
+    private func call(opponentUser: UserItem) {
+        guard canMakeCalls else {
+            alertCantMakeCalls()
+            return
+        }
+        view.style = .calling
+        view.reload(user: opponentUser)
+        view.show()
+        let uuid = UUID()
+        let call = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
+        let conversationId = call.conversationId
+        self.call = call
+        unansweredTimeoutTimer = Timer.scheduledTimer(timeInterval: CallManager.unansweredTimeoutInterval,
+                                                      target: self,
+                                                      selector: #selector(unansweredTimeout),
+                                                      userInfo: nil,
+                                                      repeats: false)
+        queue.async {
+            self.playRingtone(usesSpeaker: false)
+            self.rtcClient.offer { (sdp, error) in
+                guard let sdp = sdp else {
+                    self.failCurrentCall(sendFailedMesasgeToRemote: false,
+                                         reportAction: "SDP Construction",
+                                         description: error.debugDescription)
+                    return
+                }
+                guard let content = sdp.jsonString else {
+                    self.failCurrentCall(sendFailedMesasgeToRemote: false,
+                                         reportAction: "SDP Serialization",
+                                         description: sdp.debugDescription)
+                    return
+                }
+                let msg = Message.createWebRTCMessage(messageId: call.uuidString,
+                                                      conversationId: conversationId,
+                                                      category: .WEBRTC_AUDIO_OFFER,
+                                                      content: content,
+                                                      status: .SENDING)
+                SendMessageService.shared.sendMessage(message: msg, ownerUser: opponentUser, isGroupMessage: false)
+            }
         }
     }
     

@@ -45,8 +45,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var fromWithdrawal = false
     private var flashOn = false
     private var addressCallback: ((String) -> Void)?
-    private var detectQRCodes = [String]()
-    private var detectLock = NSLock()
+    private var detectedQRCodes = Set<String>()
     private var detectText = ""
     private var recordTimer: Timer?
     private var audioRecordPermissionIsGranted: Bool {
@@ -591,20 +590,17 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
         guard let urlString = object.stringValue?.trimmingCharacters(in: .whitespacesAndNewlines), !urlString.isEmpty else {
             return
         }
-
+        guard !detectedQRCodes.contains(urlString) else {
+            return
+        }
+        
+        detectedQRCodes.insert(urlString)
+        
         if fromWithdrawal, let address = filterAddress(urlString: urlString) {
             addressCallback?(address)
             navigationController?.popViewController(animated: true)
             return
         }
-
-        detectLock.lock()
-        guard !detectQRCodes.contains(urlString) else {
-            detectLock.unlock()
-            return
-        }
-        detectQRCodes.append(urlString)
-        detectLock.unlock()
 
         detectText = urlString
 

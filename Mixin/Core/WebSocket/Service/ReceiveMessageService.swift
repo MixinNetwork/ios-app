@@ -102,7 +102,7 @@ class ReceiveMessageService: MixinService {
             return
         }
         _ = syncUser(userId: data.getSenderId())
-        updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
+        updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED, createdAt: data.createdAt)
         if data.source == BlazeMessageAction.listPendingMessages.rawValue {
             if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
                 if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= CallManager.unansweredTimeoutInterval {

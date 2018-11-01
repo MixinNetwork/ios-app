@@ -19,7 +19,7 @@ class CallManager {
         return view
     }
     
-    private var unansweredTimeoutTimer: Timer?
+    private var unansweredTimer: Timer?
     private var pendingRemoteSdp: RTCSessionDescription?
     private var pendingCandidates = [RTCIceCandidate]()
     private var canMakeCalls: Bool {
@@ -362,6 +362,7 @@ extension CallManager {
         rtcClient.close()
         isMuted = false
         queue.async {
+            self.ringtonePlayer?.stop()
             let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
                                                   category: .WEBRTC_AUDIO_CANCEL,
                                                   status: .SENDING,
@@ -408,11 +409,13 @@ extension CallManager {
             let call = Call(uuid: uuid, opponentUser: opponentUser, isOutgoing: true)
             let conversationId = call.conversationId
             self.call = call
-            self.unansweredTimeoutTimer = Timer.scheduledTimer(timeInterval: CallManager.unansweredTimeoutInterval,
-                                                               target: self,
-                                                               selector: #selector(self.unansweredTimeout),
-                                                               userInfo: nil,
-                                                               repeats: false)
+            let timer = Timer(timeInterval: CallManager.unansweredTimeoutInterval,
+                              target: self,
+                              selector: #selector(self.unansweredTimeout),
+                              userInfo: nil,
+                              repeats: false)
+            RunLoop.main.add(timer, forMode: .default)
+            self.unansweredTimer = timer
             self.playRingtone(usesSpeaker: false)
             self.rtcClient.offer { (sdp, error) in
                 guard let sdp = sdp else {
@@ -477,8 +480,8 @@ extension CallManager {
     }
     
     private func invalidateUnansweredTimeoutTimerAndSetNil() {
-        unansweredTimeoutTimer?.invalidate()
-        unansweredTimeoutTimer = nil
+        unansweredTimer?.invalidate()
+        unansweredTimer = nil
     }
     
     private func clean() {

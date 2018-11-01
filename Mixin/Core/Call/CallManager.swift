@@ -69,12 +69,10 @@ class CallManager {
         switch AVAudioSession.sharedInstance().recordPermission {
         case .undetermined:
             AVAudioSession.sharedInstance().requestRecordPermission { (granted) in
-                DispatchQueue.main.async {
-                    if granted {
-                        self.call(opponentUser: opponentUser)
-                    } else {
-                        self.alertNoMicrophonePermission()
-                    }
+                if granted {
+                    self.call(opponentUser: opponentUser)
+                } else {
+                    self.alertNoMicrophonePermission()
                 }
             }
         case .denied:
@@ -229,9 +227,7 @@ extension CallManager {
         }
         let completeCurrentCallAndAlertNoMicrophonePermission = {
             self.completeCurrentCall()
-            DispatchQueue.main.async {
-                self.alertNoMicrophonePermission()
-            }
+            self.alertNoMicrophonePermission()
         }
         switch AVAudioSession.sharedInstance().recordPermission {
         case .undetermined:
@@ -381,23 +377,25 @@ extension CallManager {
     }
     
     private func alertCantMakeCalls() {
-        if !CallManager.callObserver.calls.isEmpty {
-            AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
-        } else if !WebSocketService.shared.connected {
-            AppDelegate.current.window?.rootViewController?.alert(Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST)
+        DispatchQueue.main.async {
+            if !CallManager.callObserver.calls.isEmpty {
+                AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
+            } else if !WebSocketService.shared.connected {
+                AppDelegate.current.window?.rootViewController?.alert(Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST)
+            }
         }
     }
     
     private func alertNoMicrophonePermission() {
-        AppDelegate.current.window?.rootViewController?.alertSettings(Localized.CALL_NO_MICROPHONE_PERMISSION)
+        DispatchQueue.main.async {
+            AppDelegate.current.window?.rootViewController?.alertSettings(Localized.CALL_NO_MICROPHONE_PERMISSION)
+        }
     }
     
     private func call(opponentUser: UserItem) {
         queue.async {
             guard self.canMakeCalls else {
-                DispatchQueue.main.sync {
-                    self.alertCantMakeCalls()
-                }
+                self.alertCantMakeCalls()
                 return
             }
             DispatchQueue.main.sync {

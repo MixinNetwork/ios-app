@@ -22,9 +22,8 @@ class CallManager {
     private var unansweredTimer: Timer?
     private var pendingRemoteSdp: RTCSessionDescription?
     private var pendingCandidates = [RTCIceCandidate]()
-    private var canMakeCalls: Bool {
-        return CallManager.callObserver.calls.isEmpty
-            && WebSocketService.shared.connected
+    private var lineIsIdle: Bool {
+        return call == nil && CallManager.callObserver.calls.isEmpty
     }
     
     var isMuted = false {
@@ -62,8 +61,8 @@ class CallManager {
     }
     
     func checkPreconditionsAndCallIfPossible(opponentUser: UserItem) {
-        guard canMakeCalls else {
-            alertCantMakeCalls()
+        guard WebSocketService.shared.connected && lineIsIdle else {
+            alertNetworkFailureOrLineBusy()
             return
         }
         switch AVAudioSession.sharedInstance().recordPermission {
@@ -221,9 +220,12 @@ extension CallManager {
     }
     
     private func checkPreconditionsAndHandleIncomingCallIfPossible(data: BlazeMessageData) throws {
-        guard canMakeCalls else {
-            alertCantMakeCalls()
-            throw CallError.preconditionFailed
+        guard WebSocketService.shared.connected else {
+            alertNetworkFailureOrLineBusy()
+            throw CallError.networkFailure
+        }
+        guard lineIsIdle else {
+            throw CallError.busy
         }
         let completeCurrentCallAndAlertNoMicrophonePermission = {
             self.completeCurrentCall()
@@ -246,7 +248,7 @@ extension CallManager {
     }
     
     private func handleIncomingCall(data: BlazeMessageData, reportIncomingCallToInterface: Bool) throws {
-        guard call == nil else {
+        guard lineIsIdle else {
             throw CallError.busy
         }
         guard let uuid = UUID(uuidString: data.messageId) else {
@@ -376,12 +378,12 @@ extension CallManager {
         try? AVAudioSession.sharedInstance().overrideOutputAudioPort(portOverride)
     }
     
-    private func alertCantMakeCalls() {
+    private func alertNetworkFailureOrLineBusy() {
         DispatchQueue.main.async {
-            if !CallManager.callObserver.calls.isEmpty {
-                AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
-            } else if !WebSocketService.shared.connected {
+            if !WebSocketService.shared.connected {
                 AppDelegate.current.window?.rootViewController?.alert(Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST)
+            } else if !self.lineIsIdle {
+                AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
             }
         }
     }
@@ -394,8 +396,8 @@ extension CallManager {
     
     private func call(opponentUser: UserItem) {
         queue.async {
-            guard self.canMakeCalls else {
-                self.alertCantMakeCalls()
+            guard WebSocketService.shared.connected && self.lineIsIdle else {
+                self.alertNetworkFailureOrLineBusy()
                 return
             }
             DispatchQueue.main.sync {

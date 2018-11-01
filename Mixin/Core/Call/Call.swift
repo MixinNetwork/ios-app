@@ -5,7 +5,7 @@ enum CallError: Error {
     case invalidUUID(uuid: String)
     case invalidSdp(sdp: String?)
     case missingUser(userId: String)
-    case preconditionFailed // Has active call, no network
+    case networkFailure
     case microphonePermissionDenied
 }
 

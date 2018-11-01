@@ -300,7 +300,7 @@ extension CallManager {
             DispatchQueue.main.sync {
                 view.style = .disconnecting
             }
-            CallManager.insertCallCompletedMessage(call: call, markMessageAsRead: false, category: category)
+            CallManager.insertCallCompletedMessage(call: call, markMessageAsRead: true, category: category)
             clean()
             DispatchQueue.main.sync {
                 view.dismiss()

@@ -284,6 +284,9 @@ extension CallManager {
             self.ringtonePlayer?.stop()
             self.usesSpeaker = false
             call.hasReceivedRemoteAnswer = true
+            DispatchQueue.main.sync {
+                self.view.style = .connecting
+            }
             sendCandidates(pendingCandidates)
             rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {

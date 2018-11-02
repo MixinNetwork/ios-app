@@ -64,7 +64,7 @@ class CallView: UIVisualEffectView {
     }
     
     @IBAction func hangUpAction(_ sender: Any) {
-        manager.completeCurrentCall()
+        manager.completeCurrentCall(isUserInitiated: true)
     }
     
     @IBAction func acceptAction(_ sender: Any) {

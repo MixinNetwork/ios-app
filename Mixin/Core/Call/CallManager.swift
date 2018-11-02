@@ -81,7 +81,7 @@ class CallManager {
         }
     }
     
-    func completeCurrentCall() {
+    func completeCurrentCall(isUserInitiated: Bool) {
         queue.async {
             guard let call = self.call else {
                 DispatchQueue.main.sync {
@@ -111,7 +111,7 @@ class CallManager {
             SendMessageService.shared.sendWebRTCMessage(message: msg,
                                                         recipientId: call.opponentUser.userId)
             CallManager.insertCallCompletedMessage(call: call,
-                                                   markMessageAsRead: true,
+                                                   isUserInitiated: isUserInitiated,
                                                    category: category)
             DispatchQueue.main.sync {
                 self.view.dismiss()
@@ -199,11 +199,14 @@ extension CallManager {
         .WEBRTC_AUDIO_DECLINE
     ]
     
-    static func insertCallCompletedMessage(call: Call, markMessageAsRead: Bool, category: MessageCategory?) {
+    static func insertCallCompletedMessage(call: Call, isUserInitiated: Bool, category: MessageCategory?) {
         let timeIntervalSinceNow = call.connectedDate?.timeIntervalSinceNow ?? 0
         let duration = abs(timeIntervalSinceNow * millisecondsPerSecond)
         let category = category ?? .WEBRTC_AUDIO_FAILED
-        let status: MessageStatus = markMessageAsRead ? .READ : .DELIVERED
+        let shouldMarkMessageRead = call.isOutgoing
+            || category == .WEBRTC_AUDIO_END
+            || (category == .WEBRTC_AUDIO_DECLINE && isUserInitiated)
+        let status: MessageStatus = shouldMarkMessageRead ? .READ : .DELIVERED
         let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
                                               userId: call.raisedByUserId,
                                               category: category,
@@ -227,21 +230,19 @@ extension CallManager {
         guard lineIsIdle else {
             throw CallError.busy
         }
-        let completeCurrentCallAndAlertNoMicrophonePermission = {
-            self.completeCurrentCall()
-            self.alertNoMicrophonePermission()
-        }
         switch AVAudioSession.sharedInstance().recordPermission {
         case .undetermined:
             try handleIncomingCall(data: data, reportIncomingCallToInterface: true)
             AVAudioSession.sharedInstance().requestRecordPermission { (granted) in
                 if !granted {
-                    completeCurrentCallAndAlertNoMicrophonePermission()
+                    self.completeCurrentCall(isUserInitiated: true)
+                    self.alertNoMicrophonePermission()
                 }
             }
         case .denied:
             try handleIncomingCall(data: data, reportIncomingCallToInterface: false)
-            completeCurrentCallAndAlertNoMicrophonePermission()
+            self.completeCurrentCall(isUserInitiated: false)
+            self.alertNoMicrophonePermission()
         case .granted:
             try handleIncomingCall(data: data, reportIncomingCallToInterface: true)
         }
@@ -301,7 +302,7 @@ extension CallManager {
             DispatchQueue.main.sync {
                 view.style = .disconnecting
             }
-            CallManager.insertCallCompletedMessage(call: call, markMessageAsRead: true, category: category)
+            CallManager.insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
             clean()
             DispatchQueue.main.sync {
                 view.dismiss()
@@ -366,7 +367,7 @@ extension CallManager {
                                                   status: .SENDING,
                                                   quoteMessageId: call.uuidString)
             SendMessageService.shared.sendWebRTCMessage(message: msg, recipientId: call.opponentUser.userId)
-            CallManager.insertCallCompletedMessage(call: call, markMessageAsRead: true, category: .WEBRTC_AUDIO_CANCEL)
+            CallManager.insertCallCompletedMessage(call: call, isUserInitiated: false, category: .WEBRTC_AUDIO_CANCEL)
             self.call = nil
         }
     }

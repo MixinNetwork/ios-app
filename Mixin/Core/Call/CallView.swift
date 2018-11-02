@@ -68,7 +68,6 @@ class CallView: UIVisualEffectView {
     }
     
     @IBAction func acceptAction(_ sender: Any) {
-        style = .connecting
         manager.acceptCurrentCall()
     }
     

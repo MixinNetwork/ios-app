@@ -123,6 +123,7 @@ class CallManager {
     }
     
     func acceptCurrentCall() {
+        view.style = .connecting
         queue.async {
             guard let call = self.call, let sdp = self.pendingRemoteSdp else {
                 return

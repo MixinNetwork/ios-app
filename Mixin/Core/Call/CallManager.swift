@@ -48,7 +48,6 @@ class CallManager {
     }
     
     init() {
-        RTCSetMinDebugLogLevel(.error)
         rtcClient.delegate = self
         ringtonePlayer?.numberOfLoops = -1
         NotificationCenter.default.addObserver(self,

@@ -27,7 +27,6 @@ class CallView: UIVisualEffectView {
     
     private let animationDuration: TimeInterval = 0.3
     
-    private var duration: TimeInterval = 0
     private var timer: Timer?
     private var isOutgoing: Bool {
         return manager.call?.isOutgoing ?? true
@@ -105,12 +104,13 @@ extension CallView {
         }
     }
     
-    @objc private func updateDurationLabel() {
-        guard style == .connected else {
-            return
+    @objc private func updateStatusLabelWithCallingDuration() {
+        if style == .connected, let timeIntervalSinceNow = manager.call?.connectedDate?.timeIntervalSinceNow {
+            let duration = abs(timeIntervalSinceNow)
+            statusLabel.text = mediaDurationFormatter.string(from: duration)
+        } else {
+            statusLabel.text = nil
         }
-        statusLabel.text = mediaDurationFormatter.string(from: duration)
-        duration += 1
     }
     
     private func loadSubviews() {
@@ -123,7 +123,11 @@ extension CallView {
     }
     
     private func layout(for style: Style) {
-        statusLabel.text = localizedStatus ?? mediaDurationFormatter.string(from: 0)
+        if style == .connected {
+            statusLabel.text = mediaDurationFormatter.string(from: 0)
+        } else {
+            statusLabel.text = localizedStatus
+        }
         switch style {
         case .calling:
             hangUpTitleLabel.text = isOutgoing ? Localized.CALL_FUNC_HANGUP : Localized.CALL_FUNC_DECLINE
@@ -140,7 +144,6 @@ extension CallView {
             }
         case .connected:
             hangUpTitleLabel.text = Localized.CALL_FUNC_HANGUP
-            duration = 0
             UIView.animate(withDuration: animationDuration) {
                 self.setAcceptButtonHidden(true)
                 self.setFunctionSwitchesHidden(false)
@@ -148,7 +151,7 @@ extension CallView {
             }
             timer = Timer.scheduledTimer(timeInterval: 1,
                                          target: self,
-                                         selector: #selector(updateDurationLabel),
+                                         selector: #selector(updateStatusLabelWithCallingDuration),
                                          userInfo: nil,
                                          repeats: true)
         case .disconnecting:

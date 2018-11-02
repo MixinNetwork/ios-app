@@ -177,11 +177,7 @@ class CallManager {
             case MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue:
                 self.handleIncomingIceCandidateIfNeeded(data: data)
             default:
-                if !self.handleCallStatusChange(data: data) {
-                    MessageDAO.shared.updateMessageCategory(category: data.category,
-                                                            messageId: data.quoteMessageId,
-                                                            conversationId: data.conversationId)
-                }
+                self.handleCallStatusChangeIfNeeded(data: data)
             }
         }
     }
@@ -273,10 +269,9 @@ extension CallManager {
         }
     }
     
-    // Return true if data is handled, false if not
-    private func handleCallStatusChange(data: BlazeMessageData) -> Bool {
+    private func handleCallStatusChangeIfNeeded(data: BlazeMessageData) {
         guard let call = call, data.quoteMessageId == call.uuidString else {
-            return false
+            return
         }
         if call.isOutgoing, data.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue, let sdpString = data.data.base64Decoded(), let sdp = RTCSessionDescription(jsonString: sdpString) {
             invalidateUnansweredTimeoutTimerAndSetNil()
@@ -296,7 +291,6 @@ extension CallManager {
                     }
                 }
             }
-            return true
         } else if let category = MessageCategory(rawValue: data.category), CallManager.completeCallCategories.contains(category) {
             ringtonePlayer?.stop()
             DispatchQueue.main.sync {
@@ -307,9 +301,6 @@ extension CallManager {
             DispatchQueue.main.sync {
                 view.dismiss()
             }
-            return true
-        } else {
-            return false
         }
     }
     

@@ -146,14 +146,6 @@ final class MessageDAO {
         MixinDatabase.shared.update(maps: [(Message.Properties.quoteContent, quoteContent)], tableName: Message.tableName, condition: Message.Properties.quoteMessageId == quoteContent)
     }
     
-    func updateMessageCategory(category: String, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.category, category)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
-            return
-        }
-        let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-    }
-
     func updateMessageContentAndStatus(content: String, status: String, messageId: String, conversationId: String) {
         guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
             return

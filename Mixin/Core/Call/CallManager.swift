@@ -219,10 +219,6 @@ extension CallManager {
     }
     
     private func checkPreconditionsAndHandleIncomingCallIfPossible(data: BlazeMessageData) throws {
-        guard WebSocketService.shared.connected else {
-            alertNetworkFailureOrLineBusy()
-            throw CallError.networkFailure
-        }
         guard lineIsIdle else {
             throw CallError.busy
         }

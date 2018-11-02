@@ -2,10 +2,11 @@ import Foundation
 import UserNotifications
 import UIKit
 
-extension UNNotificationSoundName {
+extension UNNotificationSound {
     
-    static let mixin = UNNotificationSoundName(rawValue: "mixin.caf")
-    
+    static let mixin = UNNotificationSound(named: UNNotificationSoundName("mixin.caf"))
+    static let call = UNNotificationSound(named: UNNotificationSoundName("call.caf"))
+
 }
 
 extension UNUserNotificationCenter {
@@ -42,12 +43,12 @@ extension UNUserNotificationCenter {
 extension UNUserNotificationCenter {
 
     func registerNotificationCategory() {
-        let textAction = UNTextInputNotificationAction(identifier: NotificationIdentifier.replyAction.rawValue,
+        let textAction = UNTextInputNotificationAction(identifier: NotificationActionIdentifier.reply,
                                                        title: Localized.NOTIFICATION_REPLY,
                                                        options: [])
-        let category = UNNotificationCategory(identifier: NotificationIdentifier.actionCategory.rawValue,
+        let category = UNNotificationCategory(identifier: NotificationCategoryIdentifier.message,
                                               actions: [textAction],
-                                              intentIdentifiers: [NotificationIdentifier.replyAction.rawValue],
+                                              intentIdentifiers: [NotificationActionIdentifier.reply],
                                               options: [])
 
         UNUserNotificationCenter.current().setNotificationCategories([category])
@@ -76,14 +77,26 @@ extension UNUserNotificationCenter {
             userInfo["userAppId"] = user.appId
         }
         notificationContent.userInfo = userInfo
-        notificationContent.sound = UNNotificationSound(named: .mixin)
-        notificationContent.categoryIdentifier = NotificationIdentifier.actionCategory.rawValue
+        notificationContent.sound = .mixin
+        notificationContent.categoryIdentifier = NotificationCategoryIdentifier.message
 
         if UIApplication.shared.applicationState == .active {
-            UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: NotificationIdentifier.showInAppNotification.rawValue, content: notificationContent, trigger: nil), withCompletionHandler: nil)
+            UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: NotificationRequestIdentifier.showInApp, content: notificationContent, trigger: nil), withCompletionHandler: nil)
         } else {
             UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: message.messageId, content: notificationContent, trigger: nil), withCompletionHandler: nil)
         }
+    }
+    
+    func sendCallNotification(callerName: String) {
+        let content = UNMutableNotificationContent()
+        content.title = callerName
+        content.body = Localized.ALERT_KEY_CONTACT_AUDIO_CALL_MESSAGE
+        content.sound = .call
+        content.categoryIdentifier = NotificationCategoryIdentifier.call
+        let request = UNNotificationRequest(identifier: NotificationRequestIdentifier.call,
+                                            content: content,
+                                            trigger: nil)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
 
     func removeNotifications(identifier: String) {

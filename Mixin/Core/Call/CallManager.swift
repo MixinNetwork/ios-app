@@ -1,6 +1,7 @@
 import Foundation
 import WebRTC
 import CallKit
+import UserNotifications
 
 class CallManager {
     
@@ -260,6 +261,9 @@ extension CallManager {
                 view.reload(user: user)
                 view.style = .calling
                 view.show()
+                if UIApplication.shared.applicationState == .inactive {
+                    UNUserNotificationCenter.current().sendCallNotification(callerName: user.fullName)
+                }
             }
             playRingtone(usesSpeaker: true)
         }

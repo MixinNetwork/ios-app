@@ -555,6 +555,7 @@ public class Localized {
     public static let ALERT_KEY_CONTACT_STICKER_MESSAGE = LocalizedString("alert_key_contact_sticker_message", comment: "send you a sticker")
     public static let ALERT_KEY_CONTACT_CONTACT_MESSAGE = LocalizedString("alert_key_contact_contact_message", comment: "send you a contact")
     public static let ALERT_KEY_CONTACT_AUDIO_MESSAGE = LocalizedString("alert_key_contact_audio_message", comment: "send you a audio")
+    public static let ALERT_KEY_CONTACT_AUDIO_CALL_MESSAGE = LocalizedString("alert_key_contact_audio_call_message", comment: "invites you to a voice call")
 
     // About
     public static let ABOUT_LOGOUT_TITLE = LocalizedString("about_logout_title", comment: "Do you want to log out?")

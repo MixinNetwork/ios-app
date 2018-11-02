@@ -139,7 +139,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 guard AccountAPI.shared.didLogin else {
                     return
                 }
-                UNUserNotificationCenter.current().removeNotifications(identifier: NotificationIdentifier.showInAppNotification.rawValue)
+                UNUserNotificationCenter.current().removeNotifications(identifier: NotificationRequestIdentifier.showInApp)
             })
             self.autoCanceleNotification = workItem
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: workItem)
@@ -170,12 +170,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let actionIdentifier = response.actionIdentifier
         let inputText = (response as? UNTextInputNotificationResponse)?.userText
         let userInfo = response.notification.request.content.userInfo
-        return handerQuickAction(categoryIdentifier: categoryIdentifier, handleActionIdentifier: actionIdentifier, inputText: inputText, userInfo: userInfo)
+        return handerQuickAction(categoryIdentifier: categoryIdentifier, actionIdentifier: actionIdentifier, inputText: inputText, userInfo: userInfo)
     }
 
     @discardableResult
-    func handerQuickAction(categoryIdentifier: String, handleActionIdentifier: String, inputText: String?, userInfo: [AnyHashable : Any]) -> Bool {
-        guard categoryIdentifier == NotificationIdentifier.actionCategory.rawValue, AccountAPI.shared.didLogin else {
+    func handerQuickAction(categoryIdentifier: String, actionIdentifier: String, inputText: String?, userInfo: [AnyHashable : Any]) -> Bool {
+        guard categoryIdentifier == NotificationCategoryIdentifier.message, AccountAPI.shared.didLogin else {
             return false
         }
 
@@ -183,8 +183,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return false
         }
 
-        switch handleActionIdentifier {
-        case NotificationIdentifier.replyAction.rawValue:
+        switch actionIdentifier {
+        case NotificationActionIdentifier.reply:
             guard let text = inputText?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty else {
                 return false
             }

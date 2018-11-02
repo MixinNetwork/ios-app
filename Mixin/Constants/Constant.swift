@@ -40,11 +40,19 @@ extension NSNotification.Name {
     static let HiddenAssetsDidChange = NSNotification.Name("one.mixin.ios.hidden.assets.changed")
 }
 
-enum NotificationIdentifier: String {
-    case replyAction
-    case muteAction
-    case actionCategory
-    case showInAppNotification
+enum NotificationActionIdentifier {
+    static let reply = "reply"
+    static let mute = "mute" // preserved
+}
+
+enum NotificationCategoryIdentifier {
+    static let message = "message"
+    static let call = "call"
+}
+
+enum NotificationRequestIdentifier {
+    static let showInApp = "show_in_app"
+    static let call = "call"
 }
 
 struct ConversationChange {

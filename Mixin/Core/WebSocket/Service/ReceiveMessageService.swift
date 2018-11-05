@@ -81,6 +81,12 @@ class ReceiveMessageService: MixinService {
                         continue
                     }
 
+                    guard let category = MessageCategory(rawValue: data.category), category != .UNKNOWN else {
+                        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+                        BlazeMessageDAO.shared.delete(data: data)
+                        continue
+                    }
+
                     ReceiveMessageService.shared.syncConversation(data: data)
                     ReceiveMessageService.shared.processSystemMessage(data: data)
                     ReceiveMessageService.shared.processPlainMessage(data: data)
@@ -99,7 +105,7 @@ class ReceiveMessageService: MixinService {
             return
         }
         MessageDAO.shared.insertMessage(message: Message.createMessage(appMessage: data), messageSource: data.source)
-        updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
+        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
 
     private func processSignalMessage(data: BlazeMessageData) {
@@ -110,10 +116,10 @@ class ReceiveMessageService: MixinService {
         let username = UserDAO.shared.getUser(userId: data.userId)?.fullName ?? data.userId
 
         if data.category == MessageCategory.SIGNAL_KEY.rawValue {
-            updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
+            updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
             MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
         } else {
-            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED, createdAt: data.createdAt)
+            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         }
 
         let decoded = SignalProtocol.shared.decodeMessageData(encoded: data.data)
@@ -123,7 +129,7 @@ class ReceiveMessageService: MixinService {
                     let plainText = String(data: plain, encoding: .utf8)!
                     if let messageId = decoded.resendMessageId {
                         self.processRedecryptMessage(data: data, messageId: messageId, plainText: plainText)
-                        self.updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
+                        self.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
                         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
                     } else {
                         self.processDecryptSuccess(data: data, plainText: plainText)
@@ -427,7 +433,7 @@ class ReceiveMessageService: MixinService {
             }
 
             defer {
-                updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
+                updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
                 MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
             }
 
@@ -453,7 +459,7 @@ class ReceiveMessageService: MixinService {
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
             _ = syncUser(userId: data.getSenderId())
             processDecryptSuccess(data: data, plainText: data.data)
-            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED, createdAt: data.createdAt)
+            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         default:
             break
         }
@@ -491,7 +497,7 @@ class ReceiveMessageService: MixinService {
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_KEY)
     }
 
-    private func updateRemoteMessageStatus(messageId: String, status: MessageStatus, createdAt: String) {
+    private func updateRemoteMessageStatus(messageId: String, status: MessageStatus) {
         SendMessageService.shared.sendAckMessage(messageId: messageId, status: status)
     }
 }
@@ -534,7 +540,7 @@ extension ReceiveMessageService {
         snapshot.createdAt = data.createdAt
         SnapshotDAO.shared.replaceSnapshot(snapshot: snapshot)
         MessageDAO.shared.insertMessage(message: Message.createMessage(snapshotMesssage: snapshot, data: data), messageSource: data.source)
-        updateRemoteMessageStatus(messageId: data.messageId, status: .READ, createdAt: data.createdAt)
+        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
 
     private func processSystemConversationMessage(data: BlazeMessageData) {
@@ -553,7 +559,7 @@ extension ReceiveMessageService {
 
         defer {
             if operSuccess {
-                updateRemoteMessageStatus(messageId: messageId, status: .READ, createdAt: data.createdAt)
+                updateRemoteMessageStatus(messageId: messageId, status: .READ)
                 if sysMessage.action != SystemConversationAction.UPDATE.rawValue && sysMessage.action != SystemConversationAction.ROLE.rawValue {
                     ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: data.conversationId))
                 }

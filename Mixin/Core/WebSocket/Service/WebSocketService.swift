@@ -100,8 +100,19 @@ extension WebSocketService: SRWebSocketDelegate {
                 transactions.removeValue(forKey: blazeMessage.id)
                 transaction.callback(.success(blazeMessage))
             }
-            if blazeMessage.data != nil && blazeMessage.isReceiveMessageAction() {
-                ReceiveMessageService.shared.receiveMessage(blazeMessage: blazeMessage, rawData: unzipJson)
+
+            if blazeMessage.data != nil {
+                if blazeMessage.isReceiveMessageAction() {
+                    ReceiveMessageService.shared.receiveMessage(blazeMessage: blazeMessage, rawData: unzipJson)
+                } else {
+                    guard blazeMessage.action != BlazeMessageAction.acknowledgeMessageReceipt.rawValue else {
+                        return
+                    }
+                    guard let data = blazeMessage.toBlazeMessageData() else {
+                        return
+                    }
+                    SendMessageService.shared.sendAckMessage(messageId: data.messageId, status: .READ)
+                }
             }
         }
     }

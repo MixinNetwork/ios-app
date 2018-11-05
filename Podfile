@@ -5,7 +5,7 @@ target 'Mixin' do
   use_frameworks!
   inhibit_all_warnings!
 
-  pod 'Alamofire'
+  pod 'Alamofire', :git => 'git@github.com:over140/Alamofire.git', :branch => 'master'
   pod 'Bugsnag'
   pod 'Firebase/Core'
   pod 'Firebase/Analytics'

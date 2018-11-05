@@ -180,6 +180,7 @@
 "call_func_mute" = "静音";
 "call_func_speaker" = "扬声器";
 "call_no_microphone_permission" = "如果使用语音通话，Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
+"call_no_network" = "通话服务不可用，请确认网络连接正常并重试";
 
 // Sticker
 "sticker_manager_title" = "我收藏的贴纸";

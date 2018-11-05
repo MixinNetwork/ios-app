@@ -374,7 +374,7 @@ extension CallManager {
     private func alertNetworkFailureOrLineBusy() {
         DispatchQueue.main.async {
             if !WebSocketService.shared.connected {
-                AppDelegate.current.window?.rootViewController?.alert(Localized.TOAST_API_ERROR_NETWORK_CONNECTION_LOST)
+                AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_NO_NETWORK)
             } else if !self.lineIsIdle {
                 AppDelegate.current.window?.rootViewController?.alert(Localized.CALL_HINT_ON_ANOTHER_CALL)
             }

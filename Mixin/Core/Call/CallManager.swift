@@ -332,6 +332,7 @@ extension CallManager: WebRTCClientDelegate {
     
     func webRTCClientDidConnected(_ client: WebRTCClient) {
         call?.connectedDate = Date()
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         performSynchronouslyOnMainThread {
             self.view.style = .connected
         }

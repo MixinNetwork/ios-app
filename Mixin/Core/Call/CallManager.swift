@@ -204,7 +204,8 @@ extension CallManager {
             || category == .WEBRTC_AUDIO_END
             || (category == .WEBRTC_AUDIO_DECLINE && isUserInitiated)
         let status: MessageStatus = shouldMarkMessageRead ? .READ : .DELIVERED
-        let msg = Message.createWebRTCMessage(conversationId: call.conversationId,
+        let msg = Message.createWebRTCMessage(messageId: call.uuidString,
+                                              conversationId: call.conversationId,
                                               userId: call.raisedByUserId,
                                               category: category,
                                               mediaDuration: Int64(duration),
@@ -449,7 +450,8 @@ extension CallManager {
                                                   ownerUser: call.opponentUser,
                                                   isGroupMessage: false)
         }
-        let failedMessage = Message.createWebRTCMessage(conversationId: call.conversationId,
+        let failedMessage = Message.createWebRTCMessage(messageId: call.uuidString,
+                                                        conversationId: call.conversationId,
                                                         category: .WEBRTC_AUDIO_FAILED,
                                                         status: .DELIVERED)
         MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")

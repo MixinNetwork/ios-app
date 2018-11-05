@@ -86,8 +86,9 @@ class SendMessageService: MixinService {
             let response = ConversationResponse(conversationId: conversationId, name: "", category: ConversationCategory.CONTACT.rawValue, iconUrl: user.avatarUrl, announcement: "", createdAt: Date().toUTCString(), participants: participants, codeUrl: "", creatorId: user.userId, muteUntil: "")
             ConversationDAO.shared.createConversation(conversation: response, targetStatus: .START)
         }
-
-        MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+        if !message.category.hasPrefix("WEBRTC_") {
+            MessageDAO.shared.insertMessage(message: msg, messageSource: "")
+        }
         if msg.category.hasSuffix("_TEXT") || msg.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") {
             SendMessageService.shared.sendMessage(message: msg)
         } else if msg.category.hasSuffix("_IMAGE") {
@@ -98,12 +99,21 @@ class SendMessageService: MixinService {
             FileJobQueue.shared.addJob(job: VideoUploadJob(message: msg))
         } else if msg.category.hasSuffix("_AUDIO") {
             FileJobQueue.shared.addJob(job: AudioUploadJob(message: msg))
+        } else if message.category.hasPrefix("WEBRTC_"), let recipient = ownerUser {
+            SendMessageService.shared.sendWebRTCMessage(message: message, recipientId: recipient.userId)
         }
     }
 
     func sendMessage(message: Message) {
         saveDispatchQueue.async {
             MixinDatabase.shared.insertOrReplace(objects: [Job(message: message)])
+            SendMessageService.shared.processMessages()
+        }
+    }
+    
+    func sendWebRTCMessage(message: Message, recipientId: String) {
+        saveDispatchQueue.async {
+            MixinDatabase.shared.insertOrReplace(objects: [Job(webRTCMessage: message, recipientId: recipientId)])
             SendMessageService.shared.processMessages()
         }
     }
@@ -270,7 +280,12 @@ class SendMessageService: MixinService {
                 switch job.action {
                 case JobAction.SEND_MESSAGE.rawValue:
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {
-                        try SendMessageService.shared.sendMessage(job: job)
+                        let blazeMessage = job.toBlazeMessage()
+                        if blazeMessage.action == BlazeMessageAction.createCall.rawValue {
+                            try SendMessageService.shared.sendCallMessage(blazeMessage: blazeMessage)
+                        } else {
+                            try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage, jobOrderId: job.orderId)
+                        }
                     }
                 case JobAction.RESEND_MESSAGE.rawValue:
                     try ReceiveMessageService.shared.messageDispatchQueue.sync {
@@ -334,8 +349,8 @@ extension SendMessageService {
         FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][ResendMessage]...messageId:\(messageId)...resendMessageId:\(resendMessageId)...resendUserId:\(recipientId)")
     }
 
-    private func sendMessage(job: Job) throws {
-        var blazeMessage = job.toBlazeMessage()
+    private func sendMessage(blazeMessage: BlazeMessage, jobOrderId: Int?) throws {
+        var blazeMessage = blazeMessage
         guard let messageId = blazeMessage.params?.messageId, let message = MessageDAO.shared.getMessage(messageId: messageId) else {
             return
         }
@@ -384,8 +399,25 @@ extension SendMessageService {
             blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: message.content ?? "")
             try deliverMessage(blazeMessage: blazeMessage)
 
-            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isExistSenderKey:\(isExistSenderKey)...messageId:\(messageId)...messageStatus:\(message.status)...orderId:\(job.orderId ?? 0)")
+            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isExistSenderKey:\(isExistSenderKey)...messageId:\(messageId)...messageStatus:\(message.status)...orderId:\(jobOrderId ?? 0)")
         }
+    }
+    
+    private func sendCallMessage(blazeMessage: BlazeMessage) throws {
+        let onlySendWhenThereIsAnActiveCall = blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue
+            || blazeMessage.params?.category == MessageCategory.WEBRTC_AUDIO_ANSWER.rawValue
+            || blazeMessage.params?.category == MessageCategory.WEBRTC_ICE_CANDIDATE.rawValue
+        guard CallManager.shared.call != nil || !onlySendWhenThereIsAnActiveCall else {
+            return
+        }
+        guard let conversationId = blazeMessage.params?.conversationId else {
+            return
+        }
+        guard let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
+            return
+        }
+        try requestCreateConversation(conversation: conversation)
+        try deliverMessage(blazeMessage: blazeMessage)
     }
 
     private func deliverMessage(blazeMessage: BlazeMessage) throws {

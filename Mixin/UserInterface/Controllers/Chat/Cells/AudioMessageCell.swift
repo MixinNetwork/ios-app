@@ -101,12 +101,8 @@ extension AudioMessageCell: MXNAudioPlayerObserver {
     
     func mxnAudioPlayer(_ player: MXNAudioPlayer, playbackStateDidChangeTo state: MXNAudioPlaybackState) {
         if state == .stopped {
-            if Thread.isMainThread {
-                isPlaying = false
-            } else {
-                DispatchQueue.main.sync { [weak self] in
-                    self?.isPlaying = false
-                }
+            performSynchronouslyOnMainThread { [weak self] in
+                self?.isPlaying = false
             }
         }
     }

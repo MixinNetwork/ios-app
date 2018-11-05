@@ -23,5 +23,6 @@ target 'Mixin' do
   pod 'SignalProtocolC', :git => 'git@github.com:MixinMessenger/SignalProtocolC.git', :submodules => true
   pod 'WCDB.swift', :git => 'git@github.com:wuyuehyang/wcdb.git', :branch => 'swift4.2'
   pod 'GiphyCoreSDK'
+  pod 'GoogleWebRTC'
 
 end

@@ -31,11 +31,15 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     }
 
     internal var backgroundWidth: CGFloat {
-        return contentSize.width + contentMargin.horizontal
+        return contentAdditionalLeadingMargin + contentSize.width + contentMargin.horizontal
     }
     
     internal var contentLabelTopMargin: CGFloat {
         return style.contains(.fullname) ? fullnameHeight : contentMargin.top
+    }
+    
+    internal var contentAdditionalLeadingMargin: CGFloat {
+        return 0
     }
     
     // Link detection will be disabled if subclasses override this var and return a non-nil value
@@ -43,9 +47,13 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return nil
     }
     
+    internal var rawContent: String {
+        return message.content
+    }
+    
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         super.init(message: message, style: style, fits: layoutWidth)
-        let str = NSMutableAttributedString(string: message.content)
+        let str = NSMutableAttributedString(string: rawContent)
         // Detect links
         let linksMap: [NSRange: URL]
         if let fixedLinks = fixedLinks {
@@ -128,8 +136,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         // Make content
         self.content = CoreTextLabel.Content(lines: lines, lineOrigins: lineOrigins, links: links)
         // Calculate content size
-        let hasStatusImage = !style.contains(.received)
-        let statusImageWidth = hasStatusImage ? DetailInfoMessageViewModel.statusImageSize.width : 0
+        let statusImageWidth = showStatusImage ? DetailInfoMessageViewModel.statusImageSize.width : 0
         let additionalTrailingSize = CGSize(width: timeLeftMargin + timeSize.width + statusImageWidth + DetailInfoMessageViewModel.statusLeftMargin, height: 16)
         var contentSize = textSize
         let lastLineWithTrailingWidth = lastLineWidth + additionalTrailingSize.width

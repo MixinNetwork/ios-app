@@ -120,7 +120,19 @@ extension Message {
         let mediaStatus = data.category.hasSuffix("_DATA") || data.category.hasSuffix("_VIDEO") ? MediaStatus.CANCELED.rawValue : MediaStatus.PENDING.rawValue
         return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: mediaData.attachmentId, mediaMimeType: mediaData.mimeType, mediaSize: mediaData.size, mediaDuration: mediaData.duration, mediaWidth: mediaData.width, mediaHeight: mediaData.height, mediaKey: mediaData.key, mediaDigest: mediaData.digest, mediaStatus: mediaStatus, mediaWaveform: mediaData.waveform, thumbImage: mediaData.thumbnail, status: MessageStatus.DELIVERED.rawValue, name: mediaData.name, createdAt: data.createdAt)
     }
-
+    
+    static func createWebRTCMessage(data: BlazeMessageData, category: MessageCategory, status: MessageStatus) -> Message {
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: category.rawValue, status: status.rawValue, quoteMessageId: data.quoteMessageId, createdAt: data.createdAt)
+    }
+    
+    static func createWebRTCMessage(quote: BlazeMessageData, category: MessageCategory, status: MessageStatus) -> Message {
+        return createMessage(messageId: UUID().uuidString.lowercased(), conversationId: quote.conversationId, userId: AccountAPI.shared.accountUserId, category: category.rawValue, status: status.rawValue, quoteMessageId: quote.messageId, createdAt: Date().toUTCString())
+    }
+    
+    static func createWebRTCMessage(messageId: String = UUID().uuidString.lowercased(), conversationId: String, userId: String = AccountAPI.shared.accountUserId, category: MessageCategory, content: String? = nil, mediaDuration: Int64? = nil, status: MessageStatus, quoteMessageId: String? = nil) -> Message {
+        return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category.rawValue, content: content, mediaDuration: mediaDuration, status: status.rawValue, quoteMessageId: quoteMessageId, createdAt: Date().toUTCString())
+    }
+    
     static func createMessage(messageId: String = UUID().uuidString.lowercased(), category: String, conversationId: String, createdAt: String = Date().toUTCString(), userId: String) -> Message {
         return createMessage(messageId: messageId, conversationId: conversationId, userId: userId, category: category, status: MessageStatus.SENDING.rawValue, createdAt: createdAt)
     }
@@ -152,6 +164,14 @@ enum MessageCategory: String {
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION
     case SYSTEM_ACCOUNT_SNAPSHOT
+    case WEBRTC_AUDIO_OFFER
+    case WEBRTC_AUDIO_ANSWER
+    case WEBRTC_AUDIO_CANCEL
+    case WEBRTC_AUDIO_DECLINE
+    case WEBRTC_AUDIO_BUSY
+    case WEBRTC_AUDIO_FAILED
+    case WEBRTC_AUDIO_END
+    case WEBRTC_ICE_CANDIDATE
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN

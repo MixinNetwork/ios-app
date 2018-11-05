@@ -97,6 +97,8 @@ extension ConversationMoreMenuViewController: UICollectionViewDelegate {
                 conversationViewController?.transferAction()
             case .contact:
                 conversationViewController?.contactAction()
+            case .call:
+                conversationViewController?.callAction()
             }
         } else {
             let app = apps[indexPath.row]
@@ -117,6 +119,7 @@ extension ConversationMoreMenuViewController {
         case file
         case transfer
         case contact
+        case call
         
         var image: UIImage {
             switch self {
@@ -130,6 +133,8 @@ extension ConversationMoreMenuViewController {
                 return #imageLiteral(resourceName: "ic_conversation_transfer")
             case .contact:
                 return #imageLiteral(resourceName: "ic_conversation_contact")
+            case .call:
+                return UIImage(named: "ic_conversation_call")!
             }
         }
         
@@ -145,6 +150,8 @@ extension ConversationMoreMenuViewController {
                 return Localized.CHAT_MENU_TRANSFER
             case .contact:
                 return Localized.CHAT_MENU_CONTACT
+            case .call:
+                return Localized.CHAT_MENU_CALL
             }
         }
     }

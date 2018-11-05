@@ -81,10 +81,39 @@ extension Job {
 extension Job {
 
     init(message: Message) {
-        let blazeParam = BlazeMessageParam(conversationId: message.conversationId, recipientId: nil, category: message.category, data: nil, offset: nil, status: MessageStatus.SENT.rawValue, messageId: message.messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
-        let blazeMessage = BlazeMessage(params: blazeParam, action: BlazeMessageAction.createMessage.rawValue)
+        let param = BlazeMessageParam(conversationId: message.conversationId,
+                                      recipientId: nil,
+                                      category: message.category,
+                                      data: nil,
+                                      offset: nil,
+                                      status: MessageStatus.SENT.rawValue,
+                                      messageId: message.messageId,
+                                      quoteMessageId: nil,
+                                      keys: nil,
+                                      recipients: nil,
+                                      messages: nil)
+        let action = BlazeMessageAction.createMessage.rawValue
+        let blazeMessage = BlazeMessage(params: param, action: action)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
     }
+    
+    init(webRTCMessage message: Message, recipientId: String) {
+        let param = BlazeMessageParam(conversationId: message.conversationId,
+                                      recipientId: recipientId,
+                                      category: message.category,
+                                      data: message.content?.base64Encoded(),
+                                      offset: nil,
+                                      status: nil,
+                                      messageId: message.messageId,
+                                      quoteMessageId: message.quoteMessageId,
+                                      keys: nil,
+                                      recipients: nil,
+                                      messages: nil)
+        let action = BlazeMessageAction.createCall.rawValue
+        let blazeMessage = BlazeMessage(params: param, action: action)
+        self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
+    }
+    
 }
 
 

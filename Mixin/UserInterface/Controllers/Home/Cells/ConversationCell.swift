@@ -94,6 +94,8 @@ class ConversationCell: UITableViewCell {
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_AUDIO
                 }
+            } else if category.hasPrefix("WEBRTC_") {
+                contentLabel.text = Localized.NOTIFICATION_CONTENT_VOICE_CALL
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 contentLabel.text = Localized.NOTIFICATION_CONTENT_TRANSFER
                 messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_transfer")
@@ -126,21 +128,24 @@ class ConversationCell: UITableViewCell {
     }
 
     private func showMessageIndicate(conversation: ConversationItem) {
-        guard conversation.senderId == AccountAPI.shared.accountUserId, !conversation.contentType.hasPrefix("SYSTEM_") else {
-            messageStatusImageView.isHidden = true
-            return
-        }
-        messageStatusImageView.isHidden = false
-        switch conversation.messageStatus {
-        case MessageStatus.SENDING.rawValue:
-            messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_sending")
-        case MessageStatus.SENT.rawValue:
-            messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_sent")
-        case MessageStatus.DELIVERED.rawValue:
-            messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_delivered")
-        case MessageStatus.READ.rawValue:
-            messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_read")
-        default:
+        if conversation.contentType.hasPrefix("WEBRTC_") {
+            messageStatusImageView.isHidden = false
+            messageStatusImageView.image = UIImage(named: "ic_message_call")
+        } else if conversation.senderId == AccountAPI.shared.accountUserId, !conversation.contentType.hasPrefix("SYSTEM_") {
+            messageStatusImageView.isHidden = false
+            switch conversation.messageStatus {
+            case MessageStatus.SENDING.rawValue:
+                messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_sending")
+            case MessageStatus.SENT.rawValue:
+                messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_sent")
+            case MessageStatus.DELIVERED.rawValue:
+                messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_delivered")
+            case MessageStatus.READ.rawValue:
+                messageStatusImageView.image = #imageLiteral(resourceName: "ic_status_read")
+            default:
+                messageStatusImageView.isHidden = true
+            }
+        } else {
             messageStatusImageView.isHidden = true
         }
     }

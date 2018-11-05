@@ -134,6 +134,14 @@
 "chat_message_left" = "%@离开了群组";
 "chat_message_admin" = "%@现在是管理员";
 "chat_message_changed_title" = "%@修改群组名称为'%@'";
+"chat_message_call_cancelled" = "已取消";
+"chat_message_call_remote_cancelled" = "对方已取消";
+"chat_message_call_declined" = "已拒绝";
+"chat_message_call_remote_declined" = "对方已拒绝";
+"chat_message_call_busy" = "忙线未接听";
+"chat_message_call_remote_busy" = "对方忙";
+"chat_message_call_failed" = "连接失败";
+"chat_message_call_duration" = "通话时长 %@";
 "chat_cell_title_encryption" = "此对话中的消息使用端对端加密。点击了解更多。";
 "chat_cell_title_unknown_category" = "不支持此类型消息。请升级 Mixin 查看。";
 "chat_forward_title" = "转发";
@@ -150,6 +158,7 @@
 "chat_menu_file" = "文件";
 "chat_menu_transfer" = "转账";
 "chat_menu_contact" = "联系人";
+"chat_menu_call" = "通话";
 "chat_photo_save" = "保存到相册";
 "chat_file_expired" = "已过期";
 "chat_voice_record_cancel" = "滑动取消";
@@ -158,6 +167,20 @@
 "chat_quote_type_photo" = "图片";
 "chat_quote_type_video" = "视频";
 "chat_search_giphy" = "在 GIPHY 上搜索";
+
+// Call
+"call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
+"call_status_calling" = "正在拨号...";
+"call_status_being_calling" = "正在等待接听...";
+"call_status_connecting" = "正在连接";
+"call_status_disconnecting" = "正在断开";
+"call_func_hangup" = "挂断";
+"call_func_decline" = "拒绝";
+"call_func_accept" = "接听";
+"call_func_mute" = "静音";
+"call_func_speaker" = "扬声器";
+"call_no_microphone_permission" = "如果使用语音通话，Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
+"call_no_network" = "通话服务不可用，请确认网络连接正常并重试";
 
 // Sticker
 "sticker_manager_title" = "我收藏的贴纸";
@@ -455,6 +478,7 @@
 "notification_content_rebate" = "[退款]";
 "notification_content_video" = "[视频]";
 "notification_content_audio" = "[语音]";
+"notification_content_voice_call" = "[语音通话]";
 "alert_key_group_message" = "%@发来一条信息";
 "alert_key_group_text_message" = "%@发来一条信息";
 "alert_key_group_image_message" = "%@发来一张图片";
@@ -472,6 +496,7 @@
 "alert_key_contact_sticker_message" = "发来了一个贴纸";
 "alert_key_contact_contact_message" = "发来了一个联系人";
 "alert_key_contact_audio_message" = "发来了一个语音";
+"alert_key_contact_audio_call_message" = "邀请你进行语音通话";
 
 // About
 "about_twitter" = "关注我们的 Twitter";

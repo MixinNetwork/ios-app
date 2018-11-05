@@ -10,7 +10,9 @@ class ReceiveMessageService: MixinService {
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive")
     private let prekeyMiniNum = 500
-
+    private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
+    private var listPendingCallWorkItems = [String: DispatchWorkItem]()
+    
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
 
@@ -29,7 +31,7 @@ class ReceiveMessageService: MixinService {
             if blazeMessage.action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue {
                 MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
                 CryptoUserDefault.shared.statusOffset = data.updatedAt.toUTCDate().nanosecond()
-            } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue {
+            } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                 if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
                 } else {
@@ -92,6 +94,7 @@ class ReceiveMessageService: MixinService {
                     ReceiveMessageService.shared.processPlainMessage(data: data)
                     ReceiveMessageService.shared.processSignalMessage(data: data)
                     ReceiveMessageService.shared.processAppButton(data: data)
+                    ReceiveMessageService.shared.processWebRTCMessage(data: data)
                     BlazeMessageDAO.shared.delete(data: data)
                 }
 
@@ -99,7 +102,44 @@ class ReceiveMessageService: MixinService {
             } while true
         }
     }
-
+    
+    private func processWebRTCMessage(data: BlazeMessageData) {
+        guard data.category.hasPrefix("WEBRTC_") else {
+            return
+        }
+        _ = syncUser(userId: data.getSenderId())
+        updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED, createdAt: data.createdAt)
+        MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
+        if data.source == BlazeMessageAction.listPendingMessages.rawValue {
+            if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {
+                if abs(data.createdAt.toUTCDate().timeIntervalSinceNow) >= CallManager.unansweredTimeoutInterval {
+                    let msg = Message.createWebRTCMessage(data: data, category: .WEBRTC_AUDIO_CANCEL, status: .DELIVERED)
+                    MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+                } else {
+                    let workItem = DispatchWorkItem(block: {
+                        CallManager.shared.handleIncomingBlazeMessageData(data)
+                    })
+                    listPendingCallWorkItems[data.messageId] = workItem
+                    DispatchQueue.global().asyncAfter(deadline: .now() + listPendingCallDelay, execute: workItem)
+                }
+            } else if let workItem = listPendingCallWorkItems[data.quoteMessageId] {
+                workItem.cancel()
+                listPendingCallWorkItems.removeValue(forKey: data.quoteMessageId)
+                let category = MessageCategory(rawValue: data.category) ?? .WEBRTC_AUDIO_FAILED
+                let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                      conversationId: data.conversationId,
+                                                      userId: data.userId,
+                                                      category: category,
+                                                      status: .DELIVERED)
+                MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+            } else {
+                CallManager.shared.handleIncomingBlazeMessageData(data)
+            }
+        } else {
+            CallManager.shared.handleIncomingBlazeMessageData(data)
+        }
+    }
+    
     private func processAppButton(data: BlazeMessageData) {
         guard data.category == MessageCategory.APP_BUTTON_GROUP.rawValue || data.category == MessageCategory.APP_CARD.rawValue else {
             return

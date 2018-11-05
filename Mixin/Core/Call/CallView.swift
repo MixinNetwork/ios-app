@@ -52,6 +52,7 @@ class CallView: UIVisualEffectView {
     }
     
     func dismiss() {
+        setConnectionDurationTimerEnabled(false)
         removeFromSuperview()
     }
     
@@ -149,16 +150,13 @@ extension CallView {
                 self.setFunctionSwitchesHidden(false)
                 self.layoutIfNeeded()
             }
-            timer = Timer.scheduledTimer(timeInterval: 1,
-                                         target: self,
-                                         selector: #selector(updateStatusLabelWithCallingDuration),
-                                         userInfo: nil,
-                                         repeats: true)
+            setConnectionDurationTimerEnabled(true)
         case .disconnecting:
             timer?.invalidate()
             timer = nil
             setAcceptButtonHidden(true)
             setConnectionButtonsEnabled(false)
+            setConnectionDurationTimerEnabled(false)
         }
     }
     
@@ -182,6 +180,20 @@ extension CallView {
         let alpha: CGFloat = hidden ? 0 : 1
         muteStackView.alpha = alpha
         speakerStackView.alpha = alpha
+    }
+    
+    private func setConnectionDurationTimerEnabled(_ enabled: Bool) {
+        timer?.invalidate()
+        timer = nil
+        if enabled {
+            let timer = Timer(timeInterval: 1,
+                              target: self,
+                              selector: #selector(updateStatusLabelWithCallingDuration),
+                              userInfo: nil,
+                              repeats: true)
+            RunLoop.main.add(timer, forMode: .default)
+            self.timer = timer
+        }
     }
     
 }

@@ -127,11 +127,14 @@ final class MessageDAO {
     }
 
     func clearChat(conversationId: String, autoNotification: Bool = true) {
-        guard MixinDatabase.shared.delete(table: Message.tableName, condition: Message.Properties.conversationId == conversationId) > 0, autoNotification else {
-            return
+        MixinDatabase.shared.transaction { (db) in
+            try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
+            try db.update(table: Conversation.tableName, on: [Conversation.Properties.unseenMessageCount], with: [0])
         }
-        let change = ConversationChange(conversationId: conversationId, action: .reload)
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        if autoNotification {
+            let change = ConversationChange(conversationId: conversationId, action: .reload)
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        }
     }
 
     func updateMessageContentAndMediaStatus(content: String, mediaStatus: MediaStatus, messageId: String, conversationId: String) {

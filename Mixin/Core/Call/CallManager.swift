@@ -299,9 +299,6 @@ extension CallManager {
             }
             CallManager.insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
             clean()
-            DispatchQueue.main.sync {
-                view.dismiss()
-            }
         }
     }
     
@@ -335,6 +332,15 @@ extension CallManager: WebRTCClientDelegate {
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         performSynchronouslyOnMainThread {
             self.view.style = .connected
+        }
+    }
+    
+    func webRTCClientDidFailed(_ client: WebRTCClient) {
+        queue.async {
+            self.failCurrentCall(sendFailedMesasgeToRemote: true,
+                                 reportAction: "RTC Client fail",
+                                 description: "")
+            CallUserDefaults.shared.servers = nil
         }
     }
     
@@ -487,6 +493,9 @@ extension CallManager {
         isMuted = false
         usesSpeaker = false
         invalidateUnansweredTimeoutTimerAndSetNil()
+        performSynchronouslyOnMainThread {
+            view.dismiss()
+        }
     }
     
     private func playRingtone(usesSpeaker: Bool) {

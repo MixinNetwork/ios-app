@@ -4,6 +4,7 @@ import WebRTC
 protocol WebRTCClientDelegate: class {
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate)
     func webRTCClientDidConnected(_ client: WebRTCClient)
+    func webRTCClientDidFailed(_ client: WebRTCClient)
 }
 
 class WebRTCClient: NSObject {
@@ -98,6 +99,8 @@ extension WebRTCClient: RTCPeerConnectionDelegate {
         if newState == .connected {
             delegate?.webRTCClientDidConnected(self)
             RTCAudioSession.sharedInstance().isAudioEnabled = true
+        } else if newState == .failed {
+            delegate?.webRTCClientDidFailed(self)
         }
     }
     

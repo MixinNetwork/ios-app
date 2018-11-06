@@ -71,7 +71,7 @@ PODS:
     - SDWebImage/Core (>= 5.0.0-beta3)
     - YYImage/Core
   - SignalProtocolC (2.3.1)
-  - SnapKit (4.0.1)
+  - SnapKit (4.2.0)
   - SocketRocket (0.5.1)
   - SQLiteRepairKit (1.2.1):
     - WCDBOptimizedSQLCipher (~> 1.2.0)
@@ -185,7 +185,7 @@ SPEC CHECKSUMS:
   SDWebImage: e52654ceef9fdc19f4c612d64a5b6d3f05dd81a4
   SDWebImageYYPlugin: 9d51da357b0d810ecfe63501e2d65ca87dc7334d
   SignalProtocolC: d46237ab35954a8d1213faabf4baa783591c49ab
-  SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SQLiteRepairKit: 4d21bab9eff6a273f63da6815a0d1659e53f5bde
   SwiftMessages: da7c981256a65b3e58022d9027a36584cf4eccf5
@@ -196,4 +196,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: aabcfc7f84a1f1e51051be4e49131939a4071fee
 
-COCOAPODS: 1.6.0.beta.1
+COCOAPODS: 1.6.0.beta.2

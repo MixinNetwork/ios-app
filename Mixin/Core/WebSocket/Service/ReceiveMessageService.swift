@@ -108,7 +108,7 @@ class ReceiveMessageService: MixinService {
             return
         }
         _ = syncUser(userId: data.getSenderId())
-        updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED, createdAt: data.createdAt)
+        updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
         if data.source == BlazeMessageAction.listPendingMessages.rawValue {
             if data.category == MessageCategory.WEBRTC_AUDIO_OFFER.rawValue {

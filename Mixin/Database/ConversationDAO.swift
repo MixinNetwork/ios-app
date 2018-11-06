@@ -159,7 +159,14 @@ final class ConversationDAO {
     func updateConversationPinTime(conversationId: String, pinTime: String?) {
         MixinDatabase.shared.update(maps: [(Conversation.Properties.pinTime, pinTime ?? MixinDatabase.NullValue())], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
     }
-
+    
+    func deleteConversationAndMessages(conversationId: String) {
+        MixinDatabase.shared.transaction { (db) in
+            try db.delete(fromTable: Conversation.tableName, where: Conversation.Properties.conversationId == conversationId)
+            try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
+        }
+    }
+    
     func deleteAndExitConversation(conversationId: String, autoNotification: Bool = true) {
         MessageDAO.shared.clearChat(conversationId: conversationId, autoNotification: false)
         MixinFile.cleanAllChatDirectories()

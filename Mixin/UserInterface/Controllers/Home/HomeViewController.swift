@@ -274,13 +274,12 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     private func deleteAction(indexPath: IndexPath) {
-        let conversation = conversations[indexPath.row]
         tableView.beginUpdates()
-        conversations.remove(at: indexPath.row)
+        let conversation = conversations.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
         tableView.endUpdates()
         DispatchQueue.global().async {
-            MessageDAO.shared.clearChat(conversationId: conversation.conversationId, autoNotification: false)
+            ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversation.conversationId)
             MixinFile.cleanAllChatDirectories()
         }
     }

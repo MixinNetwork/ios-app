@@ -57,6 +57,8 @@
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "toast_added" = "已添加";
 "toast_error" = "错误 %@：%@";
+"screen_captured_pin_leaking_hint" = "检测到屏幕录制，支付密码可能会录入视频。";
+"biometry_suggestion" = "建议使用%@认证";
 
 // Login
 "navigation_title_select_country" = "选择一个国家";

@@ -262,7 +262,7 @@ extension CallManager {
                 view.reload(user: user)
                 view.style = .calling
                 view.show()
-                if UIApplication.shared.applicationState == .inactive {
+                if UIApplication.shared.applicationState != .active {
                     UNUserNotificationCenter.current().sendCallNotification(callerName: user.fullName)
                 }
             }

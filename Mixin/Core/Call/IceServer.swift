@@ -14,23 +14,17 @@ extension RTCIceServer {
     private static let iceServerLoadingTimeoutInterval = DispatchTimeInterval.seconds(3)
     
     private static func loadIceServer() -> [RTCIceServer] {
-        var output: [TurnServer]
-        if let servers = CallUserDefaults.shared.servers {
-            output = servers
-        } else {
-            output = []
-            CallAPI.shared.turn { (result) in
-                switch result {
-                case .success(let servers):
-                    output = servers
-                    CallUserDefaults.shared.servers = servers
-                case .failure(let error):
-                    UIApplication.trackError("Turn Server", action: "Fetch", userInfo: ["error": error.debugDescription])
-                }
-                semaphore.signal()
+        var output = [TurnServer]()
+        CallAPI.shared.turn { (result) in
+            switch result {
+            case .success(let servers):
+                output = servers
+            case .failure(let error):
+                UIApplication.trackError("Turn Server", action: "Fetch", userInfo: ["error": error.debugDescription])
             }
-            _ = semaphore.wait(timeout: .now() + iceServerLoadingTimeoutInterval)
+            semaphore.signal()
         }
+        _ = semaphore.wait(timeout: .now() + iceServerLoadingTimeoutInterval)
         return output.map({ RTCIceServer(urlStrings: [$0.url], username: $0.username, credential: $0.credential) })
     }
     

@@ -340,7 +340,6 @@ extension CallManager: WebRTCClientDelegate {
             self.failCurrentCall(sendFailedMesasgeToRemote: true,
                                  reportAction: "RTC Client fail",
                                  description: "")
-            CallUserDefaults.shared.servers = nil
         }
     }
     

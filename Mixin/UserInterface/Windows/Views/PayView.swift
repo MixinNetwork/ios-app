@@ -35,7 +35,10 @@ class PayView: UIStackView {
     private var soundId: SystemSoundID = 0
     private var isTransfer = false
     private var isAutoFillPIN = false
-
+    private var biometricPayTimedOut: Bool {
+        return Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime >= WalletUserDefault.shared.pinInterval
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         if ScreenSize.current == .inch3_5 {
@@ -251,7 +254,7 @@ extension PayView: PinFieldDelegate {
         guard WalletUserDefault.shared.isBiometricPay else {
             return
         }
-        guard Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime < WalletUserDefault.shared.pinInterval else {
+        guard !biometricPayTimedOut else {
             return
         }
         
@@ -299,7 +302,7 @@ extension PayView: PinFieldDelegate {
         guard window != nil, #available(iOS 11.0, *), UIScreen.main.isCaptured else {
             return
         }
-        guard !WalletUserDefault.shared.isBiometricPay else {
+        guard !WalletUserDefault.shared.isBiometricPay || biometricPayTimedOut else {
             return
         }
         var prompt = Localized.SCREEN_CAPTURED_PIN_LEAKING_HINT

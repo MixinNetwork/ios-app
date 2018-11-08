@@ -15,8 +15,6 @@ class WebRTCClient: NSObject {
     private let streamId = "stream0"
     private let factory = RTCPeerConnectionFactory(encoderFactory: RTCDefaultVideoEncoderFactory(),
                                                    decoderFactory: RTCDefaultVideoDecoderFactory())
-    private let mediaConstraints = [kRTCMediaConstraintsOfferToReceiveVideo: kRTCMediaConstraintsValueFalse,
-                                    kRTCMediaConstraintsOfferToReceiveAudio: kRTCMediaConstraintsValueTrue]
     
     private var peerConnection: RTCPeerConnection?
     private var audioTrack: RTCAudioTrack?
@@ -33,7 +31,7 @@ class WebRTCClient: NSObject {
     
     func offer(completion: @escaping (RTCSessionDescription?, Error?) -> Void) {
         makePeerConnectionIfNeeded()
-        let constraints = RTCMediaConstraints(mandatoryConstraints: mediaConstraints, optionalConstraints: nil)
+        let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
         peerConnection?.offer(for: constraints) { (sdp, error) in
             if let sdp = sdp {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in
@@ -47,7 +45,7 @@ class WebRTCClient: NSObject {
     
     func answer(completion: @escaping (RTCSessionDescription?, Error?) -> Void) {
         makePeerConnectionIfNeeded()
-        let constraints = RTCMediaConstraints(mandatoryConstraints: mediaConstraints, optionalConstraints: nil)
+        let constraints = RTCMediaConstraints(mandatoryConstraints: [:], optionalConstraints: nil)
         peerConnection?.answer(for: constraints) { (sdp, error) in
             if let sdp = sdp {
                 self.peerConnection?.setLocalDescription(sdp, completionHandler: { (_) in

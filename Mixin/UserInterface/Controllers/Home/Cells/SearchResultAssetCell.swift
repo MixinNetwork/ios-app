@@ -1,6 +1,6 @@
 import UIKit
 
-class WalletAssetCell: UITableViewCell {
+class SearchResultAssetCell: UITableViewCell {
 
     static let cellIdentifier = "cell_identifier_asset"
     static let cellHeight: CGFloat = 70

@@ -42,7 +42,7 @@ class WalletViewController: UIViewController {
     }
 
     private func prepareTableView() {
-        tableView.register(UINib(nibName: "WalletAssetCell", bundle: nil), forCellReuseIdentifier: WalletAssetCell.cellIdentifier)
+        tableView.register(UINib(nibName: "SearchResultAssetCell", bundle: nil), forCellReuseIdentifier: SearchResultAssetCell.cellIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
@@ -138,7 +138,7 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
             }
             return WalletHeaderCell.height(usdBalanceIsMoreThanZero: firstUSDBalance > 0)
         case 1:
-            return WalletAssetCell.cellHeight
+            return SearchResultAssetCell.cellHeight
         default:
             return 44
         }
@@ -151,7 +151,7 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         } else {
             let asset = assets[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: WalletAssetCell.cellIdentifier) as! WalletAssetCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultAssetCell.cellIdentifier) as! SearchResultAssetCell
             cell.render(asset: asset)
             return cell
         }

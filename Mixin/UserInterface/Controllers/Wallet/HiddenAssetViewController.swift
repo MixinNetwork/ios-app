@@ -31,7 +31,7 @@ class HiddenAssetViewController: UIViewController {
     }
 
     private func prepareTableView() {
-        tableView.register(UINib(nibName: "WalletAssetCell", bundle: nil), forCellReuseIdentifier: WalletAssetCell.cellIdentifier)
+        tableView.register(UINib(nibName: "SearchResultAssetCell", bundle: nil), forCellReuseIdentifier: SearchResultAssetCell.cellIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
@@ -80,12 +80,12 @@ extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate 
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return WalletAssetCell.cellHeight
+        return SearchResultAssetCell.cellHeight
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let asset = assets[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: WalletAssetCell.cellIdentifier) as! WalletAssetCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultAssetCell.cellIdentifier) as! SearchResultAssetCell
         cell.render(asset: asset)
         return cell
     }

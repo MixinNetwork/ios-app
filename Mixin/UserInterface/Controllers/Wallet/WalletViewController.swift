@@ -43,7 +43,6 @@ class WalletViewController: UIViewController {
 
     private func prepareTableView() {
         tableView.register(UINib(nibName: "WalletAssetCell", bundle: nil), forCellReuseIdentifier: WalletAssetCell.cellIdentifier)
-        tableView.register(UINib(nibName: "WalletTotalBalanceCell", bundle: nil), forCellReuseIdentifier: WalletTotalBalanceCell.cellIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
@@ -129,12 +128,25 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return indexPath.section == 0 ? WalletTotalBalanceCell.cellHeight : WalletAssetCell.cellHeight
+        switch indexPath.section {
+        case 0:
+            let firstUSDBalance: Double
+            if let asset = assets.first {
+                firstUSDBalance = asset.balance.doubleValue * asset.priceUsd.doubleValue
+            } else {
+                firstUSDBalance = 0
+            }
+            return WalletHeaderCell.height(usdBalanceIsMoreThanZero: firstUSDBalance > 0)
+        case 1:
+            return WalletAssetCell.cellHeight
+        default:
+            return 44
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: WalletTotalBalanceCell.cellIdentifier) as! WalletTotalBalanceCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.header) as! WalletHeaderCell
             cell.render(assets: assets)
             return cell
         } else {
@@ -171,5 +183,13 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return indexPath.section == 1
     }
+
 }
 
+extension WalletViewController {
+    
+    enum ReuseId {
+        static let header = "wallet_header"
+    }
+    
+}

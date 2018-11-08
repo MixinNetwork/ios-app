@@ -39,7 +39,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
     }
     
     internal var showStatusImage: Bool {
-        return !style.contains(.received)
+        return !style.contains(.received) || message.status == MessageStatus.FAILED.rawValue
     }
     
     var status: String {

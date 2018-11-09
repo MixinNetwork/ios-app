@@ -120,7 +120,7 @@ class BaseAPI {
     }
 
     @discardableResult
-    func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, toastError: Bool = true, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
+    func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, toastError: Bool = true, retry: Bool = false, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
         if checkLogin && !AccountAPI.shared.didLogin {
             return nil
         }
@@ -134,9 +134,20 @@ class BaseAPI {
                     case 401:
                         var userInfo = UIApplication.getTrackUserInfo()
                         userInfo["request"] = request.debugDescription
+                        userInfo["requestId"] = response.response?.allHeaderFields["x-request-id"] as? String ?? ""
+                        userInfo["serverTime"] = response.response?.allHeaderFields["x-server-time"] as? String ?? ""
+                        userInfo["retry"] = retry
                         userInfo["startRequestTime"] = requestTime
                         UIApplication.trackError("BaseAPI async request", action: "401", userInfo: userInfo)
                         FileManager.default.writeLog(log: "\n>>>>>>>>>>> BaseAPI async request didLogin:\(AccountAPI.shared.didLogin) requestTime:\(requestTime) \n\(request.debugDescription)", newSection: true)
+
+                        if !retry, let serverTime =  UInt64(response.response?.allHeaderFields["x-server-time"] as? String ?? ""), serverTime > 0 {
+                            let clientTime = UInt64(Date().timeIntervalSince1970)
+                            if abs(Int(serverTime / UInt64(1000000000) - clientTime)) < 600 {
+                                self.request(method: method, url: url, parameters: parameters, encoding: encoding, checkLogin: checkLogin, toastError: toastError, retry: true, completion: completion)
+                                return
+                            }
+                        }
                         AccountAPI.shared.logout()
                         return
                     case 429:
@@ -182,9 +193,10 @@ extension BaseAPI {
     }()
 
     @discardableResult
-    func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> APIResult<T> {
+    func request<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, retry: Bool = false) -> APIResult<T> {
         return dispatchQueue.sync {
             var result: APIResult<T> = .failure(APIError.createTimeoutError())
+            var responseServerTime = ""
             var debugDescription = ""
             let requestTime = Date()
             var errorMsg = ""
@@ -194,6 +206,7 @@ extension BaseAPI {
                     .validate(statusCode: 200...299)
                     .responseData(completionHandler: { (response) in
                         let httpStatusCode = response.response?.statusCode ?? -1
+                        responseServerTime = response.response?.allHeaderFields["x-server-time"] as? String ?? ""
                         switch response.result {
                         case let .success(data):
                             do {
@@ -228,10 +241,21 @@ extension BaseAPI {
                 if AccountAPI.shared.didLogin {
                     var userInfo = UIApplication.getTrackUserInfo()
                     userInfo["request"] = debugDescription
+                    userInfo["serverTime"] = responseServerTime
+                    userInfo["retry"] = retry
                     userInfo["startRequestTime"] = DateFormatter.filename.string(from: requestTime)
                     userInfo["errorMsg"] = errorMsg
                     UIApplication.trackError("BaseAPI sync request", action: "401", userInfo: userInfo)
                 }
+
+                if !retry, let serverTime = UInt64(responseServerTime), serverTime > 0 {
+                    let clientTime = UInt64(Date().timeIntervalSince1970)
+
+                    if abs(Int(serverTime / UInt64(1000000000) - clientTime)) < 600 {
+                        return request(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
+                    }
+                }
+
                 AccountAPI.shared.logout()
             }
             return result

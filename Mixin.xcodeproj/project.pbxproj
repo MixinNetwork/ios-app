@@ -177,6 +177,7 @@
 		7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */; };
 		7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B9863901FA313E300D4B16C /* BottomWrapperView.xib */; };
 		7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9863921FA3141F00D4B16C /* XibDesignable.swift */; };
+		7B9916D421945A6800C11401 /* WalletAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9916D321945A6800C11401 /* WalletAssetCell.swift */; };
 		7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */; };
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
 		7B9B8F3D205A27E700DC81AF /* WithdrawalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */; };
@@ -759,6 +760,7 @@
 		7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomWrapperView.swift; sourceTree = "<group>"; };
 		7B9863901FA313E300D4B16C /* BottomWrapperView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomWrapperView.xib; sourceTree = "<group>"; };
 		7B9863921FA3141F00D4B16C /* XibDesignable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XibDesignable.swift; sourceTree = "<group>"; };
+		7B9916D321945A6800C11401 /* WalletAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAssetCell.swift; sourceTree = "<group>"; };
 		7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
 		7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalViewController.swift; sourceTree = "<group>"; };
@@ -1962,6 +1964,7 @@
 				7B4375C22170CA6900846DC5 /* TransactionsFilterConditionCell.swift */,
 				7B95D52B21743EEF00C95281 /* TransactionsFilterConditionCell.xib */,
 				7B71F5252191CC1500F93B98 /* WalletHeaderCell.swift */,
+				7B9916D321945A6800C11401 /* WalletAssetCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2871,6 +2874,7 @@
 				7B8938A52020176200C72070 /* ConversationMoreMenuViewController.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
 				DF17B51320525485006447C2 /* ConversationItem.swift in Sources */,
+				7B9916D421945A6800C11401 /* WalletAssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,

@@ -10,6 +10,11 @@
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="mixin_condensed.otf">
+            <string>MixinCondensed-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Wallet View Controller-->
         <scene sceneID="fr3-6X-tbe">
@@ -86,10 +91,10 @@
                                 <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="wallet_header" rowHeight="192" id="ZSx-rD-maP" customClass="WalletHeaderCell" customModule="Mixin" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="wallet_header" rowHeight="192" id="ZSx-rD-maP" customClass="WalletHeaderCell" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="192"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZSx-rD-maP" id="F36-LN-Rge">
+                                        <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZSx-rD-maP" id="F36-LN-Rge">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="192"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -363,6 +368,136 @@
                                             <outlet property="rightAssetSymbolLabel" destination="laD-AH-fHv" id="qbK-4J-G4x"/>
                                             <outlet property="rightAssetWrapperView" destination="ZVj-xN-Q6p" id="Kk7-TM-8NY"/>
                                             <outlet property="usdValueLabel" destination="eGd-qQ-SHD" id="gNH-Ga-gLl"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="wallet_asset" rowHeight="90" id="cke-Dw-vWF" customClass="WalletAssetCell" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="220" width="414" height="90"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cke-Dw-vWF" id="lDE-pw-2Xh">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="90"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nBK-xl-I5E" customClass="ShadowedCardView" customModule="Mixin" customModuleProvider="target">
+                                                    <rect key="frame" x="10" y="5" width="394" height="80"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </view>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_token_icon_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="2kl-ZZ-XEB">
+                                                    <rect key="frame" x="26" y="27" width="48" height="48"/>
+                                                </imageView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3FI-Xf-yU5">
+                                                    <rect key="frame" x="33" y="28" width="34" height="34"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="s7C-j4-GuR" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="34" height="34"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                    <real key="value" value="17"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </imageView>
+                                                        <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="k72-1C-Wsm" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="24" width="10" height="10"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="10" id="Cqj-nN-khw"/>
+                                                                <constraint firstAttribute="height" constant="10" id="SFv-B9-gW4"/>
+                                                            </constraints>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                    <real key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </imageView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="34" id="8CO-jg-KJ1"/>
+                                                        <constraint firstAttribute="width" constant="34" id="EAf-rH-Od9"/>
+                                                        <constraint firstAttribute="bottom" secondItem="k72-1C-Wsm" secondAttribute="bottom" id="PqX-jq-03k"/>
+                                                        <constraint firstAttribute="trailing" secondItem="s7C-j4-GuR" secondAttribute="trailing" id="dEe-JT-PRl"/>
+                                                        <constraint firstItem="s7C-j4-GuR" firstAttribute="leading" secondItem="3FI-Xf-yU5" secondAttribute="leading" id="fpu-9L-g4e"/>
+                                                        <constraint firstAttribute="bottom" secondItem="s7C-j4-GuR" secondAttribute="bottom" id="ohX-Yj-LEA"/>
+                                                        <constraint firstItem="s7C-j4-GuR" firstAttribute="top" secondItem="3FI-Xf-yU5" secondAttribute="top" id="pnf-Ei-biC"/>
+                                                        <constraint firstItem="k72-1C-Wsm" firstAttribute="leading" secondItem="3FI-Xf-yU5" secondAttribute="leading" id="to0-dP-YXT"/>
+                                                    </constraints>
+                                                </view>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="J4i-ha-XrU">
+                                                    <rect key="frame" x="82" y="23.333333333333332" width="306" height="43.333333333333343"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="KCn-WC-RMk">
+                                                            <rect key="frame" x="0.0" y="0.0" width="306" height="19"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="1.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XOa-ln-WuS">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="18" height="19"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="19"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PKf-6O-RbI">
+                                                                    <rect key="frame" x="19.999999999999986" y="0.0" width="242.66666666666663" height="19"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="12.06%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Fr-Ji-McC">
+                                                                    <rect key="frame" x="264.66666666666669" y="0.0" width="41.333333333333314" height="19"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                    <color key="textColor" red="0.16078431372549018" green="0.74509803921568629" blue="0.45098039215686275" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </stackView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="56" translatesAutoresizingMaskIntoConstraints="NO" id="gWw-GL-3dP">
+                                                            <rect key="frame" x="0.0" y="29.000000000000004" width="306" height="14.333333333333332"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="$717.89" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fWV-AC-PZw">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="194.66666666666666" height="14.333333333333334"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                    <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="≈ $717.89" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cv4-Nh-2Em">
+                                                                    <rect key="frame" x="250.66666666666671" y="0.0" width="55.333333333333343" height="14.333333333333334"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                    <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </stackView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="3FI-Xf-yU5" firstAttribute="centerY" secondItem="lDE-pw-2Xh" secondAttribute="centerY" id="4kt-Bc-y7L"/>
+                                                <constraint firstItem="J4i-ha-XrU" firstAttribute="centerY" secondItem="lDE-pw-2Xh" secondAttribute="centerY" id="6ZN-Yx-uoE"/>
+                                                <constraint firstItem="J4i-ha-XrU" firstAttribute="leading" secondItem="3FI-Xf-yU5" secondAttribute="trailing" constant="15" id="ARJ-jj-wwC"/>
+                                                <constraint firstItem="3FI-Xf-yU5" firstAttribute="leading" secondItem="lDE-pw-2Xh" secondAttribute="leading" constant="33" id="D4i-Bh-B2o"/>
+                                                <constraint firstAttribute="bottom" secondItem="nBK-xl-I5E" secondAttribute="bottom" constant="5" id="Kh4-dC-Phc"/>
+                                                <constraint firstItem="nBK-xl-I5E" firstAttribute="leading" secondItem="lDE-pw-2Xh" secondAttribute="leading" constant="10" id="LzX-6g-qv3"/>
+                                                <constraint firstItem="2kl-ZZ-XEB" firstAttribute="centerY" secondItem="3FI-Xf-yU5" secondAttribute="centerY" constant="6" id="SfY-fL-1Kz"/>
+                                                <constraint firstAttribute="trailing" secondItem="J4i-ha-XrU" secondAttribute="trailing" constant="26" id="ahH-sa-noy"/>
+                                                <constraint firstItem="2kl-ZZ-XEB" firstAttribute="centerX" secondItem="3FI-Xf-yU5" secondAttribute="centerX" id="ifu-y1-YBh"/>
+                                                <constraint firstItem="nBK-xl-I5E" firstAttribute="top" secondItem="lDE-pw-2Xh" secondAttribute="top" constant="5" id="l6f-y0-3g5"/>
+                                                <constraint firstAttribute="trailing" secondItem="nBK-xl-I5E" secondAttribute="trailing" constant="10" id="uxY-oP-VJx"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="balanceLabel" destination="XOa-ln-WuS" id="fCN-g5-2ql"/>
+                                            <outlet property="chainImageView" destination="k72-1C-Wsm" id="54H-cb-nl1"/>
+                                            <outlet property="changeLabel" destination="2Fr-Ji-McC" id="S8e-NF-FYb"/>
+                                            <outlet property="iconImageView" destination="s7C-j4-GuR" id="P6B-Mf-bit"/>
+                                            <outlet property="symbolLabel" destination="PKf-6O-RbI" id="ZZ1-Vl-2zt"/>
+                                            <outlet property="usdBalanceLabel" destination="fWV-AC-PZw" id="2Et-9W-dlE"/>
+                                            <outlet property="usdPriceLabel" destination="cv4-Nh-2Em" id="ace-lf-g32"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1972,6 +2107,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Wallet/ic_token_icon_shadow" width="48.666667938232422" height="48.666667938232422"/>
         <image name="Wallet/ic_token_indicator_left" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>

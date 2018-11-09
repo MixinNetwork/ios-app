@@ -11,10 +11,7 @@ class SearchResultAssetCell: UITableViewCell {
     @IBOutlet weak var exchangeLabel: UILabel!
     @IBOutlet weak var priceChangeLabel: UILabel!
     @IBOutlet weak var blockchainImageView: CornerImageView!
-
-    private let redColor = UIColor(rgbValue: 0xEE7474)
-    private let greenColor = UIColor(rgbValue: 0x66AA77)
-
+    
     func render(asset: AssetItem) {
         balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never, symbol: .custom(asset.symbol))
         exchangeLabel.text = asset.localizedUSDBalance
@@ -30,9 +27,9 @@ class SearchResultAssetCell: UITableViewCell {
             priceLabel.text = "$\(asset.localizedPriceUsd)"
             priceChangeLabel.text = "\(asset.localizedUSDChange)%"
             if asset.changeUsd.doubleValue > 0 {
-                 priceChangeLabel.textColor = greenColor
+                 priceChangeLabel.textColor = .walletGreen
             } else {
-                priceChangeLabel.textColor = redColor
+                priceChangeLabel.textColor = .walletRed
             }
         } else {
             priceLabel.text = Localized.WALLET_NO_PRICE

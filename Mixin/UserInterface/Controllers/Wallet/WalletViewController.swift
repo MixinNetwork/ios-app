@@ -42,7 +42,6 @@ class WalletViewController: UIViewController {
     }
 
     private func prepareTableView() {
-        tableView.register(UINib(nibName: "SearchResultAssetCell", bundle: nil), forCellReuseIdentifier: SearchResultAssetCell.cellIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
@@ -138,7 +137,7 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
             }
             return WalletHeaderCell.height(usdBalanceIsMoreThanZero: firstUSDBalance > 0)
         case 1:
-            return SearchResultAssetCell.cellHeight
+            return WalletAssetCell.height
         default:
             return 44
         }
@@ -151,7 +150,7 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         } else {
             let asset = assets[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultAssetCell.cellIdentifier) as! SearchResultAssetCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.asset) as! WalletAssetCell
             cell.render(asset: asset)
             return cell
         }
@@ -163,14 +162,6 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
         if indexPath.section == 1 {
             navigationController?.pushViewController(AssetViewController.instance(asset: assets[indexPath.row]), animated: true)
         }
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? CGFloat.leastNormalMagnitude : 10
-    }
-
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 10
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -190,6 +181,7 @@ extension WalletViewController {
     
     enum ReuseId {
         static let header = "wallet_header"
+        static let asset = "wallet_asset"
     }
     
 }

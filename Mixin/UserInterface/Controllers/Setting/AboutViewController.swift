@@ -22,10 +22,12 @@ extension AboutViewController {
         case 2:
             UIApplication.shared.openURL(url: "https://fb.com/MixinMessenger")
         case 3:
-            UIApplication.shared.openURL(url: URL.terms)
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/en-us")
         case 4:
-            UIApplication.shared.openURL(url: URL.privacy)
+            UIApplication.shared.openURL(url: URL.terms)
         case 5:
+            UIApplication.shared.openURL(url: URL.privacy)
+        case 6:
             UIApplication.shared.openURL(url: "https://mixin.one")
         default:
             break

@@ -119,6 +119,7 @@ class ReceiveMessageService: MixinService {
                 } else {
                     let workItem = DispatchWorkItem(block: {
                         CallManager.shared.handleIncomingBlazeMessageData(data)
+                        self.listPendingCallWorkItems.removeValue(forKey: data.messageId)
                         self.listPendingCandidates[data.messageId]?.forEach(CallManager.shared.handleIncomingBlazeMessageData)
                         self.listPendingCandidates = [:]
                     })

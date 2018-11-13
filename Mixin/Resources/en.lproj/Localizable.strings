@@ -262,6 +262,8 @@
 "wallet_set_password_success" = "Set wallet PIN successfully";
 "wallet_snapshot_from" = "From %@";
 "wallet_snapshot_to" = "To %@";
+"wallet_caption_deposit" = "DEPOSIT";
+"wallet_caption_withdrawal" = "WITHDRAWAL";
 "wallet_deposit" = "Deposit";
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_no_transaction" = "No transaction";

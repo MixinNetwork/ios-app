@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AssetTableHeaderView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="filterButton" destination="vnO-Rs-9dG" id="UQt-ze-hlI"/>
+                <outlet property="titleView" destination="tm2-C9-mxu" id="UhQ-G1-ykJ"/>
+                <outlet property="transactionsHeaderHeightConstraint" destination="z26-bE-lyv" id="1j7-Ux-u9x"/>
+                <outlet property="transactionsHeaderTopConstraint" destination="6ae-do-e5d" id="z1t-1b-Odm"/>
+                <outlet property="transactionsHeaderView" destination="h1A-Ls-iGk" id="9R5-1z-sCp"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="222"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tm2-C9-mxu" customClass="AssetTitleView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="167"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="167" id="ClT-Az-MtE"/>
+                    </constraints>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h1A-Ls-iGk">
+                    <rect key="frame" x="0.0" y="172" width="375" height="50"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/bg_transaction_header_top" translatesAutoresizingMaskIntoConstraints="NO" id="KV3-Ed-Jpe">
+                            <rect key="frame" x="-15" y="-16" width="405" height="66"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transactions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xtr-Ya-ipN">
+                            <rect key="frame" x="34" y="0.0" width="95.5" height="50"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vnO-Rs-9dG">
+                            <rect key="frame" x="315" y="0.0" width="50" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="vnO-Rs-9dG" secondAttribute="height" id="M70-Nu-j39"/>
+                            </constraints>
+                            <state key="normal" image="Wallet/ic_filter"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="Xtr-Ya-ipN" secondAttribute="bottom" id="32Q-Ve-GyU"/>
+                        <constraint firstItem="vnO-Rs-9dG" firstAttribute="width" secondItem="vnO-Rs-9dG" secondAttribute="height" id="HAX-ci-cVW"/>
+                        <constraint firstAttribute="trailing" secondItem="vnO-Rs-9dG" secondAttribute="trailing" constant="10" id="NNm-pS-lFt"/>
+                        <constraint firstAttribute="leading" secondItem="KV3-Ed-Jpe" secondAttribute="leading" constant="15" id="PqI-9f-cgo"/>
+                        <constraint firstItem="Xtr-Ya-ipN" firstAttribute="top" secondItem="h1A-Ls-iGk" secondAttribute="top" id="R05-cN-gR5"/>
+                        <constraint firstItem="KV3-Ed-Jpe" firstAttribute="trailing" secondItem="h1A-Ls-iGk" secondAttribute="trailing" constant="15" id="X33-bu-QzV"/>
+                        <constraint firstItem="vnO-Rs-9dG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Xtr-Ya-ipN" secondAttribute="trailing" constant="8" id="YRO-ac-HjT"/>
+                        <constraint firstAttribute="bottom" secondItem="vnO-Rs-9dG" secondAttribute="bottom" id="aAo-Ws-6fG"/>
+                        <constraint firstAttribute="bottom" secondItem="KV3-Ed-Jpe" secondAttribute="bottom" id="jNd-Tz-mfx"/>
+                        <constraint firstItem="vnO-Rs-9dG" firstAttribute="top" secondItem="h1A-Ls-iGk" secondAttribute="top" id="odA-ew-3rN"/>
+                        <constraint firstItem="Xtr-Ya-ipN" firstAttribute="leading" secondItem="h1A-Ls-iGk" secondAttribute="leading" constant="34" id="vSR-Yt-1Dq"/>
+                        <constraint firstAttribute="height" constant="50" id="z26-bE-lyv"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="tm2-C9-mxu" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="5Vp-Ep-MHY"/>
+                <constraint firstItem="h1A-Ls-iGk" firstAttribute="top" secondItem="tm2-C9-mxu" secondAttribute="bottom" constant="5" id="6ae-do-e5d"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="h1A-Ls-iGk" secondAttribute="bottom" id="9jJ-3O-HNr"/>
+                <constraint firstItem="tm2-C9-mxu" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="Ega-SR-1IR"/>
+                <constraint firstItem="h1A-Ls-iGk" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="ExV-oT-jSj"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="tm2-C9-mxu" secondAttribute="trailing" id="fez-BA-F9t"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="h1A-Ls-iGk" secondAttribute="trailing" id="yor-Jt-hgE"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="138.40000000000001" y="409.7451274362819"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Wallet/bg_transaction_header_top" width="67" height="66.5"/>
+        <image name="Wallet/ic_filter" width="14" height="14"/>
+    </resources>
+</document>

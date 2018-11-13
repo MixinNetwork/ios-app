@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="331"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/bg_shadow_left" translatesAutoresizingMaskIntoConstraints="NO" id="Bpk-FL-49V">
+                    <rect key="frame" x="-40" y="0.0" width="50" height="1000"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1000" id="oBn-fI-VEI"/>
+                    </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/bg_shadow_right" translatesAutoresizingMaskIntoConstraints="NO" id="1wN-cK-mUK">
+                    <rect key="frame" x="365" y="0.0" width="50" height="1000"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1000" id="0cK-qw-Jl6"/>
+                    </constraints>
+                </imageView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="agf-Oe-84Y">
+                    <rect key="frame" x="10" y="68" width="355" height="166"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_no_transaction" translatesAutoresizingMaskIntoConstraints="NO" id="PPn-Au-M39">
+                            <rect key="frame" x="114.5" y="0.0" width="126" height="128"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NO TRANSACTION" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FkW-Th-jdO">
+                            <rect key="frame" x="112.5" y="148" width="130" height="18"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" red="0.73725490196078436" green="0.75294117647058822" blue="0.7803921568627451" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_no_transaction"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="1wN-cK-mUK" secondAttribute="leading" constant="10" id="6Yw-dF-DNT"/>
+                <constraint firstItem="Bpk-FL-49V" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="HHh-qC-ifh"/>
+                <constraint firstItem="agf-Oe-84Y" firstAttribute="leading" secondItem="Bpk-FL-49V" secondAttribute="trailing" id="Sjf-L1-svc"/>
+                <constraint firstItem="1wN-cK-mUK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Ssd-Xa-JF8"/>
+                <constraint firstItem="Bpk-FL-49V" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="TSr-CL-nab"/>
+                <constraint firstItem="1wN-cK-mUK" firstAttribute="leading" secondItem="agf-Oe-84Y" secondAttribute="trailing" id="nMZ-ip-HjK"/>
+                <constraint firstItem="agf-Oe-84Y" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="68" id="oHK-3p-LIk"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="79.200000000000003" y="199.25037481259372"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Wallet/bg_shadow_left" width="50" height="1"/>
+        <image name="Wallet/bg_shadow_right" width="50" height="1"/>
+        <image name="Wallet/ic_no_transaction" width="126" height="128"/>
+    </resources>
+</document>

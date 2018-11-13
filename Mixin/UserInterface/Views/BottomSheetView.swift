@@ -16,7 +16,7 @@ class BottomSheetView: UIView {
         return CGPoint(x: self.center.x, y: self.bounds.size.height-(self.popupView.bounds.size.height * 0.5))
     }
 
-    func presentPopupControllerAnimated() {
+    @objc func presentPopupControllerAnimated() {
         UIApplication.currentActivity()?.view.endEditing(true)
         guard !isShowing, let window = UIApplication.shared.keyWindow else {
             return

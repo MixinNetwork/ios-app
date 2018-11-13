@@ -124,26 +124,24 @@ class BaseAPI {
         if checkLogin && !AccountAPI.shared.didLogin {
             return nil
         }
-        let requestTime = DateFormatter.filename.string(from: Date())
         let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
         return request.validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
                 let httpStatusCode = response.response?.statusCode ?? -1
+                let responseServerTime = response.response?.allHeaderFields["x-server-time"] as? String ?? ""
                 let handerError = { (error: APIError) in
                     switch error.code {
                     case 401:
-                        var userInfo = UIApplication.getTrackUserInfo()
-                        userInfo["request"] = request.debugDescription
-                        userInfo["requestId"] = response.response?.allHeaderFields["x-request-id"] as? String ?? ""
-                        userInfo["serverTime"] = response.response?.allHeaderFields["x-server-time"] as? String ?? ""
-                        userInfo["retry"] = retry
-                        userInfo["startRequestTime"] = requestTime
-                        UIApplication.trackError("BaseAPI async request", action: "401", userInfo: userInfo)
-                        FileManager.default.writeLog(log: "\n>>>>>>>>>>> BaseAPI async request didLogin:\(AccountAPI.shared.didLogin) requestTime:\(requestTime) \n\(request.debugDescription)", newSection: true)
-
-                        if !retry, let serverTime =  Double(response.response?.allHeaderFields["x-server-time"] as? String ?? ""), serverTime > 0 {
+                        if let serverTime = Double(responseServerTime), serverTime > 0 {
                             let clientTime = Date().timeIntervalSince1970
-                            if abs(serverTime / 1000000000 - clientTime) < 600 {
+                            if abs(serverTime / 1000000000 - clientTime) > 600 {
+                                CommonUserDefault.shared.hasClockSkew = true
+                                DispatchQueue.main.async {
+                                    WebSocketService.shared.disconnect()
+                                    AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                                }
+                                return
+                            } else if !retry {
                                 self.request(method: method, url: url, parameters: parameters, encoding: encoding, checkLogin: checkLogin, toastError: toastError, retry: true, completion: completion)
                                 return
                             }
@@ -202,12 +200,10 @@ extension BaseAPI {
     private func syncRequest<T: Codable>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, retry: Bool = false) -> APIResult<T> {
         var result: APIResult<T> = .failure(APIError.createTimeoutError())
         var responseServerTime = ""
-        var debugDescription = ""
         let requestTime = Date()
-        var errorMsg = ""
         if AccountAPI.shared.didLogin {
             let semaphore = DispatchSemaphore(value: 0)
-            let req = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
+            getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
                 .validate(statusCode: 200...299)
                 .responseData(completionHandler: { (response) in
                     let httpStatusCode = response.response?.statusCode ?? -1
@@ -225,11 +221,9 @@ extension BaseAPI {
                                 result = .success(model)
                             }
                         } catch {
-                            errorMsg = "decode error:\(error)"
                             result = .failure(APIError.createError(error: error, status: httpStatusCode))
                         }
                     case let .failure(error):
-                        errorMsg = "api error:\(error)"
                         result = .failure(APIError.createError(error: error, status: httpStatusCode))
                     }
                     semaphore.signal()
@@ -238,29 +232,22 @@ extension BaseAPI {
             if semaphore.wait(timeout: .now() + .seconds(8)) == .timedOut || Date().timeIntervalSince1970 - requestTime.timeIntervalSince1970 >= 8 {
                 result = .failure(APIError(status: NSURLErrorTimedOut, code: -1, description: Localized.TOAST_API_ERROR_CONNECTION_TIMEOUT))
             }
-            debugDescription = req.debugDescription
         }
 
         if !result.isSuccess, case let .failure(error) = result, error.code == 401 {
-            FileManager.default.writeLog(log: "\n>>>>>>>>>>> BaseAPI sync request 401 didLogin:\(AccountAPI.shared.didLogin) requestTime:\(requestTime) \n\(debugDescription)\n(errorMsg)", newSection: true)
-            if AccountAPI.shared.didLogin {
-                var userInfo = UIApplication.getTrackUserInfo()
-                userInfo["request"] = debugDescription
-                userInfo["serverTime"] = responseServerTime
-                userInfo["retry"] = retry
-                userInfo["startRequestTime"] = DateFormatter.filename.string(from: requestTime)
-                userInfo["errorMsg"] = errorMsg
-                UIApplication.trackError("BaseAPI sync request", action: "401", userInfo: userInfo)
-            }
-
-            if !retry, let serverTime = Double(responseServerTime), serverTime > 0 {
+            if let serverTime = Double(responseServerTime), serverTime > 0 {
                 let clientTime = Date().timeIntervalSince1970
-
-                if abs(serverTime / 1000000000 - clientTime) < 600 {
+                if abs(serverTime / 1000000000 - clientTime) > 600 {
+                    CommonUserDefault.shared.hasClockSkew = true
+                    DispatchQueue.main.async {
+                        WebSocketService.shared.disconnect()
+                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                    }
+                    return result
+                } else if !retry {
                     return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
                 }
             }
-
             AccountAPI.shared.logout()
         }
         return result

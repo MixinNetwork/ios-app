@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WzX-DS-F3g">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WzX-DS-F3g">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -55,7 +55,7 @@
                                                 <rect key="frame" x="56" y="10" width="263" height="36"/>
                                                 <subviews>
                                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cQK-aj-tRc">
-                                                        <rect key="frame" x="58" y="0.0" width="148.5" height="36"/>
+                                                        <rect key="frame" x="57.5" y="0.0" width="148.5" height="36"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_search" translatesAutoresizingMaskIntoConstraints="NO" id="1f0-pg-142">
                                                                 <rect key="frame" x="0.0" y="0.0" width="12" height="36"/>
@@ -211,7 +211,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_qr_code" translatesAutoresizingMaskIntoConstraints="NO" id="IpN-ia-USo">
-                                <rect key="frame" x="176" y="616" width="22" height="22"/>
+                                <rect key="frame" x="176.5" y="616" width="22" height="22"/>
                             </imageView>
                             <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uc0-po-iUR">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -476,6 +476,85 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0qg-MT-HpR" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-919" y="-277"/>
+        </scene>
+        <!--Clock Skew View Controller-->
+        <scene sceneID="cpN-Ov-8nc">
+            <objects>
+                <viewController storyboardIdentifier="clock" id="mYH-vJ-6Lx" customClass="ClockSkewViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="hWj-zz-Sn4">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_mixin" translatesAutoresizingMaskIntoConstraints="NO" id="hmp-73-im2">
+                                <rect key="frame" x="0.0" y="100" width="375" height="280"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="hmp-73-im2" secondAttribute="height" multiplier="75:56" id="4bR-db-cnJ"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eRn-IU-Yqu" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="123" y="566" width="129" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <inset key="contentEdgeInsets" minX="30" minY="10" maxX="30" maxY="10"/>
+                                <state key="normal" title="Continue"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="continueAction:" destination="mYH-vJ-6Lx" eventType="touchUpInside" id="URL-Ie-08l"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T46-MZ-eNq">
+                                <rect key="frame" x="50" y="440" width="275" height="66"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tou-53-uta">
+                                        <rect key="frame" x="0.0" y="-3" width="275" height="72"/>
+                                        <string key="text">System time is unusual, please continue to use again after correction. Settings &gt; General &gt; Date &amp; Time &gt; Turn on Set Automatically</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="clock_skew_tips"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Tou-53-uta" firstAttribute="centerY" secondItem="T46-MZ-eNq" secondAttribute="centerY" id="IQR-nD-8Zj"/>
+                                    <constraint firstAttribute="trailing" secondItem="Tou-53-uta" secondAttribute="trailing" id="kvg-eN-X2d"/>
+                                    <constraint firstItem="Tou-53-uta" firstAttribute="leading" secondItem="T46-MZ-eNq" secondAttribute="leading" id="ttx-0t-ogu"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="O9K-H9-6Uy" firstAttribute="trailing" secondItem="hmp-73-im2" secondAttribute="trailing" id="A96-0W-hOU"/>
+                            <constraint firstItem="eRn-IU-Yqu" firstAttribute="centerX" secondItem="O9K-H9-6Uy" secondAttribute="centerX" id="HJR-ay-yQR"/>
+                            <constraint firstItem="hmp-73-im2" firstAttribute="leading" secondItem="O9K-H9-6Uy" secondAttribute="leading" id="Nhe-MH-weA"/>
+                            <constraint firstItem="T46-MZ-eNq" firstAttribute="top" secondItem="hmp-73-im2" secondAttribute="bottom" priority="749" constant="60" id="ZsL-Lw-D6o"/>
+                            <constraint firstItem="T46-MZ-eNq" firstAttribute="leading" secondItem="O9K-H9-6Uy" secondAttribute="leading" constant="50" id="dyB-vO-lKJ"/>
+                            <constraint firstItem="O9K-H9-6Uy" firstAttribute="bottom" secondItem="eRn-IU-Yqu" secondAttribute="bottom" constant="60" id="eCP-g9-T1R"/>
+                            <constraint firstItem="eRn-IU-Yqu" firstAttribute="top" secondItem="T46-MZ-eNq" secondAttribute="bottom" priority="749" constant="60" id="lHY-1G-bLT"/>
+                            <constraint firstItem="O9K-H9-6Uy" firstAttribute="trailing" secondItem="T46-MZ-eNq" secondAttribute="trailing" constant="50" id="zQl-dH-LRd"/>
+                            <constraint firstItem="hmp-73-im2" firstAttribute="top" secondItem="O9K-H9-6Uy" secondAttribute="top" constant="80" id="zry-Kv-u6R" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="O9K-H9-6Uy"/>
+                    </view>
+                    <connections>
+                        <outlet property="continueAction" destination="eRn-IU-Yqu" id="TeC-in-fYA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xxp-dS-d33" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1188" y="-278"/>
         </scene>
     </scenes>
     <resources>

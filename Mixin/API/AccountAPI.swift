@@ -54,6 +54,10 @@ final class AccountAPI: BaseAPI {
         return request(method: .get, url: url.me)
     }
 
+    func checkTime(completion: @escaping (APIResult<BuildResponse>) -> Void) {
+        request(method: .get, url: "", completion: completion)
+    }
+
     func sendCode(to phoneNumber: String, reCaptchaToken: String?, purpose: VerificationPurpose, completion: @escaping (APIResult<VerificationResponse>) -> Void) {
         var param = ["phone": phoneNumber,
                      "purpose": purpose.rawValue]

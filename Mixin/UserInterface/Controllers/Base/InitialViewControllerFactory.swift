@@ -5,7 +5,14 @@ func makeInitialViewController() -> UIViewController {
         return SignalLoadingViewController.instance()
     } else {
         let viewControllers: [UIViewController]
-        if CommonUserDefault.shared.hasConversation {
+        if CommonUserDefault.shared.hasClockSkew {
+            if let nav = AppDelegate.current.window?.rootViewController?.navigationController, let viewController = nav.viewControllers.last as? ClockSkewViewController {
+                viewController.continueAction.isBusy = false
+                return nav
+            } else {
+                viewControllers = [ClockSkewViewController.instance()]
+            }
+        } else if CommonUserDefault.shared.hasConversation {
             viewControllers = [HomeViewController.instance()]
         } else {
             if AccountAPI.shared.account?.has_pin ?? false {

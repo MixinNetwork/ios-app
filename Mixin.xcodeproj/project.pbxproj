@@ -72,7 +72,6 @@
 		7B1AD8BB2199771400FE40DE /* AssetTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B1AD8BA2199771400FE40DE /* AssetTitleView.xib */; };
 		7B1CCBA31FEE63C300137644 /* UserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1CCBA21FEE63C300137644 /* UserRequest.swift */; };
 		7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */; };
-		7B25EC1E2174429F0057CA47 /* FilterableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B25EC1D2174429F0057CA47 /* FilterableHeaderView.swift */; };
 		7B287A3420EA5770007278A3 /* AssetExportSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B287A3320EA5770007278A3 /* AssetExportSession.swift */; };
 		7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA11201195A10023B28D /* StickerMessageCell.swift */; };
 		7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */; };
@@ -290,7 +289,6 @@
 		DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */; };
 		DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */; };
 		DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0111FE5598300F98479 /* ExitConversationJob.swift */; };
-		DF05F0151FE6759B00F98479 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0141FE6759B00F98479 /* PieChartView.swift */; };
 		DF05F0191FE90A1B00F98479 /* SignalKeyCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */; };
 		DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */; };
 		DF07391620B86E5200E46EC3 /* ReceiveMoneyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */; };
@@ -663,7 +661,6 @@
 		7B1AD8BA2199771400FE40DE /* AssetTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssetTitleView.xib; sourceTree = "<group>"; };
 		7B1CCBA21FEE63C300137644 /* UserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRequest.swift; sourceTree = "<group>"; };
 		7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
-		7B25EC1D2174429F0057CA47 /* FilterableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterableHeaderView.swift; sourceTree = "<group>"; };
 		7B287A3320EA5770007278A3 /* AssetExportSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetExportSession.swift; sourceTree = "<group>"; };
 		7B28FA11201195A10023B28D /* StickerMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMessageCell.swift; sourceTree = "<group>"; };
 		7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMessageViewModel.swift; sourceTree = "<group>"; };
@@ -895,7 +892,6 @@
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
 		DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshGroupIconJob.swift; sourceTree = "<group>"; };
 		DF05F0111FE5598300F98479 /* ExitConversationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitConversationJob.swift; sourceTree = "<group>"; };
-		DF05F0141FE6759B00F98479 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyCount.swift; sourceTree = "<group>"; };
 		DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingViewController.swift; sourceTree = "<group>"; };
 		DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMoneyWindow.swift; sourceTree = "<group>"; };
@@ -1591,12 +1587,10 @@
 		DF05F0131FE6757600F98479 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				DF05F0141FE6759B00F98479 /* PieChartView.swift */,
 				DFAA4B382010ADF800C696D3 /* PinTipsView.swift */,
 				DFAA4B3A2010AE0300C696D3 /* PinTipsView.xib */,
 				7B4D1121205A9EF80074BF60 /* AddressBookView.swift */,
 				7B4D1123205A9F170074BF60 /* AddressBookView.xib */,
-				7B25EC1D2174429F0057CA47 /* FilterableHeaderView.swift */,
 				7BB1DD0C2195BE5200E98CEF /* ShadowedCardView.swift */,
 				7BB12FA62192C8DB009BEECF /* BarChartView.swift */,
 				7B1AD8B82199770A00FE40DE /* AssetTitleView.swift */,
@@ -2933,7 +2927,6 @@
 				DF30D7441FA22D4E00683C1A /* WebSocketService.swift in Sources */,
 				DFCC4340206B60CE006F50BE /* KeyUtil.swift in Sources */,
 				273FACC5205FB9A800513327 /* KeyStoreWrapper.swift in Sources */,
-				DF05F0151FE6759B00F98479 /* PieChartView.swift in Sources */,
 				DF9E66ED205C16AD00F1A0B9 /* WithdrawalRequest.swift in Sources */,
 				7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */,
 				DF3C47501FA18EE900A07C71 /* Message.swift in Sources */,
@@ -3017,7 +3010,6 @@
 				DF121F311FA1C767000F701D /* ConversationCell.swift in Sources */,
 				DF1A9A7E1FF2539700A95188 /* UserNotificationExtension.swift in Sources */,
 				7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */,
-				7B25EC1E2174429F0057CA47 /* FilterableHeaderView.swift in Sources */,
 				7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */,
 				DF503D451FED1D3C00C008E7 /* MixinSenderKeyStore.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,

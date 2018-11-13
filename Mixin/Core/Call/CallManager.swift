@@ -187,14 +187,15 @@ class CallManager {
 
 extension CallManager {
     
-    private static let callObserver = CXCallObserver()
-    private static let completeCallCategories: [MessageCategory] = [
+    static let completeCallCategories: [MessageCategory] = [
         .WEBRTC_AUDIO_END,
         .WEBRTC_AUDIO_BUSY,
         .WEBRTC_AUDIO_CANCEL,
         .WEBRTC_AUDIO_FAILED,
         .WEBRTC_AUDIO_DECLINE
     ]
+    
+    private static let callObserver = CXCallObserver()
     
     static func insertCallCompletedMessage(call: Call, isUserInitiated: Bool, category: MessageCategory?) {
         let timeIntervalSinceNow = call.connectedDate?.timeIntervalSinceNow ?? 0

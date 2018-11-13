@@ -170,8 +170,8 @@
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
-"call_status_calling" = "正在拨号...";
-"call_status_being_calling" = "正在等待接听...";
+"call_status_calling" = "正在呼叫...";
+"call_status_being_calling" = "语音通话来电";
 "call_status_connecting" = "正在连接";
 "call_status_disconnecting" = "正在断开";
 "call_func_hangup" = "挂断";

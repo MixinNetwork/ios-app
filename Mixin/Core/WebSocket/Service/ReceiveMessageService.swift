@@ -12,6 +12,7 @@ class ReceiveMessageService: MixinService {
     private let prekeyMiniNum = 500
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
     private var listPendingCallWorkItems = [String: DispatchWorkItem]()
+    private var listPendingCandidates = [String: [BlazeMessageData]]()
     
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
@@ -118,20 +119,32 @@ class ReceiveMessageService: MixinService {
                 } else {
                     let workItem = DispatchWorkItem(block: {
                         CallManager.shared.handleIncomingBlazeMessageData(data)
+                        self.listPendingCallWorkItems.removeValue(forKey: data.messageId)
+                        self.listPendingCandidates[data.messageId]?.forEach(CallManager.shared.handleIncomingBlazeMessageData)
+                        self.listPendingCandidates = [:]
                     })
                     listPendingCallWorkItems[data.messageId] = workItem
                     DispatchQueue.global().asyncAfter(deadline: .now() + listPendingCallDelay, execute: workItem)
                 }
             } else if let workItem = listPendingCallWorkItems[data.quoteMessageId] {
-                workItem.cancel()
-                listPendingCallWorkItems.removeValue(forKey: data.quoteMessageId)
                 let category = MessageCategory(rawValue: data.category) ?? .WEBRTC_AUDIO_FAILED
-                let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
-                                                      conversationId: data.conversationId,
-                                                      userId: data.userId,
-                                                      category: category,
-                                                      status: .DELIVERED)
-                MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+                if category == .WEBRTC_ICE_CANDIDATE {
+                    if listPendingCandidates[data.quoteMessageId] == nil {
+                        listPendingCandidates[data.quoteMessageId] = [data]
+                    } else {
+                        listPendingCandidates[data.quoteMessageId]!.append(data)
+                    }
+                } else if CallManager.completeCallCategories.contains(category) {
+                    workItem.cancel()
+                    listPendingCallWorkItems.removeValue(forKey: data.quoteMessageId)
+                    listPendingCandidates.removeValue(forKey: data.quoteMessageId)
+                    let msg = Message.createWebRTCMessage(messageId: data.quoteMessageId,
+                                                          conversationId: data.conversationId,
+                                                          userId: data.userId,
+                                                          category: category,
+                                                          status: .DELIVERED)
+                    MessageDAO.shared.insertMessage(message: msg, messageSource: data.source)
+                }
             } else {
                 CallManager.shared.handleIncomingBlazeMessageData(data)
             }

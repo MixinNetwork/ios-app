@@ -22,7 +22,6 @@ class CallManager {
     
     private var unansweredTimer: Timer?
     private var pendingRemoteSdp: RTCSessionDescription?
-    private var pendingCandidates = [RTCIceCandidate]()
     private var lineIsIdle: Bool {
         return call == nil && CallManager.callObserver.calls.isEmpty
     }
@@ -283,7 +282,6 @@ extension CallManager {
             DispatchQueue.main.sync {
                 self.view.style = .connecting
             }
-            sendCandidates(pendingCandidates)
             rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
                     self.queue.async {
@@ -321,11 +319,7 @@ extension CallManager: WebRTCClientDelegate {
         guard let call = call else {
             return
         }
-        if call.isOutgoing, !call.hasReceivedRemoteAnswer {
-            pendingCandidates.append(candidate)
-        } else {
-            sendCandidates([candidate])
-        }
+        sendCandidates([candidate])
     }
     
     func webRTCClientDidConnected(_ client: WebRTCClient) {
@@ -489,7 +483,6 @@ extension CallManager {
         rtcClient.close()
         call = nil
         pendingRemoteSdp = nil
-        pendingCandidates = []
         isMuted = false
         usesSpeaker = false
         invalidateUnansweredTimeoutTimerAndSetNil()

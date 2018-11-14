@@ -164,7 +164,6 @@
 		7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */; };
 		7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F6B215F32A500A562C6 /* GiphyViewController.swift */; };
 		7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */; };
-		7B9243D12188181B007E3D6F /* CallUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9243D02188181B007E3D6F /* CallUserDefaults.swift */; };
 		7B92F8251FA1A7D5000B838B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8241FA1A7D5000B838B /* LoginViewController.swift */; };
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F8291FA1B80A000B838B /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */; };
@@ -310,6 +309,7 @@
 		DF191194208F104800BD415D /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF191193208F104800BD415D /* Job.swift */; };
 		DF191196208F186100BD415D /* SendMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF191195208F186100BD415D /* SendMessageService.swift */; };
 		DF191198208F290700BD415D /* MixinService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF191197208F290700BD415D /* MixinService.swift */; };
+		DF1A2C60219BCACC004EFD68 /* ClockSkewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */; };
 		DF1A9A7A1FF206F500A95188 /* RefreshSnapshotsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */; };
 		DF1A9A7C1FF2245800A95188 /* NumberExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A9A7B1FF2245800A95188 /* NumberExtension.swift */; };
 		DF1A9A7E1FF2539700A95188 /* UserNotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A9A7D1FF2539600A95188 /* UserNotificationExtension.swift */; };
@@ -744,7 +744,6 @@
 		7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersCollectionViewController.swift; sourceTree = "<group>"; };
 		7B915F6B215F32A500A562C6 /* GiphyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyViewController.swift; sourceTree = "<group>"; };
 		7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchViewController.swift; sourceTree = "<group>"; };
-		7B9243D02188181B007E3D6F /* CallUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallUserDefaults.swift; sourceTree = "<group>"; };
 		7B92F8241FA1A7D5000B838B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
@@ -905,6 +904,7 @@
 		DF191193208F104800BD415D /* Job.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = "<group>"; };
 		DF191195208F186100BD415D /* SendMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessageService.swift; sourceTree = "<group>"; };
 		DF191197208F290700BD415D /* MixinService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinService.swift; sourceTree = "<group>"; };
+		DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClockSkewViewController.swift; sourceTree = "<group>"; };
 		DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshSnapshotsJob.swift; sourceTree = "<group>"; };
 		DF1A9A7B1FF2245800A95188 /* NumberExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberExtension.swift; sourceTree = "<group>"; };
 		DF1A9A7D1FF2539600A95188 /* UserNotificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationExtension.swift; sourceTree = "<group>"; };
@@ -1433,7 +1433,6 @@
 				7B08CD2B2178700C00FB8CCF /* CallManager.swift */,
 				7B7E7143217D87860052C7DD /* CallView.xib */,
 				7B7E7145217D89790052C7DD /* CallView.swift */,
-				7B9243D02188181B007E3D6F /* CallUserDefaults.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -1936,6 +1935,7 @@
 				DFD2943B1FA7069600FADAAD /* Cells */,
 				DF3C47461FA071F400A07C71 /* HomeViewController.swift */,
 				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
+				DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
 			);
 			path = Home;
@@ -2731,6 +2731,7 @@
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */,
 				DFD87C8B1FDBF10100BBCFFC /* RefreshOffsetJob.swift in Sources */,
+				DF1A2C60219BCACC004EFD68 /* ClockSkewViewController.swift in Sources */,
 				DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */,
 				DF736F901FC09724001DB063 /* WalletTotalBalanceCell.swift in Sources */,
 				DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */,
@@ -2935,7 +2936,6 @@
 				27D6E8D22045473300BA678A /* TransferMessage.swift in Sources */,
 				7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */,
 				7B84358920D8DC2E00237242 /* QuoteTextMessageCell.swift in Sources */,
-				7B9243D12188181B007E3D6F /* CallUserDefaults.swift in Sources */,
 				DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */,
 				DF16681E20A6F84200C45E31 /* SnapshotViewController.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,

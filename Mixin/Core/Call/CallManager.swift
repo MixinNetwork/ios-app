@@ -22,7 +22,6 @@ class CallManager {
     
     private var unansweredTimer: Timer?
     private var pendingRemoteSdp: RTCSessionDescription?
-    private var pendingCandidates = [RTCIceCandidate]()
     private var lineIsIdle: Bool {
         return call == nil && CallManager.callObserver.calls.isEmpty
     }
@@ -187,14 +186,15 @@ class CallManager {
 
 extension CallManager {
     
-    private static let callObserver = CXCallObserver()
-    private static let completeCallCategories: [MessageCategory] = [
+    static let completeCallCategories: [MessageCategory] = [
         .WEBRTC_AUDIO_END,
         .WEBRTC_AUDIO_BUSY,
         .WEBRTC_AUDIO_CANCEL,
         .WEBRTC_AUDIO_FAILED,
         .WEBRTC_AUDIO_DECLINE
     ]
+    
+    private static let callObserver = CXCallObserver()
     
     static func insertCallCompletedMessage(call: Call, isUserInitiated: Bool, category: MessageCategory?) {
         let timeIntervalSinceNow = call.connectedDate?.timeIntervalSinceNow ?? 0
@@ -262,7 +262,7 @@ extension CallManager {
                 view.reload(user: user)
                 view.style = .calling
                 view.show()
-                if UIApplication.shared.applicationState == .inactive {
+                if UIApplication.shared.applicationState != .active {
                     UNUserNotificationCenter.current().sendCallNotification(callerName: user.fullName)
                 }
             }
@@ -282,7 +282,6 @@ extension CallManager {
             DispatchQueue.main.sync {
                 self.view.style = .connecting
             }
-            sendCandidates(pendingCandidates)
             rtcClient.set(remoteSdp: sdp) { (error) in
                 if let error = error {
                     self.queue.async {
@@ -299,9 +298,6 @@ extension CallManager {
             }
             CallManager.insertCallCompletedMessage(call: call, isUserInitiated: false, category: category)
             clean()
-            DispatchQueue.main.sync {
-                view.dismiss()
-            }
         }
     }
     
@@ -323,11 +319,7 @@ extension CallManager: WebRTCClientDelegate {
         guard let call = call else {
             return
         }
-        if call.isOutgoing, !call.hasReceivedRemoteAnswer {
-            pendingCandidates.append(candidate)
-        } else {
-            sendCandidates([candidate])
-        }
+        sendCandidates([candidate])
     }
     
     func webRTCClientDidConnected(_ client: WebRTCClient) {
@@ -335,6 +327,14 @@ extension CallManager: WebRTCClientDelegate {
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         performSynchronouslyOnMainThread {
             self.view.style = .connected
+        }
+    }
+    
+    func webRTCClientDidFailed(_ client: WebRTCClient) {
+        queue.async {
+            self.failCurrentCall(sendFailedMesasgeToRemote: true,
+                                 reportAction: "RTC Client fail",
+                                 description: "")
         }
     }
     
@@ -483,10 +483,12 @@ extension CallManager {
         rtcClient.close()
         call = nil
         pendingRemoteSdp = nil
-        pendingCandidates = []
         isMuted = false
         usesSpeaker = false
         invalidateUnansweredTimeoutTimerAndSetNil()
+        performSynchronouslyOnMainThread {
+            view.dismiss()
+        }
     }
     
     private func playRingtone(usesSpeaker: Bool) {

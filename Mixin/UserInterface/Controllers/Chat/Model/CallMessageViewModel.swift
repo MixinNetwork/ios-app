@@ -14,7 +14,7 @@ class CallMessageViewModel: TextMessageViewModel {
         case MessageCategory.WEBRTC_AUDIO_CANCEL.rawValue:
             return isRemote ? Localized.CHAT_MESSAGE_CALL_REMOTE_CANCELLED : Localized.CHAT_MESSAGE_CALL_CANCELLED
         case MessageCategory.WEBRTC_AUDIO_DECLINE.rawValue:
-            return isRemote ? Localized.CHAT_MESSAGE_CALL_REMOTE_DECLINED : Localized.CHAT_MESSAGE_CALL_DECLINED
+            return isRemote ? Localized.CHAT_MESSAGE_CALL_DECLINED : Localized.CHAT_MESSAGE_CALL_REMOTE_DECLINED
         case MessageCategory.WEBRTC_AUDIO_BUSY.rawValue:
             return isRemote ? Localized.CHAT_MESSAGE_CALL_BUSY : Localized.CHAT_MESSAGE_CALL_REMOTE_BUSY
         case MessageCategory.WEBRTC_AUDIO_FAILED.rawValue:

@@ -40,6 +40,7 @@ class WebSocketService: NSObject {
     }
 
     func disconnect() {
+        connected = false
         tearDown()
         client?.delegate = nil
         client?.close(withCode: exitCode, reason: "disconnect")
@@ -91,9 +92,9 @@ extension WebSocketService: SRWebSocketDelegate {
                 transaction.callback(.failure(error))
             }
             if blazeMessage.action == BlazeMessageAction.error.rawValue && error.code == 401 {
-                FileManager.default.writeLog(log: "\n>>>>>>>>>>>>>>WebSocketService...didReceiveMessage...401", newSection: true)
-                UIApplication.trackError("WebSocketService didReceiveMessage", action: "401", userInfo: UIApplication.getTrackUserInfo())
-                AccountAPI.shared.logout()
+                if !AccountUserDefault.shared.hasClockSkew {
+                    AccountAPI.shared.logout()
+                }
             }
         } else {
             if let transaction = transactions[blazeMessage.id] {
@@ -126,6 +127,19 @@ extension WebSocketService: SRWebSocketDelegate {
         guard client != nil else {
             return
         }
+        if let responseServerTime = CFHTTPMessageCopyHeaderFieldValue(webSocket.receivedHTTPHeaders, "x-server-time" as CFString)?.takeRetainedValue() as String?, let serverTime = Double(responseServerTime), serverTime > 0 {
+            let clientTime = Date().timeIntervalSince1970
+            if abs(serverTime / 1000000000 - clientTime) > 600 {
+                FileManager.default.writeLog(log: "WebSocketService...webSocketDidOpen...clock skew")
+                AccountUserDefault.shared.hasClockSkew = true
+                DispatchQueue.main.async {
+                    WebSocketService.shared.disconnect()
+                    AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                }
+                return
+            }
+        }
+
         FileManager.default.writeLog(log: "WebSocketService...webSocketDidOpen")
         connected = true
         NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: true)
@@ -316,23 +330,10 @@ extension WebSocketService {
                     result = blazeMessage
                 case let .failure(error):
                     if error.code == 10002 {
-                        var userInfo = UIApplication.getTrackUserInfo()
-                        if let param = blazeMessage.params {
-                            userInfo["category"] = param.category ?? ""
-                            userInfo["conversationId"] = param.conversationId ?? ""
-                            userInfo["status"] = param.status ?? ""
-                            userInfo["recipientId"] = param.recipientId ?? ""
-                            userInfo["data"] = param.data ?? ""
-                            if let messageId = param.messageId {
-                                userInfo["messageId"] = messageId
-                                userInfo["messageCreatedAt"] = MessageDAO.shared.getMessage(messageId: messageId)?.createdAt
-                                if messageId != messageId.lowercased() {
-                                    MessageDAO.shared.deleteMessage(id: messageId)
-                                    JobDAO.shared.removeJob(jobId: blazeMessage.id)
-                                }
-                            }
+                        if let param = blazeMessage.params, let messageId = param.messageId, messageId != messageId.lowercased() {
+                            MessageDAO.shared.deleteMessage(id: messageId)
+                            JobDAO.shared.removeJob(jobId: blazeMessage.id)
                         }
-                        UIApplication.trackError("The request data has invalid field", action: blazeMessage.action, userInfo: userInfo)
                     }
                     err = error
                 }

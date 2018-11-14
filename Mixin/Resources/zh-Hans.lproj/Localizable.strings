@@ -59,6 +59,7 @@
 "toast_error" = "错误 %@：%@";
 "screen_captured_pin_leaking_hint" = "检测到屏幕录制，支付密码可能会录入视频。";
 "biometry_suggestion" = "建议使用%@认证";
+"clock_skew_tips" = "检测到系统时间异常，请校正后再继续使用。设置 > 通用 > 日期与时间 > 自动设置。";
 
 // Login
 "navigation_title_select_country" = "选择一个国家";
@@ -172,8 +173,8 @@
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
-"call_status_calling" = "正在拨号...";
-"call_status_being_calling" = "正在等待接听...";
+"call_status_calling" = "正在呼叫...";
+"call_status_being_calling" = "语音通话来电";
 "call_status_connecting" = "正在连接";
 "call_status_disconnecting" = "正在断开";
 "call_func_hangup" = "挂断";

@@ -27,7 +27,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         AVVideoWidthKey: 1280,
         AVVideoHeightKey: 720,
         AVVideoCompressionPropertiesKey: [
-            AVVideoAverageBitRateKey: 1000000,
+            AVVideoAverageBitRateKey: 1500000,
             AVVideoProfileLevelKey: AVVideoProfileLevelH264MainAutoLevel
         ]
     ]

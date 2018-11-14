@@ -5,7 +5,17 @@ func makeInitialViewController() -> UIViewController {
         return SignalLoadingViewController.instance()
     } else {
         let viewControllers: [UIViewController]
-        if CommonUserDefault.shared.hasConversation {
+        if AccountUserDefault.shared.hasClockSkew {
+            if let nav = AppDelegate.current.window?.rootViewController as? MixinNavigationController, let viewController = nav.viewControllers.last as? ClockSkewViewController {
+                viewController.checkFailed()
+                return nav
+            } else {
+                while UIApplication.shared.keyWindow?.subviews.last is BottomSheetView {
+                    UIApplication.shared.keyWindow?.subviews.last?.removeFromSuperview()
+                }
+                viewControllers = [ClockSkewViewController.instance()]
+            }
+        } else if CommonUserDefault.shared.hasConversation {
             viewControllers = [HomeViewController.instance()]
         } else {
             if AccountAPI.shared.account?.has_pin ?? false {

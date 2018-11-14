@@ -58,7 +58,7 @@
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_added" = "Added";
 "toast_error" = "ERROR %@: %@";
-"clock_skew_tips" = "System time is unusual, please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically";
+"clock_skew_tips" = "System time is unusual, please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically.";
 
 
 // Login

@@ -550,6 +550,7 @@
                     </view>
                     <connections>
                         <outlet property="continueAction" destination="eRn-IU-Yqu" id="TeC-in-fYA"/>
+                        <outlet property="tipsLabel" destination="Tou-53-uta" id="zoe-ss-Eo7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xxp-dS-d33" sceneMemberID="firstResponder"/>

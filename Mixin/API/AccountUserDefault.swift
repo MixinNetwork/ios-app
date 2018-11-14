@@ -5,7 +5,7 @@ class AccountUserDefault {
     private let keyAccount = "Account"
     private let keySessionSecret = "session_secret"
     private let keyPinToken = "pin_token"
-
+    private var keyHasClockSkew = "has_clock_skew"
 
     static let shared = AccountUserDefault()
 
@@ -46,6 +46,15 @@ class AccountUserDefault {
     func storeToken(token: String) {
         session.setValue(token, forKey: keySessionSecret)
         session.synchronize()
+    }
+
+    var hasClockSkew: Bool {
+        get {
+            return session.bool(forKey: keyHasClockSkew)
+        }
+        set {
+            session.set(newValue, forKey: keyHasClockSkew)
+        }
     }
 
     func clear() {

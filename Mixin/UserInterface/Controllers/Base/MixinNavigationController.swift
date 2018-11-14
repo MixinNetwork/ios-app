@@ -42,7 +42,7 @@ class MixinNavigationController: UINavigationController {
         self.interactivePopGestureRecognizer?.delegate = self
         self.isNavigationBarHidden = true
         self.delegate = self
-        if CryptoUserDefault.shared.isLoaded && !CommonUserDefault.shared.hasClockSkew {
+        if CryptoUserDefault.shared.isLoaded && !AccountUserDefault.shared.hasClockSkew {
             WebSocketService.shared.connect()
             checkUser()
         }

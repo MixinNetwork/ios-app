@@ -135,7 +135,7 @@ class BaseAPI {
                         if let serverTime = Double(responseServerTime), serverTime > 0 {
                             let clientTime = Date().timeIntervalSince1970
                             if abs(serverTime / 1000000000 - clientTime) > 600 {
-                                CommonUserDefault.shared.hasClockSkew = true
+                                AccountUserDefault.shared.hasClockSkew = true
                                 DispatchQueue.main.async {
                                     WebSocketService.shared.disconnect()
                                     AppDelegate.current.window?.rootViewController = makeInitialViewController()
@@ -238,7 +238,7 @@ extension BaseAPI {
             if let serverTime = Double(responseServerTime), serverTime > 0 {
                 let clientTime = Date().timeIntervalSince1970
                 if abs(serverTime / 1000000000 - clientTime) > 600 {
-                    CommonUserDefault.shared.hasClockSkew = true
+                    AccountUserDefault.shared.hasClockSkew = true
                     DispatchQueue.main.async {
                         WebSocketService.shared.disconnect()
                         AppDelegate.current.window?.rootViewController = makeInitialViewController()

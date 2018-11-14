@@ -30,7 +30,6 @@ class CommonUserDefault {
     private var keyHasConversation: String {
         return "has_conversation_\(AccountAPI.shared.accountIdentityNumber)"
     }
-    private var keyHasClockSkew = "has_clock_skew"
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
 
@@ -87,15 +86,6 @@ class CommonUserDefault {
         }
         set {
             session.set(newValue, forKey: keyHasConversation)
-        }
-    }
-
-    var hasClockSkew: Bool {
-        get {
-            return session.bool(forKey: keyHasClockSkew)
-        }
-        set {
-            session.set(newValue, forKey: keyHasClockSkew)
         }
     }
     

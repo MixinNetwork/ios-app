@@ -17,19 +17,20 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AssetTitleView" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="actionButtonsSeparatorView" destination="NFD-XO-enZ" id="zVw-8I-OO3"/>
                 <outlet property="actionButtonsStackView" destination="Hts-rf-a6p" id="ipt-0b-UTa"/>
-                <outlet property="balanceLabel" destination="OR8-Nl-brd" id="Xi3-Nf-JtD"/>
+                <outlet property="amountLabel" destination="OR8-Nl-brd" id="Xi3-Nf-JtD"/>
                 <outlet property="chainImageView" destination="hzr-uN-uFc" id="aOa-ZA-eD5"/>
                 <outlet property="depositButton" destination="cnm-K9-Ul6" id="iRZ-Ac-MTr"/>
                 <outlet property="iconImageView" destination="3k2-24-CBm" id="Iby-sx-Dhv"/>
                 <outlet property="symbolLabel" destination="L9F-lx-hml" id="REE-Db-NFl"/>
-                <outlet property="usdBalanceLabel" destination="IIV-CI-Xm1" id="2mx-cl-LvC"/>
+                <outlet property="usdAmountLabel" destination="IIV-CI-Xm1" id="2mx-cl-LvC"/>
                 <outlet property="withdrawalButton" destination="WkA-89-oHW" id="tyC-4A-2sV"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="167"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="172"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IEL-FV-sUa" customClass="ShadowedCardView" customModule="Mixin" customModuleProvider="target">
@@ -175,9 +176,9 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="IEL-FV-sUa" secondAttribute="bottom" constant="5" id="FtG-zf-0Tm"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="IEL-FV-sUa" secondAttribute="bottom" constant="10" id="FtG-zf-0Tm"/>
                 <constraint firstItem="IEL-FV-sUa" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="G1j-Xc-6YX"/>
                 <constraint firstAttribute="trailing" secondItem="IEL-FV-sUa" secondAttribute="trailing" constant="10" id="a73-ci-REh"/>
                 <constraint firstItem="IEL-FV-sUa" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="rqC-gb-3Z9"/>

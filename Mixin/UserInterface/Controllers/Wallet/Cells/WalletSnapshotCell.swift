@@ -9,6 +9,7 @@ class WalletSnapshotCell: UITableViewCell {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
+    @IBOutlet weak var bottomShadowImageView: UIImageView!
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
     

@@ -11,6 +11,7 @@ class AssetViewController: UIViewController {
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.asset-load")
     private let tableHeaderView = AssetTableHeaderView()
+    private let noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
     
     private var asset: AssetItem!
     private var snapshots = [SnapshotItem]() {
@@ -29,21 +30,6 @@ class AssetViewController: UIViewController {
         let window = AssetFilterWindow.instance()
         window.delegate = self
         return window
-    }()
-    private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
-    private lazy var hasTransactionFooterView: UIView = {
-        let image = UIImage(named: "Wallet/bg_asset_bottom")!
-        let imageView = UIImageView(image: image)
-        imageView.backgroundColor = .white
-        let footer = UIView()
-        footer.frame.size.height = image.size.height
-        footer.addSubview(imageView)
-        imageView.snp.makeConstraints({ (make) in
-            make.top.bottom.equalToSuperview()
-            make.leading.equalToSuperview().offset(-15)
-            make.trailing.equalToSuperview().offset(15)
-        })
-        return footer
     }()
     
     override func viewDidLoad() {
@@ -145,6 +131,9 @@ extension AssetViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! WalletSnapshotCell
         cell.render(snapshot: filteredSnapshots[indexPath.section][indexPath.row], asset: asset)
+        let lastSection = filteredSnapshots.count - 1
+        let lastIndexPath = IndexPath(row: filteredSnapshots[lastSection].count - 1, section: lastSection)
+        cell.bottomShadowImageView.isHidden = indexPath != lastIndexPath
         return cell
     }
     
@@ -306,7 +295,7 @@ extension AssetViewController {
             }
         } else {
             tableHeaderView.transactionsHeaderView.isHidden = false
-            tableView.tableFooterView = hasTransactionFooterView
+            tableView.tableFooterView = nil
         }
     }
     

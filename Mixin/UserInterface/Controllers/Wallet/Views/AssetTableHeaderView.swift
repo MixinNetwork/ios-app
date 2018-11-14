@@ -10,7 +10,7 @@ class AssetTableHeaderView: UIView, XibDesignable {
     @IBOutlet weak var transactionsHeaderHeightConstraint: NSLayoutConstraint!
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let height = AssetTitleView.height(hasActionButtons: true)
+        let height = titleView.sizeThatFits(size).height
             + transactionsHeaderTopConstraint.constant
             + transactionsHeaderHeightConstraint.constant
         return CGSize(width: size.width, height: height)

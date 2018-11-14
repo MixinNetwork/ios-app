@@ -25,16 +25,16 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tm2-C9-mxu" customClass="AssetTitleView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="167"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="172"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="167" id="ClT-Az-MtE"/>
+                        <constraint firstAttribute="height" constant="172" id="ClT-Az-MtE"/>
                     </constraints>
                 </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h1A-Ls-iGk">
                     <rect key="frame" x="0.0" y="172" width="375" height="50"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/bg_transaction_header_top" translatesAutoresizingMaskIntoConstraints="NO" id="KV3-Ed-Jpe">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/bg_shadow_top" translatesAutoresizingMaskIntoConstraints="NO" id="KV3-Ed-Jpe">
                             <rect key="frame" x="-15" y="-16" width="405" height="66"/>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transactions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xtr-Ya-ipN">
@@ -71,7 +71,7 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="tm2-C9-mxu" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="5Vp-Ep-MHY"/>
-                <constraint firstItem="h1A-Ls-iGk" firstAttribute="top" secondItem="tm2-C9-mxu" secondAttribute="bottom" constant="5" id="6ae-do-e5d"/>
+                <constraint firstItem="h1A-Ls-iGk" firstAttribute="top" secondItem="tm2-C9-mxu" secondAttribute="bottom" id="6ae-do-e5d"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="h1A-Ls-iGk" secondAttribute="bottom" id="9jJ-3O-HNr"/>
                 <constraint firstItem="tm2-C9-mxu" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="Ega-SR-1IR"/>
                 <constraint firstItem="h1A-Ls-iGk" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="ExV-oT-jSj"/>
@@ -84,7 +84,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Wallet/bg_transaction_header_top" width="67" height="66.5"/>
+        <image name="Wallet/bg_shadow_top" width="67" height="66.5"/>
         <image name="Wallet/ic_filter" width="14" height="14"/>
     </resources>
 </document>

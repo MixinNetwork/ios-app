@@ -58,11 +58,6 @@ class PayView: UIStackView {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func didMoveToWindow() {
-        super.didMoveToWindow()
-        DispatchQueue.main.async(execute: alertScreenCapturedIfNeeded)
-    }
-    
     func render(isTransfer: Bool, asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
         self.isTransfer = isTransfer
         self.asset = asset
@@ -110,8 +105,9 @@ class PayView: UIStackView {
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
 
-        if #available(iOS 11.0, *) {
-            biometricsPayAction()
+
+        if !biometricsPayAction() {
+            DispatchQueue.main.async(execute: alertScreenCapturedIfNeeded)
         }
     }
 
@@ -249,22 +245,30 @@ extension PayView: PinFieldDelegate {
         }
     }
 
-    @available(iOS 11.0, *)
-    private func biometricsPayAction() {
+    private func biometricsPayAction() -> Bool {
+        guard #available(iOS 11.0, *) else {
+            return false
+        }
+
         guard WalletUserDefault.shared.isBiometricPay else {
-            return
+            return false
         }
         guard !biometricPayTimedOut else {
-            return
+            return false
         }
         
         guard biometryType != .none else {
-            return
+            return false
         }
+
         let prompt = Localized.WALLET_BIOMETRIC_PAY_PROMPT(biometricType: biometryType.localizedName)
 
         DispatchQueue.global().async { [weak self] in
+            guard let weakSelf = self else {
+                return
+            }
             guard let pin = Keychain.shared.getPIN(prompt: prompt) else {
+                DispatchQueue.main.async(execute: weakSelf.alertScreenCapturedIfNeeded)
                 return
             }
             DispatchQueue.main.async {
@@ -272,6 +276,8 @@ extension PayView: PinFieldDelegate {
                 self?.pinField.insertText(pin)
             }
         }
+
+        return true
     }
 
     private func delayDismissWindow() {
@@ -300,9 +306,6 @@ extension PayView: PinFieldDelegate {
     
     private func alertScreenCapturedIfNeeded() {
         guard window != nil, #available(iOS 11.0, *), UIScreen.main.isCaptured else {
-            return
-        }
-        guard !WalletUserDefault.shared.isBiometricPay || biometricPayTimedOut else {
             return
         }
         var prompt = Localized.SCREEN_CAPTURED_PIN_LEAKING_HINT

@@ -110,4 +110,8 @@ class WalletUserDefault {
             session.set(newValue, forKey: keyPINInterval)
         }
     }
+
+    func clearBiometricPay() {
+        session.removeObject(forKey: keyIsBiometricPay)
+    }
 }

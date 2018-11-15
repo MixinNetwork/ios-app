@@ -77,7 +77,11 @@ public class Localized {
     public static func TOAST_ERROR(errorCode: Int, errorMessage: String) -> String {
         return String(format: LocalizedString("toast_error", comment: "ERROR %@: %@"), "\(errorCode)", errorMessage)
     }
-
+    public static let SCREEN_CAPTURED_PIN_LEAKING_HINT = LocalizedString("screen_captured_pin_leaking_hint", comment: "Screen recorder detected, PIN may be recorded.")
+    public static func BIOMETRY_SUGGESTION(biometricType: String) -> String {
+        return String(format: LocalizedString("biometry_suggestion", comment: " %@ is suggested."), biometricType)
+    }
+    
     // Login
     public static func NAVIGATION_TITLE_ENTER_VERIFICATION_CODE(mobileNumber: String) -> String {
         return String(format: LocalizedString("navigation_title_enter_verification_code", comment: "Enter the 4-digit code sent to you at %@"), mobileNumber)

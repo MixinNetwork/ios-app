@@ -58,8 +58,9 @@
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_added" = "Added";
 "toast_error" = "ERROR %@: %@";
+"screen_captured_pin_leaking_hint" = "Screen recorder detected, PIN may be recorded.";
+"biometry_suggestion" = " %@ is suggested.";
 "clock_skew_tips" = "System time is unusual, please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically.";
-
 
 // Login
 "navigation_title_select_country" = "Select a Country";

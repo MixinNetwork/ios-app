@@ -134,6 +134,7 @@ extension Keychain {
     }
 
     func clearPIN() {
+        WalletUserDefault.shared.clearBiometricPay()
         remove(keyEncryptedPIN)
     }
 

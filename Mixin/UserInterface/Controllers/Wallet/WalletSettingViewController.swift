@@ -6,29 +6,7 @@ class WalletSettingViewController: UITableViewController {
     @IBOutlet weak var payTitleLabel: UILabel!
     @IBOutlet weak var biometricsPaySwitch: UISwitch!
     @IBOutlet weak var pinIntervalLabel: UILabel!
-    
-    private let biometryType: BiometryType = {
-        guard #available(iOS 11.0, *), !UIDevice.isJailbreak else {
-            return .none
-        }
-        guard AccountAPI.shared.account?.has_pin ?? false else {
-            return .none
-        }
-        let context = LAContext()
-        var error: NSError?
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            switch context.biometryType {
-            case .touchID:
-                return .touchID
-            case .faceID:
-                return .faceID
-            default:
-                return .none
-            }
-        } else {
-            return .none
-        }
-    }()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -136,27 +114,6 @@ class WalletSettingViewController: UITableViewController {
     class func instance() -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "wallet_setting") as! WalletSettingViewController
         return ContainerViewController.instance(viewController: vc, title: Localized.WALLET_SETTING)
-    }
-    
-}
-
-extension WalletSettingViewController {
-    
-    enum BiometryType {
-        case faceID
-        case touchID
-        case none
-        
-        var localizedName: String {
-            switch self {
-            case .faceID:
-                return Localized.WALLET_FACE_ID
-            case .touchID:
-                return Localized.WALLET_TOUCH_ID
-            case .none:
-                return ""
-            }
-        }
     }
     
 }

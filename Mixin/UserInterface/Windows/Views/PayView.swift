@@ -35,7 +35,10 @@ class PayView: UIStackView {
     private var soundId: SystemSoundID = 0
     private var isTransfer = false
     private var isAutoFillPIN = false
-
+    private var biometricPayTimedOut: Bool {
+        return Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime >= WalletUserDefault.shared.pinInterval
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         if ScreenSize.current == .inch3_5 {
@@ -54,7 +57,7 @@ class PayView: UIStackView {
         }
         NotificationCenter.default.removeObserver(self)
     }
-
+    
     func render(isTransfer: Bool, asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
         self.isTransfer = isTransfer
         self.asset = asset
@@ -102,8 +105,9 @@ class PayView: UIStackView {
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
 
-        if #available(iOS 11.0, *) {
-            biometricsPayAction()
+
+        if !biometricsPayAction() {
+            DispatchQueue.main.async(execute: alertScreenCapturedIfNeeded)
         }
     }
 
@@ -241,24 +245,30 @@ extension PayView: PinFieldDelegate {
         }
     }
 
-    @available(iOS 11.0, *)
-    private func biometricsPayAction() {
-        guard WalletUserDefault.shared.isBiometricPay else {
-            return
-        }
-        guard Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime < WalletUserDefault.shared.pinInterval else {
-            return
+    private func biometricsPayAction() -> Bool {
+        guard #available(iOS 11.0, *) else {
+            return false
         }
 
-        let context = LAContext()
-        var error: NSError?
-        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), context.biometryType == .touchID || context.biometryType == .faceID else {
-            return
+        guard WalletUserDefault.shared.isBiometricPay else {
+            return false
         }
-        let prompt = Localized.WALLET_BIOMETRIC_PAY_PROMPT(biometricType: context.biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
+        guard !biometricPayTimedOut else {
+            return false
+        }
+        
+        guard biometryType != .none else {
+            return false
+        }
+
+        let prompt = Localized.WALLET_BIOMETRIC_PAY_PROMPT(biometricType: biometryType.localizedName)
 
         DispatchQueue.global().async { [weak self] in
+            guard let weakSelf = self else {
+                return
+            }
             guard let pin = Keychain.shared.getPIN(prompt: prompt) else {
+                DispatchQueue.main.async(execute: weakSelf.alertScreenCapturedIfNeeded)
                 return
             }
             DispatchQueue.main.async {
@@ -266,6 +276,8 @@ extension PayView: PinFieldDelegate {
                 self?.pinField.insertText(pin)
             }
         }
+
+        return true
     }
 
     private func delayDismissWindow() {
@@ -291,4 +303,16 @@ extension PayView: PinFieldDelegate {
         }
         AudioServicesPlaySystemSound(soundId)
     }
+    
+    private func alertScreenCapturedIfNeeded() {
+        guard window != nil, #available(iOS 11.0, *), UIScreen.main.isCaptured else {
+            return
+        }
+        var prompt = Localized.SCREEN_CAPTURED_PIN_LEAKING_HINT
+        if biometryType != .none {
+            prompt += Localized.BIOMETRY_SUGGESTION(biometricType: biometryType.localizedName)
+        }
+        UIApplication.currentActivity()?.alert(prompt)
+    }
+    
 }

@@ -9,7 +9,9 @@ extension UIViewController {
 }
 
 protocol ContainerViewControllerDelegate: class {
-
+    
+    var prefersNavigationBarSeparatorLineHidden: Bool { get }
+    
     func barLeftButtonTappedAction()
 
     func barRightButtonTappedAction()
@@ -22,7 +24,11 @@ protocol ContainerViewControllerDelegate: class {
 }
 
 extension ContainerViewControllerDelegate where Self: UIViewController {
-
+    
+    var prefersNavigationBarSeparatorLineHidden: Bool {
+        return false
+    }
+    
     func prepareBar(rightButton: StateResponsiveButton) {
 
     }
@@ -53,6 +59,7 @@ class ContainerViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var rightButton: StateResponsiveButton!
     @IBOutlet weak var leftButton: UIButton!
+    @IBOutlet weak var separatorLineView: UIView!
     
     @IBOutlet weak var rightButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightButtonWidthConstraint: NSLayoutConstraint!
@@ -64,6 +71,9 @@ class ContainerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if delegate?.prefersNavigationBarSeparatorLineHidden ?? false {
+            separatorLineView.isHidden = true
+        }
         prepareBarRightButton()
         navigationBar.layoutIfNeeded()
         titleLabel.text = controllerTitle

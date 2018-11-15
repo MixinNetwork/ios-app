@@ -43,6 +43,14 @@ class TransactionViewController: UIViewController {
     
 }
 
+extension TransactionViewController: ContainerViewControllerDelegate {
+    
+    var prefersNavigationBarSeparatorLineHidden: Bool {
+        return true
+    }
+    
+}
+
 extension TransactionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -97,6 +97,10 @@ class AssetViewController: UIViewController {
 
 extension AssetViewController: ContainerViewControllerDelegate {
     
+    var prefersNavigationBarSeparatorLineHidden: Bool {
+        return true
+    }
+    
     func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.WALLET_MENU_WITHDRAW, style: .default, handler: { [weak self] (_) in

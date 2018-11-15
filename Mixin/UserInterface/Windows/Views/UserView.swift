@@ -201,11 +201,7 @@ class UserView: CornerView {
         avatarPreviewImageView.clipsToBounds = true
         avatarImageView.isHidden = true
         superView.addSubview(avatarPreviewImageView)
-        if #available(iOS 11.0, *) {
-            superView.contentBottomConstraint.constant = -self.frame.height - superView.safeAreaInsets.vertical
-        } else {
-            superView.contentBottomConstraint.constant = -self.frame.height
-        }
+        superView.contentBottomConstraint.constant = -self.frame.height - superView.compatibleSafeAreaInsets.vertical
         UIView.animate(withDuration: 0.25, animations: {
             superView.layoutIfNeeded()
             avatarPreviewImageView.layer.cornerRadius = 0

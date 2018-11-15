@@ -111,7 +111,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
-    private lazy var lastInputWrapperBottomConstant = bottomSafeAreaInset
+    private lazy var lastInputWrapperBottomConstant = view.compatibleSafeAreaInsets.bottom
     private lazy var giphySearchViewController: GiphySearchViewController = {
         let controller = GiphySearchViewController.instance()
         controller.conversationViewController = self
@@ -146,21 +146,13 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         view.addContactButton.addTarget(self, action: #selector(addContactAction(_:)), for: .touchUpInside)
         return view
     }()
-
-    private var bottomSafeAreaInset: CGFloat {
-        if #available(iOS 11.0, *) {
-            return view.safeAreaInsets.bottom
-        } else {
-            return 0
-        }
-    }
-
+    
     private var stickerPanelFullsizedHeight: CGFloat {
-        if #available(iOS 11.0, *) {
-            return view.frame.height - 56 - max(view.safeAreaInsets.top, 20) - view.safeAreaInsets.bottom - 55
-        } else {
-            return view.frame.height - 56 - 20 - 55
-        }
+        return view.frame.height
+            - 56
+            - max(view.compatibleSafeAreaInsets.top, 20)
+            - view.compatibleSafeAreaInsets.bottom
+            - 55
     }
     
     private var isShowingMoreMenu: Bool {
@@ -323,7 +315,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         if inputWrapperBottomConstraint.constant == 0 {
-            inputWrapperBottomConstraint.constant = bottomSafeAreaInset
+            inputWrapperBottomConstraint.constant = view.compatibleSafeAreaInsets.bottom
             updateTableViewContentInset()
         }
     }
@@ -1389,7 +1381,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
             && tableViewContentOffsetShouldFollowInputWrapperPosition
         let windowHeight = AppDelegate.current.window!.bounds.height
         inputWrapperBottomConstraint.constant = max(windowHeight - newFrame.origin.y - manager.inputAccessoryViewHeight,
-                                                    bottomSafeAreaInset)
+                                                    view.compatibleSafeAreaInsets.bottom)
         let inputWrapperDisplacement = lastInputWrapperBottomConstant - inputWrapperBottomConstraint.constant
         if intent == .show {
             if isShowingStickerPanel {
@@ -1539,7 +1531,7 @@ extension ConversationViewController {
     
     private func toggleStickerPanel(delay: TimeInterval) {
         stickerPanelContainerHeightConstraint.constant = ConversationKeyboardManager.lastKeyboardHeight
-        inputWrapperBottomConstraint.constant = isShowingStickerPanel ? bottomSafeAreaInset : stickerPanelContainerHeightConstraint.constant
+        inputWrapperBottomConstraint.constant = isShowingStickerPanel ? view.compatibleSafeAreaInsets.bottom : stickerPanelContainerHeightConstraint.constant
         let newAlpha: CGFloat = isShowingStickerPanel ? 0 : 1
         stickerKeyboardSwitcherButton.setImage(isShowingStickerPanel ? #imageLiteral(resourceName: "ic_chat_sticker") : #imageLiteral(resourceName: "ic_chat_keyboard"), for: .normal)
         sendButton.isHidden = !isShowingStickerPanel || !inputTextView.hasText

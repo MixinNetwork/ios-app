@@ -17,12 +17,19 @@ class TransactionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateTableViewContentInset()
         makeContents()
         tableHeaderView.render(asset: asset, snapshot: snapshot)
         tableHeaderView.sizeToFit()
         tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
         tableView.delegate = self
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewContentInset()
     }
     
     class func instance(asset: AssetItem, snapshot: SnapshotItem) -> UIViewController {
@@ -106,6 +113,14 @@ extension TransactionViewController: UITableViewDelegate {
 }
 
 extension TransactionViewController {
+    
+    private func updateTableViewContentInset() {
+        if view.compatibleSafeAreaInsets.bottom < 1 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
+    }
     
     private func makeContents() {
         contents = []

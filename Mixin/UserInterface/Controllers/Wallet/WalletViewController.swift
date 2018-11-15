@@ -24,7 +24,14 @@ class WalletViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        prepareTableView()
+        updateTableViewContentInset()
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.tableFooterView = UIView()
+        tableView.reloadData()
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
         fetchAssets()
         fetchRemoteAssets()
     }
@@ -40,46 +47,13 @@ class WalletViewController: UIViewController {
             PinTipsView.instance().presentPopupControllerAnimated()
         }
     }
-
-    private func prepareTableView() {
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.tableFooterView = UIView()
-        tableView.reloadData()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetsDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewContentInset()
     }
-
-    @objc private func fetchAssets() {
-        DispatchQueue.global().async { [weak self] in
-            let hiddenAssets = WalletUserDefault.shared.hiddenAssets
-            let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
-                return hiddenAssets[asset.assetId] == nil
-            })
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.assets = assets
-                weakSelf.tableView.reloadData()
-            }
-        }
-    }
-
-    private func fetchRemoteAssets() {
-        DispatchQueue.global().async {
-            switch AssetAPI.shared.assets() {
-            case let .success(assets):
-                DispatchQueue.global().async {
-                    AssetDAO.shared.insertOrUpdateAssets(assets: assets)
-                }
-            case .failure:
-                break
-            }
-        }
-    }
-
+    
     @IBAction func backAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
@@ -179,9 +153,46 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension WalletViewController {
     
-    enum ReuseId {
+    private enum ReuseId {
         static let header = "wallet_header"
         static let asset = "wallet_asset"
+    }
+    
+    private func updateTableViewContentInset() {
+        if view.compatibleSafeAreaInsets.bottom < 1 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
+    }
+    
+    @objc private func fetchAssets() {
+        DispatchQueue.global().async { [weak self] in
+            let hiddenAssets = WalletUserDefault.shared.hiddenAssets
+            let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
+                return hiddenAssets[asset.assetId] == nil
+            })
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.assets = assets
+                weakSelf.tableView.reloadData()
+            }
+        }
+    }
+    
+    private func fetchRemoteAssets() {
+        DispatchQueue.global().async {
+            switch AssetAPI.shared.assets() {
+            case let .success(assets):
+                DispatchQueue.global().async {
+                    AssetDAO.shared.insertOrUpdateAssets(assets: assets)
+                }
+            case .failure:
+                break
+            }
+        }
     }
     
 }

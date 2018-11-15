@@ -34,6 +34,7 @@ class AssetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateTableViewContentInset()
         tableHeaderView.sizeToFit()
         tableHeaderView.filterButton.addTarget(filterWindow, action: #selector(AssetFilterWindow.presentPopupControllerAnimated), for: .touchUpInside)
         tableHeaderView.titleView.withdrawalButton.addTarget(self, action: #selector(withdraw(_:)), for: .touchUpInside)
@@ -51,6 +52,12 @@ class AssetViewController: UIViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewContentInset()
     }
     
     @objc func assetsDidChange(_ notification: Notification) {
@@ -188,6 +195,14 @@ extension AssetViewController: AssetFilterWindowDelegate {
 }
 
 extension AssetViewController {
+    
+    private func updateTableViewContentInset() {
+        if view.compatibleSafeAreaInsets.bottom < 1 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
+    }
     
     private func reloadAsset() {
         let assetId = asset.assetId

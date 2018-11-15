@@ -583,11 +583,13 @@ extension ReceiveMessageService {
             checkUser(userId: opponentId, tryAgain: true)
         }
 
-        switch AssetAPI.shared.asset(assetId: snapshot.assetId) {
-        case let .success(asset):
-            AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
-        case .failure:
-            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
+        if !AssetDAO.shared.isExist(assetId: snapshot.assetId) {
+            switch AssetAPI.shared.asset(assetId: snapshot.assetId) {
+            case let .success(asset):
+                AssetDAO.shared.insertOrUpdateAssets(assets: [asset])
+            case .failure:
+                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
+            }
         }
 
         snapshot.createdAt = data.createdAt

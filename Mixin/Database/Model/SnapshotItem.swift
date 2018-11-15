@@ -5,7 +5,7 @@ struct SnapshotItem: TableCodable {
     let snapshotId: String
     let type: String
     let assetId: String
-    let assetSymbol: String
+    let assetSymbol: String?
     let amount: String
     let transactionHash: String?
     let sender: String?

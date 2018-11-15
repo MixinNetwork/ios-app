@@ -12,7 +12,7 @@ class SnapshotCell: UITableViewCell {
     
     func render(snapshot: SnapshotItem, asset: AssetItem? = nil) {
         timeLabel.text = DateFormatter.MMMddHHmm.string(from: snapshot.createdAt.toUTCDate())
-        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always, symbol: .custom(snapshot.assetSymbol))
+        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always, symbol: .custom(snapshot.assetSymbol ?? ""))
         pendingLabel.isHidden = snapshot.type != SnapshotType.pendingDeposit.rawValue
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:

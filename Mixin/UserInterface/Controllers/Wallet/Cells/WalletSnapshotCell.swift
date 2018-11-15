@@ -10,8 +10,19 @@ class WalletSnapshotCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var bottomShadowImageView: UIImageView!
+    @IBOutlet weak var selectionView: RoundCornerSelectionView!
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        selectionView.setHighlighted(selected, animated: animated)
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        selectionView.setHighlighted(highlighted, animated: animated)
+    }
     
     func render(snapshot: SnapshotItem, asset: AssetItem) {
         iconImageView.sd_setImage(with: nil, completed: nil)

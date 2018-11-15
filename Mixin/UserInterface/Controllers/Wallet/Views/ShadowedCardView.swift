@@ -24,6 +24,18 @@ class ShadowedCardView: UIView {
         updateCardPath()
     }
     
+    func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        let color: UIColor = highlighted ? UIColor(rgbValue: 0xF6F8FC) : .white
+        let work = {
+            self.cardLayer.fillColor = color.cgColor
+        }
+        if animated {
+            UIView.animate(withDuration: 0.3, animations: work)
+        } else {
+            work()
+        }
+    }
+    
     private func prepare() {
         updateCardPath()
         cardLayer.fillColor = UIColor.white.cgColor

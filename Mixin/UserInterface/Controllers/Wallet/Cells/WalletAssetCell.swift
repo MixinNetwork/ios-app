@@ -4,6 +4,7 @@ class WalletAssetCell: UITableViewCell {
     
     static let height: CGFloat = 90
     
+    @IBOutlet weak var cardView: ShadowedCardView!
     @IBOutlet weak var iconImageView: CornerImageView!
     @IBOutlet weak var chainImageView: CornerImageView!
     @IBOutlet weak var balanceLabel: UILabel!
@@ -16,6 +17,16 @@ class WalletAssetCell: UITableViewCell {
         super.prepareForReuse()
         iconImageView.sd_cancelCurrentImageLoad()
         chainImageView.sd_cancelCurrentImageLoad()
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        cardView.setHighlighted(selected, animated: animated)
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        cardView.setHighlighted(highlighted, animated: animated)
     }
     
     func render(asset: AssetItem) {

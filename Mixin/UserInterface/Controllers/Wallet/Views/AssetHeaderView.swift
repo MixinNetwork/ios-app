@@ -19,7 +19,6 @@ class AssetHeaderView: UITableViewHeaderFooterView {
     }
     
     private func prepare() {
-        backgroundColor = .white
         contentView.backgroundColor = .white
         clipsToBounds = true
         leftShadowImageView.image = UIImage(named: "Wallet/bg_shadow_left")

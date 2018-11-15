@@ -133,7 +133,13 @@ extension AssetViewController: UITableViewDataSource {
         cell.render(snapshot: filteredSnapshots[indexPath.section][indexPath.row], asset: asset)
         let lastSection = filteredSnapshots.count - 1
         let lastIndexPath = IndexPath(row: filteredSnapshots[lastSection].count - 1, section: lastSection)
-        cell.bottomShadowImageView.isHidden = indexPath != lastIndexPath
+        if indexPath == lastIndexPath {
+            cell.bottomShadowImageView.isHidden = false
+            cell.selectionView.roundingCorners = [.bottomLeft, .bottomRight]
+        } else {
+            cell.bottomShadowImageView.isHidden = true
+            cell.selectionView.roundingCorners = []
+        }
         return cell
     }
     

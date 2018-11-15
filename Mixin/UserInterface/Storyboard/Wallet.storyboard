@@ -92,7 +92,7 @@
                                                     <rect key="frame" x="10" y="10" width="394" height="177"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IHE-HM-Hdw">
-                                                            <rect key="frame" x="137" y="32" width="120" height="40"/>
+                                                            <rect key="frame" x="113.33333333333333" y="32" width="167.66666666666669" height="40"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rtr-Z3-phX">
                                                                     <rect key="frame" x="0.0" y="0.0" width="11.333333333333334" height="21.666666666666668"/>
@@ -101,7 +101,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGd-qQ-SHD">
-                                                                    <rect key="frame" x="18.33333333333335" y="4" width="101.66666666666669" height="40"/>
+                                                                    <rect key="frame" x="18.333333333333329" y="4" width="149.33333333333337" height="46.666666666666664"/>
                                                                     <attributedString key="attributedText">
                                                                         <fragment content="65536.">
                                                                             <attributes>
@@ -515,7 +515,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d0Z-79-VlA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-520.28985507246375" y="147.55434782608697"/>
+            <point key="canvasLocation" x="-455" y="-2"/>
         </scene>
         <!--Hidden Asset View Controller-->
         <scene sceneID="zH6-MX-htI">
@@ -547,7 +547,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lxu-7F-X7Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="151" y="147"/>
+            <point key="canvasLocation" x="-455" y="703"/>
         </scene>
         <!--Transaction View Controller-->
         <scene sceneID="jHO-cF-iCX">
@@ -774,7 +774,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kzn-0f-7y0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="140.57971014492756" y="831.52173913043487"/>
+            <point key="canvasLocation" x="1075" y="-2"/>
         </scene>
         <!--Asset View Controller-->
         <scene sceneID="c47-Rw-nB5">
@@ -838,7 +838,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="+20" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pzo-Ta-KyW">
-                                                                    <rect key="frame" x="99" y="20.666666666666668" width="255" height="19.000000000000004"/>
+                                                                    <rect key="frame" x="99" y="19" width="255" height="22.333333333333329"/>
                                                                     <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="19"/>
                                                                     <color key="textColor" red="0.16078431372549018" green="0.74509803921568629" blue="0.45098039215686275" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
@@ -910,7 +910,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fqu-1c-u8d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-520.28985507246375" y="831.52173913043487"/>
+            <point key="canvasLocation" x="304" y="-2"/>
         </scene>
         <!--Snapshot View Controller-->
         <scene sceneID="Wmp-9a-ZV7">
@@ -930,7 +930,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uYK-Jb-eE7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="883" y="1551"/>
+            <point key="canvasLocation" x="1074" y="1416"/>
         </scene>
         <!--Deposit View Controller-->
         <scene sceneID="oWt-lb-ba4">
@@ -1255,7 +1255,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="882.60869565217399" y="132.88043478260872"/>
+            <point key="canvasLocation" x="303" y="703"/>
         </scene>
         <!--Withdrawal View Controller-->
         <scene sceneID="eAJ-0K-AA1">
@@ -1626,7 +1626,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jqm-cV-6Vd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-519.20000000000005" y="1551.7241379310346"/>
+            <point key="canvasLocation" x="-455" y="1417"/>
         </scene>
         <!--Address View Controller-->
         <scene sceneID="Igl-Cs-K3x">
@@ -1657,7 +1657,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ASE-0H-YBK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-520.28985507246375" y="2273.6413043478265"/>
+            <point key="canvasLocation" x="-455" y="2133"/>
         </scene>
         <!--Peer Transactions View Controller-->
         <scene sceneID="Z9R-Jm-PPj">
@@ -1675,7 +1675,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QaG-EY-fZP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-520" y="2989"/>
+            <point key="canvasLocation" x="-455" y="2849"/>
         </scene>
         <!--New Address View Controller-->
         <scene sceneID="gpe-l0-tIj">
@@ -1827,7 +1827,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7kp-zD-jKL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="141" y="2274"/>
+            <point key="canvasLocation" x="303" y="2133"/>
         </scene>
         <!--Wallet Setting View Controller-->
         <scene sceneID="Osd-4K-R2k">
@@ -1942,7 +1942,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QXU-oo-BvW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="883" y="2274"/>
+            <point key="canvasLocation" x="1074" y="2133"/>
         </scene>
         <!--Pin Interval View Controller-->
         <scene sceneID="F5c-oM-WhF">
@@ -2097,7 +2097,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MgZ-zG-TLD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1586" y="2274"/>
+            <point key="canvasLocation" x="1845" y="2133"/>
         </scene>
         <!--Wallet Password View Controller-->
         <scene sceneID="RZW-0e-IdW">
@@ -2308,7 +2308,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FGA-IM-Cax" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="187.5" y="1552.8169014084508"/>
+            <point key="canvasLocation" x="303" y="1416"/>
         </scene>
     </scenes>
     <resources>

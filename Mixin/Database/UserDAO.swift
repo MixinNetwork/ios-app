@@ -11,7 +11,7 @@ final class UserDAO {
     """
 
     private static let sqlQueryContacts = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' ORDER BY u.created_at DESC"
-    private static let sqlQueryUserByNameOrIdentityNumber = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.full_name LIKE ? OR u.identity_number LIKE ?"
+    private static let sqlQueryUserByNameOrIdentityNumber = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND (u.full_name LIKE ? OR u.identity_number LIKE ?)"
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"
     private static let sqlQueryBlockedUsers = "\(sqlQueryColumns) WHERE relationship = 'BLOCKING'"

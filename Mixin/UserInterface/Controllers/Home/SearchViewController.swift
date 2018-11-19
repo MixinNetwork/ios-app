@@ -144,7 +144,6 @@ class SearchViewController: UIViewController {
         assets = []
         conversations = []
         tableView.reloadData()
-        tableView.contentOffset.y = -tableView.contentInset.top
         beforePresentingConstraints.forEach {
             $0.priority = .defaultHigh
         }
@@ -153,6 +152,7 @@ class SearchViewController: UIViewController {
         }
         keywordTextField.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         view.layoutIfNeeded()
+        tableView.contentOffset.y = -tableView.contentInset.top
     }
 
 }

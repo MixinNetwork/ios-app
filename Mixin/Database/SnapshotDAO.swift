@@ -46,7 +46,17 @@ final class SnapshotDAO {
     }
 
     func updateSnapshots(snapshots: [Snapshot]) {
-        MixinDatabase.shared.insertOrReplace(objects: snapshots)
+        MixinDatabase.shared.transaction { (db) in
+            for snapshot in snapshots {
+                guard let transactionHash = snapshot.transactionHash else {
+                    continue
+                }
+                let condition = Snapshot.Properties.transactionHash == transactionHash
+                    && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue
+                try db.delete(fromTable: Snapshot.tableName, where: condition)
+            }
+            try db.insertOrReplace(objects: snapshots, intoTable: Snapshot.tableName)
+        }
         NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: nil)
     }
     

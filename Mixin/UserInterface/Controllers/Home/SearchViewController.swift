@@ -48,19 +48,31 @@ class SearchViewController: UIViewController {
         let keyword = self.keyword
         searchQueue.cancelAllOperations()
         if keyword.isEmpty {
+            self.assets = []
+            self.users = []
+            self.conversations = []
             showContacts()
         } else {
-            searchQueue.addOperation {
+            tableView.reloadData()
+            let op = BlockOperation()
+            op.addExecutionBlock { [unowned op] in
+                guard !op.isCancelled else {
+                    return
+                }
                 let assets = AssetDAO.shared.searchAssets(content: keyword)
                 let users = UserDAO.shared.getUsers(nameOrPhone: keyword)
                 let messages = ConversationDAO.shared.searchConversation(content: keyword)
-                DispatchQueue.main.async {
+                DispatchQueue.main.sync {
+                    guard !op.isCancelled else {
+                        return
+                    }
                     self.assets = assets
                     self.users = users
                     self.conversations = messages
                     self.tableView.reloadData()
                 }
             }
+            searchQueue.addOperation(op)
         }
     }
 

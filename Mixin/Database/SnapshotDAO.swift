@@ -72,6 +72,11 @@ final class SnapshotDAO {
         }
     }
 
+    func removePendingDeposits(assetId: String, transactionHash: String) {
+        MixinDatabase.shared.delete(table: Snapshot.tableName, condition: Snapshot.Properties.assetId == assetId && Snapshot.Properties.transactionHash == transactionHash
+            && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue)
+    }
+
     private func checkSnapshots(_ snapshots: [SnapshotItem]) -> [SnapshotItem] {
         let assetIds: [String] = snapshots
             .filter({ $0.assetSymbol == nil })

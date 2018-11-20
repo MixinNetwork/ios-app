@@ -592,6 +592,10 @@ extension ReceiveMessageService {
             }
         }
 
+        if snapshot.type == SnapshotType.deposit.rawValue, let transactionHash = snapshot.transactionHash {
+            SnapshotDAO.shared.removePendingDeposits(assetId: snapshot.assetId, transactionHash: transactionHash)
+        }
+
         snapshot.createdAt = data.createdAt
         SnapshotDAO.shared.replaceSnapshot(snapshot: snapshot)
         MessageDAO.shared.insertMessage(message: Message.createMessage(snapshotMesssage: snapshot, data: data), messageSource: data.source)

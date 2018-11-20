@@ -46,17 +46,7 @@ final class SnapshotDAO {
     }
 
     func updateSnapshots(snapshots: [Snapshot]) {
-        MixinDatabase.shared.transaction { (db) in
-            for snapshot in snapshots {
-                guard let transactionHash = snapshot.transactionHash else {
-                    continue
-                }
-                let condition = Snapshot.Properties.transactionHash == transactionHash
-                    && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue
-                try db.delete(fromTable: Snapshot.tableName, where: condition)
-            }
-            try db.insertOrReplace(objects: snapshots, intoTable: Snapshot.tableName)
-        }
+        MixinDatabase.shared.insertOrReplace(objects: snapshots)
         NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: nil)
     }
     
@@ -80,6 +70,11 @@ final class SnapshotDAO {
                 try db.insert(objects: pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )}), intoTable: Snapshot.tableName)
             }
         }
+    }
+
+    func removePendingDeposits(assetId: String, transactionHash: String) {
+        MixinDatabase.shared.delete(table: Snapshot.tableName, condition: Snapshot.Properties.assetId == assetId && Snapshot.Properties.transactionHash == transactionHash
+            && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue)
     }
 
     private func checkSnapshots(_ snapshots: [SnapshotItem]) -> [SnapshotItem] {

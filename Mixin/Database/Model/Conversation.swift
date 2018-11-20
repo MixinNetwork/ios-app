@@ -47,7 +47,7 @@ struct Conversation: BaseCodable {
         }
         static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
             return [
-                "_index": IndexBinding(indexesBy: [lastMessageCreatedAt])
+                "_indexs": IndexBinding(indexesBy: [pinTime, lastMessageCreatedAt])
             ]
         }
     }

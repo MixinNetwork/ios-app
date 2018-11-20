@@ -162,7 +162,8 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                             dataSource.sendMessage(type: .SIGNAL_VIDEO, value: outputURL)
                             weakSelf.navigationController?.popViewController(animated: true)
                         } else {
-                            weakSelf.navigationController?.pushViewController(SendToViewController.instance(videoUrl: outputURL), animated: true)
+                            let vc = SendMessagePeerSelectionViewController.instance(content: .video(outputURL))
+                            weakSelf.navigationController?.pushViewController(vc, animated: true)
                         }
                     } else {
                         weakSelf.sendButton.isBusy = false

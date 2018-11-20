@@ -468,8 +468,9 @@ public class Localized {
     public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Successfully copied to clipboard")
 
     // Transfer
-    public static func TRANSFER_TITLE_TO(fullName: String) -> String {
-        return String(format: LocalizedString("transfer_title_to", comment: "to %@"), fullName)
+    public static let TRANSFER_TITLE_TO = LocalizedString("transfer_title_to", comment: "Transfer to")
+    public static func TRANSFER_TITLE_TO_RECEIVER(fullName: String) -> String {
+        return String(format: LocalizedString("transfer_title_to_receiver", comment: "to %@"), fullName)
     }
     public static let TRANSFER_TRANSACTIONS = LocalizedString("transfer_transactions", comment: "TRANSACTIONS")
     public static let TRANSFER_TOUCH_ID_REASON = LocalizedString("transfer_touch_id_reason", comment: "Use an existing fingerprint to make the payment")

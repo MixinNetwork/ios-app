@@ -262,7 +262,7 @@
 "wallet_snapshot_from" = "转账来自%@";
 "wallet_snapshot_to" = "转账给%@";
 "wallet_caption_deposit" = "充值";
-"wallet_caption_withdrawal" = "提现";
+"wallet_caption_transfer" = "转账";
 "wallet_deposit" = "充值";
 "wallet_deposit_confirmations" = "充值到账至少需要 %@ 个区块确认";
 "wallet_no_transaction" = "暂无转账记录";
@@ -353,7 +353,8 @@
 
 // Transfer
 "transfer_title" = "转账";
-"transfer_title_to" = "给%@";
+"transfer_title_to" = "转账给";
+"transfer_title_to_receiver" = "给%@";
 "transfer_balance" = "余额";
 "transfer_transactions" = "转账记录";
 "transfer_transfer_type" = "转账类型";

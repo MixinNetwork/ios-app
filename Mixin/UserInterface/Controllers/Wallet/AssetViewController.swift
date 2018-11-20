@@ -37,7 +37,7 @@ class AssetViewController: UIViewController {
         updateTableViewContentInset()
         tableHeaderView.sizeToFit()
         tableHeaderView.filterButton.addTarget(filterWindow, action: #selector(AssetFilterWindow.presentPopupControllerAnimated), for: .touchUpInside)
-        tableHeaderView.titleView.withdrawalButton.addTarget(self, action: #selector(withdraw(_:)), for: .touchUpInside)
+        tableHeaderView.titleView.transferButton.addTarget(self, action: #selector(transfer(_:)), for: .touchUpInside)
         tableHeaderView.titleView.depositButton.addTarget(self, action: #selector(deposit(_:)), for: .touchUpInside)
         tableView.tableHeaderView = tableHeaderView
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
@@ -72,8 +72,8 @@ class AssetViewController: UIViewController {
         reloadSnapshots()
     }
     
-    @objc func withdraw(_ sender: Any) {
-        let vc = WithdrawalViewController.instance(asset: asset)
+    @objc func transfer(_ sender: Any) {
+        let vc = TransferPeerSelectionViewController.instance(asset: asset)
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -103,12 +103,14 @@ extension AssetViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let asset = self.asset!
         alc.addAction(UIAlertAction(title: Localized.WALLET_MENU_WITHDRAW, style: .default, handler: { [weak self] (_) in
-            self?.withdraw(alc)
+            let vc = WithdrawalViewController.instance(asset: asset)
+            self?.navigationController?.pushViewController(vc, animated: true)
         }))
         let toggleAssetHiddenTitle = WalletUserDefault.shared.hiddenAssets[asset.assetId] == nil ? Localized.WALLET_MENU_HIDE_ASSET : Localized.WALLET_MENU_SHOW_ASSET
         alc.addAction(UIAlertAction(title: toggleAssetHiddenTitle, style: .default, handler: { [weak self](_) in
-            guard let weakSelf = self, let asset = weakSelf.asset else {
+            guard let weakSelf = self else {
                 return
             }
             if WalletUserDefault.shared.hiddenAssets[asset.assetId] == nil {

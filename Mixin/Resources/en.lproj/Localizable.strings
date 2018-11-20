@@ -263,7 +263,7 @@
 "wallet_snapshot_from" = "From %@";
 "wallet_snapshot_to" = "To %@";
 "wallet_caption_deposit" = "DEPOSIT";
-"wallet_caption_withdrawal" = "WITHDRAWAL";
+"wallet_caption_transfer" = "TRANSFER";
 "wallet_deposit" = "Deposit";
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_no_transaction" = "No transaction";
@@ -353,7 +353,8 @@
 
 // Transfer
 "transfer_title" = "Transfer";
-"transfer_title_to" = "to %@";
+"transfer_title_to" = "Transfer to";
+"transfer_title_to_receiver" = "to %@";
 "transfer_balance" = "BALANCE";
 "transfer_transactions" = "TRANSACTIONS";
 "transfer_transfer_type" = "Transfer Type";

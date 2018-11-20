@@ -9,7 +9,7 @@ class AssetTitleView: UIView, XibDesignable {
     @IBOutlet weak var usdAmountLabel: UILabel!
     @IBOutlet weak var actionButtonsStackView: UIStackView!
     @IBOutlet weak var actionButtonsSeparatorView: UIView!
-    @IBOutlet weak var withdrawalButton: UIButton!
+    @IBOutlet weak var transferButton: UIButton!
     @IBOutlet weak var depositButton: StateResponsiveButton!
     
     override init(frame: CGRect) {

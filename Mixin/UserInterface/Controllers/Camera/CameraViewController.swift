@@ -245,7 +245,8 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         guard let photo = snapshotImageView.image else {
             return
         }
-        navigationController?.pushViewController(SendToViewController.instance(photo: photo), animated: true)
+        let vc = SendMessagePeerSelectionViewController.instance(content: .photo(photo))
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     @IBAction func backAction(_ sender: UIButton) {

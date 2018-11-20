@@ -379,7 +379,8 @@ extension UrlWindow {
         }
 
         let shareText = text.removingPercentEncoding ?? text
-        UIApplication.rootNavigationController()?.pushViewController(SendToViewController.instance(text: shareText), animated: true)
+        let vc = SendMessagePeerSelectionViewController.instance(content: .text(shareText))
+        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
 
         return true
     }

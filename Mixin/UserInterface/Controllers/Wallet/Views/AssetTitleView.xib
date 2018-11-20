@@ -24,8 +24,8 @@
                 <outlet property="depositButton" destination="cnm-K9-Ul6" id="iRZ-Ac-MTr"/>
                 <outlet property="iconImageView" destination="3k2-24-CBm" id="Iby-sx-Dhv"/>
                 <outlet property="symbolLabel" destination="L9F-lx-hml" id="REE-Db-NFl"/>
+                <outlet property="transferButton" destination="WkA-89-oHW" id="tyC-4A-2sV"/>
                 <outlet property="usdAmountLabel" destination="IIV-CI-Xm1" id="2mx-cl-LvC"/>
-                <outlet property="withdrawalButton" destination="WkA-89-oHW" id="tyC-4A-2sV"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -131,9 +131,9 @@
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WkA-89-oHW">
                                     <rect key="frame" x="0.0" y="0.0" width="177.5" height="56"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
-                                    <state key="normal" title="WITHDRAWAL"/>
+                                    <state key="normal" title="TRANSFER"/>
                                     <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_caption_withdrawal"/>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_caption_transfer"/>
                                     </userDefinedRuntimeAttributes>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cnm-K9-Ul6" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">

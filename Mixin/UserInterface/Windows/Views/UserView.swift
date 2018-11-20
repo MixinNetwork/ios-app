@@ -238,7 +238,8 @@ class UserView: CornerView {
     }
 
     private func shareAction() {
-        UIApplication.rootNavigationController()?.pushViewController(ShareContactViewController.instance(ownerUser: user), animated: true)
+        let vc = SendMessagePeerSelectionViewController.instance(content: .contact(user.userId))
+        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
     }
     
     private func transactionsAction() {

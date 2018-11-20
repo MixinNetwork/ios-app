@@ -19,24 +19,7 @@ final class UserDAO {
     func deleteUser(userId: String) {
         MixinDatabase.shared.delete(table: User.tableName, condition: User.Properties.userId == userId)
     }
-
-    func getForwardContacts() -> [ForwardUser] {
-        return MixinDatabase.shared.getCodables { (db) -> [ForwardUser] in
-            let rows = try db.getRows(on: [User.Properties.userId, User.Properties.fullName, User.Properties.identityNumber, User.Properties.avatarUrl, User.Properties.isVerified, User.Properties.appId], fromTable: User.tableName, where: User.Properties.relationship == Relationship.FRIEND.rawValue, orderBy: [User.Properties.createdAt.asOrder(by: .descending)])
-            var conversations = [ForwardUser]()
-            for row in rows {
-                let userId = row[0].stringValue
-                let fullName = row[1].stringValue
-                let identityNumber = row[2].stringValue
-                let avatarUrl = row[3].stringValue
-                let isVerified = row[4].int32Value == 1
-                let appId = row[5].stringValue
-                conversations.append(ForwardUser(name: "", iconUrl: "", userId: userId, identityNumber: identityNumber, fullName: fullName, ownerAvatarUrl: avatarUrl, ownerAppId: appId, ownerIsVerified: isVerified, category: "", conversationId: ""))
-            }
-            return conversations
-        }
-    }
-
+    
     func insertSystemUser(userId: String) {
         guard !isExist(userId: userId) else {
             return

@@ -8,7 +8,6 @@ class GroupUser: NSObject {
     let avatarUrl: String
     let isVerified: Bool
     let isBot: Bool
-    var disabled = false
     
     init(userId: String, identityNumber: String, fullName: String, avatarUrl: String, isVerified: Bool, isBot: Bool) {
         self.userId = userId

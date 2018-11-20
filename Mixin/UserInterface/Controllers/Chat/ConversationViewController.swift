@@ -815,7 +815,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
 
     func contactAction() {
-        navigationController?.pushViewController(ConversationShareContactViewController.instance(ownerUser: ownerUser, conversationId: conversationId), animated: true)
+        let vc = ConversationShareContactViewController.instance(ownerUser: ownerUser, conversation: dataSource.conversation)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func callAction() {
@@ -1027,7 +1028,8 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             }
         case .forward:
             audioInputViewController?.cancelIfRecording()
-            navigationController?.pushViewController(ForwardViewController.instance(message: message, ownerUser: ownerUser), animated: true)
+            let vc = SendMessagePeerSelectionViewController.instance(content: .message(message))
+            navigationController?.pushViewController(vc, animated: true)
         case .reply:
             audioInputViewController?.cancelIfRecording()
             quoteMessageId = message.messageId

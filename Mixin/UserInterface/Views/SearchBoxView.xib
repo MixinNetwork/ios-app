@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="textField" destination="d6g-b6-7tA" id="YcR-4a-VM4"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="qcz-K0-qIT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qGH-m2-GHB">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="500" image="ic_search" translatesAutoresizingMaskIntoConstraints="NO" id="2K5-wJ-Qjv">
+                            <rect key="frame" x="0.0" y="0.0" width="36" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="36" id="Avv-66-2ZT"/>
+                            </constraints>
+                        </imageView>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search" textAlignment="natural" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="d6g-b6-7tA">
+                            <rect key="frame" x="36" y="0.0" width="339" height="44"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="18"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="button_title_search"/>
+                            </userDefinedRuntimeAttributes>
+                        </textField>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="85Z-q2-WU1"/>
+                    </constraints>
+                </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yby-vL-pSY">
+                    <rect key="frame" x="0.0" y="44" width="375" height="1"/>
+                    <color key="backgroundColor" red="0.35294117650000001" green="0.35686274509999999" blue="0.40000000000000002" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="2by-O7-Sqr" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="qGH-m2-GHB" firstAttribute="top" secondItem="qcz-K0-qIT" secondAttribute="top" id="00g-OO-zKQ"/>
+                <constraint firstAttribute="bottom" secondItem="yby-vL-pSY" secondAttribute="bottom" id="IRa-93-NiA"/>
+                <constraint firstItem="yby-vL-pSY" firstAttribute="leading" secondItem="qcz-K0-qIT" secondAttribute="leading" id="UJr-TO-90u"/>
+                <constraint firstItem="qGH-m2-GHB" firstAttribute="leading" secondItem="qcz-K0-qIT" secondAttribute="leading" id="UZe-6A-oPu"/>
+                <constraint firstAttribute="trailing" secondItem="qGH-m2-GHB" secondAttribute="trailing" id="kME-Vc-kpf"/>
+                <constraint firstAttribute="trailing" secondItem="yby-vL-pSY" secondAttribute="trailing" id="sxU-oM-fQk"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-47.200000000000003" y="-277.51124437781112"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_search" width="12" height="12"/>
+    </resources>
+</document>

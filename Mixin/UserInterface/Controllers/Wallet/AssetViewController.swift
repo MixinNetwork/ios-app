@@ -35,11 +35,11 @@ class AssetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateTableViewContentInset()
-        tableHeaderView.sizeToFit()
-        tableHeaderView.filterButton.addTarget(filterWindow, action: #selector(AssetFilterWindow.presentPopupControllerAnimated), for: .touchUpInside)
+        tableHeaderView.filterButton.addTarget(self, action: #selector(presentFilterWindow(_:)), for: .touchUpInside)
         tableHeaderView.titleView.transferButton.addTarget(self, action: #selector(transfer(_:)), for: .touchUpInside)
         tableHeaderView.titleView.depositButton.addTarget(self, action: #selector(deposit(_:)), for: .touchUpInside)
         tableView.tableHeaderView = tableHeaderView
+        tableHeaderView.sizeToFit()
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.dataSource = self
         tableView.delegate = self
@@ -70,6 +70,10 @@ class AssetViewController: UIViewController {
     @objc func snapshotsDidChange(_ notification: Notification) {
         didLoadRemoteSnapshots = true
         reloadSnapshots()
+    }
+    
+    @objc func presentFilterWindow(_ sender: Any) {
+        filterWindow.presentPopupControllerAnimated()
     }
     
     @objc func transfer(_ sender: Any) {

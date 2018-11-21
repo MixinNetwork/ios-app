@@ -142,6 +142,10 @@ struct MixinFile {
         return dir.appendingPathComponent("signal.db").path
     }
 
+    static var backupDatabase: URL {
+        return rootDirectory.appendingPathComponent("mixin.backup.db")
+    }
+
     static func url(ofChatDirectory directory: ChatDirectory, filename: String?) -> URL {
         let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent(directory.rawValue)
         if !FileManager.default.fileExists(atPath: url.path) {

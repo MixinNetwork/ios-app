@@ -47,11 +47,16 @@ extension SettingViewController {
                 vc = ConversationSettingViewController.instance()
             }
         case 1:
-            vc = AuthorizationsViewController.instance()
+            switch indexPath.row {
+            case 0:
+                vc = NotificationSettingsViewController.instance()
+            case 1:
+                vc = BackupViewController.instance()
+            default:
+                vc = StorageUsageViewController.instance()
+            }
         case 2:
-            vc = StorageUsageViewController.instance()
-        case 3:
-            vc = NotificationSettingsViewController.instance()
+            vc = AuthorizationsViewController.instance()
         default:
             vc = AboutContainerViewController.instance()
         }

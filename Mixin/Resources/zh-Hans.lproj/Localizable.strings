@@ -465,6 +465,14 @@
 "setting_storage_files" = "文件";
 "setting_logout" = "退出登录";
 "setting_notification_message_preview" = "显示消息内容";
+"setting_backup_title" = "聊天记录备份";
+"setting_backup_now" = "立即备份";
+"setting_backup_auto" = "自动备份";
+"setting_backup_videos" = "包含视频";
+"setting_backup_daily" = "每天";
+"setting_backup_weekly" = "每周";
+"setting_backup_monthly" = "每月";
+"setting_backup_off" = "关闭";
 
 // Notifications
 "notification_reply" = "回复";

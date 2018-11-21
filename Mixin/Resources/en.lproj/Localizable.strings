@@ -463,6 +463,14 @@
 "setting_storage_files" = "Files";
 "setting_logout" = "Log Out";
 "setting_notification_message_preview" = "Message Preview";
+"setting_backup_title" = "Chat Backup";
+"setting_backup_now" = "Back Up Now";
+"setting_backup_auto" = "Auto Backup";
+"setting_backup_videos" = "Include Videos";
+"setting_backup_daily" = "Daily";
+"setting_backup_weekly" = "Weekly";
+"setting_backup_monthly" = "Monthly";
+"setting_backup_off" = "Off";
 
 // Notifications
 "notification_reply" = "Reply";

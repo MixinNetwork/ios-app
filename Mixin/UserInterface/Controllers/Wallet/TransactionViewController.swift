@@ -17,11 +17,12 @@ class TransactionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.layoutIfNeeded()
         updateTableViewContentInset()
         makeContents()
+        tableView.tableHeaderView = tableHeaderView
         tableHeaderView.render(asset: asset, snapshot: snapshot)
         tableHeaderView.sizeToFit()
-        tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
         tableView.delegate = self
     }

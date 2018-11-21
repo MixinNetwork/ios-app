@@ -28,7 +28,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="172"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="172" id="ClT-Az-MtE"/>
+                        <constraint firstAttribute="height" constant="172" placeholder="YES" id="ClT-Az-MtE"/>
                     </constraints>
                 </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h1A-Ls-iGk">
@@ -84,7 +84,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Wallet/bg_shadow_top" width="67" height="66.5"/>
+        <image name="Wallet/bg_shadow_top" width="67" height="66"/>
         <image name="Wallet/ic_filter" width="14" height="14"/>
     </resources>
 </document>

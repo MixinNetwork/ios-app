@@ -2,6 +2,7 @@ import UIKit
 
 class AssetTitleView: UIView, XibDesignable {
     
+    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var iconImageView: CornerImageView!
     @IBOutlet weak var chainImageView: CornerImageView!
     @IBOutlet weak var amountLabel: UILabel!
@@ -11,6 +12,11 @@ class AssetTitleView: UIView, XibDesignable {
     @IBOutlet weak var actionButtonsSeparatorView: UIView!
     @IBOutlet weak var transferButton: UIButton!
     @IBOutlet weak var depositButton: StateResponsiveButton!
+    
+    @IBOutlet weak var contentStackViewToCardViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentStackViewToActionButtonsBottomConstraint: NSLayoutConstraint!
+    
+    @IBOutlet var AmountLabelConcernedHorizontalConstraints: [NSLayoutConstraint]!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,8 +29,10 @@ class AssetTitleView: UIView, XibDesignable {
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let height: CGFloat = actionButtonsStackView.isHidden ? 150 : 172
-        return CGSize(width: size.width, height: height)
+        amountLabel.preferredMaxLayoutWidth = amountLabelPreferredMaxLayoutWidthThatFits(size.width)
+        let sizeToFit = CGSize(width: size.width, height: UIView.layoutFittingExpandedSize.height)
+        let layoutSize = systemLayoutSizeFitting(sizeToFit)
+        return CGSize(width: size.width, height: layoutSize.height)
     }
     
     func render(asset: AssetItem) {
@@ -40,6 +48,8 @@ class AssetTitleView: UIView, XibDesignable {
         depositButton.isBusy = !(asset.isAccount || asset.isAddress)
         actionButtonsStackView.isHidden = false
         actionButtonsSeparatorView.isHidden = false
+        contentStackViewToCardViewBottomConstraint.priority = .defaultLow
+        contentStackViewToActionButtonsBottomConstraint.priority = .defaultHigh
     }
     
     func render(asset: AssetItem, snapshot: SnapshotItem) {
@@ -68,6 +78,8 @@ class AssetTitleView: UIView, XibDesignable {
         }
         actionButtonsStackView.isHidden = true
         actionButtonsSeparatorView.isHidden = true
+        contentStackViewToCardViewBottomConstraint.priority = .defaultHigh
+        contentStackViewToActionButtonsBottomConstraint.priority = .defaultLow
     }
     
     private func reloadIcon(asset: AssetItem) {
@@ -82,6 +94,15 @@ class AssetTitleView: UIView, XibDesignable {
         } else {
             chainImageView.isHidden = true
         }
+    }
+    
+    private func amountLabelPreferredMaxLayoutWidthThatFits(_ containerWidth: CGFloat) -> CGFloat {
+        var width = AmountLabelConcernedHorizontalConstraints.reduce(0) { (width, constraint) -> CGFloat in
+            return width + constraint.constant
+        }
+        width += contentStackView.spacing
+        width += symbolLabel.intrinsicContentSize.width
+        return containerWidth - width
     }
     
 }

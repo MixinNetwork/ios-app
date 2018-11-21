@@ -34,11 +34,13 @@ class AssetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.layoutIfNeeded()
         updateTableViewContentInset()
         tableHeaderView.filterButton.addTarget(self, action: #selector(presentFilterWindow(_:)), for: .touchUpInside)
         tableHeaderView.titleView.transferButton.addTarget(self, action: #selector(transfer(_:)), for: .touchUpInside)
         tableHeaderView.titleView.depositButton.addTarget(self, action: #selector(deposit(_:)), for: .touchUpInside)
         tableView.tableHeaderView = tableHeaderView
+        tableHeaderView.titleView.render(asset: asset)
         tableHeaderView.sizeToFit()
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.dataSource = self

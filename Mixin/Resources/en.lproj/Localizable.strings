@@ -253,6 +253,7 @@
 // Wallet
 "wallet_title" = "Wallet";
 "wallet_title_withdrawal" = "Withdrawal";
+"wallet_title_add_asset" = "Add asset";
 "wallet_transfer_out" = "Transfer Out";
 "wallet_symbol_other" = "Other";
 "wallet_password_verify_title" = "Old PIN";

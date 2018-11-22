@@ -93,11 +93,11 @@ extension WalletViewController: MixinNavigationAnimating {
 extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 1 : assets.count
+        return section == 1 ? assets.count : 1
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -113,28 +113,37 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
         case 1:
             return WalletAssetCell.height
         default:
-            return 44
+            return WalletAddAssetCell.height
         }
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
+        switch indexPath.section {
+        case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.header) as! WalletHeaderCell
             cell.render(assets: assets)
             return cell
-        } else {
+        case 1:
             let asset = assets[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.asset) as! WalletAssetCell
             cell.render(asset: asset)
             return cell
+        default:
+            return tableView.dequeueReusableCell(withIdentifier: ReuseId.addAsset)!
         }
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
-        if indexPath.section == 1 {
-            navigationController?.pushViewController(AssetViewController.instance(asset: assets[indexPath.row]), animated: true)
+        switch indexPath.section {
+        case 1:
+            let vc = AssetViewController.instance(asset: assets[indexPath.row])
+            navigationController?.pushViewController(vc, animated: true)
+        case 2:
+            let vc = AddAssetViewController.instance()
+            navigationController?.pushViewController(vc, animated: true)
+        default:
+            break
         }
     }
     
@@ -156,6 +165,7 @@ extension WalletViewController {
     private enum ReuseId {
         static let header = "wallet_header"
         static let asset = "wallet_asset"
+        static let addAsset = "wallet_add_asset"
     }
     
     private func updateTableViewContentInset() {

@@ -60,6 +60,11 @@
 		7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01931FEA281E000EEE4F /* URLExtension.swift */; };
 		7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */; };
 		7B0B01981FEA63FA000EEE4F /* StrangerTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */; };
+		7B0BE45C21A557B700B91A1E /* WalletAddAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE45B21A557B700B91A1E /* WalletAddAssetCell.swift */; };
+		7B0BE45E21A55E6C00B91A1E /* AddAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE45D21A55E6C00B91A1E /* AddAssetViewController.swift */; };
+		7B0BE46021A5630500B91A1E /* SearchAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */; };
+		7B0BE46221A57C7100B91A1E /* TopAssetsDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE46121A57C7100B91A1E /* TopAssetsDAO.swift */; };
+		7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */; };
 		7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */; };
 		7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */; };
 		7B0E67082179931C0056DE3A /* AssetKeyConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0E67072179931C0056DE3A /* AssetKeyConvertible.swift */; };
@@ -651,6 +656,11 @@
 		7B0B01931FEA281E000EEE4F /* URLExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtension.swift; sourceTree = "<group>"; };
 		7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StrangerTipsView.xib; sourceTree = "<group>"; };
 		7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrangerTipsView.swift; sourceTree = "<group>"; };
+		7B0BE45B21A557B700B91A1E /* WalletAddAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAddAssetCell.swift; sourceTree = "<group>"; };
+		7B0BE45D21A55E6C00B91A1E /* AddAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewController.swift; sourceTree = "<group>"; };
+		7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAssetCell.swift; sourceTree = "<group>"; };
+		7B0BE46121A57C7100B91A1E /* TopAssetsDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopAssetsDAO.swift; sourceTree = "<group>"; };
+		7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTopAssetsJob.swift; sourceTree = "<group>"; };
 		7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MXNAudioPlayerError.swift; sourceTree = "<group>"; };
 		7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HittestBypassWrapperView.swift; sourceTree = "<group>"; };
 		7B0E67072179931C0056DE3A /* AssetKeyConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetKeyConvertible.swift; sourceTree = "<group>"; };
@@ -1692,6 +1702,7 @@
 				DF10709A2049BC3F00E20047 /* MixinDatabase.swift */,
 				7B4D112B205BC9160074BF60 /* AddressDAO.swift */,
 				DFF353011FEE532300058453 /* AssetDAO.swift */,
+				7B0BE46121A57C7100B91A1E /* TopAssetsDAO.swift */,
 				DF68F18B201567D6001C4225 /* StickerRelationshipDAO.swift */,
 				DF2A3CD52016DB1E0095F024 /* StickerDAO.swift */,
 				DFF3B68B20E2690000DC82D9 /* AlbumDAO.swift */,
@@ -2007,7 +2018,9 @@
 				7B95D52B21743EEF00C95281 /* TransactionsFilterConditionCell.xib */,
 				7B71F5252191CC1500F93B98 /* WalletHeaderCell.swift */,
 				7B9916D321945A6800C11401 /* WalletAssetCell.swift */,
+				7B0BE45B21A557B700B91A1E /* WalletAddAssetCell.swift */,
 				7BC2D27C21992FA8002FAC1D /* WalletSnapshotCell.swift */,
+				7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2073,6 +2086,7 @@
 				DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */,
 				DFD87C8A1FDBF10100BBCFFC /* RefreshOffsetJob.swift */,
 				DFF353051FEE6A3400058453 /* RefreshAssetsJob.swift */,
+				7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */,
 				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
 				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
 				DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */,
@@ -2145,6 +2159,7 @@
 				DF736F881FC08B67001DB063 /* Cells */,
 				7B68F78A2191741300B79978 /* BiometryType.swift */,
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
+				7B0BE45D21A55E6C00B91A1E /* AddAssetViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */,
 				7B63C48C21A3ED530044C4BF /* TransferPeerSelectionViewController.swift */,
 				DF8794932074FB4E004A1E55 /* TransactionViewController.swift */,
@@ -2680,6 +2695,7 @@
 				DFE48AE020EBD7F3003E0BF8 /* ConversationCategoryStorage.swift in Sources */,
 				DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
+				7B0BE45E21A55E6C00B91A1E /* AddAssetViewController.swift in Sources */,
 				7BC8503520CBA69B00A57B83 /* MXNAudioRecorder.m in Sources */,
 				DFEE215A200CACB300D9B3F7 /* AuthorizeAPI.swift in Sources */,
 				DF65AAF3205122A3004E3459 /* MessageBlaze.swift in Sources */,
@@ -2694,6 +2710,7 @@
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				DF114B0C2020B56E00EA8F9C /* WebWindow.swift in Sources */,
+				7B0BE45C21A557B700B91A1E /* WalletAddAssetCell.swift in Sources */,
 				273FACB9205FB9A800513327 /* PreKeyStore.swift in Sources */,
 				DFF353041FEE657000058453 /* CryptoUserDefault.swift in Sources */,
 				7BB1EDBF1FB1A481000DF9E7 /* GroupParticipentViewController.swift in Sources */,
@@ -2760,6 +2777,7 @@
 				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
 				7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */,
 				DF3FF05D20134C4C000A0C0A /* DatabaseUserDefault.swift in Sources */,
+				7B0BE46221A57C7100B91A1E /* TopAssetsDAO.swift in Sources */,
 				DF5CDA74204FEBA1004A52BA /* BaseCodable.swift in Sources */,
 				273FACB1205FB9A800513327 /* SignalAddress.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
@@ -2848,6 +2866,7 @@
 				7BA4A1CE1FF347130086CD56 /* GroupParticipantCell.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
+				7B0BE46021A5630500B91A1E /* SearchAssetCell.swift in Sources */,
 				7B09E55E1FD15BAA002E45D3 /* TransferMessageViewModel.swift in Sources */,
 				7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */,
 				DF503D3F1FED060900C008E7 /* MixinIdentityKeyStore.swift in Sources */,
@@ -2921,6 +2940,7 @@
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,
+				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
 				7BF5D02B2170B8EA0062EF14 /* AssetFilterWindow.swift in Sources */,
 				DFA5B5871FADBE7D00549728 /* AddMemberViewController.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,

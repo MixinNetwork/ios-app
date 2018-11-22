@@ -4,7 +4,8 @@ import WCDBSwift
 struct Asset: BaseCodable, AssetKeyConvertible {
 
     static var tableName: String = "assets"
-
+    static let topAssetsTableName = "top_assets"
+    
     let assetId: String
     let type: String
     let symbol: String

@@ -27,7 +27,7 @@ class WalletAddAssetCell: UITableViewCell {
         dashOutlineLayer.strokeColor = UIColor(rgbValue: 0xD5E3F9).cgColor
         dashOutlineLayer.lineWidth = 1
         dashOutlineLayer.lineDashPattern = [3, 3]
-        dashOutlineLayer.fillColor = UIColor.clear.cgColor
+        dashOutlineLayer.fillColor = UIColor.white.cgColor
     }
     
 }

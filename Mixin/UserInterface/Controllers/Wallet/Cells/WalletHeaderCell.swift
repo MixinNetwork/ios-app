@@ -28,7 +28,7 @@ class WalletHeaderCell: UITableViewCell {
     ]
     
     static func height(usdBalanceIsMoreThanZero: Bool) -> CGFloat {
-        return usdBalanceIsMoreThanZero ? 192 : 132
+        return usdBalanceIsMoreThanZero ? 187 : 135
     }
     
     func render(assets: [AssetItem]) {
@@ -39,7 +39,7 @@ class WalletHeaderCell: UITableViewCell {
             let balance = asset.balance.doubleValue
             let usdBalance = balance * asset.priceUsd.doubleValue
             if usdBalance > 0 {
-                let btcBalance = balance * asset.priceUsd.doubleValue
+                let btcBalance = balance * asset.priceBtc.doubleValue
                 btcTotalBalance += btcBalance
                 usdTotalBalance += usdBalance
                 if assetPortions.count < 3 {

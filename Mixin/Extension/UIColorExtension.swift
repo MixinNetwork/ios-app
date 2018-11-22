@@ -15,8 +15,8 @@ extension UIColor {
     static let selection = UIColor(rgbValue: 0xEDEEEE)
     static let headerGray = UIColor(red: 0.43, green: 0.43, blue: 0.45, alpha: 1)
     
-    static let walletGreen = UIColor(rgbValue: 0x00B56E)
-    static let walletRed = UIColor(rgbValue: 0xE55541)
+    static let walletGreen = UIColor(rgbValue: 0x29BE73)
+    static let walletRed = UIColor(rgbValue: 0xF67070)
     static let walletGray = UIColor(rgbValue: 0xAAAAAA)
     
     static let hintBlue = UIColor(rgbValue: 0x1FB4FC)

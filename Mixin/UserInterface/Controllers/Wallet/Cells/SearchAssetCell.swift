@@ -32,6 +32,11 @@ class SearchAssetCell: UITableViewCell {
         chainIconImageView.sd_cancelCurrentImageLoad()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        separatorInset.left = titleLabel.convert(.zero, to: self).x
+    }
+    
     func render(asset: AssetItem, forceSelected: Bool) {
         assetIconImageView.sd_setImage(with: URL(string: asset.iconUrl), completed: nil)
         chainIconImageView.sd_setImage(with: URL(string: asset.chainIconUrl ?? ""), completed: nil)

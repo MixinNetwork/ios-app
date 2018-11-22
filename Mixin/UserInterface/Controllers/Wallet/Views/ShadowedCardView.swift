@@ -5,7 +5,7 @@ class ShadowedCardView: UIView {
     private let cardLayer = CAShapeLayer()
     private let cornerRadius: CGFloat = 8
     private let shadowColor = UIColor(rgbValue: 0xC3C3C3)
-    private let shadowOffset = CGPoint(x: 0, y: 5)
+    private let shadowOffset = CGPoint(x: 0, y: 8)
     
     private var lastBounds = CGRect.zero
     

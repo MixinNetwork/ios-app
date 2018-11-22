@@ -210,6 +210,7 @@
 		7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD2E54207DE046006D7887 /* UnreadHintMessageCell.swift */; };
 		7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD3337216E1DF9006C0309 /* RTCSessionDescription+JSON.swift */; };
 		7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD3338216E1DF9006C0309 /* RTCIceCandidate+JSON.swift */; };
+		7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */; };
 		7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD50801FA0C8C1009B59FB /* VerificationCodeField.swift */; };
 		7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BADC83D204BD01D0016B0FC /* ChangeNumberViewController.swift */; };
 		7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BADC83F204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift */; };
@@ -805,6 +806,7 @@
 		7BAD2E54207DE046006D7887 /* UnreadHintMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadHintMessageCell.swift; sourceTree = "<group>"; };
 		7BAD3337216E1DF9006C0309 /* RTCSessionDescription+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RTCSessionDescription+JSON.swift"; sourceTree = "<group>"; };
 		7BAD3338216E1DF9006C0309 /* RTCIceCandidate+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RTCIceCandidate+JSON.swift"; sourceTree = "<group>"; };
+		7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusyButton.swift; sourceTree = "<group>"; };
 		7BAD50801FA0C8C1009B59FB /* VerificationCodeField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeField.swift; sourceTree = "<group>"; };
 		7BADC83D204BD01D0016B0FC /* ChangeNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberViewController.swift; sourceTree = "<group>"; };
 		7BADC83F204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberNewNumberViewController.swift; sourceTree = "<group>"; };
@@ -1894,6 +1896,7 @@
 				DF768562200647CC0055F3FF /* BouncingButton.swift */,
 				7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */,
 				7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */,
+				7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */,
 				7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */,
 				7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */,
 				7BAD50801FA0C8C1009B59FB /* VerificationCodeField.swift */,
@@ -3042,6 +3045,7 @@
 				DF503D301FECF6F000C008E7 /* SenderKeyDAO.swift in Sources */,
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
 				DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */,
+				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift in Sources */,
 				7B4375C32170CA6900846DC5 /* TransactionsFilterConditionCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,

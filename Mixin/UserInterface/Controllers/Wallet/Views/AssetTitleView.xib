@@ -66,7 +66,7 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </imageView>
-                                        <imageView hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.89999997615814209" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="hzr-uN-uFc" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                                        <imageView hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.90000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="hzr-uN-uFc" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="40" width="16" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="6iu-sP-cWn"/>
@@ -155,7 +155,7 @@
                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_caption_transfer"/>
                                     </userDefinedRuntimeAttributes>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cnm-K9-Ul6" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cnm-K9-Ul6" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="177.5" y="0.0" width="177.5" height="56"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                     <state key="normal" title="DEPOSIT"/>
@@ -170,7 +170,7 @@
                         </stackView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NFD-XO-enZ">
                             <rect key="frame" x="177" y="172" width="1" height="16"/>
-                            <color key="backgroundColor" red="0.83921568629999999" green="0.83921568629999999" blue="0.83921568629999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.83921568629999999" green="0.83921568629999999" blue="0.83921568629999999" alpha="0.44" colorSpace="custom" customColorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="1" id="gl8-Db-GKI"/>
                                 <constraint firstAttribute="height" constant="16" id="gvu-FP-J5E"/>

@@ -4,7 +4,9 @@ class BarChartView: UIView {
     
     var proportions = [Double]() {
         didSet {
-            draw(oldProportions: oldValue)
+            CATransaction.performWithoutAnimation {
+                draw(oldProportions: oldValue)
+            }
         }
     }
     
@@ -24,7 +26,9 @@ class BarChartView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        layoutLayers()
+        CATransaction.performWithoutAnimation {
+            layoutLayers()
+        }
     }
     
     private func prepare() {

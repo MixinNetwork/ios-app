@@ -11,7 +11,7 @@ class AssetTitleView: UIView, XibDesignable {
     @IBOutlet weak var actionButtonsStackView: UIStackView!
     @IBOutlet weak var actionButtonsSeparatorView: UIView!
     @IBOutlet weak var transferButton: UIButton!
-    @IBOutlet weak var depositButton: StateResponsiveButton!
+    @IBOutlet weak var depositButton: BusyButton!
     
     @IBOutlet weak var contentStackViewToCardViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentStackViewToActionButtonsBottomConstraint: NSLayoutConstraint!

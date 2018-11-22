@@ -9,12 +9,18 @@ class AddAssetViewController: UIViewController {
     
     private let cellReuseId = "add_asset"
     private let searchQueue = OperationQueue()
+    private let textFieldClearButton = UIButton()
     
     private var topAssets = [AssetItem]()
     private var searchResult = [(asset: AssetItem, forceSelected: Bool)]()
+    private var lastKeyword = ""
     
     private var isSearching: Bool {
-        return !(textField.text?.isEmpty ?? true)
+        return !keyword.isEmpty
+    }
+    
+    private var keyword: String {
+        return (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     static func instance() -> UIViewController {
@@ -24,7 +30,13 @@ class AddAssetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        textFieldClearButton.frame.size = CGSize(width: 42, height: 70)
+        textFieldClearButton.imageView?.contentMode = .center
+        textFieldClearButton.setImage(UIImage(named: "Wallet/ic_clear"), for: .normal)
+        textFieldClearButton.addTarget(self, action: #selector(clearTextField(_:)), for: .touchUpInside)
         textField.delegate = self
+        textField.rightViewMode = .whileEditing
+        textField.rightView = textFieldClearButton
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -35,13 +47,20 @@ class AddAssetViewController: UIViewController {
     }
     
     @IBAction func searchAction(_ sender: Any) {
+        let keyword = self.keyword
+        textFieldClearButton.isHidden = keyword.isEmpty
         guard textField.markedTextRange == nil else {
             return
         }
-        guard let keyword = textField.text, !keyword.isEmpty else {
+        guard !keyword.isEmpty else {
+            activityIndicator.stopAnimating()
             tableView.reloadData()
             return
         }
+        guard keyword != lastKeyword else {
+            return
+        }
+        lastKeyword = keyword
         activityIndicator.startAnimating()
         searchQueue.cancelAllOperations()
         let op = BlockOperation()
@@ -74,6 +93,11 @@ class AddAssetViewController: UIViewController {
             }
         }
         searchQueue.addOperation(op)
+    }
+    
+    @objc func clearTextField(_ sender: Any) {
+        textField.text = nil
+        textFieldClearButton.isHidden = true
     }
     
     @objc func reloadWithLocalTopAssets() {
@@ -139,6 +163,11 @@ extension AddAssetViewController: UITextFieldDelegate {
         return false
     }
     
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        textField.backgroundColor = .white
+        return true
+    }
+    
 }
 
 extension AddAssetViewController: UITableViewDataSource {
@@ -178,6 +207,19 @@ extension AddAssetViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         container?.rightButton.isEnabled = tableView.indexPathForSelectedRow != nil
+    }
+    
+}
+
+extension AddAssetViewController: UIScrollViewDelegate {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if textField.isFirstResponder {
+            textField.resignFirstResponder()
+            if keyword.isEmpty {
+                textField.backgroundColor = .clear
+            }
+        }
     }
     
 }

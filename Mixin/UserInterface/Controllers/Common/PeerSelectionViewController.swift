@@ -165,8 +165,13 @@ extension PeerSelectionViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let showHeader = !isSearching && !headerTitles.isEmpty
-        return showHeader ? 30 : .leastNormalMagnitude
+        if isSearching {
+            return .leastNormalMagnitude
+        } else if !headerTitles.isEmpty {
+            return peers[section].isEmpty ? .leastNormalMagnitude : 30
+        } else {
+            return .leastNormalMagnitude
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -256,15 +261,22 @@ extension PeerSelectionViewController {
                 titles = []
                 peers = [contacts.map(Peer.init)]
             case .transferReceivers:
-                titles = []
-                let transferReceivers = contacts.filter({ (user) -> Bool in
+                titles = [Localized.CHAT_FORWARD_CHATS,
+                          Localized.CHAT_FORWARD_CONTACTS]
+                let conversations = ConversationDAO.shared.conversationList()
+                let transferAcceptableContacts = contacts.filter({ (user) -> Bool in
                     if user.isBot {
                         return user.appCreatorId == AccountAPI.shared.accountUserId
                     } else {
                         return true
                     }
                 })
-                peers = [transferReceivers.map(Peer.init)]
+                let transferAcceptableConversations = conversations.filter({ (conversation) -> Bool in
+                    return conversation.category == ConversationCategory.CONTACT.rawValue
+                        && !conversation.ownerIsBot
+                })
+                peers = [transferAcceptableConversations.map(Peer.init),
+                         transferAcceptableContacts.map(Peer.init)]
             case .catalogedContacts:
                 (titles, peers) = PeerSelectionViewController.catalogedPeers(from: contacts)
             }

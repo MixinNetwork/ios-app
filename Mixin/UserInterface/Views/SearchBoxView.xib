@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="separatorLineView" destination="yby-vL-pSY" id="rws-Rs-cja"/>
                 <outlet property="textField" destination="d6g-b6-7tA" id="YcR-4a-VM4"/>
             </connections>
         </placeholder>

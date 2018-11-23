@@ -2,6 +2,7 @@ import UIKit
 
 class SearchBoxView: UIView, XibDesignable {
     
+    @IBOutlet weak var separatorLineView: UIView!
     @IBOutlet weak var textField: UITextField!
     
     required init?(coder aDecoder: NSCoder) {

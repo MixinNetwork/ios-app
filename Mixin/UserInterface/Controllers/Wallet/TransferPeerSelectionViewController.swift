@@ -4,12 +4,21 @@ class TransferPeerSelectionViewController: PeerSelectionViewController {
     
     var asset: AssetItem!
     
+    private let separatorColor = UIColor(rgbValue: 0xF3F3F3)
+    
     override var content: PeerSelectionViewController.Content {
         return .transferReceivers
     }
     
     override var allowsMultipleSelection: Bool {
         return false
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        container?.separatorLineView.backgroundColor = separatorColor
+        searchBoxView.separatorLineView.backgroundColor = separatorColor
+        tableView.separatorColor = separatorColor
     }
     
     override func work(selections: [Peer]) {

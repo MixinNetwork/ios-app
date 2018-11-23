@@ -2,6 +2,7 @@ import UIKit
 
 class AddAssetViewController: UIViewController {
     
+    @IBOutlet weak var saveButton: BusyButton!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -24,8 +25,7 @@ class AddAssetViewController: UIViewController {
     }
     
     static func instance() -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "add_asset")
-        return ContainerViewController.instance(viewController: vc, title: Localized.WALLET_TITLE_ADD_ASSET)
+        return Storyboard.wallet.instantiateViewController(withIdentifier: "add_asset")
     }
     
     override func viewDidLoad() {
@@ -95,9 +95,39 @@ class AddAssetViewController: UIViewController {
         searchQueue.addOperation(op)
     }
     
+    @IBAction func saveAction(_ sender: Any) {
+        guard let indices = tableView.indexPathsForSelectedRows?.map({ $0.row }) else {
+            return
+        }
+        saveButton.isBusy = true
+        var items = [AssetItem]()
+        if isSearching {
+            for index in indices {
+                items.append(searchResult[index].asset)
+            }
+        } else {
+            for index in indices {
+                items.append(topAssets[index])
+            }
+        }
+        DispatchQueue.global().async { [weak self] in
+            let assets = items.map(Asset.createAsset)
+            AssetDAO.shared.insertOrUpdateAssets(assets: assets)
+            DispatchQueue.main.async {
+                self?.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+    
+    @IBAction func popAction(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
     @objc func clearTextField(_ sender: Any) {
         textField.text = nil
         textFieldClearButton.isHidden = true
+        activityIndicator.stopAnimating()
+        tableView.reloadData()
     }
     
     @objc func reloadWithLocalTopAssets() {
@@ -120,38 +150,6 @@ class AddAssetViewController: UIViewController {
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         let windowHeight = AppDelegate.current.window!.bounds.height
         keyboardPlaceholderHeightConstraint.constant = windowHeight - endFrame.origin.y
-    }
-    
-}
-
-extension AddAssetViewController: ContainerViewControllerDelegate {
-    
-    func textBarRightButton() -> String? {
-        return Localized.ACTION_SAVE
-    }
-    
-    func barRightButtonTappedAction() {
-        guard let indices = tableView.indexPathsForSelectedRows?.map({ $0.row }) else {
-            return
-        }
-        container?.rightButton.isBusy = true
-        var items = [AssetItem]()
-        if isSearching {
-            for index in indices {
-                items.append(searchResult[index].asset)
-            }
-        } else {
-            for index in indices {
-                items.append(topAssets[index])
-            }
-        }
-        DispatchQueue.global().async { [weak self] in
-            let assets = items.map(Asset.createAsset)
-            AssetDAO.shared.insertOrUpdateAssets(assets: assets)
-            DispatchQueue.main.async {
-                self?.navigationController?.popViewController(animated: true)
-            }
-        }
     }
     
 }
@@ -202,11 +200,11 @@ extension AddAssetViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        container?.rightButton.isEnabled = tableView.indexPathForSelectedRow != nil
+        saveButton.isEnabled = tableView.indexPathForSelectedRow != nil
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        container?.rightButton.isEnabled = tableView.indexPathForSelectedRow != nil
+        saveButton.isEnabled = tableView.indexPathForSelectedRow != nil
     }
     
 }

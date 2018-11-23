@@ -9,8 +9,8 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         case catalogedContacts
     }
     
-    private let searchBoxView = SearchBoxView()
-    private let tableView = UITableView()
+    let searchBoxView = SearchBoxView()
+    let tableView = UITableView()
     
     private var headerTitles = [String]()
     private var peers = [[Peer]]()

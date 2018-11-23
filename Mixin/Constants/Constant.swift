@@ -38,6 +38,8 @@ extension NSNotification.Name {
     static let StorageUsageDidChange = NSNotification.Name("one.mixin.ios.storage.changed")
     
     static let HiddenAssetsDidChange = NSNotification.Name("one.mixin.ios.hidden.assets.changed")
+
+    static let BackupDidChange = NSNotification.Name("one.mixin.ios.backup.changed")
 }
 
 enum NotificationActionIdentifier {

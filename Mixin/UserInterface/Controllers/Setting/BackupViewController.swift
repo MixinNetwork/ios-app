@@ -6,8 +6,9 @@ class BackupViewController: UITableViewController {
     @IBOutlet weak var switchIncludeFiles: UISwitch!
     @IBOutlet weak var switchIncludeVideos: UISwitch!
     @IBOutlet weak var categoryLabel: UILabel!
+    @IBOutlet weak var backupIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var backupLabel: UILabel!
     
-
     class func instance() -> UIViewController {
         let vc = Storyboard.setting.instantiateViewController(withIdentifier: "backup")
         return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_BACKUP_TITLE)
@@ -20,6 +21,15 @@ class BackupViewController: UITableViewController {
         switchIncludeVideos.isOn = CommonUserDefault.shared.hasBackupVideos
 
         tableView.tableHeaderView = Bundle.main.loadNibNamed("BackupHeader", owner: nil, options: nil)?.first as? UIView
+        NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
+    }
+
+    @objc func backupChanged() {
+        backupIndicatorView.stopAnimating()
+        backupIndicatorView.isHidden = true
+        backupLabel.text = Localized.SETTING_BACKUP_NOW
+        backupLabel.textColor = .systemTint
+        tableView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -52,7 +62,12 @@ extension BackupViewController {
         tableView.deselectRow(at: indexPath, animated: true)
 
         if indexPath.section == 0 && indexPath.row == 0 {
-            BackupJobQueue.shared.addJob(job: BackupJob())
+            if BackupJobQueue.shared.addJob(job: BackupJob(immediatelyBackup: true)) {
+                backupIndicatorView.startAnimating()
+                backupIndicatorView.isHidden = false
+                backupLabel.text = Localized.SETTING_BACKING
+                backupLabel.textColor = .lightGray
+            }
         } else if indexPath.section == 1 && indexPath.row == 0 {
             navigationController?.pushViewController(BackupCategoryViewController.instance(), animated: true)
         }
@@ -61,7 +76,12 @@ extension BackupViewController {
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
         case 0:
-            return Localized.SETTING_BACKUP_LAST(time: "Thursday, 3:06 PM", size: "2.4 MB")
+            let time = CommonUserDefault.shared.lastBackupTime
+            if let size = CommonUserDefault.shared.lastBackupSize, size > 0, time > 0 {
+                return Localized.SETTING_BACKUP_LAST(time: DateFormatter.backupFormatter.string(from: Date(timeIntervalSince1970: time)), size: size.sizeRepresentation())
+            } else {
+                return nil
+            }
         case 1:
             return Localized.SETTING_BACKUP_TIPS
         default:

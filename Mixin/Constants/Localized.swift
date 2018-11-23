@@ -512,6 +512,8 @@ public class Localized {
     public static let SETTING_LOGOUT = LocalizedString("setting_logout", comment: "Log Out")
     public static let SETTING_BACKUP_TITLE = LocalizedString("setting_backup_title", comment: "Chat Backup")
     public static let SETTING_BACKUP_AUTO = LocalizedString("setting_backup_auto", comment: "Auto Backup")
+    public static let SETTING_BACKUP_NOW = LocalizedString("setting_backup_now", comment: "Back Up Now")
+    public static let SETTING_BACKING = LocalizedString("setting_backing", comment: "Backing Up...")
     public static let SETTING_BACKUP_DAILY = LocalizedString("setting_backup_daily", comment: "Daily")
     public static let SETTING_BACKUP_WEEKLY = LocalizedString("setting_backup_weekly", comment: "Weekly")
     public static let SETTING_BACKUP_MONTHLY = LocalizedString("setting_backup_monthly", comment: "Monthly")

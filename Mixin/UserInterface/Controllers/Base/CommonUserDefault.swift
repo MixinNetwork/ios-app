@@ -39,6 +39,12 @@ class CommonUserDefault {
     private var keyBackupCategory: String {
         return "backup_category_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyLastBackupTime: String {
+        return "last_backup_time_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyLastBackupSize: String {
+        return "last_backup_size_\(AccountAPI.shared.accountIdentityNumber)"
+    }
 
     enum BackupCategory: String {
         case daily
@@ -94,6 +100,26 @@ class CommonUserDefault {
             session.set(newValue, forKey: keyBackupFiles)
         }
     }
+
+    var lastBackupTime: TimeInterval {
+        get {
+            return session.double(forKey: keyLastBackupTime)
+        }
+        set {
+            session.set(newValue, forKey: keyLastBackupTime)
+        }
+    }
+
+    var lastBackupSize: Int64? {
+        get {
+
+            return session.object(forKey: keyLastBackupSize) as? Int64
+        }
+        set {
+            session.set(newValue, forKey: keyLastBackupSize)
+        }
+    }
+
 
     var backupCategory: BackupCategory {
         get {

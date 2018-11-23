@@ -465,6 +465,7 @@
 "setting_notification_message_preview" = "Message Preview";
 "setting_backup_title" = "Chat Backup";
 "setting_backup_now" = "Back Up Now";
+"setting_backing" = "Backing Up...";
 "setting_backup_auto" = "Auto Backup";
 "setting_backup_files" = "Include Files";
 "setting_backup_videos" = "Include Videos";
@@ -475,7 +476,7 @@
 "setting_backup_disable_tips" = "Sign in to iCloud to back up your history. Settings > iCloud > Turn on iCloud Drive.";
 "setting_backup_tips" = "Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.";
 "setting_backup_tips" = "Automatically back up to iCloud only over Wi-Fi.";
-"setting_backup_last" = "Last backup at %@, total size %@.";
+"setting_backup_last" = "Last backup on %@, total size %@.";
 
 // Notifications
 "notification_reply" = "Reply";

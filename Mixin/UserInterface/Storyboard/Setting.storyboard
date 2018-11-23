@@ -767,7 +767,7 @@
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Back Up Now" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="814-d3-ePT">
                                                     <rect key="frame" x="16" y="11.5" width="103" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_backup_now"/>
@@ -889,6 +889,8 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="backupIndicatorView" destination="5N8-W9-npF" id="6Rz-CO-xcR"/>
+                        <outlet property="backupLabel" destination="814-d3-ePT" id="cAb-xa-uS0"/>
                         <outlet property="categoryLabel" destination="RMp-SI-b7a" id="nCJ-1p-U50"/>
                         <outlet property="switchIncludeFiles" destination="sVG-X5-64M" id="Iwo-6I-Wus"/>
                         <outlet property="switchIncludeVideos" destination="5kh-D3-WeL" id="TqY-pd-2YS"/>

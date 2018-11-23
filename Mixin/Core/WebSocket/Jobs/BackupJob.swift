@@ -4,19 +4,12 @@ import Zip
 
 class BackupJob: BaseJob {
 
-    private var totalProgress: Float = 0
-    private var progress: Float = 0
-    private var progressRatio: Float = {
-        var progressRatio: Float
-        if CommonUserDefault.shared.hasBackupFiles && CommonUserDefault.shared.hasBackupVideos {
-            progressRatio = 0.2
-        } else if CommonUserDefault.shared.hasBackupFiles || CommonUserDefault.shared.hasBackupVideos {
-            progressRatio = 0.25
-        } else {
-            progressRatio = 0.34
-        }
-        return progressRatio
-    }()
+    private let immediatelyBackup: Bool
+
+    init(immediatelyBackup: Bool = false) {
+        self.immediatelyBackup = immediatelyBackup
+        super.init()
+    }
 
     override func getJobId() -> String {
          return "backup"
@@ -30,63 +23,80 @@ class BackupJob: BaseJob {
             return
         }
 
+        if !immediatelyBackup {
+            let lastBackupTime = CommonUserDefault.shared.lastBackupTime
+            let now = Date().timeIntervalSince1970
+            switch CommonUserDefault.shared.backupCategory {
+            case .daily:
+                if now - lastBackupTime < 86400 {
+                    return
+                }
+            case .weekly:
+                if now - lastBackupTime < 86400 * 7 {
+                    return
+                }
+            case .monthly:
+                if now - lastBackupTime < 86400 * 30 {
+                    return
+                }
+            case .off:
+                return
+            }
+        }
+
         do {
             try FileManager.default.createDirectoryIfNeeded(dir: backupDir)
 
-            var progressRatio: Float
-            if CommonUserDefault.shared.hasBackupFiles && CommonUserDefault.shared.hasBackupVideos {
-                progressRatio = 0.2
-            } else if CommonUserDefault.shared.hasBackupFiles || CommonUserDefault.shared.hasBackupVideos {
-                progressRatio = 0.25
-            } else {
-                progressRatio = 0.34
-            }
+            var fileSize: Int64 = 0
+            fileSize += try backupDatabase(backupDir: backupDir)
+            fileSize += try backupPhotosAndAudios(backupDir: backupDir)
+            fileSize += try backupFilesAndVideos(backupDir: backupDir)
 
-            try backupDatabase(backupDir: backupDir)
-            try backupPhotosAndAudios(backupDir: backupDir, progressRatio: progressRatio)
-            try backupFilesAndVideos(backupDir: backupDir, progressRatio: progressRatio)
+            CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
+            CommonUserDefault.shared.lastBackupSize = fileSize
         } catch {
             Bugsnag.notifyError(error)
             #if DEBUG
             print(error)
             #endif
         }
+        NotificationCenter.default.postOnMain(name: .BackupDidChange)
     }
 
-    private func updateProcess(progress: Float) {
-        totalProgress + progress
-    }
-
-    private func backupDatabase(backupDir: URL) throws {
+    private func backupDatabase(backupDir: URL) throws -> Int64 {
         let databasePath = MixinFile.rootDirectory.appendingPathComponent("mixin.backup.db")
+        let iCloudPath = backupDir.appendingPathComponent(databasePath.lastPathComponent)
+
+        try? FileManager.default.removeItem(at: databasePath)
 
         try MixinDatabase.shared.backup(path: databasePath.path) { (remaining, pagecount) in
-            let progress = Float(remaining) / Float(pagecount)
-//            self.updateProcess(progress: progress)
-            NotificationCenter.default.post(name: .AVPlayerItemNewAccessLogEntry, object: progress)
+
         }
 
-        try FileManager.default.replace(from: databasePath, to: backupDir.appendingPathComponent(databasePath.lastPathComponent))
+        try FileManager.default.replace(from: databasePath, to: iCloudPath)
 
-        try FileManager.default.removeItem(at: databasePath)
+        try? FileManager.default.removeItem(at: databasePath)
+
+        return FileManager.default.fileSize(iCloudPath.path)
     }
 
-    private func backupPhotosAndAudios(backupDir: URL, progressRatio: Float) throws {
+    private func backupPhotosAndAudios(backupDir: URL) throws -> Int64 {
         let categories: [MixinFile.ChatDirectory] = [.photos, .audios]
+        var fileSize: Int64 = 0
         for category in categories {
             let dir = MixinFile.url(ofChatDirectory: category, filename: nil)
             let paths = try FileManager.default.contentsOfDirectory(atPath: dir.path).compactMap{ dir.appendingPathComponent($0) }
 
-            let zipPath = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())") { (progress) in
-                //print("----------BackupJob...backupPhotosAndAudios...progress:\(progress)")
-            }
+            let zipPath = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())")
             try FileManager.default.replace(from: zipPath, to: backupDir.appendingPathComponent(zipPath.lastPathComponent))
 
-            try FileManager.default.removeItem(at: zipPath)
+            fileSize += FileManager.default.fileSize(zipPath.path)
+            try? FileManager.default.removeItem(at: zipPath)
         }
+        return fileSize
     }
 
-    private func backupFilesAndVideos(backupDir: URL, progressRatio: Float) throws {
+    private func backupFilesAndVideos(backupDir: URL) throws -> Int64 {
         var categories = [MixinFile.ChatDirectory]()
         var localPaths = Set<String>()
         var cloudPaths = Set<String>()
@@ -114,6 +124,7 @@ class BackupJob: BaseJob {
             }
         }
 
+        var fileSize: Int64 = 0
         for path in localPaths {
             let cloudPath = backupDir.appendingPathComponent(path)
             let localPath = MixinFile.rootDirectory.appendingPathComponent("Chat").appendingPathComponent(path)
@@ -125,7 +136,10 @@ class BackupJob: BaseJob {
             } else {
                 try FileManager.default.copyItem(at: localPath, to: cloudPath)
             }
+            fileSize += FileManager.default.fileSize(localPath.path)
         }
+
+        return fileSize
     }
 
 }

@@ -31,9 +31,30 @@ class TransferPeerSelectionViewController: PeerSelectionViewController {
     }
     
     override func work(selections: [Peer]) {
-        guard let peer = selections.first, let user = peer.user, let navigationController = navigationController else {
+        guard let peer = selections.first else {
             return
         }
+
+        switch peer.item {
+        case let .conversation(conversation):
+            DispatchQueue.global().async { [weak self] in
+                guard let user = UserDAO.shared.getUser(userId: conversation.ownerId) else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    self?.transferAction(peer: peer, user: user)
+                }
+            }
+        case let .user(user):
+            transferAction(peer: peer, user: user)
+        }
+    }
+
+    private func transferAction(peer: Peer, user: UserItem) {
+        guard let navigationController = navigationController else {
+            return
+        }
+
         let vc = TransferViewController.instance(user: user,
                                                  conversationId: peer.conversationId,
                                                  asset: asset,

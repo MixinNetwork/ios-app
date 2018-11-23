@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LargerSearchBoxView" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="clearButton" destination="f6R-3n-IWK" id="rAu-mM-sxm"/>
+                <outlet property="separatorLineView" destination="tjv-Kb-AFC" id="i7O-ln-0ay"/>
                 <outlet property="textField" destination="tjo-zD-yNg" id="21w-zd-akG"/>
                 <outlet property="textFieldBackgroundView" destination="ody-Ra-Quq" id="7RN-dz-UbG"/>
             </connections>

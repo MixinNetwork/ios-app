@@ -1,12 +1,17 @@
 import UIKit
 
-class LargerSearchBoxView: UIView, XibDesignable {
+class LargerSearchBoxView: UIView, XibDesignable, SearchBoxView {
     
     @IBOutlet weak var textFieldBackgroundView: UIView!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var clearButton: UIButton!
+    @IBOutlet weak var separatorLineView: UIView!
     
-    private var isEditing = false
+    let height: CGFloat = 70
+    
+    private var text: String {
+        return textField.text ?? ""
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -26,27 +31,25 @@ class LargerSearchBoxView: UIView, XibDesignable {
         guard let textField = notification.object as? UITextField, textField == self.textField else {
             return
         }
-        isEditing = true
         textFieldBackgroundView.isHidden = false
+        clearButton.isHidden = text.isEmpty
     }
     
     @objc func textDidEndEditing(_ notification: Notification) {
         guard let textField = notification.object as? UITextField, textField == self.textField else {
             return
         }
-        isEditing = false
-        textFieldBackgroundView.isHidden = true
+        if text.isEmpty {
+            textFieldBackgroundView.isHidden = true
+        }
+        clearButton.isHidden = true
     }
     
     @objc func textDidChange(_ notification: Notification) {
         guard let textField = notification.object as? UITextField, textField == self.textField else {
             return
         }
-        if let text = textField.text, !text.isEmpty {
-            clearButton.isHidden = false
-        } else {
-            clearButton.isHidden = true
-        }
+        clearButton.isHidden = text.isEmpty
     }
     
     @IBAction func clearAction(_ sender: Any) {

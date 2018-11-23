@@ -14,11 +14,20 @@ class TransferPeerSelectionViewController: PeerSelectionViewController {
         return false
     }
     
+    override var searchBoxViewClass: (UIView & SearchBoxView).Type {
+        return LargerSearchBoxView.self
+    }
+    
+    override var tableViewHorizontalMargin: CGFloat {
+        return 5
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.separatorLineView.backgroundColor = separatorColor
         searchBoxView.separatorLineView.backgroundColor = separatorColor
         tableView.separatorColor = separatorColor
+        tableView.rowHeight = 70
     }
     
     override func work(selections: [Peer]) {

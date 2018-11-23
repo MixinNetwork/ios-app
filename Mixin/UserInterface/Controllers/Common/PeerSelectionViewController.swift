@@ -9,8 +9,9 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         case catalogedContacts
     }
     
-    let searchBoxView = SearchBoxView()
     let tableView = UITableView()
+    
+    var searchBoxView: (UIView & SearchBoxView)!
     
     private var headerTitles = [String]()
     private var peers = [[Peer]]()
@@ -38,17 +39,28 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         return .chatsAndContacts
     }
     
+    var searchBoxViewClass: (UIView & SearchBoxView).Type {
+        return SmallerSearchBoxView.self
+    }
+    
+    var tableViewHorizontalMargin: CGFloat {
+        return 0
+    }
+    
     override func loadView() {
-        view = UIView()
+        view = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        searchBoxView = searchBoxViewClass.init(frame: CGRect(x: 0, y: 0, width: 375, height: 70))
         view.addSubview(searchBoxView)
         view.addSubview(tableView)
         searchBoxView.snp.makeConstraints { (make) in
             make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(44)
+            make.height.equalTo(searchBoxView.height)
         }
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(searchBoxView.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(tableViewHorizontalMargin)
+            make.trailing.equalToSuperview().offset(-tableViewHorizontalMargin)
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -57,7 +69,6 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         searchBoxView.textField.addTarget(self,
                                           action: #selector(search(_:)),
                                           for: .editingChanged)
-        tableView.keyboardDismissMode = .onDrag
         tableView.allowsMultipleSelection = allowsMultipleSelection
         tableView.rowHeight = 60
         tableView.register(UINib(nibName: "PeerCell", bundle: .main),
@@ -178,6 +189,16 @@ extension PeerSelectionViewController: UITableViewDelegate {
             sortedSelections.remove(at: index)
         }
         reloadSelections()
+    }
+    
+}
+
+extension PeerSelectionViewController: UIScrollViewDelegate {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if searchBoxView.textField.isFirstResponder {
+            searchBoxView.textField.resignFirstResponder()
+        }
     }
     
 }

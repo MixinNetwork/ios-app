@@ -184,8 +184,8 @@
 		7B92F8291FA1B80A000B838B /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */; };
 		7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */; };
 		7B95D52D21743EEF00C95281 /* TransactionsFilterConditionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B95D52B21743EEF00C95281 /* TransactionsFilterConditionCell.xib */; };
-		7B972A88219D7F93005C0FEC /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B972A87219D7F93005C0FEC /* SearchBoxView.swift */; };
-		7B972A8A219D7FA6005C0FEC /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B972A89219D7FA6005C0FEC /* SearchBoxView.xib */; };
+		7B972A88219D7F93005C0FEC /* SmallerSearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B972A87219D7F93005C0FEC /* SmallerSearchBoxView.swift */; };
+		7B972A8A219D7FA6005C0FEC /* SmallerSearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B972A89219D7FA6005C0FEC /* SmallerSearchBoxView.xib */; };
 		7B97BA0A2019D42C0013D58F /* StickerRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA092019D42C0013D58F /* StickerRelationship.swift */; };
 		7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA0B2019D7570013D58F /* AlbumCollectionViewCell.swift */; };
 		7B97BA0E2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B97BA0D2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift */; };
@@ -783,8 +783,8 @@
 		7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateResponsiveButton.swift; sourceTree = "<group>"; };
 		7B95D52B21743EEF00C95281 /* TransactionsFilterConditionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionsFilterConditionCell.xib; sourceTree = "<group>"; };
-		7B972A87219D7F93005C0FEC /* SearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxView.swift; sourceTree = "<group>"; };
-		7B972A89219D7FA6005C0FEC /* SearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBoxView.xib; sourceTree = "<group>"; };
+		7B972A87219D7F93005C0FEC /* SmallerSearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallerSearchBoxView.swift; sourceTree = "<group>"; };
+		7B972A89219D7FA6005C0FEC /* SmallerSearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SmallerSearchBoxView.xib; sourceTree = "<group>"; };
 		7B97BA092019D42C0013D58F /* StickerRelationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerRelationship.swift; sourceTree = "<group>"; };
 		7B97BA0B2019D7570013D58F /* AlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		7B97BA0D2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedImageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1926,8 +1926,8 @@
 				7B7264F4209C5B1A00F234BE /* CoreTextLabel.swift */,
 				DF44B0CB20C6897000A099B6 /* EmptyView.swift */,
 				DF44B0CD20C6897D00A099B6 /* EmptyView.xib */,
-				7B972A87219D7F93005C0FEC /* SearchBoxView.swift */,
-				7B972A89219D7FA6005C0FEC /* SearchBoxView.xib */,
+				7B972A87219D7F93005C0FEC /* SmallerSearchBoxView.swift */,
+				7B972A89219D7FA6005C0FEC /* SmallerSearchBoxView.xib */,
 				7B015D7E21A81C81000C9F1E /* LargerSearchBoxView.swift */,
 				7B015D8021A81C8D000C9F1E /* LargerSearchBoxView.xib */,
 			);
@@ -2471,7 +2471,7 @@
 				DFB9B3981FAAB8B9009503CE /* PhoneContactHeaderFooter.xib in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
 				7BB1EDC71FB1B43B000DF9E7 /* GroupMemberCell.xib in Resources */,
-				7B972A8A219D7FA6005C0FEC /* SearchBoxView.xib in Resources */,
+				7B972A8A219D7FA6005C0FEC /* SmallerSearchBoxView.xib in Resources */,
 				DF8CECDF1FC3053B00E40064 /* TransferTypeCell.xib in Resources */,
 				DF736F8C1FC096D4001DB063 /* SearchResultAssetCell.xib in Resources */,
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
@@ -3048,7 +3048,7 @@
 				DF17B51C20528B36006447C2 /* UserItem.swift in Sources */,
 				7BA722811FC1F2A100132FF4 /* PhotoMessageCell.swift in Sources */,
 				DF191192208F103E00BD415D /* JobDAO.swift in Sources */,
-				7B972A88219D7F93005C0FEC /* SearchBoxView.swift in Sources */,
+				7B972A88219D7F93005C0FEC /* SmallerSearchBoxView.swift in Sources */,
 				DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */,
 				273FACC2205FB9A800513327 /* SessionBuilder.swift in Sources */,
 				DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */,

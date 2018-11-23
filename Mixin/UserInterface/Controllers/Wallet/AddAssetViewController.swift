@@ -115,6 +115,8 @@ class AddAssetViewController: UIViewController {
             AssetDAO.shared.insertOrUpdateAssets(assets: assets)
             DispatchQueue.main.async {
                 self?.navigationController?.popViewController(animated: true)
+                NotificationCenter.default.post(name: .ToastMessageDidAppear,
+                                                object: Localized.TOAST_ADD_ASSET)
             }
         }
     }

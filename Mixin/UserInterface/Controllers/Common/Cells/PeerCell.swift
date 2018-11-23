@@ -64,7 +64,6 @@ class PeerCell: UITableViewCell {
         render(fullName: peer.name,
                isVerified: peer.isVerified,
                isBot: peer.isBot)
-
     }
     
     private func render(fullName: String, isVerified: Bool, isBot: Bool) {

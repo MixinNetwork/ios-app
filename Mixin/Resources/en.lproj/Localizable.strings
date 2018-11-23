@@ -55,6 +55,7 @@
 "permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "toast_operation_failed" = "The operation failed, please try again later";
 "toast_copied" = "Successfully copied to clipboard";
+"toast_add_asset" = "Successfully added selected assets";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_added" = "Added";
 "toast_error" = "ERROR %@: %@";

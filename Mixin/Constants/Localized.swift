@@ -77,6 +77,8 @@ public class Localized {
     public static func TOAST_ERROR(errorCode: Int, errorMessage: String) -> String {
         return String(format: LocalizedString("toast_error", comment: "ERROR %@: %@"), "\(errorCode)", errorMessage)
     }
+    public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Successfully copied to clipboard")
+    public static let TOAST_ADD_ASSET = LocalizedString("toast_add_asset", comment: "Successfully added selected assets")
     public static let SCREEN_CAPTURED_PIN_LEAKING_HINT = LocalizedString("screen_captured_pin_leaking_hint", comment: "Screen recorder detected, PIN may be recorded.")
     public static func BIOMETRY_SUGGESTION(biometricType: String) -> String {
         return String(format: LocalizedString("biometry_suggestion", comment: " %@ is suggested."), biometricType)
@@ -467,8 +469,6 @@ public class Localized {
     }
     public static let ADDRESS_FORMAT_ERROR = LocalizedString("address_format_error", comment: "Invalid address format.")
     
-    public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Successfully copied to clipboard")
-
     // Transfer
     public static let TRANSFER_TITLE_TO = LocalizedString("transfer_title_to", comment: "Transfer to")
     public static func TRANSFER_TITLE_TO_RECEIVER(fullName: String) -> String {

@@ -11,6 +11,7 @@ class WalletSnapshotCell: UITableViewCell {
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var bottomShadowImageView: UIImageView!
     @IBOutlet weak var selectionView: RoundCornerSelectionView!
+    @IBOutlet weak var separatorLineView: UIView!
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
     

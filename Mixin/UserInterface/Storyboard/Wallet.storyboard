@@ -92,7 +92,7 @@
                                                     <rect key="frame" x="10" y="10" width="394" height="181"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IHE-HM-Hdw">
-                                                            <rect key="frame" x="113.33333333333333" y="28" width="167.66666666666669" height="40"/>
+                                                            <rect key="frame" x="137" y="28" width="120" height="40"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rtr-Z3-phX">
                                                                     <rect key="frame" x="0.0" y="0.0" width="11.333333333333334" height="21.666666666666668"/>
@@ -101,7 +101,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGd-qQ-SHD">
-                                                                    <rect key="frame" x="18.333333333333329" y="2" width="149.33333333333337" height="46.666666666666664"/>
+                                                                    <rect key="frame" x="18.33333333333335" y="2" width="101.66666666666669" height="40"/>
                                                                     <attributedString key="attributedText">
                                                                         <fragment content="65536.">
                                                                             <attributes>
@@ -128,7 +128,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JDj-Ex-KE6">
-                                                            <rect key="frame" x="173.66666666666666" y="80" width="47" height="14"/>
+                                                            <rect key="frame" x="171.66666666666666" y="80" width="50.666666666666657" height="14"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4.617" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7s3-8d-IEj">
                                                                     <rect key="frame" x="0.0" y="0.0" width="23.666666666666668" height="14"/>
@@ -137,8 +137,8 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l67-0u-hKp">
-                                                                    <rect key="frame" x="26.666666666666686" y="0.3333333333333286" width="20.333333333333329" height="12"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                                    <rect key="frame" x="26.666666666666686" y="-1.3333333333333286" width="24" height="14.333333333333334"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
@@ -501,7 +501,7 @@
                                                     <rect key="frame" x="20" y="66" width="384" height="1"/>
                                                     <color key="backgroundColor" red="0.95294117649999999" green="0.95294117649999999" blue="0.95294117649999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="dBY-F6-Oty"/>
+                                                        <constraint firstAttribute="height" constant="1" id="dBY-F6-Oty" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -560,7 +560,7 @@
                                                     <rect key="frame" x="20" y="66" width="384" height="1"/>
                                                     <color key="backgroundColor" red="0.95294117647058818" green="0.95294117647058818" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="uLx-am-fMa"/>
+                                                        <constraint firstAttribute="height" constant="1" id="uLx-am-fMa" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
                                                     </constraints>
                                                 </view>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/bg_shadow_left" translatesAutoresizingMaskIntoConstraints="NO" id="tFq-vb-unh">
@@ -1031,19 +1031,29 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="+20" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pzo-Ta-KyW">
-                                                                    <rect key="frame" x="99" y="19" width="255" height="22.333333333333329"/>
+                                                                    <rect key="frame" x="99" y="20.666666666666668" width="255" height="19.000000000000004"/>
                                                                     <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="19"/>
                                                                     <color key="textColor" red="0.16078431372549018" green="0.74509803921568629" blue="0.45098039215686275" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
                                                         </stackView>
+                                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yWl-l0-tcg">
+                                                            <rect key="frame" x="60" y="59" width="334" height="1"/>
+                                                            <color key="backgroundColor" red="0.95294117647058818" green="0.95294117647058818" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="1" id="YjH-UL-fRy" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
+                                                            </constraints>
+                                                        </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="kNt-H0-QNw" secondAttribute="trailing" id="0xv-yF-0aG"/>
                                                         <constraint firstAttribute="bottom" secondItem="kNt-H0-QNw" secondAttribute="bottom" id="2dJ-Un-1rj"/>
+                                                        <constraint firstItem="yWl-l0-tcg" firstAttribute="leading" secondItem="cV0-Ke-mCk" secondAttribute="leading" id="43p-Y7-AIJ"/>
+                                                        <constraint firstAttribute="trailing" secondItem="yWl-l0-tcg" secondAttribute="trailing" id="AZz-2u-HDJ"/>
                                                         <constraint firstItem="tBD-cJ-PQO" firstAttribute="leading" secondItem="d7W-ta-QZv" secondAttribute="leading" constant="20" id="DLS-EC-tRS"/>
+                                                        <constraint firstAttribute="bottom" secondItem="yWl-l0-tcg" secondAttribute="bottom" id="Mbd-sa-Qfy"/>
                                                         <constraint firstAttribute="trailing" secondItem="tBD-cJ-PQO" secondAttribute="trailing" constant="20" id="OEc-Dl-C0M"/>
                                                         <constraint firstItem="tBD-cJ-PQO" firstAttribute="top" secondItem="d7W-ta-QZv" secondAttribute="top" id="aFD-nF-BEs"/>
                                                         <constraint firstItem="kNt-H0-QNw" firstAttribute="top" secondItem="d7W-ta-QZv" secondAttribute="top" id="bo3-8a-UtQ"/>
@@ -1081,6 +1091,7 @@
                                             <outlet property="pendingDepositProgressConstraint" destination="pJA-Mm-Qho" id="mbk-tY-dKk"/>
                                             <outlet property="pendingDepositProgressView" destination="kNt-H0-QNw" id="zcY-a7-JUU"/>
                                             <outlet property="selectionView" destination="UVh-P9-ayq" id="fI5-OX-ul3"/>
+                                            <outlet property="separatorLineView" destination="yWl-l0-tcg" id="QSx-1S-ouN"/>
                                             <outlet property="shadowSafeContainerView" destination="d7W-ta-QZv" id="C9b-P7-8tS"/>
                                             <outlet property="titleLabel" destination="cV0-Ke-mCk" id="25X-xy-sPb"/>
                                         </connections>

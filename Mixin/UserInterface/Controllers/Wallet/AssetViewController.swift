@@ -159,6 +159,8 @@ extension AssetViewController: UITableViewDataSource {
             cell.bottomShadowImageView.isHidden = true
             cell.selectionView.roundingCorners = []
         }
+        cell.separatorLineView.isHidden = filteredSnapshots[indexPath.section].count == 1
+            || indexPath.row == filteredSnapshots[indexPath.section].count - 1
         return cell
     }
     

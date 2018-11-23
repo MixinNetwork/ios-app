@@ -81,51 +81,7 @@ final class ConversationDAO {
     func updateIconUrl(conversationId: String, iconUrl: String) {
         MixinDatabase.shared.update(maps: [(Conversation.Properties.iconUrl, iconUrl)], tableName: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)
     }
-
-    func getForwardConversations() -> [ForwardUser] {
-        return MixinDatabase.shared.getCodables { (db) -> [ForwardUser] in
-            let conversationIdColumn = Conversation.Properties.conversationId.in(table: Conversation.tableName)
-            let nameColumn = Conversation.Properties.name.in(table: Conversation.tableName)
-            let iconUrlColumn = Conversation.Properties.iconUrl.in(table: Conversation.tableName)
-            let categoryColumn = Conversation.Properties.category.in(table: Conversation.tableName)
-            let ownerUserIdColumn = Conversation.Properties.ownerId.in(table: Conversation.tableName)
-            let lastMessageCreatedAtColumn = Conversation.Properties.lastMessageCreatedAt.in(table: Conversation.tableName)
-            let pinTimeColumn = Conversation.Properties.pinTime.in(table: Conversation.tableName)
-            let ownerIdentityNumberColumn = User.Properties.identityNumber.in(table: User.tableName)
-            let ownerAvatarUrlColumn = User.Properties.avatarUrl.in(table: User.tableName)
-            let ownerFullName = User.Properties.fullName.in(table: User.tableName)
-            let ownerIsVerified = User.Properties.isVerified.in(table: User.tableName)
-            let ownerAppId = User.Properties.appId.in(table: User.tableName)
-
-            let columns = [conversationIdColumn, nameColumn, iconUrlColumn, categoryColumn, ownerUserIdColumn, ownerIdentityNumberColumn, ownerAvatarUrlColumn, ownerFullName, ownerIsVerified, ownerAppId]
-
-            let userIdColumn = User.Properties.userId.in(table: User.tableName)
-            let statusColumn = Conversation.Properties.status.in(table: Conversation.tableName)
-            let joinClause = JoinClause(with: Conversation.tableName)
-                .join(User.tableName, with: .left)
-                .on(userIdColumn == ownerUserIdColumn)
-
-            let statementSelect = StatementSelect().select(columns).from(joinClause).where(categoryColumn.isNotNull() && statusColumn != ConversationStatus.QUIT.rawValue).order(by: [pinTimeColumn.asOrder(by: .descending), lastMessageCreatedAtColumn.asOrder(by: .descending)])
-            let coreStatement = try db.prepare(statementSelect)
-
-            var conversations = [ForwardUser]()
-            while try coreStatement.step() {
-                let conversationId = coreStatement.value(atIndex: 0).stringValue
-                let name = coreStatement.value(atIndex: 1).stringValue
-                let iconUrl = coreStatement.value(atIndex: 2).stringValue
-                let category = coreStatement.value(atIndex: 3).stringValue
-                let userId = coreStatement.value(atIndex: 4).stringValue
-                let identityNumber = coreStatement.value(atIndex: 5).stringValue
-                let avatarUrl = coreStatement.value(atIndex: 6).stringValue
-                let fullName = coreStatement.value(atIndex: 7).stringValue
-                let isVerified = coreStatement.value(atIndex: 8).int32Value == 1
-                let appId = coreStatement.value(atIndex: 9).stringValue
-                conversations.append(ForwardUser(name: name, iconUrl: iconUrl, userId: userId, identityNumber: identityNumber, fullName: fullName, ownerAvatarUrl: avatarUrl, ownerAppId: appId, ownerIsVerified: isVerified, category: category, conversationId: conversationId))
-            }
-            return conversations
-        }
-    }
-
+    
     func getStartStatusConversations() -> [String] {
         return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.START.rawValue, inTransaction: false)
     }

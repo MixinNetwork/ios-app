@@ -134,7 +134,8 @@ extension GroupParticipentViewController: UITableViewDelegate {
         } else {
             let showAdminActions = self.showAdminActions
             if showAdminActions && indexPath.row == 0 {
-                navigationController?.pushViewController(AddMemberViewController.instance(conversationId: conversation.conversationId), animated: true)
+                let vc = AddMemberViewController.instance(appendMembersToExistedGroupOfConversationId: conversation.conversationId)
+                navigationController?.pushViewController(vc, animated: true)
             } else if showAdminActions && indexPath.row == 1 {
                 navigationController?.pushViewController(InviteLinkViewController.instance(conversation: conversation), animated: true)
             } else {

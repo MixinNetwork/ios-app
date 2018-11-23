@@ -53,8 +53,8 @@ extension AssetItem {
     
     var localizedUSDBalance: String {
         let usdBalance = balance.doubleValue * priceUsd.doubleValue
-        if let value = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never, symbol: .usd) {
-            return "≈ " + value
+        if let value = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
+            return "≈ $" + value
         } else {
             return ""
         }

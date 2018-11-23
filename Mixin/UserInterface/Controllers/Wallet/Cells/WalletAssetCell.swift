@@ -1,43 +1,57 @@
 import UIKit
 
 class WalletAssetCell: UITableViewCell {
-
-    static let cellIdentifier = "cell_identifier_asset"
-    static let cellHeight: CGFloat = 70
-
-    @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var priceLabel: UILabel!
+    
+    static let height: CGFloat = 90
+    
+    @IBOutlet weak var cardView: ShadowedCardView!
+    @IBOutlet weak var iconImageView: CornerImageView!
+    @IBOutlet weak var chainImageView: CornerImageView!
     @IBOutlet weak var balanceLabel: UILabel!
-    @IBOutlet weak var exchangeLabel: UILabel!
-    @IBOutlet weak var priceChangeLabel: UILabel!
-    @IBOutlet weak var blockchainImageView: CornerImageView!
-
-    private let redColor = UIColor(rgbValue: 0xEE7474)
-    private let greenColor = UIColor(rgbValue: 0x66AA77)
-
+    @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var changeLabel: UILabel!
+    @IBOutlet weak var usdPriceLabel: UILabel!
+    @IBOutlet weak var usdBalanceLabel: UILabel!
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        iconImageView.sd_cancelCurrentImageLoad()
+        chainImageView.sd_cancelCurrentImageLoad()
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        cardView.setHighlighted(selected, animated: animated)
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        cardView.setHighlighted(highlighted, animated: animated)
+    }
+    
     func render(asset: AssetItem) {
-        balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never, symbol: .custom(asset.symbol))
-        exchangeLabel.text = asset.localizedUSDBalance
         iconImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
         if let chainIconUrl = asset.chainIconUrl {
-            blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
-            blockchainImageView.isHidden = false
+            chainImageView.sd_setImage(with: URL(string: chainIconUrl))
+            chainImageView.isHidden = false
         } else {
-            blockchainImageView.isHidden = true
+            chainImageView.isHidden = true
         }
-
+        balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never)
+        symbolLabel.text = asset.symbol
         if asset.priceUsd.doubleValue > 0 {
-            priceLabel.text = "$\(asset.localizedPriceUsd)"
-            priceChangeLabel.text = "\(asset.localizedUSDChange)%"
+            changeLabel.text = "\(asset.localizedUSDChange)%"
             if asset.changeUsd.doubleValue > 0 {
-                 priceChangeLabel.textColor = greenColor
+                changeLabel.textColor = .walletGreen
             } else {
-                priceChangeLabel.textColor = redColor
+                changeLabel.textColor = .walletRed
             }
+            usdPriceLabel.text = "$\(asset.localizedPriceUsd)"
         } else {
-            priceLabel.text = Localized.WALLET_NO_PRICE
-            priceChangeLabel.text = ""
+            changeLabel.text = ""
+            usdPriceLabel.text = Localized.WALLET_NO_PRICE
         }
+        usdBalanceLabel.text = asset.localizedUSDBalance
     }
 
 }

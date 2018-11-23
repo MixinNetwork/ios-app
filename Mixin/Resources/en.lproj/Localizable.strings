@@ -55,6 +55,7 @@
 "permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "toast_operation_failed" = "The operation failed, please try again later";
 "toast_copied" = "Successfully copied to clipboard";
+"toast_add_asset" = "Successfully added selected assets";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_added" = "Added";
 "toast_error" = "ERROR %@: %@";
@@ -253,6 +254,7 @@
 // Wallet
 "wallet_title" = "Wallet";
 "wallet_title_withdrawal" = "Withdrawal";
+"wallet_title_add_asset" = "Add asset";
 "wallet_transfer_out" = "Transfer Out";
 "wallet_symbol_other" = "Other";
 "wallet_password_verify_title" = "Old PIN";
@@ -262,9 +264,12 @@
 "wallet_set_password_success" = "Set wallet PIN successfully";
 "wallet_snapshot_from" = "From %@";
 "wallet_snapshot_to" = "To %@";
+"wallet_caption_deposit" = "DEPOSIT";
+"wallet_caption_transfer" = "TRANSFER";
 "wallet_deposit" = "Deposit";
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_no_transaction" = "No transaction";
+"wallet_address" = "Address";
 "wallet_account_name" = "Account Name";
 "wallet_account_memo" = "Account Memo";
 "wallet_deposit_account_notice" = "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin, deposit will arrive after at least %@ block confirmations.";
@@ -351,7 +356,8 @@
 
 // Transfer
 "transfer_title" = "Transfer";
-"transfer_title_to" = "to %@";
+"transfer_title_to" = "Transfer to";
+"transfer_title_to_receiver" = "to %@";
 "transfer_balance" = "BALANCE";
 "transfer_transactions" = "TRANSACTIONS";
 "transfer_transfer_type" = "Transfer Type";

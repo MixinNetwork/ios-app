@@ -117,6 +117,7 @@
                         <outlet property="rightButtonTrailingConstraint" destination="uCO-kR-ANg" id="bbb-HA-omX"/>
                         <outlet property="rightButtonWidthConstraint" destination="L2P-22-Ntf" id="MxH-lX-zvw"/>
                         <outlet property="rightbuttonHeightConstraint" destination="BEv-5s-60I" id="6VG-VQ-bob"/>
+                        <outlet property="separatorLineView" destination="aj9-pP-qsJ" id="fbz-rt-Vrr"/>
                         <outlet property="subtitleLabel" destination="dWA-GK-Nf0" id="ubb-DS-k2m"/>
                         <outlet property="titleLabel" destination="ABp-yv-qRY" id="4zI-Fi-1uq"/>
                     </connections>

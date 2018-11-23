@@ -1,6 +1,6 @@
 import UIKit
 
-class TransferViewController: UIViewController, MixinNavigationAnimating {
+class TransferViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
@@ -30,13 +30,14 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
     private var availableAssets = [AssetItem]()
     private var keyboardHeight: CGFloat = 0
     private var continueButtonFollowsKeyboardPosition = true
+    private var usePresentAnimationWhenPushed = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         amountTextField.delegate = self
         memoTextField.delegate = self
         avatarImageView.setImage(with: user)
-        transferToLabel.text = Localized.TRANSFER_TITLE_TO(fullName: user.fullName)
+        transferToLabel.text = Localized.TRANSFER_TITLE_TO_RECEIVER(fullName: user.fullName)
         updateUI()
         fetchAssets()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
@@ -143,11 +144,12 @@ class TransferViewController: UIViewController, MixinNavigationAnimating {
         }
     }
     
-    class func instance(user: UserItem, conversationId: String, asset: AssetItem?) -> UIViewController {
+    class func instance(user: UserItem, conversationId: String, asset: AssetItem?, usePresentAnimationWhenPushed: Bool = true) -> UIViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "transfer") as! TransferViewController
         vc.user = user
         vc.conversationId = conversationId
         vc.asset = asset
+        vc.usePresentAnimationWhenPushed = usePresentAnimationWhenPushed
         return vc
     }
     
@@ -178,6 +180,14 @@ extension TransferViewController: UITextFieldDelegate {
             continueAction(textField)
         }
         return false
+    }
+    
+}
+
+extension TransferViewController: MixinNavigationAnimating {
+    
+    var pushAnimation: MixinNavigationPushAnimation {
+        return usePresentAnimationWhenPushed ? .present : .push
     }
     
 }

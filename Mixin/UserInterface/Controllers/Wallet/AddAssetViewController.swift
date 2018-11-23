@@ -3,25 +3,28 @@ import UIKit
 class AddAssetViewController: UIViewController {
     
     @IBOutlet weak var saveButton: BusyButton!
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var searchBoxView: LargerSearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let cellReuseId = "add_asset"
     private let searchQueue = OperationQueue()
-    private let textFieldClearButton = UIButton()
     
     private var topAssets = [AssetItem]()
     private var searchResult = [(asset: AssetItem, forceSelected: Bool)]()
     private var lastKeyword = ""
     
-    private var isSearching: Bool {
-        return !keyword.isEmpty
+    private var textField: UITextField {
+        return searchBoxView.textField
     }
     
     private var keyword: String {
         return (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    private var isSearching: Bool {
+        return !keyword.isEmpty
     }
     
     static func instance() -> UIViewController {
@@ -30,13 +33,8 @@ class AddAssetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textFieldClearButton.frame.size = CGSize(width: 42, height: 70)
-        textFieldClearButton.imageView?.contentMode = .center
-        textFieldClearButton.setImage(UIImage(named: "Wallet/ic_clear"), for: .normal)
-        textFieldClearButton.addTarget(self, action: #selector(clearTextField(_:)), for: .touchUpInside)
         textField.delegate = self
-        textField.rightViewMode = .whileEditing
-        textField.rightView = textFieldClearButton
+        textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -46,10 +44,42 @@ class AddAssetViewController: UIViewController {
         ConcurrentJobQueue.shared.addJob(job: RefreshTopAssetsJob())
     }
     
-    @IBAction func searchAction(_ sender: Any) {
+    @IBAction func saveAction(_ sender: Any) {
+        guard let indices = tableView.indexPathsForSelectedRows?.map({ $0.row }) else {
+            return
+        }
+        saveButton.isBusy = true
+        var items = [AssetItem]()
+        if isSearching {
+            for index in indices {
+                items.append(searchResult[index].asset)
+            }
+        } else {
+            for index in indices {
+                items.append(topAssets[index])
+            }
+        }
+        DispatchQueue.global().async { [weak self] in
+            let assets = items.map(Asset.createAsset)
+            AssetDAO.shared.insertOrUpdateAssets(assets: assets)
+            DispatchQueue.main.async {
+                self?.navigationController?.popViewController(animated: true)
+                NotificationCenter.default.post(name: .ToastMessageDidAppear,
+                                                object: Localized.TOAST_ADD_ASSET)
+            }
+        }
+    }
+    
+    @IBAction func popAction(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func search(_ sender: Any) {
         let keyword = self.keyword
-        textFieldClearButton.isHidden = keyword.isEmpty
         guard textField.markedTextRange == nil else {
+            if tableView.isDragging {
+                tableView.reloadData()
+            }
             return
         }
         guard !keyword.isEmpty else {
@@ -93,43 +123,6 @@ class AddAssetViewController: UIViewController {
             }
         }
         searchQueue.addOperation(op)
-    }
-    
-    @IBAction func saveAction(_ sender: Any) {
-        guard let indices = tableView.indexPathsForSelectedRows?.map({ $0.row }) else {
-            return
-        }
-        saveButton.isBusy = true
-        var items = [AssetItem]()
-        if isSearching {
-            for index in indices {
-                items.append(searchResult[index].asset)
-            }
-        } else {
-            for index in indices {
-                items.append(topAssets[index])
-            }
-        }
-        DispatchQueue.global().async { [weak self] in
-            let assets = items.map(Asset.createAsset)
-            AssetDAO.shared.insertOrUpdateAssets(assets: assets)
-            DispatchQueue.main.async {
-                self?.navigationController?.popViewController(animated: true)
-                NotificationCenter.default.post(name: .ToastMessageDidAppear,
-                                                object: Localized.TOAST_ADD_ASSET)
-            }
-        }
-    }
-    
-    @IBAction func popAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    @objc func clearTextField(_ sender: Any) {
-        textField.text = nil
-        textFieldClearButton.isHidden = true
-        activityIndicator.stopAnimating()
-        tableView.reloadData()
     }
     
     @objc func reloadWithLocalTopAssets() {

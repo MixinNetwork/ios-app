@@ -752,70 +752,11 @@
                                     <constraint firstAttribute="height" constant="56" id="vct-Mm-dib"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MsV-0y-qu3">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MsV-0y-qu3" customClass="LargerSearchBoxView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="76" width="414" height="70"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zjj-L5-RfM">
-                                        <rect key="frame" x="30" y="0.0" width="364" height="70"/>
-                                        <subviews>
-                                            <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="p2t-1E-dRS">
-                                                <rect key="frame" x="0.0" y="0.0" width="364" height="70"/>
-                                                <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="Wallet/ic_search" translatesAutoresizingMaskIntoConstraints="NO" id="0vD-pe-Za0">
-                                                        <rect key="frame" x="0.0" y="0.0" width="17" height="70"/>
-                                                    </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ixk-nj-gBk">
-                                                        <rect key="frame" x="41" y="0.0" width="323" height="70"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="button_title_search"/>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="cIE-oM-cx7">
-                                                <rect key="frame" x="0.0" y="0.0" width="364" height="70"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="textColor"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
-                                                <connections>
-                                                    <action selector="searchAction:" destination="zKh-d3-pn1" eventType="editingChanged" id="jVP-HT-nXo"/>
-                                                </connections>
-                                            </textField>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="cIE-oM-cx7" secondAttribute="bottom" id="547-yi-i7x"/>
-                                            <constraint firstAttribute="trailing" secondItem="cIE-oM-cx7" secondAttribute="trailing" id="9yT-oV-yz9"/>
-                                            <constraint firstItem="p2t-1E-dRS" firstAttribute="leading" secondItem="Zjj-L5-RfM" secondAttribute="leading" id="Kay-zW-wW7"/>
-                                            <constraint firstAttribute="bottom" secondItem="p2t-1E-dRS" secondAttribute="bottom" id="LY6-z7-j5k"/>
-                                            <constraint firstAttribute="trailing" secondItem="p2t-1E-dRS" secondAttribute="trailing" id="OEp-YN-evi"/>
-                                            <constraint firstItem="cIE-oM-cx7" firstAttribute="leading" secondItem="Zjj-L5-RfM" secondAttribute="leading" id="SoZ-c0-xav"/>
-                                            <constraint firstItem="cIE-oM-cx7" firstAttribute="top" secondItem="Zjj-L5-RfM" secondAttribute="top" id="jKH-Rt-9aE"/>
-                                            <constraint firstItem="p2t-1E-dRS" firstAttribute="top" secondItem="Zjj-L5-RfM" secondAttribute="top" id="oLI-Me-X0l"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bEu-Hi-n9m">
-                                        <rect key="frame" x="0.0" y="69" width="414" height="1"/>
-                                        <color key="backgroundColor" red="0.95294117647058818" green="0.95294117647058818" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="Nma-hP-RrQ" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="Zjj-L5-RfM" firstAttribute="top" secondItem="MsV-0y-qu3" secondAttribute="top" id="0XB-Ca-itt"/>
-                                    <constraint firstAttribute="trailing" secondItem="bEu-Hi-n9m" secondAttribute="trailing" id="ClC-yF-9sy"/>
-                                    <constraint firstItem="bEu-Hi-n9m" firstAttribute="leading" secondItem="MsV-0y-qu3" secondAttribute="leading" id="FoF-FM-Kft"/>
                                     <constraint firstAttribute="height" constant="70" id="ILh-hn-5XA"/>
-                                    <constraint firstAttribute="bottom" secondItem="bEu-Hi-n9m" secondAttribute="bottom" id="NCO-kY-LXL"/>
-                                    <constraint firstAttribute="trailing" secondItem="Zjj-L5-RfM" secondAttribute="trailing" constant="20" id="PAy-C6-ssk"/>
-                                    <constraint firstItem="Zjj-L5-RfM" firstAttribute="leading" secondItem="MsV-0y-qu3" secondAttribute="leading" constant="30" id="fOq-6A-6qC"/>
-                                    <constraint firstAttribute="bottom" secondItem="Zjj-L5-RfM" secondAttribute="bottom" id="ywN-sy-Tom"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="70" estimatedRowHeight="70" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KKk-CI-DI7">
@@ -961,8 +902,8 @@
                         <outlet property="activityIndicator" destination="B6s-SV-OHw" id="ac0-ju-DF2"/>
                         <outlet property="keyboardPlaceholderHeightConstraint" destination="tHr-eq-VRX" id="0HA-x6-u5N"/>
                         <outlet property="saveButton" destination="7se-PT-zc4" id="50j-gw-J4P"/>
+                        <outlet property="searchBoxView" destination="MsV-0y-qu3" id="lMS-MS-Gnv"/>
                         <outlet property="tableView" destination="KKk-CI-DI7" id="HYD-pD-7Fw"/>
-                        <outlet property="textField" destination="cIE-oM-cx7" id="ksB-9f-cId"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RvE-Np-GaX" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2289,7 +2230,6 @@
         <image name="Wallet/ic_add" width="10" height="10"/>
         <image name="Wallet/ic_deselected" width="34" height="34"/>
         <image name="Wallet/ic_force_selected" width="16" height="16"/>
-        <image name="Wallet/ic_search" width="17" height="17"/>
         <image name="Wallet/ic_selected" width="34" height="34"/>
         <image name="Wallet/ic_token_indicator_left" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>

@@ -48,6 +48,8 @@
 		27D6E8D22045473300BA678A /* TransferMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D6E8D12045473300BA678A /* TransferMessage.swift */; };
 		27DA337F1FE8F92900A4D16F /* SignalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DA337E1FE8F92900A4D16F /* SignalProtocol.swift */; };
 		27FE22B81FC70399006F2AA5 /* SignalKeyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FE22B71FC70399006F2AA5 /* SignalKeyAPI.swift */; };
+		7B015D7F21A81C81000C9F1E /* LargerSearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* LargerSearchBoxView.swift */; };
+		7B015D8121A81C8D000C9F1E /* LargerSearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* LargerSearchBoxView.xib */; };
 		7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B075CCE1FC0A98B005315A2 /* ConversationTableView.swift */; };
 		7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B075CD01FC0B268005315A2 /* MessageCell.swift */; };
 		7B08CD2C2178700C00FB8CCF /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B08CD2B2178700C00FB8CCF /* CallManager.swift */; };
@@ -646,6 +648,8 @@
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
+		7B015D7E21A81C81000C9F1E /* LargerSearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargerSearchBoxView.swift; sourceTree = "<group>"; };
+		7B015D8021A81C8D000C9F1E /* LargerSearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LargerSearchBoxView.xib; sourceTree = "<group>"; };
 		7B075CCE1FC0A98B005315A2 /* ConversationTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableView.swift; sourceTree = "<group>"; };
 		7B075CD01FC0B268005315A2 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		7B08CD2B2178700C00FB8CCF /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
@@ -1924,6 +1928,8 @@
 				DF44B0CD20C6897D00A099B6 /* EmptyView.xib */,
 				7B972A87219D7F93005C0FEC /* SearchBoxView.swift */,
 				7B972A89219D7FA6005C0FEC /* SearchBoxView.xib */,
+				7B015D7E21A81C81000C9F1E /* LargerSearchBoxView.swift */,
+				7B015D8021A81C8D000C9F1E /* LargerSearchBoxView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2501,6 +2507,7 @@
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				7B4D1128205B8D380074BF60 /* AddressCell.xib in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
+				7B015D8121A81C8D000C9F1E /* LargerSearchBoxView.xib in Resources */,
 				7B2E3E531FA07F9F00DDDDEB /* CountryCode.xcassets in Resources */,
 				DF114B0E2020B85600EA8F9C /* WebWindow.xib in Resources */,
 				DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */,
@@ -2823,6 +2830,7 @@
 				DFA606312013AA4F0006EEE4 /* FileJobQueue.swift in Sources */,
 				27DA337F1FE8F92900A4D16F /* SignalProtocol.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
+				7B015D7F21A81C81000C9F1E /* LargerSearchBoxView.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
 				7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */,
 				DF5D9F391F9C998F0036D5FD /* Account.swift in Sources */,

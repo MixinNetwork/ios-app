@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LargerSearchBoxView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="clearButton" destination="f6R-3n-IWK" id="rAu-mM-sxm"/>
+                <outlet property="textField" destination="tjo-zD-yNg" id="21w-zd-akG"/>
+                <outlet property="textFieldBackgroundView" destination="ody-Ra-Quq" id="7RN-dz-UbG"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PuW-kr-XkV">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rbc-vX-uxy">
+                    <rect key="frame" x="30" y="0.0" width="325" height="70"/>
+                    <subviews>
+                        <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="GXx-5y-jzJ">
+                            <rect key="frame" x="0.0" y="0.0" width="325" height="70"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="Wallet/ic_search" translatesAutoresizingMaskIntoConstraints="NO" id="7MJ-Iw-ccl">
+                                    <rect key="frame" x="0.0" y="0.0" width="17" height="70"/>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCH-Zr-QFo">
+                                    <rect key="frame" x="41" y="0.0" width="284" height="70"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="button_title_search"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ody-Ra-Quq">
+                            <rect key="frame" x="0.0" y="0.0" width="325" height="70"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0NY-P9-aSD">
+                            <rect key="frame" x="0.0" y="0.0" width="325" height="70"/>
+                            <subviews>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="tjo-zD-yNg">
+                                    <rect key="frame" x="0.0" y="0.0" width="325" height="70"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="textColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                </textField>
+                                <button hidden="YES" opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f6R-3n-IWK">
+                                    <rect key="frame" x="0.0" y="0.0" width="42" height="70"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="42" id="Afr-KU-Miw"/>
+                                    </constraints>
+                                    <state key="normal" image="Wallet/ic_clear"/>
+                                    <connections>
+                                        <action selector="clearAction:" destination="-1" eventType="touchUpInside" id="vAg-z0-Ywo"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="ody-Ra-Quq" firstAttribute="top" secondItem="rbc-vX-uxy" secondAttribute="top" id="7Zv-pm-Vpg"/>
+                        <constraint firstItem="0NY-P9-aSD" firstAttribute="leading" secondItem="rbc-vX-uxy" secondAttribute="leading" id="FRO-bb-glO"/>
+                        <constraint firstAttribute="trailing" secondItem="ody-Ra-Quq" secondAttribute="trailing" id="IQn-ZS-yjF"/>
+                        <constraint firstItem="GXx-5y-jzJ" firstAttribute="top" secondItem="rbc-vX-uxy" secondAttribute="top" id="MVx-m4-89h"/>
+                        <constraint firstAttribute="trailing" secondItem="GXx-5y-jzJ" secondAttribute="trailing" id="NA9-ot-dhc"/>
+                        <constraint firstItem="ody-Ra-Quq" firstAttribute="leading" secondItem="rbc-vX-uxy" secondAttribute="leading" id="SnY-3o-sRe"/>
+                        <constraint firstItem="GXx-5y-jzJ" firstAttribute="leading" secondItem="rbc-vX-uxy" secondAttribute="leading" id="ZOa-mW-Aev"/>
+                        <constraint firstAttribute="trailing" secondItem="0NY-P9-aSD" secondAttribute="trailing" id="Zb1-KL-tkN"/>
+                        <constraint firstAttribute="bottom" secondItem="ody-Ra-Quq" secondAttribute="bottom" id="aR1-ix-dGQ"/>
+                        <constraint firstAttribute="bottom" secondItem="0NY-P9-aSD" secondAttribute="bottom" id="gzA-cr-PTG"/>
+                        <constraint firstAttribute="bottom" secondItem="GXx-5y-jzJ" secondAttribute="bottom" id="iC2-L9-Cex"/>
+                        <constraint firstItem="0NY-P9-aSD" firstAttribute="top" secondItem="rbc-vX-uxy" secondAttribute="top" id="jOp-O4-XUF"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tjv-Kb-AFC">
+                    <rect key="frame" x="0.0" y="69" width="375" height="1"/>
+                    <color key="backgroundColor" red="0.95294117649999999" green="0.95294117649999999" blue="0.95294117649999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="UZh-oY-nvP" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="tjv-Kb-AFC" firstAttribute="leading" secondItem="PuW-kr-XkV" secondAttribute="leading" id="3zo-G0-tki"/>
+                <constraint firstAttribute="bottom" secondItem="tjv-Kb-AFC" secondAttribute="bottom" id="Ibk-gh-q3J"/>
+                <constraint firstAttribute="bottom" secondItem="rbc-vX-uxy" secondAttribute="bottom" id="OB9-fV-5Ux"/>
+                <constraint firstAttribute="trailing" secondItem="tjv-Kb-AFC" secondAttribute="trailing" id="PyV-yU-ChU"/>
+                <constraint firstItem="rbc-vX-uxy" firstAttribute="leading" secondItem="PuW-kr-XkV" secondAttribute="leading" constant="30" id="ZQ5-av-xMj"/>
+                <constraint firstAttribute="trailing" secondItem="rbc-vX-uxy" secondAttribute="trailing" constant="20" id="ZVO-jr-GLJ"/>
+                <constraint firstItem="rbc-vX-uxy" firstAttribute="top" secondItem="PuW-kr-XkV" secondAttribute="top" id="p7z-Ee-mZQ"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Wallet/ic_clear" width="42" height="42"/>
+        <image name="Wallet/ic_search" width="17" height="17"/>
+    </resources>
+</document>

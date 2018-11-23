@@ -485,6 +485,8 @@
 		DFAB3B4120B8569300886838 /* MyQRCodeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFAB3B4020B8569300886838 /* MyQRCodeWindow.swift */; };
 		DFAB3B4320B856A600886838 /* MyQRCodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAB3B4220B856A600886838 /* MyQRCodeWindow.xib */; };
 		DFAB3B4520B85A0C00886838 /* ReceiveMoneyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */; };
+		DFB2062421A7B7E2006E4341 /* BackupHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB2062321A7B7E2006E4341 /* BackupHeader.xib */; };
+		DFB2062621A80173006E4341 /* BackupCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */; };
 		DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D941FF7C2B6000875BD /* ResendData.swift */; };
 		DFB37D9F1FF94864000875BD /* RotateSignedPreKeyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */; };
 		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
@@ -1088,6 +1090,8 @@
 		DFAB3B4020B8569300886838 /* MyQRCodeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyQRCodeWindow.swift; sourceTree = "<group>"; };
 		DFAB3B4220B856A600886838 /* MyQRCodeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyQRCodeWindow.xib; sourceTree = "<group>"; };
 		DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReceiveMoneyWindow.xib; sourceTree = "<group>"; };
+		DFB2062321A7B7E2006E4341 /* BackupHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackupHeader.xib; sourceTree = "<group>"; };
+		DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCategoryViewController.swift; sourceTree = "<group>"; };
 		DFB37D941FF7C2B6000875BD /* ResendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendData.swift; sourceTree = "<group>"; };
 		DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateSignedPreKeyJob.swift; sourceTree = "<group>"; };
 		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
@@ -1985,6 +1989,7 @@
 				DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */,
 				DF8CECF31FC425F700E40064 /* BlockUserCell.xib */,
 				7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */,
+				DFB2062321A7B7E2006E4341 /* BackupHeader.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2228,6 +2233,7 @@
 				DF8CECF01FC4255700E40064 /* Cells */,
 				DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
+				DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */,
 				DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
 				DF8CECEE1FC4240500E40064 /* BlockUserViewController.swift */,
@@ -2416,6 +2422,7 @@
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */,
+				DFB2062421A7B7E2006E4341 /* BackupHeader.xib in Resources */,
 				7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */,
 				DFD294431FA7076600FADAAD /* ContactMeCell.xib in Resources */,
 				7BA4A1CF1FF347130086CD56 /* GroupParticipantCell.xib in Resources */,
@@ -2874,6 +2881,7 @@
 				7B8938A52020176200C72070 /* ConversationMoreMenuViewController.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
 				DF17B51320525485006447C2 /* ConversationItem.swift in Sources */,
+				DFB2062621A80173006E4341 /* BackupCategoryViewController.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,

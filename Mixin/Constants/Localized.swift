@@ -507,9 +507,20 @@ public class Localized {
     }
     public static let SETTING_STORAGE_USAGE = LocalizedString("setting_storage_usage", comment: "Storage Usage")
     public static func SETTING_STORAGE_USAGE_CLEAR(messageCount: Int, size: String) -> String {
-    return String(format: LocalizedString("setting_storage_usage_clear", comment: "Clear %@ messages (%@)?"), "\(messageCount)", size)
+        return String(format: LocalizedString("setting_storage_usage_clear", comment: "Clear %@ messages (%@)?"), "\(messageCount)", size)
     }
     public static let SETTING_LOGOUT = LocalizedString("setting_logout", comment: "Log Out")
+    public static let SETTING_BACKUP_TITLE = LocalizedString("setting_backup_title", comment: "Chat Backup")
+    public static let SETTING_BACKUP_AUTO = LocalizedString("setting_backup_auto", comment: "Auto Backup")
+    public static let SETTING_BACKUP_DAILY = LocalizedString("setting_backup_daily", comment: "Daily")
+    public static let SETTING_BACKUP_WEEKLY = LocalizedString("setting_backup_weekly", comment: "Weekly")
+    public static let SETTING_BACKUP_MONTHLY = LocalizedString("setting_backup_monthly", comment: "Monthly")
+    public static let SETTING_BACKUP_OFF = LocalizedString("setting_backup_off", comment: "Off")
+    public static let SETTING_BACKUP_TIPS = LocalizedString("setting_backup_tips", comment: "Automatically back up to iCloud only over Wi-Fi.")
+    public static let SETTING_BACKUP_DISABLE_TIPS = LocalizedString("setting_backup_disable_tips", comment: "Sign in to iCloud to back up your history. Settings > iCloud > Turn on iCloud Drive.")
+    public static func SETTING_BACKUP_LAST(time: String, size: String) -> String {
+        return String(format: LocalizedString("setting_backup_last", comment: "Last backup at %@, total size %@"), time, size)
+    }
 
     // Notifications
     public static let NOTIFICATION_REPLY = LocalizedString("notification_reply", comment: "Reply")

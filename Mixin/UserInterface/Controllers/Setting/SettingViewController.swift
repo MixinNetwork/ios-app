@@ -51,6 +51,10 @@ extension SettingViewController {
             case 0:
                 vc = NotificationSettingsViewController.instance()
             case 1:
+                guard FileManager.default.ubiquityIdentityToken != nil else  {
+                    alert(Localized.SETTING_BACKUP_DISABLE_TIPS)
+                    return
+                }
                 vc = BackupViewController.instance()
             default:
                 vc = StorageUsageViewController.instance()

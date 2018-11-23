@@ -12,6 +12,14 @@ extension FileManager {
         return fileSize?.int64Value ?? 0
     }
 
+    func replace(from: URL, to: URL) throws {
+        if FileManager.default.fileExists(atPath: to.path) {
+            _ = try FileManager.default.replaceItemAt(to, withItemAt: from)
+        } else {
+            try FileManager.default.copyItem(at: from, to: to)
+        }
+    }
+
     func fileName(_ path: String) -> String {
         return URL(fileURLWithPath: path).lastPathComponent
     }
@@ -41,6 +49,12 @@ extension FileManager {
             return UIImage(contentsOfFile: path)?.size ?? CGSize.zero
         }
         return CGSize(width: width.intValue, height: height.intValue)
+    }
+
+    func createDirectoryIfNeeded(dir: URL) throws {
+        if !FileManager.default.fileExists(atPath: dir.path) {
+            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
+        }
     }
 
     func createNobackupDirectory(_ directory: URL) -> Bool {

@@ -30,6 +30,22 @@ class CommonUserDefault {
     private var keyHasConversation: String {
         return "has_conversation_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyBackupVideos: String {
+        return "backup_videos_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyBackupFiles: String {
+        return "backup_files_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyBackupCategory: String {
+        return "backup_category_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+
+    enum BackupCategory: String {
+        case daily
+        case weekly
+        case monthly
+        case off
+    }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
 
@@ -58,6 +74,36 @@ class CommonUserDefault {
         }
         set {
             session.set(newValue, forKey: keyHasPerformedTransfer)
+        }
+    }
+
+    var hasBackupVideos: Bool {
+        get {
+            return session.bool(forKey: keyBackupVideos)
+        }
+        set {
+            session.set(newValue, forKey: keyBackupVideos)
+        }
+    }
+
+    var hasBackupFiles: Bool {
+        get {
+            return session.bool(forKey: keyBackupFiles)
+        }
+        set {
+            session.set(newValue, forKey: keyBackupFiles)
+        }
+    }
+
+    var backupCategory: BackupCategory {
+        get {
+            guard let category = session.string(forKey: keyBackupCategory) else {
+                return .off
+            }
+            return BackupCategory(rawValue: category) ?? .off
+        }
+        set {
+            session.set(newValue.rawValue, forKey: keyBackupCategory)
         }
     }
 

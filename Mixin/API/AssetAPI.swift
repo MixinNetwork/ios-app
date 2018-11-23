@@ -34,8 +34,8 @@ final class AssetAPI: BaseAPI {
             return "external/transactions?asset=\(assetId)&account_name=\(accountName)&account_tag=\(accountTag)"
         }
         
-        static func search(keyword: String) -> String {
-            return "network/assets/search/\(keyword)"
+        static func search(keyword: String) -> String? {
+            return "network/assets/search/\(keyword)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         }
         static let top = "network/assets/top"
         
@@ -98,7 +98,10 @@ final class AssetAPI: BaseAPI {
     }
     
     func search(keyword: String) -> APIResult<[Asset]>  {
-        return request(method: .get, url: url.search(keyword: keyword))
+        guard let url = url.search(keyword: keyword) else {
+            return .success([])
+        }
+        return request(method: .get, url: url)
     }
     
     func topAssets() -> APIResult<[Asset]> {

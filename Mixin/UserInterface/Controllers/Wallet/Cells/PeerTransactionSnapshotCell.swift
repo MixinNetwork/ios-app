@@ -1,6 +1,6 @@
 import UIKit
 
-class SnapshotCell: UITableViewCell {
+class PeerTransactionSnapshotCell: UITableViewCell {
 
     static let cellIdentifier = "cell_identifier_snapshot"
     static let cellHeight: CGFloat = 60

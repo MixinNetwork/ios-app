@@ -570,8 +570,8 @@
 		DFF3530A1FEE9E1200058453 /* TransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353091FEE9E1200058453 /* TransferResponse.swift */; };
 		DFF3530E1FEEA3DC00058453 /* SnapshotDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3530D1FEEA3DC00058453 /* SnapshotDAO.swift */; };
 		DFF353121FEEB72C00058453 /* Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353111FEEB72C00058453 /* Snapshot.swift */; };
-		DFF353141FEEBC3A00058453 /* SnapshotCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFF353131FEEBC3A00058453 /* SnapshotCell.xib */; };
-		DFF353161FEEBC4700058453 /* SnapshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353151FEEBC4700058453 /* SnapshotCell.swift */; };
+		DFF353141FEEBC3A00058453 /* PeerTransactionSnapshotCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFF353131FEEBC3A00058453 /* PeerTransactionSnapshotCell.xib */; };
+		DFF353161FEEBC4700058453 /* PeerTransactionSnapshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353151FEEBC4700058453 /* PeerTransactionSnapshotCell.swift */; };
 		DFF353191FEEC83100058453 /* WalletUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF353181FEEC83100058453 /* WalletUserDefault.swift */; };
 		DFF3B68A20E25CB500DC82D9 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3B68920E25CB500DC82D9 /* Album.swift */; };
 		DFF3B68C20E2690100DC82D9 /* AlbumDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3B68B20E2690000DC82D9 /* AlbumDAO.swift */; };
@@ -1189,8 +1189,8 @@
 		DFF353091FEE9E1200058453 /* TransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferResponse.swift; sourceTree = "<group>"; };
 		DFF3530D1FEEA3DC00058453 /* SnapshotDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotDAO.swift; sourceTree = "<group>"; };
 		DFF353111FEEB72C00058453 /* Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshot.swift; sourceTree = "<group>"; };
-		DFF353131FEEBC3A00058453 /* SnapshotCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotCell.xib; sourceTree = "<group>"; };
-		DFF353151FEEBC4700058453 /* SnapshotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotCell.swift; sourceTree = "<group>"; };
+		DFF353131FEEBC3A00058453 /* PeerTransactionSnapshotCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerTransactionSnapshotCell.xib; sourceTree = "<group>"; };
+		DFF353151FEEBC4700058453 /* PeerTransactionSnapshotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerTransactionSnapshotCell.swift; sourceTree = "<group>"; };
 		DFF353181FEEC83100058453 /* WalletUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletUserDefault.swift; sourceTree = "<group>"; };
 		DFF3B68920E25CB500DC82D9 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		DFF3B68B20E2690000DC82D9 /* AlbumDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumDAO.swift; sourceTree = "<group>"; };
@@ -2017,8 +2017,8 @@
 		DF736F881FC08B67001DB063 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				DFF353151FEEBC4700058453 /* SnapshotCell.swift */,
-				DFF353131FEEBC3A00058453 /* SnapshotCell.xib */,
+				DFF353151FEEBC4700058453 /* PeerTransactionSnapshotCell.swift */,
+				DFF353131FEEBC3A00058453 /* PeerTransactionSnapshotCell.xib */,
 				7B4D1125205B8D380074BF60 /* AddressCell.swift */,
 				7B4D1126205B8D380074BF60 /* AddressCell.xib */,
 				DF87949B207505F4004A1E55 /* TransactionCell.swift */,
@@ -2451,7 +2451,7 @@
 			files = (
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
 				277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */,
-				DFF353141FEEBC3A00058453 /* SnapshotCell.xib in Resources */,
+				DFF353141FEEBC3A00058453 /* PeerTransactionSnapshotCell.xib in Resources */,
 				DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */,
 				7B3B43B02194392000A26FEB /* mixin_condensed.otf in Resources */,
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
@@ -2783,7 +2783,7 @@
 				DF3FF05B20123BD6000A0C0A /* FileDownloadJob.swift in Sources */,
 				7B2E3E521FA07F7B00DDDDEB /* CountryCell.swift in Sources */,
 				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
-				DFF353161FEEBC4700058453 /* SnapshotCell.swift in Sources */,
+				DFF353161FEEBC4700058453 /* PeerTransactionSnapshotCell.swift in Sources */,
 				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
 				7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */,
 				DF3FF05D20134C4C000A0C0A /* DatabaseUserDefault.swift in Sources */,

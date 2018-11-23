@@ -7,8 +7,8 @@ class PeerTransactionsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let nib = UINib(nibName: "SnapshotCell", bundle: .main)
-        tableView.register(nib, forCellReuseIdentifier: SnapshotCell.cellIdentifier)
+        let nib = UINib(nibName: "PeerTransactionSnapshotCell", bundle: .main)
+        tableView.register(nib, forCellReuseIdentifier: PeerTransactionSnapshotCell.cellIdentifier)
         tableView.tableFooterView = UIView()
         reload()
         NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
@@ -24,13 +24,13 @@ class PeerTransactionsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SnapshotCell.cellIdentifier, for: indexPath) as! SnapshotCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: PeerTransactionSnapshotCell.cellIdentifier, for: indexPath) as! PeerTransactionSnapshotCell
         cell.render(snapshot: snapshots[indexPath.row])
         return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SnapshotCell.cellHeight
+        return PeerTransactionSnapshotCell.cellHeight
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

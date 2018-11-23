@@ -11,8 +11,8 @@ class SnapshotViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UINib(nibName: "SnapshotCell", bundle: .main),
-                           forCellReuseIdentifier: SnapshotCell.cellIdentifier)
+        tableView.register(UINib(nibName: "PeerTransactionSnapshotCell", bundle: .main),
+                           forCellReuseIdentifier: PeerTransactionSnapshotCell.cellIdentifier)
         fetchRemoteSnapshots()
         fetchSnapshots()
     }
@@ -68,7 +68,7 @@ extension SnapshotViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SnapshotCell.cellIdentifier, for: indexPath) as! SnapshotCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: PeerTransactionSnapshotCell.cellIdentifier, for: indexPath) as! PeerTransactionSnapshotCell
         cell.render(snapshot: snapshots[indexPath.row])
         return cell
     }
@@ -94,6 +94,6 @@ extension SnapshotViewController {
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SnapshotCell.cellHeight
+        return PeerTransactionSnapshotCell.cellHeight
     }
 }

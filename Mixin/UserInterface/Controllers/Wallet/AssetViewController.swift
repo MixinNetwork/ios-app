@@ -50,6 +50,7 @@ class AssetViewController: UIViewController {
         tableView.tableHeaderView = tableHeaderView
         tableHeaderView.titleView.render(asset: asset)
         tableHeaderView.sizeToFit()
+        tableView.register(UINib(nibName: "SnapshotCell", bundle: .main), forCellReuseIdentifier: ReuseId.cell)
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.dataSource = self
         tableView.delegate = self
@@ -156,19 +157,9 @@ extension AssetViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! WalletSnapshotCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
         cell.render(snapshot: filteredSnapshots[indexPath.section][indexPath.row], asset: asset)
-        let lastSection = filteredSnapshots.count - 1
-        let lastIndexPath = IndexPath(row: filteredSnapshots[lastSection].count - 1, section: lastSection)
-        if indexPath == lastIndexPath {
-            cell.bottomShadowImageView.isHidden = false
-            cell.selectionView.roundingCorners = [.bottomLeft, .bottomRight]
-        } else {
-            cell.bottomShadowImageView.isHidden = true
-            cell.selectionView.roundingCorners = []
-        }
-        cell.separatorLineView.isHidden = filteredSnapshots[indexPath.section].count == 1
-            || indexPath.row == filteredSnapshots[indexPath.section].count - 1
+        cell.renderDecorationViews(indexPath: indexPath, models: filteredSnapshots)
         cell.delegate = self
         return cell
     }
@@ -217,9 +208,9 @@ extension AssetViewController: AssetFilterWindowDelegate {
     
 }
 
-extension AssetViewController: WalletSnapshotCellDelegate {
+extension AssetViewController: SnapshotCellDelegate {
     
-    func walletSnapshotCellDidSelectIcon(_ cell: WalletSnapshotCell) {
+    func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return
         }

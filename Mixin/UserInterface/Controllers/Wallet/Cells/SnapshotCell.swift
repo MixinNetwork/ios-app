@@ -1,10 +1,10 @@
 import UIKit
 
-protocol WalletSnapshotCellDelegate: class {
-    func walletSnapshotCellDidSelectIcon(_ cell: WalletSnapshotCell)
+protocol SnapshotCellDelegate: class {
+    func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell)
 }
 
-class WalletSnapshotCell: UITableViewCell {
+class SnapshotCell: UITableViewCell {
     
     static let height: CGFloat = 60
     
@@ -19,7 +19,7 @@ class WalletSnapshotCell: UITableViewCell {
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
     
-    weak var delegate: WalletSnapshotCellDelegate?
+    weak var delegate: SnapshotCellDelegate?
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -38,7 +38,11 @@ class WalletSnapshotCell: UITableViewCell {
         iconImageView.titleLabel.text = nil
     }
     
-    func render(snapshot: SnapshotItem, asset: AssetItem) {
+    @IBAction func selectIconAction(_ sender: Any) {
+        delegate?.walletSnapshotCellDidSelectIcon(self)
+    }
+    
+    func render(snapshot: SnapshotItem, asset: AssetItem? = nil) {
         switch snapshot.type {
         case SnapshotType.deposit.rawValue, SnapshotType.pendingDeposit.rawValue:
             iconImageView.image = UIImage(named: "Wallet/ic_deposit")
@@ -73,9 +77,9 @@ class WalletSnapshotCell: UITableViewCell {
             titleLabel.text = Localized.TRANSACTION_TYPE_REBATE
         case SnapshotType.pendingDeposit.rawValue:
             amountLabel.textColor = .walletGray
-            if let confirmations = snapshot.confirmations {
-                titleLabel.text = Localized.PENDING_DEPOSIT_CONFIRMATION(numerator: confirmations,
-                                                                         denominator: asset.confirmations)
+            if let finished = snapshot.confirmations, let total = asset?.confirmations {
+                titleLabel.text = Localized.PENDING_DEPOSIT_CONFIRMATION(numerator: finished,
+                                                                         denominator: total)
             } else {
                 titleLabel.text = nil
             }
@@ -83,9 +87,9 @@ class WalletSnapshotCell: UITableViewCell {
             break
         }
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
-        if snapshot.type == SnapshotType.pendingDeposit.rawValue, let confirmations = snapshot.confirmations {
+        if snapshot.type == SnapshotType.pendingDeposit.rawValue, let finished = snapshot.confirmations, let total = asset?.confirmations {
             pendingDepositProgressView.isHidden = false
-            let multiplier = CGFloat(confirmations) / CGFloat(asset.confirmations)
+            let multiplier = CGFloat(finished) / CGFloat(total)
             if abs(pendingDepositProgressConstraint.multiplier - multiplier) > 0.1 {
                 NSLayoutConstraint.deactivate([pendingDepositProgressConstraint])
                 pendingDepositProgressConstraint = pendingDepositProgressView.widthAnchor.constraint(equalTo: shadowSafeContainerView.widthAnchor, multiplier: multiplier)
@@ -96,8 +100,18 @@ class WalletSnapshotCell: UITableViewCell {
         }
     }
     
-    @IBAction func selectIconAction(_ sender: Any) {
-        delegate?.walletSnapshotCellDidSelectIcon(self)
+    func renderDecorationViews(indexPath: IndexPath, models: [[Any]]) {
+        let lastSection = models.count - 1
+        let lastIndexPath = IndexPath(row: models[lastSection].count - 1, section: lastSection)
+        if indexPath == lastIndexPath {
+            bottomShadowImageView.isHidden = false
+            selectionView.roundingCorners = [.bottomLeft, .bottomRight]
+        } else {
+            bottomShadowImageView.isHidden = true
+            selectionView.roundingCorners = []
+        }
+        separatorLineView.isHidden = models[indexPath.section].count == 1
+            || indexPath.row == models[indexPath.section].count - 1
     }
     
 }

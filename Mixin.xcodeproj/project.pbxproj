@@ -236,7 +236,7 @@
 		7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */; };
 		7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */; };
 		7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC26533207B595500EA7DFF /* ContactMessageCell.swift */; };
-		7BC2D27F21992FA9002FAC1D /* WalletSnapshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC2D27C21992FA8002FAC1D /* WalletSnapshotCell.swift */; };
+		7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */; };
 		7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC681A91FA1DD5600BAB85F /* UsernameViewController.swift */; };
 		7BC8503020CBA69B00A57B83 /* MXNOggOpusReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502320CBA69900A57B83 /* MXNOggOpusReader.m */; };
 		7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502420CBA69900A57B83 /* MXNOggOpusError.m */; };
@@ -247,6 +247,7 @@
 		7BC850C020CBB3AE00A57B83 /* liboggopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC850BF20CBB3AD00A57B83 /* liboggopus.a */; };
 		7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */; };
 		7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */; };
+		7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE296521AC132E00B1A507 /* SnapshotCell.xib */; };
 		7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532720A41F6A00C36F69 /* RangeExtension.swift */; };
 		7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532920A435D300C36F69 /* CoreTextExtension.swift */; };
 		7BD150E22160C1560019FD5B /* GiphyCoreSDKExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */; };
@@ -834,7 +835,7 @@
 		7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationsViewController.swift; sourceTree = "<group>"; };
 		7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationTableViewCell.swift; sourceTree = "<group>"; };
 		7BC26533207B595500EA7DFF /* ContactMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageCell.swift; sourceTree = "<group>"; };
-		7BC2D27C21992FA8002FAC1D /* WalletSnapshotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletSnapshotCell.swift; sourceTree = "<group>"; };
+		7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotCell.swift; sourceTree = "<group>"; };
 		7BC681A91FA1DD5600BAB85F /* UsernameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameViewController.swift; sourceTree = "<group>"; };
 		7BC8502320CBA69900A57B83 /* MXNOggOpusReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNOggOpusReader.m; sourceTree = "<group>"; };
 		7BC8502420CBA69900A57B83 /* MXNOggOpusError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNOggOpusError.m; sourceTree = "<group>"; };
@@ -859,6 +860,7 @@
 		7BC850BF20CBB3AD00A57B83 /* liboggopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liboggopus.a; sourceTree = "<group>"; };
 		7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CATransactionExtension.swift; sourceTree = "<group>"; };
 		7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		7BCE296521AC132E00B1A507 /* SnapshotCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotCell.xib; sourceTree = "<group>"; };
 		7BD0532720A41F6A00C36F69 /* RangeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeExtension.swift; sourceTree = "<group>"; };
 		7BD0532920A435D300C36F69 /* CoreTextExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextExtension.swift; sourceTree = "<group>"; };
 		7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyCoreSDKExtension.swift; sourceTree = "<group>"; };
@@ -2028,7 +2030,8 @@
 				7B9916D321945A6800C11401 /* WalletAssetCell.swift */,
 				7BEC4DF021A7D054003336F2 /* WalletAssetCell.xib */,
 				7B0BE45B21A557B700B91A1E /* WalletAddAssetCell.swift */,
-				7BC2D27C21992FA8002FAC1D /* WalletSnapshotCell.swift */,
+				7BCE296521AC132E00B1A507 /* SnapshotCell.xib */,
+				7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */,
 				7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */,
 			);
 			path = Cells;
@@ -2450,6 +2453,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
+				7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */,
 				277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */,
 				DFF353141FEEBC3A00058453 /* PeerTransactionSnapshotCell.xib in Resources */,
 				DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */,
@@ -3117,7 +3121,7 @@
 				7BD97DD52179DD3400FAE490 /* WebRTCClient.swift in Sources */,
 				DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */,
 				DF5CDA77204FF9A0004A52BA /* SignalDAO.swift in Sources */,
-				7BC2D27F21992FA9002FAC1D /* WalletSnapshotCell.swift in Sources */,
+				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallView.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
 				273FACB8205FB9A800513327 /* SessionStore.swift in Sources */,

@@ -25,9 +25,11 @@ class WalletViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateTableViewContentInset()
+        tableView.register(UINib(nibName: "WalletAssetCell", bundle: .main),
+                           forCellReuseIdentifier: ReuseId.asset)
+        tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.tableFooterView = UIView()
         tableView.reloadData()
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)

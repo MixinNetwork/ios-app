@@ -4,6 +4,8 @@ class HiddenAssetViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
 
+    private let cellReuseId = "cell"
+    
     private var assets = [AssetItem]()
 
     private lazy var assetAction: UITableViewRowAction = {
@@ -22,7 +24,15 @@ class HiddenAssetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        prepareTableView()
+        updateTableViewContentInset()
+        tableView.register(UINib(nibName: "WalletAssetCell", bundle: nil),
+                           forCellReuseIdentifier: cellReuseId)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.tableFooterView = UIView()
+        tableView.reloadData()
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
         fetchAssets()
     }
     
@@ -30,16 +40,12 @@ class HiddenAssetViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
-    private func prepareTableView() {
-        tableView.register(UINib(nibName: "SearchResultAssetCell", bundle: nil), forCellReuseIdentifier: SearchResultAssetCell.cellIdentifier)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.tableFooterView = UIView()
-        tableView.reloadData()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewContentInset()
     }
-
+    
     @objc private func fetchAssets() {
         DispatchQueue.global().async { [weak self] in
             let hiddenAssets = WalletUserDefault.shared.hiddenAssets
@@ -67,37 +73,33 @@ class HiddenAssetViewController: UIViewController {
         container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
+    
+    private func updateTableViewContentInset() {
+        if view.compatibleSafeAreaInsets.bottom < 1 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
+    }
+    
 }
 
 extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return assets.count
     }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SearchResultAssetCell.cellHeight
-    }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let asset = assets[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultAssetCell.cellIdentifier) as! SearchResultAssetCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! WalletAssetCell
         cell.render(asset: asset)
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
         navigationController?.pushViewController(AssetViewController.instance(asset: assets[indexPath.row]), animated: true)
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -106,3 +108,10 @@ extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate 
     
 }
 
+extension HiddenAssetViewController: ContainerViewControllerDelegate {
+    
+    var prefersNavigationBarSeparatorLineHidden: Bool {
+        return true
+    }
+    
+}

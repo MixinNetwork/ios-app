@@ -1,45 +1,56 @@
 import UIKit
 
 class DepositWindow: BottomSheetView {
-
-    @IBOutlet weak var qrcodeAvatarImageView: AvatarImageView!
+    
     @IBOutlet weak var qrcodeImageView: UIImageView!
+    @IBOutlet weak var iconImageView: UIImageView!
+    @IBOutlet weak var chainImageView: CornerImageView!
     @IBOutlet weak var qrcodeView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var blockchainImageView: CornerImageView!
-
-    private var asset: AssetItem!
-
-    func presentView(asset: AssetItem, isDisplayAccountName: Bool) {
-        self.asset = asset
-
-        if isDisplayAccountName {
+    
+    enum Content {
+        case address, name, memo
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        iconImageView.layer.borderColor = UIColor.white.cgColor
+        iconImageView.layer.borderWidth = 2
+    }
+    
+    func render(asset: AssetItem, content: Content) {
+        iconImageView.sd_cancelCurrentImageLoad()
+        chainImageView.sd_cancelCurrentImageLoad()
+        iconImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
+        if let chainIconUrl = asset.chainIconUrl {
+            chainImageView.sd_setImage(with: URL(string: chainIconUrl))
+            chainImageView.isHidden = false
+        } else {
+            chainImageView.isHidden = true
+        }
+        switch content {
+        case .address:
+            titleLabel.text = Localized.WALLET_ADDRESS
+            subtitleLabel.text = nil
+            qrcodeImageView.image = UIImage(qrcode: asset.publicKey ?? "", size: qrcodeImageView.frame.size)
+        case .name:
             titleLabel.text = Localized.WALLET_ACCOUNT_NAME
             subtitleLabel.text = asset.accountName
             qrcodeImageView.image = UIImage(qrcode: asset.accountName ?? "", size: qrcodeImageView.frame.size)
-        } else {
+        case .memo:
             titleLabel.text = Localized.WALLET_ACCOUNT_MEMO
             subtitleLabel.text = asset.accountTag
             qrcodeImageView.image = UIImage(qrcode: asset.accountTag ?? "", size: qrcodeImageView.frame.size)
         }
-        qrcodeAvatarImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
-        qrcodeAvatarImageView.layer.borderColor = UIColor.white.cgColor
-        qrcodeAvatarImageView.layer.borderWidth = 2
-        if let chainIconUrl = asset.chainIconUrl {
-            blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
-            blockchainImageView.isHidden = false
-        } else {
-            blockchainImageView.isHidden = true
-        }
-        super.presentView()
     }
-
+    
     @IBAction func dismissAction(_ sender: Any) {
         dismissView()
     }
-
+    
     class func instance() -> DepositWindow {
         return Bundle.main.loadNibNamed("DepositWindow", owner: nil, options: nil)?.first as! DepositWindow
     }
+    
 }

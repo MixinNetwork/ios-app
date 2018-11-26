@@ -6,6 +6,7 @@ class AddAssetViewController: UIViewController {
     @IBOutlet weak var searchBoxView: ModernSearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var noResultIndicator: UIView!
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let cellReuseId = "add_asset"
@@ -146,6 +147,7 @@ class AddAssetViewController: UIViewController {
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         let windowHeight = AppDelegate.current.window!.bounds.height
         keyboardPlaceholderHeightConstraint.constant = windowHeight - endFrame.origin.y
+        view.layoutIfNeeded()
     }
     
     private func asset(for indexPath: IndexPath) -> AssetItem {
@@ -159,11 +161,13 @@ class AddAssetViewController: UIViewController {
     private func reloadTableViewAndSelections() {
         tableView.reloadData()
         if isSearching {
+            noResultIndicator.isHidden = !searchResults.isEmpty
             for (row, result) in searchResults.enumerated() where selections.contains(result.asset.assetId) {
                 let indexPath = IndexPath(row: row, section: 0)
                 tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             }
         } else {
+            noResultIndicator.isHidden = true
             for (row, asset) in topAssets.enumerated() where selections.contains(asset.assetId) {
                 let indexPath = IndexPath(row: row, section: 0)
                 tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)

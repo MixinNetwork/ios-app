@@ -868,6 +868,31 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="color" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uNc-M9-sRf">
+                                <rect key="frame" x="0.0" y="146" width="414" height="462"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="rt0-Mp-iwA">
+                                        <rect key="frame" x="144.66666666666666" y="137.66666666666669" width="124.99999999999997" height="169"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_no_result" translatesAutoresizingMaskIntoConstraints="NO" id="xZC-cA-NDZ">
+                                                <rect key="frame" x="0.0" y="0.0" width="125" height="125"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NO RESULT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6w-Mn-l1z">
+                                                <rect key="frame" x="22" y="151" width="81" height="18"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <color key="textColor" red="0.73725490196078436" green="0.75294117647058822" blue="0.7803921568627451" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="rt0-Mp-iwA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="uNc-M9-sRf" secondAttribute="top" priority="750" constant="15" id="AfW-oh-VIN"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="rt0-Mp-iwA" secondAttribute="bottom" priority="750" constant="15" id="iyN-uh-EVJ"/>
+                                    <constraint firstItem="rt0-Mp-iwA" firstAttribute="centerX" secondItem="uNc-M9-sRf" secondAttribute="centerX" id="jhM-cv-2PH"/>
+                                </constraints>
+                            </view>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CPv-6c-dwf">
                                 <rect key="frame" x="0.0" y="608" width="414" height="128"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -882,8 +907,11 @@
                             <constraint firstAttribute="bottom" secondItem="CPv-6c-dwf" secondAttribute="bottom" id="6LJ-eb-1Fj"/>
                             <constraint firstItem="KKk-CI-DI7" firstAttribute="leading" secondItem="p7t-Dz-c7G" secondAttribute="leading" id="6RC-RB-ewq"/>
                             <constraint firstItem="uJJ-gG-PEu" firstAttribute="leading" secondItem="p7t-Dz-c7G" secondAttribute="leading" id="C2A-h0-ltQ"/>
+                            <constraint firstItem="CPv-6c-dwf" firstAttribute="top" secondItem="uNc-M9-sRf" secondAttribute="bottom" id="HM3-WB-gqb"/>
                             <constraint firstItem="MsV-0y-qu3" firstAttribute="top" secondItem="uJJ-gG-PEu" secondAttribute="bottom" id="MW9-lj-hcs"/>
                             <constraint firstAttribute="trailing" secondItem="CPv-6c-dwf" secondAttribute="trailing" id="N8f-Eo-wFK"/>
+                            <constraint firstItem="uNc-M9-sRf" firstAttribute="top" secondItem="KKk-CI-DI7" secondAttribute="top" id="NQe-hu-lKS"/>
+                            <constraint firstItem="uNc-M9-sRf" firstAttribute="trailing" secondItem="KKk-CI-DI7" secondAttribute="trailing" id="SR5-8Q-JHv"/>
                             <constraint firstAttribute="trailing" secondItem="MsV-0y-qu3" secondAttribute="trailing" id="TWL-uL-9UU"/>
                             <constraint firstItem="B6s-SV-OHw" firstAttribute="top" secondItem="KKk-CI-DI7" secondAttribute="top" id="UCU-vF-2j2"/>
                             <constraint firstItem="CPv-6c-dwf" firstAttribute="top" secondItem="B6s-SV-OHw" secondAttribute="bottom" id="dSY-xq-Aoh"/>
@@ -894,6 +922,8 @@
                             <constraint firstItem="uJJ-gG-PEu" firstAttribute="trailing" secondItem="icq-di-T8s" secondAttribute="trailing" id="o2a-Fc-By4"/>
                             <constraint firstItem="MsV-0y-qu3" firstAttribute="leading" secondItem="p7t-Dz-c7G" secondAttribute="leading" id="pen-Ks-yZv"/>
                             <constraint firstItem="icq-di-T8s" firstAttribute="top" secondItem="uJJ-gG-PEu" secondAttribute="top" id="u3O-c6-Svw"/>
+                            <constraint firstItem="uNc-M9-sRf" firstAttribute="leading" secondItem="KKk-CI-DI7" secondAttribute="leading" id="wza-qz-lbP"/>
+                            <constraint firstItem="rt0-Mp-iwA" firstAttribute="centerY" secondItem="p7t-Dz-c7G" secondAttribute="centerY" priority="250" id="xDa-Ta-0NZ"/>
                             <constraint firstItem="CPv-6c-dwf" firstAttribute="leading" secondItem="p7t-Dz-c7G" secondAttribute="leading" id="xSR-90-4Qq"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="icq-di-T8s"/>
@@ -901,6 +931,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="B6s-SV-OHw" id="ac0-ju-DF2"/>
                         <outlet property="keyboardPlaceholderHeightConstraint" destination="tHr-eq-VRX" id="0HA-x6-u5N"/>
+                        <outlet property="noResultIndicator" destination="uNc-M9-sRf" id="sHb-lr-hNq"/>
                         <outlet property="saveButton" destination="7se-PT-zc4" id="50j-gw-J4P"/>
                         <outlet property="searchBoxView" destination="MsV-0y-qu3" id="lMS-MS-Gnv"/>
                         <outlet property="tableView" destination="KKk-CI-DI7" id="HYD-pD-7Fw"/>
@@ -2253,6 +2284,7 @@
         <image name="Wallet/ic_add" width="10" height="10"/>
         <image name="Wallet/ic_deselected" width="34" height="34"/>
         <image name="Wallet/ic_force_selected" width="16" height="16"/>
+        <image name="Wallet/ic_no_result" width="125" height="125"/>
         <image name="Wallet/ic_selected" width="34" height="34"/>
         <image name="Wallet/ic_token_indicator_left" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>

@@ -953,18 +953,41 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="tBD-cJ-PQO">
                                                             <rect key="frame" x="20" y="0.0" width="354" height="60"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ZBN-0L-eog" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4qX-Dg-h1I">
                                                                     <rect key="frame" x="0.0" y="16" width="28" height="28"/>
+                                                                    <subviews>
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ZBN-0L-eog" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="28" height="28"/>
+                                                                            <userDefinedRuntimeAttributes>
+                                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                                    <real key="value" value="14"/>
+                                                                                </userDefinedRuntimeAttribute>
+                                                                                <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
+                                                                                    <real key="value" value="12"/>
+                                                                                </userDefinedRuntimeAttribute>
+                                                                            </userDefinedRuntimeAttributes>
+                                                                        </imageView>
+                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zN9-qS-3ko">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="28" height="28"/>
+                                                                            <connections>
+                                                                                <action selector="selectIconAction:" destination="v6A-1e-66p" eventType="touchUpInside" id="HQl-Az-qao"/>
+                                                                            </connections>
+                                                                        </button>
+                                                                    </subviews>
+                                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="width" constant="28" id="3Fh-wF-lnu"/>
-                                                                        <constraint firstAttribute="height" constant="28" id="ICV-aS-oWc"/>
+                                                                        <constraint firstItem="ZBN-0L-eog" firstAttribute="leading" secondItem="4qX-Dg-h1I" secondAttribute="leading" id="1QX-g2-pxz"/>
+                                                                        <constraint firstItem="zN9-qS-3ko" firstAttribute="top" secondItem="4qX-Dg-h1I" secondAttribute="top" id="61f-86-uZt"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="zN9-qS-3ko" secondAttribute="trailing" id="ASQ-9m-EuO"/>
+                                                                        <constraint firstAttribute="height" constant="28" id="QHc-Jq-VtY"/>
+                                                                        <constraint firstItem="zN9-qS-3ko" firstAttribute="leading" secondItem="4qX-Dg-h1I" secondAttribute="leading" id="Tqv-L4-dFm"/>
+                                                                        <constraint firstItem="ZBN-0L-eog" firstAttribute="top" secondItem="4qX-Dg-h1I" secondAttribute="top" id="VyX-QU-ai5"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="ZBN-0L-eog" secondAttribute="trailing" id="Ydi-Aa-cye"/>
+                                                                        <constraint firstAttribute="width" constant="28" id="xdS-7U-sGg"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="zN9-qS-3ko" secondAttribute="bottom" id="xua-9D-5c4"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="ZBN-0L-eog" secondAttribute="bottom" id="zCv-Kt-uCh"/>
                                                                     </constraints>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                            <real key="value" value="14"/>
-                                                                        </userDefinedRuntimeAttribute>
-                                                                    </userDefinedRuntimeAttributes>
-                                                                </imageView>
+                                                                </view>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="Transfer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cV0-Ke-mCk">
                                                                     <rect key="frame" x="40" y="23" width="47" height="14.333333333333336"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>

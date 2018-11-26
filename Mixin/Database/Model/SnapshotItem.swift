@@ -12,12 +12,15 @@ struct SnapshotItem: TableCodable {
     let opponentId: String?
 
     let createdAt: String
-    let opponentUserFullName: String?
     let receiver: String?
     let confirmations: Int?
 
     let memo: String?
+    
+    let opponentUserId: String?
+    let opponentUserFullName: String?
     let opponentUserAvatarUrl: String?
+    let opponentUserIdentityNumber: String?
     
     enum CodingKeys: String, CodingTableKey {
         typealias Root = SnapshotItem
@@ -30,11 +33,13 @@ struct SnapshotItem: TableCodable {
         case transactionHash = "transaction_hash"
         case sender
         case createdAt = "created_at"
-        case opponentUserFullName
         case receiver
         case confirmations
         case memo
-        case opponentUserAvatarUrl = "opponent_avatar_url"
+        case opponentUserId = "opponent_user_id"
+        case opponentUserFullName = "opponent_user_full_name"
+        case opponentUserAvatarUrl = "opponent_user_avatar_url"
+        case opponentUserIdentityNumber = "opponent_user_identity_number"
         
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
     }

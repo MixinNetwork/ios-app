@@ -1,12 +1,16 @@
 import UIKit
 
+protocol WalletSnapshotCellDelegate: class {
+    func walletSnapshotCellDidSelectIcon(_ cell: WalletSnapshotCell)
+}
+
 class WalletSnapshotCell: UITableViewCell {
     
     static let height: CGFloat = 60
     
     @IBOutlet weak var shadowSafeContainerView: UIView!
     @IBOutlet weak var pendingDepositProgressView: UIView!
-    @IBOutlet weak var iconImageView: UIImageView!
+    @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var bottomShadowImageView: UIImageView!
@@ -14,6 +18,8 @@ class WalletSnapshotCell: UITableViewCell {
     @IBOutlet weak var separatorLineView: UIView!
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
+    
+    weak var delegate: WalletSnapshotCellDelegate?
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -25,16 +31,22 @@ class WalletSnapshotCell: UITableViewCell {
         selectionView.setHighlighted(highlighted, animated: animated)
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        iconImageView.sd_cancelCurrentImageLoad()
+        iconImageView.image = nil
+        iconImageView.titleLabel.text = nil
+    }
+    
     func render(snapshot: SnapshotItem, asset: AssetItem) {
-        iconImageView.sd_setImage(with: nil, completed: nil)
         switch snapshot.type {
         case SnapshotType.deposit.rawValue, SnapshotType.pendingDeposit.rawValue:
             iconImageView.image = UIImage(named: "Wallet/ic_deposit")
         case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
             iconImageView.image = UIImage(named: "Wallet/ic_withdrawal")
         case SnapshotType.transfer.rawValue:
-            if let iconUrl = snapshot.opponentUserAvatarUrl, let url = URL(string: iconUrl) {
-                iconImageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
+            if let iconUrl = snapshot.opponentUserAvatarUrl, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
+                iconImageView.setImage(with: iconUrl, identityNumber: identityNumber, name: name)
             }
         default:
             break
@@ -82,6 +94,10 @@ class WalletSnapshotCell: UITableViewCell {
         } else {
             pendingDepositProgressView.isHidden = true
         }
+    }
+    
+    @IBAction func selectIconAction(_ sender: Any) {
+        delegate?.walletSnapshotCellDidSelectIcon(self)
     }
     
 }

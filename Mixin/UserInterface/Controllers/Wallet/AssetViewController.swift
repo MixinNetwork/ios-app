@@ -161,6 +161,7 @@ extension AssetViewController: UITableViewDataSource {
         }
         cell.separatorLineView.isHidden = filteredSnapshots[indexPath.section].count == 1
             || indexPath.row == filteredSnapshots[indexPath.section].count - 1
+        cell.delegate = self
         return cell
     }
     
@@ -204,6 +205,27 @@ extension AssetViewController: AssetFilterWindowDelegate {
         updateFilteredSnapshots()
         tableView.reloadData()
         updateTableFooterView()
+    }
+    
+}
+
+extension AssetViewController: WalletSnapshotCellDelegate {
+    
+    func walletSnapshotCellDidSelectIcon(_ cell: WalletSnapshotCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
+        guard let userId = filteredSnapshots[indexPath.section][indexPath.row].opponentUserId else {
+            return
+        }
+        DispatchQueue.global().async {
+            guard let user = UserDAO.shared.getUser(userId: userId) else {
+                return
+            }
+            DispatchQueue.main.async {
+                UserWindow.instance().updateUser(user: user).presentView()
+            }
+        }
     }
     
 }

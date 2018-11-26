@@ -3,7 +3,7 @@ import UIKit
 class AddAssetViewController: UIViewController {
     
     @IBOutlet weak var saveButton: BusyButton!
-    @IBOutlet weak var searchBoxView: LargerSearchBoxView!
+    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!

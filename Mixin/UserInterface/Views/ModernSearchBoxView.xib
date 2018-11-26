@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LargerSearchBoxView" customModule="Mixin" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ModernSearchBoxView" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="clearButton" destination="f6R-3n-IWK" id="rAu-mM-sxm"/>
                 <outlet property="separatorLineView" destination="tjv-Kb-AFC" id="i7O-ln-0ay"/>
@@ -56,9 +56,9 @@
                                     <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                 </textField>
                                 <button hidden="YES" opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f6R-3n-IWK">
-                                    <rect key="frame" x="0.0" y="0.0" width="42" height="70"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="70"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="42" id="Afr-KU-Miw"/>
+                                        <constraint firstAttribute="width" priority="999" constant="42" id="Afr-KU-Miw"/>
                                     </constraints>
                                     <state key="normal" image="Wallet/ic_clear"/>
                                     <connections>

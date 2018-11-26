@@ -1,6 +1,6 @@
 import UIKit
 
-class LargerSearchBoxView: UIView, XibDesignable, SearchBoxView {
+class ModernSearchBoxView: UIView, XibDesignable, SearchBox {
     
     @IBOutlet weak var textFieldBackgroundView: UIView!
     @IBOutlet weak var textField: UITextField!
@@ -32,7 +32,9 @@ class LargerSearchBoxView: UIView, XibDesignable, SearchBoxView {
             return
         }
         textFieldBackgroundView.isHidden = false
-        clearButton.isHidden = text.isEmpty
+        UIView.performWithoutAnimation {
+            clearButton.isHidden = text.isEmpty
+        }
     }
     
     @objc func textDidEndEditing(_ notification: Notification) {
@@ -42,20 +44,26 @@ class LargerSearchBoxView: UIView, XibDesignable, SearchBoxView {
         if text.isEmpty {
             textFieldBackgroundView.isHidden = true
         }
-        clearButton.isHidden = true
+        UIView.performWithoutAnimation {
+            clearButton.isHidden = true
+        }
     }
     
     @objc func textDidChange(_ notification: Notification) {
         guard let textField = notification.object as? UITextField, textField == self.textField else {
             return
         }
-        clearButton.isHidden = text.isEmpty
+        UIView.performWithoutAnimation {
+            clearButton.isHidden = text.isEmpty
+        }
     }
     
     @IBAction func clearAction(_ sender: Any) {
         textField.text = nil
         textField.sendActions(for: .editingChanged)
-        clearButton.isHidden = true
+        UIView.performWithoutAnimation {
+            clearButton.isHidden = true
+        }
     }
     
     private func prepare() {

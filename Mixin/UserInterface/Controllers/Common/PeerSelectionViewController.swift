@@ -15,7 +15,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     
     let tableView = UITableView()
     
-    var searchBoxView: (UIView & SearchBoxView)!
+    var searchBoxView: (UIView & SearchBox)!
     
     var allowsMultipleSelection: Bool {
         return true
@@ -43,8 +43,8 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         }
     }
     
-    private var searchBoxViewClass: (UIView & SearchBoxView).Type {
-        return type(of: self).usesModernStyle ? LargerSearchBoxView.self : SmallerSearchBoxView.self
+    private var searchBoxViewClass: (UIView & SearchBox).Type {
+        return type(of: self).usesModernStyle ? ModernSearchBoxView.self : LegacySearchBoxView.self
     }
     
     override func loadView() {

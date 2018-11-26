@@ -12,6 +12,7 @@ class WalletAssetCell: UITableViewCell {
     @IBOutlet weak var changeLabel: UILabel!
     @IBOutlet weak var usdPriceLabel: UILabel!
     @IBOutlet weak var usdBalanceLabel: UILabel!
+    @IBOutlet weak var noUSDPriceIndicatorLabel: UILabel!
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -40,16 +41,22 @@ class WalletAssetCell: UITableViewCell {
         balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never)
         symbolLabel.text = asset.symbol
         if asset.priceUsd.doubleValue > 0 {
-            changeLabel.text = "\(asset.localizedUSDChange)%"
+            changeLabel.text = " \(asset.localizedUSDChange)%"
             if asset.changeUsd.doubleValue > 0 {
                 changeLabel.textColor = .walletGreen
             } else {
                 changeLabel.textColor = .walletRed
             }
             usdPriceLabel.text = "$\(asset.localizedPriceUsd)"
+            changeLabel.alpha = 1
+            usdPriceLabel.alpha = 1
+            noUSDPriceIndicatorLabel.alpha = 0
         } else {
-            changeLabel.text = ""
-            usdPriceLabel.text = Localized.WALLET_NO_PRICE
+            changeLabel.text = Localized.WALLET_NO_PRICE // Just for layout guidance
+            usdPriceLabel.text = nil
+            changeLabel.alpha = 0
+            usdPriceLabel.alpha = 0
+            noUSDPriceIndicatorLabel.alpha = 1
         }
         usdBalanceLabel.text = asset.localizedUSDBalance
     }

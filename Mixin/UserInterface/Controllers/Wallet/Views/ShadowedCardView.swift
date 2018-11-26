@@ -25,7 +25,7 @@ class ShadowedCardView: UIView {
     }
     
     func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        let color: UIColor = highlighted ? UIColor(rgbValue: 0xF6F8FC) : .white
+        let color: UIColor = highlighted ? .modernCellSelection : .white
         let work = {
             self.cardLayer.fillColor = color.cgColor
         }

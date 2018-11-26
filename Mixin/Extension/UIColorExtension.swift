@@ -25,6 +25,8 @@ extension UIColor {
 
     static let actionBackground = UIColor(rgbValue: 0x29BE73)
     
+    static let modernCellSelection = UIColor(rgbValue: 0xF6F8FC)
+    
     static let usernameColors = [UIColor(rgbValue: 0xAA4848),
                                  UIColor(rgbValue: 0xB0665E),
                                  UIColor(rgbValue: 0xEF8A44),

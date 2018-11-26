@@ -11,6 +11,25 @@ class PeerCell: UITableViewCell {
     @IBOutlet weak var identityImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     
+    @IBOutlet weak var contentStackViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentStackViewTrailingConstraint: NSLayoutConstraint!
+    
+    var usesModernStyle: Bool = false {
+        didSet {
+            if usesModernStyle {
+                contentStackViewLeadingConstraint.constant = 20
+                contentStackViewTrailingConstraint.constant = 20
+                let view = UIView()
+                view.backgroundColor = .modernCellSelection
+                selectedBackgroundView = view
+            } else {
+                contentStackViewLeadingConstraint.constant = 15
+                contentStackViewTrailingConstraint.constant = 15
+                selectedBackgroundView = nil
+            }
+        }
+    }
+    
     var supportsMultipleSelection = false {
         didSet {
             selectionImageView.isHidden = !supportsMultipleSelection

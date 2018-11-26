@@ -156,11 +156,6 @@ extension AddAssetViewController: UITextFieldDelegate {
         return false
     }
     
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        textField.backgroundColor = .white
-        return true
-    }
-    
 }
 
 extension AddAssetViewController: UITableViewDataSource {
@@ -209,9 +204,6 @@ extension AddAssetViewController: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if textField.isFirstResponder {
             textField.resignFirstResponder()
-            if keyword.isEmpty {
-                textField.backgroundColor = .clear
-            }
         }
     }
     

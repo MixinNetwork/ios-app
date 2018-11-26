@@ -53,7 +53,19 @@
                 <constraint firstItem="1wN-cK-mUK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Ssd-Xa-JF8"/>
                 <constraint firstItem="Bpk-FL-49V" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="TSr-CL-nab"/>
                 <constraint firstItem="1wN-cK-mUK" firstAttribute="leading" secondItem="agf-Oe-84Y" secondAttribute="trailing" id="nMZ-ip-HjK"/>
-                <constraint firstItem="agf-Oe-84Y" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="68" id="oHK-3p-LIk"/>
+                <constraint firstItem="agf-Oe-84Y" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="68" id="oHK-3p-LIk" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                            <real key="value" value="20"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                            <real key="value" value="35"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                            <real key="value" value="40"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="79.200000000000003" y="199.25037481259372"/>

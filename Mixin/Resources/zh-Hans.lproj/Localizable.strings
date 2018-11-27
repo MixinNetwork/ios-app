@@ -486,7 +486,7 @@
 "setting_backup_off" = "关闭";
 "setting_backup_disable_tips" = "需要登录 iCloud 来备份你的聊天记录。 设置 > iCloud > 打开 iCloud 云盘。";
 "setting_backup_tips" = "备份你的聊天记录到 iCloud。如果你丢失或者更换手机，你可以在重新安装 Mixin Messenger 时恢复你的聊天记录。注意备份到 iCloud 中的聊天记录不受端对端加密保护！";
-"setting_backup_tips" = "只会在 Wi-Fi 下自动备份聊天记录。";
+"setting_backup_auto_tips" = "只会在 Wi-Fi 下自动备份聊天记录。";
 "setting_backup_last" = "上次备份是%@，占用空间 %@。";
 
 // Notifications

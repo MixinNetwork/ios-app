@@ -78,10 +78,7 @@ class RestoreViewController: UIViewController {
         let categories: [MixinFile.ChatDirectory] = [.photos, .audios]
 
         try FileManager.default.createDirectoryIfNeeded(dir: chatDir)
-
-        let contents = try FileManager.default.contentsOfDirectory(atPath: backupDir.path)
-        print(contents)
-
+        
         for category in categories {
             let zip = backupDir.appendingPathComponent("mixin.\(category.rawValue.lowercased()).zip")
             guard FileManager.default.fileExists(atPath: zip.path) else {

@@ -93,7 +93,7 @@ extension BackupViewController {
                 return nil
             }
         case 1:
-            return Localized.SETTING_BACKUP_TIPS
+            return Localized.SETTING_BACKUP_AUTO_TIPS
         default:
             return nil
         }

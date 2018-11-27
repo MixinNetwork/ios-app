@@ -68,13 +68,11 @@ class BackupJob: BaseJob {
         let iCloudPath = backupDir.appendingPathComponent(databasePath.lastPathComponent)
 
         try? FileManager.default.removeItem(at: databasePath)
-
         try MixinDatabase.shared.backup(path: databasePath.path) { (remaining, pagecount) in
 
         }
 
         try FileManager.default.replace(from: databasePath, to: iCloudPath)
-
         try? FileManager.default.removeItem(at: databasePath)
 
         return FileManager.default.fileSize(iCloudPath.path)

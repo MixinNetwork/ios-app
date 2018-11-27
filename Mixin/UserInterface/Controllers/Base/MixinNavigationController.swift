@@ -123,6 +123,9 @@ extension MixinNavigationController {
         if let account = AccountAPI.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
         }
+        if AccountUserDefault.shared.hasRestoreFilesAndVideos {
+            BackupJobQueue.shared.addJob(job: RestoreJob())
+        }
     }
     
 }

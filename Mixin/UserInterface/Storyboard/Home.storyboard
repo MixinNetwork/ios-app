@@ -557,12 +557,96 @@
             </objects>
             <point key="canvasLocation" x="1188" y="-278"/>
         </scene>
+        <!--Restore View Controller-->
+        <scene sceneID="hQT-bq-Xq1">
+            <objects>
+                <viewController storyboardIdentifier="restore" id="je6-dP-iXh" customClass="RestoreViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="C0N-w5-vaR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_restore" translatesAutoresizingMaskIntoConstraints="NO" id="ccd-OF-Y5G">
+                                <rect key="frame" x="0.0" y="80" width="375" height="280"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="ccd-OF-Y5G" secondAttribute="height" multiplier="75:56" id="J74-9C-Cra"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HAa-aR-8l8" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="78" y="519" width="219" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <inset key="contentEdgeInsets" minX="30" minY="10" maxX="30" maxY="10"/>
+                                <state key="normal" title="Restore Chat History"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_restore"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="restoreAction:" destination="je6-dP-iXh" eventType="touchUpInside" id="hhM-Gy-8mC"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xRF-Rk-K9J">
+                                <rect key="frame" x="140.5" y="566" width="94" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <inset key="contentEdgeInsets" minX="30" minY="10" maxX="30" maxY="10"/>
+                                <state key="normal" title="Skip">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_skip"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="skipAction:" destination="je6-dP-iXh" eventType="touchUpInside" id="Bqv-nc-sYL"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Restore your chat history from iCloud. You will not be able to restore later if you decline to restore now." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKN-Yk-9Wh">
+                                <rect key="frame" x="50" y="360" width="275" height="54"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_restore_tips"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="hKN-Yk-9Wh" secondAttribute="trailing" constant="50" id="P7k-QC-ZHr"/>
+                            <constraint firstItem="VtA-NB-BK7" firstAttribute="bottom" secondItem="xRF-Rk-K9J" secondAttribute="bottom" constant="60" id="Qu6-Ra-GBZ"/>
+                            <constraint firstItem="hKN-Yk-9Wh" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" constant="50" id="dE4-ks-Q47"/>
+                            <constraint firstItem="hKN-Yk-9Wh" firstAttribute="top" secondItem="ccd-OF-Y5G" secondAttribute="bottom" id="exp-GV-DhW"/>
+                            <constraint firstItem="xRF-Rk-K9J" firstAttribute="centerX" secondItem="VtA-NB-BK7" secondAttribute="centerX" id="ggB-f2-hDo"/>
+                            <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="ccd-OF-Y5G" secondAttribute="trailing" id="gt3-TK-jV0"/>
+                            <constraint firstItem="ccd-OF-Y5G" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" id="l1I-b7-zrm"/>
+                            <constraint firstItem="xRF-Rk-K9J" firstAttribute="top" secondItem="HAa-aR-8l8" secondAttribute="bottom" constant="6" id="lsv-82-yor"/>
+                            <constraint firstItem="ccd-OF-Y5G" firstAttribute="top" secondItem="VtA-NB-BK7" secondAttribute="top" constant="60" id="qRA-3Q-n83" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="40"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="60"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="HAa-aR-8l8" firstAttribute="centerX" secondItem="VtA-NB-BK7" secondAttribute="centerX" id="zmv-ve-oj7"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="VtA-NB-BK7"/>
+                    </view>
+                    <connections>
+                        <outlet property="restoreButton" destination="HAa-aR-8l8" id="Qd0-xg-ULA"/>
+                        <outlet property="skipButton" destination="xRF-Rk-K9J" id="Kf4-EF-039"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pPq-Dm-YCs" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1855" y="-278"/>
+        </scene>
     </scenes>
     <resources>
         <image name="bg_mixin" width="375" height="280"/>
         <image name="ic_home_bottom_shadow" width="375" height="122"/>
         <image name="ic_home_camera" width="44" height="44"/>
         <image name="ic_qr_code" width="22" height="22"/>
+        <image name="ic_restore" width="169" height="108"/>
         <image name="ic_search" width="12" height="12"/>
         <image name="ic_titlebar_contact" width="44" height="44"/>
         <image name="ic_titlebar_wallet" width="44" height="44"/>

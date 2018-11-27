@@ -138,6 +138,7 @@ final class AccountAPI: BaseAPI {
     }
     
     func logout() {
+        CommonUserDefault.shared.hasForceLogout = true
         DispatchQueue.main.async {
             self.account = nil
             Keychain.shared.clearPIN()

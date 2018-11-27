@@ -33,6 +33,13 @@ extension DateFormatter {
         formatter.timeZone = TimeZone.current
         return formatter
     }()
+
+    static let backupFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
 }
 
 func currentTimeInMiliseconds() -> UInt64 {

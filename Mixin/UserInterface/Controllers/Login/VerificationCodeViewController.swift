@@ -70,15 +70,23 @@ class VerificationCodeViewController: LoginViewController {
                     AccountUserDefault.shared.storePinToken(pinToken: KeyUtil.rsaDecrypt(pkString: keyPair.privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token))
                     AccountUserDefault.shared.storeToken(token: keyPair.privateKeyPem)
                     AccountAPI.shared.account = account
-                    MixinDatabase.shared.configure(reset: true)
-                    DispatchQueue.global().async {
-                        UserDAO.shared.updateAccount(account: account)
-                    }
-                    if account.full_name.isEmpty {
-                        let vc = UsernameViewController.instance()
-                        weakSelf.navigationController?.pushViewController(vc, animated: true)
+
+                    if CommonUserDefault.shared.hasForceLogout || !RestoreJob.isRestoreChat() {
+                        CommonUserDefault.shared.hasForceLogout = false
+                        MixinDatabase.shared.configure(reset: true)
+                        DispatchQueue.global().async {
+                            UserDAO.shared.updateAccount(account: account)
+                        }
+                        if account.full_name.isEmpty {
+                            let vc = UsernameViewController.instance()
+                            weakSelf.navigationController?.pushViewController(vc, animated: true)
+                        } else {
+                            ContactAPI.shared.syncContacts()
+                            AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                        }
                     } else {
-                        ContactAPI.shared.syncContacts()
+                        AccountUserDefault.shared.hasRestoreChat = true
+                        AccountUserDefault.shared.hasRestoreFilesAndVideos = true
                         AppDelegate.current.window?.rootViewController = makeInitialViewController()
                     }
                 case let .failure(error):

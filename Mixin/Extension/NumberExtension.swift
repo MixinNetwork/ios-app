@@ -19,3 +19,21 @@ extension NumberFormatter {
     }
 
 }
+
+extension Int64 {
+
+    func sizeRepresentation() -> String {
+        let sizeInBytes = self
+        if sizeInBytes < 1024 {
+            return "\(sizeInBytes) Bytes"
+        } else {
+            let sizeInKB = sizeInBytes / 1024
+            if sizeInKB <= 1024 {
+                return "\(sizeInKB) KB"
+            } else {
+                return "\(sizeInKB / 1024) MB"
+            }
+        }
+    }
+
+}

@@ -6,6 +6,8 @@ class AccountUserDefault {
     private let keySessionSecret = "session_secret"
     private let keyPinToken = "pin_token"
     private var keyHasClockSkew = "has_clock_skew"
+    private var keyHasRestoreChat = "has_restore_chat"
+    private var keyHasRestoreFilesAndVideos = "has_restore_files_videos"
 
     static let shared = AccountUserDefault()
 
@@ -54,6 +56,24 @@ class AccountUserDefault {
         }
         set {
             session.set(newValue, forKey: keyHasClockSkew)
+        }
+    }
+
+    var hasRestoreChat: Bool {
+        get {
+            return session.bool(forKey: keyHasRestoreChat)
+        }
+        set {
+            session.set(newValue, forKey: keyHasRestoreChat)
+        }
+    }
+
+    var hasRestoreFilesAndVideos: Bool {
+        get {
+            return session.bool(forKey: keyHasRestoreFilesAndVideos)
+        }
+        set {
+            session.set(newValue, forKey: keyHasRestoreFilesAndVideos)
         }
     }
 

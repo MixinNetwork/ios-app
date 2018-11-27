@@ -1,7 +1,9 @@
 import UIKit
 
 func makeInitialViewController() -> UIViewController {
-    if !CryptoUserDefault.shared.isLoaded {
+    if AccountUserDefault.shared.hasRestoreChat {
+        return RestoreViewController.instance()
+    } else if !CryptoUserDefault.shared.isLoaded {
         return SignalLoadingViewController.instance()
     } else {
         let viewControllers: [UIViewController]

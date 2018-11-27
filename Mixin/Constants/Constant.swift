@@ -38,6 +38,8 @@ extension NSNotification.Name {
     static let StorageUsageDidChange = NSNotification.Name("one.mixin.ios.storage.changed")
     
     static let HiddenAssetsDidChange = NSNotification.Name("one.mixin.ios.hidden.assets.changed")
+
+    static let BackupDidChange = NSNotification.Name("one.mixin.ios.backup.changed")
 }
 
 enum NotificationActionIdentifier {
@@ -119,6 +121,10 @@ struct MixinFile {
         }
     }
 
+    static var iCloudBackupDirectory: URL? {
+        return FileManager.default.url(forUbiquityContainerIdentifier: "MixinMessenger")?.appendingPathComponent(AccountAPI.shared.accountIdentityNumber).appendingPathComponent("Backup")
+    }
+
     static var rootDirectory: URL {
         let dir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(AccountAPI.shared.accountIdentityNumber)
         _ = FileManager.default.createNobackupDirectory(dir)
@@ -140,6 +146,10 @@ struct MixinFile {
     static var signalDatabasePath: String {
         let dir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         return dir.appendingPathComponent("signal.db").path
+    }
+
+    static var backupDatabase: URL {
+        return rootDirectory.appendingPathComponent("mixin.backup.db")
     }
 
     static func url(ofChatDirectory directory: ChatDirectory, filename: String?) -> URL {

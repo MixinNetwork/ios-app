@@ -25,16 +25,30 @@ final class SnapshotDAO {
     WHERE s.opponent_id = ?
     ORDER BY s.created_at DESC
     """
-    private static let sqlQuery = """
+    private static let sqlQueryByLocation = """
     SELECT s.snapshot_id, s.type, s.asset_id, a.symbol as assetSymbol, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.created_at, s.receiver, s.confirmations, s.memo, u.user_id as opponent_user_id, u.full_name as opponent_user_full_name, u.avatar_url as opponent_user_avatar_url, u.identity_number as opponent_user_identity_number FROM snapshots s
     LEFT JOIN users u ON s.opponent_id = u.user_id
     LEFT JOIN assets a ON s.asset_id = a.asset_id
-    ORDER BY s.created_at DESC
-    LIMIT ? OFFSET ?
     """
 
-    func snapshots(offset: Int, limit: Int) -> [SnapshotItem] {
-        return checkSnapshots(MixinDatabase.shared.getCodables(sql: SnapshotDAO.sqlQuery, values: [limit, offset], inTransaction: false))
+    func snapshots(below location: SnapshotItem?, limit: Int) -> [SnapshotItem] {
+        let snapshots: [SnapshotItem]
+        var sql = SnapshotDAO.sqlQueryByLocation
+        if let location = location {
+            sql += """
+                WHERE s.created_at < ?
+                ORDER BY s.created_at DESC
+                LIMIT ?
+            """
+            snapshots = MixinDatabase.shared.getCodables(sql: sql, values: [location.createdAt, limit], inTransaction: false)
+        } else {
+            sql += """
+                ORDER BY s.created_at DESC
+                LIMIT ?
+            """
+            snapshots = MixinDatabase.shared.getCodables(sql: sql, values: [limit], inTransaction: false)
+        }
+        return checkSnapshots(snapshots)
     }
 
     func replaceSnapshot(snapshot: Snapshot) {

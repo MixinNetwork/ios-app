@@ -9,5 +9,9 @@ class BackupJobQueue: JobQueue {
         super.init(maxConcurrentOperationCount: 1)
     }
 
+    func isBackuping() -> Bool {
+        return isExistJob(jodId: "backup")
+    }
+
 }
 

@@ -27,6 +27,8 @@ class BackupJob: BaseJob {
             let lastBackupTime = CommonUserDefault.shared.lastBackupTime
             let now = Date().timeIntervalSince1970
             switch CommonUserDefault.shared.backupCategory {
+            case .off:
+                return
             case .daily:
                 if now - lastBackupTime < 86400 {
                     return
@@ -39,8 +41,6 @@ class BackupJob: BaseJob {
                 if now - lastBackupTime < 86400 * 30 {
                     return
                 }
-            case .off:
-                return
             }
         }
 
@@ -64,7 +64,7 @@ class BackupJob: BaseJob {
     }
 
     private func backupDatabase(backupDir: URL) throws -> Int64 {
-        let databasePath = MixinFile.rootDirectory.appendingPathComponent("mixin.backup.db")
+        let databasePath = MixinFile.backupDatabase
         let iCloudPath = backupDir.appendingPathComponent(databasePath.lastPathComponent)
 
         try? FileManager.default.removeItem(at: databasePath)

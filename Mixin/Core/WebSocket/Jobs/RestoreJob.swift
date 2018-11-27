@@ -64,7 +64,7 @@ class RestoreJob: BaseJob {
             return false
         }
 
-        let databasePath = backupDir.appendingPathComponent("mixin.backup.db").path
+        let databasePath = backupDir.appendingPathComponent(MixinFile.backupDatabase.lastPathComponent).path
         return FileManager.default.fileExists(atPath: databasePath) && FileManager.default.fileSize(databasePath) > 0
     }
 }

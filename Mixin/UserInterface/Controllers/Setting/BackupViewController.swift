@@ -22,6 +22,13 @@ class BackupViewController: UITableViewController {
 
         tableView.tableHeaderView = Bundle.main.loadNibNamed("BackupHeader", owner: nil, options: nil)?.first as? UIView
         NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
+
+        if BackupJobQueue.shared.isBackuping() {
+            backingUI()
+        } else if !RestoreJob.isRestoreChat() {
+            CommonUserDefault.shared.lastBackupTime = 0
+            CommonUserDefault.shared.lastBackupSize = 0
+        }
     }
 
     @objc func backupChanged() {
@@ -54,6 +61,12 @@ class BackupViewController: UITableViewController {
         CommonUserDefault.shared.hasBackupVideos = switchIncludeVideos.isOn
     }
 
+    private func backingUI() {
+        backupIndicatorView.startAnimating()
+        backupIndicatorView.isHidden = false
+        backupLabel.text = Localized.SETTING_BACKING
+        backupLabel.textColor = .lightGray
+    }
 }
 
 extension BackupViewController {
@@ -63,10 +76,7 @@ extension BackupViewController {
 
         if indexPath.section == 0 && indexPath.row == 0 {
             if BackupJobQueue.shared.addJob(job: BackupJob(immediatelyBackup: true)) {
-                backupIndicatorView.startAnimating()
-                backupIndicatorView.isHidden = false
-                backupLabel.text = Localized.SETTING_BACKING
-                backupLabel.textColor = .lightGray
+                backingUI()
             }
         } else if indexPath.section == 1 && indexPath.row == 0 {
             navigationController?.pushViewController(BackupCategoryViewController.instance(), animated: true)

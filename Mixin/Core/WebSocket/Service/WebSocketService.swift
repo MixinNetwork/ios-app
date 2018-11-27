@@ -154,6 +154,10 @@ extension WebSocketService: SRWebSocketDelegate {
         resumeAllJob()
         ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
         pingRunnable()
+
+        if CommonUserDefault.shared.backupCategory != .off {
+            BackupJobQueue.shared.addJob(job: BackupJob())
+        }
     }
 
     func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {

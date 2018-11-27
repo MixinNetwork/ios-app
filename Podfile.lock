@@ -104,7 +104,7 @@ DEPENDENCIES:
   - SnapKit
   - "SocketRocket (from `git@github.com:over140/SocketRocket.git`, branch `feature/request`)"
   - SwiftMessages
-  - "WCDB.swift (from `git@github.com:wuyuehyang/wcdb.git`, branch `swift4.2`)"
+  - "WCDB.swift (from `git@github.com:MixinNetwork/wcdb.git`, branch `swift4.2`)"
   - YYImage/WebP
   - Zip (~> 1.1)
 
@@ -147,7 +147,7 @@ EXTERNAL SOURCES:
     :git: "git@github.com:over140/SocketRocket.git"
   WCDB.swift:
     :branch: swift4.2
-    :git: "git@github.com:wuyuehyang/wcdb.git"
+    :git: "git@github.com:MixinNetwork/wcdb.git"
 
 CHECKOUT OPTIONS:
   Alamofire:
@@ -161,8 +161,8 @@ CHECKOUT OPTIONS:
     :commit: ad8bd27edf6ef32ecf9f4a675588e6f628362969
     :git: "git@github.com:over140/SocketRocket.git"
   WCDB.swift:
-    :commit: 9142b4718ec371893f5ae5c4387b62bdb8c3adea
-    :git: "git@github.com:wuyuehyang/wcdb.git"
+    :commit: 4ec63ef2ed17edf48b8addead9839fa2e3c13cce
+    :git: "git@github.com:MixinNetwork/wcdb.git"
 
 SPEC CHECKSUMS:
   Alamofire: 5f691e36644ab9a04e6df58bfa74b2d627a6919b
@@ -194,6 +194,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: aabcfc7f84a1f1e51051be4e49131939a4071fee
+PODFILE CHECKSUM: bc65395caafc78ab7c4045fde301275bb5ff4eb9
 
 COCOAPODS: 1.6.0.beta.2

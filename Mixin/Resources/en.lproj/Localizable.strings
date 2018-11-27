@@ -27,6 +27,7 @@
 "action_show" = "Show";
 "action_apply" = "Apply";
 "action_filter" = "Filter";
+"action_skip" = "Skip";
 "action_deauthorize" = "Deauthorize";
 "menu_delete" = "Delete";
 "no_result" = "No result";
@@ -174,6 +175,8 @@
 "chat_quote_type_photo" = "Photo";
 "chat_quote_type_video" = "Video";
 "chat_search_giphy" = "Search GIPHY";
+"chat_restore_tips" = "Restore your chat history from iCloud. You will not be able to restore later if you decline to restore now.";
+"chat_restore" = "Restore Chat History";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";
@@ -469,6 +472,20 @@
 "setting_storage_files" = "Files";
 "setting_logout" = "Log Out";
 "setting_notification_message_preview" = "Message Preview";
+"setting_backup_title" = "Chat Backup";
+"setting_backup_now" = "Back Up Now";
+"setting_backing" = "Backing Up...";
+"setting_backup_auto" = "Auto Backup";
+"setting_backup_files" = "Include Files";
+"setting_backup_videos" = "Include Videos";
+"setting_backup_daily" = "Daily";
+"setting_backup_weekly" = "Weekly";
+"setting_backup_monthly" = "Monthly";
+"setting_backup_off" = "Off";
+"setting_backup_disable_tips" = "Sign in to iCloud to back up your history. Settings > iCloud > Turn on iCloud Drive.";
+"setting_backup_tips" = "Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.";
+"setting_backup_auto_tips" = "Automatically back up to iCloud only over Wi-Fi.";
+"setting_backup_last" = "Last backup on %@, total size %@.";
 
 // Notifications
 "notification_reply" = "Reply";

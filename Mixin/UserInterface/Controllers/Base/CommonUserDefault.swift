@@ -30,6 +30,31 @@ class CommonUserDefault {
     private var keyHasConversation: String {
         return "has_conversation_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyBackupVideos: String {
+        return "backup_videos_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyBackupFiles: String {
+        return "backup_files_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyBackupCategory: String {
+        return "backup_category_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyLastBackupTime: String {
+        return "last_backup_time_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyLastBackupSize: String {
+        return "last_backup_size_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyHasForceLogout: String {
+        return "has_force_logout_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+
+    enum BackupCategory: String {
+        case daily
+        case weekly
+        case monthly
+        case off
+    }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
 
@@ -58,6 +83,65 @@ class CommonUserDefault {
         }
         set {
             session.set(newValue, forKey: keyHasPerformedTransfer)
+        }
+    }
+
+    var hasBackupVideos: Bool {
+        get {
+            return session.bool(forKey: keyBackupVideos)
+        }
+        set {
+            session.set(newValue, forKey: keyBackupVideos)
+        }
+    }
+
+    var hasForceLogout: Bool {
+        get {
+            return session.bool(forKey: keyHasForceLogout)
+        }
+        set {
+            session.set(newValue, forKey: keyHasForceLogout)
+        }
+    }
+
+    var hasBackupFiles: Bool {
+        get {
+            return session.bool(forKey: keyBackupFiles)
+        }
+        set {
+            session.set(newValue, forKey: keyBackupFiles)
+        }
+    }
+
+    var lastBackupTime: TimeInterval {
+        get {
+            return session.double(forKey: keyLastBackupTime)
+        }
+        set {
+            session.set(newValue, forKey: keyLastBackupTime)
+        }
+    }
+
+    var lastBackupSize: Int64? {
+        get {
+
+            return session.object(forKey: keyLastBackupSize) as? Int64
+        }
+        set {
+            session.set(newValue, forKey: keyLastBackupSize)
+        }
+    }
+
+
+    var backupCategory: BackupCategory {
+        get {
+            guard let category = session.string(forKey: keyBackupCategory) else {
+                return .off
+            }
+            return BackupCategory(rawValue: category) ?? .off
+        }
+        set {
+            session.set(newValue.rawValue, forKey: keyBackupCategory)
         }
     }
 

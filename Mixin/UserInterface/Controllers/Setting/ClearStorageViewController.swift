@@ -102,8 +102,8 @@ extension ClearStorageViewController: ContainerViewControllerDelegate {
     private func clearAction() {
         let clearPhotos = isClearPhotos && categorys["_IMAGE"]?.messageCount ?? 0 > 0
         let clearVideos = isClearVideos && categorys["_VIDEO"]?.messageCount ?? 0 > 0
-        let clearAudios = isClearPhotos && categorys["_AUDIO"]?.messageCount ?? 0 > 0
-        let clearFiles = isClearPhotos && categorys["_DATA"]?.messageCount ?? 0 > 0
+        let clearAudios = isClearAudios && categorys["_AUDIO"]?.messageCount ?? 0 > 0
+        let clearFiles = isClearFiles && categorys["_DATA"]?.messageCount ?? 0 > 0
         container?.rightButton.isBusy = true
         DispatchQueue.global().async { [weak self] in
             if clearPhotos {

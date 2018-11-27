@@ -19,6 +19,10 @@ class BaseDatabase {
         database?.close()
     }
 
+    func backup(path: String, progress: @escaping @convention (c) (Int32, Int32) -> Void) throws {
+        try database.backup(withFile: path, progress: progress)
+    }
+
     func trace() {
         guard !BaseDatabase.isTraced else {
             return

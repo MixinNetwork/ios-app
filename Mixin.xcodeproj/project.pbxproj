@@ -344,6 +344,9 @@
 		DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1ED8D820BBECFF003E10E8 /* AlbumViewController.swift */; };
 		DF1ED8DB20BBED24003E10E8 /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1ED8DA20BBED24003E10E8 /* PickerViewController.swift */; };
 		DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF1ED8E120BC0794003E10E8 /* Photo.storyboard */; };
+		DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F277B21A53585009A74C6 /* BackupViewController.swift */; };
+		DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F278321A5637B009A74C6 /* BackupJob.swift */; };
+		DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */; };
 		DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF2081B12005FF3500B87DB0 /* Camera.storyboard */; };
 		DF2209301FFFE96500D470EF /* SessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22092F1FFFE96500D470EF /* SessionRequest.swift */; };
 		DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */; };
@@ -502,6 +505,10 @@
 		DFAB3B4120B8569300886838 /* MyQRCodeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFAB3B4020B8569300886838 /* MyQRCodeWindow.swift */; };
 		DFAB3B4320B856A600886838 /* MyQRCodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAB3B4220B856A600886838 /* MyQRCodeWindow.xib */; };
 		DFAB3B4520B85A0C00886838 /* ReceiveMoneyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */; };
+		DFB2062421A7B7E2006E4341 /* BackupHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB2062321A7B7E2006E4341 /* BackupHeader.xib */; };
+		DFB2062621A80173006E4341 /* BackupCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */; };
+		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
+		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
 		DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D941FF7C2B6000875BD /* ResendData.swift */; };
 		DFB37D9F1FF94864000875BD /* RotateSignedPreKeyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */; };
 		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
@@ -958,6 +965,9 @@
 		DF1ED8D820BBECFF003E10E8 /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		DF1ED8DA20BBED24003E10E8 /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 		DF1ED8E120BC0794003E10E8 /* Photo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Photo.storyboard; sourceTree = "<group>"; };
+		DF1F277B21A53585009A74C6 /* BackupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupViewController.swift; sourceTree = "<group>"; };
+		DF1F278321A5637B009A74C6 /* BackupJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupJob.swift; sourceTree = "<group>"; };
+		DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupJobQueue.swift; sourceTree = "<group>"; };
 		DF2081B12005FF3500B87DB0 /* Camera.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
 		DF22092F1FFFE96500D470EF /* SessionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRequest.swift; sourceTree = "<group>"; };
 		DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlainData.swift; sourceTree = "<group>"; };
@@ -1121,6 +1131,10 @@
 		DFAB3B4020B8569300886838 /* MyQRCodeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyQRCodeWindow.swift; sourceTree = "<group>"; };
 		DFAB3B4220B856A600886838 /* MyQRCodeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyQRCodeWindow.xib; sourceTree = "<group>"; };
 		DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReceiveMoneyWindow.xib; sourceTree = "<group>"; };
+		DFB2062321A7B7E2006E4341 /* BackupHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackupHeader.xib; sourceTree = "<group>"; };
+		DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCategoryViewController.swift; sourceTree = "<group>"; };
+		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
+		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
 		DFB37D941FF7C2B6000875BD /* ResendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendData.swift; sourceTree = "<group>"; };
 		DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateSignedPreKeyJob.swift; sourceTree = "<group>"; };
 		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
@@ -1653,6 +1667,7 @@
 			children = (
 				DF6ED3EA1FE36F3E00E958A3 /* JobQueue.swift */,
 				DFA606302013AA4F0006EEE4 /* FileJobQueue.swift */,
+				DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */,
 				DF6ED3ED1FE37D0400E958A3 /* ConcurrentJobQueue.swift */,
 			);
 			path = Queue;
@@ -2012,6 +2027,7 @@
 				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
 				DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
+				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2053,6 +2069,7 @@
 				DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */,
 				DF8CECF31FC425F700E40064 /* BlockUserCell.xib */,
 				7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */,
+				DFB2062321A7B7E2006E4341 /* BackupHeader.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2098,6 +2115,8 @@
 				DF8DA1AE1FD6832000425CEC /* RefreshUserJob.swift */,
 				DFD87C8A1FDBF10100BBCFFC /* RefreshOffsetJob.swift */,
 				DFF353051FEE6A3400058453 /* RefreshAssetsJob.swift */,
+				DF1F278321A5637B009A74C6 /* BackupJob.swift */,
+				DFB2062921AC1771006E4341 /* RestoreJob.swift */,
 				7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */,
 				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
 				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
@@ -2292,6 +2311,8 @@
 			children = (
 				DF8CECF01FC4255700E40064 /* Cells */,
 				DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */,
+				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
+				DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */,
 				DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
 				DF8CECEE1FC4240500E40064 /* BlockUserViewController.swift */,
@@ -2484,6 +2505,7 @@
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */,
+				DFB2062421A7B7E2006E4341 /* BackupHeader.xib in Resources */,
 				7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */,
 				DFD294431FA7076600FADAAD /* ContactMeCell.xib in Resources */,
 				7BA4A1CF1FF347130086CD56 /* GroupParticipantCell.xib in Resources */,
@@ -2668,6 +2690,7 @@
 				273FACBB205FB9A800513327 /* SignedPreKeyStore.swift in Sources */,
 				7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */,
 				DFF21455209A9F8D00612234 /* PhoneContactWindow.swift in Sources */,
+				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */,
@@ -2950,6 +2973,7 @@
 				7B8938A52020176200C72070 /* ConversationMoreMenuViewController.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
 				DF17B51320525485006447C2 /* ConversationItem.swift in Sources */,
+				DFB2062621A80173006E4341 /* BackupCategoryViewController.swift in Sources */,
 				7B9916D421945A6800C11401 /* WalletAssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
@@ -3035,6 +3059,7 @@
 				DFF3B68E20E3599E00DC82D9 /* PrintLog.swift in Sources */,
 				DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */,
 				7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */,
+				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */,
 				DF3C474A1FA0BECA00A07C71 /* DataExtension.swift in Sources */,
@@ -3056,6 +3081,7 @@
 				7BD51DDC1FB4231400865CB8 /* ConnectionHintView.swift in Sources */,
 				DF503D301FECF6F000C008E7 /* SenderKeyDAO.swift in Sources */,
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
+				DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */,
 				DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift in Sources */,
@@ -3068,6 +3094,7 @@
 				DFFDF6852112E591009984B3 /* PinIntervalViewController.swift in Sources */,
 				7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */,
 				DF121F311FA1C767000F701D /* ConversationCell.swift in Sources */,
+				DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */,
 				DF1A9A7E1FF2539700A95188 /* UserNotificationExtension.swift in Sources */,
 				7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */,
 				7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */,
@@ -3122,6 +3149,8 @@
 				DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */,
 				DF5CDA77204FF9A0004A52BA /* SignalDAO.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
+				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
+				7BC2D27F21992FA9002FAC1D /* WalletSnapshotCell.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallView.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
 				273FACB8205FB9A800513327 /* SessionStore.swift in Sources */,

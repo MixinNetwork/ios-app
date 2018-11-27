@@ -27,6 +27,7 @@
 "action_show" = "显示";
 "action_apply" = "应用";
 "action_filter" = "筛选";
+"action_skip" = "跳过";
 "action_deauthorize" = "取消授权";
 "menu_delete" = "删除";
 "no_result" = "未找到相关内容";
@@ -171,6 +172,8 @@
 "chat_quote_type_photo" = "图片";
 "chat_quote_type_video" = "视频";
 "chat_search_giphy" = "在 GIPHY 上搜索";
+"chat_restore_tips" = "从 iCloud 云端恢复你的聊天记录。如果跳过后续无法恢复！";
+"chat_restore" = "恢复聊天记录";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
@@ -471,6 +474,20 @@
 "setting_storage_files" = "文件";
 "setting_logout" = "退出登录";
 "setting_notification_message_preview" = "显示消息内容";
+"setting_backup_title" = "聊天记录备份";
+"setting_backup_now" = "立即备份";
+"setting_backing" = "正在备份...";
+"setting_backup_auto" = "自动备份";
+"setting_backup_files" = "包含文件";
+"setting_backup_videos" = "包含视频";
+"setting_backup_daily" = "每天";
+"setting_backup_weekly" = "每周";
+"setting_backup_monthly" = "每月";
+"setting_backup_off" = "关闭";
+"setting_backup_disable_tips" = "需要登录 iCloud 来备份你的聊天记录。 设置 > iCloud > 打开 iCloud 云盘。";
+"setting_backup_tips" = "备份你的聊天记录到 iCloud。如果你丢失或者更换手机，你可以在重新安装 Mixin Messenger 时恢复你的聊天记录。注意备份到 iCloud 中的聊天记录不受端对端加密保护！";
+"setting_backup_auto_tips" = "只会在 Wi-Fi 下自动备份聊天记录。";
+"setting_backup_last" = "上次备份是%@，占用空间 %@。";
 
 // Notifications
 "notification_reply" = "回复";

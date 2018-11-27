@@ -119,6 +119,15 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </stackView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N/A" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g77-7K-eGQ">
+                        <rect key="frame" x="367" y="28" width="21" height="39.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_no_price"/>
+                        </userDefinedRuntimeAttributes>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
@@ -131,8 +140,11 @@
                     <constraint firstItem="d8N-Tc-AIO" firstAttribute="centerX" secondItem="LEC-GX-KUU" secondAttribute="centerX" id="NkC-Vb-fCE"/>
                     <constraint firstAttribute="trailing" secondItem="SrK-zr-BLJ" secondAttribute="trailing" constant="10" id="Rj9-oA-Zds"/>
                     <constraint firstItem="i2P-VJ-bue" firstAttribute="top" secondItem="LEC-GX-KUU" secondAttribute="top" id="TUV-pY-Qyi"/>
+                    <constraint firstItem="g77-7K-eGQ" firstAttribute="bottom" secondItem="i2P-VJ-bue" secondAttribute="bottom" id="UAI-4r-Gj3"/>
                     <constraint firstAttribute="trailing" secondItem="i2P-VJ-bue" secondAttribute="trailing" constant="26" id="YtI-HT-vm4"/>
                     <constraint firstItem="i2P-VJ-bue" firstAttribute="leading" secondItem="LEC-GX-KUU" secondAttribute="trailing" constant="15" id="eCS-K0-dee"/>
+                    <constraint firstItem="g77-7K-eGQ" firstAttribute="top" secondItem="i2P-VJ-bue" secondAttribute="top" id="ebp-bc-v1i"/>
+                    <constraint firstItem="g77-7K-eGQ" firstAttribute="trailing" secondItem="i2P-VJ-bue" secondAttribute="trailing" id="pCD-Rd-oSO"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -142,6 +154,7 @@
                 <outlet property="chainImageView" destination="C6E-Uo-2KG" id="utG-qx-zRc"/>
                 <outlet property="changeLabel" destination="esD-bh-haj" id="cje-aA-wlb"/>
                 <outlet property="iconImageView" destination="zI3-gO-xzv" id="ljO-ap-NXk"/>
+                <outlet property="noUSDPriceIndicatorLabel" destination="g77-7K-eGQ" id="LE2-in-eqK"/>
                 <outlet property="symbolLabel" destination="Ks7-rU-07m" id="07e-F2-0aW"/>
                 <outlet property="usdBalanceLabel" destination="gzb-Zt-1Oo" id="ieB-nh-RfT"/>
                 <outlet property="usdPriceLabel" destination="XoA-aw-3R3" id="LNn-uG-f3V"/>

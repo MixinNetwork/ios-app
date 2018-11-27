@@ -1,12 +1,6 @@
 import UIKit
 
-protocol SearchBoxView {
-    var textField: UITextField! { get }
-    var separatorLineView: UIView! { get }
-    var height: CGFloat { get }
-}
-
-class SmallerSearchBoxView: UIView, XibDesignable, SearchBoxView {
+class LegacySearchBoxView: UIView, XibDesignable, SearchBox {
     
     @IBOutlet weak var separatorLineView: UIView!
     @IBOutlet weak var textField: UITextField!

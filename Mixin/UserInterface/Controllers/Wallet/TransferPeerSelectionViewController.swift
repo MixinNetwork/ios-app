@@ -2,6 +2,10 @@ import UIKit
 
 class TransferPeerSelectionViewController: PeerSelectionViewController {
     
+    override class var usesModernStyle: Bool {
+        return true
+    }
+    
     var asset: AssetItem!
     
     private let separatorColor = UIColor(rgbValue: 0xF3F3F3)
@@ -12,14 +16,6 @@ class TransferPeerSelectionViewController: PeerSelectionViewController {
     
     override var allowsMultipleSelection: Bool {
         return false
-    }
-    
-    override var searchBoxViewClass: (UIView & SearchBoxView).Type {
-        return LargerSearchBoxView.self
-    }
-    
-    override var tableViewHorizontalMargin: CGFloat {
-        return 5
     }
     
     override func viewDidLoad() {

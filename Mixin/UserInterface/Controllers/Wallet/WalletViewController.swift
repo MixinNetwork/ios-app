@@ -66,7 +66,7 @@ class WalletViewController: UIViewController {
             self?.navigationController?.pushViewController(AddAssetViewController.instance(), animated: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.WALLET_ALL_TRANSACTIONS_TITLE, style: .default, handler: { [weak self](_) in
-            self?.navigationController?.pushViewController(SnapshotViewController.instance(), animated: true)
+            self?.navigationController?.pushViewController(AllTransactionsViewController.instance(), animated: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.WALLET_MENU_SHOW_HIDDEN_ASSETS, style: .default, handler: { [weak self](_) in
             self?.navigationController?.pushViewController(HiddenAssetViewController.instance(), animated: true)

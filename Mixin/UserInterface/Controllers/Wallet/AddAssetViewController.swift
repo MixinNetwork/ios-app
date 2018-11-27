@@ -3,17 +3,19 @@ import UIKit
 class AddAssetViewController: UIViewController {
     
     @IBOutlet weak var saveButton: BusyButton!
-    @IBOutlet weak var searchBoxView: LargerSearchBoxView!
+    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var noResultIndicator: UIView!
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let cellReuseId = "add_asset"
     private let searchQueue = OperationQueue()
     
     private var topAssets = [AssetItem]()
-    private var searchResult = [(asset: AssetItem, forceSelected: Bool)]()
+    private var searchResults = [(asset: AssetItem, forceSelected: Bool)]()
     private var lastKeyword = ""
+    private var selections = Set<String>() // Key is asset id
     
     private var textField: UITextField {
         return searchBoxView.textField
@@ -52,7 +54,7 @@ class AddAssetViewController: UIViewController {
         var items = [AssetItem]()
         if isSearching {
             for index in indices {
-                items.append(searchResult[index].asset)
+                items.append(searchResults[index].asset)
             }
         } else {
             for index in indices {
@@ -78,13 +80,13 @@ class AddAssetViewController: UIViewController {
         let keyword = self.keyword
         guard textField.markedTextRange == nil else {
             if tableView.isDragging {
-                tableView.reloadData()
+                reloadTableViewAndSelections()
             }
             return
         }
         guard !keyword.isEmpty else {
             activityIndicator.stopAnimating()
-            tableView.reloadData()
+            reloadTableViewAndSelections()
             return
         }
         guard keyword != lastKeyword else {
@@ -117,8 +119,8 @@ class AddAssetViewController: UIViewController {
                 }
                 if self.isSearching {
                     self.activityIndicator.stopAnimating()
-                    self.searchResult = assetItems
-                    self.tableView.reloadData()
+                    self.searchResults = assetItems
+                    self.reloadTableViewAndSelections()
                 }
             }
         }
@@ -135,7 +137,7 @@ class AddAssetViewController: UIViewController {
                 weakSelf.topAssets = topAssets
                 if !weakSelf.isSearching {
                     weakSelf.activityIndicator.stopAnimating()
-                    weakSelf.tableView.reloadData()
+                    weakSelf.reloadTableViewAndSelections()
                 }
             }
         }
@@ -145,6 +147,32 @@ class AddAssetViewController: UIViewController {
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         let windowHeight = AppDelegate.current.window!.bounds.height
         keyboardPlaceholderHeightConstraint.constant = windowHeight - endFrame.origin.y
+        view.layoutIfNeeded()
+    }
+    
+    private func asset(for indexPath: IndexPath) -> AssetItem {
+        if isSearching {
+            return searchResults[indexPath.row].asset
+        } else {
+            return topAssets[indexPath.row]
+        }
+    }
+    
+    private func reloadTableViewAndSelections() {
+        tableView.reloadData()
+        if isSearching {
+            noResultIndicator.isHidden = !searchResults.isEmpty
+            for (row, result) in searchResults.enumerated() where selections.contains(result.asset.assetId) {
+                let indexPath = IndexPath(row: row, section: 0)
+                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            }
+        } else {
+            noResultIndicator.isHidden = true
+            for (row, asset) in topAssets.enumerated() where selections.contains(asset.assetId) {
+                let indexPath = IndexPath(row: row, section: 0)
+                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            }
+        }
     }
     
 }
@@ -156,23 +184,18 @@ extension AddAssetViewController: UITextFieldDelegate {
         return false
     }
     
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        textField.backgroundColor = .white
-        return true
-    }
-    
 }
 
 extension AddAssetViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearching ? searchResult.count : topAssets.count
+        return isSearching ? searchResults.count : topAssets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId, for: indexPath) as! SearchAssetCell
         if isSearching {
-            let result = searchResult[indexPath.row]
+            let result = searchResults[indexPath.row]
             cell.render(asset: result.asset, forceSelected: result.forceSelected)
         } else {
             let asset = topAssets[indexPath.row]
@@ -187,7 +210,7 @@ extension AddAssetViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if isSearching {
-            let isForceSelected = searchResult[indexPath.row].forceSelected
+            let isForceSelected = searchResults[indexPath.row].forceSelected
             return isForceSelected ? nil : indexPath
         } else {
             return indexPath
@@ -195,11 +218,15 @@ extension AddAssetViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        saveButton.isEnabled = tableView.indexPathForSelectedRow != nil
+        let assetId = self.asset(for: indexPath).assetId
+        selections.insert(assetId)
+        saveButton.isEnabled = !selections.isEmpty
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        saveButton.isEnabled = tableView.indexPathForSelectedRow != nil
+        let assetId = self.asset(for: indexPath).assetId
+        selections.remove(assetId)
+        saveButton.isEnabled = !selections.isEmpty
     }
     
 }
@@ -209,9 +236,6 @@ extension AddAssetViewController: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if textField.isFirstResponder {
             textField.resignFirstResponder()
-            if keyword.isEmpty {
-                textField.backgroundColor = .clear
-            }
         }
     }
     

@@ -11,7 +11,12 @@ class AssetViewController: UIViewController {
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.asset-load")
     private let tableHeaderView = AssetTableHeaderView()
-    private let noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
+    private let loadingIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .whiteLarge)
+        view.backgroundColor = .white
+        view.color = .darkGray
+        return view
+    }()
     
     private var asset: AssetItem!
     private var snapshots = [SnapshotItem]() {
@@ -21,11 +26,13 @@ class AssetViewController: UIViewController {
     }
     private var filteredSnapshots = [[SnapshotItem]]()
     private var headerTitles = [String]()
+    private var didLoadLocalSnapshots = false
     private var didLoadRemoteSnapshots = false
     private var showTitleHeaderView: Bool {
         return !headerTitles.isEmpty && filterWindow.sort == .time
     }
     
+    private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
     private lazy var filterWindow: AssetFilterWindow = {
         let window = AssetFilterWindow.instance()
         window.delegate = self
@@ -36,12 +43,14 @@ class AssetViewController: UIViewController {
         super.viewDidLoad()
         view.layoutIfNeeded()
         updateTableViewContentInset()
+        updateTableFooterView()
         tableHeaderView.filterButton.addTarget(self, action: #selector(presentFilterWindow(_:)), for: .touchUpInside)
         tableHeaderView.titleView.transferButton.addTarget(self, action: #selector(transfer(_:)), for: .touchUpInside)
         tableHeaderView.titleView.depositButton.addTarget(self, action: #selector(deposit(_:)), for: .touchUpInside)
         tableView.tableHeaderView = tableHeaderView
         tableHeaderView.titleView.render(asset: asset)
         tableHeaderView.sizeToFit()
+        tableView.register(UINib(nibName: "SnapshotCell", bundle: .main), forCellReuseIdentifier: ReuseId.cell)
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.dataSource = self
         tableView.delegate = self
@@ -148,19 +157,12 @@ extension AssetViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! WalletSnapshotCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
         cell.render(snapshot: filteredSnapshots[indexPath.section][indexPath.row], asset: asset)
-        let lastSection = filteredSnapshots.count - 1
-        let lastIndexPath = IndexPath(row: filteredSnapshots[lastSection].count - 1, section: lastSection)
-        if indexPath == lastIndexPath {
-            cell.bottomShadowImageView.isHidden = false
-            cell.selectionView.roundingCorners = [.bottomLeft, .bottomRight]
-        } else {
-            cell.bottomShadowImageView.isHidden = true
-            cell.selectionView.roundingCorners = []
+        cell.renderDecorationViews(indexPath: indexPath, models: filteredSnapshots)
+        if cell.delegate == nil {
+            cell.delegate = self
         }
-        cell.separatorLineView.isHidden = filteredSnapshots[indexPath.section].count == 1
-            || indexPath.row == filteredSnapshots[indexPath.section].count - 1
         return cell
     }
     
@@ -187,7 +189,7 @@ extension AssetViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SnapshotCell.cellHeight
+        return PeerTransactionSnapshotCell.cellHeight
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -204,6 +206,27 @@ extension AssetViewController: AssetFilterWindowDelegate {
         updateFilteredSnapshots()
         tableView.reloadData()
         updateTableFooterView()
+    }
+    
+}
+
+extension AssetViewController: SnapshotCellDelegate {
+    
+    func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
+        guard let userId = filteredSnapshots[indexPath.section][indexPath.row].opponentUserId else {
+            return
+        }
+        DispatchQueue.global().async {
+            guard let user = UserDAO.shared.getUser(userId: userId) else {
+                return
+            }
+            DispatchQueue.main.async {
+                UserWindow.instance().updateUser(user: user).presentView()
+            }
+        }
     }
     
 }
@@ -252,9 +275,10 @@ extension AssetViewController {
                     return
                 }
                 weakSelf.snapshots = snapshots
+                weakSelf.didLoadLocalSnapshots = true
                 UIView.performWithoutAnimation {
-                    weakSelf.tableView.reloadData()
                     weakSelf.updateTableFooterView()
+                    weakSelf.tableView.reloadData()
                 }
             }
         }
@@ -312,23 +336,29 @@ extension AssetViewController {
     
     private func updateTableFooterView() {
         if filteredSnapshots.isEmpty {
-            if didLoadRemoteSnapshots {
+            if didLoadLocalSnapshots && didLoadRemoteSnapshots {
+                loadingIndicator.stopAnimating()
                 tableHeaderView.transactionsHeaderView.isHidden = false
-                if #available(iOS 11.0, *) {
-                    noTransactionFooterView.frame.size.height = tableView.frame.height
-                        - tableView.contentSize.height
-                        - tableView.adjustedContentInset.vertical
-                } else {
-                    noTransactionFooterView.frame.size.height = tableView.frame.height
-                        - tableView.contentSize.height
-                        - tableView.contentInset.vertical
-                }
+                noTransactionFooterView.frame.size.height = {
+                    if #available(iOS 11.0, *) {
+                        return tableView.frame.height
+                            - tableView.contentSize.height
+                            - tableView.adjustedContentInset.vertical
+                    } else {
+                        return tableView.frame.height
+                            - tableView.contentSize.height
+                            - tableView.contentInset.vertical
+                    }
+                }()
                 tableView.tableFooterView = noTransactionFooterView
             } else {
                 tableHeaderView.transactionsHeaderView.isHidden = true
-                tableView.tableFooterView = nil
+                loadingIndicator.startAnimating()
+                loadingIndicator.frame.size.height = 44
+                tableView.tableFooterView = loadingIndicator
             }
         } else {
+            loadingIndicator.stopAnimating()
             tableHeaderView.transactionsHeaderView.isHidden = false
             tableView.tableFooterView = nil
         }

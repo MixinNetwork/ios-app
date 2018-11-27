@@ -2,6 +2,10 @@ import UIKit
 
 class PeerSelectionViewController: UIViewController, ContainerViewControllerDelegate {
     
+    class var usesModernStyle: Bool {
+        return false
+    }
+    
     enum Content {
         case chatsAndContacts
         case contacts
@@ -11,7 +15,15 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     
     let tableView = UITableView()
     
-    var searchBoxView: (UIView & SearchBoxView)!
+    var searchBoxView: (UIView & SearchBox)!
+    
+    var allowsMultipleSelection: Bool {
+        return true
+    }
+    
+    var content: Content {
+        return .chatsAndContacts
+    }
     
     private var headerTitles = [String]()
     private var peers = [[Peer]]()
@@ -31,20 +43,8 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         }
     }
     
-    var allowsMultipleSelection: Bool {
-        return true
-    }
-    
-    var content: Content {
-        return .chatsAndContacts
-    }
-    
-    var searchBoxViewClass: (UIView & SearchBoxView).Type {
-        return SmallerSearchBoxView.self
-    }
-    
-    var tableViewHorizontalMargin: CGFloat {
-        return 0
+    private var searchBoxViewClass: (UIView & SearchBox).Type {
+        return type(of: self).usesModernStyle ? ModernSearchBoxView.self : LegacySearchBoxView.self
     }
     
     override func loadView() {
@@ -58,9 +58,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         }
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(searchBoxView.snp.bottom)
-            make.leading.equalToSuperview().offset(tableViewHorizontalMargin)
-            make.trailing.equalToSuperview().offset(-tableViewHorizontalMargin)
-            make.bottom.equalToSuperview()
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
     
@@ -144,6 +142,7 @@ extension PeerSelectionViewController: UITableViewDataSource {
         let peer = self.peer(at: indexPath)
         cell.render(peer: peer)
         cell.supportsMultipleSelection = allowsMultipleSelection
+        cell.usesModernStyle = type(of: self).usesModernStyle
         return cell
     }
     

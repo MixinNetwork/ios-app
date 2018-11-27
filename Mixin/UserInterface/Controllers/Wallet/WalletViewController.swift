@@ -24,7 +24,16 @@ class WalletViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        prepareTableView()
+        updateTableViewContentInset()
+        tableView.register(UINib(nibName: "WalletAssetCell", bundle: .main),
+                           forCellReuseIdentifier: ReuseId.asset)
+        tableView.tableFooterView = UIView()
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.reloadData()
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
         fetchAssets()
         fetchRemoteAssets()
     }
@@ -40,54 +49,22 @@ class WalletViewController: UIViewController {
             PinTipsView.instance().presentPopupControllerAnimated()
         }
     }
-
-    private func prepareTableView() {
-        tableView.register(UINib(nibName: "WalletAssetCell", bundle: nil), forCellReuseIdentifier: WalletAssetCell.cellIdentifier)
-        tableView.register(UINib(nibName: "WalletTotalBalanceCell", bundle: nil), forCellReuseIdentifier: WalletTotalBalanceCell.cellIdentifier)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.tableFooterView = UIView()
-        tableView.reloadData()
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetsDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .AssetVisibleDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchAssets), name: .HiddenAssetsDidChange, object: nil)
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewContentInset()
     }
-
-    @objc private func fetchAssets() {
-        DispatchQueue.global().async { [weak self] in
-            let hiddenAssets = WalletUserDefault.shared.hiddenAssets
-            let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
-                return hiddenAssets[asset.assetId] == nil
-            })
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.assets = assets
-                weakSelf.tableView.reloadData()
-            }
-        }
-    }
-
-    private func fetchRemoteAssets() {
-        DispatchQueue.global().async {
-            switch AssetAPI.shared.assets() {
-            case let .success(assets):
-                DispatchQueue.global().async {
-                    AssetDAO.shared.insertOrUpdateAssets(assets: assets)
-                }
-            case .failure:
-                break
-            }
-        }
-    }
-
+    
     @IBAction func backAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
 
     @IBAction func moreAction(_ sender: Any) {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.WALLET_TITLE_ADD_ASSET, style: .default, handler: { [weak self](_) in
+            self?.navigationController?.pushViewController(AddAssetViewController.instance(), animated: true)
+        }))
         alc.addAction(UIAlertAction(title: Localized.WALLET_ALL_TRANSACTIONS_TITLE, style: .default, handler: { [weak self](_) in
             self?.navigationController?.pushViewController(SnapshotViewController.instance(), animated: true)
         }))
@@ -121,44 +98,58 @@ extension WalletViewController: MixinNavigationAnimating {
 extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 1 : assets.count
+        return section == 1 ? assets.count : 1
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return indexPath.section == 0 ? WalletTotalBalanceCell.cellHeight : WalletAssetCell.cellHeight
+        switch indexPath.section {
+        case 0:
+            let firstUSDBalance: Double
+            if let asset = assets.first {
+                firstUSDBalance = asset.balance.doubleValue * asset.priceUsd.doubleValue
+            } else {
+                firstUSDBalance = 0
+            }
+            return WalletHeaderCell.height(usdBalanceIsMoreThanZero: firstUSDBalance > 0)
+        case 1:
+            return WalletAssetCell.height
+        default:
+            return WalletAddAssetCell.height
+        }
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: WalletTotalBalanceCell.cellIdentifier) as! WalletTotalBalanceCell
+        switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.header) as! WalletHeaderCell
             cell.render(assets: assets)
             return cell
-        } else {
+        case 1:
             let asset = assets[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: WalletAssetCell.cellIdentifier) as! WalletAssetCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.asset) as! WalletAssetCell
             cell.render(asset: asset)
             return cell
+        default:
+            return tableView.dequeueReusableCell(withIdentifier: ReuseId.addAsset)!
         }
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
-        if indexPath.section == 1 {
-            navigationController?.pushViewController(AssetViewController.instance(asset: assets[indexPath.row]), animated: true)
+        switch indexPath.section {
+        case 1:
+            let vc = AssetViewController.instance(asset: assets[indexPath.row])
+            navigationController?.pushViewController(vc, animated: true)
+        case 2:
+            let vc = AddAssetViewController.instance()
+            navigationController?.pushViewController(vc, animated: true)
+        default:
+            break
         }
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? CGFloat.leastNormalMagnitude : 10
-    }
-
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 10
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -171,5 +162,52 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return indexPath.section == 1
     }
+
 }
 
+extension WalletViewController {
+    
+    private enum ReuseId {
+        static let header = "wallet_header"
+        static let asset = "wallet_asset"
+        static let addAsset = "wallet_add_asset"
+    }
+    
+    private func updateTableViewContentInset() {
+        if view.compatibleSafeAreaInsets.bottom < 1 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
+    }
+    
+    @objc private func fetchAssets() {
+        DispatchQueue.global().async { [weak self] in
+            let hiddenAssets = WalletUserDefault.shared.hiddenAssets
+            let assets = AssetDAO.shared.getAssets().filter({ (asset) -> Bool in
+                return hiddenAssets[asset.assetId] == nil
+            })
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.assets = assets
+                weakSelf.tableView.reloadData()
+            }
+        }
+    }
+    
+    private func fetchRemoteAssets() {
+        DispatchQueue.global().async {
+            switch AssetAPI.shared.assets() {
+            case let .success(assets):
+                DispatchQueue.global().async {
+                    AssetDAO.shared.insertOrUpdateAssets(assets: assets)
+                }
+            case .failure:
+                break
+            }
+        }
+    }
+    
+}

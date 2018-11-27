@@ -32,7 +32,7 @@ class SearchViewController: UIViewController {
         tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.register(UINib(nibName: "SearchResultContactCell", bundle: .main), forCellReuseIdentifier: contactCellReuseId)
         tableView.register(UINib(nibName: "ConversationCell", bundle: .main), forCellReuseIdentifier: conversationCellReuseId)
-        tableView.register(UINib(nibName: "WalletAssetCell", bundle: .main), forCellReuseIdentifier: WalletAssetCell.cellIdentifier)
+        tableView.register(UINib(nibName: "SearchResultAssetCell", bundle: .main), forCellReuseIdentifier: SearchResultAssetCell.cellIdentifier)
         tableView.tableFooterView = UIView()
         tableView.contentInset.top = navigationBarContentHeightConstraint.constant
         tableView.dataSource = self
@@ -188,7 +188,7 @@ extension SearchViewController: UITableViewDataSource {
         } else {
             let section = indexPath.section
             if section == 0 && assets.count > 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: WalletAssetCell.cellIdentifier, for: indexPath) as! WalletAssetCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultAssetCell.cellIdentifier, for: indexPath) as! SearchResultAssetCell
                 cell.accessoryType = .none
                 cell.render(asset: assets[indexPath.row])
                 return cell

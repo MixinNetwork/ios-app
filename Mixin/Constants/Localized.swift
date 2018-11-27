@@ -77,6 +77,8 @@ public class Localized {
     public static func TOAST_ERROR(errorCode: Int, errorMessage: String) -> String {
         return String(format: LocalizedString("toast_error", comment: "ERROR %@: %@"), "\(errorCode)", errorMessage)
     }
+    public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Successfully copied to clipboard")
+    public static let TOAST_ADD_ASSET = LocalizedString("toast_add_asset", comment: "Successfully added selected assets")
     public static let SCREEN_CAPTURED_PIN_LEAKING_HINT = LocalizedString("screen_captured_pin_leaking_hint", comment: "Screen recorder detected, PIN may be recorded.")
     public static func BIOMETRY_SUGGESTION(biometricType: String) -> String {
         return String(format: LocalizedString("biometry_suggestion", comment: " %@ is suggested."), biometricType)
@@ -331,6 +333,7 @@ public class Localized {
 
     // Wallet
     public static let WALLET_TITLE = LocalizedString("wallet_title", comment: "Wallet")
+    public static let WALLET_TITLE_ADD_ASSET = LocalizedString("wallet_title_add_asset", comment: "Add asset")
     public static let WALLET_TRANSFER_OUT = LocalizedString("wallet_transfer_out", comment: "Transfer Out")
     public static let TRANSFER_ERROR_BALANCE_INSUFFICIENT = LocalizedString("transfer_error_balance_insufficient", comment: "Insufficient balance")
     public static let TRANSFER_ERROR_FEE_INSUFFICIENT = LocalizedString("transfer_error_fee_insufficient", comment: "Insufficient transaction fee")
@@ -356,6 +359,7 @@ public class Localized {
         return String(format: LocalizedString("wallet_deposit_confirmations", comment: "Deposit will arrive after at least %@ block confirmations."), "\(confirmations)")
     }
     public static let WALLET_NO_TRANSACTION = LocalizedString("wallet_no_transaction", comment: "No transaction")
+    public static let WALLET_ADDRESS = LocalizedString("wallet_address", comment: "Address")
     public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name")
     public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo")
     public static func WALLET_DEPOSIT_ACCOUNT_NOTICE(symbol: String, confirmations: Int) -> String {
@@ -465,11 +469,10 @@ public class Localized {
     }
     public static let ADDRESS_FORMAT_ERROR = LocalizedString("address_format_error", comment: "Invalid address format.")
     
-    public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Successfully copied to clipboard")
-
     // Transfer
-    public static func TRANSFER_TITLE_TO(fullName: String) -> String {
-        return String(format: LocalizedString("transfer_title_to", comment: "to %@"), fullName)
+    public static let TRANSFER_TITLE_TO = LocalizedString("transfer_title_to", comment: "Transfer to")
+    public static func TRANSFER_TITLE_TO_RECEIVER(fullName: String) -> String {
+        return String(format: LocalizedString("transfer_title_to_receiver", comment: "to %@"), fullName)
     }
     public static let TRANSFER_TRANSACTIONS = LocalizedString("transfer_transactions", comment: "TRANSACTIONS")
     public static let TRANSFER_TOUCH_ID_REASON = LocalizedString("transfer_touch_id_reason", comment: "Use an existing fingerprint to make the payment")

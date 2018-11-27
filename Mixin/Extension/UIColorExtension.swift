@@ -15,15 +15,15 @@ extension UIColor {
     static let selection = UIColor(rgbValue: 0xEDEEEE)
     static let headerGray = UIColor(red: 0.43, green: 0.43, blue: 0.45, alpha: 1)
     
-    static let walletGreen = UIColor(rgbValue: 0x00B56E)
-    static let walletRed = UIColor(rgbValue: 0xE55541)
+    static let walletGreen = UIColor(rgbValue: 0x29BE73)
+    static let walletRed = UIColor(rgbValue: 0xF67070)
     static let walletGray = UIColor(rgbValue: 0xAAAAAA)
     
     static let hintBlue = UIColor(rgbValue: 0x1FB4FC)
     static let hintRed = UIColor(rgbValue: 0xFF7070)
     static let hintGreen = UIColor(rgbValue: 0x48CF94)
 
-    static let actionBackground = UIColor(rgbValue: 0xc7c7cd)
+    static let actionBackground = UIColor(rgbValue: 0x29BE73)
     
     static let usernameColors = [UIColor(rgbValue: 0xAA4848),
                                  UIColor(rgbValue: 0xB0665E),

@@ -17,7 +17,8 @@ struct SnapshotItem: TableCodable {
     let confirmations: Int?
 
     let memo: String?
-
+    let opponentUserAvatarUrl: String?
+    
     enum CodingKeys: String, CodingTableKey {
         typealias Root = SnapshotItem
         case snapshotId = "snapshot_id"
@@ -33,7 +34,8 @@ struct SnapshotItem: TableCodable {
         case receiver
         case confirmations
         case memo
-
+        case opponentUserAvatarUrl = "opponent_avatar_url"
+        
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
     }
 }

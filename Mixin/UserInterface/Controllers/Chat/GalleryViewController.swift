@@ -50,15 +50,7 @@ class GalleryViewController: UIViewController {
     private let bubbleMaskLayer = BubbleLayer()
     
     private lazy var separatorWidth = scrollViewTrailingConstraint.constant
-    
-    private var safeAreaInsets: UIEdgeInsets {
-        if #available(iOS 11.0, *) {
-            return view.safeAreaInsets
-        } else {
-            return .zero
-        }
-    }
-    
+   
     private var currentPage: GalleryItemViewController {
         assert(pages.count > 0)
         let i = pageIndex(ofContentOffsetX: scrollView.contentOffset.x)

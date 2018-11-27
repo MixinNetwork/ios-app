@@ -5,7 +5,7 @@ final class SnapshotDAO {
     static let shared = SnapshotDAO()
 
     private static let sqlQueryByAssetId = """
-    SELECT s.snapshot_id, s.type, s.asset_id, a.symbol as assetSymbol, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.created_at, u.full_name as opponentUserFullName, s.receiver, s.confirmations, s.memo FROM snapshots s
+    SELECT s.snapshot_id, s.type, s.asset_id, a.symbol as assetSymbol, s.amount, s.opponent_id, s.transaction_hash, s.sender, s.created_at, u.full_name as opponentUserFullName, s.receiver, s.confirmations, s.memo, u.avatar_url as opponent_avatar_url FROM snapshots s
     LEFT JOIN users u ON s.opponent_id = u.user_id
     LEFT JOIN assets a ON s.asset_id = a.asset_id
     WHERE s.asset_id = ?

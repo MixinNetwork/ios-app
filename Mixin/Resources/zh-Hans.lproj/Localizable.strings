@@ -55,6 +55,7 @@
 "permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
 "permission_denied_microphone" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
 "toast_copied" = "已复制到剪贴板";
+"toast_add_asset" = "已添加所选资产";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "toast_added" = "已添加";
 "toast_error" = "错误 %@：%@";
@@ -255,6 +256,7 @@
 // Wallet
 "wallet_title" = "钱包";
 "wallet_title_withdrawal" = "提现";
+"wallet_title_add_asset" = "添加资产";
 "wallet_transfer_out" = "转出";
 "wallet_symbol_other" = "其它";
 "wallet_password_verify_title" = "验证旧的支付密码";
@@ -264,9 +266,12 @@
 "wallet_set_password_success" = "设置支付密码成功";
 "wallet_snapshot_from" = "转账来自%@";
 "wallet_snapshot_to" = "转账给%@";
+"wallet_caption_deposit" = "充值";
+"wallet_caption_transfer" = "转账";
 "wallet_deposit" = "充值";
 "wallet_deposit_confirmations" = "充值到账至少需要 %@ 个区块确认";
 "wallet_no_transaction" = "暂无转账记录";
+"wallet_address" = "地址";
 "wallet_account_name" = "账号名";
 "wallet_account_memo" = "备注";
 "wallet_deposit_account_notice" = "注意：账号名和备注同时使用才能充值 %@ 到 Mixin，充值到账至少需要 %@ 个区块确认。";
@@ -354,7 +359,8 @@
 
 // Transfer
 "transfer_title" = "转账";
-"transfer_title_to" = "给%@";
+"transfer_title_to" = "转账给";
+"transfer_title_to_receiver" = "给%@";
 "transfer_balance" = "余额";
 "transfer_transactions" = "转账记录";
 "transfer_transfer_type" = "转账类型";

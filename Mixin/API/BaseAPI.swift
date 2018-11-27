@@ -125,6 +125,7 @@ class BaseAPI {
             return nil
         }
         let request = getRequest(method: method, url: url, parameters: parameters, encoding: encoding)
+        let requestTime = Date()
         return request.validate(statusCode: 200...299)
             .responseData(completionHandler: { (response) in
                 let httpStatusCode = response.response?.statusCode ?? -1
@@ -133,17 +134,21 @@ class BaseAPI {
                     case 401:
                         if let responseServerTime = response.response?.allHeaderFields["x-server-time"] as? String, let serverTime = Double(responseServerTime), serverTime > 0 {
                             let clientTime = Date().timeIntervalSince1970
-                            if abs(serverTime / 1000000000 - clientTime) > 300 {
-                                FileManager.default.writeLog(log: "BaseAPI...async request...clock skew...serverTime:\(serverTime)...clientTime:\(clientTime)")
-                                AccountUserDefault.shared.hasClockSkew = true
-                                DispatchQueue.main.async {
-                                    WebSocketService.shared.disconnect()
-                                    AppDelegate.current.window?.rootViewController = makeInitialViewController()
-                                }
-                                return
-                            } else if !retry {
+
+                            FileManager.default.writeLog(log: "BaseAPI...async request...clock skew...serverTime:\(serverTime / 1000000000)...clientTime:\(clientTime)...requestTime:\(requestTime)...retry:\(retry)")
+
+                            if clientTime - requestTime.timeIntervalSince1970 > 60 {
                                 self.request(method: method, url: url, parameters: parameters, encoding: encoding, checkLogin: checkLogin, toastError: toastError, retry: true, completion: completion)
                                 return
+                            } else {
+                                if abs(serverTime / 1000000000 - clientTime) > 300 {
+                                    AccountUserDefault.shared.hasClockSkew = true
+                                    DispatchQueue.main.async {
+                                        WebSocketService.shared.disconnect()
+                                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                                    }
+                                    return
+                                }
                             }
                         }
                         AccountAPI.shared.logout()
@@ -237,8 +242,12 @@ extension BaseAPI {
         if !result.isSuccess, case let .failure(error) = result, error.code == 401 {
             if let serverTime = Double(responseServerTime), serverTime > 0 {
                 let clientTime = Date().timeIntervalSince1970
-                FileManager.default.writeLog(log: "BaseAPI...sync request...clock skew...serverTime:\(serverTime)...clientTime:\(clientTime)...retry:\(retry)")
-                if retry {
+
+                FileManager.default.writeLog(log: "BaseAPI...sync request...clock skew...serverTime:\(serverTime / 1000000000)...clientTime:\(clientTime)...retry:\(retry)")
+
+                if clientTime - requestTime.timeIntervalSince1970 > 60 {
+                    return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
+                } else {
                     if abs(serverTime / 1000000000 - clientTime) > 300 {
                         AccountUserDefault.shared.hasClockSkew = true
                         DispatchQueue.main.async {
@@ -247,8 +256,6 @@ extension BaseAPI {
                         }
                         return result
                     }
-                } else {
-                    return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
                 }
             }
             AccountAPI.shared.logout()

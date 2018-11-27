@@ -19,7 +19,7 @@ class ContactViewController: UITableViewController {
         tableView.register(UINib(nibName: "ContactMeCell", bundle: nil), forCellReuseIdentifier: ContactMeCell.cellIdentifier)
         tableView.register(UINib(nibName: "ContactQRCodeCell", bundle: nil), forCellReuseIdentifier: ContactQRCodeCell.cellIdentifier)
         tableView.register(UINib(nibName: "ContactNavCell", bundle: nil), forCellReuseIdentifier: ContactNavCell.cellIdentifier)
-        tableView.register(UINib(nibName: "ContactCell", bundle: nil), forCellReuseIdentifier: ContactCell.cellIdentifier)
+        tableView.register(UINib(nibName: "PeerCell", bundle: nil), forCellReuseIdentifier: PeerCell.cellIdentifier)
         tableView.register(UINib(nibName: "PhoneContactCell", bundle: nil), forCellReuseIdentifier: PhoneContactCell.cellIdentifier)
         tableView.register(UINib(nibName: "PhoneContactGuideCell", bundle: nil), forCellReuseIdentifier: PhoneContactGuideCell.cellIdentifier)
         tableView.tableFooterView = UIView()
@@ -204,9 +204,9 @@ extension ContactViewController {
         case 1:
             return ContactNavCell.cellHeight
         case 2:
-            return ContactCell.cellHeight
+            return PeerCell.cellHeight
         default:
-            return showPhoneContactTips ? PhoneContactGuideCell.cellHeight : ContactCell.cellHeight
+            return showPhoneContactTips ? PhoneContactGuideCell.cellHeight : PeerCell.cellHeight
         }
     }
 
@@ -232,7 +232,7 @@ extension ContactViewController {
             cell.render(row: indexPath.row)
             return cell
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ContactCell.cellIdentifier) as! ContactCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: PeerCell.cellIdentifier) as! PeerCell
             cell.render(user: contacts[indexPath.row])
             return cell
         default:

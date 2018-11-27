@@ -60,8 +60,8 @@ class ConversationAPI : BaseAPI {
         request(method: .post, url: url.join(codeId: codeId), toastError: false, completion: completion)
     }
 
-    func addParticipant(conversationId: String, participants: [GroupUser], completion: @escaping (APIResult<ConversationResponse>) -> Void) {
-        let parameters = participants.map({ ["user_id": $0.userId, "role": ""] }).toParameters()
+    func addParticipant(conversationId: String, participantUserIds: [String], completion: @escaping (APIResult<ConversationResponse>) -> Void) {
+        let parameters = participantUserIds.map({ ["user_id": $0, "role": ""] }).toParameters()
         request(method: .post, url: url.participants(id: conversationId, action: ParticipantAction.ADD), parameters: parameters, encoding: JSONArrayEncoding(), completion: completion)
     }
 

@@ -1,7 +1,15 @@
 import UIKit
 
 extension UIView {
-
+    
+    var compatibleSafeAreaInsets: UIEdgeInsets {
+        if #available(iOS 11.0, *) {
+            return safeAreaInsets
+        } else {
+            return .zero
+        }
+    }
+    
     var isVisibleInScreen: Bool {
         return self.window == UIApplication.currentActivity()?.view.window
     }

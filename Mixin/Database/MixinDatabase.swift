@@ -24,6 +24,7 @@ class MixinDatabase: BaseDatabase {
                 try self.createBefore(database: database, currentVersion: currentVersion)
 
                 try database.create(of: Asset.self)
+                try database.create(table: Asset.topAssetsTableName, of: Asset.self)
                 try database.create(of: Snapshot.self)
                 try database.create(of: Sticker.self)
                 try database.create(of: StickerRelationship.self)

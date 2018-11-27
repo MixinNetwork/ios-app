@@ -27,7 +27,7 @@ class WebSocketService: NSObject {
     private var receivedPongCount = 0
     private var awaitingPong: Bool = false
     private var pingInterval: TimeInterval = 15
-
+    private var requestHeaderTime: TimeInterval = 0
     
     func connect() {
         guard client == nil else {
@@ -120,6 +120,7 @@ extension WebSocketService: SRWebSocketDelegate {
 
     func webSocketRequestHeaders(_ request: URLRequest!) -> [String : String]! {
         FileManager.default.writeLog(log: "WebSocketService...webSocketWillOpen")
+        requestHeaderTime = Date().timeIntervalSince1970
         return MixinRequest.getHeaders(request: request)
     }
 
@@ -130,11 +131,15 @@ extension WebSocketService: SRWebSocketDelegate {
         if let responseServerTime = CFHTTPMessageCopyHeaderFieldValue(webSocket.receivedHTTPHeaders, "x-server-time" as CFString)?.takeRetainedValue() as String?, let serverTime = Double(responseServerTime), serverTime > 0 {
             let clientTime = Date().timeIntervalSince1970
             if abs(serverTime / 1000000000 - clientTime) > 300 {
-                FileManager.default.writeLog(log: "WebSocketService...webSocketDidOpen...clock skew...serverTime:\(serverTime)...clientTime:\(clientTime)")
-                AccountUserDefault.shared.hasClockSkew = true
-                DispatchQueue.main.async {
-                    WebSocketService.shared.disconnect()
-                    AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                FileManager.default.writeLog(log: "WebSocketService...webSocketDidOpen...clock skew...serverTime:\(serverTime / 1000000000)...clientTime:\(clientTime)...requestHeaderTime:\(requestHeaderTime)")
+                if clientTime - requestHeaderTime > 60 {
+                    WebSocketService.shared.reconnect(didClose: false)
+                } else {
+                    AccountUserDefault.shared.hasClockSkew = true
+                    DispatchQueue.main.async {
+                        WebSocketService.shared.disconnect()
+                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                    }
                 }
                 return
             }

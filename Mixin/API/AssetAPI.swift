@@ -34,6 +34,11 @@ final class AssetAPI: BaseAPI {
             return "external/transactions?asset=\(assetId)&account_name=\(accountName)&account_tag=\(accountTag)"
         }
         
+        static func search(keyword: String) -> String? {
+            return "network/assets/search/\(keyword)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        }
+        static let top = "network/assets/top"
+        
     }
 
     func assets(completion: @escaping (APIResult<[Asset]>) -> Void) {
@@ -90,6 +95,17 @@ final class AssetAPI: BaseAPI {
 
     func pendingDeposits(assetId: String, accountName: String, accountTag: String) -> APIResult<[PendingDeposit]> {
         return request(method: .get, url: url.pendingDeposits(assetId: assetId, accountName: accountName, accountTag: accountTag))
+    }
+    
+    func search(keyword: String) -> APIResult<[Asset]>  {
+        guard let url = url.search(keyword: keyword) else {
+            return .success([])
+        }
+        return request(method: .get, url: url)
+    }
+    
+    func topAssets() -> APIResult<[Asset]> {
+        return request(method: .get, url: url.top)
     }
     
 }

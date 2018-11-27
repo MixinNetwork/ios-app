@@ -2,15 +2,18 @@ import UIKit
 
 class AddMemberViewController: UIViewController {
 
-    @IBOutlet weak var keywordTextField: UITextField!
+    @IBOutlet weak var searchBoxView: SmallerSearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var participantsLabel: UILabel!
     @IBOutlet weak var nextButton: StateResponsiveButton!
     
     private typealias Section = [GroupUser]
-
-    private let headerReuseId = "Header"
-    private let memberSelectionCellReuseId = "MemberSelection"
+    
+    private enum ReuseId {
+        static let header = "header"
+        static let cell = "cell"
+    }
+    private let maxMembersCount = 256
     
     private var sections = [Section]()
     private var indexPaths = [GroupUser: IndexPath]()
@@ -19,30 +22,37 @@ class AddMemberViewController: UIViewController {
     private var selections = [GroupUser]() {
         didSet {
             nextButton.isEnabled = !selections.isEmpty
-            participantsLabel.text = "\(selections.count + oldParticipantCount)/256"
+            participantsLabel.text = "\(selections.count + alreadyInGroupUserIds.count)/\(maxMembersCount)"
         }
     }
-    private var oldParticipantCount = 0
-    private var isSearching: Bool {
-        return !(keywordTextField.text ?? "").isEmpty
-    }
+    private var alreadyInGroupUserIds = Set<String>()
     private var conversationId: String?
+    private var isAppendingMembersToAnExistedGroup: Bool {
+        return conversationId != nil
+    }
+    private var isSearching: Bool {
+        return !(searchBoxView.textField.text ?? "").isEmpty
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
+        searchBoxView.textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
+        tableView.register(UINib(nibName: "PeerCell", bundle: .main),
+                           forCellReuseIdentifier: ReuseId.cell)
+        tableView.register(GeneralTableViewHeader.self,
+                           forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
         nextButton.isEnabled = false
-        if conversationId != nil {
+        if isAppendingMembersToAnExistedGroup {
             nextButton.setTitle(Localized.ACTION_DONE, for: .normal)
         }
-        keywordTextField.delegate = self
-        fetchContacts()
+        searchBoxView.textField.delegate = self
+        reloadData()
     }
 
-    class func instance(conversationId: String? = nil) -> UIViewController {
+    class func instance(appendMembersToExistedGroupOfConversationId conversationId: String? = nil) -> UIViewController {
         let vc = Storyboard.group.instantiateInitialViewController() as! AddMemberViewController
         vc.conversationId = conversationId
         return vc
@@ -53,17 +63,13 @@ class AddMemberViewController: UIViewController {
     }
 
     @IBAction func nextAction(_ sender: Any) {
-        nextAction()
-    }
-    
-    private func nextAction() {
-        guard selections.count > 0 else {
+        guard !selections.isEmpty else {
             return
         }
-
-        if let conversationId = self.conversationId {
+        if let conversationId = conversationId {
             nextButton.isBusy = true
-            ConversationAPI.shared.addParticipant(conversationId: conversationId, participants: selections, completion: { [weak self](result) in
+            let userIds = selections.map({ $0.userId })
+            ConversationAPI.shared.addParticipant(conversationId: conversationId, participantUserIds: userIds, completion: { [weak self](result) in
                 guard let weakSelf = self else {
                     return
                 }
@@ -81,8 +87,8 @@ class AddMemberViewController: UIViewController {
         }
     }
     
-    @IBAction func searchAction(_ sender: Any) {
-        let keyword = (keywordTextField.text ?? "").uppercased()
+    @objc func search(_ sender: Any) {
+        let keyword = (searchBoxView.textField.text ?? "").uppercased()
         if keyword.isEmpty {
             searchResult = []
         } else {
@@ -93,31 +99,111 @@ class AddMemberViewController: UIViewController {
         reloadTableViewAndSetSelections()
     }
     
-    private func fetchContacts() {
+}
+
+extension AddMemberViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return isSearching ? searchResult.count : sections[section].count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell) as! PeerCell
+        let user = self.user(at: indexPath)
+        let userIsAlreayInGroup = alreadyInGroupUserIds.contains(user.userId)
+        cell.render(user: user, forceSelected: userIsAlreayInGroup)
+        cell.supportsMultipleSelection = true
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return isSearching ? 1 : sections.count
+    }
+
+}
+
+extension AddMemberViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if isSearching {
+            return nil
+        } else {
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! GeneralTableViewHeader
+            header.label.text = titles[section]
+            return header
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return isSearching ? .leastNormalMagnitude : 30
+    }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        guard selections.count + alreadyInGroupUserIds.count < maxMembersCount else {
+            return nil
+        }
+        let user = self.user(at: indexPath)
+        return alreadyInGroupUserIds.contains(user.userId) ? nil : indexPath
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let user = self.user(at: indexPath)
+        selections.append(user)
+    }
+    
+    func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+        let user = self.user(at: indexPath)
+        return alreadyInGroupUserIds.contains(user.userId) ? nil : indexPath
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        guard let index = selections.index(of: user(at: indexPath)) else {
+            return
+        }
+        selections.remove(at: index)
+    }
+    
+}
+
+extension AddMemberViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        searchBoxView.textField.text = nil
+        searchBoxView.textField.resignFirstResponder()
+        reloadTableViewAndSetSelections()
+        return false
+    }
+
+}
+
+extension AddMemberViewController {
+    
+    private func user(at indexPath: IndexPath) -> GroupUser {
+        if isSearching {
+            return searchResult[indexPath.row]
+        } else {
+            return sections[indexPath.section][indexPath.row]
+        }
+    }
+    
+    private func reloadData() {
         DispatchQueue.global().async { [weak self] in
-            var contacts = UserDAO.shared.contacts()
+            guard let weakSelf = self else {
+                return
+            }
+            let contacts = UserDAO.shared.contacts()
                 .map({ GroupUser(userId: $0.userId, identityNumber: $0.identityNumber, fullName: $0.fullName, avatarUrl: $0.avatarUrl, isVerified: $0.isVerified, isBot: $0.isBot) })
-            if let weakSelf = self {
-                if let conversationId = weakSelf.conversationId {
-                    let participants = ParticipantDAO.shared.participants(conversationId: conversationId)
-                    weakSelf.oldParticipantCount = participants.count
-                    for participant in participants {
-                        guard let idx = contacts.index(where: { (user) -> Bool in
-                            return user.userId == participant.userId
-                        }) else {
-                            continue
-                        }
-                        contacts[idx].disabled = true
-                    }
-                    DispatchQueue.main.async {
-                        weakSelf.participantsLabel.text = "\(weakSelf.oldParticipantCount)/256"
-                    }
+            if let conversationId = weakSelf.conversationId {
+                let participants = ParticipantDAO.shared.participants(conversationId: conversationId)
+                weakSelf.alreadyInGroupUserIds = Set(participants.map({ $0.userId }))
+                DispatchQueue.main.async {
+                    weakSelf.participantsLabel.text = "\(participants.count)/\(weakSelf.maxMembersCount)"
                 }
-                (weakSelf.titles, weakSelf.sections) = UILocalizedIndexedCollation.current().catalogue(contacts, usingSelector: #selector(getter: GroupUser.fullName))
-                for (sectionIndex, section) in weakSelf.sections.enumerated() {
-                    for (rowIndex, user) in section.enumerated() {
-                        weakSelf.indexPaths[user] = IndexPath(row: rowIndex, section: sectionIndex)
-                    }
+            }
+            (weakSelf.titles, weakSelf.sections) = UILocalizedIndexedCollation.current().catalogue(contacts, usingSelector: #selector(getter: GroupUser.fullName))
+            for (sectionIndex, section) in weakSelf.sections.enumerated() {
+                for (rowIndex, user) in section.enumerated() {
+                    weakSelf.indexPaths[user] = IndexPath(row: rowIndex, section: sectionIndex)
                 }
             }
             DispatchQueue.main.async {
@@ -143,96 +229,5 @@ class AddMemberViewController: UIViewController {
             }
         }
     }
-
-}
-
-extension AddMemberViewController: UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearching ? searchResult.count : sections[section].count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: memberSelectionCellReuseId) as! GroupMemberSelectionCell
-        let user: GroupUser
-        if isSearching {
-            user = searchResult[indexPath.row]
-        } else {
-            user = sections[indexPath.section][indexPath.row]
-        }
-        cell.render(user: user)
-        if !user.disabled && selections.contains(user) {
-            cell.setSelected(true, animated: false)
-        }
-        return cell
-    }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return isSearching ? 1 : sections.count
-    }
-
-}
-
-extension AddMemberViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if isSearching {
-            return nil
-        } else {
-            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseId) as! GeneralTableViewHeader
-            header.label.text = titles[section]
-            return header
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return isSearching ? .leastNormalMagnitude : 30
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard selections.count < 256 else {
-            return
-        }
-        if isSearching {
-            guard !searchResult[indexPath.row].disabled else {
-                return
-            }
-            selections.append(searchResult[indexPath.row])
-        } else {
-            guard !sections[indexPath.section][indexPath.row].disabled else {
-                return
-            }
-            selections.append(sections[indexPath.section][indexPath.row])
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if isSearching {
-            guard !searchResult[indexPath.row].disabled else {
-                return
-            }
-            if let index = selections.index(of: searchResult[indexPath.row]) {
-                selections.remove(at: index)
-            }
-        } else {
-            guard !sections[indexPath.section][indexPath.row].disabled else {
-                return
-            }
-            if let index = selections.index(of: sections[indexPath.section][indexPath.row]) {
-                selections.remove(at: index)
-            }
-        }
-    }
-
-}
-
-extension AddMemberViewController: UITextFieldDelegate {
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        keywordTextField.text = nil
-        keywordTextField.resignFirstResponder()
-        reloadTableViewAndSetSelections()
-        return false
-    }
-
 }

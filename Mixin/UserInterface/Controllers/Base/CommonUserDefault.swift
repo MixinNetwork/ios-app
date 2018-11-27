@@ -45,6 +45,9 @@ class CommonUserDefault {
     private var keyLastBackupSize: String {
         return "last_backup_size_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyHasForceLogout: String {
+        return "has_force_logout_\(AccountAPI.shared.accountIdentityNumber)"
+    }
 
     enum BackupCategory: String {
         case daily
@@ -89,6 +92,15 @@ class CommonUserDefault {
         }
         set {
             session.set(newValue, forKey: keyBackupVideos)
+        }
+    }
+
+    var hasForceLogout: Bool {
+        get {
+            return session.bool(forKey: keyHasForceLogout)
+        }
+        set {
+            session.set(newValue, forKey: keyHasForceLogout)
         }
     }
 

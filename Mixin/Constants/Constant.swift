@@ -121,6 +121,10 @@ struct MixinFile {
         }
     }
 
+    static var iCloudBackupDirectory: URL? {
+        return FileManager.default.url(forUbiquityContainerIdentifier: "MixinMessenger")?.appendingPathComponent(AccountAPI.shared.accountIdentityNumber).appendingPathComponent("Backup")
+    }
+
     static var rootDirectory: URL {
         let dir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(AccountAPI.shared.accountIdentityNumber)
         _ = FileManager.default.createNobackupDirectory(dir)

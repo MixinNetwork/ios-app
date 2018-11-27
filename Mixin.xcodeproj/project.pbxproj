@@ -487,6 +487,8 @@
 		DFAB3B4520B85A0C00886838 /* ReceiveMoneyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */; };
 		DFB2062421A7B7E2006E4341 /* BackupHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB2062321A7B7E2006E4341 /* BackupHeader.xib */; };
 		DFB2062621A80173006E4341 /* BackupCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */; };
+		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
+		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
 		DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D941FF7C2B6000875BD /* ResendData.swift */; };
 		DFB37D9F1FF94864000875BD /* RotateSignedPreKeyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */; };
 		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
@@ -1092,6 +1094,8 @@
 		DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReceiveMoneyWindow.xib; sourceTree = "<group>"; };
 		DFB2062321A7B7E2006E4341 /* BackupHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackupHeader.xib; sourceTree = "<group>"; };
 		DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCategoryViewController.swift; sourceTree = "<group>"; };
+		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
+		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
 		DFB37D941FF7C2B6000875BD /* ResendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendData.swift; sourceTree = "<group>"; };
 		DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateSignedPreKeyJob.swift; sourceTree = "<group>"; };
 		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
@@ -1948,6 +1952,7 @@
 				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
 				DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
+				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2036,6 +2041,7 @@
 				DFD87C8A1FDBF10100BBCFFC /* RefreshOffsetJob.swift */,
 				DFF353051FEE6A3400058453 /* RefreshAssetsJob.swift */,
 				DF1F278321A5637B009A74C6 /* BackupJob.swift */,
+				DFB2062921AC1771006E4341 /* RestoreJob.swift */,
 				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
 				DF1A9A791FF206F500A95188 /* RefreshSnapshotsJob.swift */,
 				DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */,
@@ -2985,6 +2991,7 @@
 				7BD51DDC1FB4231400865CB8 /* ConnectionHintView.swift in Sources */,
 				DF503D301FECF6F000C008E7 /* SenderKeyDAO.swift in Sources */,
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
+				DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */,
 				DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift in Sources */,
 				7B4375C32170CA6900846DC5 /* TransactionsFilterConditionCell.swift in Sources */,
@@ -2996,6 +3003,7 @@
 				DFFDF6852112E591009984B3 /* PinIntervalViewController.swift in Sources */,
 				7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */,
 				DF121F311FA1C767000F701D /* ConversationCell.swift in Sources */,
+				DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */,
 				DF1A9A7E1FF2539700A95188 /* UserNotificationExtension.swift in Sources */,
 				7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */,
 				7B25EC1E2174429F0057CA47 /* FilterableHeaderView.swift in Sources */,

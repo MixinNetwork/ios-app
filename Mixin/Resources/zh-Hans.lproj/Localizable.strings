@@ -27,6 +27,7 @@
 "action_show" = "显示";
 "action_apply" = "应用";
 "action_filter" = "筛选";
+"action_skip" = "跳过";
 "action_deauthorize" = "取消授权";
 "menu_delete" = "删除";
 "no_result" = "未找到相关内容";
@@ -170,6 +171,8 @@
 "chat_quote_type_photo" = "图片";
 "chat_quote_type_video" = "视频";
 "chat_search_giphy" = "在 GIPHY 上搜索";
+"chat_restore_tips" = "从 iCloud 云端恢复你的聊天记录。如果跳过后续无法恢复！";
+"chat_restore" = "恢复聊天记录";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";

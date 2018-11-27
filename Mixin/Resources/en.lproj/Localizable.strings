@@ -27,6 +27,7 @@
 "action_show" = "Show";
 "action_apply" = "Apply";
 "action_filter" = "Filter";
+"action_skip" = "Skip";
 "action_deauthorize" = "Deauthorize";
 "menu_delete" = "Delete";
 "no_result" = "No result";
@@ -173,6 +174,8 @@
 "chat_quote_type_photo" = "Photo";
 "chat_quote_type_video" = "Video";
 "chat_search_giphy" = "Search GIPHY";
+"chat_restore_tips" = "Restore your chat history from iCloud. You will not be able to restore later if you decline to restore now.";
+"chat_restore" = "Restore Chat History";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";

@@ -19,7 +19,7 @@ class BackupJob: BaseJob {
         guard FileManager.default.ubiquityIdentityToken != nil else {
             return
         }
-        guard let backupDir = FileManager.default.url(forUbiquityContainerIdentifier: "MixinMessenger")?.appendingPathComponent("Backup") else {
+        guard let backupDir = MixinFile.iCloudBackupDirectory else {
             return
         }
 
@@ -55,10 +55,10 @@ class BackupJob: BaseJob {
             CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
             CommonUserDefault.shared.lastBackupSize = fileSize
         } catch {
-            Bugsnag.notifyError(error)
             #if DEBUG
             print(error)
             #endif
+            Bugsnag.notifyError(error)
         }
         NotificationCenter.default.postOnMain(name: .BackupDidChange)
     }
@@ -86,6 +86,10 @@ class BackupJob: BaseJob {
         for category in categories {
             let dir = MixinFile.url(ofChatDirectory: category, filename: nil)
             let paths = try FileManager.default.contentsOfDirectory(atPath: dir.path).compactMap{ dir.appendingPathComponent($0) }
+
+            guard paths.count > 0 else {
+                continue
+            }
 
             let zipPath = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())")
             try FileManager.default.replace(from: zipPath, to: backupDir.appendingPathComponent(zipPath.lastPathComponent))

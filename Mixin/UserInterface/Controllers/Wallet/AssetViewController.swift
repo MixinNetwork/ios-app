@@ -160,9 +160,7 @@ extension AssetViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
         cell.render(snapshot: filteredSnapshots[indexPath.section][indexPath.row], asset: asset)
         cell.renderDecorationViews(indexPath: indexPath, models: filteredSnapshots)
-        if cell.delegate == nil {
-            cell.delegate = self
-        }
+        cell.delegate = self
         return cell
     }
     

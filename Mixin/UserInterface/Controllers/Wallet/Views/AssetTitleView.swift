@@ -37,14 +37,19 @@ class AssetTitleView: UIView, XibDesignable {
     
     func render(asset: AssetItem) {
         reloadIcon(asset: asset)
-        amountLabel.text = asset.balance
-        symbolLabel.text = asset.symbol
-        let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
-        if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
-            usdAmountLabel.text = "≈ $" + localizedUSDBalance
+        if asset.balance == "0" {
+            amountLabel.text = "0.00"
+            usdAmountLabel.text = "≈ $0.00"
         } else {
-            usdAmountLabel.text = nil
+            amountLabel.text = asset.balance
+            let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
+            if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
+                usdAmountLabel.text = "≈ $" + localizedUSDBalance
+            } else {
+                usdAmountLabel.text = nil
+            }
         }
+        symbolLabel.text = asset.symbol
         depositButton.isBusy = !(asset.isAccount || asset.isAddress)
         actionButtonsStackView.isHidden = false
         actionButtonsSeparatorView.isHidden = false

@@ -21,10 +21,10 @@ class WalletHeaderCell: UITableViewCell {
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
     private let usdIntegerAttribute = [
-        NSAttributedString.Key.font: UIFont(name: "MixinCondensed-Regular", size: 40)!
+        NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 40)!
     ]
     private let usdFractionAttribute = [
-        NSAttributedString.Key.font: UIFont(name: "MixinCondensed-Regular", size: 24)!
+        NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 24)!
     ]
     
     static func height(usdBalanceIsMoreThanZero: Bool) -> CGFloat {

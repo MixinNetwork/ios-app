@@ -27,7 +27,6 @@ class AssetViewController: UIViewController {
     private var filteredSnapshots = [[SnapshotItem]]()
     private var headerTitles = [String]()
     private var didLoadLocalSnapshots = false
-    private var didLoadRemoteSnapshots = false
     private var showTitleHeaderView: Bool {
         return !headerTitles.isEmpty && filterWindow.sort == .time
     }
@@ -79,7 +78,6 @@ class AssetViewController: UIViewController {
     }
     
     @objc func snapshotsDidChange(_ notification: Notification) {
-        didLoadRemoteSnapshots = true
         reloadSnapshots()
     }
     
@@ -335,7 +333,7 @@ extension AssetViewController {
     
     private func updateTableFooterView() {
         if filteredSnapshots.isEmpty {
-            if didLoadLocalSnapshots && didLoadRemoteSnapshots {
+            if didLoadLocalSnapshots {
                 loadingIndicator.stopAnimating()
                 tableHeaderView.transactionsHeaderView.isHidden = false
                 noTransactionFooterView.frame.size.height = {

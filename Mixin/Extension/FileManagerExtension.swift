@@ -74,11 +74,13 @@ extension FileManager {
         }
     }
 
-    func removeDirectoryChildFiles(_ directory: URL) {
-        guard let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) else { return }
-        for file in files {
-            try? FileManager.default.removeItem(atPath: directory.appendingPathComponent(file).path)
+    func removeDirectoryAndChildFiles(_ directory: URL) {
+        if let files = try? FileManager.default.contentsOfDirectory(atPath: directory.path) {
+            for file in files {
+                try? FileManager.default.removeItem(at: directory.appendingPathComponent(file))
+            }
         }
+        try? FileManager.default.removeItem(at: directory)
     }
 
     func mimeType(ext: String) -> String {

@@ -92,7 +92,7 @@ class BackupJob: BaseJob {
             let zipPath = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())")
             try FileManager.default.replace(from: zipPath, to: backupDir.appendingPathComponent(zipPath.lastPathComponent))
 
-            fileSize += FileManager.default.fileSize(zipPath.path)
+            fileSize += FileManager.default.fileSize(backupDir.appendingPathComponent(zipPath.lastPathComponent).path)
             try? FileManager.default.removeItem(at: zipPath)
         }
         return fileSize
@@ -106,10 +106,15 @@ class BackupJob: BaseJob {
         if CommonUserDefault.shared.hasBackupFiles {
             categories.append(.files)
             try FileManager.default.createDirectoryIfNeeded(dir: backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
+        } else {
+            FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
         }
+
         if CommonUserDefault.shared.hasBackupVideos {
             categories.append(.videos)
             try FileManager.default.createDirectoryIfNeeded(dir: backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
+        } else {
+            FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
         }
 
         for category in categories {
@@ -140,7 +145,6 @@ class BackupJob: BaseJob {
             }
             fileSize += FileManager.default.fileSize(localPath.path)
         }
-
         return fileSize
     }
 

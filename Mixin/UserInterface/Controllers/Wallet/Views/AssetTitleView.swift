@@ -5,7 +5,7 @@ class AssetTitleView: UIView, XibDesignable {
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var iconImageView: CornerImageView!
     @IBOutlet weak var chainImageView: CornerImageView!
-    @IBOutlet weak var amountLabel: UILabel!
+    @IBOutlet weak var amountLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var usdAmountLabel: UILabel!
     @IBOutlet weak var actionButtonsStackView: UIStackView!
@@ -20,12 +20,12 @@ class AssetTitleView: UIView, XibDesignable {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        loadXib()
+        prepare()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        loadXib()
+        prepare()
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -103,6 +103,11 @@ class AssetTitleView: UIView, XibDesignable {
         width += contentStackView.spacing
         width += symbolLabel.intrinsicContentSize.width
         return containerWidth - width
+    }
+    
+    private func prepare() {
+        loadXib()
+        amountLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
     }
     
 }

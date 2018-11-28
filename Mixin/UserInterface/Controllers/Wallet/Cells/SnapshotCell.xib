@@ -39,7 +39,7 @@
                                 <rect key="frame" x="354.5" y="0.0" width="39.5" height="59.5"/>
                                 <color key="backgroundColor" red="0.94901960780000005" green="0.98039215690000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="mI8-4d-1QY">
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="mI8-4d-1QY">
                                 <rect key="frame" x="20" y="0.0" width="354" height="59.5"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ITh-bd-CG3">
@@ -78,13 +78,13 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="Transfer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o1a-sz-8up">
-                                        <rect key="frame" x="40" y="22.5" width="47" height="14.5"/>
+                                        <rect key="frame" x="38" y="22.5" width="47" height="14.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" red="0.2274509804" green="0.23529411759999999" blue="0.24313725489999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="+20" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Eq-Iz-C6X">
-                                        <rect key="frame" x="99" y="20.5" width="255" height="19"/>
+                                        <rect key="frame" x="95" y="20.5" width="259" height="19"/>
                                         <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="19"/>
                                         <color key="textColor" red="0.16078431369999999" green="0.74509803919999995" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -92,7 +92,7 @@
                                 </subviews>
                             </stackView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EwF-oW-X6Y">
-                                <rect key="frame" x="60" y="58.5" width="334" height="1"/>
+                                <rect key="frame" x="58" y="58.5" width="336" height="1"/>
                                 <color key="backgroundColor" red="0.95294117649999999" green="0.95294117649999999" blue="0.95294117649999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="vHs-Be-r1X" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>

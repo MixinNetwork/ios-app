@@ -43,12 +43,11 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IEL-FV-sUa" customClass="ShadowedCardView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="10" y="10" width="355" height="214"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Wallet/ic_token_icon_shadow_large" translatesAutoresizingMaskIntoConstraints="NO" id="ch8-iL-htP">
-                            <rect key="frame" x="37.5" y="32" width="61" height="60"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_token_icon_shadow_large" translatesAutoresizingMaskIntoConstraints="NO" id="ch8-iL-htP">
+                            <rect key="frame" x="17.5" y="32" width="61" height="60"/>
                         </imageView>
-                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="PxJ-GV-z4f">
-                            <rect key="frame" x="40" y="34" width="275" height="112"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="PxJ-GV-z4f">
+                            <rect key="frame" x="20" y="34" width="292" height="112"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="488-vU-bzo">
                                     <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
@@ -87,16 +86,16 @@
                                     </constraints>
                                 </view>
                                 <view opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zeE-66-uiM">
-                                    <rect key="frame" x="65" y="0.0" width="210" height="96"/>
+                                    <rect key="frame" x="66" y="0.0" width="226" height="96"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="1.0003288888888" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OR8-Nl-brd">
-                                            <rect key="frame" x="0.0" y="0.0" width="171.5" height="80"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="1.0003288888888" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OR8-Nl-brd" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="186" height="80"/>
                                             <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="40"/>
                                             <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tlD-ja-rZq">
-                                            <rect key="frame" x="173.5" y="51.5" width="32.5" height="18.5"/>
+                                            <rect key="frame" x="188" y="51.5" width="32.5" height="18.5"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="XIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L9F-lx-hml">
                                                     <rect key="frame" x="6" y="2" width="20.5" height="14.5"/>
@@ -119,7 +118,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="≈ $4080" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IIV-CI-Xm1">
-                                            <rect key="frame" x="0.0" y="79" width="210" height="17"/>
+                                            <rect key="frame" x="0.0" y="79" width="226" height="17"/>
                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -176,12 +175,14 @@
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="Hts-rf-a6p" secondAttribute="bottom" id="2WZ-Y7-7NK"/>
                         <constraint firstItem="PxJ-GV-z4f" firstAttribute="top" secondItem="IEL-FV-sUa" secondAttribute="top" constant="34" id="3zq-01-jQ3"/>
-                        <constraint firstItem="PxJ-GV-z4f" firstAttribute="leading" secondItem="IEL-FV-sUa" secondAttribute="leading" constant="40" id="6tP-p4-Itp"/>
-                        <constraint firstAttribute="trailing" secondItem="PxJ-GV-z4f" secondAttribute="trailing" constant="40" id="EnA-na-APW"/>
+                        <constraint firstItem="PxJ-GV-z4f" firstAttribute="leading" secondItem="IEL-FV-sUa" secondAttribute="leading" constant="20" id="6tP-p4-Itp"/>
+                        <constraint firstAttribute="trailing" secondItem="PxJ-GV-z4f" secondAttribute="trailing" constant="43" id="EnA-na-APW"/>
                         <constraint firstItem="NFD-XO-enZ" firstAttribute="centerX" secondItem="Hts-rf-a6p" secondAttribute="centerX" id="MG1-uG-FAr"/>
+                        <constraint firstItem="ch8-iL-htP" firstAttribute="centerX" secondItem="488-vU-bzo" secondAttribute="centerX" id="Okl-EO-i6i"/>
                         <constraint firstItem="Hts-rf-a6p" firstAttribute="leading" secondItem="IEL-FV-sUa" secondAttribute="leading" id="PgY-qu-dQd"/>
                         <constraint firstAttribute="bottom" secondItem="PxJ-GV-z4f" secondAttribute="bottom" priority="250" constant="33" id="pIh-Ix-doS"/>
                         <constraint firstItem="NFD-XO-enZ" firstAttribute="centerY" secondItem="Hts-rf-a6p" secondAttribute="centerY" id="qXz-R1-HKW"/>
+                        <constraint firstItem="ch8-iL-htP" firstAttribute="centerY" secondItem="488-vU-bzo" secondAttribute="centerY" id="sUR-fO-cty"/>
                         <constraint firstItem="Hts-rf-a6p" firstAttribute="top" secondItem="PxJ-GV-z4f" secondAttribute="bottom" priority="750" constant="12" id="ycr-K8-azh"/>
                         <constraint firstAttribute="trailing" secondItem="Hts-rf-a6p" secondAttribute="trailing" id="zv5-eR-VAz"/>
                     </constraints>

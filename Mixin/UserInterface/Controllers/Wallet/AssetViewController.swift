@@ -264,9 +264,10 @@ extension AssetViewController {
         let assetId = asset.assetId
         queue.async { [weak self] in
             let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId)
-            let inexistedUserIds = snapshots
+            var inexistedUserIds = snapshots
                 .filter({ $0.opponentUserFullName == nil })
                 .compactMap({ $0.opponentId })
+            inexistedUserIds = Array(Set(inexistedUserIds))
             if !inexistedUserIds.isEmpty {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: inexistedUserIds))
             }

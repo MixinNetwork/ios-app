@@ -35,7 +35,7 @@ class AllTransactionsViewController: UITableViewController {
         var newSnapshots = self.snapshots
         DispatchQueue.global().async { [weak self] in
             var lastTitle = newTitles.last
-            let snapshots = SnapshotDAO.shared.snapshots(below: location, limit: pageLimit)
+            let snapshots = SnapshotDAO.shared.getSnapshots(below: location, sort: .createdAt, limit: pageLimit)
             for snapshot in snapshots {
                 let title = DateFormatter.dateSimple.string(from: snapshot.createdAt.toUTCDate())
                 if title == lastTitle {
@@ -63,7 +63,7 @@ class AllTransactionsViewController: UITableViewController {
         AssetAPI.shared.snapshots { (result) in
             switch result {
             case let .success(snapshots):
-                SnapshotDAO.shared.insertOrUpdateSnapshots(snapshots: snapshots)
+                SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots)
             case .failure:
                 break
             }
@@ -82,7 +82,7 @@ extension AllTransactionsViewController: ContainerViewControllerDelegate {
     var prefersNavigationBarSeparatorLineHidden: Bool {
         return true
     }
-        
+    
 }
 
 extension AllTransactionsViewController {

@@ -9,11 +9,11 @@ struct Snapshot: BaseCodable {
     let type: String
     let assetId: String
     let amount: String
+    let opponentId: String?
     let transactionHash: String?
     let sender: String?
-    let opponentId: String?
-    let memo: String?
     let receiver: String?
+    let memo: String?
     let confirmations: Int?
     var createdAt: String
 

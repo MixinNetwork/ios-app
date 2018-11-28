@@ -461,10 +461,12 @@ extension GalleryItemViewController {
             PHPhotoLibrary.shared().performChanges({
                 PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
             }, completionHandler: { (success, error) in
-                if success {
-                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_VIDEO_SUCCESS, backgroundColor: .hintGreen)
-                } else {
-                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_VIDEO_FAILED, backgroundColor: .hintRed)
+                DispatchQueue.main.async {
+                    if success {
+                        SwiftMessages.showToast(message: Localized.CAMERA_SAVE_VIDEO_SUCCESS, backgroundColor: .hintGreen)
+                    } else {
+                        SwiftMessages.showToast(message: Localized.CAMERA_SAVE_VIDEO_FAILED, backgroundColor: .hintRed)
+                    }
                 }
             })
         }

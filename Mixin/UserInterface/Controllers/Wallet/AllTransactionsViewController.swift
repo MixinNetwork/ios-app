@@ -110,7 +110,7 @@ extension AllTransactionsViewController {
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard !didLoadLastSnapshot, !isLoading, snapshots.count > 0, indexPath.row > snapshots.count - 20 else {
+        guard !didLoadLastSnapshot, !isLoading, snapshots.count > 0, indexPath.section == titles.count - 1 else {
             return
         }
         fetchSnapshots()

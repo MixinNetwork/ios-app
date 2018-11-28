@@ -27,6 +27,7 @@ final class SnapshotDAO {
                 }
                 stmt = stmt.order(by: [amount.asOrder(by: .descending), createdAt.asOrder(by: .descending)])
             }
+            stmt = stmt.limit(limit)
             return stmt
         }
     }

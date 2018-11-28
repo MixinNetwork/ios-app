@@ -11,12 +11,6 @@ class AssetViewController: UIViewController {
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.asset-load")
     private let tableHeaderView = AssetTableHeaderView()
-    private let loadingIndicator: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .whiteLarge)
-        view.backgroundColor = .white
-        view.color = .darkGray
-        return view
-    }()
     
     private var asset: AssetItem!
     private var snapshots = [SnapshotItem]() {
@@ -333,29 +327,20 @@ extension AssetViewController {
     
     private func updateTableFooterView() {
         if filteredSnapshots.isEmpty {
-            if didLoadLocalSnapshots {
-                loadingIndicator.stopAnimating()
-                tableHeaderView.transactionsHeaderView.isHidden = false
-                noTransactionFooterView.frame.size.height = {
-                    if #available(iOS 11.0, *) {
-                        return tableView.frame.height
-                            - tableView.contentSize.height
-                            - tableView.adjustedContentInset.vertical
-                    } else {
-                        return tableView.frame.height
-                            - tableView.contentSize.height
-                            - tableView.contentInset.vertical
-                    }
-                }()
-                tableView.tableFooterView = noTransactionFooterView
-            } else {
-                tableHeaderView.transactionsHeaderView.isHidden = true
-                loadingIndicator.startAnimating()
-                loadingIndicator.frame.size.height = 44
-                tableView.tableFooterView = loadingIndicator
-            }
+            tableHeaderView.transactionsHeaderView.isHidden = false
+            noTransactionFooterView.frame.size.height = {
+                if #available(iOS 11.0, *) {
+                    return tableView.frame.height
+                        - tableView.contentSize.height
+                        - tableView.adjustedContentInset.vertical
+                } else {
+                    return tableView.frame.height
+                        - tableView.contentSize.height
+                        - tableView.contentInset.vertical
+                }
+            }()
+            tableView.tableFooterView = noTransactionFooterView
         } else {
-            loadingIndicator.stopAnimating()
             tableHeaderView.transactionsHeaderView.isHidden = false
             tableView.tableFooterView = nil
         }

@@ -18,8 +18,8 @@ class SnapshotDataSource {
     private var isLoading = false
     private var didLoadEarliestLocalSnapshot = false
     private var didLoadEarliestRemoteSnapshot = false
-    private var sort = SnapshotDAO.Sort.createdAt
-    private var filter = Filter.all
+    private var sort = Snapshot.Sort.createdAt
+    private var filter = Snapshot.Filter.all
     private var remoteLoadingJobIds = Set<String>()
     
     init(category: Category) {
@@ -128,7 +128,7 @@ class SnapshotDataSource {
         queue.addOperation(op)
     }
     
-    func setSort(_ sort: SnapshotDAO.Sort, filter: Filter) {
+    func setSort(_ sort: Snapshot.Sort, filter: Snapshot.Filter) {
         if sort != self.sort || filter != filter {
             reloadFromLocal()
         }
@@ -186,37 +186,7 @@ extension SnapshotDataSource {
         }
     }
     
-    enum Filter {
-        case all
-        case deposit
-        case transfer
-        case withdrawal
-        case fee
-        case rebate
-        
-        var snapshotTypes: [SnapshotType] {
-            switch self {
-            case .all:
-                return SnapshotType.allCases
-            case .deposit:
-                return [.deposit, .pendingDeposit]
-            case .transfer:
-                return [.transfer]
-            case .withdrawal:
-                return [.withdrawal]
-            case .fee:
-                return [.fee]
-            case .rebate:
-                return [.rebate]
-            }
-        }
-    }
-    
-}
-
-extension SnapshotDataSource {
-    
-    private static func timeSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
+    private static func createdAtSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
         return one.createdAt > another.createdAt
     }
     
@@ -232,14 +202,14 @@ extension SnapshotDataSource {
     
     // This method will apply sort and filters, and categorize items imported
     typealias CategorizedItems = (titles: [String], snapshots: [[SnapshotItem]])
-    private static func categorizedItems(_ items: [SnapshotItem], sort: SnapshotDAO.Sort, filter: Filter) -> CategorizedItems {
+    private static func categorizedItems(_ items: [SnapshotItem], sort: Snapshot.Sort, filter: Snapshot.Filter) -> CategorizedItems {
         let visibleSnapshotTypes = filter.snapshotTypes.map({ $0.rawValue })
         var items = items.filter({ visibleSnapshotTypes.contains($0.type) })
         switch sort {
         case .amount:
             items = items.sorted(by: SnapshotDataSource.amountSorter)
         case .createdAt:
-            items = items.sorted(by: SnapshotDataSource.timeSorter)
+            items = items.sorted(by: SnapshotDataSource.createdAtSorter)
         }
         switch sort {
         case .createdAt:

@@ -22,7 +22,7 @@ class AssetViewController: UIViewController {
     private var headerTitles = [String]()
     private var didLoadLocalSnapshots = false
     private var showTitleHeaderView: Bool {
-        return !headerTitles.isEmpty && filterWindow.sort == .time
+        return !headerTitles.isEmpty && filterWindow.sort == .createdAt
     }
     
     private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
@@ -190,7 +190,7 @@ extension AssetViewController: UITableViewDelegate {
 
 extension AssetViewController: AssetFilterWindowDelegate {
     
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: AssetFilterWindow.Sort, filter: AssetFilterWindow.Filter) {
+    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: Snapshot.Sort, filter: Snapshot.Filter) {
         tableView.setContentOffset(.zero, animated: false)
         tableView.layoutIfNeeded()
         updateFilteredSnapshots()
@@ -282,9 +282,9 @@ extension AssetViewController {
             .map({ $0.rawValue })
         let sortedSnapshots = self.snapshots
             .filter({ visibleSnapshotTypes.contains($0.type) })
-            .sorted(by: filterWindow.sort == .time ? timeSorter : amountSorter)
+            .sorted(by: filterWindow.sort == .createdAt ? createdAtSorter : amountSorter)
         switch filterWindow.sort {
-        case .time:
+        case .createdAt:
             var keys = [String]()
             var dict = [String: [SnapshotItem]]()
             for snapshot in sortedSnapshots {
@@ -311,7 +311,7 @@ extension AssetViewController {
         }
     }
     
-    private func timeSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
+    private func createdAtSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
         return one.createdAt > another.createdAt
     }
     

@@ -53,6 +53,37 @@ struct Snapshot: BaseCodable {
         self.createdAt = createdAt
     }
     
+    enum Sort {
+        case createdAt
+        case amount
+    }
+    
+    enum Filter {
+        case all
+        case deposit
+        case transfer
+        case withdrawal
+        case fee
+        case rebate
+        
+        var snapshotTypes: [SnapshotType] {
+            switch self {
+            case .all:
+                return SnapshotType.allCases
+            case .deposit:
+                return [.deposit, .pendingDeposit]
+            case .transfer:
+                return [.transfer]
+            case .withdrawal:
+                return [.withdrawal]
+            case .fee:
+                return [.fee]
+            case .rebate:
+                return [.rebate]
+            }
+        }
+    }
+
 }
 
 enum SnapshotType: String, CaseIterable {

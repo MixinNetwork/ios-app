@@ -4,14 +4,9 @@ final class SnapshotDAO {
     
     static let shared = SnapshotDAO()
     
-    enum Sort {
-        case createdAt
-        case amount
-    }
-    
     private let createdAt = Snapshot.Properties.createdAt.in(table: Snapshot.tableName)
     
-    func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Sort, limit: Int) -> [SnapshotItem] {
+    func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement

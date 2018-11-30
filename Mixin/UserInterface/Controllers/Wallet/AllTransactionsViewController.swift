@@ -10,6 +10,8 @@ class AllTransactionsViewController: UITableViewController {
     private let dataSource = SnapshotDataSource(category: .all)
     private let loadNextPageThreshold = 20
     
+    private lazy var filterWindow = AssetFilterWindow.instance()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "SnapshotCell", bundle: .main),
@@ -26,14 +28,6 @@ class AllTransactionsViewController: UITableViewController {
         let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_ALL_TRANSACTIONS_TITLE)
         container.automaticallyAdjustsScrollViewInsets = false
         return container
-    }
-    
-}
-
-extension AllTransactionsViewController: ContainerViewControllerDelegate {
-    
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return true
     }
     
 }
@@ -80,6 +74,36 @@ extension AllTransactionsViewController {
                 self?.navigationController?.pushViewController(TransactionViewController.instance(asset: asset, snapshot: snapshot), animated: true)
             }
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let title = dataSource.titles[section]
+        return title.isEmpty ? .leastNormalMagnitude : 32
+    }
+    
+}
+
+extension AllTransactionsViewController: ContainerViewControllerDelegate {
+    
+    var prefersNavigationBarSeparatorLineHidden: Bool {
+        return true
+    }
+    
+    func barRightButtonTappedAction() {
+        filterWindow.delegate = self
+        filterWindow.presentPopupControllerAnimated()
+    }
+    
+    func imageBarRightButton() -> UIImage? {
+        return UIImage(named: "Wallet/ic_filter_dark")
+    }
+    
+}
+
+extension AllTransactionsViewController: AssetFilterWindowDelegate {
+    
+    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
+        dataSource.setSort(sort, filter: filter)
     }
     
 }

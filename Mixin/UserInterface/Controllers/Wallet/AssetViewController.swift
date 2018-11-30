@@ -190,7 +190,7 @@ extension AssetViewController: UITableViewDelegate {
 
 extension AssetViewController: AssetFilterWindowDelegate {
     
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: Snapshot.Sort, filter: Snapshot.Filter) {
+    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
         tableView.setContentOffset(.zero, animated: false)
         tableView.layoutIfNeeded()
         updateFilteredSnapshots()

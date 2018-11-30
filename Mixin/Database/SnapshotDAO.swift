@@ -21,9 +21,9 @@ final class SnapshotDAO {
                 stmt = stmt.order(by: createdAt.asOrder(by: .descending))
             case .amount:
                 if let location = location {
-                    stmt = stmt.where(amount < location.amount && createdAt < location.createdAt)
+                    stmt = stmt.where(amount.abs() < Expression(stringLiteral: location.amount).abs() && createdAt < location.createdAt)
                 }
-                stmt = stmt.order(by: [amount.asOrder(by: .descending), createdAt.asOrder(by: .descending)])
+                stmt = stmt.order(by: [amount.abs().asOrder(by: .descending), createdAt.asOrder(by: .descending)])
             }
             stmt = stmt.limit(limit)
             return stmt

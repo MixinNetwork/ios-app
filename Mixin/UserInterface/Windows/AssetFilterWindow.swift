@@ -1,7 +1,7 @@
 import UIKit
 
 protocol AssetFilterWindowDelegate: class {
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: Snapshot.Sort, filter: Snapshot.Filter)
+    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter)
 }
 
 class AssetFilterWindow: BottomSheetView {

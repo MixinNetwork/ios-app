@@ -129,11 +129,13 @@ class SnapshotDataSource {
     }
     
     func setSort(_ sort: Snapshot.Sort, filter: Snapshot.Filter) {
-        if sort != self.sort || filter != filter {
-            reloadFromLocal()
-        }
+        let needsReload = sort != self.sort || self.filter != filter
         self.sort = sort
         self.filter = filter
+        tableView?.setContentOffset(.zero, animated: true)
+        if needsReload {
+            reloadFromLocal()
+        }
     }
     
     func distanceToLastItem(of indexPath: IndexPath) -> Int? {

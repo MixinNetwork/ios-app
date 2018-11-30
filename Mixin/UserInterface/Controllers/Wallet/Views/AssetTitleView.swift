@@ -5,7 +5,7 @@ class AssetTitleView: UIView, XibDesignable {
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var iconImageView: CornerImageView!
     @IBOutlet weak var chainImageView: CornerImageView!
-    @IBOutlet weak var amountLabel: UILabel!
+    @IBOutlet weak var amountLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var usdAmountLabel: UILabel!
     @IBOutlet weak var actionButtonsStackView: UIStackView!
@@ -20,12 +20,12 @@ class AssetTitleView: UIView, XibDesignable {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        loadXib()
+        prepare()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        loadXib()
+        prepare()
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -37,14 +37,19 @@ class AssetTitleView: UIView, XibDesignable {
     
     func render(asset: AssetItem) {
         reloadIcon(asset: asset)
-        amountLabel.text = asset.balance
-        symbolLabel.text = asset.symbol
-        let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
-        if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
-            usdAmountLabel.text = "≈ $" + localizedUSDBalance
+        if asset.balance == "0" {
+            amountLabel.text = "0.00"
+            usdAmountLabel.text = "≈ $0.00"
         } else {
-            usdAmountLabel.text = nil
+            amountLabel.text = asset.balance
+            let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
+            if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
+                usdAmountLabel.text = "≈ $" + localizedUSDBalance
+            } else {
+                usdAmountLabel.text = nil
+            }
         }
+        symbolLabel.text = asset.symbol
         depositButton.isBusy = !(asset.isAccount || asset.isAddress)
         actionButtonsStackView.isHidden = false
         actionButtonsSeparatorView.isHidden = false
@@ -103,6 +108,11 @@ class AssetTitleView: UIView, XibDesignable {
         width += contentStackView.spacing
         width += symbolLabel.intrinsicContentSize.width
         return containerWidth - width
+    }
+    
+    private func prepare() {
+        loadXib()
+        amountLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
     }
     
 }

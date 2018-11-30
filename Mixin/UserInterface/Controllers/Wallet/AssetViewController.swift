@@ -11,12 +11,6 @@ class AssetViewController: UIViewController {
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.asset-load")
     private let tableHeaderView = AssetTableHeaderView()
-    private let loadingIndicator: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .whiteLarge)
-        view.backgroundColor = .white
-        view.color = .darkGray
-        return view
-    }()
     
     private var asset: AssetItem!
     private var snapshots = [SnapshotItem]() {
@@ -27,7 +21,6 @@ class AssetViewController: UIViewController {
     private var filteredSnapshots = [[SnapshotItem]]()
     private var headerTitles = [String]()
     private var didLoadLocalSnapshots = false
-    private var didLoadRemoteSnapshots = false
     private var showTitleHeaderView: Bool {
         return !headerTitles.isEmpty && filterWindow.sort == .time
     }
@@ -79,7 +72,6 @@ class AssetViewController: UIViewController {
     }
     
     @objc func snapshotsDidChange(_ notification: Notification) {
-        didLoadRemoteSnapshots = true
         reloadSnapshots()
     }
     
@@ -160,9 +152,7 @@ extension AssetViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
         cell.render(snapshot: filteredSnapshots[indexPath.section][indexPath.row], asset: asset)
         cell.renderDecorationViews(indexPath: indexPath, models: filteredSnapshots)
-        if cell.delegate == nil {
-            cell.delegate = self
-        }
+        cell.delegate = self
         return cell
     }
     
@@ -264,9 +254,10 @@ extension AssetViewController {
         let assetId = asset.assetId
         queue.async { [weak self] in
             let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId)
-            let inexistedUserIds = snapshots
+            var inexistedUserIds = snapshots
                 .filter({ $0.opponentUserFullName == nil })
                 .compactMap({ $0.opponentId })
+            inexistedUserIds = Array(Set(inexistedUserIds))
             if !inexistedUserIds.isEmpty {
                 ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: inexistedUserIds))
             }
@@ -336,29 +327,20 @@ extension AssetViewController {
     
     private func updateTableFooterView() {
         if filteredSnapshots.isEmpty {
-            if didLoadLocalSnapshots && didLoadRemoteSnapshots {
-                loadingIndicator.stopAnimating()
-                tableHeaderView.transactionsHeaderView.isHidden = false
-                noTransactionFooterView.frame.size.height = {
-                    if #available(iOS 11.0, *) {
-                        return tableView.frame.height
-                            - tableView.contentSize.height
-                            - tableView.adjustedContentInset.vertical
-                    } else {
-                        return tableView.frame.height
-                            - tableView.contentSize.height
-                            - tableView.contentInset.vertical
-                    }
-                }()
-                tableView.tableFooterView = noTransactionFooterView
-            } else {
-                tableHeaderView.transactionsHeaderView.isHidden = true
-                loadingIndicator.startAnimating()
-                loadingIndicator.frame.size.height = 44
-                tableView.tableFooterView = loadingIndicator
-            }
+            tableHeaderView.transactionsHeaderView.isHidden = false
+            noTransactionFooterView.frame.size.height = {
+                if #available(iOS 11.0, *) {
+                    return tableView.frame.height
+                        - tableView.contentSize.height
+                        - tableView.adjustedContentInset.vertical
+                } else {
+                    return tableView.frame.height
+                        - tableView.contentSize.height
+                        - tableView.contentInset.vertical
+                }
+            }()
+            tableView.tableFooterView = noTransactionFooterView
         } else {
-            loadingIndicator.stopAnimating()
             tableHeaderView.transactionsHeaderView.isHidden = false
             tableView.tableFooterView = nil
         }

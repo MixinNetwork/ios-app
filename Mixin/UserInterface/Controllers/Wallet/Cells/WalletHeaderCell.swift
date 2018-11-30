@@ -2,7 +2,7 @@ import UIKit
 
 class WalletHeaderCell: UITableViewCell {
     
-    @IBOutlet weak var usdValueLabel: UILabel!
+    @IBOutlet weak var usdValueLabel: InsetLabel!
     @IBOutlet weak var btcValueLabel: UILabel!
     
     @IBOutlet weak var assetChartWrapperView: UIView!
@@ -21,14 +21,19 @@ class WalletHeaderCell: UITableViewCell {
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
     private let usdIntegerAttribute = [
-        NSAttributedString.Key.font: UIFont(name: "MixinCondensed-Regular", size: 40)!
+        NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 40)!
     ]
     private let usdFractionAttribute = [
-        NSAttributedString.Key.font: UIFont(name: "MixinCondensed-Regular", size: 24)!
+        NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 24)!
     ]
     
     static func height(usdBalanceIsMoreThanZero: Bool) -> CGFloat {
         return usdBalanceIsMoreThanZero ? 187 : 135
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        usdValueLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
     }
     
     func render(assets: [AssetItem]) {

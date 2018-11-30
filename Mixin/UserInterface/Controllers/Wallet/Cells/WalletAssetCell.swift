@@ -2,17 +2,28 @@ import UIKit
 
 class WalletAssetCell: UITableViewCell {
     
-    static let height: CGFloat = 90
+    static let height: CGFloat = 96
+    static let balanceAttributes: [NSAttributedString.Key: Any] = [
+        .font: UIFont(name: "DINCondensed-Bold", size: 24)!,
+        .kern: 0.7
+    ]
     
     @IBOutlet weak var cardView: ShadowedCardView!
     @IBOutlet weak var iconImageView: CornerImageView!
     @IBOutlet weak var chainImageView: CornerImageView!
-    @IBOutlet weak var balanceLabel: UILabel!
-    @IBOutlet weak var symbolLabel: UILabel!
-    @IBOutlet weak var changeLabel: UILabel!
+    @IBOutlet weak var balanceLabel: InsetLabel!
+    @IBOutlet weak var symbolLabel: InsetLabel!
+    @IBOutlet weak var changeLabel: InsetLabel!
     @IBOutlet weak var usdPriceLabel: UILabel!
     @IBOutlet weak var usdBalanceLabel: UILabel!
     @IBOutlet weak var noUSDPriceIndicatorLabel: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        balanceLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
+        symbolLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
+        changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -38,7 +49,8 @@ class WalletAssetCell: UITableViewCell {
         } else {
             chainImageView.isHidden = true
         }
-        balanceLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never)
+        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never) ?? ""
+        balanceLabel.attributedText = NSAttributedString(string: balance, attributes: WalletAssetCell.balanceAttributes)
         symbolLabel.text = asset.symbol
         if asset.priceUsd.doubleValue > 0 {
             changeLabel.text = " \(asset.localizedUSDChange)%"

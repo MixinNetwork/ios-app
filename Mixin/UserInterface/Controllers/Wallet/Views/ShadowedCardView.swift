@@ -4,7 +4,6 @@ class ShadowedCardView: UIView {
     
     private let cardLayer = CAShapeLayer()
     private let cornerRadius: CGFloat = 8
-    private let shadowColor = UIColor(rgbValue: 0xC3C3C3)
     private let shadowOffset = CGPoint(x: 0, y: 8)
     
     private var lastBounds = CGRect.zero
@@ -39,8 +38,8 @@ class ShadowedCardView: UIView {
     private func prepare() {
         updateCardPath()
         cardLayer.fillColor = UIColor.white.cgColor
-        cardLayer.shadowColor = shadowColor.cgColor
-        cardLayer.shadowOpacity = 0.2
+        cardLayer.shadowColor = UIColor(rgbValue: 0xC3C3C3).cgColor
+        cardLayer.shadowOpacity = 0.15
         cardLayer.shadowRadius = 8
         layer.insertSublayer(cardLayer, at: 0)
     }

@@ -595,7 +595,7 @@ extension ReceiveMessageService {
         }
 
         snapshot.createdAt = data.createdAt
-        SnapshotDAO.shared.replaceSnapshot(snapshot: snapshot)
+        SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
         MessageDAO.shared.insertMessage(message: Message.createMessage(snapshotMesssage: snapshot, data: data), messageSource: data.source)
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }

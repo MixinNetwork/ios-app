@@ -202,7 +202,7 @@ extension PayView: PinFieldDelegate {
                 if isWithdrawal {
                     ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                 }
-                SnapshotDAO.shared.replaceSnapshot(snapshot: snapshot)
+                SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
                 if weakSelf.avatarImageView.isHidden {
                     WalletUserDefault.shared.lastWithdrawalAddress[assetId] = weakSelf.address.addressId
                 } else {

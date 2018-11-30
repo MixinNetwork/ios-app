@@ -19,7 +19,7 @@ class RefreshSnapshotsJob: BaseJob {
         }
         switch AssetAPI.shared.snapshots(opponentId: opponentId) {
         case let .success(snapshots):
-            SnapshotDAO.shared.updateSnapshots(snapshots: snapshots)
+            SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots)
         case let .failure(error):
             throw error
         }

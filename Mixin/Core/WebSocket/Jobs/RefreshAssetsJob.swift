@@ -66,7 +66,7 @@ class RefreshAssetsJob: BaseJob {
     private func updateSnapshots(assetId: String) {
         switch AssetAPI.shared.snapshots(assetId: assetId) {
         case let .success(snapshots):
-            SnapshotDAO.shared.updateSnapshots(snapshots: snapshots)
+            SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots)
         case let .failure(error):
             UIApplication.trackError("RefreshAssetsJob",
                                      action: "Get snapshots",

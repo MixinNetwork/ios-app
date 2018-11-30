@@ -122,7 +122,7 @@ struct MixinFile {
     }
 
     static var iCloudBackupDirectory: URL? {
-        return FileManager.default.url(forUbiquityContainerIdentifier: "MixinMessenger")?.appendingPathComponent(AccountAPI.shared.accountIdentityNumber).appendingPathComponent("Backup")
+        return FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent(AccountAPI.shared.accountIdentityNumber).appendingPathComponent("Backup")
     }
 
     static var rootDirectory: URL {
@@ -139,8 +139,8 @@ struct MixinFile {
         return url
     }
 
-    static var databasePath: String {
-        return rootDirectory.appendingPathComponent("mixin.db").path
+    static var databaseURL: URL {
+        return rootDirectory.appendingPathComponent("mixin.db")
     }
 
     static var signalDatabasePath: String {

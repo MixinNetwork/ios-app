@@ -16,6 +16,19 @@ extension URL {
         return results
     }
 
+    func cloudExist() -> Bool {
+        do {
+            return try resourceValues(forKeys: [.isUbiquitousItemKey]).isUbiquitousItem ?? false
+        } catch {
+            return false
+        }
+    }
+
+    func cloudDownloaded() throws -> Bool {
+        //A local copy of this item exists and is the most up-to-date version known to the device.
+        return try resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey]).ubiquitousItemDownloadingStatus == .current
+    }
+
     static func createTempUrl(fileExtension: String) -> URL {
         return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString.lowercased()).\(fileExtension)")
     }

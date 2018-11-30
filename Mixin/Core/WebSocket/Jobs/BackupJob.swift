@@ -64,36 +64,34 @@ class BackupJob: BaseJob {
     }
 
     private func backupDatabase(backupDir: URL) throws -> Int64 {
-        let databasePath = MixinFile.backupDatabase
-        let iCloudPath = backupDir.appendingPathComponent(databasePath.lastPathComponent)
+        let localURL = MixinFile.backupDatabase
+        let cloudURL = backupDir.appendingPathComponent(localURL.lastPathComponent)
 
-        try? FileManager.default.removeItem(at: databasePath)
-        try MixinDatabase.shared.backup(path: databasePath.path) { (remaining, pagecount) in
+        try? FileManager.default.removeItem(at: localURL)
+        try MixinDatabase.shared.backup(path: localURL.path) { (remaining, pagecount) in
 
         }
 
-        try FileManager.default.replace(from: databasePath, to: iCloudPath)
-        try? FileManager.default.removeItem(at: databasePath)
-
-        return FileManager.default.fileSize(iCloudPath.path)
+        try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
+        return FileManager.default.fileSize(cloudURL.path)
     }
 
     private func backupPhotosAndAudios(backupDir: URL) throws -> Int64 {
         let categories: [MixinFile.ChatDirectory] = [.photos, .audios]
         var fileSize: Int64 = 0
         for category in categories {
-            let dir = MixinFile.url(ofChatDirectory: category, filename: nil)
-            let paths = try FileManager.default.contentsOfDirectory(atPath: dir.path).compactMap{ dir.appendingPathComponent($0) }
+            let localDir = MixinFile.url(ofChatDirectory: category, filename: nil)
+            let paths = try FileManager.default.contentsOfDirectory(atPath: localDir.path).compactMap{ localDir.appendingPathComponent($0) }
 
             guard paths.count > 0 else {
                 continue
             }
 
-            let zipPath = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())")
-            try FileManager.default.replace(from: zipPath, to: backupDir.appendingPathComponent(zipPath.lastPathComponent))
+            let localURL = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())")
+            let cloudURL = backupDir.appendingPathComponent(localURL.lastPathComponent)
 
-            fileSize += FileManager.default.fileSize(backupDir.appendingPathComponent(zipPath.lastPathComponent).path)
-            try? FileManager.default.removeItem(at: zipPath)
+            try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
+            fileSize += FileManager.default.fileSize(cloudURL.path)
         }
         return fileSize
     }
@@ -133,17 +131,17 @@ class BackupJob: BaseJob {
 
         var fileSize: Int64 = 0
         for path in localPaths {
-            let cloudPath = backupDir.appendingPathComponent(path)
-            let localPath = MixinFile.rootDirectory.appendingPathComponent("Chat").appendingPathComponent(path)
+            let localURL = MixinFile.rootDirectory.appendingPathComponent("Chat").appendingPathComponent(path)
+            let cloudURL = backupDir.appendingPathComponent(path)
 
-            if FileManager.default.fileExists(atPath: cloudPath.path) {
-                if FileManager.default.fileSize(cloudPath.path) != FileManager.default.fileSize(localPath.path) {
-                    _ = try FileManager.default.replaceItemAt(localPath, withItemAt: cloudPath)
+            if FileManager.default.fileExists(atPath: cloudURL.path) {
+                if FileManager.default.fileSize(cloudURL.path) != FileManager.default.fileSize(localURL.path) {
+                    try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
                 }
             } else {
-                try FileManager.default.copyItem(at: localPath, to: cloudPath)
+                try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
             }
-            fileSize += FileManager.default.fileSize(localPath.path)
+            fileSize += FileManager.default.fileSize(cloudURL.path)
         }
         return fileSize
     }

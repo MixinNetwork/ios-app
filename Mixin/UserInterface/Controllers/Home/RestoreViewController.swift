@@ -9,9 +9,14 @@ class RestoreViewController: UIViewController {
     @IBOutlet weak var restoreButton: StateResponsiveButton!
     @IBOutlet weak var skipButton: UIButton!
 
+    private var stopDownload = false
 
     class func instance() -> UIViewController {
         return Storyboard.home.instantiateViewController(withIdentifier: "restore")
+    }
+
+    deinit {
+        stopDownload = true
     }
 
     @IBAction func restoreAction(_ sender: Any) {
@@ -54,23 +59,48 @@ class RestoreViewController: UIViewController {
             makeInitialViewController()
     }
 
+    private func downloadFromCloud(url: URL) throws {
+        guard url.cloudExist() else {
+            return
+        }
+
+        if try url.cloudDownloaded() {
+            return
+        }
+
+        try FileManager.default.startDownloadingUbiquitousItem(at: url)
+        repeat {
+            Thread.sleep(forTimeInterval: 1)
+
+            if stopDownload {
+                return
+            } else if try url.cloudDownloaded() {
+                return
+            } else if FileManager.default.fileExists(atPath: url.path) && FileManager.default.fileSize(url.path) > 0 {
+                return
+            }
+        } while true
+    }
+
     private func restoreDatabase(backupDir: URL) throws {
-        guard !FileManager.default.fileExists(atPath: MixinFile.databasePath) else {
-            try Database(withPath: MixinFile.databasePath).close {
-                try FileManager.default.removeItem(atPath: MixinFile.databasePath)
+        let localURL = MixinFile.databaseURL
+        if FileManager.default.fileExists(atPath: localURL.path) {
+            try Database(withPath: localURL.path).close {
+                try FileManager.default.removeItem(at: localURL)
                 try self.restoreDatabase(backupDir: backupDir)
             }
             return
         }
 
-        let iCloudPath = backupDir.appendingPathComponent(MixinFile.backupDatabase.lastPathComponent)
-        guard FileManager.default.fileExists(atPath: iCloudPath.path) else {
+        let cloudURL = backupDir.appendingPathComponent(MixinFile.backupDatabase.lastPathComponent)
+        try downloadFromCloud(url: cloudURL)
+
+        guard FileManager.default.fileExists(atPath: cloudURL.path) else {
             return
         }
         
-        try? FileManager.default.removeItem(atPath: MixinFile.databasePath)
-
-        try FileManager.default.copyItem(at: iCloudPath, to: URL(fileURLWithPath: MixinFile.databasePath))
+        try? FileManager.default.removeItem(at: localURL)
+        try FileManager.default.copyItem(at: cloudURL, to: localURL)
     }
 
     private func restorePhotosAndAudios(backupDir: URL) throws {
@@ -80,15 +110,18 @@ class RestoreViewController: UIViewController {
         try FileManager.default.createDirectoryIfNeeded(dir: chatDir)
         
         for category in categories {
-            let zip = backupDir.appendingPathComponent("mixin.\(category.rawValue.lowercased()).zip")
-            guard FileManager.default.fileExists(atPath: zip.path) else {
+            let cloudURL = backupDir.appendingPathComponent("mixin.\(category.rawValue.lowercased()).zip")
+
+            try downloadFromCloud(url: cloudURL)
+
+            guard FileManager.default.fileExists(atPath: cloudURL.path) else {
                 continue
             }
 
             let localZip = chatDir.appendingPathComponent("\(category.rawValue).zip")
 
             try? FileManager.default.removeItem(at: localZip)
-            try FileManager.default.copyItem(at: zip, to: localZip)
+            try FileManager.default.copyItem(at: cloudURL, to: localZip)
 
             let localDir = chatDir.appendingPathComponent(category.rawValue)
 

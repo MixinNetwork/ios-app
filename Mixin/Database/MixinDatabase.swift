@@ -7,16 +7,16 @@ class MixinDatabase: BaseDatabase {
 
     static let shared = MixinDatabase()
 
-    private lazy var _database = Database(withPath: MixinFile.databasePath)
+    private lazy var _database = Database(withPath: MixinFile.databaseURL.path)
     override var database: Database! {
         get { return _database }
         set { }
     }
 
     override func configure(reset: Bool = false) {
-        if MixinFile.databasePath != _database.path {
+        if MixinFile.databaseURL.path != _database.path {
             _database.close()
-            _database = Database(withPath: MixinFile.databasePath)
+            _database = Database(withPath: MixinFile.databaseURL.path)
         }
         do {
             try database.run(transaction: {

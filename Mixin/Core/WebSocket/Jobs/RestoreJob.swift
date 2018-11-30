@@ -30,6 +30,19 @@ class RestoreJob: BaseJob {
                     continue
                 }
 
+                let contents = try FileManager.default.contentsOfDirectory(atPath: cloudDir.path)
+                guard contents.count > 0 else {
+                    continue
+                }
+
+                for content in contents {
+                    var filename = content
+                    if filename.hasSuffix(".icloud") {
+                        filename = String(filename[filename.index(filename.startIndex, offsetBy: 1)..<filename.index(filename.endIndex, offsetBy: -7)])
+                    }
+                    try downloadFromCloud(url: cloudDir.appendingPathComponent(filename))
+                }
+
                 let localDir = chatDir.appendingPathComponent(category.rawValue)
                 try FileManager.default.createDirectoryIfNeeded(dir: localDir)
 
@@ -63,8 +76,29 @@ class RestoreJob: BaseJob {
         guard let backupDir = MixinFile.iCloudBackupDirectory, FileManager.default.fileExists(atPath: backupDir.path) else {
             return false
         }
-
-        let databasePath = backupDir.appendingPathComponent(MixinFile.backupDatabase.lastPathComponent).path
-        return FileManager.default.fileExists(atPath: databasePath) && FileManager.default.fileSize(databasePath) > 0
+        
+        return backupDir.appendingPathComponent(MixinFile.backupDatabase.lastPathComponent).cloudExist()
     }
+
+    private func downloadFromCloud(url: URL) throws {
+        guard url.cloudExist() else {
+            return
+        }
+        if try url.cloudDownloaded() {
+            return
+        }
+
+        try FileManager.default.startDownloadingUbiquitousItem(at: url)
+
+        repeat {
+            Thread.sleep(forTimeInterval: 1)
+
+            if try url.cloudDownloaded() {
+                return
+            } else if FileManager.default.fileExists(atPath: url.path) && FileManager.default.fileSize(url.path) > 0 {
+                return
+            }
+        } while true
+    }
+
 }

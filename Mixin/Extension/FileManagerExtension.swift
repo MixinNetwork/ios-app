@@ -12,7 +12,7 @@ extension FileManager {
         return fileSize?.int64Value ?? 0
     }
 
-    func replace(from: URL, to: URL) throws {
+    func saveToCloud(from: URL, to: URL) throws {
         if FileManager.default.fileExists(atPath: to.path) {
             _ = try FileManager.default.replaceItemAt(to, withItemAt: from)
         } else {
@@ -26,6 +26,11 @@ extension FileManager {
 
     func compare(path1: String, path2: String) -> Bool {
         return fileSize(path1) == fileSize(path2) && contentsEqual(atPath: path1, andPath: path2)
+    }
+
+    func isDirectory(atPath path: String) -> Bool {
+        var isDir : ObjCBool = false
+        return FileManager.default.fileExists(atPath: path, isDirectory: &isDir) && isDir.boolValue
     }
 
     func isStillImage(_ path: String) -> Bool {

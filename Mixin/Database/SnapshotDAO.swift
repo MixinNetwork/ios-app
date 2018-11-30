@@ -10,19 +10,29 @@ final class SnapshotDAO {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement
+            var condition = Expression(booleanLiteral: true)
             if let assetId = assetId {
-                stmt = stmt.where(Snapshot.Properties.assetId == assetId)
+                condition = condition && Snapshot.Properties.assetId.in(table: Snapshot.tableName) == assetId
             }
             switch sort {
             case .createdAt:
                 if let location = location {
-                    stmt = stmt.where(createdAt < location.createdAt)
+                    condition = condition && createdAt < location.createdAt
                 }
-                stmt = stmt.order(by: createdAt.asOrder(by: .descending))
             case .amount:
                 if let location = location {
-                    stmt = stmt.where(amount.abs() < Expression(stringLiteral: location.amount).abs() && createdAt < location.createdAt)
+                    let absAmount = amount.abs()
+                    let locationAbsAmount = Expression(stringLiteral: location.amount).abs()
+                    let isBelowLocation = absAmount < locationAbsAmount
+                        || (absAmount == locationAbsAmount && createdAt < location.createdAt)
+                    condition = condition && isBelowLocation
                 }
+            }
+            stmt.where(condition)
+            switch sort {
+            case .createdAt:
+                stmt = stmt.order(by: createdAt.asOrder(by: .descending))
+            case .amount:
                 stmt = stmt.order(by: [amount.abs().asOrder(by: .descending), createdAt.asOrder(by: .descending)])
             }
             stmt = stmt.limit(limit)

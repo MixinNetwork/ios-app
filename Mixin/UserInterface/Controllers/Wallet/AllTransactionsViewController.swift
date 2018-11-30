@@ -18,9 +18,18 @@ class AllTransactionsViewController: UITableViewController {
                            forCellReuseIdentifier: ReuseId.cell)
         tableView.register(AssetHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
-        dataSource.tableView = tableView
+        dataSource.onReload = { [weak self] in
+            self?.tableView.reloadData()
+        }
         dataSource.reloadFromLocal()
         dataSource.reloadFromRemote()
+        updateTableViewContentInset()
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewContentInset()
     }
     
     class func instance() -> UIViewController {
@@ -81,6 +90,14 @@ extension AllTransactionsViewController {
         return title.isEmpty ? .leastNormalMagnitude : 32
     }
     
+    private func updateTableViewContentInset() {
+        if view.compatibleSafeAreaInsets.bottom < 1 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
+    }
+    
 }
 
 extension AllTransactionsViewController: ContainerViewControllerDelegate {
@@ -103,6 +120,7 @@ extension AllTransactionsViewController: ContainerViewControllerDelegate {
 extension AllTransactionsViewController: AssetFilterWindowDelegate {
     
     func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
+        tableView.setContentOffset(.zero, animated: false)
         dataSource.setSort(sort, filter: filter)
     }
     

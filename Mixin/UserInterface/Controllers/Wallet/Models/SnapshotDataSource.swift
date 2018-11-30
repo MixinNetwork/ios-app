@@ -2,11 +2,11 @@ import UIKit
 
 class SnapshotDataSource {
     
-    static let numberOfItemsPerPage = 30
+    static let numberOfItemsPerPage = 50
     
     let category: Category
     
-    weak var tableView: UITableView?
+    var onReload: (() -> ())?
     
     private(set) var titles = [String]()
     private(set) var snapshots = [[SnapshotItem]]()
@@ -64,7 +64,7 @@ class SnapshotDataSource {
                 weakSelf.indexMap = indexMap
                 weakSelf.titles = titles
                 weakSelf.snapshots = snapshots
-                weakSelf.tableView?.reloadData()
+                weakSelf.onReload?()
             }
         }
         queue.addOperation(op)
@@ -119,7 +119,7 @@ class SnapshotDataSource {
                 weakSelf.indexMap = SnapshotDataSource.indexMap(models: snapshots)
                 weakSelf.titles = titles
                 weakSelf.snapshots = snapshots
-                weakSelf.tableView?.reloadData()
+                weakSelf.onReload?()
                 if weakSelf.didLoadEarliestLocalSnapshot {
                     weakSelf.loadMoreRemoteSnapshotsIfNeeded()
                 }
@@ -132,7 +132,6 @@ class SnapshotDataSource {
         let needsReload = sort != self.sort || self.filter != filter
         self.sort = sort
         self.filter = filter
-        tableView?.setContentOffset(.zero, animated: true)
         if needsReload {
             reloadFromLocal()
         }
@@ -188,31 +187,11 @@ extension SnapshotDataSource {
         }
     }
     
-    private static func createdAtSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
-        return one.createdAt > another.createdAt
-    }
-    
-    private static func amountSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
-        let oneValue = Double(one.amount) ?? 0
-        let anotherValue = Double(another.amount) ?? 0
-        if abs(oneValue) == abs(anotherValue), oneValue.sign != anotherValue.sign {
-            return oneValue > 0
-        } else {
-            return abs(oneValue) > abs(anotherValue)
-        }
-    }
-    
-    // This method will apply sort and filters, and categorize items imported
+    // This method will apply filters, and categorize items imported
     typealias CategorizedItems = (titles: [String], snapshots: [[SnapshotItem]])
     private static func categorizedItems(_ items: [SnapshotItem], sort: Snapshot.Sort, filter: Snapshot.Filter) -> CategorizedItems {
         let visibleSnapshotTypes = filter.snapshotTypes.map({ $0.rawValue })
         var items = items.filter({ visibleSnapshotTypes.contains($0.type) })
-        switch sort {
-        case .amount:
-            items = items.sorted(by: SnapshotDataSource.amountSorter)
-        case .createdAt:
-            items = items.sorted(by: SnapshotDataSource.createdAtSorter)
-        }
         switch sort {
         case .createdAt:
             var titles = [String]()

@@ -66,6 +66,7 @@ class RefreshAssetsJob: BaseJob {
     private func updateSnapshots(assetId: String) {
         switch AssetAPI.shared.snapshots(limit: 200, assetId: assetId) {
         case let .success(snapshots):
+            WalletUserDefault.shared.assetTransactionOffset[assetId] = snapshots.last?.createdAt
             SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: snapshots)
         case let .failure(error):
             UIApplication.trackError("RefreshAssetsJob",

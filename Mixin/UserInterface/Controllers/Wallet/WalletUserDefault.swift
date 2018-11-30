@@ -25,7 +25,13 @@ class WalletUserDefault {
     private var keyPINInterval: String {
         return "is_pin_interval_\(AccountAPI.shared.accountIdentityNumber)"
     }
-
+    private var keyAllTransactionOffset: String {
+        return "all_transaction_offset_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyAssetTransactionOffset: String {
+        return "asset_transaction_offset_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    
     let session = UserDefaults(suiteName: SuiteName.wallet)!
     let checkMaxInterval: Double = 60 * 60 * 24
     let checkMinInterval: Double = 60 * 10
@@ -114,4 +120,24 @@ class WalletUserDefault {
     func clearBiometricPay() {
         session.removeObject(forKey: keyIsBiometricPay)
     }
+    
+    var allTransactionOffset: String? {
+        get {
+            return session.string(forKey: keyAllTransactionOffset)
+        }
+        set {
+            session.set(newValue, forKey: keyAllTransactionOffset)
+        }
+    }
+    
+    // Key is asset id, value is offset
+    var assetTransactionOffset: [String: String] {
+        get {
+            return (session.dictionary(forKey: keyAssetTransactionOffset) as? [String: String]) ?? [:]
+        }
+        set {
+            session.set(newValue, forKey: keyAssetTransactionOffset)
+        }
+    }
+    
 }

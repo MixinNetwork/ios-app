@@ -253,7 +253,7 @@ extension AssetViewController {
     private func reloadSnapshots() {
         let assetId = asset.assetId
         queue.async { [weak self] in
-            let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId)
+            let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId, sort: .createdAt, limit: 200)
             var inexistedUserIds = snapshots
                 .filter({ $0.opponentUserFullName == nil })
                 .compactMap({ $0.opponentId })

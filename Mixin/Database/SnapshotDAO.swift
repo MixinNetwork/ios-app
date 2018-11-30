@@ -11,10 +11,13 @@ final class SnapshotDAO {
     
     private let createdAt = Snapshot.Properties.createdAt.in(table: Snapshot.tableName)
     
-    func getSnapshots(below location: SnapshotItem?, sort: Sort, limit: Int) -> [SnapshotItem] {
+    func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Sort, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement
+            if let assetId = assetId {
+                stmt = stmt.where(Snapshot.Properties.assetId == assetId)
+            }
             switch sort {
             case .createdAt:
                 if let location = location {
@@ -29,13 +32,6 @@ final class SnapshotDAO {
             }
             stmt = stmt.limit(limit)
             return stmt
-        }
-    }
-    
-    func getSnapshots(assetId: String) -> [SnapshotItem] {
-        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (stmt) -> (StatementSelect) in
-            stmt.where(Snapshot.Properties.assetId.in(table: Snapshot.tableName) == assetId)
-                .order(by: createdAt.asOrder(by: .descending))
         }
     }
     
@@ -54,9 +50,9 @@ final class SnapshotDAO {
         }).first
     }
     
-    func insertOrReplaceSnapshots(snapshots: [Snapshot]) {
+    func insertOrReplaceSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {
         MixinDatabase.shared.insertOrReplace(objects: snapshots)
-        NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: nil)
+        NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: nil, userInfo: userInfo)
     }
     
     func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit]) {

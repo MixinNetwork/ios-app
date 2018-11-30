@@ -15,9 +15,15 @@ final class AssetAPI: BaseAPI {
             return "assets/\(assetId)/fee"
         }
 
-        static let snapshots = "snapshots"
-        static func snapshots(assetId: String) -> String {
-            return "assets/\(assetId)/snapshots"
+        static func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil) -> String {
+            var url = "snapshots?limit=\(limit)"
+            if let offset = offset {
+                url += "&offset=\(offset)"
+            }
+            if let assetId = assetId {
+                url += "&asset=\(assetId)"
+            }
+            return url
         }
         static func snapshots(opponentId: String) -> String {
             return "mutual_snapshots/\(opponentId)"
@@ -68,21 +74,14 @@ final class AssetAPI: BaseAPI {
         let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "trace_id": traceId]
         request(method: .post, url: url.payments, parameters: param, toastError: false, completion: completion)
     }
-
-    func snapshots(completion: @escaping (APIResult<[Snapshot]>) -> Void) {
-        request(method: .get, url: url.snapshots, completion: completion)
-    }
-
-    func snapshots(assetId: String, completion: @escaping (APIResult<[Snapshot]>) -> Void) {
-        request(method: .get, url: url.snapshots(assetId: assetId), completion: completion)
-    }
-
-    func snapshots(assetId: String) -> APIResult<[Snapshot]> {
-        return request(method: .get, url: url.snapshots(assetId: assetId))
-    }
     
     func snapshots(opponentId: String) -> APIResult<[Snapshot]> {
         return request(method: .get, url: url.snapshots(opponentId: opponentId))
+    }
+    
+    func snapshots(limit: Int, offset: String? = nil, assetId: String? = nil) -> APIResult<[Snapshot]> {
+        assert(limit <= 500)
+        return request(method: .get, url: url.snapshots(limit: limit, offset: offset, assetId: assetId))
     }
     
     func fee(assetId: String, completion: @escaping (APIResult<Fee>) -> Void) {

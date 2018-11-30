@@ -47,6 +47,7 @@ class SnapshotDataSource {
             case .all:
                 items = SnapshotDAO.shared.getSnapshots(sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
             }
+            SnapshotDataSource.refreshUserIfNeeded(items)
             let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort, filter: filter)
             let indexMap = SnapshotDataSource.indexMap(models: snapshots)
             DispatchQueue.main.sync {
@@ -103,6 +104,7 @@ class SnapshotDataSource {
             case .all:
                 newItems = SnapshotDAO.shared.getSnapshots(below: lastSnapshot, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
             }
+            SnapshotDataSource.refreshUserIfNeeded(newItems)
             DispatchQueue.main.sync {
                 guard let weakSelf = self else {
                     return
@@ -191,7 +193,7 @@ extension SnapshotDataSource {
     typealias CategorizedItems = (titles: [String], snapshots: [[SnapshotItem]])
     private static func categorizedItems(_ items: [SnapshotItem], sort: Snapshot.Sort, filter: Snapshot.Filter) -> CategorizedItems {
         let visibleSnapshotTypes = filter.snapshotTypes.map({ $0.rawValue })
-        var items = items.filter({ visibleSnapshotTypes.contains($0.type) })
+        let items = items.filter({ visibleSnapshotTypes.contains($0.type) })
         switch sort {
         case .createdAt:
             var titles = [String]()
@@ -222,6 +224,16 @@ extension SnapshotDataSource {
             }
         }
         return result
+    }
+    
+    private static func refreshUserIfNeeded(_ snapshots: [SnapshotItem]) {
+        var inexistedUserIds = snapshots
+            .filter({ $0.opponentUserFullName == nil })
+            .compactMap({ $0.opponentId })
+        inexistedUserIds = Array(Set(inexistedUserIds))
+        if !inexistedUserIds.isEmpty {
+            ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: inexistedUserIds))
+        }
     }
     
 }

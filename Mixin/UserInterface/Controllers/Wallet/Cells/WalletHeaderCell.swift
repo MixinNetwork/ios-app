@@ -26,6 +26,10 @@ class WalletHeaderCell: UITableViewCell {
     private let usdFractionAttribute = [
         NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 24)!
     ]
+    private let btcValueAttributes: [NSAttributedString.Key: Any] = [
+        .font: UIFont(name: "DINCondensed-Bold", size: 14)!,
+        .kern: 0.7
+    ]
     
     static func height(usdBalanceIsMoreThanZero: Bool) -> CGFloat {
         return usdBalanceIsMoreThanZero ? 187 : 135
@@ -58,9 +62,9 @@ class WalletHeaderCell: UITableViewCell {
         }
         
         usdValueLabel.attributedText = attributedString(usdBalance: usdTotalBalance)
-        btcValueLabel.text = CurrencyFormatter.localizedString(from: btcTotalBalance,
-                                                               format: .pretty,
-                                                               sign: .never)
+        let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
+        let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)
+        btcValueLabel.attributedText = attributedBTCValue
         assetChartWrapperView.isHidden = usdTotalBalance <= 0
         switch assetPortions.count {
         case 0:

@@ -15,6 +15,7 @@ class SnapshotDataSource {
     
     private var rawItems = [SnapshotItem]()
     private var indexMap = [IndexPath: Int]()
+    private var numberOfFilteredItems = 0
     private var isLoading = false
     private var didLoadEarliestLocalSnapshot = false
     private var didLoadEarliestRemoteSnapshot = false
@@ -49,23 +50,23 @@ class SnapshotDataSource {
             }
             SnapshotDataSource.refreshUserIfNeeded(items)
             let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort, filter: filter)
-            let indexMap = SnapshotDataSource.indexMap(models: snapshots)
+            let (indexMap, filteredItemsCount) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
             DispatchQueue.main.sync {
-                guard let weakSelf = self else {
-                    return
-                }
-                defer {
-                    weakSelf.isLoading = false
-                }
-                guard !op.isCancelled else {
+                guard let weakSelf = self, !op.isCancelled else {
+                    self?.isLoading = false
                     return
                 }
                 weakSelf.didLoadEarliestLocalSnapshot = items.count < SnapshotDataSource.numberOfItemsPerPage
                 weakSelf.rawItems = items
                 weakSelf.indexMap = indexMap
+                weakSelf.numberOfFilteredItems = filteredItemsCount
                 weakSelf.titles = titles
                 weakSelf.snapshots = snapshots
                 weakSelf.onReload?()
+                weakSelf.isLoading = false
+                if titles.isEmpty {
+                    weakSelf.loadMoreIfPossible()
+                }
             }
         }
         queue.addOperation(op)
@@ -94,7 +95,7 @@ class SnapshotDataSource {
         let category = self.category
         let sort = self.sort
         let filter = self.filter
-        let lastSnapshot = snapshots.last?.last
+        let lastSnapshot = rawItems.last
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
             let newItems: [SnapshotItem]
@@ -106,24 +107,23 @@ class SnapshotDataSource {
             }
             SnapshotDataSource.refreshUserIfNeeded(newItems)
             DispatchQueue.main.sync {
-                guard let weakSelf = self else {
-                    return
-                }
-                defer {
-                    weakSelf.isLoading = false
-                }
-                guard !op.isCancelled else {
+                guard let weakSelf = self, !op.isCancelled else {
+                    self?.isLoading = false
                     return
                 }
                 let (titles, snapshots) = SnapshotDataSource.categorizedItems(weakSelf.rawItems + newItems, sort: sort, filter: filter)
                 weakSelf.didLoadEarliestLocalSnapshot = newItems.count < SnapshotDataSource.numberOfItemsPerPage
                 weakSelf.rawItems += newItems
-                weakSelf.indexMap = SnapshotDataSource.indexMap(models: snapshots)
+                (weakSelf.indexMap, weakSelf.numberOfFilteredItems) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
                 weakSelf.titles = titles
                 weakSelf.snapshots = snapshots
                 weakSelf.onReload?()
                 if weakSelf.didLoadEarliestLocalSnapshot {
                     weakSelf.loadMoreRemoteSnapshotsIfNeeded()
+                }
+                weakSelf.isLoading = false
+                if titles.isEmpty {
+                    weakSelf.loadMoreIfPossible()
                 }
             }
         }
@@ -143,7 +143,7 @@ class SnapshotDataSource {
         guard let index = indexMap[indexPath] else {
             return nil
         }
-        return rawItems.count - index
+        return numberOfFilteredItems - index
     }
     
     @objc func snapshotsDidChange(_ notification: Notification) {
@@ -204,17 +204,16 @@ extension SnapshotDataSource {
         }
     }
     
-    private static func indexMap(models: [[Any]]) -> [IndexPath: Int] {
+    private static func indexMapAndItemsCount(models: [[Any]]) -> ([IndexPath: Int], Int) {
         var index = 0
         var result = [IndexPath: Int]()
-        let numberOfInnerModels = models.map({ $0.count })
         for section in 0..<models.count {
-            for row in 0..<numberOfInnerModels[section] {
+            for row in 0..<models[section].count {
                 result[IndexPath(row: row, section: section)] = index
                 index += 1
             }
         }
-        return result
+        return (result, index)
     }
     
     private static func refreshUserIfNeeded(_ snapshots: [SnapshotItem]) {

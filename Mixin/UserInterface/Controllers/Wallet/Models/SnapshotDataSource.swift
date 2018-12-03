@@ -95,7 +95,8 @@ class SnapshotDataSource {
         let category = self.category
         let sort = self.sort
         let filter = self.filter
-        let lastSnapshot = rawItems.last
+        let lastSnapshot = self.rawItems.last
+        let oldItems = self.rawItems
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
             let newItems: [SnapshotItem]
@@ -106,17 +107,20 @@ class SnapshotDataSource {
                 newItems = SnapshotDAO.shared.getSnapshots(below: lastSnapshot, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
             }
             SnapshotDataSource.refreshUserIfNeeded(newItems)
+            let items = oldItems + newItems
+            let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort, filter: filter)
+            let (indexMap, filteredItemsCount) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
                     self?.isLoading = false
                     return
                 }
-                let (titles, snapshots) = SnapshotDataSource.categorizedItems(weakSelf.rawItems + newItems, sort: sort, filter: filter)
                 weakSelf.didLoadEarliestLocalSnapshot = newItems.count < SnapshotDataSource.numberOfItemsPerPage
-                weakSelf.rawItems += newItems
-                (weakSelf.indexMap, weakSelf.numberOfFilteredItems) = SnapshotDataSource.indexMapAndItemsCount(models: snapshots)
+                weakSelf.rawItems = items
                 weakSelf.titles = titles
                 weakSelf.snapshots = snapshots
+                weakSelf.indexMap = indexMap
+                weakSelf.numberOfFilteredItems = filteredItemsCount
                 weakSelf.onReload?()
                 if weakSelf.didLoadEarliestLocalSnapshot {
                     weakSelf.loadMoreRemoteSnapshotsIfNeeded()
@@ -150,7 +154,12 @@ class SnapshotDataSource {
         if let jobId = notification.userInfo?[LoadMoreSnapshotsJob.jobIdUserInfoKey] as? String, remoteLoadingJobIds.contains(jobId) {
             remoteLoadingJobIds.remove(jobId)
             didLoadEarliestRemoteSnapshot = (notification.userInfo?[LoadMoreSnapshotsJob.didLoadEarliestSnapshotUserInfoKey] as? Bool) ?? false
-            loadMoreIfPossible()
+            didLoadEarliestLocalSnapshot = false
+            if sort == .createdAt {
+                loadMoreIfPossible()
+            } else {
+                reloadFromLocal()
+            }
         } else {
             reloadFromLocal()
         }

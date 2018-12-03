@@ -102,7 +102,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         if let peer = sortedSelections.last {
             let vc: ConversationViewController
             switch peer.item {
-            case .conversation(let conversation):
+            case .group(let conversation):
                 vc = ConversationViewController.instance(conversation: conversation)
             case .user(let user):
                 vc = ConversationViewController.instance(ownerUser: user)
@@ -254,7 +254,7 @@ extension PeerSelectionViewController {
                 let conversations = ConversationDAO.shared.conversationList()
                 titles = [Localized.CHAT_FORWARD_CHATS,
                           Localized.CHAT_FORWARD_CONTACTS]
-                peers = [conversations.map(Peer.init),
+                peers = [conversations.compactMap(Peer.init),
                          contacts.map(Peer.init)]
             case .contacts:
                 titles = []
@@ -274,7 +274,7 @@ extension PeerSelectionViewController {
                     return conversation.category == ConversationCategory.CONTACT.rawValue
                         && !conversation.ownerIsBot
                 })
-                peers = [transferAcceptableConversations.map(Peer.init),
+                peers = [transferAcceptableConversations.compactMap(Peer.init),
                          transferAcceptableContacts.map(Peer.init)]
             case .catalogedContacts:
                 (titles, peers) = PeerSelectionViewController.catalogedPeers(from: contacts)

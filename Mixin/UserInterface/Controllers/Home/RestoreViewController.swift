@@ -24,6 +24,7 @@ class RestoreViewController: UIViewController {
             return
         }
         restoreButton.isBusy = true
+        skipButton.isHidden = true
         DispatchQueue.global().async {
             guard FileManager.default.ubiquityIdentityToken != nil else {
                 return
@@ -46,6 +47,7 @@ class RestoreViewController: UIViewController {
                 #endif
                 DispatchQueue.main.async {
                     self.restoreButton.isBusy = false
+                    self.skipButton.isHidden = false
                 }
                 Bugsnag.notifyError(error)
             }

@@ -178,15 +178,6 @@ extension SnapshotDataSource {
     enum Category {
         case asset(id: String)
         case all
-        
-        var assetId: String? {
-            switch self {
-            case .asset(let id):
-                return id
-            case .all:
-                return nil
-            }
-        }
     }
     
     // This method will apply filters, and categorize items imported

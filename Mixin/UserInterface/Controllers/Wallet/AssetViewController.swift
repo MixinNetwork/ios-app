@@ -210,7 +210,7 @@ extension AssetViewController: SnapshotCellDelegate {
             return
         }
         DispatchQueue.global().async {
-            guard let user = UserDAO.shared.getUser(userId: userId) else {
+            guard let user = UserDAO.shared.getUser(userId: userId), user.identityNumber != "0" else {
                 return
             }
             DispatchQueue.main.async {

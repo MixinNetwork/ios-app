@@ -4,7 +4,7 @@ class WalletAssetCell: UITableViewCell {
     
     static let height: CGFloat = 96
     static let balanceAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFont(name: "DINCondensed-Bold", size: 24)!,
+        .font: UIFont(name: "MixinCondensed-Regular", size: 24)!,
         .kern: 0.7
     ]
     

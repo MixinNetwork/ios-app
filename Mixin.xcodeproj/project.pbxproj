@@ -225,6 +225,7 @@
 		7BB1EDBF1FB1A481000DF9E7 /* GroupParticipentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB1EDBE1FB1A481000DF9E7 /* GroupParticipentViewController.swift */; };
 		7BB1EDC71FB1B43B000DF9E7 /* GroupMemberCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB1EDC61FB1B43B000DF9E7 /* GroupMemberCell.xib */; };
 		7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */; };
+		7BB3689421B6AB2C00A3CFB7 /* mixin_condensed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7BB3689321B6A9F600A3CFB7 /* mixin_condensed.otf */; };
 		7BB470491FB1965E0059AE79 /* GroupMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
 		7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */; };
@@ -832,6 +833,7 @@
 		7BB1EDBE1FB1A481000DF9E7 /* GroupParticipentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupParticipentViewController.swift; sourceTree = "<group>"; };
 		7BB1EDC61FB1B43B000DF9E7 /* GroupMemberCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupMemberCell.xib; sourceTree = "<group>"; };
 		7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageViewModel.swift; sourceTree = "<group>"; };
+		7BB3689321B6A9F600A3CFB7 /* mixin_condensed.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin_condensed.otf; sourceTree = "<group>"; };
 		7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberCell.swift; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorFooterView.xib; sourceTree = "<group>"; };
@@ -2019,6 +2021,7 @@
 		DF5D9F481F9CDBDE0036D5FD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				7BB3689321B6A9F600A3CFB7 /* mixin_condensed.otf */,
 				7B45A51B2189F28A0008F894 /* call.caf */,
 				274264A820011BB0000A8808 /* mixin.caf */,
 				DF8EF6BB2034737F00E99CE8 /* payment_success.caf */,
@@ -2549,6 +2552,7 @@
 				DFD294451FA7087800FADAAD /* ContactNavCell.xib in Resources */,
 				DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
+				7BB3689421B6AB2C00A3CFB7 /* mixin_condensed.otf in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				DFAA4B3B2010AE0300C696D3 /* PinTipsView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,

@@ -21,13 +21,13 @@ class WalletHeaderCell: UITableViewCell {
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
     private let usdIntegerAttribute = [
-        NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 40)!
+        NSAttributedString.Key.font: UIFont(name: "MixinCondensed-Regular", size: 40)!
     ]
     private let usdFractionAttribute = [
-        NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 24)!
+        NSAttributedString.Key.font: UIFont(name: "MixinCondensed-Regular", size: 24)!
     ]
     private let btcValueAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFont(name: "DINCondensed-Bold", size: 14)!,
+        .font: UIFont(name: "MixinCondensed-Regular", size: 14)!,
         .kern: 0.7
     ]
     

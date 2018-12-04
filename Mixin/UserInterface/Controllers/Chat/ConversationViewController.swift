@@ -1099,7 +1099,7 @@ extension ConversationViewController: UITableViewDelegate {
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         DispatchQueue.main.async {
-            self.tableView.setFloatingHeaderViewsHidden(true, animated: true)
+            self.tableView.setFloatingHeaderViewsHidden(true, animated: true, delay: 1)
         }
     }
     

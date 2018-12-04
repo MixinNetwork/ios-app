@@ -112,7 +112,6 @@ class ConversationDataSource {
         didLoadEarliestMessage = true
         didLoadLatestMessage = true
         tableView?.setContentOffset(.zero, animated: true)
-        highlight = nil
         ConversationViewController.positions[conversationId] = nil
         queue.async {
             guard !self.messageProcessingIsCancelled else {
@@ -215,7 +214,6 @@ class ConversationDataSource {
             return
         }
         isLoadingBelow = true
-        highlight = nil
         let conversationId = self.conversationId
         let requiredCount = self.numberOfMessagesOnPaging
         let layoutWidth = self.layoutSize.width
@@ -256,11 +254,6 @@ class ConversationDataSource {
             DispatchQueue.main.sync {
                 guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                     return
-                }
-                if !viewModels.isEmpty {
-                    self.viewModels.values.flatMap({ $0 }).forEach {
-                        ($0 as? TextMessageViewModel)?.removeHighlights()
-                    }
                 }
                 for date in dates {
                     let newViewModels = viewModels[date]!
@@ -844,6 +837,10 @@ extension ConversationDataSource {
         let row: Int
         let isLastCell: Bool
         let viewModel: MessageViewModel
+        let shouldRemoveAllHighlights = messageIsSentByMe && highlight != nil
+        if shouldRemoveAllHighlights {
+            highlight = nil
+        }
         if let viewModels = viewModels[date] {
             needsInsertNewSection = false
             section = dates.index(of: date)!
@@ -919,6 +916,14 @@ extension ConversationDataSource {
         DispatchQueue.main.sync {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                 return
+            }
+            if shouldRemoveAllHighlights {
+                self.viewModels.values.flatMap({ $0 }).forEach {
+                    ($0 as? TextMessageViewModel)?.removeHighlights()
+                }
+                if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
+                    tableView.reloadRows(at: visibleIndexPaths, with: .none)
+                }
             }
             let lastMessageIsVisibleBeforeInsertion: Bool
             if let lastIndexPathBeforeInsertion = lastIndexPathBeforeInsertion, let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(lastIndexPathBeforeInsertion) {

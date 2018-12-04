@@ -41,7 +41,7 @@ class AssetTitleView: UIView, XibDesignable {
             amountLabel.text = "0.00"
             usdAmountLabel.text = "≈ $0.00"
         } else {
-            amountLabel.text = asset.balance
+            amountLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
             let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
             if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
                 usdAmountLabel.text = "≈ $" + localizedUSDBalance

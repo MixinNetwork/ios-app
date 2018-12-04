@@ -165,8 +165,7 @@ extension TransferViewController: UITextFieldDelegate {
         if newText.isEmpty {
             return true
         } else if newText.isNumeric {
-            let decimalSeparator = Locale.current.decimalSeparator ?? "."
-            let components = newText.components(separatedBy: decimalSeparator)
+            let components = newText.components(separatedBy: currentDecimalSeparator)
             return components.count == 1 || components[1].count <= 8
         } else {
             return false

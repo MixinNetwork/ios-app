@@ -3,7 +3,7 @@ import Foundation
 class Peer {
     
     enum Item {
-        case conversation(ConversationItem)
+        case group(ConversationItem)
         case user(UserItem)
     }
     
@@ -12,7 +12,7 @@ class Peer {
     
     var name: String {
         switch item {
-        case .conversation(let conversation):
+        case .group(let conversation):
             return conversation.getConversationName()
         case .user(let user):
             return user.fullName
@@ -21,7 +21,7 @@ class Peer {
     
     var isVerified: Bool {
         switch item {
-        case .conversation:
+        case .group:
             return false
         case .user(let user):
             return user.isVerified
@@ -30,7 +30,7 @@ class Peer {
     
     var isBot: Bool {
         switch item {
-        case .conversation:
+        case .group:
             return false
         case .user(let user):
             return user.isBot
@@ -39,7 +39,7 @@ class Peer {
     
     var user: UserItem? {
         switch item {
-        case .conversation:
+        case .group:
             return nil
         case .user(let user):
             return user
@@ -48,15 +48,36 @@ class Peer {
     
     var isGroup: Bool {
         switch item {
-        case .conversation(let conversation):
-            return conversation.category == ConversationCategory.GROUP.rawValue
+        case .group:
+            return true
         case .user:
             return false
         }
     }
     
-    init(conversation: ConversationItem) {
-        self.item = .conversation(conversation)
+    init?(conversation: ConversationItem) {
+        if conversation.category == ConversationCategory.CONTACT.rawValue {
+            let userId = conversation.ownerId
+            guard !userId.isEmpty else {
+                return nil
+            }
+            if let user = UserDAO.shared.getUser(userId: userId) {
+                self.item = .user(user)
+            } else if case let .success(user) = UserAPI.shared.showUser(userId: userId) {
+                UserDAO.shared.updateUsers(users: [user])
+                if let user = UserDAO.shared.getUser(userId: userId) {
+                    self.item = .user(user)
+                } else {
+                    return nil
+                }
+            } else {
+                return nil
+            }
+        } else if conversation.category == ConversationCategory.GROUP.rawValue {
+            self.item = .group(conversation)
+        } else {
+            return nil
+        }
         self.conversationId = conversation.conversationId
     }
     
@@ -71,15 +92,9 @@ class Peer {
             imageView.setImage(with: user.avatarUrl,
                                identityNumber: user.identityNumber,
                                name: user.fullName)
-        case .conversation(let conversation):
-            if conversation.category == ConversationCategory.CONTACT.rawValue {
-                imageView.setImage(with: conversation.ownerAvatarUrl,
-                                   identityNumber: conversation.ownerIdentityNumber,
-                                   name: conversation.ownerFullName)
-            } else {
-                imageView.setGroupImage(with: conversation.iconUrl,
-                                        conversationId: conversation.conversationId)
-            }
+        case .group(let conversation):
+            imageView.setGroupImage(with: conversation.iconUrl,
+                                    conversationId: conversation.conversationId)
         }
     }
     

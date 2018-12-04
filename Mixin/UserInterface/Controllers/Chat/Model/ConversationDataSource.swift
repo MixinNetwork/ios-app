@@ -128,14 +128,15 @@ class ConversationDataSource {
         }
         didLoadEarliestMessage = true
         didLoadLatestMessage = true
-        tableView?.scrollToBottom(animated: true)
         highlight = nil
         ConversationViewController.positions[conversationId] = nil
         queue.async {
             guard !self.messageProcessingIsCancelled else {
                 return
             }
-            self.reload(initialMessageId: initialMessageId, completion: completion)
+            self.reload(initialMessageId: initialMessageId, prepareBeforeReload: {
+                self.tableView?.setContentOffsetYSafely(0, animated: false)
+            }, completion: completion, animatedReloading: true)
         }
     }
     
@@ -203,8 +204,7 @@ class ConversationDataSource {
                 }
                 let bottomDistance = tableView.contentSize.height - tableView.contentOffset.y
                 tableView.reloadData()
-                tableView.contentOffset = CGPoint(x: tableView.contentOffset.x,
-                                                  y: tableView.contentSize.height - bottomDistance)
+                tableView.setContentOffsetYSafely(tableView.contentSize.height - bottomDistance, animated: false)
                 self.isLoadingAbove = false
             }
         }
@@ -604,7 +604,7 @@ extension ConversationDataSource {
         }
     }
     
-    private func reload(initialMessageId: String? = nil, completion: (() -> Void)? = nil) {
+    private func reload(initialMessageId: String? = nil, prepareBeforeReload: (() -> Void)? = nil, completion: (() -> Void)? = nil, animatedReloading: Bool = false) {
         canInsertUnreadHint = true
         var didLoadEarliestMessage = false
         var didLoadLatestMessage = false
@@ -677,10 +677,11 @@ extension ConversationDataSource {
             }
             offset -= ConversationDateHeaderView.height
         }
-        let updateUI = {
+        performSynchronouslyOnMainThread {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                 return
             }
+            prepareBeforeReload?()
             self.dates = dates
             self.viewModels = viewModels
             tableView.reloadData()
@@ -690,10 +691,10 @@ extension ConversationDataSource {
                 if tableView.contentSize.height > self.layoutSize.height {
                     let rect = tableView.rectForRow(at: initialIndexPath)
                     let y = rect.origin.y + offset - tableView.contentInset.top
-                    tableView.setContentOffsetYSafely(y)
+                    tableView.setContentOffsetYSafely(y, animated: animatedReloading)
                 }
             } else {
-                tableView.scrollToBottom(animated: false)
+                tableView.scrollToBottom(animated: animatedReloading)
             }
             if ConversationViewController.positions[self.conversationId] != nil && !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
                 NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)
@@ -707,7 +708,6 @@ extension ConversationDataSource {
             self.pendingChanges = []
             completion?()
         }
-        performSynchronouslyOnMainThread(updateUI)
     }
     
     private func indexPath(ofDates dates: [String], viewModels: [String: [MessageViewModel]], where predicate: (MessageItem) -> Bool) -> IndexPath? {

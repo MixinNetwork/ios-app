@@ -928,7 +928,7 @@ extension ConversationViewController: UITextViewDelegate {
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
                 self.updateTableViewContentInset()
-                self.tableView.setContentOffsetYSafely(newContentOffset)
+                self.tableView.setContentOffsetYSafely(newContentOffset, animated: false)
             }, completion: { (_) in
                 self.keyboardManager.inputAccessoryViewHeight = self.inputWrapperView.frame.height
             })
@@ -1418,7 +1418,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
         let contentOffsetY = tableView.contentOffset.y
         updateTableViewContentInset()
         if !isShowingQuotePreviewView && shouldChangeTableViewContentOffset {
-            tableView.setContentOffsetYSafely(contentOffsetY - inputWrapperDisplacement)
+            tableView.setContentOffsetYSafely(contentOffsetY - inputWrapperDisplacement, animated: false)
         }
         if intent == .show {
             manager.inputAccessoryViewHeight = inputWrapperView.frame.height
@@ -1551,7 +1551,7 @@ extension ConversationViewController {
             self.view.layoutIfNeeded()
             let contentOffsetY = self.tableView.contentOffset.y
             self.updateTableViewContentInset()
-            self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
+            self.tableView.setContentOffsetYSafely(contentOffsetY + offset, animated: false)
         }) { (_) in
             self.isShowingStickerPanel = !self.isShowingStickerPanel
             self.stickerInputViewController.animated = self.isShowingStickerPanel

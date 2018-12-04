@@ -4,38 +4,39 @@ final class SnapshotDAO {
     
     static let shared = SnapshotDAO()
     
-    enum Sort {
-        case createdAt
-        case amount
-    }
-    
     private let createdAt = Snapshot.Properties.createdAt.in(table: Snapshot.tableName)
     
-    func getSnapshots(below location: SnapshotItem?, sort: Sort, limit: Int) -> [SnapshotItem] {
+    func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement
+            var condition = Expression(booleanLiteral: true)
+            if let assetId = assetId {
+                condition = condition && Snapshot.Properties.assetId.in(table: Snapshot.tableName) == assetId
+            }
             switch sort {
             case .createdAt:
                 if let location = location {
-                    stmt = stmt.where(createdAt < location.createdAt)
+                    condition = condition && createdAt < location.createdAt
                 }
-                stmt = stmt.order(by: createdAt.asOrder(by: .descending))
             case .amount:
                 if let location = location {
-                    stmt = stmt.where(amount < location.amount && createdAt < location.createdAt)
+                    let absAmount = amount.abs()
+                    let locationAbsAmount = Expression(stringLiteral: location.amount).abs()
+                    let isBelowLocation = absAmount < locationAbsAmount
+                        || (absAmount == locationAbsAmount && createdAt < location.createdAt)
+                    condition = condition && isBelowLocation
                 }
-                stmt = stmt.order(by: [amount.asOrder(by: .descending), createdAt.asOrder(by: .descending)])
+            }
+            stmt.where(condition)
+            switch sort {
+            case .createdAt:
+                stmt = stmt.order(by: createdAt.asOrder(by: .descending))
+            case .amount:
+                stmt = stmt.order(by: [amount.abs().asOrder(by: .descending), createdAt.asOrder(by: .descending)])
             }
             stmt = stmt.limit(limit)
             return stmt
-        }
-    }
-    
-    func getSnapshots(assetId: String) -> [SnapshotItem] {
-        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (stmt) -> (StatementSelect) in
-            stmt.where(Snapshot.Properties.assetId.in(table: Snapshot.tableName) == assetId)
-                .order(by: createdAt.asOrder(by: .descending))
         }
     }
     
@@ -54,9 +55,9 @@ final class SnapshotDAO {
         }).first
     }
     
-    func insertOrReplaceSnapshots(snapshots: [Snapshot]) {
+    func insertOrReplaceSnapshots(snapshots: [Snapshot], userInfo: [AnyHashable: Any]? = nil) {
         MixinDatabase.shared.insertOrReplace(objects: snapshots)
-        NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: nil)
+        NotificationCenter.default.afterPostOnMain(name: .SnapshotDidChange, object: nil, userInfo: userInfo)
     }
     
     func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit]) {

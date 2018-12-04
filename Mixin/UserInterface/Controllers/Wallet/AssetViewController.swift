@@ -9,21 +9,11 @@ class AssetViewController: UIViewController {
         static let header = "header"
     }
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.asset-load")
     private let tableHeaderView = AssetTableHeaderView()
+    private let loadMoreThreshold = 20
     
     private var asset: AssetItem!
-    private var snapshots = [SnapshotItem]() {
-        didSet {
-            updateFilteredSnapshots()
-        }
-    }
-    private var filteredSnapshots = [[SnapshotItem]]()
-    private var headerTitles = [String]()
-    private var didLoadLocalSnapshots = false
-    private var showTitleHeaderView: Bool {
-        return !headerTitles.isEmpty && filterWindow.sort == .time
-    }
+    private var snapshotDataSource: SnapshotDataSource!
     
     private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
     private lazy var filterWindow: AssetFilterWindow = {
@@ -48,9 +38,15 @@ class AssetViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         reloadAsset()
-        reloadSnapshots()
+        snapshotDataSource.onReload = { [weak self] in
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.tableView.reloadData()
+            weakSelf.updateTableFooterView()
+        }
+        snapshotDataSource.reloadFromLocal()
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(snapshotsDidChange(_:)), name: .SnapshotDidChange, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: asset.assetId))
     }
     
@@ -69,10 +65,6 @@ class AssetViewController: UIViewController {
             return
         }
         reloadAsset()
-    }
-    
-    @objc func snapshotsDidChange(_ notification: Notification) {
-        reloadSnapshots()
     }
     
     @objc func presentFilterWindow(_ sender: Any) {
@@ -95,6 +87,7 @@ class AssetViewController: UIViewController {
     class func instance(asset: AssetItem) -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "asset") as! AssetViewController
         vc.asset = asset
+        vc.snapshotDataSource = SnapshotDataSource(category: .asset(id: asset.assetId))
         let container = ContainerViewController.instance(viewController: vc, title: asset.name)
         container.automaticallyAdjustsScrollViewInsets = false
         return container
@@ -141,17 +134,17 @@ extension AssetViewController: ContainerViewControllerDelegate {
 extension AssetViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return filteredSnapshots.count
+        return snapshotDataSource.titles.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredSnapshots[section].count
+        return snapshotDataSource.snapshots[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
-        cell.render(snapshot: filteredSnapshots[indexPath.section][indexPath.row], asset: asset)
-        cell.renderDecorationViews(indexPath: indexPath, models: filteredSnapshots)
+        cell.render(snapshot: snapshotDataSource.snapshots[indexPath.section][indexPath.row], asset: asset)
+        cell.renderDecorationViews(indexPath: indexPath, models: snapshotDataSource.snapshots)
         cell.delegate = self
         return cell
     }
@@ -162,7 +155,7 @@ extension AssetViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let snapshot = filteredSnapshots[indexPath.section][indexPath.row]
+        let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
         if snapshot.type != SnapshotType.pendingDeposit.rawValue {
             let vc = TransactionViewController.instance(asset: asset, snapshot: snapshot)
             navigationController?.pushViewController(vc, animated: true)
@@ -170,11 +163,8 @@ extension AssetViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard showTitleHeaderView else {
-            return nil
-        }
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! AssetHeaderView
-        header.label.text = headerTitles[section]
+        header.label.text = snapshotDataSource.titles[section]
         return header
     }
     
@@ -183,18 +173,27 @@ extension AssetViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return showTitleHeaderView ? 32 : .leastNormalMagnitude
+        let title = snapshotDataSource.titles[section]
+        return title.isEmpty ? .leastNormalMagnitude : 32
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let distance = snapshotDataSource.distanceToLastItem(of: indexPath) else {
+            return
+        }
+        if distance < loadMoreThreshold {
+            snapshotDataSource.loadMoreIfPossible()
+        }
     }
     
 }
 
 extension AssetViewController: AssetFilterWindowDelegate {
     
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: AssetFilterWindow.Sort, filter: AssetFilterWindow.Filter) {
+    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
         tableView.setContentOffset(.zero, animated: false)
         tableView.layoutIfNeeded()
-        updateFilteredSnapshots()
-        tableView.reloadData()
+        snapshotDataSource.setSort(sort, filter: filter)
         updateTableFooterView()
     }
     
@@ -206,7 +205,7 @@ extension AssetViewController: SnapshotCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return
         }
-        guard let userId = filteredSnapshots[indexPath.section][indexPath.row].opponentUserId else {
+        guard let userId = snapshotDataSource.snapshots[indexPath.section][indexPath.row].opponentUserId else {
             return
         }
         DispatchQueue.global().async {
@@ -233,7 +232,7 @@ extension AssetViewController {
     
     private func reloadAsset() {
         let assetId = asset.assetId
-        queue.async { [weak self] in
+        DispatchQueue.global().async { [weak self] in
             guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
                 return
             }
@@ -250,83 +249,8 @@ extension AssetViewController {
         }
     }
     
-    private func reloadSnapshots() {
-        let assetId = asset.assetId
-        queue.async { [weak self] in
-            let snapshots = SnapshotDAO.shared.getSnapshots(assetId: assetId)
-            var inexistedUserIds = snapshots
-                .filter({ $0.opponentUserFullName == nil })
-                .compactMap({ $0.opponentId })
-            inexistedUserIds = Array(Set(inexistedUserIds))
-            if !inexistedUserIds.isEmpty {
-                ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: inexistedUserIds))
-            }
-            DispatchQueue.main.sync { [weak self] in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.snapshots = snapshots
-                weakSelf.didLoadLocalSnapshots = true
-                UIView.performWithoutAnimation {
-                    weakSelf.updateTableFooterView()
-                    weakSelf.tableView.reloadData()
-                }
-            }
-        }
-    }
-    
-    private func updateFilteredSnapshots() {
-        let visibleSnapshotTypes = filterWindow
-            .filter
-            .snapshotTypes
-            .map({ $0.rawValue })
-        let sortedSnapshots = self.snapshots
-            .filter({ visibleSnapshotTypes.contains($0.type) })
-            .sorted(by: filterWindow.sort == .time ? timeSorter : amountSorter)
-        switch filterWindow.sort {
-        case .time:
-            var keys = [String]()
-            var dict = [String: [SnapshotItem]]()
-            for snapshot in sortedSnapshots {
-                let date = DateFormatter.dateSimple.string(from: snapshot.createdAt.toUTCDate())
-                if dict[date] != nil {
-                    dict[date]?.append(snapshot)
-                } else {
-                    keys.append(date)
-                    dict[date] = [snapshot]
-                }
-            }
-            var snapshots = [[SnapshotItem]]()
-            for key in keys {
-                snapshots.append(dict[key] ?? [])
-            }
-            self.headerTitles = keys
-            self.filteredSnapshots = snapshots
-        case .amount:
-            headerTitles = []
-            let snapshots = self.snapshots
-                .filter({ visibleSnapshotTypes.contains($0.type) })
-                .sorted(by: amountSorter)
-            filteredSnapshots = [snapshots]
-        }
-    }
-    
-    private func timeSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
-        return one.createdAt > another.createdAt
-    }
-    
-    private func amountSorter(_ one: SnapshotItem, _ another: SnapshotItem) -> Bool {
-        let oneValue = Double(one.amount) ?? 0
-        let anotherValue = Double(another.amount) ?? 0
-        if abs(oneValue) == abs(anotherValue), oneValue.sign != anotherValue.sign {
-            return oneValue > 0
-        } else {
-            return abs(oneValue) > abs(anotherValue)
-        }
-    }
-    
     private func updateTableFooterView() {
-        if filteredSnapshots.isEmpty {
+        if snapshotDataSource.snapshots.isEmpty {
             tableHeaderView.transactionsHeaderView.isHidden = false
             noTransactionFooterView.frame.size.height = {
                 if #available(iOS 11.0, *) {

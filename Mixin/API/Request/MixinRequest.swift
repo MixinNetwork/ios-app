@@ -36,7 +36,16 @@ class MixinRequest {
     }
     
     private static func signToken(sessionId: String, userId: String, authenticationToken: String, request: URLRequest) -> String? {
-        let uri = request.url!.path
+        guard let url = request.url else {
+            return nil
+        }
+        var uri = url.path
+        if let query = url.query {
+            uri += "?" + query
+        }
+        if let fragment = url.fragment {
+            uri += "#" + fragment
+        }
         var sig = ""
         if let method = request.httpMethod {
             sig += method

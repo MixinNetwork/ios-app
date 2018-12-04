@@ -1,7 +1,7 @@
 import UIKit
 
 protocol AssetFilterWindowDelegate: class {
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort: AssetFilterWindow.Sort, filter: AssetFilterWindow.Filter)
+    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter)
 }
 
 class AssetFilterWindow: BottomSheetView {
@@ -13,8 +13,8 @@ class AssetFilterWindow: BottomSheetView {
     
     weak var delegate: AssetFilterWindowDelegate?
 
-    private(set) var sort = Sort.time
-    private(set) var filter = Filter.all
+    private(set) var sort = Snapshot.Sort.createdAt
+    private(set) var filter = Snapshot.Filter.all
     
     private lazy var sortDraft = sort
     private lazy var filterDraft = filter
@@ -104,7 +104,7 @@ extension AssetFilterWindow: UITableViewDelegate {
         if indexPath.section == 0 {
             let indexPathToDeselect = IndexPath(row: 1 - indexPath.row, section: indexPath.section)
             tableView.deselectRow(at: indexPathToDeselect, animated: true)
-            sortDraft = indexPath.row == 0 ? .time : .amount
+            sortDraft = indexPath.row == 0 ? .createdAt : .amount
         } else {
             for indexPathToDeselect in tableView.indexPathsForSelectedRows ?? [] {
                 guard indexPathToDeselect.section == 1 && indexPathToDeselect != indexPath else {
@@ -128,43 +128,12 @@ extension AssetFilterWindow: UITableViewDelegate {
 
 extension AssetFilterWindow {
     
-    enum Sort {
-        case time
-        case amount
-    }
-    
-    enum Filter {
-        case all
-        case deposit
-        case transfer
-        case withdrawal
-        case fee
-        case rebate
-        
-        var snapshotTypes: [SnapshotType] {
-            switch self {
-            case .all:
-                return SnapshotType.allCases
-            case .deposit:
-                return [.deposit, .pendingDeposit]
-            case .transfer:
-                return [.transfer]
-            case .withdrawal:
-                return [.withdrawal]
-            case .fee:
-                return [.fee]
-            case .rebate:
-                return [.rebate]
-            }
-        }
-    }
-    
     private func reloadSelection() {
         for indexPath in tableView.indexPathsForSelectedRows ?? [] {
             tableView.deselectRow(at: indexPath, animated: false)
         }
         switch sort {
-        case .time:
+        case .createdAt:
             tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
         case .amount:
             tableView.selectRow(at: IndexPath(row: 1, section: 0), animated: false, scrollPosition: .none)
@@ -190,7 +159,7 @@ extension AssetFilterWindow {
         tableView.isScrollEnabled = tableView.contentSize.height >= tableView.frame.height
     }
     
-    private func filter(for row: Int) -> Filter {
+    private func filter(for row: Int) -> Snapshot.Filter {
         switch row {
         case 0:
             return .all

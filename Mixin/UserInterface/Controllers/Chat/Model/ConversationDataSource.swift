@@ -112,7 +112,6 @@ class ConversationDataSource {
         didLoadEarliestMessage = true
         didLoadLatestMessage = true
         tableView?.setContentOffset(.zero, animated: true)
-        highlight = nil
         ConversationViewController.positions[conversationId] = nil
         queue.async {
             guard !self.messageProcessingIsCancelled else {
@@ -128,14 +127,15 @@ class ConversationDataSource {
         }
         didLoadEarliestMessage = true
         didLoadLatestMessage = true
-        tableView?.scrollToBottom(animated: true)
         highlight = nil
         ConversationViewController.positions[conversationId] = nil
         queue.async {
             guard !self.messageProcessingIsCancelled else {
                 return
             }
-            self.reload(initialMessageId: initialMessageId, completion: completion)
+            self.reload(initialMessageId: initialMessageId, prepareBeforeReload: {
+                self.tableView?.setContentOffsetYSafely(0, animated: false)
+            }, completion: completion, animatedReloading: true)
         }
     }
     
@@ -203,8 +203,7 @@ class ConversationDataSource {
                 }
                 let bottomDistance = tableView.contentSize.height - tableView.contentOffset.y
                 tableView.reloadData()
-                tableView.contentOffset = CGPoint(x: tableView.contentOffset.x,
-                                                  y: tableView.contentSize.height - bottomDistance)
+                tableView.setContentOffsetYSafely(tableView.contentSize.height - bottomDistance, animated: false)
                 self.isLoadingAbove = false
             }
         }
@@ -215,7 +214,6 @@ class ConversationDataSource {
             return
         }
         isLoadingBelow = true
-        highlight = nil
         let conversationId = self.conversationId
         let requiredCount = self.numberOfMessagesOnPaging
         let layoutWidth = self.layoutSize.width
@@ -256,11 +254,6 @@ class ConversationDataSource {
             DispatchQueue.main.sync {
                 guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                     return
-                }
-                if !viewModels.isEmpty {
-                    self.viewModels.values.flatMap({ $0 }).forEach {
-                        ($0 as? TextMessageViewModel)?.removeHighlights()
-                    }
                 }
                 for date in dates {
                     let newViewModels = viewModels[date]!
@@ -604,7 +597,7 @@ extension ConversationDataSource {
         }
     }
     
-    private func reload(initialMessageId: String? = nil, completion: (() -> Void)? = nil) {
+    private func reload(initialMessageId: String? = nil, prepareBeforeReload: (() -> Void)? = nil, completion: (() -> Void)? = nil, animatedReloading: Bool = false) {
         canInsertUnreadHint = true
         var didLoadEarliestMessage = false
         var didLoadLatestMessage = false
@@ -677,10 +670,11 @@ extension ConversationDataSource {
             }
             offset -= ConversationDateHeaderView.height
         }
-        let updateUI = {
+        performSynchronouslyOnMainThread {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                 return
             }
+            prepareBeforeReload?()
             self.dates = dates
             self.viewModels = viewModels
             tableView.reloadData()
@@ -690,10 +684,10 @@ extension ConversationDataSource {
                 if tableView.contentSize.height > self.layoutSize.height {
                     let rect = tableView.rectForRow(at: initialIndexPath)
                     let y = rect.origin.y + offset - tableView.contentInset.top
-                    tableView.setContentOffsetYSafely(y)
+                    tableView.setContentOffsetYSafely(y, animated: animatedReloading)
                 }
             } else {
-                tableView.scrollToBottom(animated: false)
+                tableView.scrollToBottom(animated: animatedReloading)
             }
             if ConversationViewController.positions[self.conversationId] != nil && !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
                 NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)
@@ -707,7 +701,6 @@ extension ConversationDataSource {
             self.pendingChanges = []
             completion?()
         }
-        performSynchronouslyOnMainThread(updateUI)
     }
     
     private func indexPath(ofDates dates: [String], viewModels: [String: [MessageViewModel]], where predicate: (MessageItem) -> Bool) -> IndexPath? {
@@ -844,6 +837,10 @@ extension ConversationDataSource {
         let row: Int
         let isLastCell: Bool
         let viewModel: MessageViewModel
+        let shouldRemoveAllHighlights = messageIsSentByMe && highlight != nil
+        if shouldRemoveAllHighlights {
+            highlight = nil
+        }
         if let viewModels = viewModels[date] {
             needsInsertNewSection = false
             section = dates.index(of: date)!
@@ -919,6 +916,14 @@ extension ConversationDataSource {
         DispatchQueue.main.sync {
             guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                 return
+            }
+            if shouldRemoveAllHighlights {
+                self.viewModels.values.flatMap({ $0 }).forEach {
+                    ($0 as? TextMessageViewModel)?.removeHighlights()
+                }
+                if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
+                    tableView.reloadRows(at: visibleIndexPaths, with: .none)
+                }
             }
             let lastMessageIsVisibleBeforeInsertion: Bool
             if let lastIndexPathBeforeInsertion = lastIndexPathBeforeInsertion, let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(lastIndexPathBeforeInsertion) {

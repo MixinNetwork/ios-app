@@ -307,14 +307,15 @@ final class MessageDAO {
         guard let message = getFullMessage(messageId: messageId) else {
             return nil
         }
-        let count = count / 2
-        let messagesAbove = getMessages(conversationId: conversationId, aboveMessage: message, count: count)
-        let messagesBelow = getMessages(conversationId: conversationId, belowMessage: message, count: count)
+        let aboveCount = 5
+        let belowCount = count - aboveCount
+        let messagesAbove = getMessages(conversationId: conversationId, aboveMessage: message, count: aboveCount)
+        let messagesBelow = getMessages(conversationId: conversationId, belowMessage: message, count: belowCount)
         var messages = [MessageItem]()
         messages.append(contentsOf: messagesAbove)
         messages.append(message)
         messages.append(contentsOf: messagesBelow)
-        return (messages, messagesAbove.count < count, messagesBelow.count < count)
+        return (messages, messagesAbove.count < aboveCount, messagesBelow.count < belowCount)
     }
     
     func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {

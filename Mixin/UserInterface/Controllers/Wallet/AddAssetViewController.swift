@@ -37,6 +37,7 @@ class AddAssetViewController: UIViewController {
         super.viewDidLoad()
         textField.delegate = self
         textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
+        textField.returnKeyType = .search
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self

@@ -278,3 +278,5 @@ enum StatusBarHeight {
     static let normal: CGFloat = 20
     static let inCall: CGFloat = 40
 }
+
+let currentDecimalSeparator = Locale.current.decimalSeparator ?? "."

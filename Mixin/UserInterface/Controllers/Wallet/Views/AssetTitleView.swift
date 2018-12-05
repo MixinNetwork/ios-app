@@ -38,10 +38,10 @@ class AssetTitleView: UIView, XibDesignable {
     func render(asset: AssetItem) {
         reloadIcon(asset: asset)
         if asset.balance == "0" {
-            amountLabel.text = "0.00"
-            usdAmountLabel.text = "≈ $0.00"
+            amountLabel.text = "0\(currentDecimalSeparator)00"
+            usdAmountLabel.text = "≈ $0\(currentDecimalSeparator)00"
         } else {
-            amountLabel.text = asset.balance
+            amountLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
             let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
             if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
                 usdAmountLabel.text = "≈ $" + localizedUSDBalance

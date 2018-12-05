@@ -334,6 +334,7 @@ public class Localized {
     // Wallet
     public static let WALLET_TITLE = LocalizedString("wallet_title", comment: "Wallet")
     public static let WALLET_TITLE_ADD_ASSET = LocalizedString("wallet_title_add_asset", comment: "Add asset")
+    public static let WALLET_ALREADY_HAD_THE_ASSET = LocalizedString("wallet_already_had_the_asset", comment: "You already had the asset")
     public static let WALLET_TRANSFER_OUT = LocalizedString("wallet_transfer_out", comment: "Transfer Out")
     public static let TRANSFER_ERROR_BALANCE_INSUFFICIENT = LocalizedString("transfer_error_balance_insufficient", comment: "Insufficient balance")
     public static let TRANSFER_ERROR_FEE_INSUFFICIENT = LocalizedString("transfer_error_fee_insufficient", comment: "Insufficient transaction fee")

@@ -49,7 +49,12 @@ class WalletAssetCell: UITableViewCell {
         } else {
             chainImageView.isHidden = true
         }
-        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never) ?? ""
+        let balance: String
+        if asset.balance == "0" {
+            balance = "0\(currentDecimalSeparator)00"
+        } else {
+            balance = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never) ?? ""
+        }
         balanceLabel.attributedText = NSAttributedString(string: balance, attributes: WalletAssetCell.balanceAttributes)
         symbolLabel.text = asset.symbol
         if asset.priceUsd.doubleValue > 0 {

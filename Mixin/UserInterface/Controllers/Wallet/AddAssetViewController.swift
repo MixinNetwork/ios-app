@@ -2,7 +2,6 @@ import UIKit
 
 class AddAssetViewController: UIViewController {
     
-    @IBOutlet weak var saveButton: BusyButton!
     @IBOutlet weak var searchBoxView: ModernSearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -30,13 +29,16 @@ class AddAssetViewController: UIViewController {
     }
     
     static func instance() -> UIViewController {
-        return Storyboard.wallet.instantiateViewController(withIdentifier: "add_asset")
+        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "add_asset")
+        return ContainerViewController.instance(viewController: vc, title: Localized.WALLET_TITLE_ADD_ASSET)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        container?.separatorLineView.backgroundColor = UIColor(rgbValue: 0xF3F3F3)
         textField.delegate = self
         textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
+        textField.returnKeyType = .search
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -44,32 +46,6 @@ class AddAssetViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         reloadWithLocalTopAssets()
         ConcurrentJobQueue.shared.addJob(job: RefreshTopAssetsJob())
-    }
-    
-    @IBAction func saveAction(_ sender: Any) {
-        guard let indices = tableView.indexPathsForSelectedRows?.map({ $0.row }) else {
-            return
-        }
-        saveButton.isBusy = true
-        var items = [AssetItem]()
-        if isSearching {
-            for index in indices {
-                items.append(searchResults[index].asset)
-            }
-        } else {
-            for index in indices {
-                items.append(topAssets[index])
-            }
-        }
-        DispatchQueue.global().async { [weak self] in
-            let assets = items.map(Asset.createAsset)
-            AssetDAO.shared.insertOrUpdateAssets(assets: assets)
-            DispatchQueue.main.async {
-                self?.navigationController?.popViewController(animated: true)
-                NotificationCenter.default.post(name: .ToastMessageDidAppear,
-                                                object: Localized.TOAST_ADD_ASSET)
-            }
-        }
     }
     
     @IBAction func popAction(_ sender: Any) {
@@ -87,6 +63,7 @@ class AddAssetViewController: UIViewController {
         guard !keyword.isEmpty else {
             activityIndicator.stopAnimating()
             reloadTableViewAndSelections()
+            lastKeyword = ""
             return
         }
         guard keyword != lastKeyword else {
@@ -177,6 +154,46 @@ class AddAssetViewController: UIViewController {
     
 }
 
+extension AddAssetViewController: ContainerViewControllerDelegate {
+    
+    func barRightButtonTappedAction() {
+        guard let indices = tableView.indexPathsForSelectedRows?.map({ $0.row }) else {
+            return
+        }
+        container?.rightButton.isBusy = true
+        var items = [AssetItem]()
+        if isSearching {
+            for index in indices {
+                items.append(searchResults[index].asset)
+            }
+        } else {
+            for index in indices {
+                items.append(topAssets[index])
+            }
+        }
+        DispatchQueue.global().async { [weak self] in
+            let assets = items.map(Asset.createAsset)
+            AssetDAO.shared.insertOrUpdateAssets(assets: assets)
+            DispatchQueue.main.async {
+                self?.navigationController?.popViewController(animated: true)
+                NotificationCenter.default.post(name: .ToastMessageDidAppear,
+                                                object: Localized.TOAST_ADD_ASSET)
+            }
+        }
+    }
+    
+    func prepareBar(rightButton: StateResponsiveButton) {
+        rightButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        rightButton.setTitleColor(UIColor(rgbValue: 0x397EE4), for: .normal)
+        rightButton.setTitleColor(UIColor(rgbValue: 0xBBBEC3), for: .disabled)
+    }
+    
+    func textBarRightButton() -> String? {
+        return Localized.ACTION_SAVE
+    }
+    
+}
+
 extension AddAssetViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -210,8 +227,12 @@ extension AddAssetViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if isSearching {
-            let isForceSelected = searchResults[indexPath.row].forceSelected
-            return isForceSelected ? nil : indexPath
+            if searchResults[indexPath.row].forceSelected {
+                NotificationCenter.default.post(name: .ToastMessageDidAppear, object: Localized.WALLET_ALREADY_HAD_THE_ASSET)
+                return nil
+            } else {
+                return indexPath
+            }
         } else {
             return indexPath
         }
@@ -220,13 +241,13 @@ extension AddAssetViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let assetId = self.asset(for: indexPath).assetId
         selections.insert(assetId)
-        saveButton.isEnabled = !selections.isEmpty
+        container?.rightButton.isEnabled = !selections.isEmpty
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let assetId = self.asset(for: indexPath).assetId
         selections.remove(assetId)
-        saveButton.isEnabled = !selections.isEmpty
+        container?.rightButton.isEnabled = !selections.isEmpty
     }
     
 }

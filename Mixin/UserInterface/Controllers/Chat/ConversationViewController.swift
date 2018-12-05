@@ -1390,6 +1390,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
                 UIView.performWithoutAnimation {
                     bottomOutsideWrapperView.backgroundColor = .white
                 }
+                dismissPanelsButton.alpha = 0
                 isShowingStickerPanel = false
                 toggleStickerPanelSizeButton.isHidden = true
                 stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_sticker"), for: .normal)

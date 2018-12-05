@@ -257,6 +257,7 @@
 "wallet_title" = "钱包";
 "wallet_title_withdrawal" = "提现";
 "wallet_title_add_asset" = "添加资产";
+"wallet_already_has_the_asset" = "您已添加过该资产";
 "wallet_transfer_out" = "转出";
 "wallet_symbol_other" = "其它";
 "wallet_password_verify_title" = "验证旧的支付密码";

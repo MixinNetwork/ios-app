@@ -87,6 +87,7 @@ class AddAssetViewController: UIViewController {
         guard !keyword.isEmpty else {
             activityIndicator.stopAnimating()
             reloadTableViewAndSelections()
+            lastKeyword = ""
             return
         }
         guard keyword != lastKeyword else {

@@ -7,8 +7,7 @@ protocol ConversationKeyboardManagerDelegate: class {
 
 class ConversationKeyboardManager {
     
-    static let minReasonableKeyboardHeight: CGFloat = 271
-    static var lastKeyboardHeight: CGFloat = minReasonableKeyboardHeight
+    static var lastKeyboardHeight: CGFloat = ScreenSize.defaultKeyboardHeight
     
     let inputAccessoryView: FrameObservingInputAccessoryView
     
@@ -43,7 +42,7 @@ class ConversationKeyboardManager {
         guard let endFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
-        ConversationKeyboardManager.lastKeyboardHeight = max(ConversationKeyboardManager.minReasonableKeyboardHeight,
+        ConversationKeyboardManager.lastKeyboardHeight = max(ScreenSize.minReasonableKeyboardHeight,
                                                              endFrame.height - inputAccessoryView.frame.height)
         if keyboardFrameIsInvisible(endFrame) && isShowingKeyboard {
             isShowingKeyboard = false
@@ -51,7 +50,7 @@ class ConversationKeyboardManager {
         } else if !keyboardFrameIsInvisible(endFrame) && !isShowingKeyboard {
             isShowingKeyboard = true
             delegate?.conversationKeyboardManager(self, keyboardWillChangeFrameTo: endFrame, intent: .show)
-        } else if endFrame.height < ConversationKeyboardManager.minReasonableKeyboardHeight, let delegate = delegate {
+        } else if endFrame.height < ScreenSize.minReasonableKeyboardHeight, let delegate = delegate {
             if delegate.conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(self).isTracking {
                 delegate.conversationKeyboardManager(self, keyboardWillChangeFrameTo: endFrame, intent: .hide)
             }

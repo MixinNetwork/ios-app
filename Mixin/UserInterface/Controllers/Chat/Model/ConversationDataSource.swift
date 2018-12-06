@@ -203,7 +203,7 @@ class ConversationDataSource {
                 }
                 let bottomDistance = tableView.contentSize.height - tableView.contentOffset.y
                 tableView.reloadData()
-                tableView.setContentOffsetYSafely(tableView.contentSize.height - bottomDistance, animated: false)
+                tableView.contentOffset.y = tableView.contentSize.height - bottomDistance
                 self.isLoadingAbove = false
             }
         }

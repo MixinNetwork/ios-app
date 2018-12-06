@@ -17,7 +17,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var bottomOutsideWrapperView: UIView!
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var moreButton: UIButton!
-    @IBOutlet weak var botButton: UIButton!
     @IBOutlet weak var inputTextView: InputTextView!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var toggleStickerPanelSizeButton: UIButton!
@@ -414,23 +413,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             inputWrapperShouldFollowKeyboardPosition = true
             toggleStickerPanel(delay: delay)
         }
-    }
-
-    @IBAction func botAction(_ sender: Any) {
-        guard let user = ownerUser, user.isBot, let app = self.ownerUserApp else {
-            return
-        }
-        guard let url = URL(string: app.homeUri), !conversationId.isEmpty else {
-            return
-        }
-
-        if isShowingMoreMenu {
-            toggleMoreMenu(delay: 0)
-        }
-        if isShowingStickerPanel {
-            toggleStickerPanel(delay: 0)
-        }
-        presentWebWindow(withURL: url)
     }
     
     @IBAction func toggleStickerPanelSizeAction(_ sender: Any) {
@@ -1424,7 +1406,6 @@ extension ConversationViewController {
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         unblockButton.isHidden = !isBlocked
         audioInputContainerView.isHidden = isBlocked || isShowingStickerPanel
-        botButton.isHidden = !user.isBot
     }
     
     private func updateMoreMenuFixedJobs() {

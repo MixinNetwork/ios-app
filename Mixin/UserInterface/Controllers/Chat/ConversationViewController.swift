@@ -1498,7 +1498,10 @@ extension ConversationViewController {
     
     private func updateAccessoryButtons(animated: Bool) {
         let position = tableView.contentSize.height - tableView.contentOffset.y - tableView.bounds.height
-        if scrollToBottomWrapperView.alpha < 0.1 && position > showScrollToBottomButtonThreshold {
+        let didReachThreshold = position > showScrollToBottomButtonThreshold
+            && tableView.contentOffset.y > tableView.contentInset.top
+        let shouldShowScrollToBottomButton = didReachThreshold || !dataSource.didLoadLatestMessage
+        if scrollToBottomWrapperView.alpha < 0.1 && shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 48
             if animated {
                 UIView.beginAnimations(nil, context: nil)
@@ -1509,7 +1512,7 @@ extension ConversationViewController {
                 view.layoutIfNeeded()
                 UIView.commitAnimations()
             }
-        } else if scrollToBottomWrapperView.alpha > 0.9 && position < showScrollToBottomButtonThreshold {
+        } else if scrollToBottomWrapperView.alpha > 0.9 && !shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 4
             if animated {
                 UIView.beginAnimations(nil, context: nil)

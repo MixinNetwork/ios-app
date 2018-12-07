@@ -203,7 +203,7 @@ class ConversationDataSource {
                 }
                 let bottomDistance = tableView.contentSize.height - tableView.contentOffset.y
                 tableView.reloadData()
-                tableView.contentOffset.y = tableView.contentSize.height - bottomDistance
+                tableView.setContentOffsetYSafely(tableView.contentSize.height - bottomDistance, animated: false)
                 self.isLoadingAbove = false
             }
         }
@@ -229,7 +229,6 @@ class ConversationDataSource {
                 let firstUnreadMessage = messages[index]
                 let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessage.createdAt)
                 messages.insert(hint, at: index)
-                self.firstUnreadMessageId = nil
                 self.canInsertUnreadHint = false
             }
             let (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)

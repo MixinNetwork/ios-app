@@ -192,7 +192,11 @@ class ConversationTableView: UITableView {
         if bottomContentOffsetY > -contentInset.top {
             var contentOffset = self.contentOffset
             contentOffset.y = min(bottomContentOffsetY, max(-contentInset.top, y))
-            setContentOffset(contentOffset, animated: animated)
+            if animated {
+                setContentOffset(contentOffset, animated: animated)
+            } else {
+                self.contentOffset = contentOffset
+            }
         }
     }
     

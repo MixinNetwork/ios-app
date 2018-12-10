@@ -61,6 +61,10 @@ class ConversationTableView: UITableView {
         return true
     }
     
+    var bottomDistance: CGFloat {
+        return contentSize.height - contentOffset.y
+    }
+    
     var indicesForVisibleSectionHeaders: [Int] {
         guard let indexPaths = indexPathsForVisibleRows else {
             return []

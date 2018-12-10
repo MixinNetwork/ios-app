@@ -307,7 +307,7 @@ final class MessageDAO {
         guard let message = getFullMessage(messageId: messageId) else {
             return nil
         }
-        let aboveCount = 5
+        let aboveCount = 10
         let belowCount = count - aboveCount
         let messagesAbove = getMessages(conversationId: conversationId, aboveMessage: message, count: aboveCount)
         let messagesBelow = getMessages(conversationId: conversationId, belowMessage: message, count: belowCount)

@@ -134,7 +134,7 @@ class ConversationDataSource {
                 return
             }
             self.reload(initialMessageId: initialMessageId, prepareBeforeReload: {
-                self.tableView?.setContentOffsetYSafely(0, animated: false)
+                self.tableView?.bounds.origin.y = 0
             }, completion: completion, animatedReloading: true)
         }
     }
@@ -207,7 +207,7 @@ class ConversationDataSource {
                 }
                 tableView.reloadData()
                 let y = tableView.contentSize.height - (bottomDistance ?? tableView.bottomDistance)
-                tableView.setContentOffsetYSafely(y, animated: false)
+                tableView.setContentOffsetYSafely(y)
                 self.isLoadingAbove = false
             }
         }
@@ -683,14 +683,21 @@ extension ConversationDataSource {
             tableView.reloadData()
             self.didLoadEarliestMessage = didLoadEarliestMessage
             self.didLoadLatestMessage = didLoadLatestMessage
-            if let initialIndexPath = initialIndexPath {
-                if tableView.contentSize.height > self.layoutSize.height {
-                    let rect = tableView.rectForRow(at: initialIndexPath)
-                    let y = rect.origin.y + offset - tableView.contentInset.top
-                    tableView.setContentOffsetYSafely(y, animated: animatedReloading)
+            let scrolling: () -> Void = {
+                if let initialIndexPath = initialIndexPath {
+                    if tableView.contentSize.height > self.layoutSize.height {
+                        let rect = tableView.rectForRow(at: initialIndexPath)
+                        let y = rect.origin.y + offset - tableView.contentInset.top
+                        tableView.setContentOffsetYSafely(y)
+                    }
+                } else {
+                    tableView.scrollToBottom(animated: false)
                 }
+            }
+            if animatedReloading {
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: scrolling, completion: nil)
             } else {
-                tableView.scrollToBottom(animated: animatedReloading)
+                scrolling()
             }
             if ConversationViewController.positions[self.conversationId] != nil && !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
                 NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)

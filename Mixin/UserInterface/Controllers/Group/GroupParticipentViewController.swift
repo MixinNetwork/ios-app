@@ -138,7 +138,7 @@ extension GroupParticipentViewController: UITableViewDelegate {
                 navigationController?.pushViewController(vc, animated: true)
             } else if showAdminActions && indexPath.row == 1 {
                 navigationController?.pushViewController(InviteLinkViewController.instance(conversation: conversation), animated: true)
-            } else {
+            } else if let cell = tableView.cellForRow(at: indexPath) as? GroupMemberCell, !cell.loadingView.isAnimating {
                 let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
                 let participant = participants[idx]
                 guard participant.userId != AccountAPI.shared.accountUserId else {
@@ -158,7 +158,7 @@ extension GroupParticipentViewController: UITableViewDelegate {
             self?.sendMessageAction(participant: participant)
         }))
 
-        if currentAccountRole == ParticipantRole.OWNER.rawValue {
+        if currentAccountRole == ParticipantRole.OWNER.rawValue && participant.role.isEmpty {
             alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_ADMIN, style: .default, handler: { [weak self] (action) in
                 self?.makeAdminAction(participant: participant, indexPath: indexPath)
             }))

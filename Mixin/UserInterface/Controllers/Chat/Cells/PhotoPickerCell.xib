@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="l4r-2N-DEq" customClass="PhotoPickerCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1sW-TN-z4k">
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T7C-ya-i39">
+                        <rect key="frame" x="0.0" y="70" width="100" height="30"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_album_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="ba1-1z-k3X">
+                                <rect key="frame" x="0.0" y="0.0" width="100" height="30"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CYn-Kt-pAP">
+                                <rect key="frame" x="4" y="11.5" width="19.5" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_album_video" translatesAutoresizingMaskIntoConstraints="NO" id="Zlw-b4-mbb">
+                                <rect key="frame" x="6" y="14" width="16" height="10"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:01" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hU1-KV-pC6">
+                                <rect key="frame" x="72" y="11.5" width="24" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="CYn-Kt-pAP" secondAttribute="bottom" constant="4" id="5vp-gf-EG4"/>
+                            <constraint firstAttribute="trailing" secondItem="ba1-1z-k3X" secondAttribute="trailing" id="7nX-vB-1eD"/>
+                            <constraint firstAttribute="trailing" secondItem="hU1-KV-pC6" secondAttribute="trailing" constant="4" id="EuO-Ic-3T3"/>
+                            <constraint firstItem="Zlw-b4-mbb" firstAttribute="leading" secondItem="T7C-ya-i39" secondAttribute="leading" constant="6" id="F0h-M2-PUL"/>
+                            <constraint firstItem="CYn-Kt-pAP" firstAttribute="leading" secondItem="T7C-ya-i39" secondAttribute="leading" constant="4" id="GZ9-I3-99f"/>
+                            <constraint firstAttribute="bottom" secondItem="Zlw-b4-mbb" secondAttribute="bottom" constant="6" id="Sb6-QU-L34"/>
+                            <constraint firstItem="ba1-1z-k3X" firstAttribute="top" secondItem="T7C-ya-i39" secondAttribute="top" id="bxz-MS-iPx"/>
+                            <constraint firstAttribute="bottom" secondItem="hU1-KV-pC6" secondAttribute="bottom" constant="4" id="cZG-J6-9cV"/>
+                            <constraint firstAttribute="bottom" secondItem="ba1-1z-k3X" secondAttribute="bottom" id="h6L-OE-tCq"/>
+                            <constraint firstItem="ba1-1z-k3X" firstAttribute="leading" secondItem="T7C-ya-i39" secondAttribute="leading" id="tL2-o8-qKf"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="1sW-TN-z4k" firstAttribute="height" secondItem="l4r-2N-DEq" secondAttribute="height" id="BV5-li-IGq"/>
+                <constraint firstItem="T7C-ya-i39" firstAttribute="trailing" secondItem="1sW-TN-z4k" secondAttribute="trailing" id="FG4-xv-s9C"/>
+                <constraint firstItem="1sW-TN-z4k" firstAttribute="centerY" secondItem="l4r-2N-DEq" secondAttribute="centerY" id="K38-R2-I6R"/>
+                <constraint firstItem="1sW-TN-z4k" firstAttribute="width" secondItem="l4r-2N-DEq" secondAttribute="width" id="NSI-rd-9JH"/>
+                <constraint firstItem="T7C-ya-i39" firstAttribute="bottom" secondItem="1sW-TN-z4k" secondAttribute="bottom" id="X3O-tW-zCH"/>
+                <constraint firstItem="T7C-ya-i39" firstAttribute="leading" secondItem="1sW-TN-z4k" secondAttribute="leading" id="tco-9x-nzF"/>
+                <constraint firstItem="1sW-TN-z4k" firstAttribute="centerX" secondItem="l4r-2N-DEq" secondAttribute="centerX" id="wul-f6-uXd"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="5SA-l3-BVP"/>
+            <connections>
+                <outlet property="durationLabel" destination="hU1-KV-pC6" id="z7g-Oc-88b"/>
+                <outlet property="fileTypeView" destination="T7C-ya-i39" id="Dmd-QP-Sfw"/>
+                <outlet property="gifLabel" destination="CYn-Kt-pAP" id="qC3-Os-kAW"/>
+                <outlet property="thumbImageView" destination="1sW-TN-z4k" id="uUB-4w-Gxz"/>
+                <outlet property="videoImageView" destination="Zlw-b4-mbb" id="znf-Ai-zBL"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="ic_album_shadow" width="93" height="30"/>
+        <image name="ic_album_video" width="16" height="10"/>
+    </resources>
+</document>

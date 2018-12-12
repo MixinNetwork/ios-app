@@ -3,7 +3,8 @@ import Photos
 import MobileCoreServices
 
 class PickerViewController: UICollectionViewController, MixinNavigationAnimating {
-
+    
+    private let cellReuseId = "cell"
     private var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
         options.deliveryMode = .opportunistic
@@ -42,6 +43,8 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
             assets = PHFetchResult<PHAsset>()
         }
         container?.titleLabel.text = collection?.localizedTitle
+        collectionView.register(UINib(nibName: "PhotoPickerCell", bundle: .main),
+                                forCellWithReuseIdentifier: cellReuseId)
         collectionView?.reloadData()
         PHPhotoLibrary.shared().register(self)
     }
@@ -103,7 +106,7 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell_identifier_picker", for: indexPath) as! PickerCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! PhotoPickerCell
         let asset = assets[indexPath.row]
         cell.localIdentifier = asset.localIdentifier
         let targetSize = CGSize(width: cell.thumbImageView.frame.size.width * 2, height: cell.thumbImageView.frame.size.height * 2)

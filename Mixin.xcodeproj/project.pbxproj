@@ -464,7 +464,7 @@
 		DF8CECDD1FC302EB00E40064 /* TransferTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECDC1FC302EB00E40064 /* TransferTypeView.swift */; };
 		DF8CECDF1FC3053B00E40064 /* TransferTypeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECDE1FC3053B00E40064 /* TransferTypeCell.xib */; };
 		DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */; };
-		DF8CECE31FC3075B00E40064 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE21FC3075B00E40064 /* TransferViewController.swift */; };
+		DF8CECE31FC3075B00E40064 /* TransferViewController_Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE21FC3075B00E40064 /* TransferViewController_Legacy.swift */; };
 		DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE41FC3177100E40064 /* BottomSheetView.swift */; };
 		DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECE61FC317BF00E40064 /* PayWindow.xib */; };
 		DF8CECE91FC411AB00E40064 /* NotificationSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */; };
@@ -1094,7 +1094,7 @@
 		DF8CECDC1FC302EB00E40064 /* TransferTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeView.swift; sourceTree = "<group>"; };
 		DF8CECDE1FC3053B00E40064 /* TransferTypeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferTypeCell.xib; sourceTree = "<group>"; };
 		DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeCell.swift; sourceTree = "<group>"; };
-		DF8CECE21FC3075B00E40064 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
+		DF8CECE21FC3075B00E40064 /* TransferViewController_Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController_Legacy.swift; sourceTree = "<group>"; };
 		DF8CECE41FC3177100E40064 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		DF8CECE61FC317BF00E40064 /* PayWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayWindow.xib; sourceTree = "<group>"; };
 		DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsViewController.swift; sourceTree = "<group>"; };
@@ -1599,7 +1599,7 @@
 				7B14568B1FCC17AD001B6DED /* Model */,
 				DF8CECF51FC5704D00E40064 /* Views */,
 				DFD2943A1FA7067500FADAAD /* Cells */,
-				DF8CECE21FC3075B00E40064 /* TransferViewController.swift */,
+				DF8CECE21FC3075B00E40064 /* TransferViewController_Legacy.swift */,
 				7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */,
 				7BA3539821BE6E560060F93E /* ConversationExtensionViewController.swift */,
 				DF84281D1FE92A250018B054 /* SendMessagePeerSelectionViewController.swift */,
@@ -2907,7 +2907,7 @@
 				DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */,
 				DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */,
 				DF16682220AC3B5D00C45E31 /* ConversationShareContactViewController.swift in Sources */,
-				DF8CECE31FC3075B00E40064 /* TransferViewController.swift in Sources */,
+				DF8CECE31FC3075B00E40064 /* TransferViewController_Legacy.swift in Sources */,
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
 				7B5747411FA08E18005A6BB5 /* MobileNumberViewController.swift in Sources */,
 				DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */,

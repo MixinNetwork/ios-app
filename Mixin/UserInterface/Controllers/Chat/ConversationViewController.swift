@@ -716,7 +716,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
         let viewController: UIViewController
         if AccountAPI.shared.account?.has_pin ?? false {
-            viewController = TransferViewController.instance(user: user, conversationId: conversationId, asset: asset)
+            viewController = TransferViewController_Legacy.instance(user: user, conversationId: conversationId, asset: asset)
         } else {
             viewController = WalletPasswordViewController.instance(fromChat:  user, conversationId: conversationId, asset: asset)
         }

@@ -182,7 +182,7 @@ extension UrlWindow {
                 if transfer {
                     weakSelf.dismissPopupControllerAnimated()
                     let conversationId = ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: AccountAPI.shared.accountUserId)
-                    let vc = TransferViewController.instance(user: user, conversationId: conversationId, asset: asset)
+                    let vc = TransferViewController_Legacy.instance(user: user, conversationId: conversationId, asset: asset)
                     if clearNavigationStack {
                         UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
                     } else {

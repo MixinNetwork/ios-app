@@ -30,7 +30,7 @@ class TransferPeerSelectionViewController: PeerSelectionViewController {
         guard let peer = selections.first, let user = peer.user, let navigationController = navigationController else {
             return
         }
-        let vc = TransferViewController.instance(user: user,
+        let vc = TransferViewController_Legacy.instance(user: user,
                                                  conversationId: peer.conversationId,
                                                  asset: asset,
                                                  usePresentAnimationWhenPushed: false)

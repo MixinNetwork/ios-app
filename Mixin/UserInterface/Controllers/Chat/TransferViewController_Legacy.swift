@@ -1,6 +1,6 @@
 import UIKit
 
-class TransferViewController: UIViewController {
+class TransferViewController_Legacy: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
@@ -145,7 +145,7 @@ class TransferViewController: UIViewController {
     }
     
     class func instance(user: UserItem, conversationId: String, asset: AssetItem?, usePresentAnimationWhenPushed: Bool = true) -> UIViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "transfer") as! TransferViewController
+        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "transfer") as! TransferViewController_Legacy
         vc.user = user
         vc.conversationId = conversationId
         vc.asset = asset
@@ -155,7 +155,7 @@ class TransferViewController: UIViewController {
     
 }
 
-extension TransferViewController: UITextFieldDelegate {
+extension TransferViewController_Legacy: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard textField == amountTextField else {
@@ -183,7 +183,7 @@ extension TransferViewController: UITextFieldDelegate {
     
 }
 
-extension TransferViewController: MixinNavigationAnimating {
+extension TransferViewController_Legacy: MixinNavigationAnimating {
     
     var pushAnimation: MixinNavigationPushAnimation {
         return usePresentAnimationWhenPushed ? .present : .push
@@ -191,7 +191,7 @@ extension TransferViewController: MixinNavigationAnimating {
     
 }
 
-extension TransferViewController {
+extension TransferViewController_Legacy {
     
     private func updateUI() {
         if let asset = self.asset {

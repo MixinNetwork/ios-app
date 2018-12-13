@@ -14,23 +14,23 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var scrollToBottomWrapperView: UIView!
     @IBOutlet weak var scrollToBottomButton: UIButton!
     @IBOutlet weak var unreadBadgeLabel: UILabel!
-    @IBOutlet weak var bottomOutsideWrapperView: UIView!
+    @IBOutlet weak var bottomPanelWrapperView: UIView!
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var inputTextView: InputTextView!
     @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var toggleStickerPanelSizeButton: UIButton!
+    @IBOutlet weak var toggleBottomPanelSizeButton: UIButton!
     @IBOutlet weak var stickerKeyboardSwitcherButton: UIButton!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var participantsLabel: UILabel!
     @IBOutlet weak var unblockButton: StateResponsiveButton!
     @IBOutlet weak var deleteConversationButton: StateResponsiveButton!
     @IBOutlet weak var stickerInputContainerView: UIView!
-    @IBOutlet weak var moreMenuContainerView: UIView!
     @IBOutlet weak var dismissPanelsButton: UIButton!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var audioInputContainerView: UIView!
+    @IBOutlet weak var extensionContainerView: UIView!
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
     
     @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
@@ -43,12 +43,13 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var inputTextViewLeadingExpandedConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var stickerPanelContainerHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var moreMenuHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var moreMenuTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewHiddenConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewShowConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showExtensionContainerConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideExtensionContainerConstraint: NSLayoutConstraint!
+    @IBOutlet weak var extensionContainerViewHeightConstraint: NSLayoutConstraint!
     
     static var positions = [String: Position]()
     
@@ -74,12 +75,14 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
     }
     
+    private enum SegueId {
+        static let audioInput = "audio_input"
+        static let `extension` = "extension"
+    }
     private let maxInputRow = 6
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.25
-    private let moreMenuSegueId = "MoreMenuSegueId"
-    private let audioInputSegueId = "AudioInputSegueId"
     
     private var ownerUser: UserItem?
     private var ownerUserApp: App?
@@ -90,9 +93,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var quotingMessageId: String?
     private var didInitData = false
     private var isShowingMenu = false
-    private var isShowingStickerPanel = false
+    private var bottomPanelSize = BottomPanel.Size.hidden
+    private var bottomPanelContent = BottomPanel.Content.none
     private var isAppearanceAnimating = true
-    private var isStickerPanelMax = false
     private var inputWrapperShouldFollowKeyboardPosition = true
     private var tableViewContentOffsetShouldFollowInputWrapperPosition = true
     private var didManuallyStoppedTableViewDecelerating = false
@@ -103,7 +106,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var keyboardManager = ConversationKeyboardManager()
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
-    private var moreMenuViewController: ConversationMoreMenuViewController?
+    private var extensionViewController: ConversationExtensionViewController?
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     
@@ -152,10 +155,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             - max(view.compatibleSafeAreaInsets.top, 20)
             - view.compatibleSafeAreaInsets.bottom
             - 55
-    }
-    
-    private var isShowingMoreMenu: Bool {
-        return moreMenuTopConstraint.constant > 0.1
     }
     
     private var unreadBadgeValue: Int = 0 {
@@ -221,8 +220,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
-        updateMoreMenuFixedJobs()
-        updateMoreMenuApps()
+        updateFixedExtensions()
+        updateConversationRelatedExtensions()
         updateStrangerTipsView()
         updateBottomView()
         inputWrapperView.isHidden = false
@@ -240,10 +239,10 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == moreMenuSegueId, let destination = segue.destination as? ConversationMoreMenuViewController {
-            moreMenuViewController = destination
-        } else if segue.identifier == audioInputSegueId, let destination = segue.destination as? AudioInputViewController {
+        if segue.identifier == SegueId.audioInput, let destination = segue.destination as? AudioInputViewController {
             audioInputViewController = destination
+        } else if segue.identifier == SegueId.extension, let destination = segue.destination as? ConversationExtensionViewController {
+            extensionViewController = destination
         }
     }
     
@@ -386,51 +385,47 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
     }
     
-    @IBAction func moreAction(_ sender: Any) {
-        var delay: TimeInterval = 0
-        if isShowingStickerPanel {
-            delay = animationDuration
-            toggleStickerPanel(delay: 0)
-        }
+    @IBAction func toggleExtensionPanelAction(_ sender: Any) {
+        inputWrapperShouldFollowKeyboardPosition = false
         makeInputTextViewResignFirstResponderIfItIs()
-        DispatchQueue.main.async {
-            self.toggleMoreMenu(delay: delay)
+        inputWrapperShouldFollowKeyboardPosition = true
+        if bottomPanelSize == .halfSized {
+            if bottomPanelContent == .extension {
+                setBottomPanelSize(.hidden)
+            }
+        } else {
+            setBottomPanelSize(.halfSized)
+        }
+        if bottomPanelContent == .extension {
+            setBottomPanelContent(.none)
+        } else {
+            setBottomPanelContent(.extension)
         }
     }
     
     @IBAction func stickerKeyboardSwitchAction(_ sender: Any) {
-        var delay: TimeInterval = 0
-        if isShowingMoreMenu {
-            toggleMoreMenu(delay: 0)
-            delay = animationDuration
-        }
-        bottomOutsideWrapperView.backgroundColor = .white
-        if isShowingStickerPanel {
+        bottomPanelWrapperView.backgroundColor = .white
+        if bottomPanelContent == .sticker {
             inputTextView.becomeFirstResponder()
         } else {
             inputWrapperShouldFollowKeyboardPosition = false
             inputTextView.resignFirstResponder()
             inputWrapperShouldFollowKeyboardPosition = true
-            toggleStickerPanel(delay: delay)
+            setBottomPanelSize(.halfSized)
+            setBottomPanelContent(.sticker)
         }
     }
     
-    @IBAction func toggleStickerPanelSizeAction(_ sender: Any) {
-        let dismissButtonAlpha: CGFloat
-        if isStickerPanelMax {
-            stickerPanelContainerHeightConstraint.constant = ConversationKeyboardManager.lastKeyboardHeight
-            dismissButtonAlpha = 0
-        } else {
-            stickerPanelContainerHeightConstraint.constant = stickerPanelFullsizedHeight
-            dismissButtonAlpha = 0.3
+    @IBAction func toggleBottomPanelSizeAction(_ sender: Any) {
+        if bottomPanelSize == .halfSized {
+            if bottomPanelContent == .sticker {
+                setBottomPanelSize(.fullSized)
+            } else if bottomPanelContent == .extension {
+                
+            }
+        } else if bottomPanelSize == .fullSized {
+            setBottomPanelSize(.halfSized)
         }
-        inputWrapperBottomConstraint.constant = stickerPanelContainerHeightConstraint.constant
-        isStickerPanelMax = !isStickerPanelMax
-        toggleStickerPanelSizeButton.animationSwapImage(newImage: isStickerPanelMax ? #imageLiteral(resourceName: "ic_chat_panel_min") : #imageLiteral(resourceName: "ic_chat_panel_max"))
-        UIView.animate(withDuration: animationDuration, animations: {
-            self.dismissPanelsButton.alpha = dismissButtonAlpha
-            self.view.layoutIfNeeded()
-        })
     }
     
     @IBAction func sendTextMessageAction(_ sender: Any) {
@@ -444,11 +439,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
     
     @IBAction func dismissPanelsAction(_ sender: Any) {
-        if isShowingStickerPanel && isStickerPanelMax {
-            toggleStickerPanel(delay: 0)
-        } else {
-            toggleMoreMenu(delay: 0)
-        }
+        setBottomPanelContent(.none)
+        setBottomPanelSize(.hidden)
     }
 
     @IBAction func deleteConversationAction(_ sender: Any) {
@@ -532,8 +524,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             dismissMenu(animated: true)
             return
         }
-        if isShowingStickerPanel {
-            toggleStickerPanel(delay: 0)
+        if bottomPanelContent == .sticker || bottomPanelContent == .extension {
+            setBottomPanelContent(.none)
+            setBottomPanelSize(.hidden)
             return
         }
         if let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)), let cell = tableView.cellForRow(at: indexPath) as? MessageCell, cell.contentFrame.contains(recognizer.location(in: cell)), let viewModel = dataSource?.viewModel(for: indexPath) {
@@ -684,7 +677,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         guard let conversationId = notification.object as? String, conversationId == self.conversationId else {
             return
         }
-        updateMoreMenuApps()
+        updateConversationRelatedExtensions()
         reloadParticipants()
     }
     
@@ -710,28 +703,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
     
     // MARK: - Interface
-    func toggleMoreMenu(delay: TimeInterval) {
-        let dismissButtonAlpha: CGFloat
-        let shouldHideContainer = isShowingMoreMenu
-        if isShowingMoreMenu {
-            moreMenuTopConstraint.constant = 0
-            dismissButtonAlpha = 0
-        } else {
-            moreMenuContainerView.isHidden = false
-            moreMenuTopConstraint.constant = moreMenuViewController?.contentHeight ?? moreMenuHeightConstraint.constant
-            dismissButtonAlpha = 0.3
-        }
-        UIView.animate(withDuration: animationDuration, delay: delay, options: [], animations: {
-            UIView.setAnimationCurve(.overdamped)
-            self.dismissPanelsButton.alpha = dismissButtonAlpha
-            self.view.layoutIfNeeded()
-        }) { (success) in
-            if shouldHideContainer {
-                self.moreMenuContainerView.isHidden = true
-            }
-        }
-    }
-    
     func documentAction() {
         let vc = UIDocumentPickerViewController(documentTypes: ["public.item", "public.content"], in: .import)
         vc.delegate = self
@@ -775,10 +746,10 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
 
     func reduceStickerPanelHeightIfMaximized() {
-        guard isStickerPanelMax else {
+        guard bottomPanelSize == .fullSized else {
             return
         }
-        toggleStickerPanelSizeAction(self)
+        toggleBottomPanelSizeAction(self)
     }
     
     func setInputWrapperHidden(_ hidden: Bool) {
@@ -1305,9 +1276,9 @@ extension ConversationViewController: PhotoAssetPickerDelegate {
 
 // MARK: - ConversationKeyboardManagerDelegate
 extension ConversationViewController: ConversationKeyboardManagerDelegate {
-
-    func conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(_ manager: ConversationKeyboardManager) -> UIScrollView {
-        return tableView
+    
+    func conversationKeyboardManagerScrollViewIsTracking(_ manager: ConversationKeyboardManager) -> Bool {
+        return tableView.isTracking
     }
     
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
@@ -1324,16 +1295,11 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
                                                     view.compatibleSafeAreaInsets.bottom)
         let inputWrapperDisplacement = lastInputWrapperBottomConstant - inputWrapperBottomConstraint.constant
         if intent == .show {
-            if isShowingStickerPanel {
-                UIView.performWithoutAnimation {
-                    bottomOutsideWrapperView.backgroundColor = .white
-                }
-                dismissPanelsButton.alpha = 0
-                isShowingStickerPanel = false
-                toggleStickerPanelSizeButton.isHidden = true
-                stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_sticker"), for: .normal)
-                stickerInputContainerView.alpha = 0
+            UIView.performWithoutAnimation {
+                bottomPanelWrapperView.backgroundColor = .white
             }
+            setBottomPanelContent(.keyboard)
+            setBottomPanelSize(.halfSized)
             if inputTextView.hasText || isShowingQuotePreviewView {
                 sendButton.isHidden = false
             } else {
@@ -1341,16 +1307,17 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
                 if manager.isShowingKeyboard {
-                    self.bottomOutsideWrapperView.backgroundColor = .clear
+                    self.bottomPanelWrapperView.backgroundColor = .clear
                 }
             }
         } else if intent == .hide {
             UIView.performWithoutAnimation {
-                bottomOutsideWrapperView.backgroundColor = .white
+                bottomPanelWrapperView.backgroundColor = .white
             }
-        }
-        if isShowingMoreMenu {
-            toggleMoreMenu(delay: 0)
+            if bottomPanelContent == .keyboard {
+                setBottomPanelContent(.none)
+                setBottomPanelSize(.hidden, updateTableViewContentOffset: false)
+            }
         }
         lastInputWrapperBottomConstant = inputWrapperBottomConstraint.constant
         view.layoutIfNeeded()
@@ -1405,32 +1372,33 @@ extension ConversationViewController {
         }
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         unblockButton.isHidden = !isBlocked
-        audioInputContainerView.isHidden = isBlocked || isShowingStickerPanel
+        audioInputContainerView.isHidden = isBlocked || bottomPanelContent == .sticker
     }
     
-    private func updateMoreMenuFixedJobs() {
-        if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-            moreMenuViewController?.fixedJobs = [.transfer, .call, .camera, .photo, .file, .contact]
-        } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
-            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
-        } else {
-            moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
-        }
+    private func updateFixedExtensions() {
+//        if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
+//            moreMenuViewController?.fixedJobs = [.transfer, .call, .camera, .photo, .file, .contact]
+//        } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
+//            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
+//        } else {
+//            moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
+//        }
+        extensionViewController?.fixedExtensions = [PhotoConversationExtension()]
     }
     
-    private func updateMoreMenuApps() {
-        if Thread.isMainThread {
-            DispatchQueue.global().async { [weak self] in
-                self?.updateMoreMenuApps()
-            }
-        } else {
-            if dataSource?.category == .group {
-                moreMenuViewController?.apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
-            } else if let ownerId = ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
-                self.ownerUserApp = app
-                DispatchQueue.main.async(execute: updateMoreMenuFixedJobs)
-            }
-        }
+    private func updateConversationRelatedExtensions() {
+//        if Thread.isMainThread {
+//            DispatchQueue.global().async { [weak self] in
+//                self?.updateConversationRelatedExtensions()
+//            }
+//        } else {
+//            if dataSource?.category == .group {
+//                moreMenuViewController?.apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
+//            } else if let ownerId = ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
+//                self.ownerUserApp = app
+//                DispatchQueue.main.async(execute: updateFixedExtensions)
+//            }
+//        }
     }
     
     private func updateAccessoryButtons(animated: Bool) {
@@ -1472,31 +1440,77 @@ extension ConversationViewController {
         UIMenuController.shared.setMenuVisible(false, animated: animated)
     }
     
-    private func toggleStickerPanel(delay: TimeInterval) {
-        stickerPanelContainerHeightConstraint.constant = ConversationKeyboardManager.lastKeyboardHeight
-        inputWrapperBottomConstraint.constant = isShowingStickerPanel ? view.compatibleSafeAreaInsets.bottom : stickerPanelContainerHeightConstraint.constant
-        let newAlpha: CGFloat = isShowingStickerPanel ? 0 : 1
-        stickerKeyboardSwitcherButton.setImage(isShowingStickerPanel ? #imageLiteral(resourceName: "ic_chat_sticker") : #imageLiteral(resourceName: "ic_chat_keyboard"), for: .normal)
-        sendButton.isHidden = !isShowingStickerPanel || !inputTextView.hasText
-        toggleStickerPanelSizeButton.isHidden = isShowingStickerPanel
-        isStickerPanelMax = false
-        toggleStickerPanelSizeButton.setImage(#imageLiteral(resourceName: "ic_chat_panel_max"), for: .normal)
-        let offset = inputWrapperBottomConstraint.constant - lastInputWrapperBottomConstant
-        UIView.animate(withDuration: 0, delay: delay, options: [], animations: {
+    private func setBottomPanelContent(_ newContent: BottomPanel.Content) {
+        let newContentIsKeyboardOrNone = newContent == .none || newContent == .keyboard
+        if newContent == .sticker {
+            stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_keyboard"), for: .normal)
+        } else {
+            stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_sticker"), for: .normal)
+        }
+        sendButton.isHidden = !inputTextView.hasText
+        toggleBottomPanelSizeButton.isHidden = newContentIsKeyboardOrNone
+        audioInputContainerView.isHidden = !newContentIsKeyboardOrNone
+        UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)
-            self.stickerInputContainerView.alpha = newAlpha
-            self.audioInputContainerView.isHidden = !self.isShowingStickerPanel
-            if self.isShowingStickerPanel {
-                self.dismissPanelsButton.alpha = 0
+            switch newContent {
+            case .none:
+                self.stickerInputContainerView.alpha = 0
+                self.extensionContainerView.alpha = 0
+            case .sticker:
+                self.stickerInputContainerView.alpha = 1
+                self.extensionContainerView.alpha = 0
+            case .extension:
+                self.stickerInputContainerView.alpha = 0
+                self.extensionContainerView.alpha = 1
+            case .keyboard:
+                self.stickerInputContainerView.alpha = 0
+                self.extensionContainerView.alpha = 0
             }
-            self.view.layoutIfNeeded()
-            let contentOffsetY = self.tableView.contentOffset.y
-            self.updateTableViewContentInset()
-            self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
         }) { (_) in
-            self.isShowingStickerPanel = !self.isShowingStickerPanel
-            self.stickerInputViewController.animated = self.isShowingStickerPanel
+            self.stickerInputViewController.animated = newContent == .sticker
+            self.bottomPanelContent = newContent
+            if newContent != .keyboard {
+                self.bottomPanelWrapperView.backgroundColor = .white
+            }
+        }
+    }
+    
+    private func setBottomPanelSize(_ newSize: BottomPanel.Size, updateTableViewContentOffset: Bool = true) {
+        let height: CGFloat
+        switch newSize {
+        case .hidden:
+            height = view.compatibleSafeAreaInsets.bottom
+            hideExtensionContainerConstraint.priority = .defaultHigh
+            showExtensionContainerConstraint.priority = .defaultLow
+        case .halfSized:
+            height = ConversationKeyboardManager.lastKeyboardHeight
+            toggleBottomPanelSizeButton.setImage(#imageLiteral(resourceName: "ic_chat_panel_max"), for: .normal)
+            hideExtensionContainerConstraint.priority = .defaultLow
+            showExtensionContainerConstraint.priority = .defaultHigh
+        case .fullSized:
+            height = stickerPanelFullsizedHeight
+            toggleBottomPanelSizeButton.setImage(#imageLiteral(resourceName: "ic_chat_panel_min"), for: .normal)
+            hideExtensionContainerConstraint.priority = .defaultLow
+            showExtensionContainerConstraint.priority = .defaultHigh
+        }
+        inputWrapperBottomConstraint.constant = height
+        if newSize != .hidden {
+            stickerPanelContainerHeightConstraint.constant = height
+            extensionContainerViewHeightConstraint.constant = height
+        }
+        let offset = inputWrapperBottomConstraint.constant - lastInputWrapperBottomConstant
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+            self.dismissPanelsButton.alpha = newSize == .fullSized ? 0.3 : 0
+            if updateTableViewContentOffset {
+                let contentOffsetY = self.tableView.contentOffset.y
+                self.updateTableViewContentInset()
+                self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
+            }
+        }) { (_) in
             self.lastInputWrapperBottomConstant = self.inputWrapperBottomConstraint.constant
+            self.bottomPanelSize = newSize
         }
     }
     
@@ -1763,6 +1777,23 @@ extension ConversationViewController {
     struct Position {
         let messageId: String
         let offset: CGFloat
+    }
+    
+    enum BottomPanel {
+        
+        enum Size {
+            case hidden
+            case halfSized
+            case fullSized
+        }
+        
+        enum Content {
+            case none
+            case sticker
+            case `extension`
+            case keyboard
+        }
+        
     }
     
 }

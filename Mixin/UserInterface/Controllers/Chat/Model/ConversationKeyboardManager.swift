@@ -1,7 +1,7 @@
 import UIKit
 
 protocol ConversationKeyboardManagerDelegate: class {
-    func conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(_ manager: ConversationKeyboardManager) -> UIScrollView
+    func conversationKeyboardManagerScrollViewIsTracking(_ manager: ConversationKeyboardManager) -> Bool
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent)
 }
 
@@ -42,16 +42,15 @@ class ConversationKeyboardManager {
         guard let endFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
-        ConversationKeyboardManager.lastKeyboardHeight = max(ScreenSize.minReasonableKeyboardHeight,
-                                                             endFrame.height - inputAccessoryView.frame.height)
         if keyboardFrameIsInvisible(endFrame) && isShowingKeyboard {
             isShowingKeyboard = false
             delegate?.conversationKeyboardManager(self, keyboardWillChangeFrameTo: endFrame, intent: .hide)
         } else if !keyboardFrameIsInvisible(endFrame) && !isShowingKeyboard {
             isShowingKeyboard = true
             delegate?.conversationKeyboardManager(self, keyboardWillChangeFrameTo: endFrame, intent: .show)
+            updateLastKeyboardHeight(keyboardFrame: endFrame)
         } else if endFrame.height < ScreenSize.minReasonableKeyboardHeight, let delegate = delegate {
-            if delegate.conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(self).isTracking {
+            if delegate.conversationKeyboardManagerScrollViewIsTracking(self) {
                 delegate.conversationKeyboardManager(self, keyboardWillChangeFrameTo: endFrame, intent: .hide)
             }
         }
@@ -61,15 +60,20 @@ class ConversationKeyboardManager {
         guard isShowingKeyboard, !keyboardFrameIsInvisible(newFrame), let delegate = delegate else {
             return
         }
-        if delegate.conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(self).isTracking {
+        if delegate.conversationKeyboardManagerScrollViewIsTracking(self) {
             delegate.conversationKeyboardManager(self, keyboardWillChangeFrameTo: newFrame, intent: .interactivelyChangeFrame)
         } else {
             delegate.conversationKeyboardManager(self, keyboardWillChangeFrameTo: newFrame, intent: .changeFrame)
+            updateLastKeyboardHeight(keyboardFrame: newFrame)
         }
     }
     
     private func keyboardFrameIsInvisible(_ frame: CGRect) -> Bool {
-        return frame.origin.y >= UIScreen.main.bounds.height
+        return ceil(frame.origin.y) >= UIScreen.main.bounds.height
+    }
+    
+    private func updateLastKeyboardHeight(keyboardFrame frame: CGRect) {
+        ConversationKeyboardManager.lastKeyboardHeight = max(ScreenSize.minReasonableKeyboardHeight, frame.height - inputAccessoryView.frame.height)
     }
     
 }

@@ -1,6 +1,5 @@
 import UIKit
 import Photos
-import MobileCoreServices
 
 class PickerViewController: UICollectionViewController, MixinNavigationAnimating {
     
@@ -9,13 +8,6 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
         let options = PHImageRequestOptions()
         options.deliveryMode = .opportunistic
         options.resizeMode = .fast
-        return options
-    }()
-    private let utiCheckingImageRequestOptions: PHImageRequestOptions = {
-        let options = PHImageRequestOptions()
-        options.deliveryMode = .fastFormat
-        options.resizeMode = .fast
-        options.isSynchronous = true
         return options
     }()
     private var collection: PHAssetCollection?
@@ -116,23 +108,7 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
             }
             cell.thumbImageView.image = image
         }
-        if asset.mediaType == .video {
-            cell.gifLabel.isHidden = true
-            cell.videoImageView.isHidden = false
-            cell.durationLabel.text = mediaDurationFormatter.string(from: asset.duration)
-            cell.fileTypeView.isHidden = false
-        } else {
-            PHImageManager.default().requestImageData(for: asset, options: utiCheckingImageRequestOptions, resultHandler: { (_, uti, _, _) in
-                if let uti = uti, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
-                    cell.gifLabel.isHidden = false
-                    cell.videoImageView.isHidden = true
-                    cell.durationLabel.text = nil
-                    cell.fileTypeView.isHidden = false
-                } else {
-                    cell.fileTypeView.isHidden = true
-                }
-            })
-        }
+        cell.updateFileTypeView(asset: asset)
         return cell
     }
 

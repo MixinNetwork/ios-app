@@ -2,10 +2,10 @@ import UIKit
 
 class HorizontalSingleLineFlowLayout: UICollectionViewLayout {
     
-    @IBInspectable var leftMargin: CGFloat = 10
-    @IBInspectable var rightMargin: CGFloat = 10
-    @IBInspectable var itemWidth: CGFloat = 88
-    @IBInspectable var itemHeight: CGFloat = 101
+    @IBInspectable var leftMargin: CGFloat = 2
+    @IBInspectable var rightMargin: CGFloat = 2
+    @IBInspectable var itemWidth: CGFloat = 44
+    @IBInspectable var itemHeight: CGFloat = 48
     
     private var cache = [IndexPath: UICollectionViewLayoutAttributes]()
     

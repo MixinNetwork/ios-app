@@ -28,7 +28,7 @@ class JobQueue {
         }
         let jobId = job.getJobId()
         guard !isExistJob(jodId: jobId) else {
-            if jobId.hasPrefix("refresh-") || jobId.hasPrefix("file-") || jobId.hasPrefix("attachment-") {
+            if jobId.hasPrefix("refresh-") || jobId.hasPrefix("file-") || jobId.hasPrefix("attachment-") || jobId.hasPrefix("load-more-snapshot-") {
                 return false
             }
             var userInfo = UIApplication.getTrackUserInfo()

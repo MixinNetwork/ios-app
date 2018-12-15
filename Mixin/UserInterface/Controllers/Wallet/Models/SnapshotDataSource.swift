@@ -176,8 +176,10 @@ class SnapshotDataSource {
         case .all:
             job = LoadMoreSnapshotsJob(category: .all)
         }
-        remoteLoadingJobIds.insert(job.getJobId())
-        ConcurrentJobQueue.shared.addJob(job: job)
+        let didAddJob = ConcurrentJobQueue.shared.addJob(job: job)
+        if didAddJob {
+            remoteLoadingJobIds.insert(job.getJobId())
+        }
     }
     
 }

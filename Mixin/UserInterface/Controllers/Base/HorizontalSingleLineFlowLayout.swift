@@ -36,6 +36,11 @@ class HorizontalSingleLineFlowLayout: UICollectionViewLayout {
         }
     }
     
+    override func invalidateLayout() {
+        super.invalidateLayout()
+        cache.removeAll()
+    }
+    
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         return cache.values.filter { $0.frame.intersects(rect) }
     }

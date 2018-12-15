@@ -928,7 +928,7 @@ extension ConversationViewController: UITextViewDelegate {
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
                 self.updateTableViewContentInset()
-                self.tableView.setContentOffsetYSafely(newContentOffset, animated: false)
+                self.tableView.setContentOffsetYSafely(newContentOffset)
             }, completion: { (_) in
                 self.keyboardManager.inputAccessoryViewHeight = self.inputWrapperView.frame.height
             })
@@ -1419,7 +1419,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
         let contentOffsetY = tableView.contentOffset.y
         updateTableViewContentInset()
         if !isShowingQuotePreviewView && shouldChangeTableViewContentOffset {
-            tableView.setContentOffsetYSafely(contentOffsetY - inputWrapperDisplacement, animated: false)
+            tableView.setContentOffsetYSafely(contentOffsetY - inputWrapperDisplacement)
         }
         if intent == .show {
             manager.inputAccessoryViewHeight = inputWrapperView.frame.height
@@ -1498,7 +1498,10 @@ extension ConversationViewController {
     
     private func updateAccessoryButtons(animated: Bool) {
         let position = tableView.contentSize.height - tableView.contentOffset.y - tableView.bounds.height
-        if scrollToBottomWrapperView.alpha < 0.1 && position > showScrollToBottomButtonThreshold {
+        let didReachThreshold = position > showScrollToBottomButtonThreshold
+            && tableView.contentOffset.y > tableView.contentInset.top
+        let shouldShowScrollToBottomButton = didReachThreshold || !dataSource.didLoadLatestMessage
+        if scrollToBottomWrapperView.alpha < 0.1 && shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 48
             if animated {
                 UIView.beginAnimations(nil, context: nil)
@@ -1509,7 +1512,7 @@ extension ConversationViewController {
                 view.layoutIfNeeded()
                 UIView.commitAnimations()
             }
-        } else if scrollToBottomWrapperView.alpha > 0.9 && position < showScrollToBottomButtonThreshold {
+        } else if scrollToBottomWrapperView.alpha > 0.9 && !shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 4
             if animated {
                 UIView.beginAnimations(nil, context: nil)
@@ -1552,7 +1555,7 @@ extension ConversationViewController {
             self.view.layoutIfNeeded()
             let contentOffsetY = self.tableView.contentOffset.y
             self.updateTableViewContentInset()
-            self.tableView.setContentOffsetYSafely(contentOffsetY + offset, animated: false)
+            self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
         }) { (_) in
             self.isShowingStickerPanel = !self.isShowingStickerPanel
             self.stickerInputViewController.animated = self.isShowingStickerPanel

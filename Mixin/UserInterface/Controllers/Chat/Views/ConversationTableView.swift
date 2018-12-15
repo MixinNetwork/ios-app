@@ -61,6 +61,10 @@ class ConversationTableView: UITableView {
         return true
     }
     
+    var bottomDistance: CGFloat {
+        return contentSize.height - contentOffset.y
+    }
+    
     var indicesForVisibleSectionHeaders: [Int] {
         guard let indexPaths = indexPathsForVisibleRows else {
             return []
@@ -187,12 +191,12 @@ class ConversationTableView: UITableView {
         setContentOffset(bottomContentOffset, animated: animated)
     }
     
-    func setContentOffsetYSafely(_ y: CGFloat, animated: Bool) {
+    func setContentOffsetYSafely(_ y: CGFloat) {
         let bottomContentOffsetY = bottomContentOffset.y
         if bottomContentOffsetY > -contentInset.top {
             var contentOffset = self.contentOffset
             contentOffset.y = min(bottomContentOffsetY, max(-contentInset.top, y))
-            setContentOffset(contentOffset, animated: animated)
+            self.contentOffset = contentOffset
         }
     }
     

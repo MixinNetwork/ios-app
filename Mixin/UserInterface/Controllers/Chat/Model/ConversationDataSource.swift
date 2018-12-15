@@ -24,7 +24,7 @@ class ConversationDataSource {
     
     private let windowRect = AppDelegate.current.window!.bounds
     private let numberOfMessagesOnPaging = 100
-    private let numberOfMessagesOnReloading = 30
+    private let numberOfMessagesOnReloading = 35
     private let me = AccountAPI.shared.account!
 
     private(set) var conversation: ConversationItem {
@@ -134,7 +134,7 @@ class ConversationDataSource {
                 return
             }
             self.reload(initialMessageId: initialMessageId, prepareBeforeReload: {
-                self.tableView?.setContentOffsetYSafely(0, animated: false)
+                self.tableView?.bounds.origin.y = 0
             }, completion: completion, animatedReloading: true)
         }
     }
@@ -169,6 +169,7 @@ class ConversationDataSource {
                     viewModels[firstDate] = [encryptionHintViewModel]
                 }
             }
+            var bottomDistance: CGFloat? = nil
             if let lastDate = dates.last, let viewModelsBeforeInsertion = self.viewModels[lastDate] {
                 let messagesBeforeInsertion = Array(viewModelsBeforeInsertion.prefix(2)).map({ $0.message })
                 let messagesForTheDate = Array(messages.suffix(2)) + messagesBeforeInsertion
@@ -178,12 +179,15 @@ class ConversationDataSource {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                         return
                     }
+                    bottomDistance = tableView.bottomDistance
                     if let viewModel = self.viewModels[lastDate]?.first {
                         viewModel.style = styles[styles.count - messagesBeforeInsertion.count]
                         if let indexPath = self.indexPath(where: { $0.messageId == viewModel.message.messageId }), let cell = tableView.cellForRow(at: indexPath) as? MessageCell {
                             cell.render(viewModel: viewModel)
-                            tableView.beginUpdates()
-                            tableView.endUpdates()
+                            UIView.performWithoutAnimation {
+                                tableView.beginUpdates()
+                                tableView.endUpdates()
+                            }
                         }
                     }
                 }
@@ -201,9 +205,9 @@ class ConversationDataSource {
                         self.viewModels[date]!.insert(contentsOf: newViewModels, at: 0)
                     }
                 }
-                let bottomDistance = tableView.contentSize.height - tableView.contentOffset.y
                 tableView.reloadData()
-                tableView.setContentOffsetYSafely(tableView.contentSize.height - bottomDistance, animated: false)
+                let y = tableView.contentSize.height - (bottomDistance ?? tableView.bottomDistance)
+                tableView.setContentOffsetYSafely(y)
                 self.isLoadingAbove = false
             }
         }
@@ -229,7 +233,6 @@ class ConversationDataSource {
                 let firstUnreadMessage = messages[index]
                 let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessage.createdAt)
                 messages.insert(hint, at: index)
-                self.firstUnreadMessageId = nil
                 self.canInsertUnreadHint = false
             }
             let (dates, viewModels) = self.viewModels(with: messages, fits: layoutWidth)
@@ -680,14 +683,21 @@ extension ConversationDataSource {
             tableView.reloadData()
             self.didLoadEarliestMessage = didLoadEarliestMessage
             self.didLoadLatestMessage = didLoadLatestMessage
-            if let initialIndexPath = initialIndexPath {
-                if tableView.contentSize.height > self.layoutSize.height {
-                    let rect = tableView.rectForRow(at: initialIndexPath)
-                    let y = rect.origin.y + offset - tableView.contentInset.top
-                    tableView.setContentOffsetYSafely(y, animated: animatedReloading)
+            let scrolling: () -> Void = {
+                if let initialIndexPath = initialIndexPath {
+                    if tableView.contentSize.height > self.layoutSize.height {
+                        let rect = tableView.rectForRow(at: initialIndexPath)
+                        let y = rect.origin.y + offset - tableView.contentInset.top
+                        tableView.setContentOffsetYSafely(y)
+                    }
+                } else {
+                    tableView.scrollToBottom(animated: false)
                 }
+            }
+            if animatedReloading {
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: scrolling, completion: nil)
             } else {
-                tableView.scrollToBottom(animated: animatedReloading)
+                scrolling()
             }
             if ConversationViewController.positions[self.conversationId] != nil && !tableView.visibleCells.contains(where: { $0 is UnreadHintMessageCell }) {
                 NotificationCenter.default.post(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: unreadMessagesCount)

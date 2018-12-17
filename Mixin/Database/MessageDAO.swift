@@ -128,8 +128,12 @@ final class MessageDAO {
 
     func clearChat(conversationId: String, autoNotification: Bool = true) {
         MixinDatabase.shared.transaction { (db) in
-            try db.delete(fromTable: Message.tableName, where: Message.Properties.conversationId == conversationId)
-            try db.update(table: Conversation.tableName, on: [Conversation.Properties.unseenMessageCount], with: [0])
+            try db.delete(fromTable: Message.tableName,
+                          where: Message.Properties.conversationId == conversationId)
+            try db.update(table: Conversation.tableName,
+                          on: [Conversation.Properties.unseenMessageCount],
+                          with: [0],
+                          where: Conversation.Properties.conversationId == conversationId)
         }
         if autoNotification {
             let change = ConversationChange(conversationId: conversationId, action: .reload)

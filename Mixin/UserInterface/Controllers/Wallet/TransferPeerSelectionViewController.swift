@@ -30,16 +30,12 @@ class TransferPeerSelectionViewController: PeerSelectionViewController {
         guard let peer = selections.first, let user = peer.user, let navigationController = navigationController else {
             return
         }
-        let vc = TransferViewController_Legacy.instance(user: user,
-                                                 conversationId: peer.conversationId,
-                                                 asset: asset,
-                                                 usePresentAnimationWhenPushed: false)
-        var viewControllers = navigationController.viewControllers
-        if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
-            viewControllers.remove(at: index)
+        let vc = TransferViewController.instance(user: user, asset: asset)
+        navigationController.present(vc, animated: true) {
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: false)
+            }
         }
-        viewControllers.append(vc)
-        navigationController.setViewControllers(viewControllers, animated: true)
     }
     
     class func instance(asset: AssetItem) -> UIViewController {

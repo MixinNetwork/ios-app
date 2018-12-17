@@ -135,3 +135,15 @@ extension NSMutableAttributedString {
     
 }
 
+extension Optional where Wrapped == String {
+    
+    var isEmpty: Bool {
+        switch self {
+        case .none:
+            return true
+        case .some(let str):
+            return str.isEmpty
+        }
+    }
+    
+}

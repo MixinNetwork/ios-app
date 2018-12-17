@@ -3,7 +3,14 @@ import UIKit
 import AudioToolbox
 
 extension UIDevice {
-
+    
+    private static let paymentSuccessSoundId: SystemSoundID = {
+        var id = SystemSoundID(integerLiteral: 0)
+        let url = Bundle.main.url(forResource: "payment_success", withExtension: "caf")! as CFURL
+        AudioServicesCreateSystemSoundID(url, &id)
+        return id
+    }()
+    
     static let isJailbreak: Bool = {
         if FileManager.default.fileExists(atPath: "/Applications/Cydia.app") ||
             FileManager.default.fileExists(atPath: "/Library/MobileSubstrate/MobileSubstrate.dylib") ||
@@ -31,6 +38,10 @@ extension UIDevice {
     
     func playInputDelete() {
         AudioServicesPlaySystemSound(1155)
+    }
+    
+    func playPaymentSuccess() {
+        AudioServicesPlaySystemSound(UIDevice.paymentSuccessSoundId)
     }
     
 }

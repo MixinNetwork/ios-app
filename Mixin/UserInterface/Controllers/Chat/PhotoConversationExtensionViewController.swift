@@ -1,7 +1,7 @@
 import UIKit
 import Photos
 
-class PhotoConversationExtensionViewController: UICollectionViewController {
+class PhotoConversationExtensionViewController: UICollectionViewController, ConversationExtensionViewController {
     
     private let cellReuseId = "cell"
     private let fetchOptions: PHFetchOptions = {

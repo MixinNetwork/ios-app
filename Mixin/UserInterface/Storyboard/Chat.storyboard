@@ -2270,10 +2270,10 @@
             </objects>
             <point key="canvasLocation" x="1572" y="553"/>
         </scene>
-        <!--Conversation Extension View Controller-->
+        <!--Conversation Extension Container View Controller-->
         <scene sceneID="WJm-2M-O5D">
             <objects>
-                <viewController id="8Oz-zs-jG0" customClass="ConversationExtensionViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="8Oz-zs-jG0" customClass="ConversationExtensionContainerViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4D1-J5-5E5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="346"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2357,8 +2357,51 @@
             </objects>
             <point key="canvasLocation" x="1572" y="-8.0959520239880067"/>
         </scene>
+        <!--Call Conversation Extension View Controller-->
+        <scene sceneID="Tf7-yy-awB">
+            <objects>
+                <viewController storyboardIdentifier="extension_call" id="GX4-pk-rUy" customClass="CallConversationExtensionViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NzR-Py-gBN">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="298"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="atj-Sw-jfz">
+                                <rect key="frame" x="150.5" y="100" width="74" height="98.5"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eM5-zt-das">
+                                        <rect key="frame" x="0.0" y="0.0" width="74" height="74"/>
+                                        <state key="normal" image="Conversation/ic_call_action">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="callAction:" destination="GX4-pk-rUy" eventType="touchUpInside" id="Brh-Fu-unA"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Voice call" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W0N-EI-3It">
+                                        <rect key="frame" x="0.0" y="84" width="74" height="14.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="textColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="atj-Sw-jfz" firstAttribute="centerX" secondItem="NzR-Py-gBN" secondAttribute="centerX" id="EKL-ow-AVL"/>
+                            <constraint firstItem="atj-Sw-jfz" firstAttribute="centerY" secondItem="NzR-Py-gBN" secondAttribute="centerY" id="oeK-hG-QpI"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Dv8-eh-wjd"/>
+                    </view>
+                    <size key="freeformSize" width="375" height="298"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="huY-Eh-1IP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2342" y="13"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="Conversation/ic_call_action" width="74" height="74"/>
         <image name="chat_video_mask_bottom" width="375" height="130"/>
         <image name="chat_video_mask_header" width="375" height="76"/>
         <image name="ic_announcement" width="44" height="44"/>

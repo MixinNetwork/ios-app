@@ -106,7 +106,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var keyboardManager = ConversationKeyboardManager()
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
-    private var extensionViewController: ConversationExtensionViewController?
+    private var extensionViewController: ConversationExtensionContainerViewController?
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     
@@ -241,7 +241,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == SegueId.audioInput, let destination = segue.destination as? AudioInputViewController {
             audioInputViewController = destination
-        } else if segue.identifier == SegueId.extension, let destination = segue.destination as? ConversationExtensionViewController {
+        } else if segue.identifier == SegueId.extension, let destination = segue.destination as? ConversationExtensionContainerViewController {
             extensionViewController = destination
         }
     }

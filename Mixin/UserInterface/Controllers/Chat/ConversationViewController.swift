@@ -714,13 +714,13 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         guard let user = ownerUser else {
             return
         }
-        let viewController: UIViewController
         if AccountAPI.shared.account?.has_pin ?? false {
-            viewController = TransferViewController_Legacy.instance(user: user, conversationId: conversationId, asset: asset)
+            let vc = TransferViewController.instance(user: user, asset: asset)
+            present(vc, animated: true, completion: nil)
         } else {
-            viewController = WalletPasswordViewController.instance(fromChat:  user, conversationId: conversationId, asset: asset)
+            let vc = WalletPasswordViewController.instance(fromChat:  user, conversationId: conversationId, asset: asset)
+            navigationController?.pushViewController(vc, animated: true)
         }
-        navigationController?.pushViewController(viewController, animated: true)
     }
 
     func contactAction() {
@@ -1376,14 +1376,13 @@ extension ConversationViewController {
     }
     
     private func updateFixedExtensions() {
-//        if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-//            moreMenuViewController?.fixedJobs = [.transfer, .call, .camera, .photo, .file, .contact]
-//        } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
-//            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
-//        } else {
-//            moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
-//        }
-        extensionViewController?.fixedExtensions = [PhotoConversationExtension()]
+        if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
+            extensionViewController?.fixedExtensions = [.photo, .transfer, .call, .file, .contact]
+        } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
+            extensionViewController?.fixedExtensions = [.photo, .transfer, .file, .contact]
+        } else {
+            extensionViewController?.fixedExtensions = [.photo, .file, .contact]
+        }
     }
     
     private func updateConversationRelatedExtensions() {

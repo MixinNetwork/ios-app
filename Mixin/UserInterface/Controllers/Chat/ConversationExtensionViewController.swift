@@ -5,7 +5,7 @@ class ConversationExtensionViewController: UIViewController {
     @IBOutlet weak var dockCollectionView: UICollectionView!
     @IBOutlet weak var containerView: UIView!
     
-    var fixedExtensions = [ConversationExtension]() {
+    var fixedExtensions = [FixedConversationExtension]() {
         didSet {
             dockCollectionView.reloadSections(IndexSet(integer: 0))
             loadDefaultExtensionIfNeeded()
@@ -22,17 +22,21 @@ class ConversationExtensionViewController: UIViewController {
     
     private var currentExtension: ConversationExtension?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        dockCollectionView.dataSource = self
+    private var conversationViewController: ConversationViewController? {
+        return parent as? ConversationViewController
     }
     
-    private func conversationExtension(at indexPath: IndexPath) -> ConversationExtension {
-        if indexPath.section == 0 {
-            return fixedExtensions[indexPath.row]
-        } else {
-            return additionalExtensions[indexPath.row]
-        }
+    private var conversationId: String? {
+        return conversationViewController?.conversationId
+    }
+    
+    private lazy var photoViewController = PhotoConversationExtensionViewController()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        dockCollectionView.allowsMultipleSelection = true
+        dockCollectionView.dataSource = self
+        dockCollectionView.delegate = self
     }
     
     private func loadDefaultExtensionIfNeeded() {
@@ -64,7 +68,11 @@ extension ConversationExtensionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! ConversationExtensionCell
-        cell.imageView.image = conversationExtension(at: indexPath).icon
+        if indexPath.section == 0 {
+            cell.imageView.image = fixedExtensions[indexPath.row].image
+        } else {
+            cell.imageView.image = additionalExtensions[indexPath.row].icon
+        }
         return cell
     }
     
@@ -72,27 +80,67 @@ extension ConversationExtensionViewController: UICollectionViewDataSource {
 
 extension ConversationExtensionViewController: UICollectionViewDelegate {
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let ext = conversationExtension(at: indexPath)
-        currentExtension = ext
-        switch ext.content {
-        case .action(let action):
-            break
-        case .url(let url):
-            break
-        case .viewController(let controller):
-            for vc in children {
-                vc.willMove(toParent: nil)
-                vc.view.removeFromSuperview()
-                vc.removeFromParent()
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == 0 {
+            let ext = fixedExtensions[indexPath.row]
+            if ext == .transfer {
+                conversationViewController?.transferAction()
+                return false
+            } else {
+                return true
             }
-            addChild(controller)
-            containerView.addSubview(controller.view)
-            controller.view.snp.makeConstraints({ (make) in
-                make.edges.equalToSuperview()
-            })
-            controller.didMove(toParent: self)
+        } else {
+            return true
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            let ext = fixedExtensions[indexPath.row]
+            switch ext {
+            case .photo:
+                replaceEmbeddedViewController(with: photoViewController)
+            case .file:
+                break
+            case .transfer:
+                break
+            case .contact:
+                break
+            case .call:
+                break
+            }
+        } else {
+            let ext = additionalExtensions[indexPath.row]
+            currentExtension = ext
+            switch ext.content {
+            case .embed(let controller):
+                replaceEmbeddedViewController(with: controller)
+            case .present(let controller):
+                present(controller, animated: true, completion: nil)
+            case .action(let action):
+                break
+            case .url(let url):
+                break
+            }
+        }
+    }
+    
+}
+
+extension ConversationExtensionViewController {
+    
+    private func replaceEmbeddedViewController(with vc: UIViewController) {
+        for child in children {
+            child.willMove(toParent: nil)
+            child.view.removeFromSuperview()
+            child.removeFromParent()
+        }
+        addChild(vc)
+        containerView.addSubview(vc.view)
+        vc.view.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+        vc.didMove(toParent: self)
     }
     
 }

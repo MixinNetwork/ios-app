@@ -288,7 +288,6 @@
 		7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */; };
 		7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */; };
 		7BEFDC211FB08E9B00F66885 /* GroupUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC201FB08E9B00F66885 /* GroupUser.swift */; };
-		7BF06BFE21C0E8A3003A20EF /* PhotoConversationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF06BFD21C0E8A3003A20EF /* PhotoConversationExtension.swift */; };
 		7BF06C0021C0E8D5003A20EF /* PhotoConversationExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF06BFF21C0E8D5003A20EF /* PhotoConversationExtensionViewController.swift */; };
 		7BF374A72063951F008A166B /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A52063951E008A166B /* GalleryViewController.swift */; };
 		7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A62063951E008A166B /* GalleryItemViewController.swift */; };
@@ -923,7 +922,6 @@
 		7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameCell.swift; sourceTree = "<group>"; };
 		7BEFDC201FB08E9B00F66885 /* GroupUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupUser.swift; sourceTree = "<group>"; };
-		7BF06BFD21C0E8A3003A20EF /* PhotoConversationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoConversationExtension.swift; sourceTree = "<group>"; };
 		7BF06BFF21C0E8D5003A20EF /* PhotoConversationExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoConversationExtensionViewController.swift; sourceTree = "<group>"; };
 		7BF374A52063951E008A166B /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		7BF374A62063951E008A166B /* GalleryItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryItemViewController.swift; sourceTree = "<group>"; };
@@ -1432,8 +1430,8 @@
 		7B14568B1FCC17AD001B6DED /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7BF06BFC21C0E88A003A20EF /* ConversationExtensions */,
 				7BEDF9F720510CD300371266 /* ConversationDataSource.swift */,
+				7BE49E2521BFE97500850442 /* ConversationExtension.swift */,
 				7B11346A211175AE00B6CD9A /* ConversationKeyboardManager.swift */,
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
 				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
@@ -1617,16 +1615,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		7BF06BFC21C0E88A003A20EF /* ConversationExtensions */ = {
-			isa = PBXGroup;
-			children = (
-				7BE49E2521BFE97500850442 /* ConversationExtension.swift */,
-				7BF06BFD21C0E8A3003A20EF /* PhotoConversationExtension.swift */,
-				7BF06BFF21C0E8D5003A20EF /* PhotoConversationExtensionViewController.swift */,
-			);
-			path = ConversationExtensions;
-			sourceTree = "<group>";
-		};
 		7BF49DD420C3DED600A8510E /* ReCaptcha */ = {
 			isa = PBXGroup;
 			children = (
@@ -1645,6 +1633,7 @@
 				DF8CECE21FC3075B00E40064 /* TransferViewController_Legacy.swift */,
 				7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */,
 				7BA3539821BE6E560060F93E /* ConversationExtensionViewController.swift */,
+				7BF06BFF21C0E8D5003A20EF /* PhotoConversationExtensionViewController.swift */,
 				DF84281D1FE92A250018B054 /* SendMessagePeerSelectionViewController.swift */,
 				DF16682120AC3B5D00C45E31 /* ConversationShareContactViewController.swift */,
 				7BF374A52063951E008A166B /* GalleryViewController.swift */,
@@ -2926,7 +2915,6 @@
 				DFE48ADA20E69B31003E0BF8 /* StorageUsageViewController.swift in Sources */,
 				DFE63C9C1FC6B18900D6E028 /* SignalKeyResponse.swift in Sources */,
 				DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */,
-				7BF06BFE21C0E8A3003A20EF /* PhotoConversationExtension.swift in Sources */,
 				DF63E1D920B84B5300A833A7 /* ContactQRCodeCell.swift in Sources */,
 				DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */,
 				7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */,

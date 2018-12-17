@@ -88,6 +88,9 @@ extension ConversationExtensionContainerViewController: UICollectionViewDelegate
             if ext == .transfer {
                 conversationViewController?.transferAction()
                 return false
+            } else if ext == .file {
+                conversationViewController?.pickFileAction()
+                return false
             } else {
                 if let indexPaths = collectionView.indexPathsForSelectedItems {
                     for indexPath in indexPaths {

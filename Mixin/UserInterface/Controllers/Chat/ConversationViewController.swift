@@ -703,7 +703,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
     
     // MARK: - Interface
-    func documentAction() {
+    func pickFileAction() {
         let vc = UIDocumentPickerViewController(documentTypes: ["public.item", "public.content"], in: .import)
         vc.delegate = self
         vc.modalPresentationStyle = .formSheet

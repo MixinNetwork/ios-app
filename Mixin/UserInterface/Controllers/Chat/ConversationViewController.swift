@@ -84,7 +84,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.25
     
-    private var ownerUser: UserItem?
+    private(set) var ownerUser: UserItem?
+    
     private var ownerUserApp: App?
     private var participants = [Participant]()
     private var role = ""
@@ -721,11 +722,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             let vc = WalletPasswordViewController.instance(fromChat:  user, conversationId: conversationId, asset: asset)
             navigationController?.pushViewController(vc, animated: true)
         }
-    }
-
-    func contactAction() {
-        let vc = ConversationShareContactViewController.instance(ownerUser: ownerUser, conversation: dataSource.conversation)
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     func callAction() {

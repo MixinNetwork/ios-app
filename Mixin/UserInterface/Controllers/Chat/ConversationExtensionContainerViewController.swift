@@ -33,6 +33,7 @@ class ConversationExtensionContainerViewController: UIViewController {
     
     private lazy var photoViewController = PhotoConversationExtensionViewController()
     private lazy var callViewController = CallConversationExtensionViewController.instance()
+    private lazy var contactViewController = ContactConversationExtensionViewController.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,7 +116,7 @@ extension ConversationExtensionContainerViewController: UICollectionViewDelegate
             case .transfer:
                 break
             case .contact:
-                break
+                replaceEmbeddedViewController(with: contactViewController)
             case .call:
                 replaceEmbeddedViewController(with: callViewController)
             }

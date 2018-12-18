@@ -36,7 +36,7 @@ enum FixedConversationExtension {
         case .transfer:
             return UIImage(named: "Conversation/ic_transfer")!
         case .contact:
-            return #imageLiteral(resourceName: "ic_conversation_contact")
+            return UIImage(named: "Conversation/ic_contact")!
         case .call:
             return UIImage(named: "Conversation/ic_call")!
         }

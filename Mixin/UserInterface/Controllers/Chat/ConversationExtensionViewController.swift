@@ -7,7 +7,7 @@ protocol ConversationExtensionViewController: class {
 extension ConversationExtensionViewController where Self: UIViewController {
     
     var conversationViewController: ConversationViewController? {
-        return (parent as? ConversationExtensionContainerViewController)?.conversationViewController
+        return parent as? ConversationViewController
     }
     
 }

@@ -2,6 +2,7 @@ import UIKit
 import MobileCoreServices
 import AVKit
 import Photos
+import WebKit
 
 class ConversationViewController: UIViewController, StatusBarStyleSwitchableViewController {
     
@@ -30,8 +31,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var audioInputContainerView: UIView!
-    @IBOutlet weak var extensionContainerView: UIView!
+    @IBOutlet weak var extensionDockContainerView: UIView!
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
+    @IBOutlet weak var extensionContainerView: UIView!
     
     @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
@@ -43,13 +45,14 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var inputTextViewLeadingExpandedConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var stickerPanelContainerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var extensionDockContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewHiddenConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewShowConstraint: NSLayoutConstraint!
     @IBOutlet weak var showExtensionContainerConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideExtensionContainerConstraint: NSLayoutConstraint!
-    @IBOutlet weak var extensionContainerViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var extensionContainerHeightConstraint: NSLayoutConstraint!
     
     static var positions = [String: Position]()
     
@@ -107,9 +110,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var keyboardManager = ConversationKeyboardManager()
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
-    private var extensionViewController: ConversationExtensionContainerViewController?
+    private var extensionDockViewController: ConversationExtensionDockViewController?
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
+    private var extensionViewController: UIViewController?
+    private var extensionWebView: WKWebView?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
     private lazy var userWindow = UserWindow.instance()
@@ -242,8 +247,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == SegueId.audioInput, let destination = segue.destination as? AudioInputViewController {
             audioInputViewController = destination
-        } else if segue.identifier == SegueId.extension, let destination = segue.destination as? ConversationExtensionContainerViewController {
-            extensionViewController = destination
+        } else if segue.identifier == SegueId.extension, let destination = segue.destination as? ConversationExtensionDockViewController {
+            extensionDockViewController = destination
         }
     }
     
@@ -761,6 +766,29 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         giphySearchViewController.onDisappear = onDisappear
         giphySearchViewController.prepareForReuse()
         present(giphySearchViewController, animated: true, completion: nil)
+    }
+    
+    func loadExtension(viewController new: UIViewController) {
+        removeCurrentExtension()
+        addChild(new)
+        extensionContainerView.addSubview(new.view)
+        new.view.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+        new.didMove(toParent: self)
+        extensionViewController = new
+    }
+    
+    func loadExtension(url: URL) {
+        removeCurrentExtension()
+        let webView = WKWebView()
+        extensionContainerView.addSubview(webView)
+        webView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
+        let request = URLRequest(url: url)
+        webView.load(request)
+        extensionWebView = webView
     }
     
     // MARK: - Class func
@@ -1373,27 +1401,30 @@ extension ConversationViewController {
     
     private func updateFixedExtensions() {
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-            extensionViewController?.fixedExtensions = [.photo, .transfer, .call, .file, .contact]
+            extensionDockViewController?.fixedExtensions = [.photo, .transfer, .call, .file, .contact]
         } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
-            extensionViewController?.fixedExtensions = [.photo, .transfer, .file, .contact]
+            extensionDockViewController?.fixedExtensions = [.photo, .transfer, .file, .contact]
         } else {
-            extensionViewController?.fixedExtensions = [.photo, .file, .contact]
+            extensionDockViewController?.fixedExtensions = [.photo, .file, .contact]
         }
     }
     
     private func updateConversationRelatedExtensions() {
-//        if Thread.isMainThread {
-//            DispatchQueue.global().async { [weak self] in
-//                self?.updateConversationRelatedExtensions()
-//            }
-//        } else {
-//            if dataSource?.category == .group {
-//                moreMenuViewController?.apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
-//            } else if let ownerId = ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
-//                self.ownerUserApp = app
-//                DispatchQueue.main.async(execute: updateFixedExtensions)
-//            }
-//        }
+        let conversationId = dataSource.category == .group ? self.conversationId : nil
+        let ownerUserId = ownerUser?.userId
+        DispatchQueue.global().async { [weak self] in
+            let apps: [App]
+            if let conversationId = conversationId {
+                apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
+            } else if let ownerUserId = ownerUserId, let app = AppDAO.shared.getApp(ofUserId: ownerUserId) {
+                apps = [app]
+            } else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.extensionDockViewController?.apps = apps
+            }
+        }
     }
     
     private func updateAccessoryButtons(animated: Bool) {
@@ -1450,15 +1481,19 @@ extension ConversationViewController {
             switch newContent {
             case .none:
                 self.stickerInputContainerView.alpha = 0
+                self.extensionDockContainerView.alpha = 0
                 self.extensionContainerView.alpha = 0
             case .sticker:
                 self.stickerInputContainerView.alpha = 1
+                self.extensionDockContainerView.alpha = 0
                 self.extensionContainerView.alpha = 0
             case .extension:
                 self.stickerInputContainerView.alpha = 0
+                self.extensionDockContainerView.alpha = 1
                 self.extensionContainerView.alpha = 1
             case .keyboard:
                 self.stickerInputContainerView.alpha = 0
+                self.extensionDockContainerView.alpha = 0
                 self.extensionContainerView.alpha = 0
             }
         }) { (_) in
@@ -1491,7 +1526,7 @@ extension ConversationViewController {
         inputWrapperBottomConstraint.constant = height
         if newSize != .hidden {
             stickerPanelContainerHeightConstraint.constant = height
-            extensionContainerViewHeightConstraint.constant = height
+            extensionContainerHeightConstraint.constant = height - extensionDockContainerHeightConstraint.constant
         }
         let offset = inputWrapperBottomConstraint.constant - lastInputWrapperBottomConstant
         UIView.animate(withDuration: 0.5, animations: {
@@ -1621,6 +1656,17 @@ extension ConversationViewController {
             rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
         }
         return rect
+    }
+    
+    private func removeCurrentExtension() {
+        if let vc = extensionViewController {
+            vc.willMove(toParent: nil)
+            vc.view.removeFromSuperview()
+            vc.removeFromParent()
+        }
+        if let webView = extensionWebView {
+            webView.removeFromSuperview()
+        }
     }
     
 }

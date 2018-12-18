@@ -19,12 +19,12 @@ class ChainSubscriptedAssetIconView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        chainImageView.frame = CGRect(x: 0,
-                                      y: bounds.height - chainIconWidth,
-                                      width: chainIconWidth,
-                                      height: chainIconWidth)
+        chainImageView.frame.size = CGSize(width: chainIconWidth, height: chainIconWidth)
+        let radius = bounds.width / 2
+        let delta = radius / sqrt(2)
+        chainImageView.center = CGPoint(x: radius - delta, y: radius + delta)
         iconImageView.frame = bounds
-        iconImageView.layer.cornerRadius = bounds.width / 2
+        iconImageView.layer.cornerRadius = radius
     }
     
     func prepareForReuse() {
@@ -48,7 +48,9 @@ class ChainSubscriptedAssetIconView: UIView {
         iconImageView.clipsToBounds = true
         addSubview(iconImageView)
         addSubview(chainImageView)
-        chainImageView.alpha = 0.6
+        chainImageView.alpha = 0.7
+        setNeedsLayout()
+        layoutIfNeeded()
     }
     
 }

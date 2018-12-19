@@ -4,7 +4,7 @@ import Alamofire
 import Photos
 import SwiftMessages
 
-class WebViewController: UIViewController, ConversationExtensionViewController {
+class WebViewController: UIViewController {
     
     private let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
     private let queue = OperationQueue()
@@ -21,10 +21,6 @@ class WebViewController: UIViewController, ConversationExtensionViewController {
     
     var webView: WKWebView {
         return view as! WKWebView
-    }
-    
-    var canBeFullsized: Bool {
-        return true
     }
     
     override func loadView() {
@@ -171,6 +167,14 @@ extension WebViewController: WKScriptMessageHandler {
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
+    }
+    
+}
+
+extension WebViewController: ConversationExtensionViewController {
+    
+    var canBeFullsized: Bool {
+        return true
     }
     
 }

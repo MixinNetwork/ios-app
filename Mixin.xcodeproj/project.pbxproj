@@ -100,6 +100,7 @@
 		7B2E3E571FA0815B00DDDDEB /* LoginIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E551FA0815B00DDDDEB /* LoginIntroViewController.swift */; };
 		7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */; };
 		7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */; };
+		7B30545B21CA44FC00580BAB /* GrabbingWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B30545A21CA44FC00580BAB /* GrabbingWebViewController.swift */; };
 		7B316F5621C3A89C008E03B8 /* TransferNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B316F5521C3A89C008E03B8 /* TransferNavigationViewController.swift */; };
 		7B331B6D21B10349000370E9 /* LoadMoreSnapshotsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */; };
 		7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3936CE20C15BA00075A97A /* MixinKeys.swift */; };
@@ -724,6 +725,7 @@
 		7B2E3E551FA0815B00DDDDEB /* LoginIntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginIntroViewController.swift; sourceTree = "<group>"; };
 		7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
 		7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginContinueButton.swift; sourceTree = "<group>"; };
+		7B30545A21CA44FC00580BAB /* GrabbingWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrabbingWebViewController.swift; sourceTree = "<group>"; };
 		7B316F5521C3A89C008E03B8 /* TransferNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferNavigationViewController.swift; sourceTree = "<group>"; };
 		7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreSnapshotsJob.swift; sourceTree = "<group>"; };
 		7B3936CE20C15BA00075A97A /* MixinKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinKeys.swift; sourceTree = "<group>"; };
@@ -1550,6 +1552,8 @@
 				7B26D1CB219EEB4000AE113A /* Peer.swift */,
 				7BA4E092219D99B300A2176D /* PeerSelectionViewController.swift */,
 				7B3B6C9921C2789A00F9448A /* PaymentConfirmationViewController.swift */,
+				7BFCA30121C9F76800E0ED21 /* WebViewController.swift */,
+				7B30545A21CA44FC00580BAB /* GrabbingWebViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1662,7 +1666,6 @@
 				7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */,
 				7B915F6B215F32A500A562C6 /* GiphyViewController.swift */,
 				7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */,
-				7BFCA30121C9F76800E0ED21 /* WebViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -2980,6 +2983,7 @@
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				273FACC8205FB9A800513327 /* PreKeyStoreWrapper.swift in Sources */,
 				7BBF395E205A624F00390712 /* Fee.swift in Sources */,
+				7B30545B21CA44FC00580BAB /* GrabbingWebViewController.swift in Sources */,
 				DF2A24521FC8744A003A8C1E /* ParticipantDAO.swift in Sources */,
 				273FACB5205FB9A800513327 /* crypto_provider.c in Sources */,
 				7B84358D20D8F89200237242 /* QuotePreviewView.swift in Sources */,

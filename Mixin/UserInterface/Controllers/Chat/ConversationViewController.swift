@@ -1776,13 +1776,8 @@ extension ConversationViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        presentWebWindow(withURL: url)
-    }
-    
-    private func presentWebWindow(withURL url: URL) {
-        let window = WebWindow.instance(conversationId: conversationId)
-        window.controller = self
-        window.presentPopupControllerAnimated(url: url)
+        let vc = GrabbingWebViewController.instance(url: url)
+        present(vc, animated: true, completion: nil)
     }
     
     private func report(conversationId: String) {

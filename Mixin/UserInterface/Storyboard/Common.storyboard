@@ -619,6 +619,71 @@
             </objects>
             <point key="canvasLocation" x="2479" y="833"/>
         </scene>
+        <!--Grabbing Web View Controller-->
+        <scene sceneID="uAv-e4-V7o">
+            <objects>
+                <viewController storyboardIdentifier="grabbing_web" id="RZh-AB-76Z" customClass="GrabbingWebViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="utf-Qc-8BE">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jJI-3S-hDd">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nz0-4l-wKH">
+                                <rect key="frame" x="0.0" y="667" width="375" height="647"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8c-HZ-LNB" customClass="GrabberButton" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <action selector="dismissAction:" destination="RZh-AB-76Z" eventType="touchUpInside" id="9GE-2Z-fNY"/>
+                                        </connections>
+                                    </button>
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="71a-bA-UoE">
+                                        <rect key="frame" x="0.0" y="30" width="375" height="617"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </containerView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="647" id="BUu-FX-euK"/>
+                                    <constraint firstItem="k8c-HZ-LNB" firstAttribute="top" secondItem="Nz0-4l-wKH" secondAttribute="top" id="LCc-I6-rgI"/>
+                                    <constraint firstItem="71a-bA-UoE" firstAttribute="leading" secondItem="Nz0-4l-wKH" secondAttribute="leading" id="Okn-Ka-4Rb"/>
+                                    <constraint firstAttribute="trailing" secondItem="71a-bA-UoE" secondAttribute="trailing" id="Uav-oj-Zg0"/>
+                                    <constraint firstItem="71a-bA-UoE" firstAttribute="top" secondItem="k8c-HZ-LNB" secondAttribute="bottom" id="lD1-bE-c6g"/>
+                                    <constraint firstAttribute="bottom" secondItem="71a-bA-UoE" secondAttribute="bottom" id="nm4-5l-1ch"/>
+                                    <constraint firstItem="k8c-HZ-LNB" firstAttribute="leading" secondItem="Nz0-4l-wKH" secondAttribute="leading" id="yOL-6u-cwj"/>
+                                    <constraint firstAttribute="trailing" secondItem="k8c-HZ-LNB" secondAttribute="trailing" id="yZP-vM-NJ7"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="jJI-3S-hDd" secondAttribute="trailing" id="02S-Rg-gCf"/>
+                            <constraint firstAttribute="trailing" secondItem="Nz0-4l-wKH" secondAttribute="trailing" id="HXc-Qg-1N6"/>
+                            <constraint firstAttribute="bottom" secondItem="Nz0-4l-wKH" secondAttribute="bottom" priority="250" id="THb-Nc-C2W"/>
+                            <constraint firstItem="jJI-3S-hDd" firstAttribute="top" secondItem="utf-Qc-8BE" secondAttribute="top" id="Yst-yd-Bl1"/>
+                            <constraint firstItem="Nz0-4l-wKH" firstAttribute="leading" secondItem="utf-Qc-8BE" secondAttribute="leading" id="msY-cY-2YW"/>
+                            <constraint firstItem="jJI-3S-hDd" firstAttribute="leading" secondItem="utf-Qc-8BE" secondAttribute="leading" id="ovL-7D-fvf"/>
+                            <constraint firstAttribute="bottom" secondItem="jJI-3S-hDd" secondAttribute="bottom" id="pYw-Tc-bd3"/>
+                            <constraint firstAttribute="bottom" secondItem="Nz0-4l-wKH" secondAttribute="top" priority="750" id="xTT-UY-vBF"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="32G-7a-egL"/>
+                    </view>
+                    <connections>
+                        <outlet property="backgroundDimmingView" destination="jJI-3S-hDd" id="4Xb-dh-HvG"/>
+                        <outlet property="containerView" destination="71a-bA-UoE" id="tJN-Gc-0QP"/>
+                        <outlet property="contentHeightConstraint" destination="BUu-FX-euK" id="Zds-N5-xly"/>
+                        <outlet property="hideContentConstraint" destination="xTT-UY-vBF" id="UYp-68-N3F"/>
+                        <outlet property="showContentConstraint" destination="THb-Nc-C2W" id="h0g-an-4qx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YpT-l0-uzd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="904.79999999999995" y="70.614692653673174"/>
+        </scene>
         <!--Payment Confirmation View Controller-->
         <scene sceneID="5M5-pV-ao6">
             <objects>

@@ -116,7 +116,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var extensionDockViewController: ConversationExtensionDockViewController?
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
-    private var extensionViewController: UIViewController?
+    private var extensionViewController: (UIViewController & ConversationExtensionViewController)?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
     private lazy var userWindow = UserWindow.instance()
@@ -429,8 +429,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             if bottomPanelContent == .sticker {
                 setBottomPanelSize(.fullSized)
             } else if bottomPanelContent == .extension {
-                let topDistance = max(StatusBarHeight.normal, view.compatibleSafeAreaInsets.top)
-                extensionWrapperHeightConstraint.constant = view.frame.height - topDistance
+                extensionWrapperHeightConstraint.constant = view.frame.height - view.compatibleSafeAreaInsets.top
                 showExtensionGrabberConstraint.priority = .defaultHigh
                 hideExtensionGrabberConstraint.priority = .defaultLow
                 UIView.animate(withDuration: 0.5) {
@@ -779,7 +778,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         present(giphySearchViewController, animated: true, completion: nil)
     }
     
-    func loadExtension(viewController new: UIViewController) {
+    func loadExtension(viewController new: UIViewController & ConversationExtensionViewController) {
         removeCurrentExtension()
         addChild(new)
         extensionContainerView.addSubview(new.view)
@@ -787,6 +786,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             make.edges.equalToSuperview()
         })
         new.didMove(toParent: self)
+        toggleBottomPanelSizeButton.isHidden = !new.canBeFullsized
         extensionViewController = new
     }
     
@@ -1305,11 +1305,14 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
     }
     
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
-        if intent == .show, bottomPanelContent == .extension {
+        guard presentedViewController == nil else {
+            return
+        }
+        if !inputTextView.isFirstResponder, intent == .show, bottomPanelContent == .extension, bottomPanelSize == .halfSized {
             toggleBottomPanelSizeAction(self)
             return
         }
-        guard presentedViewController == nil && inputTextView.isFirstResponder else {
+        guard inputTextView.isFirstResponder else {
             return
         }
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
@@ -1477,7 +1480,18 @@ extension ConversationViewController {
             stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_sticker"), for: .normal)
         }
         sendButton.isHidden = !inputTextView.hasText
-        toggleBottomPanelSizeButton.isHidden = newContentIsKeyboardOrNone
+        switch newContent {
+        case .none, .keyboard:
+            toggleBottomPanelSizeButton.isHidden = true
+        case .sticker:
+            toggleBottomPanelSizeButton.isHidden = false
+        case .extension:
+            if let ext = extensionViewController, ext.canBeFullsized {
+                toggleBottomPanelSizeButton.isHidden = false
+            } else {
+                toggleBottomPanelSizeButton.isHidden = true
+            }
+        }
         audioInputContainerView.isHidden = !newContentIsKeyboardOrNone
         UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)

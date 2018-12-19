@@ -18,6 +18,10 @@ class PhotoConversationExtensionViewController: UICollectionViewController, Conv
     
     private var assets: PHFetchResult<PHAsset>!
     
+    var canBeFullsized: Bool {
+        return false
+    }
+    
     init() {
         let layout = UICollectionViewFlowLayout()
         let separatorLineWidth: CGFloat = 1

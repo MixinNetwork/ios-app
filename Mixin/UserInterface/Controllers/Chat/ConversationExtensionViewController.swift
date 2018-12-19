@@ -1,6 +1,7 @@
 import UIKit
 
 protocol ConversationExtensionViewController: class {
+    var canBeFullsized: Bool { get }
     var conversationViewController: ConversationViewController? { get }
 }
 

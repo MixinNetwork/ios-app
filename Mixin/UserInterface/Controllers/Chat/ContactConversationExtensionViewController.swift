@@ -12,6 +12,10 @@ class ContactConversationExtensionViewController: UIViewController, Conversation
         return collectionView.indexPathsForSelectedItems ?? []
     }
     
+    var canBeFullsized: Bool {
+        return true
+    }
+    
     static func instance() -> ContactConversationExtensionViewController {
         return Storyboard.chat.instantiateViewController(withIdentifier: "extension_contact") as! ContactConversationExtensionViewController
     }

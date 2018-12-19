@@ -4,7 +4,7 @@ import Alamofire
 import Photos
 import SwiftMessages
 
-class WebViewController: UIViewController {
+class WebViewController: UIViewController, ConversationExtensionViewController {
     
     private let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
     private let queue = OperationQueue()
@@ -23,6 +23,10 @@ class WebViewController: UIViewController {
         return view as! WKWebView
     }
     
+    var canBeFullsized: Bool {
+        return true
+    }
+    
     override func loadView() {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .all
@@ -35,7 +39,7 @@ class WebViewController: UIViewController {
                                   forMainFrameOnly: true)
         config.userContentController.addUserScript(script)
         config.userContentController.add(self, name: mixinContext)
-        view = WKWebView(frame: .zero, configuration: config)
+        view = WKWebView(frame: UIScreen.main.bounds, configuration: config)
     }
     
     override func viewDidLoad() {

@@ -33,6 +33,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var audioInputContainerView: UIView!
     @IBOutlet weak var extensionDockContainerView: UIView!
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
+    @IBOutlet weak var extensionWrapperView: UIView!
     @IBOutlet weak var extensionContainerView: UIView!
     
     @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
@@ -50,9 +51,11 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var quoteViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewHiddenConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewShowConstraint: NSLayoutConstraint!
-    @IBOutlet weak var showExtensionContainerConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideExtensionContainerConstraint: NSLayoutConstraint!
-    @IBOutlet weak var extensionContainerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showExtensionWrapperConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideExtensionWrapperConstraint: NSLayoutConstraint!
+    @IBOutlet weak var extensionWrapperHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showExtensionGrabberConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideExtensionGrabberConstraint: NSLayoutConstraint!
     
     static var positions = [String: Position]()
     
@@ -426,7 +429,16 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             if bottomPanelContent == .sticker {
                 setBottomPanelSize(.fullSized)
             } else if bottomPanelContent == .extension {
-                
+                let topDistance = max(StatusBarHeight.normal, view.compatibleSafeAreaInsets.top)
+                extensionWrapperHeightConstraint.constant = view.frame.height - topDistance
+                showExtensionGrabberConstraint.priority = .defaultHigh
+                hideExtensionGrabberConstraint.priority = .defaultLow
+                UIView.animate(withDuration: 0.5) {
+                    UIView.setAnimationCurve(.overdamped)
+                    self.dismissPanelsButton.alpha = 1
+                    self.view.layoutIfNeeded()
+                }
+                bottomPanelSize = .fullSized
             }
         } else if bottomPanelSize == .fullSized {
             setBottomPanelSize(.halfSized)
@@ -760,7 +772,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     func presentGiphySearch(onDisappear: @escaping (() -> Void)) {
         UIView.animate(withDuration: 0.5) {
-            self.dismissPanelsButton.alpha = 0.3
+            self.dismissPanelsButton.alpha = 1
         }
         giphySearchViewController.onDisappear = onDisappear
         giphySearchViewController.prepareForReuse()
@@ -1293,7 +1305,11 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
     }
     
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
-        guard (presentedViewController == nil) && !(intent == .show && !inputTextView.isFirstResponder) else {
+        if intent == .show, bottomPanelContent == .extension {
+            toggleBottomPanelSizeAction(self)
+            return
+        }
+        guard presentedViewController == nil && inputTextView.isFirstResponder else {
             return
         }
         guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
@@ -1469,19 +1485,19 @@ extension ConversationViewController {
             case .none:
                 self.stickerInputContainerView.alpha = 0
                 self.extensionDockContainerView.alpha = 0
-                self.extensionContainerView.alpha = 0
+                self.extensionWrapperView.alpha = 0
             case .sticker:
                 self.stickerInputContainerView.alpha = 1
                 self.extensionDockContainerView.alpha = 0
-                self.extensionContainerView.alpha = 0
+                self.extensionWrapperView.alpha = 0
             case .extension:
                 self.stickerInputContainerView.alpha = 0
                 self.extensionDockContainerView.alpha = 1
-                self.extensionContainerView.alpha = 1
+                self.extensionWrapperView.alpha = 1
             case .keyboard:
                 self.stickerInputContainerView.alpha = 0
                 self.extensionDockContainerView.alpha = 0
-                self.extensionContainerView.alpha = 0
+                self.extensionWrapperView.alpha = 0
             }
         }) { (_) in
             self.stickerInputViewController.animated = newContent == .sticker
@@ -1497,29 +1513,34 @@ extension ConversationViewController {
         switch newSize {
         case .hidden:
             height = view.compatibleSafeAreaInsets.bottom
-            hideExtensionContainerConstraint.priority = .defaultHigh
-            showExtensionContainerConstraint.priority = .defaultLow
+            hideExtensionWrapperConstraint.priority = .defaultHigh
+            showExtensionWrapperConstraint.priority = .defaultLow
         case .halfSized:
             height = ConversationKeyboardManager.lastKeyboardHeight
             toggleBottomPanelSizeButton.setImage(#imageLiteral(resourceName: "ic_chat_panel_max"), for: .normal)
-            hideExtensionContainerConstraint.priority = .defaultLow
-            showExtensionContainerConstraint.priority = .defaultHigh
+            hideExtensionWrapperConstraint.priority = .defaultLow
+            showExtensionWrapperConstraint.priority = .defaultHigh
+            showExtensionGrabberConstraint.priority = .defaultLow
+            hideExtensionGrabberConstraint.priority = .defaultHigh
+            if !inputTextView.isFirstResponder {
+                view.endEditing(true)
+            }
         case .fullSized:
             height = stickerPanelFullsizedHeight
             toggleBottomPanelSizeButton.setImage(#imageLiteral(resourceName: "ic_chat_panel_min"), for: .normal)
-            hideExtensionContainerConstraint.priority = .defaultLow
-            showExtensionContainerConstraint.priority = .defaultHigh
+            hideExtensionWrapperConstraint.priority = .defaultLow
+            showExtensionWrapperConstraint.priority = .defaultHigh
         }
         inputWrapperBottomConstraint.constant = height
         if newSize != .hidden {
             stickerPanelContainerHeightConstraint.constant = height
-            extensionContainerHeightConstraint.constant = height - extensionDockContainerHeightConstraint.constant
+            extensionWrapperHeightConstraint.constant = height - extensionDockContainerHeightConstraint.constant
         }
         let offset = inputWrapperBottomConstraint.constant - lastInputWrapperBottomConstant
         UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)
             self.view.layoutIfNeeded()
-            self.dismissPanelsButton.alpha = newSize == .fullSized ? 0.3 : 0
+            self.dismissPanelsButton.alpha = newSize == .fullSized ? 1 : 0
             if updateTableViewContentOffset {
                 let contentOffsetY = self.tableView.contentOffset.y
                 self.updateTableViewContentInset()

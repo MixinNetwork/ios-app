@@ -718,7 +718,7 @@
                             </view>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tBY-wh-HMf">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="dismissPanelsAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="hPQ-3Q-58c"/>
                                 </connections>
@@ -902,12 +902,37 @@
                                     <segue destination="HUi-An-hzm" kind="embed" identifier="audio_input" id="2Ze-5t-sHg"/>
                                 </connections>
                             </containerView>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZO2-Bt-DBw">
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZO2-Bt-DBw">
                                 <rect key="frame" x="0.0" y="667" width="375" height="346"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lAq-8e-vic" customClass="GrabberButton" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="7cb-c0-Yrg"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="toggleBottomPanelSizeAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="nhc-1v-FIE"/>
+                                        </connections>
+                                    </button>
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vxX-dd-Db1">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="346"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </containerView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="vxX-dd-Db1" firstAttribute="leading" secondItem="ZO2-Bt-DBw" secondAttribute="leading" id="4Hg-pS-SHa"/>
+                                    <constraint firstAttribute="trailing" secondItem="lAq-8e-vic" secondAttribute="trailing" id="ILP-lv-z3m"/>
+                                    <constraint firstItem="lAq-8e-vic" firstAttribute="leading" secondItem="ZO2-Bt-DBw" secondAttribute="leading" id="Is5-kz-BOo"/>
+                                    <constraint firstAttribute="trailing" secondItem="vxX-dd-Db1" secondAttribute="trailing" id="Mvy-X5-YOi"/>
+                                    <constraint firstItem="vxX-dd-Db1" firstAttribute="top" secondItem="ZO2-Bt-DBw" secondAttribute="top" priority="750" id="WbB-Er-vmX"/>
+                                    <constraint firstItem="lAq-8e-vic" firstAttribute="top" secondItem="ZO2-Bt-DBw" secondAttribute="top" id="eId-bs-iyr"/>
+                                    <constraint firstItem="vxX-dd-Db1" firstAttribute="top" secondItem="lAq-8e-vic" secondAttribute="bottom" priority="250" id="eMu-lx-hb0"/>
                                     <constraint firstAttribute="height" constant="346" id="gyf-dN-DNg"/>
+                                    <constraint firstAttribute="bottom" secondItem="vxX-dd-Db1" secondAttribute="bottom" id="mgP-ke-2Z1"/>
                                 </constraints>
-                            </containerView>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -969,12 +994,14 @@
                         <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
                         <outlet property="deleteConversationButton" destination="7To-Ye-Nmg" id="ddX-6h-ZWv"/>
                         <outlet property="dismissPanelsButton" destination="tBY-wh-HMf" id="gLk-YR-fNU"/>
-                        <outlet property="extensionContainerHeightConstraint" destination="gyf-dN-DNg" id="gfb-jL-jM9"/>
-                        <outlet property="extensionContainerView" destination="ZO2-Bt-DBw" id="KeU-4I-gnB"/>
+                        <outlet property="extensionContainerView" destination="vxX-dd-Db1" id="ZGG-nD-cnT"/>
                         <outlet property="extensionDockContainerHeightConstraint" destination="9o4-4M-qna" id="CTT-bV-str"/>
                         <outlet property="extensionDockContainerView" destination="lgY-Sx-R4t" id="j1S-Hv-ern"/>
+                        <outlet property="extensionWrapperHeightConstraint" destination="gyf-dN-DNg" id="gfb-jL-jM9"/>
+                        <outlet property="extensionWrapperView" destination="ZO2-Bt-DBw" id="KeU-4I-gnB"/>
                         <outlet property="galleryWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
-                        <outlet property="hideExtensionContainerConstraint" destination="9IM-2A-V53" id="pbI-WS-E4z"/>
+                        <outlet property="hideExtensionGrabberConstraint" destination="WbB-Er-vmX" id="4hY-3Y-Wfg"/>
+                        <outlet property="hideExtensionWrapperConstraint" destination="9IM-2A-V53" id="pbI-WS-E4z"/>
                         <outlet property="inputTextView" destination="LmC-o2-ndc" id="oTt-5n-LgP"/>
                         <outlet property="inputTextViewBottomConstraint" destination="ZHP-TB-S3P" id="Ek7-HM-mDu"/>
                         <outlet property="inputTextViewHeightConstraint" destination="Y55-r4-fIf" id="Ic3-i4-NT1"/>
@@ -994,7 +1021,8 @@
                         <outlet property="scrollToBottomWrapperHeightConstraint" destination="iai-L8-XoW" id="F9Z-Pn-XNa"/>
                         <outlet property="scrollToBottomWrapperView" destination="enU-Jm-AWl" id="kR8-6F-tEk"/>
                         <outlet property="sendButton" destination="4sU-2a-lMZ" id="gkB-0g-9ur"/>
-                        <outlet property="showExtensionContainerConstraint" destination="pbj-ek-ccF" id="T4T-Sb-D7p"/>
+                        <outlet property="showExtensionGrabberConstraint" destination="eMu-lx-hb0" id="bqr-pz-ROr"/>
+                        <outlet property="showExtensionWrapperConstraint" destination="pbj-ek-ccF" id="T4T-Sb-D7p"/>
                         <outlet property="statusBarPlaceholderHeightConstraint" destination="zpg-10-Eec" id="ivj-pa-2FX"/>
                         <outlet property="stickerInputContainerView" destination="OCN-L0-tlY" id="qw6-7P-w3t"/>
                         <outlet property="stickerKeyboardSwitcherButton" destination="JTL-Jf-Smd" id="ZXj-Dl-yTy"/>

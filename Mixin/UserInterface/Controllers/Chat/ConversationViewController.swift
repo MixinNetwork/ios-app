@@ -1305,7 +1305,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
     }
     
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
-        guard presentedViewController == nil else {
+        guard UIApplication.shared.applicationState == .active, presentedViewController == nil else {
             return
         }
         if !inputTextView.isFirstResponder, intent == .show, bottomPanelContent == .extension, bottomPanelSize == .halfSized {

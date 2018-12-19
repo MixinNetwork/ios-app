@@ -45,13 +45,6 @@ class TransferParametersViewController: UIViewController, TransferContextAccessi
         memoTextField.resignFirstResponder()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        if let destination = segue.destination as? TransferAssetSelectorViewController {
-            destination.assets = availableAssets
-        }
-    }
-    
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
             let beginFrame = userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? CGRect,
@@ -63,6 +56,12 @@ class TransferParametersViewController: UIViewController, TransferContextAccessi
         if abs(beginFrame.origin.y - windowHeight) < 1 {
             view.layoutIfNeeded()
         }
+    }
+    
+    @IBAction func changeAssetAction(_ sender: Any) {
+        let vc = TransferAssetSelectorViewController()
+        vc.assets = availableAssets
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @IBAction func amountEditingChangedAction(_ sender: Any) {

@@ -143,14 +143,6 @@ extension TransferViewController: UIViewControllerTransitioningDelegate {
         return self
     }
     
-    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        return nil
-    }
-    
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        return nil
-    }
-    
 }
 
 extension TransferViewController: UIViewControllerAnimatedTransitioning {

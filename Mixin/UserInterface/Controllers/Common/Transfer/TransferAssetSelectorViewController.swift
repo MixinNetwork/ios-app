@@ -1,42 +1,45 @@
 import UIKit
 
-class TransferAssetSelectorViewController: UIViewController, TransferContextAccessible {
+class TransferAssetSelectorViewController: TransferAssetsDisplayViewController, TransferContextAccessible {
     
-    @IBOutlet weak var tableView: UITableView!
-    
-    var assets = [AssetItem]()
-    
-    private let cellReuseId = "cell"
+    private lazy var searchResultsController = TransferAssetSearchResultViewController()
+    private lazy var searchController = TransferAssetSearchController(searchResultsController: searchResultsController)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.reloadData()
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.delegate = self
+        navigationItem.titleView = TransferAssetSearchBarContainerView(searchBar: searchController.searchBar)
+        definesPresentationContext = true
     }
     
-}
-
-extension TransferAssetSelectorViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return assets.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId, for: indexPath) as! TransferAssetSelectorCell
-        cell.render(asset: assets[indexPath.row])
-        return cell
-    }
-    
-}
-
-extension TransferAssetSelectorViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        super.tableView(tableView, didSelectRowAt: indexPath)
         context?.asset = assets[indexPath.row]
         navigationController?.popViewController(animated: true)
+    }
+    
+}
+
+extension TransferAssetSelectorViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+}
+
+extension TransferAssetSelectorViewController: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        var keyword = searchController.searchBar.text ?? ""
+        keyword = keyword.trimmingCharacters(in: .whitespaces).lowercased()
+        if let vc = searchController.searchResultsController as? TransferAssetSearchResultViewController {
+            vc.assets = self.assets.filter({ $0.symbol.lowercased().contains(keyword) })
+            vc.tableView.reloadData()
+        }
     }
     
 }

@@ -114,7 +114,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     private var extensionViewController: UIViewController?
-    private var extensionWebView: WKWebView?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
     private lazy var userWindow = UserWindow.instance()
@@ -777,18 +776,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         })
         new.didMove(toParent: self)
         extensionViewController = new
-    }
-    
-    func loadExtension(url: URL) {
-        removeCurrentExtension()
-        let webView = WKWebView()
-        extensionContainerView.addSubview(webView)
-        webView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
-        let request = URLRequest(url: url)
-        webView.load(request)
-        extensionWebView = webView
     }
     
     // MARK: - Class func
@@ -1663,9 +1650,6 @@ extension ConversationViewController {
             vc.willMove(toParent: nil)
             vc.view.removeFromSuperview()
             vc.removeFromParent()
-        }
-        if let webView = extensionWebView {
-            webView.removeFromSuperview()
         }
     }
     

@@ -1,6 +1,6 @@
 import WCDBSwift
 
-struct App: BaseCodable {
+class App: BaseCodable {
 
     static var tableName: String = "apps"
 

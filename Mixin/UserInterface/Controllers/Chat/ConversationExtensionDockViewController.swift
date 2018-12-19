@@ -18,19 +18,21 @@ class ConversationExtensionDockViewController: UIViewController {
         }
     }
     
-    var conversationViewController: ConversationViewController? {
-        return parent as? ConversationViewController
+    var conversationViewController: ConversationViewController {
+        return parent as! ConversationViewController
     }
     
     private let cellReuseId = "extension"
     
-    private var conversationId: String? {
-        return conversationViewController?.conversationId
+    private var lastSelectedApp: App?
+    private var conversationId: String {
+        return conversationViewController.conversationId
     }
     
     private lazy var photoViewController = PhotoConversationExtensionViewController()
     private lazy var callViewController = CallConversationExtensionViewController.instance()
     private lazy var contactViewController = ContactConversationExtensionViewController.instance()
+    private lazy var webViewController = WebViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,10 +75,10 @@ extension ConversationExtensionDockViewController: UICollectionViewDelegate {
         if indexPath.section == 0 {
             let ext = fixedExtensions[indexPath.row]
             if ext == .transfer {
-                conversationViewController?.transferAction()
+                conversationViewController.transferAction()
                 return false
             } else if ext == .file {
-                conversationViewController?.pickFileAction()
+                conversationViewController.pickFileAction()
                 return false
             } else {
                 removeAllSelections()
@@ -93,19 +95,24 @@ extension ConversationExtensionDockViewController: UICollectionViewDelegate {
             let ext = fixedExtensions[indexPath.row]
             switch ext {
             case .photo:
-                conversationViewController?.loadExtension(viewController: photoViewController)
+                conversationViewController.loadExtension(viewController: photoViewController)
             case .file, .transfer:
                 break
             case .contact:
-                conversationViewController?.loadExtension(viewController: contactViewController)
+                conversationViewController.loadExtension(viewController: contactViewController)
             case .call:
-                conversationViewController?.loadExtension(viewController: callViewController)
+                conversationViewController.loadExtension(viewController: callViewController)
             }
         } else {
             let app = apps[indexPath.row]
             if let url = URL(string: app.homeUri) {
-                conversationViewController?.loadExtension(url: url)
+                webViewController.conversationId = conversationId
+                if app !== lastSelectedApp {
+                    webViewController.load(url: url)
+                }
+                conversationViewController.loadExtension(viewController: webViewController)
             }
+            lastSelectedApp = app
         }
     }
     

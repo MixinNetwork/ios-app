@@ -74,6 +74,12 @@ class WebViewController: UIViewController {
         }
     }
     
+    func unload() {
+        imageLoadingRequest?.cancel()
+        webView.stopLoading()
+        webView.configuration.userContentController.removeScriptMessageHandler(forName: mixinContext)
+    }
+    
     private func presentAlertController(for image: UIImage) {
         queue.cancelAllOperations()
         let op = BlockOperation()

@@ -29,11 +29,21 @@ class ConversationExtensionDockViewController: UIViewController {
     private var selectedIndexPaths: [IndexPath] {
         return collectionView.indexPathsForSelectedItems ?? []
     }
+    private var webViewControllerDidLoaded = false
     
     private lazy var photoViewController = PhotoConversationExtensionViewController()
     private lazy var callViewController = CallConversationExtensionViewController.instance()
     private lazy var contactViewController = ContactConversationExtensionViewController.instance()
-    private lazy var webViewController = WebViewController()
+    private lazy var webViewController: WebViewController = {
+        webViewControllerDidLoaded = true
+        return WebViewController()
+    }()
+    
+    deinit {
+        if webViewControllerDidLoaded {
+            webViewController.unload()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

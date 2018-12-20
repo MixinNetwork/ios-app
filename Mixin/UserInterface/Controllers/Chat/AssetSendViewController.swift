@@ -14,7 +14,14 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private weak var dataSource: ConversationDataSource?
 
     private let rateKey = "rate"
-
+    
+    private let assetRequestOptions: PHVideoRequestOptions = {
+        let options = PHVideoRequestOptions()
+        options.isNetworkAccessAllowed = true
+        options.deliveryMode = .fastFormat
+        return options
+    }()
+    
     private var image: UIImage?
     private var asset: PHAsset?
     private var animateURL: URL?
@@ -55,7 +62,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             }
         } else if let asset = self.asset {
             if asset.mediaType == .video {
-                PHImageManager.default().requestAVAsset(forVideo: asset, options: nil) { [weak self](avasset, _, _) in
+                PHImageManager.default().requestAVAsset(forVideo: asset, options: assetRequestOptions) { [weak self](avasset, _, _) in
                     guard let avasset = avasset else {
                         return
                     }

@@ -4,12 +4,6 @@ import Photos
 class PickerViewController: UICollectionViewController, MixinNavigationAnimating {
     
     private let cellReuseId = "cell"
-    private var imageRequestOptions: PHImageRequestOptions = {
-        let options = PHImageRequestOptions()
-        options.deliveryMode = .opportunistic
-        options.resizeMode = .fast
-        return options
-    }()
     private var collection: PHAssetCollection?
     private var assets: PHFetchResult<PHAsset>!
     private var isFilterCustomSticker = false
@@ -99,16 +93,7 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! PhotoPickerCell
-        let asset = assets[indexPath.row]
-        cell.localIdentifier = asset.localIdentifier
-        let targetSize = CGSize(width: cell.thumbImageView.frame.size.width * 2, height: cell.thumbImageView.frame.size.height * 2)
-        cell.requestId = PHCachingImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: imageRequestOptions) { (image, _) in
-            guard cell.localIdentifier == asset.localIdentifier else {
-                return
-            }
-            cell.thumbImageView.image = image
-        }
-        cell.updateFileTypeView(asset: asset)
+        cell.render(asset: assets[indexPath.row])
         return cell
     }
 
@@ -155,21 +140,4 @@ extension PickerViewController: PHPhotoLibraryChangeObserver {
         }
     }
 
-}
-
-class PickerCell: UICollectionViewCell {
-
-    @IBOutlet weak var thumbImageView: UIImageView!
-    @IBOutlet weak var fileTypeView: UIView!
-    @IBOutlet weak var gifLabel: UILabel!
-    @IBOutlet weak var videoImageView: UIImageView!
-    @IBOutlet weak var durationLabel: UILabel!
-
-    var requestId: PHImageRequestID = -1
-    var localIdentifier: String!
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        PHCachingImageManager.default().cancelImageRequest(requestId)
-    }
 }

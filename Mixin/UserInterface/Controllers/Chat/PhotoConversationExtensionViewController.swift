@@ -9,12 +9,6 @@ class PhotoConversationExtensionViewController: UICollectionViewController, Conv
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         return options
     }()
-    private let imageRequestOptions: PHImageRequestOptions = {
-        let options = PHImageRequestOptions()
-        options.deliveryMode = .opportunistic
-        options.resizeMode = .fast
-        return options
-    }()
     
     private var assets: PHFetchResult<PHAsset>!
     
@@ -51,22 +45,39 @@ class PhotoConversationExtensionViewController: UICollectionViewController, Conv
 extension PhotoConversationExtensionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return assets.count
+        return assets.count + 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! PhotoPickerCell
-        let asset = assets[indexPath.row]
-        cell.localIdentifier = asset.localIdentifier
-        let targetSize = cell.thumbImageView.frame.size * 2
-        cell.requestId = PHCachingImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: imageRequestOptions) { (image, _) in
-            guard cell.localIdentifier == asset.localIdentifier else {
-                return
-            }
-            cell.thumbImageView.image = image
+        if indexPath.row == 0 {
+            cell.thumbImageView.backgroundColor = .black
+            cell.thumbImageView.image = UIImage(named: "Conversation/ic_camera_large")
+            cell.thumbImageView.contentMode = .center
+        } else {
+            cell.thumbImageView.backgroundColor = .white
+            cell.render(asset: assets[indexPath.row - 1])
+            cell.thumbImageView.contentMode = .scaleAspectFill
         }
-        cell.updateFileTypeView(asset: asset)
         return cell
+    }
+    
+}
+
+extension PhotoConversationExtensionViewController {
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        guard let conversationViewController = conversationViewController else {
+            return
+        }
+        if indexPath.row == 0 {
+            conversationViewController.imagePickerController.presentCamera()
+        } else {
+            let vc = AssetSendViewController.instance(asset: assets[indexPath.row - 1],
+                                                      dataSource: conversationViewController.dataSource)
+            conversationViewController.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
 }

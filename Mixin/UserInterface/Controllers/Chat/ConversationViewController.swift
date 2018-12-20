@@ -427,15 +427,19 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             if bottomPanelContent == .sticker {
                 setBottomPanelSize(.fullSized)
             } else if bottomPanelContent == .extension {
-                extensionWrapperHeightConstraint.constant = view.frame.height - view.compatibleSafeAreaInsets.top
-                showExtensionGrabberConstraint.priority = .defaultHigh
-                hideExtensionGrabberConstraint.priority = .defaultLow
-                UIView.animate(withDuration: 0.5) {
-                    UIView.setAnimationCurve(.overdamped)
-                    self.dismissPanelsButton.alpha = 1
-                    self.view.layoutIfNeeded()
+                if extensionViewController is PhotoConversationExtensionViewController {
+                    pickPhotoOrVideoAction()
+                } else {
+                    extensionWrapperHeightConstraint.constant = view.frame.height - view.compatibleSafeAreaInsets.top
+                    showExtensionGrabberConstraint.priority = .defaultHigh
+                    hideExtensionGrabberConstraint.priority = .defaultLow
+                    UIView.animate(withDuration: 0.5) {
+                        UIView.setAnimationCurve(.overdamped)
+                        self.dismissPanelsButton.alpha = 1
+                        self.view.layoutIfNeeded()
+                    }
+                    bottomPanelSize = .fullSized
                 }
-                bottomPanelSize = .fullSized
             }
         } else if bottomPanelSize == .fullSized {
             setBottomPanelSize(.halfSized)
@@ -784,7 +788,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             make.edges.equalToSuperview()
         })
         new.didMove(toParent: self)
-        toggleBottomPanelSizeButton.isHidden = !new.canBeFullsized
         extensionViewController = new
     }
     
@@ -1507,11 +1510,7 @@ extension ConversationViewController {
         case .sticker:
             toggleBottomPanelSizeButton.isHidden = false
         case .extension:
-            if let ext = extensionViewController, ext.canBeFullsized {
-                toggleBottomPanelSizeButton.isHidden = false
-            } else {
-                toggleBottomPanelSizeButton.isHidden = true
-            }
+            toggleBottomPanelSizeButton.isHidden = false
         }
         audioInputContainerView.isHidden = !newContentIsKeyboardOrNone
         UIView.animate(withDuration: 0.5, animations: {

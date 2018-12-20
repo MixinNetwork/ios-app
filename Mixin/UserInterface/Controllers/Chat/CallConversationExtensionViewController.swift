@@ -7,7 +7,7 @@ class CallConversationExtensionViewController: UIViewController, ConversationExt
     }
     
     var canBeFullsized: Bool {
-        return false
+        return true
     }
     
     @IBAction func callAction(_ sender: Any) {

@@ -1011,7 +1011,6 @@
                         <outlet property="inputWrapperBottomConstraint" destination="QsO-2V-Rt7" id="Pcd-20-jDE"/>
                         <outlet property="inputWrapperView" destination="rZG-cd-J6L" id="I3v-gZ-dSQ"/>
                         <outlet property="loadingView" destination="pcl-Ex-irR" id="Xco-m3-g7P"/>
-                        <outlet property="moreButton" destination="JPe-wH-0KV" id="Q6U-HN-ajg"/>
                         <outlet property="participantsLabel" destination="a4C-sE-rDR" id="OnC-u4-cXC"/>
                         <outlet property="quotePreviewView" destination="y0l-2x-7bv" id="UYG-xX-QdK"/>
                         <outlet property="quoteViewHeightConstraint" destination="NvR-WP-xVN" id="F2A-6v-erf"/>
@@ -1031,6 +1030,7 @@
                         <outlet property="titleLabel" destination="6GB-fs-Cdu" id="Gzl-mK-sF2"/>
                         <outlet property="titleStackView" destination="eFB-Ny-P1V" id="LqH-oj-Pg0"/>
                         <outlet property="titleViewHeightConstraint" destination="8aU-zB-Vfr" id="5X3-s9-MuE"/>
+                        <outlet property="toggleBottomPanelButton" destination="JPe-wH-0KV" id="Q6U-HN-ajg"/>
                         <outlet property="toggleBottomPanelSizeButton" destination="Ctk-K4-UkK" id="WHs-fY-HMx"/>
                         <outlet property="unblockButton" destination="bTL-3p-VYH" id="buh-za-KfW"/>
                         <outlet property="unreadBadgeLabel" destination="x2d-vg-jlV" id="M0W-3d-aPa"/>

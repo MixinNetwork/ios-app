@@ -17,7 +17,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var unreadBadgeLabel: UILabel!
     @IBOutlet weak var bottomPanelWrapperView: UIView!
     @IBOutlet weak var inputWrapperView: UIView!
-    @IBOutlet weak var moreButton: UIButton!
+    @IBOutlet weak var toggleBottomPanelButton: UIButton!
     @IBOutlet weak var inputTextView: InputTextView!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var toggleBottomPanelSizeButton: UIButton!
@@ -92,7 +92,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     private(set) var ownerUser: UserItem?
     
-    private var ownerUserApp: App?
     private var participants = [Participant]()
     private var role = ""
     private var asset: AssetItem?
@@ -228,8 +227,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
-        updateFixedExtensions()
-        updateConversationRelatedExtensions()
+        updateExtensions()
         updateStrangerTipsView()
         updateBottomView()
         inputWrapperView.isHidden = false
@@ -693,7 +691,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         guard let conversationId = notification.object as? String, conversationId == self.conversationId else {
             return
         }
-        updateConversationRelatedExtensions()
+        updateExtensions()
         reloadParticipants()
     }
     
@@ -1403,32 +1401,55 @@ extension ConversationViewController {
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         unblockButton.isHidden = !isBlocked
         audioInputContainerView.isHidden = isBlocked || bottomPanelContent == .sticker
+        let bottomPanelButtonImage = user.isBot ? UIImage(named: "ic_chat_bot") : UIImage(named: "ic_chat_more")
+        toggleBottomPanelButton.setImage(bottomPanelButtonImage, for: .normal)
     }
     
-    private func updateFixedExtensions() {
+    private func updateFixedExtensions(ownerUserApp: App?) {
+        guard let dock = extensionDockViewController else {
+            return
+        }
         if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-            extensionDockViewController?.fixedExtensions = [.photo, .transfer, .call, .file, .contact]
+            dock.fixedExtensions = [.photo, .transfer, .call, .file, .contact]
         } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
-            extensionDockViewController?.fixedExtensions = [.photo, .transfer, .file, .contact]
+            dock.fixedExtensions = [.photo, .transfer, .file, .contact]
         } else {
-            extensionDockViewController?.fixedExtensions = [.photo, .file, .contact]
+            dock.fixedExtensions = [.photo, .file, .contact]
         }
     }
     
-    private func updateConversationRelatedExtensions() {
+    private func updateExtensions() {
         let conversationId = dataSource.category == .group ? self.conversationId : nil
         let ownerUserId = ownerUser?.userId
         DispatchQueue.global().async { [weak self] in
             let apps: [App]
-            if let conversationId = conversationId {
-                apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
-            } else if let ownerUserId = ownerUserId, let app = AppDAO.shared.getApp(ofUserId: ownerUserId) {
+            if let ownerUserId = ownerUserId, let app = AppDAO.shared.getApp(ofUserId: ownerUserId) {
+                // owner user is a bot
                 apps = [app]
+                DispatchQueue.main.sync {
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    weakSelf.updateFixedExtensions(ownerUserApp: app)
+                    weakSelf.extensionDockViewController?.apps = apps
+                    weakSelf.extensionDockViewController?.loadDefaultExtensionIfNeeded(section: .apps)
+                }
             } else {
-                return
-            }
-            DispatchQueue.main.async {
-                self?.extensionDockViewController?.apps = apps
+                if let conversationId = conversationId {
+                    // group
+                    apps = AppDAO.shared.getConversationApps(conversationId: conversationId)
+                } else {
+                    // owner user is not a bot
+                    apps = []
+                }
+                DispatchQueue.main.sync {
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    weakSelf.updateFixedExtensions(ownerUserApp: nil)
+                    weakSelf.extensionDockViewController?.apps = apps
+                    weakSelf.extensionDockViewController?.loadDefaultExtensionIfNeeded(section: .fixed)
+                }
             }
         }
     }

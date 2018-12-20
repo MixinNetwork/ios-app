@@ -6,15 +6,13 @@ class ConversationExtensionDockViewController: UIViewController {
     
     var fixedExtensions = [FixedExtension]() {
         didSet {
-            collectionView.reloadSections(IndexSet(integer: 0))
-            loadDefaultExtensionIfNeeded()
+            collectionView.reloadSections(IndexSet(integer: Section.fixed.rawValue))
         }
     }
     
     var apps = [App]() {
         didSet {
-            collectionView.reloadSections(IndexSet(integer: 1))
-            loadDefaultExtensionIfNeeded()
+            collectionView.reloadSections(IndexSet(integer: Section.apps.rawValue))
         }
     }
     
@@ -27,6 +25,9 @@ class ConversationExtensionDockViewController: UIViewController {
     private var lastSelectedApp: App?
     private var conversationId: String {
         return conversationViewController.conversationId
+    }
+    private var selectedIndexPaths: [IndexPath] {
+        return collectionView.indexPathsForSelectedItems ?? []
     }
     
     private lazy var photoViewController = PhotoConversationExtensionViewController()
@@ -41,6 +42,27 @@ class ConversationExtensionDockViewController: UIViewController {
         collectionView.delegate = self
     }
     
+    func loadDefaultExtensionIfNeeded(section: Section) {
+        guard selectedIndexPaths.isEmpty, !fixedExtensions.isEmpty || !apps.isEmpty else {
+            return
+        }
+        let load = {
+            let indexPath = IndexPath(item: 0, section: section.rawValue)
+            self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
+            self.collectionView(self.collectionView, didSelectItemAt: indexPath)
+        }
+        switch section {
+        case .fixed:
+            if !fixedExtensions.isEmpty {
+                load()
+            }
+        case .apps:
+            if !apps.isEmpty {
+                load()
+            }
+        }
+    }
+    
 }
 
 extension ConversationExtensionDockViewController: UICollectionViewDataSource {
@@ -50,12 +72,12 @@ extension ConversationExtensionDockViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? fixedExtensions.count : apps.count
+        return section == Section.fixed.rawValue ? fixedExtensions.count : apps.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! ConversationExtensionCell
-        if indexPath.section == 0 {
+        if indexPath.section == Section.fixed.rawValue {
             cell.imageView.image = fixedExtensions[indexPath.row].image
             cell.imageView.contentMode = .center
         } else {
@@ -72,7 +94,7 @@ extension ConversationExtensionDockViewController: UICollectionViewDataSource {
 extension ConversationExtensionDockViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == 0 {
+        if indexPath.section == Section.fixed.rawValue {
             let ext = fixedExtensions[indexPath.row]
             if ext == .transfer {
                 conversationViewController.transferAction()
@@ -91,7 +113,7 @@ extension ConversationExtensionDockViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
+        if indexPath.section == Section.fixed.rawValue {
             let ext = fixedExtensions[indexPath.row]
             switch ext {
             case .photo:
@@ -105,13 +127,11 @@ extension ConversationExtensionDockViewController: UICollectionViewDelegate {
             }
         } else {
             let app = apps[indexPath.row]
-            if let url = URL(string: app.homeUri) {
-                webViewController.conversationId = conversationId
-                if app !== lastSelectedApp {
-                    webViewController.load(url: url)
-                }
-                conversationViewController.loadExtension(viewController: webViewController)
+            webViewController.conversationId = conversationId
+            if app !== lastSelectedApp, let url = URL(string: app.homeUri) {
+                webViewController.load(url: url)
             }
+            conversationViewController.loadExtension(viewController: webViewController)
             lastSelectedApp = app
         }
     }
@@ -120,21 +140,6 @@ extension ConversationExtensionDockViewController: UICollectionViewDelegate {
 
 extension ConversationExtensionDockViewController {
     
-    private func loadDefaultExtensionIfNeeded() {
-        guard let selectedIndexPaths = collectionView.indexPathsForSelectedItems, selectedIndexPaths.isEmpty, !fixedExtensions.isEmpty || !apps.isEmpty else {
-            return
-        }
-        func loadIndexPath(_ indexPath: IndexPath) {
-            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
-            collectionView(collectionView, didSelectItemAt: indexPath)
-        }
-        if !fixedExtensions.isEmpty {
-            loadIndexPath(IndexPath(item: 0, section: 0))
-        } else if !apps.isEmpty {
-            loadIndexPath(IndexPath(item: 0, section: 1))
-        }
-    }
-    
     private func removeAllSelections() {
         guard let indexPaths = collectionView.indexPathsForSelectedItems else {
             return
@@ -142,6 +147,11 @@ extension ConversationExtensionDockViewController {
         for indexPath in indexPaths {
             collectionView.deselectItem(at: indexPath, animated: false)
         }
+    }
+    
+    enum Section: Int {
+        case fixed = 0
+        case apps = 1
     }
     
     enum FixedExtension {

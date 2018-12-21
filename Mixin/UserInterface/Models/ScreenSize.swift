@@ -15,7 +15,7 @@ enum ScreenSize {
         return ScreenSize.current == .inch3_5 || ScreenSize.current == .inch4
     }()
     
-    static let isPlusSize: Bool = {
+    static let isPlusWidth: Bool = {
         let width = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         return width > 400
     }()

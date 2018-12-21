@@ -24,13 +24,18 @@ class ContactConversationExtensionViewController: UIViewController, Conversation
         super.viewDidLoad()
         collectionView.dataSource = self
         collectionView.delegate = self
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
+        let backgroundView = UIView(frame: collectionView.bounds)
+        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        backgroundView.addGestureRecognizer(tapRecognizer)
+        collectionView.backgroundView = backgroundView
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            if ScreenSize.isCompactWidth || ScreenSize.isPlusSize {
+            if ScreenSize.isCompactWidth {
                 layout.sectionInset.left = 17
-                layout.sectionInset.left = 17
-            } else {
-                layout.sectionInset.left = 27
-                layout.sectionInset.left = 27
+                layout.sectionInset.right = 17
+            } else if ScreenSize.isPlusWidth {
+                layout.sectionInset.left = 32
+                layout.sectionInset.right = 32
             }
         }
         DispatchQueue.global().async { [weak self] in
@@ -43,6 +48,10 @@ class ContactConversationExtensionViewController: UIViewController, Conversation
                 weakSelf.collectionView.reloadData()
             }
         }
+    }
+    
+    @objc func tapAction(_ sender: UITapGestureRecognizer) {
+        removeAllSelection()
     }
     
     private func send(contact: UserItem) {
@@ -59,6 +68,12 @@ class ContactConversationExtensionViewController: UIViewController, Conversation
         SendMessageService.shared.sendMessage(message: message,
                                               ownerUser: conversationViewController.ownerUser,
                                               isGroupMessage: conversation.isGroup())
+    }
+    
+    private func removeAllSelection() {
+        for indexPath in selectedIndexPaths {
+            collectionView.deselectItem(at: indexPath, animated: true)
+        }
     }
     
 }
@@ -79,15 +94,29 @@ extension ContactConversationExtensionViewController: UICollectionViewDataSource
     
 }
 
+extension ContactConversationExtensionViewController: UIScrollViewDelegate {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        AppDelegate.current.window?.endEditing(true)
+        removeAllSelection()
+    }
+    
+}
+
 extension ContactConversationExtensionViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if selectedIndexPaths.contains(indexPath) {
-            collectionView.deselectItem(at: indexPath, animated: true)
+            removeAllSelection()
             send(contact: contacts[indexPath.row])
             return false
         } else {
-            return true
+            if selectedIndexPaths.isEmpty {
+                return true
+            } else {
+                removeAllSelection()
+                return false
+            }
         }
     }
     

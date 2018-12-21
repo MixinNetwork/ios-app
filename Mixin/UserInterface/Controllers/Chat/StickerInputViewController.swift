@@ -33,6 +33,7 @@ class StickerInputViewController: UIViewController {
         pageViewController.delegate = self
         let nib = UINib(nibName: "ConversationDockCell", bundle: .main)
         albumsCollectionView.register(nib, forCellWithReuseIdentifier: albumCellReuseId)
+        albumsCollectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
         pageScrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView

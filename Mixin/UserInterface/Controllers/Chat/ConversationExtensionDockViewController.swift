@@ -51,6 +51,7 @@ class ConversationExtensionDockViewController: UIViewController {
         super.viewDidLoad()
         let nib = UINib(nibName: "ConversationDockCell", bundle: .main)
         collectionView.register(nib, forCellWithReuseIdentifier: cellReuseId)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         collectionView.allowsMultipleSelection = true
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -126,6 +127,10 @@ extension ConversationExtensionDockViewController: UICollectionViewDelegate {
             removeAllSelections()
             return true
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        return false
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

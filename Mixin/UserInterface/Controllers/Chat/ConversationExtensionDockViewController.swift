@@ -49,6 +49,8 @@ class ConversationExtensionDockViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let nib = UINib(nibName: "ConversationDockCell", bundle: .main)
+        collectionView.register(nib, forCellWithReuseIdentifier: cellReuseId)
         collectionView.allowsMultipleSelection = true
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -90,7 +92,7 @@ extension ConversationExtensionDockViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! ConversationExtensionCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! ConversationDockCell
         if indexPath.section == Section.fixed.rawValue {
             cell.imageView.image = fixedExtensions[indexPath.row].image
             cell.imageView.contentMode = .center

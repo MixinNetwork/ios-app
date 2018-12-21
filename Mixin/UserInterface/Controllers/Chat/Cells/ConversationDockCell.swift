@@ -1,6 +1,6 @@
 import UIKit
 
-class AlbumCollectionViewCell: UICollectionViewCell {
+class ConversationDockCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     

@@ -7,6 +7,7 @@ class TransferAssetSearchController: UISearchController {
         bar.searchBarStyle = .default
         bar.showsCancelButton = false
         bar.setImage(UIImage(named: "ic_search"), for: .search, state: .normal)
+        bar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
         bar.setSearchFieldBackgroundImage(UIImage(named: "Conversation/ic_search_bar_background"), for: .normal)
         bar.setPositionAdjustment(UIOffset(horizontal: 7, vertical: 0), for: .search)
         bar.searchTextPositionAdjustment = UIOffset(horizontal: 6, vertical: 0)

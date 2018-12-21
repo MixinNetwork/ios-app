@@ -430,7 +430,9 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                 if extensionViewController is PhotoConversationExtensionViewController {
                     pickPhotoOrVideoAction()
                 } else {
-                    extensionWrapperHeightConstraint.constant = view.frame.height - view.compatibleSafeAreaInsets.top
+                    let top = max(UIApplication.shared.statusBarFrame.height,
+                                  view.compatibleSafeAreaInsets.top)
+                    extensionWrapperHeightConstraint.constant = view.frame.height - top
                     showExtensionGrabberConstraint.priority = .defaultHigh
                     hideExtensionGrabberConstraint.priority = .defaultLow
                     UIView.animate(withDuration: 0.5) {

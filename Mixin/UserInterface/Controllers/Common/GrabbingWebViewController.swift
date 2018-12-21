@@ -3,6 +3,7 @@ import UIKit
 class GrabbingWebViewController: UIViewController {
     
     @IBOutlet weak var backgroundDimmingView: UIView!
+    @IBOutlet weak var grabberButton: GrabberButton!
     @IBOutlet weak var containerView: UIView!
     
     @IBOutlet weak var contentHeightConstraint: NSLayoutConstraint!
@@ -82,6 +83,7 @@ extension GrabbingWebViewController: UIViewControllerAnimatedTransitioning {
                 UIView.setAnimationCurve(.overdamped)
                 self.view.layoutIfNeeded()
                 self.backgroundDimmingView.alpha = 1
+                self.grabberButton.alpha = 1
             }) { (_) in
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
             }
@@ -92,6 +94,7 @@ extension GrabbingWebViewController: UIViewControllerAnimatedTransitioning {
                 UIView.setAnimationCurve(.overdamped)
                 self.view.layoutIfNeeded()
                 self.backgroundDimmingView.alpha = 0
+                self.grabberButton.alpha = 0
             }) { (_) in
                 self.view.removeFromSuperview()
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)

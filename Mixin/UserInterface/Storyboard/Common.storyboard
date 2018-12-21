@@ -508,7 +508,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nz0-4l-wKH">
                                 <rect key="frame" x="0.0" y="667" width="375" height="647"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8c-HZ-LNB" customClass="GrabberButton" customModule="Mixin" customModuleProvider="target">
+                                    <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8c-HZ-LNB" customClass="GrabberButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
@@ -550,6 +550,7 @@
                         <outlet property="backgroundDimmingView" destination="jJI-3S-hDd" id="4Xb-dh-HvG"/>
                         <outlet property="containerView" destination="71a-bA-UoE" id="tJN-Gc-0QP"/>
                         <outlet property="contentHeightConstraint" destination="BUu-FX-euK" id="Zds-N5-xly"/>
+                        <outlet property="grabberButton" destination="k8c-HZ-LNB" id="eGJ-3q-SDd"/>
                         <outlet property="hideContentConstraint" destination="xTT-UY-vBF" id="UYp-68-N3F"/>
                         <outlet property="showContentConstraint" destination="THb-Nc-C2W" id="h0g-an-4qx"/>
                     </connections>

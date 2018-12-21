@@ -6,7 +6,6 @@ import SwiftMessages
 
 class WebViewController: UIViewController {
     
-    private let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
     private let queue = OperationQueue()
     private let mixinContext = "MixinContext"
     private let disableImageSelectionScriptString = """
@@ -40,6 +39,8 @@ class WebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
+        longPressRecognizer.delegate = self
         webView.addGestureRecognizer(longPressRecognizer)
         webView.uiDelegate = self
         webView.navigationDelegate = self
@@ -119,6 +120,14 @@ class WebViewController: UIViewController {
             }
         }
         queue.addOperation(op)
+    }
+    
+}
+
+extension WebViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
     
 }

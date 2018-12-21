@@ -3,6 +3,7 @@ import UIKit
 protocol ConversationKeyboardManagerDelegate: class {
     func conversationKeyboardManagerScrollViewIsTracking(_ manager: ConversationKeyboardManager) -> Bool
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent)
+    func conversationKeyboardManagerShouldUpdateKeyboardHeight(_ manager: ConversationKeyboardManager) -> Bool
 }
 
 class ConversationKeyboardManager {
@@ -73,7 +74,11 @@ class ConversationKeyboardManager {
     }
     
     private func updateLastKeyboardHeight(keyboardFrame frame: CGRect) {
-        ConversationKeyboardManager.lastKeyboardHeight = max(ScreenSize.minReasonableKeyboardHeight, frame.height - inputAccessoryView.frame.height)
+        guard let delegate = delegate, delegate.conversationKeyboardManagerShouldUpdateKeyboardHeight(self) else {
+            return
+        }
+        ConversationKeyboardManager.lastKeyboardHeight = max(ScreenSize.minReasonableKeyboardHeight,
+                                                             frame.height - inputAccessoryView.frame.height)
     }
     
 }

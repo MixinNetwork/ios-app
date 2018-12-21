@@ -1313,6 +1313,9 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
         guard UIApplication.shared.applicationState == .active, presentedViewController == nil else {
             return
         }
+        if bottomPanelSize == .halfSized {
+            updateBottomPanelsHeight(newFrame.height)
+        }
         if !inputTextView.isFirstResponder, intent == .show, bottomPanelContent == .extension, bottomPanelSize == .halfSized {
             toggleBottomPanelSizeAction(self)
             return
@@ -1370,7 +1373,12 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
             self.tableView.setFloatingHeaderViewsHidden(true, animated: true)
         }
     }
-
+    
+    func conversationKeyboardManagerShouldUpdateKeyboardHeight(_ manager: ConversationKeyboardManager) -> Bool {
+        return UIApplication.shared.applicationState == .active
+            && presentedViewController == nil
+    }
+    
 }
 
 // MARK: - TransferViewControllerDelegate
@@ -1597,8 +1605,7 @@ extension ConversationViewController {
         }
         inputWrapperBottomConstraint.constant = height
         if newSize != .hidden {
-            stickerPanelContainerHeightConstraint.constant = height
-            extensionWrapperHeightConstraint.constant = height - extensionDockContainerHeightConstraint.constant
+            updateBottomPanelsHeight(height)
         }
         let offset = inputWrapperBottomConstraint.constant - lastInputWrapperBottomConstant
         UIView.animate(withDuration: 0.5, animations: {
@@ -1736,6 +1743,11 @@ extension ConversationViewController {
             vc.view.removeFromSuperview()
             vc.removeFromParent()
         }
+    }
+    
+    private func updateBottomPanelsHeight(_ height: CGFloat) {
+        stickerPanelContainerHeightConstraint.constant = height
+        extensionWrapperHeightConstraint.constant = height - extensionDockContainerHeightConstraint.constant
     }
     
 }

@@ -15,10 +15,12 @@ class GrabbingWebViewController: UIViewController {
     private let animationDuration: TimeInterval = 0.5
     
     private var url: URL!
+    private var conversationId = ""
     
-    static func instance(url: URL) -> GrabbingWebViewController {
+    static func instance(url: URL, conversationId: String) -> GrabbingWebViewController {
         let vc = Storyboard.common.instantiateViewController(withIdentifier: "grabbing_web") as! GrabbingWebViewController
         vc.url = url
+        vc.conversationId = conversationId
         vc.modalPresentationStyle = .overCurrentContext 
         vc.transitioningDelegate = vc
         return vc
@@ -32,6 +34,7 @@ class GrabbingWebViewController: UIViewController {
             make.edges.equalToSuperview()
         })
         webViewController.didMove(toParent: self)
+        webViewController.conversationId = conversationId
         webViewController.load(url: url)
         updateContentHeight()
     }

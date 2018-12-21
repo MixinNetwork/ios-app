@@ -354,7 +354,8 @@ class UserView: CornerView {
                     return
                 }
                 weakSelf.superView?.dismissPopupControllerAnimated()
-                WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+                let vc = GrabbingWebViewController.instance(url: url, conversationId: conversationId)
+                UIApplication.currentActivity()?.present(vc, animated: true, completion: nil)
             }
         }
     }
@@ -384,7 +385,8 @@ extension UserView: CollapsingLabelDelegate {
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
         dismissAction(self)
         if !UrlWindow.checkUrl(url: url) {
-            WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+            let vc = GrabbingWebViewController.instance(url: url, conversationId: conversationId)
+            UIApplication.currentActivity()?.present(vc, animated: true, completion: nil)
         }
     }
     

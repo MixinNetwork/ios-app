@@ -34,7 +34,8 @@ extension RecognizeWindow: UITextViewDelegate {
 
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         dismissPopupControllerAnimated()
-        WebWindow.instance(conversationId: "").presentPopupControllerAnimated(url: URL)
+        let vc = GrabbingWebViewController.instance(url: URL, conversationId: "")
+        UIApplication.currentActivity()?.present(vc, animated: true, completion: nil)
         return false
     }
 

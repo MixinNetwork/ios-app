@@ -1840,7 +1840,7 @@ extension ConversationViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        let vc = GrabbingWebViewController.instance(url: url)
+        let vc = GrabbingWebViewController.instance(url: url, conversationId: conversationId)
         present(vc, animated: true, completion: nil)
     }
     

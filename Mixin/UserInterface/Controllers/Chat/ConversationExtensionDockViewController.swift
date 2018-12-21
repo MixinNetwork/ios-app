@@ -75,7 +75,7 @@ class ConversationExtensionDockViewController: UIViewController {
             }
         case .apps:
             if !apps.isEmpty {
-                load(section: Section.apps.rawValue)
+                load(section: Section.fixed.rawValue)
             }
         }
     }

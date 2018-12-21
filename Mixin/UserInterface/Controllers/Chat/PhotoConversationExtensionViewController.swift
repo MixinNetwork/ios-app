@@ -76,6 +76,7 @@ extension PhotoConversationExtensionViewController {
         } else {
             let vc = AssetSendViewController.instance(asset: assets[indexPath.row - 1],
                                                       dataSource: conversationViewController.dataSource)
+            vc.delegate = conversationViewController
             conversationViewController.navigationController?.pushViewController(vc, animated: true)
         }
     }

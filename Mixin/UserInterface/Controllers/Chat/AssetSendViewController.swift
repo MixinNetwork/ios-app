@@ -3,6 +3,10 @@ import WebKit
 import Photos
 import YYImage
 
+protocol AssetSendViewControllerDelegate: class {
+    func assetSendViewControllerWillSendMessage(_ viewController: AssetSendViewController)
+}
+
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
     @IBOutlet weak var photoImageView: YYAnimatedImageView!
@@ -10,7 +14,9 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var sendButton: StateResponsiveButton!
     @IBOutlet weak var dismissButton: BouncingButton!
-
+    
+    weak var delegate: AssetSendViewControllerDelegate?
+    
     private weak var dataSource: ConversationDataSource?
 
     private let rateKey = "rate"
@@ -154,6 +160,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         guard !sendButton.isBusy else {
             return
         }
+        delegate?.assetSendViewControllerWillSendMessage(self)
         sendButton.isBusy = true
         if let asset = self.videoAsset {
             let filename = UUID().uuidString.lowercased()
@@ -241,7 +248,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         navigationController?.popViewController(animated: true)
     }
 
-    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> UIViewController {
+    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> AssetSendViewController {
        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "send_asset") as! AssetSendViewController
         vc.image = image
         vc.asset = asset

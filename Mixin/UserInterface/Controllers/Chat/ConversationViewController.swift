@@ -1176,6 +1176,7 @@ extension ConversationViewController: ImagePickerControllerDelegate {
     
     func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
         let previewViewController = AssetSendViewController.instance(image: image, dataSource: dataSource)
+        previewViewController.delegate = self
         navigationController?.pushViewController(previewViewController, animated: true)
     }
     
@@ -1294,7 +1295,9 @@ extension ConversationViewController: GalleryViewControllerDelegate {
 extension ConversationViewController: PhotoAssetPickerDelegate {
 
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
-        navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, dataSource: dataSource), animated: true)
+        let vc = AssetSendViewController.instance(asset: asset, dataSource: dataSource)
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }
@@ -1375,9 +1378,17 @@ extension ConversationViewController: TransferViewControllerDelegate {
     
     func transferViewControllerWillPresentPaymentConfirmation(_ viewController: TransferViewController) {
         UIView.performWithoutAnimation {
-            setBottomPanelSize(.hidden)
-            setBottomPanelContent(.none)
-            view.layoutIfNeeded()
+            toggleExtensionPanelAction(viewController)
+        }
+    }
+    
+}
+
+extension ConversationViewController: AssetSendViewControllerDelegate {
+    
+    func assetSendViewControllerWillSendMessage(_ viewController: AssetSendViewController) {
+        UIView.performWithoutAnimation {
+            toggleExtensionPanelAction(viewController)
         }
     }
     

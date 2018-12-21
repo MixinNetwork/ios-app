@@ -160,6 +160,7 @@ extension PaymentConfirmationViewController {
                     ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                     WalletUserDefault.shared.lastWithdrawalAddress[assetId] = address.addressId
                 }
+                SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
                 if !self.didPerformBiometricAuth {
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                 }

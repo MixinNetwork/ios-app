@@ -1,6 +1,10 @@
 import UIKit
 import SwiftMessages
 
+protocol TransferViewControllerDelegate: class {
+    func transferViewControllerWillPresentPaymentConfirmation(_ viewController: TransferViewController)
+}
+
 class TransferViewController: UIViewController {
     
     @IBOutlet weak var backgroundButton: UIView!
@@ -13,6 +17,8 @@ class TransferViewController: UIViewController {
     @IBOutlet weak var hideParametersConstraint: NSLayoutConstraint!
     @IBOutlet weak var showConfirmationConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideConfirmationConstraint: NSLayoutConstraint!
+    
+    weak var delegate: TransferViewControllerDelegate?
     
     var context: PaymentContext!
     
@@ -70,6 +76,7 @@ class TransferViewController: UIViewController {
     }
     
     func confirmPayment() {
+        delegate?.transferViewControllerWillPresentPaymentConfirmation(self)
         paymentViewController.context = context
         if paymentViewController.biometricAuthIsAvailable {
             UIApplication.shared.resignFirstResponder()
@@ -78,8 +85,8 @@ class TransferViewController: UIViewController {
         }
         showConfirmationConstraint.priority = .defaultHigh
         hideConfirmationConstraint.priority = .defaultLow
-        self.showParametersConstraint.priority = .defaultLow
-        self.hideParametersConstraint.priority = .defaultHigh
+        showParametersConstraint.priority = .defaultLow
+        hideParametersConstraint.priority = .defaultHigh
         UIView.animate(withDuration: animationDuration, animations: {
             UIView.setAnimationCurve(.overdamped)
             self.view.layoutIfNeeded()

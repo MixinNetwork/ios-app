@@ -734,6 +734,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
         if AccountAPI.shared.account?.has_pin ?? false {
             let vc = TransferViewController.instance(user: user, asset: asset)
+            vc.delegate = self
             present(vc, animated: true, completion: nil)
         } else {
             let vc = WalletPasswordViewController.instance(fromChat:  user, conversationId: conversationId, asset: asset)
@@ -1367,6 +1368,19 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
         }
     }
 
+}
+
+// MARK: - TransferViewControllerDelegate
+extension ConversationViewController: TransferViewControllerDelegate {
+    
+    func transferViewControllerWillPresentPaymentConfirmation(_ viewController: TransferViewController) {
+        UIView.performWithoutAnimation {
+            setBottomPanelSize(.hidden)
+            setBottomPanelContent(.none)
+            view.layoutIfNeeded()
+        }
+    }
+    
 }
 
 // MARK: - UI Related Helpers

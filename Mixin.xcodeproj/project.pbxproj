@@ -63,6 +63,7 @@
 		7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01931FEA281E000EEE4F /* URLExtension.swift */; };
 		7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */; };
 		7B0B01981FEA63FA000EEE4F /* StrangerTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */; };
+		7B0BC83721CCE259003A25C7 /* TransferViewControllerContextAccessible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BC83621CCE259003A25C7 /* TransferViewControllerContextAccessible.swift */; };
 		7B0BE45C21A557B700B91A1E /* WalletAddAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE45B21A557B700B91A1E /* WalletAddAssetCell.swift */; };
 		7B0BE45E21A55E6C00B91A1E /* AddAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE45D21A55E6C00B91A1E /* AddAssetViewController.swift */; };
 		7B0BE46021A5630500B91A1E /* SearchAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */; };
@@ -696,6 +697,7 @@
 		7B0B01931FEA281E000EEE4F /* URLExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtension.swift; sourceTree = "<group>"; };
 		7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StrangerTipsView.xib; sourceTree = "<group>"; };
 		7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrangerTipsView.swift; sourceTree = "<group>"; };
+		7B0BC83621CCE259003A25C7 /* TransferViewControllerContextAccessible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewControllerContextAccessible.swift; sourceTree = "<group>"; };
 		7B0BE45B21A557B700B91A1E /* WalletAddAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAddAssetCell.swift; sourceTree = "<group>"; };
 		7B0BE45D21A55E6C00B91A1E /* AddAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetViewController.swift; sourceTree = "<group>"; };
 		7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAssetCell.swift; sourceTree = "<group>"; };
@@ -1528,6 +1530,7 @@
 			isa = PBXGroup;
 			children = (
 				7BD344FB21C254D200B9A8BF /* TransferViewController.swift */,
+				7B0BC83621CCE259003A25C7 /* TransferViewControllerContextAccessible.swift */,
 				7B316F5521C3A89C008E03B8 /* TransferNavigationViewController.swift */,
 				7B3B6C9521C2775C00F9448A /* TransferParametersViewController.swift */,
 				7B48346A21CA7B3C002B4AFA /* TransferAssetsDisplayViewController.swift */,
@@ -3193,6 +3196,7 @@
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */,
+				7B0BC83721CCE259003A25C7 /* TransferViewControllerContextAccessible.swift in Sources */,
 				DF3C474A1FA0BECA00A07C71 /* DataExtension.swift in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,

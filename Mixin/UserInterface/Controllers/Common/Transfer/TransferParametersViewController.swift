@@ -1,6 +1,6 @@
 import UIKit
 
-class TransferParametersViewController: UIViewController, TransferContextAccessible {
+class TransferParametersViewController: UIViewController, TransferViewControllerContextAccessible {
     
     @IBOutlet weak var iconView: ChainSubscriptedAssetIconView!
     @IBOutlet weak var scrollView: UIScrollView!

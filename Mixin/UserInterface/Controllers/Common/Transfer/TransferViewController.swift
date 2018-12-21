@@ -1,29 +1,6 @@
 import UIKit
 import SwiftMessages
 
-protocol TransferContextAccessible: class {
-    var transferViewController: TransferViewController? { get }
-    var context: PaymentContext? { get set }
-}
-
-extension TransferContextAccessible where Self: UIViewController {
-    
-    var transferViewController: TransferViewController? {
-        assert(navigationController!.parent! is TransferViewController)
-        return navigationController?.parent as? TransferViewController
-    }
-    
-    var context: PaymentContext? {
-        get {
-            return transferViewController?.context
-        }
-        set {
-            transferViewController?.context = newValue
-        }
-    }
-    
-}
-
 class TransferViewController: UIViewController {
     
     @IBOutlet weak var backgroundButton: UIView!

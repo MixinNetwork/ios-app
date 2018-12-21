@@ -1,6 +1,6 @@
 import UIKit
 
-class TransferAssetSelectorViewController: TransferAssetsDisplayViewController, TransferContextAccessible {
+class TransferAssetSelectorViewController: TransferAssetsDisplayViewController, TransferViewControllerContextAccessible {
     
     private lazy var searchResultsController = TransferAssetSearchResultViewController()
     private lazy var searchController = TransferAssetSearchController(searchResultsController: searchResultsController)

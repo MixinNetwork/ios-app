@@ -902,7 +902,7 @@
                                     <segue destination="HUi-An-hzm" kind="embed" identifier="audio_input" id="2Ze-5t-sHg"/>
                                 </connections>
                             </containerView>
-                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZO2-Bt-DBw">
+                            <view opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZO2-Bt-DBw">
                                 <rect key="frame" x="0.0" y="667" width="375" height="346"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lAq-8e-vic" customClass="GrabberButton" customModule="Mixin" customModuleProvider="target">

@@ -1434,8 +1434,10 @@ extension ConversationViewController {
                         return
                     }
                     weakSelf.updateFixedExtensions(ownerUserApp: app)
-                    weakSelf.extensionDockViewController?.apps = apps
-                    weakSelf.extensionDockViewController?.loadDefaultExtensionIfNeeded(section: .apps)
+                    if let dock = weakSelf.extensionDockViewController {
+                        dock.apps = apps
+                        dock.defaultExtensionSection = .apps
+                    }
                 }
             } else {
                 if let conversationId = conversationId {
@@ -1450,8 +1452,10 @@ extension ConversationViewController {
                         return
                     }
                     weakSelf.updateFixedExtensions(ownerUserApp: nil)
-                    weakSelf.extensionDockViewController?.apps = apps
-                    weakSelf.extensionDockViewController?.loadDefaultExtensionIfNeeded(section: .fixed)
+                    if let dock = weakSelf.extensionDockViewController {
+                        dock.apps = apps
+                        dock.defaultExtensionSection = .fixed
+                    }
                 }
             }
         }
@@ -1511,6 +1515,7 @@ extension ConversationViewController {
             toggleBottomPanelSizeButton.isHidden = false
         case .extension:
             toggleBottomPanelSizeButton.isHidden = false
+            extensionDockViewController?.loadDefaultExtensionIfNeeded()
         }
         audioInputContainerView.isHidden = !newContentIsKeyboardOrNone
         UIView.animate(withDuration: 0.5, animations: {

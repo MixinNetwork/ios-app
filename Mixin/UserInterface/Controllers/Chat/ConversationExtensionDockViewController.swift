@@ -20,6 +20,8 @@ class ConversationExtensionDockViewController: UIViewController {
         return parent as! ConversationViewController
     }
     
+    var defaultExtensionSection = Section.fixed
+    
     private let cellReuseId = "extension"
     
     private var lastSelectedApp: App?
@@ -52,23 +54,25 @@ class ConversationExtensionDockViewController: UIViewController {
         collectionView.delegate = self
     }
     
-    func loadDefaultExtensionIfNeeded(section: Section) {
-        guard selectedIndexPaths.isEmpty, !fixedExtensions.isEmpty || !apps.isEmpty else {
+    func loadDefaultExtensionIfNeeded() {
+        guard selectedIndexPaths.isEmpty else {
             return
         }
-        let load = {
-            let indexPath = IndexPath(item: 0, section: section.rawValue)
+        func load(section: Int) {
+            let indexPath = IndexPath(item: 0, section: section)
             self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
             self.collectionView(self.collectionView, didSelectItemAt: indexPath)
         }
-        switch section {
+        switch defaultExtensionSection {
         case .fixed:
-            if !fixedExtensions.isEmpty {
-                load()
+            if fixedExtensions.isEmpty {
+                fallthrough
+            } else {
+                load(section: Section.fixed.rawValue)
             }
         case .apps:
             if !apps.isEmpty {
-                load()
+                load(section: Section.apps.rawValue)
             }
         }
     }

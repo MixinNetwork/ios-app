@@ -19,7 +19,9 @@ class GrabberButton: UIButton {
     override func layoutSubviews() {
         super.layoutSubviews()
         chevronView.frame = bounds
-        maskLayer.path = UIBezierPath(roundedRect: bounds,
+        // Add 1 pt height to mask or the view will be inconsecutive downwards during animation
+        let rect = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height + 1)
+        maskLayer.path = UIBezierPath(roundedRect: rect,
                                       byRoundingCorners: [.topLeft, .topRight],
                                       cornerRadii: cornerRadii).cgPath
     }
@@ -29,6 +31,8 @@ class GrabberButton: UIButton {
         layer.mask = maskLayer
         chevronView.isUserInteractionEnabled = false
         addSubview(chevronView)
+        setNeedsLayout()
+        layoutIfNeeded()
     }
     
 }

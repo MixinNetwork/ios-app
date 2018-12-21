@@ -144,10 +144,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C6p-DA-1sa">
                                 <rect key="frame" x="0.0" y="667" width="375" height="647"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hjv-YS-E4e" userLabel="Background View">
-                                        <rect key="frame" x="0.0" y="29" width="375" height="2"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4hg-n6-QPk" customClass="GrabberButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -171,15 +167,11 @@
                                     <constraint firstItem="3eK-LF-Q8o" firstAttribute="leading" secondItem="C6p-DA-1sa" secondAttribute="leading" id="C9A-sc-0aZ"/>
                                     <constraint firstAttribute="bottom" secondItem="3eK-LF-Q8o" secondAttribute="bottom" id="FBX-AH-xwb"/>
                                     <constraint firstItem="4hg-n6-QPk" firstAttribute="leading" secondItem="C6p-DA-1sa" secondAttribute="leading" id="J8b-bm-4PT"/>
-                                    <constraint firstItem="Hjv-YS-E4e" firstAttribute="leading" secondItem="C6p-DA-1sa" secondAttribute="leading" id="RCy-js-lRo"/>
                                     <constraint firstAttribute="trailing" secondItem="3eK-LF-Q8o" secondAttribute="trailing" id="Z2D-fM-esC"/>
-                                    <constraint firstItem="Hjv-YS-E4e" firstAttribute="top" secondItem="4hg-n6-QPk" secondAttribute="bottom" constant="-1" id="erk-5F-3dz"/>
                                     <constraint firstItem="3eK-LF-Q8o" firstAttribute="top" secondItem="4hg-n6-QPk" secondAttribute="bottom" id="fd0-iK-TnS"/>
                                     <constraint firstAttribute="trailing" secondItem="4hg-n6-QPk" secondAttribute="trailing" id="gxb-q8-Bqf"/>
-                                    <constraint firstItem="Hjv-YS-E4e" firstAttribute="bottom" secondItem="3eK-LF-Q8o" secondAttribute="top" constant="1" id="l6r-oN-5LH"/>
                                     <constraint firstAttribute="height" constant="647" id="qwt-6P-YaS"/>
                                     <constraint firstItem="4hg-n6-QPk" firstAttribute="top" secondItem="C6p-DA-1sa" secondAttribute="top" id="rWb-LV-uUf"/>
-                                    <constraint firstAttribute="trailing" secondItem="Hjv-YS-E4e" secondAttribute="trailing" id="sdQ-XQ-MTl"/>
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dIG-TA-16k">

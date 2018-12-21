@@ -72,6 +72,11 @@ class PaymentConfirmationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        pinField.resignFirstResponder()
+        super.viewWillDisappear(animated)
+    }
+    
     @IBAction func pinEditingChanged(_ sender: Any) {
         guard pinField.text.count == pinField.numberOfDigits else {
             return
@@ -79,6 +84,14 @@ class PaymentConfirmationViewController: UIViewController {
         loadingIndicator.startAnimating()
         pinField.isHidden = true
         pay(pin: pinField.text)
+    }
+    
+    @IBAction func dismissAction(_ sender: Any) {
+        if presentingViewController is TransferViewController {
+            presentingViewController?.dismiss(animated: true, completion: nil)
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {

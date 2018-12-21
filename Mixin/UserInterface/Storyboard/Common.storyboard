@@ -580,7 +580,7 @@
                                             <constraint firstAttribute="height" constant="30" id="HjM-hU-gUM"/>
                                         </constraints>
                                         <connections>
-                                            <action selector="dismissAction:" destination="Scz-Co-WeL" eventType="touchUpInside" id="LZ5-sH-Exl"/>
+                                            <action selector="dismissAction:" destination="ctH-KV-odN" eventType="touchUpInside" id="geO-O9-JgD"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Transfer to Jack" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O4i-yh-ndI">

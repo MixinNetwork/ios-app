@@ -2369,11 +2369,38 @@
         <scene sceneID="S0y-cY-KzM">
             <objects>
                 <viewController storyboardIdentifier="extension_contact" id="Aeh-0M-Q02" customClass="ContactConversationExtensionViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="tFc-6Q-lPN">
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="tFc-6Q-lPN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="298"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="u7d-5q-Eww">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xf9-Jh-ObN">
+                                <rect key="frame" x="0.0" y="-44" width="375" height="44"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" background="Conversation/ic_search_bar_background" translatesAutoresizingMaskIntoConstraints="NO" id="Fh4-Tb-3bU">
+                                        <rect key="frame" x="15" y="6" width="345" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="t1K-2g-2Yw"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="button_title_search"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="searchAction:" destination="Aeh-0M-Q02" eventType="editingChanged" id="uiK-zZ-NEI"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Fh4-Tb-3bU" secondAttribute="trailing" constant="15" id="AjD-t1-x37"/>
+                                    <constraint firstItem="Fh4-Tb-3bU" firstAttribute="leading" secondItem="xf9-Jh-ObN" secondAttribute="leading" constant="15" id="aG6-72-hl3"/>
+                                    <constraint firstItem="Fh4-Tb-3bU" firstAttribute="centerY" secondItem="xf9-Jh-ObN" secondAttribute="centerY" id="gZd-Rp-sEN"/>
+                                    <constraint firstAttribute="height" constant="44" id="uFU-0H-ivz"/>
+                                </constraints>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="u7d-5q-Eww">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="298"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="20" id="fKn-M2-LYb">
@@ -2465,23 +2492,31 @@
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="u7d-5q-Eww" secondAttribute="bottom" id="0TU-kw-N8m"/>
                             <constraint firstItem="u7d-5q-Eww" firstAttribute="leading" secondItem="tFc-6Q-lPN" secondAttribute="leading" id="2Yl-4o-YLy"/>
-                            <constraint firstItem="u7d-5q-Eww" firstAttribute="top" secondItem="tFc-6Q-lPN" secondAttribute="top" id="Caq-vM-ps4"/>
+                            <constraint firstAttribute="trailing" secondItem="xf9-Jh-ObN" secondAttribute="trailing" id="BMn-Km-lea"/>
+                            <constraint firstItem="u7d-5q-Eww" firstAttribute="top" secondItem="tFc-6Q-lPN" secondAttribute="top" priority="750" id="Caq-vM-ps4"/>
                             <constraint firstAttribute="trailing" secondItem="u7d-5q-Eww" secondAttribute="trailing" id="Maz-gE-aMI"/>
+                            <constraint firstItem="xf9-Jh-ObN" firstAttribute="top" secondItem="tFc-6Q-lPN" secondAttribute="top" priority="250" id="OeZ-Y2-38I"/>
+                            <constraint firstItem="xf9-Jh-ObN" firstAttribute="leading" secondItem="tFc-6Q-lPN" secondAttribute="leading" id="gIG-dt-yrS"/>
+                            <constraint firstItem="u7d-5q-Eww" firstAttribute="top" secondItem="xf9-Jh-ObN" secondAttribute="bottom" id="pwL-zR-oZL"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5VM-QM-NhU"/>
                     </view>
                     <size key="freeformSize" width="375" height="298"/>
                     <connections>
                         <outlet property="collectionView" destination="u7d-5q-Eww" id="wrY-zN-nFe"/>
+                        <outlet property="hideSearchBarConstraint" destination="Caq-vM-ps4" id="ojj-Ui-eb8"/>
+                        <outlet property="searchTextField" destination="Fh4-Tb-3bU" id="Mqr-D6-SbS"/>
+                        <outlet property="showSearchBarConstraint" destination="OeZ-Y2-38I" id="huk-dE-F5e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9f7-r1-Rge" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2342" y="-152"/>
+            <point key="canvasLocation" x="2341.5999999999999" y="-152.02398800599701"/>
         </scene>
     </scenes>
     <resources>
         <image name="Conversation/ic_call_action" width="74" height="74"/>
+        <image name="Conversation/ic_search_bar_background" width="32.5" height="32"/>
         <image name="chat_video_mask_bottom" width="375" height="130"/>
         <image name="chat_video_mask_header" width="375" height="76"/>
         <image name="ic_announcement" width="44" height="44"/>

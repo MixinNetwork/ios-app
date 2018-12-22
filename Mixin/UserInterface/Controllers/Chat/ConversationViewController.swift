@@ -435,6 +435,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                     extensionWrapperHeightConstraint.constant = view.frame.height - top
                     showExtensionGrabberConstraint.priority = .defaultHigh
                     hideExtensionGrabberConstraint.priority = .defaultLow
+                    extensionViewController?.layoutForFullsized(true)
                     UIView.animate(withDuration: 0.5) {
                         UIView.setAnimationCurve(.overdamped)
                         self.dismissPanelsButton.alpha = 1
@@ -1596,6 +1597,7 @@ extension ConversationViewController {
             showExtensionWrapperConstraint.priority = .defaultHigh
             showExtensionGrabberConstraint.priority = .defaultLow
             hideExtensionGrabberConstraint.priority = .defaultHigh
+            extensionViewController?.layoutForFullsized(false)
             if !inputTextView.isFirstResponder {
                 view.endEditing(true)
             }

@@ -36,11 +36,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     private var sortedSelections = [Peer]()
     
     private var isSearching: Bool {
-        if let text = searchBoxView.textField.text {
-            return !text.isEmpty
-        } else {
-            return false
-        }
+        return !searchBoxView.textField.text.isEmpty
     }
     
     private var searchBoxViewClass: (UIView & SearchBox).Type {

@@ -8,7 +8,7 @@ func makeInitialViewController() -> UIViewController {
     } else {
         let viewControllers: [UIViewController]
         if AccountUserDefault.shared.hasClockSkew {
-            if let nav = AppDelegate.current.window?.rootViewController as? MixinNavigationController, let viewController = nav.viewControllers.last as? ClockSkewViewController {
+            if let nav = AppDelegate.current.window?.rootViewController as? HomeNavigationController, let viewController = nav.viewControllers.last as? ClockSkewViewController {
                 viewController.checkFailed()
                 return nav
             } else {
@@ -28,7 +28,7 @@ func makeInitialViewController() -> UIViewController {
                                    WalletPasswordViewController.instance(walletPasswordType: .initPinStep1)]
             }
         }
-        let navigationController = MixinNavigationController.instance()
+        let navigationController = HomeNavigationController.instance()
         navigationController.setViewControllers(viewControllers, animated: false)
         return navigationController
     }

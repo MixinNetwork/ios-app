@@ -31,7 +31,7 @@ extension MixinNavigationAnimating {
     
 }
 
-class MixinNavigationController: UINavigationController {
+class HomeNavigationController: UINavigationController {
 
     fileprivate let presentFromBottomAnimator = PresentFromBottomAnimator()
     fileprivate let pushFromLeftAnimator = PushFromLeftAnimator()
@@ -48,13 +48,13 @@ class MixinNavigationController: UINavigationController {
         }
     }
     
-    class func instance() -> MixinNavigationController {
-        return Storyboard.home.instantiateViewController(withIdentifier: "navigation") as! MixinNavigationController
+    class func instance() -> HomeNavigationController {
+        return Storyboard.home.instantiateViewController(withIdentifier: "navigation") as! HomeNavigationController
     }
     
 }
 
-extension MixinNavigationController: UINavigationControllerDelegate {
+extension HomeNavigationController: UINavigationControllerDelegate {
 
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         if operation == .push {
@@ -97,7 +97,7 @@ extension MixinNavigationController: UINavigationControllerDelegate {
 
 }
 
-extension MixinNavigationController: UIGestureRecognizerDelegate {
+extension HomeNavigationController: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard viewControllers.count > 1 else {
@@ -112,7 +112,7 @@ extension MixinNavigationController: UIGestureRecognizerDelegate {
 
 }
 
-extension MixinNavigationController {
+extension HomeNavigationController {
     
     private func checkUser() {
         guard AccountAPI.shared.didLogin else {

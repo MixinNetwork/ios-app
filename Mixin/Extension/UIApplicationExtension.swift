@@ -10,8 +10,8 @@ extension UIApplication {
         return UIApplication.shared.delegate as! AppDelegate
     }
 
-    static func rootNavigationController() -> UINavigationController? {
-        return UIApplication.shared.keyWindow?.rootViewController as? UINavigationController
+    static func rootNavigationController() -> HomeNavigationController? {
+        return UIApplication.shared.keyWindow?.rootViewController as? HomeNavigationController
     }
 
     static func currentActivity() -> UIViewController? {

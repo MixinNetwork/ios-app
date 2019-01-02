@@ -540,7 +540,7 @@
 		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
 		DFB961441FA85F4B00F0922E /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB961431FA85F4B00F0922E /* MyProfileViewController.swift */; };
 		DFB9B3981FAAB8B9009503CE /* PhoneContactHeaderFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB9B3971FAAB8B9009503CE /* PhoneContactHeaderFooter.xib */; };
-		DFB9B39A1FAB01E6009503CE /* MixinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3991FAB01E6009503CE /* MixinNavigationController.swift */; };
+		DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */; };
 		DFB9B3A11FAB2B3E009503CE /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3A01FAB2B3E009503CE /* BaseViewController.swift */; };
 		DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBADC111FD1211E00722929 /* AboutViewController.swift */; };
 		DFBC04A1200397B0008CA56A /* SentSenderKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBC04A0200397B0008CA56A /* SentSenderKey.swift */; };
@@ -1192,7 +1192,7 @@
 		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
 		DFB961431FA85F4B00F0922E /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		DFB9B3971FAAB8B9009503CE /* PhoneContactHeaderFooter.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactHeaderFooter.xib; sourceTree = "<group>"; };
-		DFB9B3991FAB01E6009503CE /* MixinNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinNavigationController.swift; sourceTree = "<group>"; };
+		DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationController.swift; sourceTree = "<group>"; };
 		DFB9B3A01FAB2B3E009503CE /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		DFBADC111FD1211E00722929 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		DFBC04A0200397B0008CA56A /* SentSenderKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentSenderKey.swift; sourceTree = "<group>"; };
@@ -2321,7 +2321,7 @@
 		DFD294301FA5D01900FADAAD /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				DFB9B3991FAB01E6009503CE /* MixinNavigationController.swift */,
+				DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */,
 				DFB9B3A01FAB2B3E009503CE /* BaseViewController.swift */,
 				DFA4573A200AED2D001E10FA /* CommonUserDefault.swift */,
 				7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */,
@@ -2944,7 +2944,7 @@
 				DFF353121FEEB72C00058453 /* Snapshot.swift in Sources */,
 				7B894CD620D24BE2004FA5A8 /* AudioInputLockView.swift in Sources */,
 				7B5FEE402101AD790008321F /* ScreenSize.swift in Sources */,
-				DFB9B39A1FAB01E6009503CE /* MixinNavigationController.swift in Sources */,
+				DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */,
 				273FACB3205FB9A800513327 /* CiphertextMessage.swift in Sources */,
 				DF0E2D2420FDEB2500BB2658 /* Keychain.swift in Sources */,
 				DF503D431FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift in Sources */,

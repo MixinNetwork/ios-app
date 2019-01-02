@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Mixin Navigation Controller-->
+        <!--Home Navigation Controller-->
         <scene sceneID="qAV-Lg-xFU">
             <objects>
-                <navigationController storyboardIdentifier="navigation" navigationBarHidden="YES" id="WzX-DS-F3g" customClass="MixinNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navigation" navigationBarHidden="YES" id="WzX-DS-F3g" customClass="HomeNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="FRb-qT-qP6">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>

@@ -16,7 +16,7 @@ class StickersViewController: StickersCollectionViewController {
     
     func send(sticker: Sticker) {
         conversationViewController?.dataSource?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
-        conversationViewController?.reduceStickerPanelHeightIfMaximized()
+        conversationViewController?.reduceBottomPanelSizeIfFullSized()
         if updateUsedAtAfterSent {
             DispatchQueue.global().async {
                 let newUsedAt = Date().toUTCString()

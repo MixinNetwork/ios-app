@@ -762,7 +762,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
     }
 
-    func reduceStickerPanelHeightIfMaximized() {
+    func reduceBottomPanelSizeIfFullSized() {
         guard bottomPanelSize == .fullSized else {
             return
         }

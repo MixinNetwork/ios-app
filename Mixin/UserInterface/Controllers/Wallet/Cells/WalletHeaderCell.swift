@@ -74,7 +74,7 @@ class WalletHeaderCell: UITableViewCell {
             middleAssetWrapperView.isHidden = false
             rightAssetWrapperView.isHidden = true
             middleAssetSymbolLabel.text = assetPortions[0].symbol
-            middleAssetPercentLabel.text = WalletHeaderCell.percentageFormatter.string(from: 100)
+            middleAssetPercentLabel.text = WalletHeaderCell.percentageFormatter.string(from: 1)
             assetChartView.proportions = [1]
         case 2:
             leftAssetWrapperView.isHidden = false

@@ -126,15 +126,17 @@ extension WalletHeaderCell {
     }()
     
     private func attributedString(usdBalance: Double) -> NSAttributedString? {
+        let zeroInteger = "0"
+        let zeroFraction = "00"
         if usdBalance == 0 {
-            return NSAttributedString(string: "0\(currentDecimalSeparator)00", attributes: usdIntegerAttribute)
+            let str = zeroInteger + currentDecimalSeparator + zeroFraction
+            return NSAttributedString(string: str, attributes: usdIntegerAttribute)
         } else if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
             let components = localizedUSDBalance.components(separatedBy: currentDecimalSeparator)
-            let str = NSMutableAttributedString(string: (components.first ?? "0") + currentDecimalSeparator,
-                                                attributes: usdIntegerAttribute)
-            let fraction = NSAttributedString(string: (components.last ?? "00"),
-                                              attributes: usdFractionAttribute)
-            str.append(fraction)
+            let integer = (components.first ?? zeroInteger) + currentDecimalSeparator
+            let str = NSMutableAttributedString(string: integer, attributes: usdIntegerAttribute)
+            let fraction = components.count < 2 ? zeroFraction : components[1]
+            str.append(NSAttributedString(string: fraction, attributes: usdFractionAttribute))
             return str
         } else {
             return nil

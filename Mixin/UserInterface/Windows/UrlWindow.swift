@@ -181,13 +181,15 @@ extension UrlWindow {
                 }
                 if transfer {
                     weakSelf.dismissPopupControllerAnimated()
-                    let conversationId = ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: AccountAPI.shared.accountUserId)
-                    let vc = TransferViewController_Legacy.instance(user: user, conversationId: conversationId, asset: asset)
-                    if clearNavigationStack {
-                        UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
-                    } else {
-                        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
-                    }
+                    let vc = TransferViewController.instance(user: user, asset: asset)
+                    let navigationController = UIApplication.rootNavigationController()
+                    navigationController?.present(vc, animated: true, completion: {
+                        if clearNavigationStack {
+                            DispatchQueue.main.async {
+                                navigationController?.popToRootViewController(animated: false)
+                            }
+                        }
+                    })
                 } else {
                     weakSelf.presentUser(user: user, clearNavigationStack: clearNavigationStack, refreshUser: refreshUser)
                 }

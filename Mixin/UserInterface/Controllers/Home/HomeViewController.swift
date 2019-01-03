@@ -154,7 +154,8 @@ class HomeViewController: UIViewController {
             WalletUserDefault.shared.initPinInterval()
             navigationController?.pushViewController(WalletViewController.instance(), animated: true)
         } else {
-            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1), animated: true)
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1)
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 

@@ -27,13 +27,13 @@ extension UINavigationController {
         }
         setViewControllers(viewControllers, animated: true)
     }
-
-    func backToChat() {
-        var viewControllers: [UIViewController] = self.viewControllers
-        while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
-            viewControllers.removeLast()
+    
+    func popToConversation(animated: Bool) {
+        guard let chat = viewControllers.first(where: { $0 is ConversationViewController }) else {
+            return
         }
-        setViewControllers(viewControllers, animated: true)
+        popToViewController(chat, animated: animated)
     }
+    
 }
 

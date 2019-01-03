@@ -1313,7 +1313,7 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
     }
     
     func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
-        guard UIApplication.shared.applicationState == .active, presentedViewController == nil else {
+        guard UIApplication.shared.applicationState == .active, navigationController?.topViewController == self, presentedViewController == nil else {
             return
         }
         if bottomPanelSize == .halfSized {

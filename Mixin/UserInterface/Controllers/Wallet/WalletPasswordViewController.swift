@@ -250,10 +250,16 @@ class WalletPasswordViewController: UIViewController {
             guard let weakSelf = self else {
                 return
             }
+            let navigationController = weakSelf.navigationController
             if let transferData = weakSelf.transferData {
-                self?.navigationController?.pushViewController(withBackChat: TransferViewController_Legacy.instance(user: transferData.user, conversationId: transferData.conversationId, asset: transferData.asset))
+                let vc = TransferViewController.instance(user: transferData.user, asset: transferData.asset)
+                navigationController?.present(vc, animated: true, completion: {
+                    DispatchQueue.main.async {
+                        navigationController?.popToConversation(animated: false)
+                    }
+                })
             } else {
-                self?.navigationController?.pushViewController(withBackRoot: WalletViewController.instance())
+                navigationController?.pushViewController(withBackRoot: WalletViewController.instance())
             }
         })
     }

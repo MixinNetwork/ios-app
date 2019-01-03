@@ -288,7 +288,11 @@ extension PayView: PinFieldDelegate {
             }
             weakSelf.processing = false
             weakSelf.superView?.dismissPopupControllerAnimated()
-            if let lastViewController = UIApplication.rootNavigationController()?.viewControllers.last, lastViewController is TransferViewController_Legacy || lastViewController is WithdrawalViewController || lastViewController is CameraViewController {
+            var topViewController = UIApplication.rootNavigationController()?.topViewController
+            if let vc = topViewController?.presentedViewController {
+                topViewController = vc
+            }
+            if let topViewController = topViewController, topViewController is TransferViewController || topViewController is WithdrawalViewController || topViewController is CameraViewController {
                 UIApplication.rootNavigationController()?.popViewController(animated: true)
             }
         }

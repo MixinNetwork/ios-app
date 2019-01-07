@@ -511,8 +511,10 @@
                                     <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8c-HZ-LNB" customClass="GrabberButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <gestureRecognizers/>
                                         <connections>
                                             <action selector="dismissAction:" destination="RZh-AB-76Z" eventType="touchUpInside" id="9GE-2Z-fNY"/>
+                                            <outletCollection property="gestureRecognizers" destination="WlC-Jz-tCo" appends="YES" id="l0S-dd-iLf"/>
                                         </connections>
                                     </button>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="71a-bA-UoE">
@@ -556,6 +558,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YpT-l0-uzd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="WlC-Jz-tCo">
+                    <connections>
+                        <action selector="panAction:" destination="RZh-AB-76Z" id="a7x-h6-itA"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="904.79999999999995" y="70.614692653673174"/>
         </scene>
@@ -856,7 +863,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_arrow_right" width="8" height="14"/>
+        <image name="ic_arrow_right" width="10" height="18"/>
         <image name="ic_pay_success" width="42" height="42"/>
         <image name="ic_titlebar_back" width="44" height="44"/>
     </resources>

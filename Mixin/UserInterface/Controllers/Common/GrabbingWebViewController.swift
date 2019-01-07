@@ -49,6 +49,34 @@ class GrabbingWebViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func panAction(_ sender: UIPanGestureRecognizer) {
+        let shouldDismiss = sender.location(in: view).y > view.bounds.height / 2
+            || sender.velocity(in: view).y > 1000
+        switch sender.state {
+        case .began:
+            grabberButton.chevronView.isDiagonal = false
+        case .changed:
+            let translation = sender.translation(in: view)
+            showContentConstraint.constant -= translation.y / 2
+            if shouldDismiss {
+                dismiss(animated: true, completion: nil)
+            }
+            sender.setTranslation(.zero, in: view)
+        case .ended:
+            grabberButton.chevronView.isDiagonal = true
+            if shouldDismiss {
+                dismiss(animated: true, completion: nil)
+            } else {
+                showContentConstraint.constant = 0
+                UIView.animate(withDuration: 0.3) {
+                    self.view.layoutIfNeeded()
+                }
+            }
+        default:
+            break
+        }
+    }
+    
     private func updateContentHeight() {
         let topDistance = max(UIApplication.shared.statusBarFrame.height,
                               view.compatibleSafeAreaInsets.top)

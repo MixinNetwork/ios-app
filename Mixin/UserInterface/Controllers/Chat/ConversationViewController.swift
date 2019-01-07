@@ -302,7 +302,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             }
             updateTableViewContentInset()
             dataSource.initData {
-                self.updateAccessoryButtons(animated: false)
+                self.updateAccessoryButtons(showForcibly: false, animated: false)
                 self.stickerInputViewController.reload()
                 DispatchQueue.global().async { [weak self] in
                     self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
@@ -719,6 +719,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             return
         }
         unreadBadgeValue += count
+        updateAccessoryButtons(showForcibly: true, animated: true)
     }
     
     @objc func didChangeStatusBarFrame(_ notification: Notification) {
@@ -1011,7 +1012,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
 extension ConversationViewController: UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        updateAccessoryButtons(animated: !isAppearanceAnimating)
+        updateAccessoryButtons(showForcibly: false, animated: !isAppearanceAnimating)
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -1503,11 +1504,13 @@ extension ConversationViewController {
         }
     }
     
-    private func updateAccessoryButtons(animated: Bool) {
+    private func updateAccessoryButtons(showForcibly: Bool, animated: Bool) {
         let position = tableView.contentSize.height - tableView.contentOffset.y - tableView.bounds.height
         let didReachThreshold = position > showScrollToBottomButtonThreshold
             && tableView.contentOffset.y > tableView.contentInset.top
-        let shouldShowScrollToBottomButton = didReachThreshold || !dataSource.didLoadLatestMessage
+        let shouldShowScrollToBottomButton = showForcibly
+            || didReachThreshold
+            || !dataSource.didLoadLatestMessage
         if scrollToBottomWrapperView.alpha < 0.1 && shouldShowScrollToBottomButton {
             scrollToBottomWrapperHeightConstraint.constant = 48
             if animated {

@@ -36,6 +36,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var extensionWrapperView: UIView!
     @IBOutlet weak var extensionContainerView: UIView!
     
+    @IBOutlet var interactiveDismissPanelPanRecognizer: UIPanGestureRecognizer!
+    
     @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
@@ -221,6 +223,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
+        interactiveDismissPanelPanRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
         tableView.dataSource = self
         tableView.delegate = self
@@ -639,6 +642,39 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         }
     }
     
+    @IBAction func interactiveDismissPanelAction(_ sender: UIPanGestureRecognizer) {
+        switch sender.state {
+        case .changed:
+            let location = sender.location(in: bottomPanelWrapperView)
+            if bottomPanelWrapperView.bounds.contains(location) || inputWrapperBottomConstraint.constant < lastInputWrapperBottomConstant {
+                let y = sender.translation(in: view).y
+                if inputWrapperBottomConstraint.constant - y < lastInputWrapperBottomConstant {
+                    inputWrapperBottomConstraint.constant -= y
+                    showExtensionWrapperConstraint.constant -= y
+                } else {
+                    inputWrapperBottomConstraint.constant = lastInputWrapperBottomConstant
+                    showExtensionWrapperConstraint.constant = 0
+                }
+            }
+            sender.setTranslation(.zero, in: view)
+        case .ended:
+            let location = sender.location(in: bottomPanelWrapperView)
+            let verticalVelocity = sender.velocity(in: view).y
+            let shouldDismissByVelocity = verticalVelocity > 700 && location.y > -1
+            let shouldDismissByPosition = bottomPanelWrapperView.frame.origin.y > view.bounds.height - lastInputWrapperBottomConstant
+            let shouldDismiss = verticalVelocity > 0
+                && (shouldDismissByVelocity || shouldDismissByPosition)
+            if shouldDismiss {
+                setBottomPanelSize(.hidden)
+                setBottomPanelContent(.none)
+            } else {
+                setBottomPanelSize(bottomPanelSize)
+            }
+        default:
+            break
+        }
+    }
+    
     @objc func showReportMenuAction() {
         guard !self.conversationId.isEmpty else {
             return
@@ -828,13 +864,28 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
 // MARK: - UIGestureRecognizerDelegate
 extension ConversationViewController: UIGestureRecognizerDelegate {
     
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer == interactiveDismissPanelPanRecognizer {
+            return bottomPanelContent != .keyboard
+        } else {
+            return true
+        }
+    }
+    
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        guard gestureRecognizer == tapRecognizer else {
+            return true
+        }
         if isShowingMenu {
             return true
         }
         if let view = touch.view as? TextMessageLabel {
             return !view.canResponseTouch(at: touch.location(in: view))
         }
+        return true
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
     
@@ -1631,6 +1682,7 @@ extension ConversationViewController {
                 self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
             }
         }) { (_) in
+            self.showExtensionWrapperConstraint.constant = 0
             self.lastInputWrapperBottomConstant = self.inputWrapperBottomConstraint.constant
             self.bottomPanelSize = newSize
         }

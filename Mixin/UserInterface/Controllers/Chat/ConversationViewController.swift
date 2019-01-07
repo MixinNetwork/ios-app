@@ -80,6 +80,13 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             }
         }
     }
+    var shouldScrollToNewIncomingMessage: Bool {
+        let isTopViewController = navigationController == nil
+            || navigationController?.topViewController == self
+        return isTopViewController
+            && presentedViewController == nil
+            && bottomPanelSize != .fullSized
+    }
     
     private enum SegueId {
         static let audioInput = "audio_input"
@@ -226,7 +233,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         connectionHintView.delegate = self
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
-        dataSource.tableView = tableView
         updateExtensions()
         updateStrangerTipsView()
         updateBottomView()
@@ -798,7 +804,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
-        let dataSource = ConversationDataSource(conversation: conversation, highlight: highlight)
+        let dataSource = ConversationDataSource(viewController: vc, conversation: conversation, highlight: highlight)
         if dataSource.category == .contact {
             vc.ownerUser = UserDAO.shared.getUser(userId: dataSource.conversation.ownerId)
         }
@@ -812,7 +818,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: ownerUser.userId)
         let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
             ?? ConversationItem(ownerUser: ownerUser)
-        vc.dataSource = ConversationDataSource(conversation: conversation)
+        vc.dataSource = ConversationDataSource(viewController: vc, conversation: conversation)
         return vc
     }
     

@@ -20,7 +20,8 @@ class ConversationDataSource {
     
     var ownerUser: UserItem?
     var firstUnreadMessageId: String?
-    weak var tableView: ConversationTableView?
+    
+    weak var viewController: ConversationViewController!
     
     private let windowRect = AppDelegate.current.window!.bounds
     private let numberOfMessagesOnPaging = 100
@@ -46,6 +47,9 @@ class ConversationDataSource {
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
     private var pendingChanges = [ConversationChange]()
+    private var tableView: ConversationTableView? {
+        return viewController.tableView
+    }
     private var tableViewContentInset: UIEdgeInsets {
         return performSynchronouslyOnMainThread {
             self.tableView?.contentInset ?? .zero
@@ -69,7 +73,8 @@ class ConversationDataSource {
     }
     
     // MARK: - Interface
-    init(conversation: ConversationItem, highlight: Highlight? = nil, ownerUser: UserItem? = nil) {
+    init(viewController: ConversationViewController, conversation: ConversationItem, highlight: Highlight? = nil, ownerUser: UserItem? = nil) {
+        self.viewController = viewController
         self.conversation = conversation
         self.highlight = highlight
         self.ownerUser = ownerUser
@@ -957,7 +962,8 @@ extension ConversationDataSource {
             }
             tableView.endUpdates()
             UIView.setAnimationsEnabled(true)
-            let shouldScrollToNewMessage = !tableView.isTracking
+            let shouldScrollToNewMessage = viewController.shouldScrollToNewIncomingMessage
+                && !tableView.isTracking
                 && !tableView.isDecelerating
                 && isLastCell
                 && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)

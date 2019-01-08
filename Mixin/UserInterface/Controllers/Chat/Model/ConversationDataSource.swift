@@ -962,11 +962,11 @@ extension ConversationDataSource {
             }
             tableView.endUpdates()
             UIView.setAnimationsEnabled(true)
-            let shouldScrollToNewMessage = viewController.shouldScrollToNewIncomingMessage
-                && !tableView.isTracking
-                && !tableView.isDecelerating
+            let shouldScrollBecausePosition = viewController.shouldScrollToNewIncomingMessage
                 && isLastCell
-                && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)
+                && lastMessageIsVisibleBeforeInsertion
+            let shouldScrollToNewMessage = (!tableView.isTracking && !tableView.isDecelerating)
+                && (shouldScrollBecausePosition || messageIsSentByMe)
             if shouldScrollToNewMessage {
                 tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             } else {

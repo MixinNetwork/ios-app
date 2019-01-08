@@ -98,7 +98,11 @@ class PaymentConfirmationViewController: UIViewController {
         guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
-        keyboardPlaceholderHeightConstraint.constant = AppDelegate.current.window!.frame.height - endFrame.origin.y
+        updateKeyboardPlaceHolderHeight(keyboardFrame: endFrame)
+    }
+    
+    func updateKeyboardPlaceHolderHeight(keyboardFrame: CGRect) {
+        keyboardPlaceholderHeightConstraint.constant = AppDelegate.current.window!.frame.height - keyboardFrame.origin.y
         updatePreferredContentSize()
         view.layoutIfNeeded()
     }

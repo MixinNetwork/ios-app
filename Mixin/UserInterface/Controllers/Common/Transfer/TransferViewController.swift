@@ -25,6 +25,7 @@ class TransferViewController: UIViewController {
     private let animationDuration: TimeInterval = 0.5
     
     private var parametersViewController: TransferParametersViewController!
+    private var keyboardFrame = CGRect.zero
     
     private lazy var paymentViewController: PaymentConfirmationViewController = {
         let vc = PaymentConfirmationViewController.instance()
@@ -38,6 +39,10 @@ class TransferViewController: UIViewController {
         return vc
     }()
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     static func instance(user: UserItem, asset: AssetItem?) -> TransferViewController {
         let vc = Storyboard.common.instantiateViewController(withIdentifier: "transfer") as! TransferViewController
         vc.modalPresentationStyle = .overCurrentContext
@@ -49,6 +54,7 @@ class TransferViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateWrapperViewsHeight()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -75,8 +81,16 @@ class TransferViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
+        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        keyboardFrame = endFrame
+    }
+    
     func confirmPayment() {
         delegate?.transferViewControllerWillPresentPaymentConfirmation(self)
+        paymentViewController.updateKeyboardPlaceHolderHeight(keyboardFrame: keyboardFrame)
         paymentViewController.context = context
         if paymentViewController.biometricAuthIsAvailable {
             UIApplication.shared.resignFirstResponder()

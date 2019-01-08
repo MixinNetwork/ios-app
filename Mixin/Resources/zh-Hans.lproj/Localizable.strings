@@ -29,6 +29,7 @@
 "action_filter" = "筛选";
 "action_skip" = "跳过";
 "action_deauthorize" = "取消授权";
+"action_open_settings" = "打开设置";
 "menu_delete" = "删除";
 "no_result" = "未找到相关内容";
 

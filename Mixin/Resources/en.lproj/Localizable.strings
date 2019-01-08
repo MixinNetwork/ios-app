@@ -29,6 +29,7 @@
 "action_filter" = "Filter";
 "action_skip" = "Skip";
 "action_deauthorize" = "Deauthorize";
+"action_open_settings" = "Open Settings";
 "menu_delete" = "Delete";
 "no_result" = "No result";
 

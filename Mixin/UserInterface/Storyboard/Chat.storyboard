@@ -2375,6 +2375,59 @@
             </objects>
             <point key="canvasLocation" x="2342" y="179"/>
         </scene>
+        <!--Photo Conversation Extension View Controller-->
+        <scene sceneID="OjA-Jg-UAq">
+            <objects>
+                <viewController storyboardIdentifier="extension_photo" id="SLO-ba-HdM" customClass="PhotoConversationExtensionViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xG3-3a-Z4w">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="298"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="q4E-2n-O3j">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="298"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="AEo-BD-bUs">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HHN-en-gBj">
+                                <rect key="frame" x="115.5" y="133" width="144" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <inset key="contentEdgeInsets" minX="20" minY="6" maxX="20" maxY="6"/>
+                                <state key="normal" title="Open Settings"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_open_settings"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="requestPermissionAction:" destination="SLO-ba-HdM" eventType="touchUpInside" id="FCV-vR-yCJ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="q4E-2n-O3j" firstAttribute="leading" secondItem="xG3-3a-Z4w" secondAttribute="leading" id="4Ac-3w-QQo"/>
+                            <constraint firstItem="HHN-en-gBj" firstAttribute="centerX" secondItem="P2e-KZ-Kwc" secondAttribute="centerX" id="PK3-n5-cMk"/>
+                            <constraint firstAttribute="trailing" secondItem="q4E-2n-O3j" secondAttribute="trailing" id="R89-qR-BNk"/>
+                            <constraint firstItem="q4E-2n-O3j" firstAttribute="top" secondItem="xG3-3a-Z4w" secondAttribute="top" id="S4y-bf-Xkj"/>
+                            <constraint firstItem="HHN-en-gBj" firstAttribute="centerY" secondItem="P2e-KZ-Kwc" secondAttribute="centerY" id="gG5-Ek-hNH"/>
+                            <constraint firstAttribute="bottom" secondItem="q4E-2n-O3j" secondAttribute="bottom" id="pdi-9b-WGK"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="P2e-KZ-Kwc"/>
+                    </view>
+                    <size key="freeformSize" width="375" height="298"/>
+                    <connections>
+                        <outlet property="collectionView" destination="q4E-2n-O3j" id="s3Q-of-Zb7"/>
+                        <outlet property="requestPermissionButton" destination="HHN-en-gBj" id="iIg-i6-ENc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EMa-8s-Pt9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3030" y="-152"/>
+        </scene>
         <!--Contact Conversation Extension View Controller-->
         <scene sceneID="S0y-cY-KzM">
             <objects>

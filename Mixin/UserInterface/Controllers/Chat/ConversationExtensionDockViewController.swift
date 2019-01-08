@@ -33,7 +33,7 @@ class ConversationExtensionDockViewController: UIViewController {
     }
     private var webViewControllerDidLoaded = false
     
-    private lazy var photoViewController = PhotoConversationExtensionViewController()
+    private lazy var photoViewController = PhotoConversationExtensionViewController.instance()
     private lazy var callViewController = CallConversationExtensionViewController.instance()
     private lazy var contactViewController = ContactConversationExtensionViewController.instance()
     private lazy var webViewController: WebViewController = {

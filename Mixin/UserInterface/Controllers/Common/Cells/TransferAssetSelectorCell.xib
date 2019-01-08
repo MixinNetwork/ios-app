@@ -39,13 +39,13 @@
                                 <rect key="frame" x="0.0" y="26" width="284" height="17"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="6.66" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F5c-ny-jTp">
-                                        <rect key="frame" x="0.0" y="0.0" width="29.5" height="17"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="29" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                         <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="BALANCE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gwe-oF-gUH">
-                                        <rect key="frame" x="33.5" y="0.0" width="250.5" height="17"/>
+                                        <rect key="frame" x="33" y="0.0" width="251" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>

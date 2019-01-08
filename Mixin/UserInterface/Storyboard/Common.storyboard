@@ -521,7 +521,7 @@
                                         </connections>
                                     </button>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="71a-bA-UoE">
-                                        <rect key="frame" x="0.0" y="30" width="375" height="617"/>
+                                        <rect key="frame" x="0.0" y="29.5" width="375" height="617.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </containerView>
                                 </subviews>
@@ -531,7 +531,7 @@
                                     <constraint firstItem="k8c-HZ-LNB" firstAttribute="top" secondItem="Nz0-4l-wKH" secondAttribute="top" id="LCc-I6-rgI"/>
                                     <constraint firstItem="71a-bA-UoE" firstAttribute="leading" secondItem="Nz0-4l-wKH" secondAttribute="leading" id="Okn-Ka-4Rb"/>
                                     <constraint firstAttribute="trailing" secondItem="71a-bA-UoE" secondAttribute="trailing" id="Uav-oj-Zg0"/>
-                                    <constraint firstItem="71a-bA-UoE" firstAttribute="top" secondItem="k8c-HZ-LNB" secondAttribute="bottom" id="lD1-bE-c6g"/>
+                                    <constraint firstItem="71a-bA-UoE" firstAttribute="top" secondItem="k8c-HZ-LNB" secondAttribute="bottom" constant="-0.5" id="lD1-bE-c6g"/>
                                     <constraint firstAttribute="bottom" secondItem="71a-bA-UoE" secondAttribute="bottom" id="nm4-5l-1ch"/>
                                     <constraint firstItem="k8c-HZ-LNB" firstAttribute="leading" secondItem="Nz0-4l-wKH" secondAttribute="leading" id="yOL-6u-cwj"/>
                                     <constraint firstAttribute="trailing" secondItem="k8c-HZ-LNB" secondAttribute="trailing" id="yZP-vM-NJ7"/>

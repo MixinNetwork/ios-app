@@ -108,8 +108,12 @@ class TransferViewController: UIViewController {
     }
     
     private func updateWrapperViewsHeight() {
-        let windowHeight = AppDelegate.current.window!.frame.height
-        let height = windowHeight - view.compatibleSafeAreaInsets.top
+        var height = view.frame.height
+        if #available(iOS 11.0, *) {
+            height -= view.safeAreaInsets.top
+        } else {
+            height -= UIApplication.shared.statusBarFrame.height
+        }
         parametersGrabbingWrapperViewHeightConstraint.constant = height
     }
     

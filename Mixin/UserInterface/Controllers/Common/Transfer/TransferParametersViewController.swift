@@ -13,6 +13,8 @@ class TransferParametersViewController: UIViewController, TransferViewController
     @IBOutlet weak var changeAssetButton: UIButton!
     @IBOutlet weak var continueButton: UIButton!
     
+    @IBOutlet weak var showContinueButtonConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideContinueButtonConstraint: NSLayoutConstraint!
     @IBOutlet weak var continueButtonBottomConstraint: NSLayoutConstraint!
     
     private let placeHolderFont = UIFont.systemFont(ofSize: 14)
@@ -68,6 +70,8 @@ class TransferParametersViewController: UIViewController, TransferViewController
         let amountIsEmpty = amountTextField.text.isEmpty
         amountTextField.font = amountIsEmpty ? placeHolderFont : amountFont
         continueButton.isHidden = amountIsEmpty
+        showContinueButtonConstraint.priority = amountIsEmpty ? .defaultLow : .defaultHigh
+        hideContinueButtonConstraint.priority = amountIsEmpty ? .defaultHigh : .defaultLow
     }
     
     @IBAction func continueAction(_ sender: Any) {

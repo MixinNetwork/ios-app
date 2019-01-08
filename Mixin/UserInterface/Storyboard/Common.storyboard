@@ -462,8 +462,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="3o0-ZJ-f12" firstAttribute="trailing" secondItem="DSp-Ua-HGJ" secondAttribute="trailing" id="94s-MD-BnL"/>
+                            <constraint firstItem="CSr-uR-TxE" firstAttribute="bottom" secondItem="DSp-Ua-HGJ" secondAttribute="bottom" priority="750" id="G60-fE-JyK"/>
                             <constraint firstItem="3o0-ZJ-f12" firstAttribute="trailing" secondItem="CSr-uR-TxE" secondAttribute="trailing" id="UyZ-ra-5sz"/>
-                            <constraint firstAttribute="bottom" secondItem="CSr-uR-TxE" secondAttribute="bottom" id="ahu-5g-0SB"/>
+                            <constraint firstItem="DSp-Ua-HGJ" firstAttribute="top" secondItem="CSr-uR-TxE" secondAttribute="bottom" priority="250" id="fCY-bf-qYo"/>
                             <constraint firstItem="3o0-ZJ-f12" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="DSp-Ua-HGJ" secondAttribute="bottom" id="ilG-xI-wvP"/>
                             <constraint firstItem="CSr-uR-TxE" firstAttribute="leading" secondItem="3o0-ZJ-f12" secondAttribute="leading" id="ilr-CY-Jek"/>
                             <constraint firstAttribute="bottom" secondItem="DSp-Ua-HGJ" secondAttribute="bottom" priority="750" id="jiw-2e-Ebf"/>
@@ -483,10 +484,12 @@
                         <outlet property="contentView" destination="QFr-Cf-NAr" id="QTx-0T-Vbm"/>
                         <outlet property="continueButton" destination="DSp-Ua-HGJ" id="4Xh-bz-3Ip"/>
                         <outlet property="continueButtonBottomConstraint" destination="jiw-2e-Ebf" id="voV-Gv-pTe"/>
+                        <outlet property="hideContinueButtonConstraint" destination="G60-fE-JyK" id="p4C-aK-WSL"/>
                         <outlet property="iconView" destination="Q3B-QA-cyd" id="NMW-RZ-E5A"/>
                         <outlet property="loadingIndicator" destination="7J1-ZS-WH7" id="XRg-bc-Qdr"/>
                         <outlet property="memoTextField" destination="wX3-tZ-VT2" id="5Ba-za-FyE"/>
                         <outlet property="scrollView" destination="CSr-uR-TxE" id="DCn-e0-Alq"/>
+                        <outlet property="showContinueButtonConstraint" destination="fCY-bf-qYo" id="NhJ-14-t1W"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s3Q-CZ-tO4" userLabel="First Responder" sceneMemberID="firstResponder"/>

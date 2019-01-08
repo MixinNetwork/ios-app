@@ -1,6 +1,6 @@
 import Foundation
 
-struct Fee: Codable, NumberStringLocalizable {
+struct Fee: Codable {
     let type: String
     let assetId: String
     let amount: String
@@ -12,6 +12,6 @@ struct Fee: Codable, NumberStringLocalizable {
     }
     
     var localizedAmount: String {
-        return localizedNumberString(amount)
+        return decimalSeparatorLocalized(amount)
     }
 }

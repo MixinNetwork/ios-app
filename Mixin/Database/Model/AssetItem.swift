@@ -1,7 +1,7 @@
 import Foundation
 import WCDBSwift
 
-struct AssetItem: TableCodable, NumberStringLocalizable, AssetKeyConvertible {
+struct AssetItem: TableCodable, AssetKeyConvertible {
 
     let assetId: String
     let type: String
@@ -44,11 +44,11 @@ struct AssetItem: TableCodable, NumberStringLocalizable, AssetKeyConvertible {
 extension AssetItem {
     
     var localizedPriceUsd: String {
-        return localizedNumberString(priceUsd)
+        return decimalSeparatorLocalized(priceUsd)
     }
     
     var localizedBalance: String {
-        return localizedNumberString(balance)
+        return CurrencyFormatter.localizedString(from: balance, format: .precision, sign: .never) ?? balance
     }
     
     var localizedUSDBalance: String {

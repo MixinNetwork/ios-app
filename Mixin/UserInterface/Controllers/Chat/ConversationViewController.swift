@@ -18,6 +18,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     @IBOutlet weak var bottomPanelWrapperView: UIView!
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var toggleBottomPanelButton: UIButton!
+    @IBOutlet weak var botButton: UIButton!
     @IBOutlet weak var inputTextView: InputTextView!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var toggleBottomPanelSizeButton: UIButton!
@@ -101,6 +102,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     private(set) var ownerUser: UserItem?
     
+    private var ownerUserApp: App?
     private var participants = [Participant]()
     private var role = ""
     private var asset: AssetItem?
@@ -456,6 +458,14 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         } else if bottomPanelSize == .fullSized {
             setBottomPanelSize(.halfSized)
         }
+    }
+    
+    @IBAction func openBotAction(_ sender: Any) {
+        guard let homeUri = ownerUserApp?.homeUri, let url = URL(string: homeUri) else {
+            return
+        }
+        let vc = GrabbingWebViewController.instance(url: url, conversationId: conversationId)
+        present(vc, animated: true, completion: nil)
     }
     
     @IBAction func sendTextMessageAction(_ sender: Any) {
@@ -1498,8 +1508,7 @@ extension ConversationViewController {
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         unblockButton.isHidden = !isBlocked
         audioInputContainerView.isHidden = isBlocked || bottomPanelContent == .sticker
-        let bottomPanelButtonImage = user.isBot ? UIImage(named: "ic_chat_bot") : UIImage(named: "ic_chat_more")
-        toggleBottomPanelButton.setImage(bottomPanelButtonImage, for: .normal)
+        botButton.isHidden = !user.isBot
     }
     
     private func updateFixedExtensions(ownerUserApp: App?) {
@@ -1519,21 +1528,18 @@ extension ConversationViewController {
         let conversationId = dataSource.category == .group ? self.conversationId : nil
         let ownerUserId = ownerUser?.userId
         DispatchQueue.global().async { [weak self] in
-            let apps: [App]
             if let ownerUserId = ownerUserId, let app = AppDAO.shared.getApp(ofUserId: ownerUserId) {
                 // owner user is a bot
-                apps = [app]
                 DispatchQueue.main.sync {
                     guard let weakSelf = self else {
                         return
                     }
+                    weakSelf.ownerUserApp = app
                     weakSelf.updateFixedExtensions(ownerUserApp: app)
-                    if let dock = weakSelf.extensionDockViewController {
-                        dock.apps = apps
-                        dock.defaultExtensionSection = .apps
-                    }
+                    weakSelf.extensionDockViewController?.apps = []
                 }
             } else {
+                let apps: [App]
                 if let conversationId = conversationId {
                     // group
                     apps = AppDAO.shared.getConversationApps(conversationId: conversationId)
@@ -1545,11 +1551,9 @@ extension ConversationViewController {
                     guard let weakSelf = self else {
                         return
                     }
+                    weakSelf.ownerUserApp = nil
                     weakSelf.updateFixedExtensions(ownerUserApp: nil)
-                    if let dock = weakSelf.extensionDockViewController {
-                        dock.apps = apps
-                        dock.defaultExtensionSection = .fixed
-                    }
+                    weakSelf.extensionDockViewController?.apps = apps
                 }
             }
         }

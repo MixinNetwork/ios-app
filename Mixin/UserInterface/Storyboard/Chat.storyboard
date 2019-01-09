@@ -743,17 +743,34 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IAk-sA-T54">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="55"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JPe-wH-0KV" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dU1-rL-A6s">
                                                         <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JPe-wH-0KV" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" priority="999" constant="55" id="SUR-Q6-eoj"/>
+                                                                </constraints>
+                                                                <state key="normal" image="ic_chat_more"/>
+                                                                <connections>
+                                                                    <action selector="toggleExtensionPanelAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="G74-WU-pfZ"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQv-zE-LLy" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="55"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" priority="999" constant="55" id="CMD-9c-waX"/>
+                                                                </constraints>
+                                                                <state key="normal" title="Button" image="ic_chat_bot"/>
+                                                                <connections>
+                                                                    <action selector="openBotAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="amJ-Gg-9s8"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="55" id="SUR-Q6-eoj"/>
-                                                            <constraint firstAttribute="height" constant="55" id="fbI-zI-tcq"/>
+                                                            <constraint firstAttribute="height" constant="55" id="kzk-GO-wpY"/>
                                                         </constraints>
-                                                        <state key="normal" image="ic_chat_more"/>
-                                                        <connections>
-                                                            <action selector="toggleExtensionPanelAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="G74-WU-pfZ"/>
-                                                        </connections>
-                                                    </button>
+                                                    </stackView>
                                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="LmC-o2-ndc" customClass="InputTextView" customModule="Mixin" customModuleProvider="target">
                                                         <rect key="frame" x="55" y="9.5" width="265" height="36"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -810,17 +827,17 @@
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="JPe-wH-0KV" secondAttribute="bottom" id="6yB-DJ-ahO"/>
                                                     <constraint firstItem="LmC-o2-ndc" firstAttribute="top" secondItem="IAk-sA-T54" secondAttribute="top" constant="9.3000000000000007" id="9DH-so-S89"/>
                                                     <constraint firstItem="JTL-Jf-Smd" firstAttribute="trailing" secondItem="LmC-o2-ndc" secondAttribute="trailing" id="ADb-Vr-k6R"/>
-                                                    <constraint firstItem="JPe-wH-0KV" firstAttribute="leading" secondItem="IAk-sA-T54" secondAttribute="leading" id="AFz-9D-GFe"/>
                                                     <constraint firstAttribute="trailing" secondItem="hVh-Hy-zRR" secondAttribute="trailing" id="AiQ-Ui-t3a"/>
+                                                    <constraint firstItem="dU1-rL-A6s" firstAttribute="top" secondItem="IAk-sA-T54" secondAttribute="top" id="Kk3-an-P2p"/>
                                                     <constraint firstItem="hVh-Hy-zRR" firstAttribute="leading" secondItem="LmC-o2-ndc" secondAttribute="trailing" id="Kln-h1-RVq"/>
                                                     <constraint firstAttribute="bottom" secondItem="hVh-Hy-zRR" secondAttribute="bottom" id="Pfj-ly-gLZ"/>
                                                     <constraint firstItem="LmC-o2-ndc" firstAttribute="leading" secondItem="IAk-sA-T54" secondAttribute="leading" priority="250" constant="8" id="VSm-W3-K8F"/>
                                                     <constraint firstAttribute="bottom" secondItem="LmC-o2-ndc" secondAttribute="bottom" constant="9.3000000000000007" id="ZHP-TB-S3P"/>
+                                                    <constraint firstItem="LmC-o2-ndc" firstAttribute="leading" secondItem="dU1-rL-A6s" secondAttribute="trailing" priority="999" id="e0R-Ba-Vcn"/>
                                                     <constraint firstItem="JTL-Jf-Smd" firstAttribute="centerY" secondItem="LmC-o2-ndc" secondAttribute="centerY" id="em4-wv-Stp"/>
-                                                    <constraint firstItem="LmC-o2-ndc" firstAttribute="leading" secondItem="JPe-wH-0KV" secondAttribute="trailing" priority="999" id="ifu-oW-QEf"/>
+                                                    <constraint firstItem="dU1-rL-A6s" firstAttribute="leading" secondItem="IAk-sA-T54" secondAttribute="leading" id="vti-vF-B9A"/>
                                                 </constraints>
                                             </view>
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bTL-3p-VYH" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
@@ -994,6 +1011,7 @@
                         <outlet property="audioInputContainerWidthConstraint" destination="Rxf-D8-RRS" id="RVY-kA-voc"/>
                         <outlet property="avatarImageView" destination="tCB-t3-VXy" id="tSV-HN-6ST"/>
                         <outlet property="backgroundImageView" destination="MYg-f9-MjM" id="1WJ-qd-DbP"/>
+                        <outlet property="botButton" destination="zQv-zE-LLy" id="yYJ-f3-wcf"/>
                         <outlet property="bottomPanelWrapperView" destination="6MP-pq-xci" id="6rZ-Vb-0CM"/>
                         <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
                         <outlet property="deleteConversationButton" destination="7To-Ye-Nmg" id="ddX-6h-ZWv"/>
@@ -1010,7 +1028,7 @@
                         <outlet property="inputTextViewBottomConstraint" destination="ZHP-TB-S3P" id="Ek7-HM-mDu"/>
                         <outlet property="inputTextViewHeightConstraint" destination="Y55-r4-fIf" id="Ic3-i4-NT1"/>
                         <outlet property="inputTextViewLeadingExpandedConstraint" destination="VSm-W3-K8F" id="TEg-rf-tu6"/>
-                        <outlet property="inputTextViewLeadingShrinkConstraint" destination="ifu-oW-QEf" id="UFH-lP-J5O"/>
+                        <outlet property="inputTextViewLeadingShrinkConstraint" destination="e0R-Ba-Vcn" id="GdD-vf-Jiy"/>
                         <outlet property="inputTextViewTopConstraint" destination="9DH-so-S89" id="Ant-iz-z6J"/>
                         <outlet property="inputWrapperBottomConstraint" destination="QsO-2V-Rt7" id="Pcd-20-jDE"/>
                         <outlet property="inputWrapperView" destination="rZG-cd-J6L" id="I3v-gZ-dSQ"/>
@@ -2587,6 +2605,7 @@
         <image name="ic_camera_send" width="36" height="36"/>
         <image name="ic_chat_arrow" width="6" height="11"/>
         <image name="ic_chat_bg" width="375" height="667"/>
+        <image name="ic_chat_bot" width="44" height="44"/>
         <image name="ic_chat_microphone" width="44" height="44"/>
         <image name="ic_chat_more" width="44" height="44"/>
         <image name="ic_chat_panel_max" width="44" height="44"/>

@@ -136,7 +136,7 @@ class ContactConversationExtensionViewController: UIViewController {
         SendMessageService.shared.sendMessage(message: message,
                                               ownerUser: conversationViewController.ownerUser,
                                               isGroupMessage: conversation.isGroup())
-        conversationViewController.reduceBottomPanelSizeIfFullSized()
+        conversationViewController.dismissPanelsAction(self)
     }
     
     private func removeAllSelection() {

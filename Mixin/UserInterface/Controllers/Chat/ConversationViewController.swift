@@ -903,7 +903,11 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+        if gestureRecognizer == tapRecognizer {
+            return false
+        } else {
+            return true
+        }
     }
     
 }

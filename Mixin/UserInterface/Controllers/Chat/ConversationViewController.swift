@@ -838,7 +838,14 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     }
     
     func loadExtension(viewController new: UIViewController & ConversationExtensionViewController) {
-        removeCurrentExtension()
+        guard extensionViewController !== new else {
+            return
+        }
+        if let vc = extensionViewController {
+            vc.willMove(toParent: nil)
+            vc.view.removeFromSuperview()
+            vc.removeFromParent()
+        }
         addChild(new)
         extensionContainerView.addSubview(new.view)
         new.view.snp.makeConstraints({ (make) in
@@ -1804,14 +1811,6 @@ extension ConversationViewController {
             rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
         }
         return rect
-    }
-    
-    private func removeCurrentExtension() {
-        if let vc = extensionViewController {
-            vc.willMove(toParent: nil)
-            vc.view.removeFromSuperview()
-            vc.removeFromParent()
-        }
     }
     
     private func updateBottomPanelsHeight(_ height: CGFloat) {

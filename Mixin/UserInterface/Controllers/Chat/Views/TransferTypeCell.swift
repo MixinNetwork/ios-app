@@ -10,6 +10,11 @@ class TransferTypeCell: UITableViewCell {
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var blockchainImageView: CornerImageView!
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        separatorInset.left = symbolLabel.convert(.zero, to: self).x
+    }
+    
     func render(asset: AssetItem) {
         assetIconImageView.sd_setImage(with: URL(string :asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
         symbolLabel.text = asset.symbol

@@ -4,6 +4,7 @@ class GrabbingWebViewController: UIViewController {
     
     @IBOutlet weak var backgroundDimmingView: UIView!
     @IBOutlet weak var grabberButton: GrabberButton!
+    @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var containerView: UIView!
     
     @IBOutlet weak var contentHeightConstraint: NSLayoutConstraint!
@@ -16,6 +17,7 @@ class GrabbingWebViewController: UIViewController {
     
     private var url: URL!
     private var conversationId = ""
+    private var progressObserver: NSKeyValueObservation?
     
     static func instance(url: URL, conversationId: String) -> GrabbingWebViewController {
         let vc = Storyboard.common.instantiateViewController(withIdentifier: "grabbing_web") as! GrabbingWebViewController
@@ -26,8 +28,15 @@ class GrabbingWebViewController: UIViewController {
         return vc
     }
     
+    deinit {
+        progressObserver?.invalidate()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        progressObserver = webViewController.webView.observe(\.estimatedProgress, changeHandler: { [weak self] (view, _) in
+            self?.updateProgress(Float(view.estimatedProgress))
+        })
         addChild(webViewController)
         containerView.addSubview(webViewController.view)
         webViewController.view.snp.makeConstraints({ (make) in
@@ -81,6 +90,17 @@ class GrabbingWebViewController: UIViewController {
         let topDistance = max(UIApplication.shared.statusBarFrame.height,
                               view.compatibleSafeAreaInsets.top)
         contentHeightConstraint.constant = view.frame.height - topDistance
+    }
+    
+    private func updateProgress(_ progress: Float) {
+        progressView.setProgress(Float(progress), animated: progress > progressView.progress)
+        if progress == 1 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.progressView.isHidden = self.webViewController.webView.estimatedProgress == 1
+            }
+        } else {
+            progressView.isHidden = false
+        }
     }
     
 }

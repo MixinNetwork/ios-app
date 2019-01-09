@@ -524,16 +524,24 @@
                                         <rect key="frame" x="0.0" y="29.5" width="375" height="617.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </containerView>
+                                    <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sWR-Tv-DjX">
+                                        <rect key="frame" x="0.0" y="29.5" width="375" height="2"/>
+                                        <color key="progressTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="trackTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </progressView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="sWR-Tv-DjX" firstAttribute="top" secondItem="71a-bA-UoE" secondAttribute="top" id="5iR-3g-6Sk"/>
                                     <constraint firstAttribute="height" constant="647" id="BUu-FX-euK"/>
                                     <constraint firstItem="k8c-HZ-LNB" firstAttribute="top" secondItem="Nz0-4l-wKH" secondAttribute="top" id="LCc-I6-rgI"/>
                                     <constraint firstItem="71a-bA-UoE" firstAttribute="leading" secondItem="Nz0-4l-wKH" secondAttribute="leading" id="Okn-Ka-4Rb"/>
                                     <constraint firstAttribute="trailing" secondItem="71a-bA-UoE" secondAttribute="trailing" id="Uav-oj-Zg0"/>
                                     <constraint firstItem="71a-bA-UoE" firstAttribute="top" secondItem="k8c-HZ-LNB" secondAttribute="bottom" constant="-0.5" id="lD1-bE-c6g"/>
                                     <constraint firstAttribute="bottom" secondItem="71a-bA-UoE" secondAttribute="bottom" id="nm4-5l-1ch"/>
+                                    <constraint firstItem="sWR-Tv-DjX" firstAttribute="leading" secondItem="71a-bA-UoE" secondAttribute="leading" id="vNB-9y-nJM"/>
                                     <constraint firstItem="k8c-HZ-LNB" firstAttribute="leading" secondItem="Nz0-4l-wKH" secondAttribute="leading" id="yOL-6u-cwj"/>
+                                    <constraint firstItem="sWR-Tv-DjX" firstAttribute="trailing" secondItem="71a-bA-UoE" secondAttribute="trailing" id="yUK-Ne-esF"/>
                                     <constraint firstAttribute="trailing" secondItem="k8c-HZ-LNB" secondAttribute="trailing" id="yZP-vM-NJ7"/>
                                 </constraints>
                             </view>
@@ -557,6 +565,7 @@
                         <outlet property="contentHeightConstraint" destination="BUu-FX-euK" id="Zds-N5-xly"/>
                         <outlet property="grabberButton" destination="k8c-HZ-LNB" id="eGJ-3q-SDd"/>
                         <outlet property="hideContentConstraint" destination="xTT-UY-vBF" id="UYp-68-N3F"/>
+                        <outlet property="progressView" destination="sWR-Tv-DjX" id="mfh-0y-6lL"/>
                         <outlet property="showContentConstraint" destination="THb-Nc-C2W" id="h0g-an-4qx"/>
                     </connections>
                 </viewController>

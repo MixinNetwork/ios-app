@@ -1548,6 +1548,7 @@ extension ConversationViewController {
                     weakSelf.ownerUserApp = app
                     weakSelf.updateFixedExtensions(ownerUserApp: app)
                     weakSelf.extensionDockViewController?.apps = []
+                    weakSelf.extensionDockViewController?.loadDefaultExtensionIfNeeded()
                 }
             } else {
                 let apps: [App]
@@ -1565,6 +1566,7 @@ extension ConversationViewController {
                     weakSelf.ownerUserApp = nil
                     weakSelf.updateFixedExtensions(ownerUserApp: nil)
                     weakSelf.extensionDockViewController?.apps = apps
+                    weakSelf.extensionDockViewController?.loadDefaultExtensionIfNeeded()
                 }
             }
         }
@@ -1626,7 +1628,6 @@ extension ConversationViewController {
             toggleBottomPanelSizeButton.isHidden = false
         case .extension:
             toggleBottomPanelSizeButton.isHidden = false
-            extensionDockViewController?.loadDefaultExtensionIfNeeded()
         }
         audioInputContainerView.isHidden = !newContentIsKeyboardOrNone
         UIView.animate(withDuration: 0.5, animations: {

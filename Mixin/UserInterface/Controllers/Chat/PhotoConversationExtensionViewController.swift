@@ -27,7 +27,7 @@ class PhotoConversationExtensionViewController: UIViewController, ConversationEx
         super.viewDidLoad()
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             let separatorLineWidth: CGFloat = 1
-            let numberOfItemsPerRow: CGFloat = ScreenSize.isPlusWidth ? 4 : 3
+            let numberOfItemsPerRow: CGFloat = 3
             let itemWidth = (UIScreen.main.bounds.width - (numberOfItemsPerRow - 1) * separatorLineWidth) / numberOfItemsPerRow
             layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
             layout.minimumLineSpacing = 1

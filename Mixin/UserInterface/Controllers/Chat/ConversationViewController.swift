@@ -1745,6 +1745,8 @@ extension ConversationViewController {
     private func setQuoteViewHidden(_ hidden: Bool) {
         if hidden {
             quoteMessageId = nil
+        } else {
+            quotePreviewView.isHidden = false
         }
         quoteViewShowConstraint.priority = hidden ? .defaultLow : .defaultHigh
         quoteViewHiddenConstraint.priority = hidden ? .defaultHigh : .defaultLow
@@ -1753,9 +1755,13 @@ extension ConversationViewController {
         audioInputContainerView.isHidden = !hidden
         stickerKeyboardSwitcherButton.isHidden = !hidden
         sendButton.isHidden = false
-        UIView.animate(withDuration: animationDuration) {
+        UIView.animate(withDuration: animationDuration, animations: {
             self.updateTableViewContentInset()
             self.view.layoutIfNeeded()
+        }) { (_) in
+            if hidden {
+                self.quotePreviewView.isHidden = true
+            }
         }
     }
     

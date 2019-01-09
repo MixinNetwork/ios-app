@@ -743,9 +743,19 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IAk-sA-T54">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="55"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dU1-rL-A6s">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="-8" translatesAutoresizingMaskIntoConstraints="NO" id="dU1-rL-A6s">
                                                         <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
                                                         <subviews>
+                                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQv-zE-LLy" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="55"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" priority="999" constant="55" id="CMD-9c-waX"/>
+                                                                </constraints>
+                                                                <state key="normal" image="ic_chat_bot"/>
+                                                                <connections>
+                                                                    <action selector="openBotAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="amJ-Gg-9s8"/>
+                                                                </connections>
+                                                            </button>
                                                             <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JPe-wH-0KV" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
                                                                 <constraints>
@@ -754,16 +764,6 @@
                                                                 <state key="normal" image="ic_chat_more"/>
                                                                 <connections>
                                                                     <action selector="toggleExtensionPanelAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="G74-WU-pfZ"/>
-                                                                </connections>
-                                                            </button>
-                                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQv-zE-LLy" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="55"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" priority="999" constant="55" id="CMD-9c-waX"/>
-                                                                </constraints>
-                                                                <state key="normal" title="Button" image="ic_chat_bot"/>
-                                                                <connections>
-                                                                    <action selector="openBotAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="amJ-Gg-9s8"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>

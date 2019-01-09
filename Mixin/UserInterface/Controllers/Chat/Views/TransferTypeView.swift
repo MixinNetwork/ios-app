@@ -3,15 +3,26 @@ import UIKit
 class TransferTypeView: BottomSheetView {
 
     @IBOutlet weak var tableView: UITableView!
-
-    @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
-
+    @IBOutlet weak var keywordTextField: UITextField!
+    
     private weak var textfield: UITextField?
 
     private var assets: [AssetItem]!
     private var asset: AssetItem?
     private var callback: ((AssetItem) -> Void)?
-
+    private var searchResults = [AssetItem]()
+    private var lastKeyword = ""
+    
+    private var keyword: String {
+        return (keywordTextField.text ?? "")
+            .lowercased()
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    private var isSearching: Bool {
+        return !keyword.isEmpty
+    }
+    
     func presentPopupControllerAnimated(textfield: UITextField, assets: [AssetItem], asset: AssetItem?, callback: @escaping ((AssetItem) -> Void)) {
         super.presentPopupControllerAnimated()
         self.textfield = textfield
@@ -28,17 +39,42 @@ class TransferTypeView: BottomSheetView {
         self.assets = self.assets.filter({ (asset) -> Bool in
             return hiddenAssets[asset.assetId] == nil
         })
-        if assets.count < 3 {
-            tableHeightConstraint.constant = TransferTypeCell.cellHeight * CGFloat(assets.count)
-            popupView.layoutIfNeeded()
-        }
         prepareTableView()
     }
 
     @IBAction func cancelAction(_ sender: Any) {
-        dismissPopupControllerAnimated()
+        if keywordTextField.isFirstResponder {
+            keywordTextField.text = nil
+            searchAction(sender)
+            keywordTextField.resignFirstResponder()
+        } else {
+            dismissPopupControllerAnimated()
+        }
     }
-
+    
+    @IBAction func searchAction(_ sender: Any) {
+        let keyword = self.keyword
+        guard keywordTextField.markedTextRange == nil else {
+            if tableView.isDragging {
+                tableView.reloadData()
+            }
+            return
+        }
+        guard !keyword.isEmpty else {
+            tableView.reloadData()
+            lastKeyword = ""
+            return
+        }
+        guard keyword != lastKeyword else {
+            return
+        }
+        lastKeyword = keyword
+        searchResults = assets.filter({ (asset) -> Bool in
+            asset.symbol.lowercased().contains(keyword)
+        })
+        tableView.reloadData()
+    }
+    
     override func dismissPopupControllerAnimated() {
         super.dismissPopupControllerAnimated()
         textfield?.becomeFirstResponder()
@@ -59,26 +95,27 @@ extension TransferTypeView: UITableViewDelegate, UITableViewDataSource {
         tableView.rowHeight = TransferTypeCell.cellHeight
         tableView.reloadData()
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return assets.count
+        return isSearching ? searchResults.count : assets.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TransferTypeCell.cellIdentifier) as! TransferTypeCell
-        let asset = assets[indexPath.row]
+        let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
         if asset.assetId == self.asset?.assetId {
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none
         }
-        cell.render(asset: assets[indexPath.row])
+        cell.render(asset: asset)
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        callback?(assets[indexPath.row])
+        let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
+        callback?(asset)
         dismissPopupControllerAnimated()
     }
 }

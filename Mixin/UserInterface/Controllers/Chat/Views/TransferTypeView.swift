@@ -28,10 +28,11 @@ class TransferTypeView: BottomSheetView {
         self.textfield = textfield
         self.asset = asset
         self.callback = callback
-        if let assetId = asset?.assetId {
-            self.assets = assets.sorted(by: { (pre, next) -> Bool in
-                return pre.assetId == assetId
-            })
+        if let assetId = asset?.assetId, let index = assets.firstIndex(where: { $0.assetId == assetId }) {
+            var reordered = assets
+            let selected = reordered.remove(at: index)
+            reordered.insert(selected, at: 0)
+            self.assets = reordered
         } else {
             self.assets = assets
         }

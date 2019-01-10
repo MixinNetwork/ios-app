@@ -461,6 +461,10 @@
 "setting_blocked_empty" = "没有人被屏蔽";
 "setting_blocked_summary" = "被屏蔽的用户不能给你发消息也不能邀请你入群。";
 "setting_conversation" = "会话";
+"setting_desktop" = "Mixin Messenger 桌面版";
+"setting_desktop_last_active" = "最后登入于 %@";
+"setting_desktop_desktop_on" = "桌面版已登入";
+"setting_desktop_log_out" = "从桌面版退出";
 "setting_authorizations" = "授权";
 "setting_deauthorize_confirmation" = "取消 %@ 授权？";
 "setting_storage_usage" = "存储空间";

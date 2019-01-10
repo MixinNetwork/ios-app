@@ -505,6 +505,12 @@ public class Localized {
     public static let SETTING_PRIVACY_AND_SECURITY_TITLE = LocalizedString("setting_privacy_and_security_title", comment: "PRIVACY")
     public static let SETTING_HEADER_MESSAGE_SOURCE = LocalizedString("setting_header_message_source", comment: "WHO CAN SEND ME MESSAGES")
     public static let SETTING_HEADER_CONVERSATION_SOURCE = LocalizedString("setting_header_conversation_source", comment: "WHO CAN ADD ME TO GROUP CHATS")
+    public static let SETTING_DESKTOP = LocalizedString("setting_desktop", comment: "Mixin Messenger Desktop")
+    public static func SETTING_DESKTOP_LAST_ACTIVE(time: String) -> String {
+        return String(format: LocalizedString("setting_desktop_last_active", comment: "Last active %@"), time)
+    }
+    public static let SETTING_DESKTOP_DESKTOP_ON = LocalizedString("setting_desktop_desktop_on", comment: "You have your desktop logged in")
+    public static let SETTING_DESKTOP_LOG_OUT = LocalizedString("setting_desktop_log_out", comment: "Log out from desktop")
     public static let SETTING_AUTHORIZATIONS = LocalizedString("setting_authorizations", comment: "Authorizations")
     public static func SETTING_DEAUTHORIZE_CONFIRMATION(name: String) -> String {
         return String(format: LocalizedString("setting_deauthorize_confirmation", comment: "Deauthorize %@?"), name)

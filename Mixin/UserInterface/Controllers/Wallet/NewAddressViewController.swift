@@ -19,6 +19,8 @@ class NewAddressViewController: UIViewController {
     private var successCallback: ((Address) -> Void)?
     private var address: Address?
     
+    private weak var pinTipsView: PinTipsView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addressTextView.delegate = self
@@ -110,9 +112,10 @@ extension NewAddressViewController: ContainerViewControllerDelegate {
         addressTextView.isUserInteractionEnabled = false
         labelTextField.isEnabled = false
         actionButton.isBusy = true
-        PinTipsView.instance(tips: Localized.WALLET_PASSWORD_ADDRESS_TIPS) { [weak self](pin) in
+        pinTipsView = PinTipsView.instance(tips: Localized.WALLET_PASSWORD_ADDRESS_TIPS) { [weak self] (pin) in
             self?.saveAddressAction(pin: pin)
-        }.presentPopupControllerAnimated()
+        }
+        pinTipsView?.presentPopupControllerAnimated()
     }
 
     private func saveAddressAction(pin: String) {
@@ -134,6 +137,7 @@ extension NewAddressViewController: ContainerViewControllerDelegate {
                     weakSelf.navigationController?.popViewController(animated: true)
                 }
             case .failure:
+                self?.pinTipsView?.removeFromSuperview()
                 self?.container?.rightButton.isBusy = false
                 self?.addressTextView.isUserInteractionEnabled = true
                 self?.labelTextField.isEnabled = true

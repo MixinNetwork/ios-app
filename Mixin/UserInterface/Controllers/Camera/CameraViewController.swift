@@ -9,6 +9,10 @@ enum DetechStatus {
     case failed
 }
 
+protocol CameraViewControllerDelegate: class {
+    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool
+}
+
 class CameraViewController: UIViewController, MixinNavigationAnimating {
 
     @IBOutlet weak var previewView: PreviewView!
@@ -29,7 +33,9 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var timeLabel: UILabel!
 
     @IBOutlet weak var qrcodeNotificationTopConstraint: NSLayoutConstraint!
-
+    
+    weak var delegate: CameraViewControllerDelegate?
+    
     private let sessionQueue = DispatchQueue(label: "one.mixin.messenger.queue.camera")
     private let metadataOutput = AVCaptureMetadataOutput()
     private let session = AVCaptureSession()
@@ -42,9 +48,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var photoCaptureProcessor: PhotoCaptureProcessor?
     private var cameraPosition = AVCaptureDevice.Position.unspecified
     private lazy var shutterAnimationView = ShutterAnimationView()
-    private var fromWithdrawal = false
     private var flashOn = false
-    private var addressCallback: ((String) -> Void)?
     private var detectedQRCodes = Set<String>()
     private var detectText = ""
     private var recordTimer: Timer?
@@ -257,14 +261,11 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             navigationController?.popViewController(animated: true)
         }
     }
-
-    class func instance(fromWithdrawal: Bool = false, addressCallback: ((String) -> Void)? = nil) -> UIViewController {
-        let vc = Storyboard.camera.instantiateViewController(withIdentifier: "camera") as! CameraViewController
-        vc.fromWithdrawal = fromWithdrawal
-        vc.addressCallback = addressCallback
-        return vc
+    
+    class func instance() -> CameraViewController {
+        return Storyboard.camera.instantiateViewController(withIdentifier: "camera") as! CameraViewController
     }
-
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -597,9 +598,7 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
         
         detectedQRCodes.insert(urlString)
         
-        if fromWithdrawal, let address = filterAddress(urlString: urlString) {
-            addressCallback?(address)
-            navigationController?.popViewController(animated: true)
+        if let delegate = delegate, !delegate.cameraViewController(self, shouldRecognizeString: urlString) {
             return
         }
 
@@ -652,58 +651,5 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
             self.qrcodeView.isHidden = true
         }
     }
-
-    private func filterAddress(urlString: String) -> String? {
-        guard urlString.hasPrefix("iban:XE") || urlString.hasPrefix("IBAN:XE") else {
-            return urlString
-        }
-        guard urlString.count >= 20 else {
-            return nil
-        }
-
-        let endIndex = urlString.index(of: "?") ?? urlString.endIndex
-        let accountIdentifier = urlString[urlString.index(urlString.startIndex, offsetBy: 9)..<endIndex]
-
-        guard let address = accountIdentifier.lowercased().base36to16() else {
-            return nil
-        }
-        return "0x\(address)"
-    }
     
-}
-
-fileprivate extension String {
-
-    static let base36Alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
-
-    static var base36AlphabetMap: [Character: Int] = {
-        var reverseLookup = [Character: Int]()
-        for characterIndex in 0..<String.base36Alphabet.count {
-            let character = base36Alphabet[base36Alphabet.index(base36Alphabet.startIndex, offsetBy: characterIndex)]
-            reverseLookup[character] = characterIndex
-        }
-        return reverseLookup
-    }()
-
-    func base36to16() -> String? {
-        var bytes = [Int]()
-        for character in self {
-            guard var carry = String.base36AlphabetMap[character] else {
-                return nil
-            }
-
-            for byteIndex in 0..<bytes.count {
-                carry += bytes[byteIndex] * 36
-                bytes[byteIndex] = carry & 0xff
-                carry >>= 8
-            }
-
-            while carry > 0 {
-                bytes.append(carry & 0xff)
-                carry >>= 8
-            }
-        }
-        return bytes.reversed().map { String(format: "%02hhx", $0) }.joined()
-    }
-
 }

@@ -374,6 +374,7 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="statusImageView" destination="Z3R-y8-ijL" id="fDi-Sr-lTX"/>
                         <outlet property="tableView" destination="Ixr-D2-LC6" id="4pG-Wb-46Q"/>
                     </connections>
                 </tableViewController>

@@ -20,6 +20,11 @@ final class ParticipantDAO {
     LEFT JOIN users u ON p.user_id = u.user_id
     WHERE p.conversation_id = ? AND p.user_id != ? AND ifnull(u.app_id, '') = ''
     """
+    static let sqlQueryParticipants = """
+    \(sqlQueryColumns)
+    LEFT JOIN users u ON p.user_id = u.user_id
+    WHERE p.conversation_id = ? AND u.identity_number > '0'
+    """
     static let sqlUpdateStatus = "UPDATE participants SET status = 1 WHERE conversation_id = ? AND user_id in (SELECT user_id FROM users)"
     private static let sqlQueryParticipantUsers = """
     SELECT u.user_id, u.full_name, u.identity_number, u.avatar_url, u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship, u.created_at, a.description as appDescription, a.creator_id as appCreatorId, p.role
@@ -128,7 +133,7 @@ final class ParticipantDAO {
     }
 
     func participants(conversationId: String) -> [Participant] {
-        return MixinDatabase.shared.getCodables(condition: Participant.Properties.conversationId == conversationId)
+        return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryParticipants, values: [conversationId])
     }
 
     func participantRequests(conversationId: String, currentAccountId: String) -> [ParticipantRequest] {

@@ -13,7 +13,8 @@ class DetailInfoMessageViewModel: MessageViewModel {
     static let fullnameFont = UIFont.systemFont(ofSize: 14)
     static let identityIconLeftMargin: CGFloat = 4
     static let identityIconSize = #imageLiteral(resourceName: "ic_user_bot").size
-
+    static let minFullnameWidth: CGFloat = 44
+    
     class var bubbleImageProvider: BubbleImageProvider.Type {
         return BubbleImageProvider.self
     }
@@ -113,7 +114,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
         }
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)
-        fullnameFrame.size.width = min(fullnameWidth, maxContentWidth)
+        fullnameFrame.size.width = max(DetailInfoMessageViewModel.minFullnameWidth, min(fullnameWidth, maxContentWidth))
         identityIconFrame.origin = CGPoint(x: fullnameFrame.maxX + DetailInfoMessageViewModel.identityIconLeftMargin,
                                            y: fullnameFrame.origin.y + (fullnameFrame.height - identityIconFrame.height) / 2)
     }

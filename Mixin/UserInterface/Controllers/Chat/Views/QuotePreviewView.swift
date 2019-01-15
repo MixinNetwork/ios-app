@@ -33,7 +33,7 @@ class QuotePreviewView: UIView, XibDesignable {
         }
         indicatorView.backgroundColor = tintColor
         contentImageView.sd_cancelCurrentImageLoad()
-        contentImageView.sd_setImage(with: nil, completed: nil)
+        contentImageView.image = nil
         contentImageView.titleLabel.text = nil
         contentImageView.layer.cornerRadius = contentImageViewNormalCornerRadius
         contentImageView.contentMode = .scaleAspectFill

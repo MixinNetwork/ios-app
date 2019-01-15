@@ -19,7 +19,7 @@ class StickerMessageCell: DetailInfoMessageCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        contentImageView.sd_setImage(with: nil, completed: nil)
+        contentImageView.sd_cancelCurrentImageLoad()
     }
 
     override func render(viewModel: MessageViewModel) {
@@ -27,6 +27,8 @@ class StickerMessageCell: DetailInfoMessageCell {
         if let viewModel = viewModel as? StickerMessageViewModel, let assetUrl = viewModel.message.assetUrl {
             contentImageView.frame = viewModel.contentFrame
             contentImageView.sd_setImage(with: URL(string: assetUrl))
+        } else {
+            contentImageView.image = nil
         }
     }
     

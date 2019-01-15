@@ -11,7 +11,7 @@ class QuoteTextMessageCell: TextMessageCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         quoteImageView.titleLabel.text = nil
-        quoteImageView.sd_setImage(with: nil, completed: nil)
+        quoteImageView.sd_cancelCurrentImageLoad()
     }
     
     override func render(viewModel: MessageViewModel) {
@@ -40,6 +40,8 @@ class QuoteTextMessageCell: TextMessageCell {
                         quoteImageView.image = thumbnail
                         quoteImageView.cornerRadius = QuoteTextMessageViewModel.Quote.imageCornerRadius
                     }
+                } else {
+                    quoteImageView.image = nil
                 }
             }
         }

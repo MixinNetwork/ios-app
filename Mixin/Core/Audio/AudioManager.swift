@@ -59,6 +59,7 @@ class AudioManager {
                                        selector: #selector(AudioManager.audioSessionMediaServicesWereReset(_:)),
                                        name: AVAudioSession.mediaServicesWereResetNotification,
                                        object: nil)
+                    self.playingNode = nil
                     try self.player.loadFile(atPath: node.path)
                     self.player.play()
                     self.playingNode = node

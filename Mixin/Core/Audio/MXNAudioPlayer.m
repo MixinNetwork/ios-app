@@ -24,7 +24,6 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 @implementation MXNAudioPlayer {;
     AudioQueueRef _audioQueue;
     AudioQueueBufferRef _buffers[numberOfAudioQueueBuffers];
-    AudioQueueTimelineRef _timeline;
 }
 
 + (instancetype)sharedPlayer {
@@ -52,11 +51,14 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         return 0;
     }
     AudioTimeStamp timeStamp;
-    AudioQueueGetCurrentTime(_audioQueue, _timeline, &timeStamp, NULL);
+    AudioQueueGetCurrentTime(_audioQueue, NULL, &timeStamp, NULL);
     return timeStamp.mSampleTime / sampleRate;
 }
 
 - (BOOL)loadFileAtPath:(NSString *)path error:(NSError * _Nullable *)outError {
+    if (self.isPlaying) {
+        [self stop];
+    }
     [self dispose];
     
     NSError *error = nil;

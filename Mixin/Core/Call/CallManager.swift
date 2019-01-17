@@ -255,6 +255,7 @@ extension CallManager {
         guard let user = UserDAO.shared.getUser(userId: data.userId) else {
             throw CallError.missingUser(userId: data.userId)
         }
+        AudioManager.shared.stop(deactivateAudioSession: false)
         pendingRemoteSdp = sdp
         call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
         if reportIncomingCallToInterface {
@@ -316,7 +317,7 @@ extension CallManager {
 extension CallManager: WebRTCClientDelegate {
     
     func webRTCClient(_ client: WebRTCClient, didGenerateLocalCandidate candidate: RTCIceCandidate) {
-        guard let call = call else {
+        guard call != nil else {
             return
         }
         sendCandidates([candidate])
@@ -389,6 +390,7 @@ extension CallManager {
     }
     
     private func call(opponentUser: UserItem) {
+        AudioManager.shared.stop(deactivateAudioSession: false)
         queue.async {
             guard WebSocketService.shared.connected && self.lineIsIdle else {
                 self.alertNetworkFailureOrLineBusy()

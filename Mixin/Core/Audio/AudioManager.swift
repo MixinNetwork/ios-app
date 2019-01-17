@@ -32,7 +32,7 @@ class AudioManager {
         let key = node.message.messageId as NSString
         if playingNode?.message.messageId == node.message.messageId {
             cells.object(forKey: key)?.isPlaying = false
-            stop()
+            stop(deactivateAudioSession: true)
         } else {
             if let cells = cells.objectEnumerator()?.allObjects as? [AudioMessageCell] {
                 cells.forEach {
@@ -70,17 +70,17 @@ class AudioManager {
         }
     }
     
-    func stop() {
+    func stop(deactivateAudioSession: Bool) {
         queue.async {
-            DispatchQueue.main.sync {
-                if let messageId = self.playingNode?.message.messageId {
-                    self.cells.object(forKey: messageId as NSString)?.isPlaying = false
-                }
-                self.playingNode = nil
+            guard self.player.isPlaying else {
+                return
             }
+            self.updateCellsAndPlayingNodeForStopping()
             self.player.stop()
             NotificationCenter.default.removeObserver(self)
-            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            if deactivateAudioSession {
+                try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            }
         }
     }
     
@@ -98,7 +98,7 @@ class AudioManager {
     }
     
     @objc func audioSessionInterruption(_ notification: Notification) {
-        stop()
+        stop(deactivateAudioSession: true)
     }
     
     @objc func audioSessionRouteChange(_ notification: Notification) {
@@ -112,15 +112,24 @@ class AudioManager {
             let newCategory = AVAudioSession.sharedInstance().category
             let canContinue = newCategory == .playback || newCategory == .playAndRecord
             if !canContinue {
-                stop()
+                stop(deactivateAudioSession: true)
             }
         case .unknown, .oldDeviceUnavailable, .wakeFromSleep, .noSuitableRouteForCategory:
-            stop()
+            stop(deactivateAudioSession: true)
         }
     }
     
     @objc func audioSessionMediaServicesWereReset(_ notification: Notification) {
         player.dispose()
+    }
+    
+    private func updateCellsAndPlayingNodeForStopping() {
+        performSynchronouslyOnMainThread {
+            if let messageId = self.playingNode?.message.messageId {
+                self.cells.object(forKey: messageId as NSString)?.isPlaying = false
+            }
+            self.playingNode = nil
+        }
     }
     
     private func isPlayingChanged() {
@@ -138,7 +147,9 @@ class AudioManager {
                 playOrStop(node: nextNode)
             }
         } else {
-            stop()
+            updateCellsAndPlayingNodeForStopping()
+            NotificationCenter.default.removeObserver(self)
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         }
     }
     

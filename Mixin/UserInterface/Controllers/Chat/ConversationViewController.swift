@@ -378,7 +378,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         saveDraft()
-        AudioManager.shared.stop()
+        AudioManager.shared.stop(deactivateAudioSession: true)
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath), tableView.rectForRow(at: lastIndexPath).origin.y < tableView.contentOffset.y + tableView.frame.height - tableView.contentInset.bottom {
                 ConversationViewController.positions[conversationId] = nil
@@ -634,7 +634,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
             } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue, let item = GalleryItem(message: message) {
                 tableViewContentOffsetShouldFollowInputWrapperPosition = false
                 makeInputTextViewResignFirstResponderIfItIs()
-                AudioManager.shared.stop()
+                AudioManager.shared.stop(deactivateAudioSession: true)
                 tableViewContentOffsetShouldFollowInputWrapperPosition = true
                 view.bringSubviewToFront(galleryWrapperView)
                 if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, case let .relativeOffset(offset) = viewModel.layoutPosition {

@@ -75,6 +75,7 @@ class AudioInputViewController: UIViewController {
         }
         switch recordGestureRecognizer.state {
         case .began:
+            AudioManager.shared.stop(deactivateAudioSession: false)
             isLocked = false
             lockView.progress = 0
             if isShowingLongPressHint {

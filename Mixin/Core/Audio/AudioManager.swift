@@ -4,7 +4,7 @@ import AVFoundation
 class AudioManager {
     
     struct Node {
-        let messageId: String
+        let message: MessageItem
         let path: String
     }
     
@@ -16,7 +16,7 @@ class AudioManager {
     
     private var cells = NSMapTable<NSString, AudioMessageCell>(keyOptions: .strongMemory, valueOptions: .weakMemory)
     private var isPlayingObservation: NSKeyValueObservation?
-    private var playingMessageId: String?
+    private var playingNode: Node?
     
     init() {
         isPlayingObservation = player.observe(\.isPlaying) { [weak self] (player, change) in
@@ -29,8 +29,8 @@ class AudioManager {
     }
     
     func playOrStop(node: Node) {
-        let key = node.messageId as NSString
-        if playingMessageId == node.messageId {
+        let key = node.message.messageId as NSString
+        if playingNode?.message.messageId == node.message.messageId {
             cells.object(forKey: key)?.isPlaying = false
             stop()
         } else {
@@ -47,7 +47,7 @@ class AudioManager {
                     try session.setActive(true, options: [])
                     try self.player.loadFile(atPath: node.path)
                     self.player.play()
-                    self.playingMessageId = node.messageId
+                    self.playingNode = node
                 } catch {
                     self.cells.object(forKey: key)?.isPlaying = false
                     return
@@ -58,15 +58,15 @@ class AudioManager {
     
     func stop() {
         queue.async {
+            self.playingNode = nil
             self.player.stop()
-            self.playingMessageId = nil
             try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         }
     }
     
     func register(cell: AudioMessageCell, forMessageId messageId: String) {
         cells.setObject(cell, forKey: messageId as NSString)
-        cell.isPlaying = messageId == playingMessageId
+        cell.isPlaying = messageId == playingNode?.message.messageId
     }
     
     func unregister(cell: AudioMessageCell, forMessageId messageId: String) {
@@ -81,13 +81,33 @@ class AudioManager {
         guard !player.isPlaying else {
             return
         }
-        guard let messageId = playingMessageId else {
+        guard let messageId = playingNode?.message.messageId else {
             return
         }
         performSynchronouslyOnMainThread {
-            playingMessageId = nil
             cells.object(forKey: messageId as NSString)?.isPlaying = false
         }
+        if let node = playingNode, let nextNode = self.node(nextTo: node) {
+            performSynchronouslyOnMainThread {
+                playOrStop(node: nextNode)
+            }
+        } else {
+            stop()
+        }
+    }
+    
+    private func node(nextTo node: Node) -> Node? {
+        guard let nextMessage = MessageDAO.shared.getMessages(conversationId: node.message.conversationId, belowMessage: node.message, count: 1).first else {
+            return nil
+        }
+        guard nextMessage.category.hasSuffix("_AUDIO"), nextMessage.userId == node.message.userId else {
+            return nil
+        }
+        guard let filename = nextMessage.mediaUrl else {
+            return nil
+        }
+        let path = MixinFile.url(ofChatDirectory: .audios, filename: filename).path
+        return Node(message: nextMessage, path: path)
     }
     
 }

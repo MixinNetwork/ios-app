@@ -41,15 +41,29 @@ class AudioManager {
             }
             cells.object(forKey: key)?.isPlaying = true
             queue.async {
-                let session = AVAudioSession.sharedInstance()
+                let center = NotificationCenter.default
                 do {
+                    let session = AVAudioSession.sharedInstance()
                     try session.setCategory(.playback, mode: .default, options: [])
                     try session.setActive(true, options: [])
+                    center.addObserver(self,
+                                       selector: #selector(AudioManager.audioSessionInterruption(_:)),
+                                       name: AVAudioSession.interruptionNotification,
+                                       object: nil)
+                    center.addObserver(self,
+                                       selector: #selector(AudioManager.audioSessionRouteChange(_:)),
+                                       name: AVAudioSession.routeChangeNotification,
+                                       object: nil)
+                    center.addObserver(self,
+                                       selector: #selector(AudioManager.audioSessionMediaServicesWereReset(_:)),
+                                       name: AVAudioSession.mediaServicesWereResetNotification,
+                                       object: nil)
                     try self.player.loadFile(atPath: node.path)
                     self.player.play()
                     self.playingNode = node
                 } catch {
                     self.cells.object(forKey: key)?.isPlaying = false
+                    center.removeObserver(self)
                     return
                 }
             }
@@ -58,8 +72,14 @@ class AudioManager {
     
     func stop() {
         queue.async {
-            self.playingNode = nil
+            DispatchQueue.main.sync {
+                if let messageId = self.playingNode?.message.messageId {
+                    self.cells.object(forKey: messageId as NSString)?.isPlaying = false
+                }
+                self.playingNode = nil
+            }
             self.player.stop()
+            NotificationCenter.default.removeObserver(self)
             try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         }
     }
@@ -75,6 +95,32 @@ class AudioManager {
             return
         }
         cells.removeObject(forKey: key)
+    }
+    
+    @objc func audioSessionInterruption(_ notification: Notification) {
+        stop()
+    }
+    
+    @objc func audioSessionRouteChange(_ notification: Notification) {
+        guard let reason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? AVAudioSession.RouteChangeReason else {
+            return
+        }
+        switch reason {
+        case .override, .newDeviceAvailable, .routeConfigurationChange:
+            break
+        case .categoryChange:
+            let newCategory = AVAudioSession.sharedInstance().category
+            let canContinue = newCategory == .playback || newCategory == .playAndRecord
+            if !canContinue {
+                stop()
+            }
+        case .unknown, .oldDeviceUnavailable, .wakeFromSleep, .noSuitableRouteForCategory:
+            stop()
+        }
+    }
+    
+    @objc func audioSessionMediaServicesWereReset(_ notification: Notification) {
+        player.dispose()
     }
     
     private func isPlayingChanged() {

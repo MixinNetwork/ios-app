@@ -1538,8 +1538,8 @@
 				7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */,
 				7BC8502820CBA69A00A57B83 /* MXNAudioPlayer.h */,
 				7BC8502B20CBA69A00A57B83 /* MXNAudioPlayer.m */,
-				7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */,
 				7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */,
+				7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";

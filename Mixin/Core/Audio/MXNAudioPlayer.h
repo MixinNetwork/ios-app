@@ -24,6 +24,7 @@ typedef NS_ENUM(NSUInteger, MXNAudioPlayerErrorCode) {
 - (BOOL)loadFileAtPath:(NSString *)path error:(NSError * _Nullable *)outError;
 - (void)play;
 - (void)stop;
+- (void)dispose;
 
 @end
 

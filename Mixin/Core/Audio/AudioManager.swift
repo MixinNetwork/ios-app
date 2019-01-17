@@ -12,11 +12,12 @@ class AudioManager {
     
     let player = MXNAudioPlayer.shared()
     
+    private(set) var playingNode: Node?
+    
     private let queue = DispatchQueue(label: "one.mixin.messenger.audio_manager")
     
     private var cells = NSMapTable<NSString, AudioMessageCell>(keyOptions: .strongMemory, valueOptions: .weakMemory)
     private var isPlayingObservation: NSKeyValueObservation?
-    private var playingNode: Node?
     
     init() {
         isPlayingObservation = player.observe(\.isPlaying) { [weak self] (player, change) in

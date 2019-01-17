@@ -996,6 +996,9 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             }
         case .delete:
             (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(markMediaStatusCancelled: false)
+            if viewModel.message.messageId == AudioManager.shared.playingNode?.message.messageId {
+                AudioManager.shared.stop(deactivateAudioSession: true)
+            }
             dataSource?.queue.async { [weak self] in
                 MessageDAO.shared.deleteMessage(id: message.messageId)
                 DispatchQueue.main.sync {

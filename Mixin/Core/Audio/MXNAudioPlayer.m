@@ -12,13 +12,18 @@ static const UInt32 audioQueueBufferSize = 65536; // Should be smaller than UINT
 NS_INLINE NSError* ErrorWithCodeAndOSStatus(MXNAudioPlayerErrorCode code, OSStatus status);
 NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 
-@implementation MXNAudioPlayer {
-    dispatch_queue_t _processingQueue;
+@interface MXNAudioPlayer ()
+
+@property (nonatomic, strong, readwrite) dispatch_queue_t processingQueue;
+@property (nonatomic, assign, readwrite) BOOL isPlaying;
+@property (nonatomic, strong, readwrite) MXNOggOpusReader *reader;
+@property (nonatomic, assign, readwrite) BOOL didReachEnd;
+
+@end
+
+@implementation MXNAudioPlayer {;
     AudioQueueRef _audioQueue;
     AudioQueueBufferRef _buffers[numberOfAudioQueueBuffers];
-    AudioQueueTimelineRef _timeline;
-    MXNOggOpusReader *_reader;
-    NSHashTable<id<MXNAudioPlayerObserver>> *_observers;
 }
 
 + (instancetype)sharedPlayer {
@@ -35,267 +40,101 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     if (self) {
         _processingQueue = dispatch_queue_create("one.mixin.queue.audio_player", DISPATCH_QUEUE_SERIAL);
         _audioQueue = NULL;
-        _observers = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        _state = MXNAudioPlaybackStatePreparing;
+        _didReachEnd = NO;
+        _isPlaying = NO;
     }
     return self;
 }
 
 - (Float64)currentTime {
-    if (_state != MXNAudioPlaybackStatePlaying) {
+    if (!self.isPlaying) {
         return 0;
     }
     AudioTimeStamp timeStamp;
-    AudioQueueGetCurrentTime(_audioQueue, _timeline, &timeStamp, NULL);
+    AudioQueueGetCurrentTime(_audioQueue, NULL, &timeStamp, NULL);
     return timeStamp.mSampleTime / sampleRate;
 }
 
-- (void)playFileAtPath:(NSString *)path completion:(MXNAudioPlayerLoadFileCompletionCallback)completion {
-    if ([path isEqualToString:_path]) {
-        switch (_state) {
-            case MXNAudioPlaybackStatePreparing: {
-                // Not expected to happend
-                return;
-            }
-            case MXNAudioPlaybackStateReadyToPlay:
-            case MXNAudioPlaybackStatePlaying:
-            case MXNAudioPlaybackStatePaused:
-            case MXNAudioPlaybackStateStopped: {
-                [self play];
-                completion(YES, nil);
-                return;
-            }
-            case MXNAudioPlaybackStateDisposed: {
-                break;
-            }
-        }
-    } else {
-        [self stopWithAudioSessionDeactivated:NO];
-        [self dispose];
-        _path = path;
+- (BOOL)loadFileAtPath:(NSString *)path error:(NSError * _Nullable *)outError {
+    if (self.isPlaying) {
+        [self stop];
     }
-    dispatch_async(_processingQueue, ^{
-        NSError *error = nil;
-
-        if (_path != path) {
-            error = [NSError errorWithDomain:MXNAudioPlayerErrorDomain
-                                        code:MXNAudioPlayerErrorCodeCancelled
-                                    userInfo:nil];
-            completion(NO, error);
-            return;
+    [self dispose];
+    
+    NSError *error = nil;
+    _reader = [MXNOggOpusReader readerWithFileAtPath:path error:&error];
+    if (error) {
+        if (outError) {
+            *outError = error;
         }
-        
-        [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStatePreparing];
-        
-        MXNOggOpusReader *reader = [MXNOggOpusReader readerWithFileAtPath:path error:&error];
-        if (!reader) {
-            completion(NO, error);
-            return;
+        [self dispose];
+        return NO;
+    }
+    
+    AudioStreamBasicDescription format = CreateFormat();
+    OSStatus result;
+    result = AudioQueueNewOutput(&format, AQBufferCallback, (__bridge void *)(self), NULL, NULL, 0, &_audioQueue);
+    if (result != noErr) {
+        if (outError) {
+            *outError = ErrorWithCodeAndOSStatus(MXNAudioPlayerErrorCodeNewOutput, result);
         }
-
-        self->_reader = reader;
-        
-        AVAudioSession *session = [AVAudioSession sharedInstance];
-        BOOL success = [session setCategory:AVAudioSessionCategoryPlayAndRecord
-                                       mode:AVAudioSessionModeDefault
-                                    options:AVAudioSessionCategoryOptionDefaultToSpeaker | AVAudioSessionCategoryOptionAllowBluetooth
-                                      error:&error];
-        if (!success) {
-            [self dispose];
-            completion(NO, error);
-            return;
-        }
-        
-        success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
-        if (!success) {
-            [self dispose];
-            completion(NO, error);
-            return;
-        }
-        
-        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-        [center addObserver:self
-                   selector:@selector(audioSessionInterruption:)
-                       name:AVAudioSessionInterruptionNotification
-                     object:nil];
-        [center addObserver:self
-                   selector:@selector(audioSessionRouteChange:)
-                       name:AVAudioSessionRouteChangeNotification
-                     object:nil];
-        [center addObserver:self
-                   selector:@selector(audioSessionMediaServicesWereReset:)
-                       name:AVAudioSessionMediaServicesWereResetNotification
-                     object:nil];
-        
-        AudioStreamBasicDescription format = CreateFormat();
-        OSStatus result;
-        result = AudioQueueNewOutput(&format, AQBufferCallback, (__bridge void *)(self), NULL, NULL, 0, &self->_audioQueue);
+        [self dispose];
+        return NO;
+    }
+    
+    AudioQueueAddPropertyListener(_audioQueue, kAudioQueueProperty_IsRunning, isRunningChanged, (__bridge void *)(self));
+    for (int i = 0; i < numberOfAudioQueueBuffers; ++i) {
+        result = AudioQueueAllocateBuffer(_audioQueue, audioQueueBufferSize, &_buffers[i]);
         if (result != noErr) {
-            error = ErrorWithCodeAndOSStatus(MXNAudioPlayerErrorCodeNewOutput, result);
-            [self dispose];
-            completion(NO, error);
-            return;
-        }
-        
-        for (int i = 0; i < numberOfAudioQueueBuffers; ++i) {
-            result = AudioQueueAllocateBuffer(self->_audioQueue, audioQueueBufferSize, &self->_buffers[i]);
-            if (result != noErr) {
-                error = ErrorWithCodeAndOSStatus(MXNAudioPlayerErrorCodeNewOutput, result);
-                [self dispose];
-                completion(NO, error);
-                return;
+            if (outError) {
+                *outError = ErrorWithCodeAndOSStatus(MXNAudioPlayerErrorCodeAllocateBuffers, result);
             }
-            AQBufferCallback((__bridge void *)(self), self->_audioQueue, self->_buffers[i]);
-        }
-        
-        result = AudioQueueAddPropertyListener(self->_audioQueue, kAudioQueueProperty_IsRunning, isRunningChanged, (__bridge void * _Nullable)(self));
-        if (result != noErr) {
-            error = ErrorWithCodeAndOSStatus(MXNAudioPlayerErrorCodeAddPropertyListener, result);
             [self dispose];
-            completion(NO, error);
+            return NO;
         }
-        
-        AudioQueueCreateTimeline(self->_audioQueue, &self->_timeline);
-        
-        AudioQueueSetParameter(self->_audioQueue, kAudioQueueParam_Volume, 1.0);
-        
-        [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateReadyToPlay];
-        [self play];
-        completion(YES, nil);
-    });
+    }
+    
+    AudioQueueSetParameter(_audioQueue, kAudioQueueParam_Volume, 1.0);
+    return YES;
 }
 
 - (void)play {
-    if (_state == MXNAudioPlaybackStateStopped) {
-        [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStatePreparing];
-        [_reader seekToZero];
-        for (int i = 0; i < numberOfAudioQueueBuffers; i++) {
-            AQBufferCallback((__bridge void *)(self), self->_audioQueue, self->_buffers[i]);
-        }
-        [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateReadyToPlay];
+    _didReachEnd = NO;
+    for (int i = 0; i < numberOfAudioQueueBuffers; ++i) {
+        AQBufferCallback((__bridge void *)self, _audioQueue, _buffers[i]);
     }
-    if (_state == MXNAudioPlaybackStateStopped || _state == MXNAudioPlaybackStateReadyToPlay || _state == MXNAudioPlaybackStatePaused) {
-        AudioQueueStart(_audioQueue, NULL);
-        [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStatePlaying];
-    }
+    AudioQueueStart(_audioQueue, NULL);
 }
 
-- (void)pause {
-    if (_state != MXNAudioPlaybackStatePlaying) {
-        return;
-    }
-    AudioQueuePause(_audioQueue);
-    [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStatePaused];
-}
-
-- (void)stopWithAudioSessionDeactivated:(BOOL)shouldDeactivate {
-    if (_state == MXNAudioPlaybackStateStopped || _state == MXNAudioPlaybackStateDisposed) {
-        return;
-    }
-    [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateStopped];
-    AudioQueueStop(_audioQueue, TRUE);
-    if (shouldDeactivate) {
-        dispatch_async(_processingQueue, ^{
-            BOOL shouldDeactivate = self->_state == MXNAudioPlaybackStateStopped || self->_state == MXNAudioPlaybackStateDisposed;
-            if (shouldDeactivate) {
-                AudioQueueStop(self->_audioQueue, TRUE);
-                [[AVAudioSession sharedInstance] setActive:NO
-                                               withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
-                                                     error:nil];
-            }
-        });
-    }
+- (void)stop {
+    self.isPlaying = NO;
+    AudioQueueStop(_audioQueue, true);
 }
 
 - (void)dispose {
-    if (_state != MXNAudioPlaybackStateStopped) {
-        [self stopWithAudioSessionDeactivated:YES];
-    }
-    if (_timeline) {
-        AudioQueueDisposeTimeline(_audioQueue, _timeline);
-        _timeline = nil;
-    }
     if (_audioQueue) {
-        AudioQueueDispose(_audioQueue, TRUE);
-        _audioQueue = nil;
+        AudioQueueDispose(_audioQueue, true);
+        _audioQueue = NULL;
     }
     if (_reader) {
         [_reader close];
         _reader = nil;
     }
-    [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateDisposed];
-}
-
-- (void)addObserver:(id<MXNAudioPlayerObserver>)observer {
-    [_observers addObject:observer];
-}
-
-- (void)removeObserver:(id<MXNAudioPlayerObserver>)observer {
-    [_observers removeObject:observer];
-}
-
-- (void)setPlaybackStateAndNotifyObservers:(MXNAudioPlaybackState)state {
-    _state = state;
-    NSArray *observers = _observers.allObjects;
-    for (id<MXNAudioPlayerObserver> observer in observers) {
-        [observer mxnAudioPlayer:self playbackStateDidChangeTo:state];
-    }
-}
-
-- (void)audioSessionInterruption:(NSNotification *)notification {
-    [self stopWithAudioSessionDeactivated:YES];
-}
-
-- (void)audioSessionRouteChange:(NSNotification *)notification {
-    AVAudioSessionRouteChangeReason reason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
-    switch (reason) {
-        case AVAudioSessionRouteChangeReasonOverride:
-        case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
-        case AVAudioSessionRouteChangeReasonRouteConfigurationChange: {
-            break;
-        }
-        case AVAudioSessionRouteChangeReasonCategoryChange: {
-            NSString *newCategory = [[AVAudioSession sharedInstance] category];
-            BOOL canContinue = [newCategory isEqualToString:AVAudioSessionCategoryRecord] || [newCategory isEqualToString:AVAudioSessionCategoryPlayAndRecord];
-            if (!canContinue) {
-                [self stopWithAudioSessionDeactivated:YES];
-            }
-            break;
-        }
-        case AVAudioSessionRouteChangeReasonUnknown:
-        case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
-        case AVAudioSessionRouteChangeReasonWakeFromSleep:
-        case AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory: {
-            [self stopWithAudioSessionDeactivated:YES];
-            break;
-        }
-    }
-}
-
-- (void)audioSessionMediaServicesWereReset:(NSNotification *)notification {
-    _audioQueue = nil;
-    if (_reader) {
-        [_reader close];
-        _reader = nil;
-    }
-    [self setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateDisposed];
 }
 
 void AQBufferCallback(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer) {
     MXNAudioPlayer *player = (__bridge MXNAudioPlayer *)inUserData;
-    if (player->_state == MXNAudioPlaybackStateStopped || player->_state == MXNAudioPlaybackStateDisposed) {
+    if (player->_didReachEnd) {
         return;
     }
     NSData *pcmData = [player->_reader pcmDataWithMaxLength:audioQueueBufferSize error:nil];
-    NSCAssert(pcmData.length <= audioQueueBufferSize,  @"Too many PCM data");
     if (pcmData && pcmData.length > 0) {
         inBuffer->mAudioDataByteSize = (UInt32)pcmData.length;
         [pcmData getBytes:inBuffer->mAudioData length:pcmData.length];
         AudioQueueEnqueueBuffer(player->_audioQueue, inBuffer, 0, NULL);
     } else {
-        if (player->_state == MXNAudioPlaybackStatePlaying) {
-            [player stopWithAudioSessionDeactivated:YES];
-        }
+        player->_didReachEnd = YES;
+        AudioQueueStop(inAQ, false);
     }
 }
 
@@ -304,9 +143,8 @@ void isRunningChanged(void * __nullable inUserData, AudioQueueRef inAQ, AudioQue
     UInt32 isRunning;
     UInt32 size = sizeof(isRunning);
     OSStatus result = AudioQueueGetProperty(inAQ, kAudioQueueProperty_IsRunning, &isRunning, &size);
-    if (result == noErr && !isRunning && player->_state != MXNAudioPlaybackStateStopped) {
-        NSLog(@"isRunningChanged post stoped. previous: %@", NSStringFromMXNAudioPlaybackState(player->_state));
-        [player setPlaybackStateAndNotifyObservers:MXNAudioPlaybackStateStopped];
+    if (result == noErr) {
+        player.isPlaying = isRunning;
     }
 }
 
@@ -330,21 +168,4 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void) {
     format.mBytesPerPacket = format.mBytesPerFrame = (format.mBitsPerChannel / 8) * format.mChannelsPerFrame;
     format.mFramesPerPacket = 1;
     return format;
-}
-
-NSString* NSStringFromMXNAudioPlaybackState(MXNAudioPlaybackState state) {
-    switch (state) {
-        case MXNAudioPlaybackStatePreparing:
-            return @"Preparing";
-        case MXNAudioPlaybackStateReadyToPlay:
-            return @"ReadyToPlay";
-        case MXNAudioPlaybackStatePlaying:
-            return @"Playing";
-        case MXNAudioPlaybackStatePaused:
-            return @"Paused";
-        case MXNAudioPlaybackStateStopped:
-            return @"Stopped";
-        case MXNAudioPlaybackStateDisposed:
-            return @"Disposed";
-    }
 }

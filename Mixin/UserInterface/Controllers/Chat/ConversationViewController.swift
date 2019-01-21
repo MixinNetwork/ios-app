@@ -378,7 +378,7 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         saveDraft()
-        MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
+        AudioManager.shared.stop(deactivateAudioSession: true)
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath), tableView.rectForRow(at: lastIndexPath).origin.y < tableView.contentOffset.y + tableView.frame.height - tableView.contentInset.bottom {
                 ConversationViewController.positions[conversationId] = nil
@@ -627,28 +627,14 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
                         }
                     })
                 }
-            } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue, let cell = cell as? AudioMessageCell {
-                let cellIsPlaying = cell.isPlaying
-                MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: cellIsPlaying)
-                if !cellIsPlaying {
-                    cell.isPlaying = true
-                    if let mediaUrl = viewModel.message.mediaUrl {
-                        let path = MixinFile.url(ofChatDirectory: .audios, filename: mediaUrl).path
-                        MXNAudioPlayer.shared().playFile(atPath: path) { [weak cell] (success, error) in
-                            if let error = error as? MXNAudioPlayerError, error == .cancelled {
-                                DispatchQueue.main.async {
-                                    cell?.isPlaying = false
-                                }
-                            } else if let error = error {
-                                UIApplication.trackError("ConversationViewController", action: "Play audio", userInfo: ["error": error])
-                            }
-                        }
-                    }
-                }
+            } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue, let filename = message.mediaUrl {
+                let url = MixinFile.url(ofChatDirectory: .audios, filename: filename)
+                let node = AudioManager.Node(message: message, path: url.path)
+                AudioManager.shared.playOrStop(node: node)
             } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue, let item = GalleryItem(message: message) {
                 tableViewContentOffsetShouldFollowInputWrapperPosition = false
                 makeInputTextViewResignFirstResponderIfItIs()
-                MXNAudioPlayer.shared().stop(withAudioSessionDeactivated: true)
+                AudioManager.shared.stop(deactivateAudioSession: true)
                 tableViewContentOffsetShouldFollowInputWrapperPosition = true
                 view.bringSubviewToFront(galleryWrapperView)
                 if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, case let .relativeOffset(offset) = viewModel.layoutPosition {
@@ -1010,6 +996,9 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             }
         case .delete:
             (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(markMediaStatusCancelled: false)
+            if viewModel.message.messageId == AudioManager.shared.playingNode?.message.messageId {
+                AudioManager.shared.stop(deactivateAudioSession: true)
+            }
             dataSource?.queue.async { [weak self] in
                 MessageDAO.shared.deleteMessage(id: message.messageId)
                 DispatchQueue.main.sync {

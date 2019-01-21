@@ -2,6 +2,9 @@ import UIKit
 
 class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     
+    private static let playImage = UIImage(named: "ic_play")
+    private static let stopImage = UIImage(named: "ic_file_cancel")
+
     @IBOutlet weak var operationButton: NetworkOperationButton!
     @IBOutlet weak var playbackStateImageView: UIImageView!
     @IBOutlet weak var waveformView: WaveformView!
@@ -21,16 +24,14 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
             guard isPlaying != oldValue else {
                 return
             }
-            let image = isPlaying ? #imageLiteral(resourceName: "ic_file_cancel") : #imageLiteral(resourceName: "ic_play")
+            let image = isPlaying ? AudioMessageCell.stopImage : AudioMessageCell.playImage
             playbackStateImageView.image = image
             if isPlaying {
-                MXNAudioPlayer.shared().addObserver(self)
                 timer = Timer(timeInterval: waveformUpdateInterval, repeats: true, block: { [weak self] (_) in
                     self?.updateWaveformProgress()
                 })
                 RunLoop.main.add(timer!, forMode: .common)
             } else {
-                MXNAudioPlayer.shared().removeObserver(self)
                 waveformMaskView.frame = .zero
                 timer?.invalidate()
                 timer = nil
@@ -41,6 +42,9 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     deinit {
         timer?.invalidate()
         timer = nil
+        if let messageId = viewModel?.message.messageId {
+            AudioManager.shared.unregister(cell: self, forMessageId: messageId)
+        }
     }
     
     override var contentTopMargin: CGFloat {
@@ -57,9 +61,11 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
         super.prepareForReuse()
         isPlaying = false
         waveformMaskView.frame = .zero
-        MXNAudioPlayer.shared().removeObserver(self)
         timer?.invalidate()
         timer = nil
+        if let messageId = viewModel?.message.messageId {
+            AudioManager.shared.unregister(cell: self, forMessageId: messageId)
+        }
     }
 
     override func render(viewModel: MessageViewModel) {
@@ -72,19 +78,26 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
             operationButton.isHidden = viewModel.operationButtonIsHidden
             playbackStateImageView.isHidden = viewModel.playbackStateIsHidden
             duration = Float64(viewModel.message.mediaDuration ?? 0)
-            let player = MXNAudioPlayer.shared()
-            if player.state == .playing, let mediaUrl = viewModel.message.mediaUrl, player.path.contains(mediaUrl) {
-                isPlaying = true
-            }
         }
+        AudioManager.shared.register(cell: self, forMessageId: viewModel.message.messageId)
     }
     
     @IBAction func operationAction(_ sender: Any) {
         attachmentLoadingDelegate?.attachmentLoadingCellDidSelectNetworkOperation(self)
     }
     
+    func updateOperationButtonStyle() {
+        guard let viewModel = viewModel as? AudioMessageViewModel else {
+            return
+        }
+        operationButton.style = viewModel.operationButtonStyle
+        operationButton.isHidden = viewModel.operationButtonIsHidden
+        playbackStateImageView.isHidden = viewModel.playbackStateIsHidden
+    }
+    
     private func updateWaveformProgress() {
-        let progress = MXNAudioPlayer.shared().currentTime * millisecondsPerSecond / (duration - waveformUpdateInterval * millisecondsPerSecond)
+        let player = AudioManager.shared.player
+        let progress = player.currentTime * millisecondsPerSecond / (duration - waveformUpdateInterval * millisecondsPerSecond)
         let oldWidth = waveformMaskView.frame.width
         let newWidth = highlightedWaveformView.frame.width * CGFloat(progress)
         if abs(oldWidth - newWidth) > 0.3 {
@@ -95,16 +108,4 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
         }
     }
 
-}
-
-extension AudioMessageCell: MXNAudioPlayerObserver {
-    
-    func mxnAudioPlayer(_ player: MXNAudioPlayer, playbackStateDidChangeTo state: MXNAudioPlaybackState) {
-        if state == .stopped {
-            performSynchronouslyOnMainThread { [weak self] in
-                self?.isPlaying = false
-            }
-        }
-    }
-    
 }

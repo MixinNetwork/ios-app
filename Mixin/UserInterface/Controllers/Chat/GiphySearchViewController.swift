@@ -171,6 +171,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let url = urls[indexPath.row].fullsized
         conversationViewController?.dataSource?.sendGif(at: url)
+        conversationViewController?.reduceStickerPanelHeightIfMaximized()
         dismissAction(collectionView)
     }
     

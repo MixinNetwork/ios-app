@@ -3,16 +3,28 @@ import Bugsnag
 import Zip
 
 class BackupJob: BaseJob {
-
+    
+    static let sharedId = "backup"
+    
+    let progress = Progress()
+    
     private let immediatelyBackup: Bool
-
+    
+    private var shouldBackupFiles: Bool {
+        return CommonUserDefault.shared.hasBackupFiles
+    }
+    
+    private var shouldBackupVideos: Bool {
+        return CommonUserDefault.shared.hasBackupVideos
+    }
+    
     init(immediatelyBackup: Bool = false) {
         self.immediatelyBackup = immediatelyBackup
         super.init()
     }
 
     override func getJobId() -> String {
-         return "backup"
+         return BackupJob.sharedId
     }
 
     override func run() throws {
@@ -46,12 +58,18 @@ class BackupJob: BaseJob {
 
         do {
             try FileManager.default.createDirectoryIfNeeded(dir: backupDir)
-
+            
+            if !shouldBackupFiles && !shouldBackupVideos {
+                progress.remainingJobCount = 3
+            } else {
+                progress.remainingJobCount = 4
+            }
+            
             var fileSize: Int64 = 0
             fileSize += try backupDatabase(backupDir: backupDir)
             fileSize += try backupPhotosAndAudios(backupDir: backupDir)
             fileSize += try backupFilesAndVideos(backupDir: backupDir)
-
+            
             CommonUserDefault.shared.lastBackupTime = Date().timeIntervalSince1970
             CommonUserDefault.shared.lastBackupSize = fileSize
         } catch {
@@ -69,10 +87,14 @@ class BackupJob: BaseJob {
 
         try? FileManager.default.removeItem(at: localURL)
         try MixinDatabase.shared.backup(path: localURL.path) { (remaining, pagecount) in
-
+            guard let job = BackupJobQueue.shared.backupJob else {
+                return
+            }
+            job.progress.currentJobProgress = Float(pagecount - remaining) / Float(pagecount)
         }
 
         try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
+        progress.completeCurrentJob()
         return FileManager.default.fileSize(cloudURL.path)
     }
 
@@ -82,16 +104,17 @@ class BackupJob: BaseJob {
         for category in categories {
             let localDir = MixinFile.url(ofChatDirectory: category, filename: nil)
             let paths = try FileManager.default.contentsOfDirectory(atPath: localDir.path).compactMap{ localDir.appendingPathComponent($0) }
-
-            guard paths.count > 0 else {
-                continue
+            if paths.isEmpty {
+                progress.completeCurrentJob()
+            } else {
+                let localURL = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())", progress: { (progress) in
+                    self.progress.currentJobProgress = Float(progress)
+                })
+                let cloudURL = backupDir.appendingPathComponent(localURL.lastPathComponent)
+                try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
+                fileSize += FileManager.default.fileSize(cloudURL.path)
+                progress.completeCurrentJob()
             }
-
-            let localURL = try Zip.quickZipFiles(paths, fileName: "mixin.\(category.rawValue.lowercased())")
-            let cloudURL = backupDir.appendingPathComponent(localURL.lastPathComponent)
-
-            try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
-            fileSize += FileManager.default.fileSize(cloudURL.path)
         }
         return fileSize
     }
@@ -101,14 +124,14 @@ class BackupJob: BaseJob {
         var localPaths = Set<String>()
         var cloudPaths = Set<String>()
 
-        if CommonUserDefault.shared.hasBackupFiles {
+        if shouldBackupFiles {
             categories.append(.files)
             try FileManager.default.createDirectoryIfNeeded(dir: backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
         } else {
             FileManager.default.removeDirectoryAndChildFiles(backupDir.appendingPathComponent(MixinFile.ChatDirectory.files.rawValue))
         }
 
-        if CommonUserDefault.shared.hasBackupVideos {
+        if shouldBackupVideos {
             categories.append(.videos)
             try FileManager.default.createDirectoryIfNeeded(dir: backupDir.appendingPathComponent(MixinFile.ChatDirectory.videos.rawValue))
         } else {
@@ -130,7 +153,9 @@ class BackupJob: BaseJob {
         }
 
         var fileSize: Int64 = 0
-        for path in localPaths {
+        let pathCount = Float(localPaths.count)
+        for (index, path) in localPaths.enumerated() {
+            progress.currentJobProgress = Float(index + 1) / pathCount
             let localURL = MixinFile.rootDirectory.appendingPathComponent("Chat").appendingPathComponent(path)
             let cloudURL = backupDir.appendingPathComponent(path)
 
@@ -143,7 +168,39 @@ class BackupJob: BaseJob {
             }
             fileSize += FileManager.default.fileSize(cloudURL.path)
         }
+        progress.completeCurrentJob()
         return fileSize
     }
+    
+}
 
+extension BackupJob {
+    
+    class Progress {
+        
+        var completedJobCount = 0
+        var remainingJobCount = 0
+        
+        var currentJobProgress: Float = 0
+        
+        var fractionCompleted: Float {
+            let totalCount = completedJobCount + remainingJobCount
+            guard totalCount > 0 else {
+                return 0
+            }
+            if remainingJobCount > 0 {
+                return (Float(completedJobCount) + currentJobProgress) / Float(totalCount)
+            } else {
+                return 1
+            }
+        }
+        
+        func completeCurrentJob() {
+            completedJobCount += 1
+            remainingJobCount -= 1
+            currentJobProgress = 0
+        }
+        
+    }
+    
 }

@@ -74,7 +74,7 @@ class WalletHeaderCell: UITableViewCell {
             middleAssetWrapperView.isHidden = false
             rightAssetWrapperView.isHidden = true
             middleAssetSymbolLabel.text = assetPortions[0].symbol
-            middleAssetPercentLabel.text = WalletHeaderCell.percentageFormatter.string(from: 1)
+            middleAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: 1)
             assetChartView.proportions = [1]
         case 2:
             leftAssetWrapperView.isHidden = false
@@ -82,10 +82,10 @@ class WalletHeaderCell: UITableViewCell {
             rightAssetWrapperView.isHidden = false
             let leftPercent = assetPortions[0].usdBalance / usdTotalBalance
             leftAssetSymbolLabel.text = assetPortions[0].symbol
-            leftAssetPercentLabel.text = WalletHeaderCell.percentageFormatter.string(from: NSNumber(value: leftPercent))
+            leftAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: leftPercent))
             let rightPercent = 1 - leftPercent
             rightAssetSymbolLabel.text = assetPortions[1].symbol
-            rightAssetPercentLabel.text = WalletHeaderCell.percentageFormatter.string(from: NSNumber(value: rightPercent))
+            rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: rightPercent))
             assetChartView.proportions = [leftPercent, rightPercent]
         default:
             leftAssetWrapperView.isHidden = false
@@ -93,13 +93,13 @@ class WalletHeaderCell: UITableViewCell {
             rightAssetWrapperView.isHidden = false
             let leftPercent = assetPortions[0].usdBalance / usdTotalBalance
             leftAssetSymbolLabel.text = assetPortions[0].symbol
-            leftAssetPercentLabel.text = WalletHeaderCell.percentageFormatter.string(from: NSNumber(value: leftPercent))
+            leftAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: leftPercent))
             let middlePercent = assetPortions[1].usdBalance / usdTotalBalance
             middleAssetSymbolLabel.text = assetPortions[1].symbol
-            middleAssetPercentLabel.text = WalletHeaderCell.percentageFormatter.string(from: NSNumber(value: middlePercent))
+            middleAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: middlePercent))
             let rightPercent = 1 - leftPercent - middlePercent
             rightAssetSymbolLabel.text = assetPortions[2].symbol
-            rightAssetPercentLabel.text = WalletHeaderCell.percentageFormatter.string(from: NSNumber(value: rightPercent))
+            rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: rightPercent))
             assetChartView.proportions = [leftPercent, middlePercent, rightPercent]
         }
     }
@@ -112,18 +112,6 @@ extension WalletHeaderCell {
         var symbol: String
         var usdBalance: Double
     }
-    
-    static let percentageFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .percent
-        formatter.minimum = 0.01
-        formatter.maximum = 1
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 0
-        formatter.roundingMode = .floor
-        formatter.locale = .current
-        return formatter
-    }()
     
     private func attributedString(usdBalance: Double) -> NSAttributedString? {
         let zeroInteger = "0"

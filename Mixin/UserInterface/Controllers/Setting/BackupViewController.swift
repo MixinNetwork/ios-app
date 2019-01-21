@@ -9,6 +9,15 @@ class BackupViewController: UITableViewController {
     @IBOutlet weak var backupIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var backupLabel: UILabel!
     
+    private let actionSectionFooterView = FooterView()
+    
+    private var timer: Timer?
+    
+    deinit {
+        timer?.invalidate()
+        timer = nil
+    }
+    
     class func instance() -> UIViewController {
         let vc = Storyboard.setting.instantiateViewController(withIdentifier: "backup")
         return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_BACKUP_TITLE)
@@ -20,10 +29,11 @@ class BackupViewController: UITableViewController {
         switchIncludeFiles.isOn = CommonUserDefault.shared.hasBackupFiles
         switchIncludeVideos.isOn = CommonUserDefault.shared.hasBackupVideos
 
+        reloadActionSectionFooterLabel()
         tableView.tableHeaderView = Bundle.main.loadNibNamed("BackupHeader", owner: nil, options: nil)?.first as? UIView
         NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
 
-        if BackupJobQueue.shared.isBackuping() {
+        if BackupJobQueue.shared.isBackingUp {
             backingUI()
         } else if !RestoreJob.isRestoreChat() {
             CommonUserDefault.shared.lastBackupTime = 0
@@ -32,11 +42,19 @@ class BackupViewController: UITableViewController {
     }
 
     @objc func backupChanged() {
-        backupIndicatorView.stopAnimating()
-        backupIndicatorView.isHidden = true
-        backupLabel.text = Localized.SETTING_BACKUP_NOW
-        backupLabel.textColor = .systemTint
-        tableView.reloadData()
+        timer?.invalidate()
+        timer = nil
+        reloadActionSectionFooterLabel(progress: 1)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.reloadActionSectionFooterLabel()
+            self.backupIndicatorView.stopAnimating()
+            self.backupIndicatorView.isHidden = true
+            self.backupLabel.text = Localized.SETTING_BACKUP_NOW
+            self.backupLabel.textColor = .systemTint
+            self.switchIncludeFiles.isEnabled = true
+            self.switchIncludeVideos.isEnabled = true
+            self.tableView.reloadData()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -66,7 +84,31 @@ class BackupViewController: UITableViewController {
         backupIndicatorView.isHidden = false
         backupLabel.text = Localized.SETTING_BACKING
         backupLabel.textColor = .lightGray
+        switchIncludeFiles.isEnabled = false
+        switchIncludeVideos.isEnabled = false
+        reloadActionSectionFooterLabel()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
+            self?.reloadActionSectionFooterLabel()
+        })
     }
+    
+    private func reloadActionSectionFooterLabel(progress: Float? = nil) {
+        let text: String?
+        if let progress = progress ?? BackupJobQueue.shared.backupJob?.progress.fractionCompleted {
+            let number = NSNumber(value: progress)
+            let percentage = NumberFormatter.simplePercentage.string(from: number)
+            text = Localized.SETTING_BACKUP_PROGRESS(progress: percentage ?? "")
+        } else {
+            let time = CommonUserDefault.shared.lastBackupTime
+            if let size = CommonUserDefault.shared.lastBackupSize, size > 0, time > 0 {
+                text = Localized.SETTING_BACKUP_LAST(time: DateFormatter.backupFormatter.string(from: Date(timeIntervalSince1970: time)), size: size.sizeRepresentation())
+            } else {
+                text = nil
+            }
+        }
+        actionSectionFooterView.label.text = text
+    }
+    
 }
 
 extension BackupViewController {
@@ -84,19 +126,66 @@ extension BackupViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            let time = CommonUserDefault.shared.lastBackupTime
-            if let size = CommonUserDefault.shared.lastBackupSize, size > 0, time > 0 {
-                return Localized.SETTING_BACKUP_LAST(time: DateFormatter.backupFormatter.string(from: Date(timeIntervalSince1970: time)), size: size.sizeRepresentation())
-            } else {
-                return nil
-            }
-        case 1:
-            return Localized.SETTING_BACKUP_AUTO_TIPS
-        default:
+        guard section == 1 else {
             return nil
         }
+        return Localized.SETTING_BACKUP_AUTO_TIPS
     }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard section == 0 else {
+            return nil
+        }
+        return actionSectionFooterView
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 {
+            let sizeToFit = CGSize(width: tableView.frame.width, height: UIView.layoutFittingExpandedSize.height)
+            let sizeThatFits = actionSectionFooterView.sizeThatFits(sizeToFit)
+            return sizeThatFits.height
+        } else {
+            return super.tableView(tableView, heightForFooterInSection: section)
+        }
+    }
+    
+}
 
+extension BackupViewController {
+    
+    class FooterView: UIView {
+        
+        let label = UILabel()
+        
+        private let labelInset = UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 20)
+        
+        required init?(coder aDecoder: NSCoder) {
+            super.init(coder: aDecoder)
+            prepare()
+        }
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            prepare()
+        }
+        
+        override func sizeThatFits(_ size: CGSize) -> CGSize {
+            let sizeToFit = CGSize(width: size.width - labelInset.horizontal, height: size.height - labelInset.vertical)
+            let sizeThatFits = label.sizeThatFits(sizeToFit)
+            return CGSize(width: sizeThatFits.width + labelInset.horizontal, height: sizeThatFits.height + labelInset.vertical)
+        }
+
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            label.frame = bounds.inset(by: labelInset)
+        }
+        
+        private func prepare() {
+            label.font = .systemFont(ofSize: 13)
+            label.textColor = UIColor(red: 0.43, green: 0.43, blue: 0.43, alpha: 1)
+            addSubview(label)
+        }
+        
+    }
+    
 }

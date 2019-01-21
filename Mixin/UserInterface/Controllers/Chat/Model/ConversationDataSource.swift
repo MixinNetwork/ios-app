@@ -568,8 +568,10 @@ extension ConversationDataSource {
                                             conversationId: conversationId,
                                             userId: AccountAPI.shared.accountUserId)
         message.mediaStatus = MediaStatus.PENDING.rawValue
-        SDWebImageManager.shared.loadImage(with: url, options: .highPriority, progress: nil) { (image, _, _, _, _, _) in
+        let context = SDWebImagePrefetcher.shared.context ?? [.animatedImageClass: YYImage.self]
+        SDWebImageManager.shared.loadImage(with: url, options: .highPriority, context: context, progress: nil) { (image, _, _, _, _, _) in
             guard let image = image as? YYImage, let data = image.animatedImageData else {
+                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
                 return
             }
             DispatchQueue.global().async {

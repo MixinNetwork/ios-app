@@ -28,7 +28,7 @@ class GiphySearchViewController: UIViewController {
     private let limit = 24
 
     private var status = Status.loading
-    private var urls = [URL]()
+    private var urls = [GiphyImageURL]()
     private var isLoadingMore = false
     private var animated: Bool = false {
         didSet {
@@ -53,7 +53,7 @@ class GiphySearchViewController: UIViewController {
         guard let weakSelf = self, let data = response?.data else {
             return
         }
-        let urls = data.compactMap({ $0.mixinImageURL })
+        let urls = data.compactMap(GiphyImageURL.init)
         DispatchQueue.main.async {
             weakSelf.status = urls.isEmpty ? .noResult : .loading
             weakSelf.urls = urls
@@ -64,7 +64,7 @@ class GiphySearchViewController: UIViewController {
         guard let weakSelf = self, let data = response?.data else {
             return
         }
-        let urls = data.compactMap({ $0.mixinImageURL })
+        let urls = data.compactMap(GiphyImageURL.init)
         DispatchQueue.main.async {
             if urls.isEmpty {
                 weakSelf.status = .noMoreResult
@@ -155,7 +155,8 @@ extension GiphySearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
         cell.imageView.contentMode = .scaleAspectFill
-        cell.imageView.sd_setImage(with: urls[indexPath.row], completed: nil)
+        let url = urls[indexPath.row].preview
+        cell.imageView.sd_setImage(with: url, completed: nil)
         return cell
     }
     
@@ -168,7 +169,7 @@ extension GiphySearchViewController: UICollectionViewDataSource {
 extension GiphySearchViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let url = urls[indexPath.row]
+        let url = urls[indexPath.row].fullsized
         conversationViewController?.dataSource?.sendGif(at: url)
         dismissAction(collectionView)
     }

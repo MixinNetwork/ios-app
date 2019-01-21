@@ -3,7 +3,7 @@ import GiphyCoreSDK
 
 class GiphyViewController: StickersCollectionViewController {
     
-    var urls = [URL]()
+    var urls = [GiphyImageURL]()
     
     private let footerReuseId = "footer"
     private let loadingIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -42,7 +42,7 @@ class GiphyViewController: StickersCollectionViewController {
             guard let weakSelf = self, let data = response?.data, error == nil else {
                 return
             }
-            let urls = data.compactMap({ $0.mixinImageURL })
+            let urls = data.compactMap(GiphyImageURL.init)
             DispatchQueue.main.async {
                 weakSelf.loadingIndicator.stopAnimating()
                 weakSelf.urls = urls
@@ -62,7 +62,8 @@ class GiphyViewController: StickersCollectionViewController {
             cell.imageView.image = UIImage(named: "ic_giphy_search")
         } else {
             cell.imageView.contentMode = .scaleAspectFill
-            cell.imageView.sd_setImage(with: urls[indexPath.row - 1], completed: nil)
+            let url = urls[indexPath.row - 1].preview
+            cell.imageView.sd_setImage(with: url, completed: nil)
         }
         return cell
     }
@@ -74,7 +75,7 @@ class GiphyViewController: StickersCollectionViewController {
                 self?.animated = true
             })
         } else {
-            let url = urls[indexPath.row - 1]
+            let url = urls[indexPath.row - 1].fullsized
             conversationViewController?.dataSource?.sendGif(at: url)
             conversationViewController?.reduceStickerPanelHeightIfMaximized()
         }

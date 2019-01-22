@@ -530,6 +530,9 @@ public class Localized {
     public static func SETTING_BACKUP_PROGRESS(progress: String) -> String {
         return String(format: LocalizedString("setting_backup_progress", comment: "Uploading %@"), progress)
     }
+    public static func SETTING_RESTORE_PROGRESS(progress: String) -> String {
+        return String(format: LocalizedString("setting_restore_progress", comment: "Restoring %@"), progress)
+    }
     
     // Notifications
     public static let NOTIFICATION_REPLY = LocalizedString("notification_reply", comment: "Reply")

@@ -491,6 +491,7 @@
 "setting_backup_auto_tips" = "只会在 Wi-Fi 下自动备份聊天记录。";
 "setting_backup_last" = "上次备份是%@，占用空间 %@。";
 "setting_backup_progress" = "正在备份 %@";
+"setting_restore_progress" = "正在恢复 %@";
 
 // Notifications
 "notification_reply" = "回复";

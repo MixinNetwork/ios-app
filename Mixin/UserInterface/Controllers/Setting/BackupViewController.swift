@@ -9,7 +9,7 @@ class BackupViewController: UITableViewController {
     @IBOutlet weak var backupIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var backupLabel: UILabel!
     
-    private let actionSectionFooterView = FooterView()
+    private lazy var actionSectionFooterView = FooterView()
     
     private var timer: Timer?
     
@@ -87,6 +87,7 @@ class BackupViewController: UITableViewController {
         switchIncludeFiles.isEnabled = false
         switchIncludeVideos.isEnabled = false
         reloadActionSectionFooterLabel()
+        tableView.reloadData()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
             self?.reloadActionSectionFooterLabel()
         })

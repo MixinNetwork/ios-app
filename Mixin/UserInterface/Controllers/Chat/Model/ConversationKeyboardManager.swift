@@ -70,7 +70,7 @@ class ConversationKeyboardManager {
     }
     
     private func keyboardFrameIsInvisible(_ frame: CGRect) -> Bool {
-        return frame.origin.y >= UIScreen.main.bounds.height
+        return UIScreen.main.bounds.height - frame.origin.y <= 1
     }
     
 }

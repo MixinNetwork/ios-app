@@ -50,6 +50,7 @@ class ContactViewController: UITableViewController {
                     self?.tableView.reloadSections(IndexSet(integer: 2), with: .none)
                 }
                 if refresh {
+                    ContactAPI.shared.syncContacts()
                     self?.checkPhoneContact(contacts)
                 }
             }
@@ -98,7 +99,6 @@ extension ContactViewController: PhoneContactGuideCellDelegate {
 
     private func checkPhoneContact(_ contacts: [UserItem]) {
         if ContactsManager.shared.authorization == .authorized {
-            ContactAPI.shared.syncContacts()
             fetchPhoneContact(contacts)
         } else {
             showPhoneContactTips = true

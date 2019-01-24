@@ -1,6 +1,7 @@
 import Foundation
 import Bugsnag
 import Zip
+import WCDBSwift
 
 class BackupJob: BaseJob {
     
@@ -93,7 +94,11 @@ class BackupJob: BaseJob {
             job.progress.currentJobProgress = Float(pagecount - remaining) / Float(pagecount)
         }
 
-        try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
+        let db = Database(withFileURL: localURL)
+        try? db.delete(fromTable: SentSenderKey.tableName)
+        try db.close {
+            try FileManager.default.saveToCloud(from: localURL, to: cloudURL)
+        }
         progress.completeCurrentJob()
         return FileManager.default.fileSize(cloudURL.path)
     }

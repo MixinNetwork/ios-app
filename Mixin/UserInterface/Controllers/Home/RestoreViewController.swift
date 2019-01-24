@@ -37,7 +37,7 @@ class RestoreViewController: UIViewController {
             }
 
             do {
-                self.updateProgressLabel(progress: 0.1)
+                self.updateProgressLabel(progress: 0.01)
                 try self.restoreDatabase(backupDir: backupDir)
                 self.updateProgressLabel(progress: 0.3)
                 try self.restorePhotosAndAudios(backupDir: backupDir)

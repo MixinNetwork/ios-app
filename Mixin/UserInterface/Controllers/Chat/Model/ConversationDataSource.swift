@@ -616,15 +616,9 @@ extension ConversationDataSource {
         if initialMessageId != nil {
             ConversationViewController.positions[conversationId] = nil
         }
-        let initialMessageId = initialMessageId
-            ?? highlight?.messageId
-            ?? ConversationViewController.positions[conversationId]?.messageId
+        var initialMessageId = initialMessageId ?? highlight?.messageId
         FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Initial message id: \(initialMessageId ?? "(nil)")")
-        if let initialMessageId = initialMessageId, initialMessageId == MessageItem.encryptionHintMessageId {
-            messages = MessageDAO.shared.getFirstNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
-            didLoadEarliestMessage = true
-            didLoadLatestMessage = messages.count < numberOfMessagesOnReloading
-        } else if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: numberOfMessagesOnReloading) {
+        if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: numberOfMessagesOnReloading) {
             (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
             if highlight == nil, initialMessageId != firstUnreadMessageId {
                 firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId
@@ -632,6 +626,14 @@ extension ConversationDataSource {
         } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: firstUnreadMessageId, count: numberOfMessagesOnReloading) {
             (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
             self.firstUnreadMessageId = firstUnreadMessageId
+        } else if let id = ConversationViewController.positions[conversationId]?.messageId, id == MessageItem.encryptionHintMessageId {
+            messages = MessageDAO.shared.getFirstNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
+            didLoadEarliestMessage = true
+            didLoadLatestMessage = messages.count < numberOfMessagesOnReloading
+            initialMessageId = id
+        } else if let id = ConversationViewController.positions[conversationId]?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: id, count: numberOfMessagesOnReloading) {
+            (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
+            initialMessageId = id
         } else {
             messages = MessageDAO.shared.getLastNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
             didLoadLatestMessage = true

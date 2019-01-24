@@ -19,8 +19,12 @@ final class SentSenderKeyDAO {
         MixinDatabase.shared.insertOrReplace(objects: keys)
     }
 
-    func delete(conversationId: String) {
+    func delete(byConversationId conversationId: String) {
         MixinDatabase.shared.delete(table: SentSenderKey.tableName, condition: SentSenderKey.Properties.conversationId == conversationId)
+    }
+
+    func delete(byUserId userId: String) {
+        MixinDatabase.shared.delete(table: SentSenderKey.tableName, condition: SentSenderKey.Properties.userId == userId)
     }
 }
 

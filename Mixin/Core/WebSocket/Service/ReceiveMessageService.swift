@@ -650,7 +650,7 @@ extension ReceiveMessageService {
                 return
             }
             SignalProtocol.shared.clearSenderKey(groupId: data.conversationId, senderId: currentAccountId)
-            SentSenderKeyDAO.shared.delete(conversationId: data.conversationId)
+            SentSenderKeyDAO.shared.delete(byConversationId: data.conversationId)
 
             operSuccess = ParticipantDAO.shared.removeParticipant(message: message, conversationId: data.conversationId, userId: participantId, source: data.source)
              ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [participantId]))
@@ -662,7 +662,7 @@ extension ReceiveMessageService {
             }
 
             SignalProtocol.shared.clearSenderKey(groupId: data.conversationId, senderId: currentAccountId)
-            SentSenderKeyDAO.shared.delete(conversationId: data.conversationId)
+            SentSenderKeyDAO.shared.delete(byConversationId: data.conversationId)
 
             guard participantId != currentAccountId else {
                 ConversationDAO.shared.deleteAndExitConversation(conversationId: data.conversationId, autoNotification: false)

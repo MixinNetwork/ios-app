@@ -174,7 +174,9 @@ class ConversationDataSource {
                     viewModels[firstDate] = [encryptionHintViewModel]
                 }
             }
-            var bottomDistance: CGFloat? = nil
+            let bottomDistance = DispatchQueue.main.sync {
+                self.tableView?.bottomDistance ?? 0
+            }
             if let lastDate = dates.last, let viewModelsBeforeInsertion = self.viewModels[lastDate] {
                 let messagesBeforeInsertion = Array(viewModelsBeforeInsertion.prefix(2)).map({ $0.message })
                 let messagesForTheDate = Array(messages.suffix(2)) + messagesBeforeInsertion
@@ -184,7 +186,6 @@ class ConversationDataSource {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                         return
                     }
-                    bottomDistance = tableView.bottomDistance
                     if let viewModel = self.viewModels[lastDate]?.first {
                         viewModel.style = styles[styles.count - messagesBeforeInsertion.count]
                         if let indexPath = self.indexPath(where: { $0.messageId == viewModel.message.messageId }), let cell = tableView.cellForRow(at: indexPath) as? MessageCell {
@@ -211,7 +212,7 @@ class ConversationDataSource {
                     }
                 }
                 tableView.reloadData()
-                let y = tableView.contentSize.height - (bottomDistance ?? tableView.bottomDistance)
+                let y = tableView.contentSize.height - bottomDistance
                 tableView.setContentOffsetYSafely(y)
                 FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Set contentOffset: \(tableView.contentOffset), reason: Load msg above")
                 self.isLoadingAbove = false

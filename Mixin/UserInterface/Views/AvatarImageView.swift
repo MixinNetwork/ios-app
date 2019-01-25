@@ -47,11 +47,12 @@ class AvatarImageView: CornerImageView {
         setImage(with: user.avatarUrl, identityNumber: user.identityNumber, name: user.fullName)
     }
     
-    func setImage(with url: String, identityNumber: String, name: String) {
+    func setImage(with url: String, identityNumber: String, name: String, placeholder: Bool = true) {
         if let url = URL(string: url) {
             titleLabel.text = nil
             backgroundColor = .clear
-            sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "ic_place_holder"), options: .lowPriority)
+            let placeholder = placeholder ? #imageLiteral(resourceName: "ic_place_holder") : nil
+            sd_setImage(with: url, placeholderImage: placeholder, options: .lowPriority)
         } else {
             if let number = Int64(identityNumber) {
                 image = UIImage(named: "color\(number % 24 + 1)")

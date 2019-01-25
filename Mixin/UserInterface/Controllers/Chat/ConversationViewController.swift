@@ -487,7 +487,6 @@ class ConversationViewController: UIViewController {
             toggleStickerPanel(delay: 0)
         }
         let window = WebWindow.instance(conversationId: conversationId, app: app)
-        window.controller = self
         window.presentPopupControllerAnimated(url: url)
     }
     
@@ -1762,7 +1761,6 @@ extension ConversationViewController {
             return
         }
         let window = WebWindow.instance(conversationId: conversationId)
-        window.controller = self
         window.presentPopupControllerAnimated(url: url)
     }
     

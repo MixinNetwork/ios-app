@@ -14,8 +14,6 @@ class WebWindow: BottomSheetView {
     
     @IBOutlet weak var titleHeightConstraint: NSLayoutConstraint!
     
-    weak var controller: UIViewController?
-    
     var usePageTitle = true
     
     private let disableImageSelectionScriptString = """
@@ -65,6 +63,13 @@ class WebWindow: BottomSheetView {
         dismissButton.imageView?.contentMode = .scaleAspectFit
     }
     
+    override func didMoveToSuperview() {
+        guard let navigationController = UIApplication.rootNavigationController() else {
+            return
+        }
+        navigationController.interactivePopGestureRecognizer?.isEnabled = superview == nil
+    }
+    
     override func dismissPopupControllerAnimated() {
         imageDownloadTask?.cancel()
         webView.stopLoading()
@@ -72,7 +77,6 @@ class WebWindow: BottomSheetView {
         CATransaction.perform(blockWithTransaction: {
             dismissView()
         }) {
-            self.controller?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             self.removeFromSuperview()
         }
     }
@@ -139,7 +143,6 @@ class WebWindow: BottomSheetView {
     func presentPopupControllerAnimated(url: URL) {
         presentView()
         webView.load(URLRequest(url: url))
-        controller?.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
     
     class func instance(conversationId: String, app: App? = nil) -> WebWindow {

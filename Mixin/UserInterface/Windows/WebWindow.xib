@@ -110,7 +110,8 @@
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="7b3-bB-hYw" firstAttribute="top" secondItem="Rr0-ei-B13" secondAttribute="top" id="F8B-l4-9XO"/>
+                <constraint firstItem="Rr0-ei-B13" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Qmy-MR-oXV" secondAttribute="top" constant="20" id="5Gx-eI-56Z"/>
+                <constraint firstItem="7b3-bB-hYw" firstAttribute="top" secondItem="Rr0-ei-B13" secondAttribute="top" priority="750" id="F8B-l4-9XO"/>
                 <constraint firstItem="nW9-LR-ccq" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7b3-bB-hYw" secondAttribute="top" id="L7l-Q0-itc"/>
                 <constraint firstItem="nW9-LR-ccq" firstAttribute="leading" secondItem="7b3-bB-hYw" secondAttribute="leading" id="U8I-Jb-vPC"/>
                 <constraint firstItem="7b3-bB-hYw" firstAttribute="trailing" secondItem="nW9-LR-ccq" secondAttribute="trailing" id="XEr-Ea-5fd"/>

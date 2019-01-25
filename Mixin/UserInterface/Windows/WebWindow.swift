@@ -139,7 +139,7 @@ class WebWindow: BottomSheetView {
     func presentPopupControllerAnimated(url: URL) {
         presentView()
         webView.load(URLRequest(url: url))
-        controller?.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        controller?.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
     
     class func instance(conversationId: String, app: App? = nil) -> WebWindow {

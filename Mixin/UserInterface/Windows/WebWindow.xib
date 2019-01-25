@@ -20,22 +20,22 @@
                     <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rr0-ei-B13">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="44s-dW-lAV">
-                                    <rect key="frame" x="0.0" y="0.0" width="315" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="309" height="70"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="BJu-DI-mFR">
-                                            <rect key="frame" x="15" y="0.0" width="300" height="60"/>
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="BJu-DI-mFR">
+                                            <rect key="frame" x="20" y="0.0" width="289" height="70"/>
                                             <subviews>
                                                 <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qk7-V2-agQ">
-                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="60"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="70"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" priority="999" constant="26" id="FUw-t9-elh"/>
+                                                        <constraint firstAttribute="width" priority="999" constant="30" id="FUw-t9-elh"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Loading..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k5S-YR-Z3Z">
-                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="60"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="289" height="70"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -51,7 +51,7 @@
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="BJu-DI-mFR" secondAttribute="trailing" id="4L1-oJ-dB1"/>
                                         <constraint firstAttribute="bottom" secondItem="BJu-DI-mFR" secondAttribute="bottom" id="58k-U6-adg"/>
-                                        <constraint firstItem="BJu-DI-mFR" firstAttribute="leading" secondItem="44s-dW-lAV" secondAttribute="leading" constant="15" id="5fJ-ZC-hyM"/>
+                                        <constraint firstItem="BJu-DI-mFR" firstAttribute="leading" secondItem="44s-dW-lAV" secondAttribute="leading" constant="20" id="5fJ-ZC-hyM"/>
                                         <constraint firstItem="BJu-DI-mFR" firstAttribute="top" secondItem="44s-dW-lAV" secondAttribute="top" id="8uP-Mf-PeD"/>
                                     </constraints>
                                     <connections>
@@ -59,9 +59,9 @@
                                     </connections>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uvk-a8-USK">
-                                    <rect key="frame" x="315" y="0.0" width="60" height="60"/>
+                                    <rect key="frame" x="309" y="0.0" width="66" height="70"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" secondItem="uvk-a8-USK" secondAttribute="height" id="5e0-Un-OO9"/>
+                                        <constraint firstAttribute="width" constant="66" id="Ffg-Oy-4yz"/>
                                     </constraints>
                                     <state key="normal" image="ic_web_close"/>
                                     <connections>
@@ -75,14 +75,14 @@
                                 <constraint firstAttribute="bottom" secondItem="uvk-a8-USK" secondAttribute="bottom" id="4BM-0C-Xvl"/>
                                 <constraint firstItem="uvk-a8-USK" firstAttribute="top" secondItem="Rr0-ei-B13" secondAttribute="top" id="4ks-8O-QE1"/>
                                 <constraint firstItem="uvk-a8-USK" firstAttribute="leading" secondItem="44s-dW-lAV" secondAttribute="trailing" id="DSZ-Cb-SGC"/>
-                                <constraint firstAttribute="height" constant="60" id="Ewj-cl-Uzr"/>
+                                <constraint firstAttribute="height" constant="70" id="Ewj-cl-Uzr"/>
                                 <constraint firstItem="44s-dW-lAV" firstAttribute="leading" secondItem="Rr0-ei-B13" secondAttribute="leading" id="kDE-Is-gYG"/>
                                 <constraint firstItem="44s-dW-lAV" firstAttribute="top" secondItem="Rr0-ei-B13" secondAttribute="top" id="lUd-XR-LZs"/>
                                 <constraint firstAttribute="bottom" secondItem="44s-dW-lAV" secondAttribute="bottom" id="xno-pB-cFG"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="okA-Lg-ndE">
-                            <rect key="frame" x="0.0" y="60" width="375" height="587"/>
+                            <rect key="frame" x="0.0" y="70" width="375" height="577"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                             <connections>
@@ -103,7 +103,7 @@
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="8"/>
+                            <integer key="value" value="13"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>

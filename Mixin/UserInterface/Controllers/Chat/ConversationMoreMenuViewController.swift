@@ -105,7 +105,7 @@ extension ConversationMoreMenuViewController: UICollectionViewDelegate {
             guard let url = URL(string: app.homeUri), let conversationId = self.conversationId else {
                 return
             }
-            WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+            WebWindow.instance(conversationId: conversationId, app: app).presentPopupControllerAnimated(url: url)
         }
     }
     

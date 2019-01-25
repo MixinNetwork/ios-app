@@ -3,7 +3,7 @@ import MobileCoreServices
 import AVKit
 import Photos
 
-class ConversationViewController: UIViewController, StatusBarStyleSwitchableViewController {
+class ConversationViewController: UIViewController {
     
     @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
@@ -56,11 +56,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     var dataSource: ConversationDataSource!
     var conversationId: String {
         return dataSource.conversationId
-    }
-    var statusBarStyle = UIStatusBarStyle.default {
-        didSet {
-            setNeedsStatusBarAppearanceUpdate()
-        }
     }
     var statusBarHidden = false {
         didSet {
@@ -171,10 +166,6 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
     
     override var prefersStatusBarHidden: Bool {
         return statusBarHidden
-    }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return statusBarStyle
     }
     
     // MARK: - Life cycle
@@ -495,7 +486,8 @@ class ConversationViewController: UIViewController, StatusBarStyleSwitchableView
         if isShowingStickerPanel {
             toggleStickerPanel(delay: 0)
         }
-        presentWebWindow(withURL: url)
+        let window = WebWindow.instance(conversationId: conversationId, app: app)
+        window.presentPopupControllerAnimated(url: url)
     }
     
     @IBAction func toggleStickerPanelSizeAction(_ sender: Any) {
@@ -1768,12 +1760,7 @@ extension ConversationViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        presentWebWindow(withURL: url)
-    }
-    
-    private func presentWebWindow(withURL url: URL) {
         let window = WebWindow.instance(conversationId: conversationId)
-        window.controller = self
         window.presentPopupControllerAnimated(url: url)
     }
     

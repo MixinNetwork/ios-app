@@ -9,9 +9,3 @@ class BaseViewController: UIViewController {
 
 
 }
-
-protocol StatusBarStyleSwitchableViewController: class {
-    
-    var statusBarStyle: UIStatusBarStyle { get set }
-    
-}

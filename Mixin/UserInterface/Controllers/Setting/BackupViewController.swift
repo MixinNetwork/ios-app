@@ -30,7 +30,6 @@ class BackupViewController: UITableViewController {
         switchIncludeVideos.isOn = CommonUserDefault.shared.hasBackupVideos
 
         reloadActionSectionFooterLabel()
-        tableView.tableHeaderView = Bundle.main.loadNibNamed("BackupHeader", owner: nil, options: nil)?.first as? UIView
         NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
 
         if BackupJobQueue.shared.isBackingUp {

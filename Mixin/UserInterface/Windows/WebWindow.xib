@@ -19,7 +19,11 @@
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nW9-LR-ccq">
                     <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rr0-ei-B13">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6tZ-4X-cbX" userLabel="Background Filler">
+                            <rect key="frame" x="0.0" y="57" width="375" height="26"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rr0-ei-B13">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="44s-dW-lAV">
@@ -80,6 +84,11 @@
                                 <constraint firstItem="44s-dW-lAV" firstAttribute="top" secondItem="Rr0-ei-B13" secondAttribute="top" id="lUd-XR-LZs"/>
                                 <constraint firstAttribute="bottom" secondItem="44s-dW-lAV" secondAttribute="bottom" id="xno-pB-cFG"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="13"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="okA-Lg-ndE">
                             <rect key="frame" x="0.0" y="70" width="375" height="577"/>
@@ -90,22 +99,21 @@
                             </connections>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <gestureRecognizers/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="okA-Lg-ndE" secondAttribute="bottom" id="45j-1W-Mcz"/>
+                        <constraint firstAttribute="trailing" secondItem="6tZ-4X-cbX" secondAttribute="trailing" id="BQN-q4-JlK"/>
                         <constraint firstAttribute="trailing" secondItem="Rr0-ei-B13" secondAttribute="trailing" id="DLY-qP-MCy"/>
                         <constraint firstAttribute="trailing" secondItem="okA-Lg-ndE" secondAttribute="trailing" id="EyZ-JQ-EpC"/>
                         <constraint firstItem="okA-Lg-ndE" firstAttribute="leading" secondItem="nW9-LR-ccq" secondAttribute="leading" id="PxM-oN-eCn"/>
+                        <constraint firstItem="6tZ-4X-cbX" firstAttribute="top" secondItem="Rr0-ei-B13" secondAttribute="bottom" constant="-13" id="Rfm-59-9qQ"/>
+                        <constraint firstItem="6tZ-4X-cbX" firstAttribute="leading" secondItem="nW9-LR-ccq" secondAttribute="leading" id="YU2-8f-8vo"/>
                         <constraint firstItem="Rr0-ei-B13" firstAttribute="top" secondItem="nW9-LR-ccq" secondAttribute="top" priority="750" id="cuJ-vL-JgY"/>
                         <constraint firstItem="okA-Lg-ndE" firstAttribute="top" secondItem="Rr0-ei-B13" secondAttribute="bottom" id="gfj-kq-9og"/>
                         <constraint firstItem="Rr0-ei-B13" firstAttribute="leading" secondItem="nW9-LR-ccq" secondAttribute="leading" id="nBD-kh-7hp"/>
+                        <constraint firstItem="6tZ-4X-cbX" firstAttribute="bottom" secondItem="okA-Lg-ndE" secondAttribute="top" constant="13" id="wru-bW-aS9"/>
                     </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="13"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>

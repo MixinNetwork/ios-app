@@ -354,7 +354,7 @@ class UserView: CornerView {
                     return
                 }
                 weakSelf.superView?.dismissPopupControllerAnimated()
-                WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)
+                WebWindow.instance(conversationId: conversationId, app: app).presentPopupControllerAnimated(url: url)
             }
         }
     }

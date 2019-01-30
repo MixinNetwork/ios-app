@@ -50,6 +50,7 @@
 		27FE22B81FC70399006F2AA5 /* SignalKeyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FE22B71FC70399006F2AA5 /* SignalKeyAPI.swift */; };
 		7B015D7F21A81C81000C9F1E /* ModernSearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* ModernSearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* ModernSearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* ModernSearchBoxView.xib */; };
+		7B06F9A22201CE1B0058DE94 /* BackupAvailabilityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B06F9A12201CE1B0058DE94 /* BackupAvailabilityQuery.swift */; };
 		7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B075CCE1FC0A98B005315A2 /* ConversationTableView.swift */; };
 		7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B075CD01FC0B268005315A2 /* MessageCell.swift */; };
 		7B07923A21AF96F500316BD2 /* SnapshotDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B07923921AF96F500316BD2 /* SnapshotDataSource.swift */; };
@@ -659,6 +660,7 @@
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		7B015D7E21A81C81000C9F1E /* ModernSearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernSearchBoxView.swift; sourceTree = "<group>"; };
 		7B015D8021A81C8D000C9F1E /* ModernSearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModernSearchBoxView.xib; sourceTree = "<group>"; };
+		7B06F9A12201CE1B0058DE94 /* BackupAvailabilityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupAvailabilityQuery.swift; sourceTree = "<group>"; };
 		7B075CCE1FC0A98B005315A2 /* ConversationTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableView.swift; sourceTree = "<group>"; };
 		7B075CD01FC0B268005315A2 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		7B07923921AF96F500316BD2 /* SnapshotDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotDataSource.swift; sourceTree = "<group>"; };
@@ -1504,6 +1506,7 @@
 				DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */,
 				7B26D1CB219EEB4000AE113A /* Peer.swift */,
 				7BA4E092219D99B300A2176D /* PeerSelectionViewController.swift */,
+				7B06F9A12201CE1B0058DE94 /* BackupAvailabilityQuery.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2676,6 +2679,7 @@
 				7BF49DD320C3DBAC00A8510E /* ReCaptchaManager.swift in Sources */,
 				7BB1DD0D2195BE5200E98CEF /* ShadowedCardView.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
+				7B06F9A22201CE1B0058DE94 /* BackupAvailabilityQuery.swift in Sources */,
 				9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */,
 				27382EC61FECDF0D00437A1B /* PreKeyUtil.swift in Sources */,
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,

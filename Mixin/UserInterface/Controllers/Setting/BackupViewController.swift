@@ -10,6 +10,7 @@ class BackupViewController: UITableViewController {
     @IBOutlet weak var backupLabel: UILabel!
     
     private lazy var actionSectionFooterView = FooterView()
+    private lazy var backupAvailabilityQuery = BackupAvailabilityQuery()
     
     private var timer: Timer?
     
@@ -34,9 +35,13 @@ class BackupViewController: UITableViewController {
 
         if BackupJobQueue.shared.isBackingUp {
             backingUI()
-        } else if !RestoreJob.isRestoreChat() {
-            CommonUserDefault.shared.lastBackupTime = 0
-            CommonUserDefault.shared.lastBackupSize = 0
+        } else {
+            backupAvailabilityQuery.fileExist() { (exist) in
+                if !exist {
+                    CommonUserDefault.shared.lastBackupTime = 0
+                    CommonUserDefault.shared.lastBackupSize = 0
+                }
+            }
         }
     }
 

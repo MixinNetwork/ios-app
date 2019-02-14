@@ -250,6 +250,7 @@
 "group_menu_delete" = "删除聊天";
 "group_menu_exit" = "删除并退出群组";
 "group_menu_participants" = "群组成员";
+"group_title_members" = "%@ 位群组成员";
 
 "code_recognition_fail_title" = "未识别的链接";
 "code_recognition_fail_summary" = "没有找到这个链接相关的群组或人";

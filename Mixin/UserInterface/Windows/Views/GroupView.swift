@@ -6,22 +6,15 @@ class GroupView: CornerView {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var groupMembersLabel: UILabel!
     @IBOutlet weak var announcementScrollView: UIScrollView!
     @IBOutlet weak var announcementLabel: CollapsingLabel!
-    @IBOutlet weak var participantView1: AvatarImageView!
-    @IBOutlet weak var participantView2: AvatarImageView!
-    @IBOutlet weak var participantView3: AvatarImageView!
-    @IBOutlet weak var participantView4: AvatarImageView!
-    @IBOutlet weak var participantCountLabel: ConerLabel!
-    @IBOutlet weak var joinTopLineView: UIView!
-    @IBOutlet weak var joinBottomLineView: UIView!
-    @IBOutlet weak var joinButton: StateResponsiveButton!
     @IBOutlet weak var viewButton: StateResponsiveButton!
-    @IBOutlet weak var participantsView: UIStackView!
     @IBOutlet weak var moreButton: StateResponsiveButton!
-
+    @IBOutlet weak var inGroupActionsStackView: UIStackView!
+    @IBOutlet weak var joinButton: BusyButton!
+    
     @IBOutlet weak var announcementScrollViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var announcementScrollViewBottomConstraint: NSLayoutConstraint!
     
     private weak var superView: BottomSheetView?
     private var conversation: ConversationItem!
@@ -29,9 +22,7 @@ class GroupView: CornerView {
     private var codeId: String?
     private var initialAnnouncementMode = CollapsingLabel.Mode.collapsed
     private var isAdmin = false
-
-    private lazy var participantViews = [participantView1, participantView2, participantView3, participantView4]
-    private lazy var participantsTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(participentsAction(_:)))
+    
     private lazy var changeNameController: UIAlertController = {
         let vc = UIApplication.currentActivity()!.alertInput(title: Localized.CONTACT_TITLE_CHANGE_NAME, placeholder: Localized.PLACEHOLDER_NEW_NAME, handler: { [weak self] (_) in
             self?.changeNameAction()
@@ -47,7 +38,6 @@ class GroupView: CornerView {
     override func awakeFromNib() {
         super.awakeFromNib()
         announcementLabel.delegate = self
-        participantsView.addGestureRecognizer(participantsTapRecognizer)
     }
     
     func render(codeId: String, conversation: ConversationResponse, ownerUser: UserItem, participants: [ParticipantUser], alreadyInTheGroup: Bool, superView: BottomSheetView) {
@@ -56,8 +46,8 @@ class GroupView: CornerView {
         self.conversationResponse = conversation
         self.codeId = codeId
 
-        renderConversation(alreadyInTheGroup: alreadyInTheGroup, showViewGroup: alreadyInTheGroup)
-        renderParticipants(participants: participants, participantCount: conversation.participants.count)
+        renderConversation(alreadyInTheGroup: alreadyInTheGroup)
+        renderParticipants(count: conversation.participants.count)
     }
 
     func render(conversation: ConversationItem, superView: BottomSheetView, initialAnnouncementMode: CollapsingLabel.Mode) {
@@ -65,26 +55,23 @@ class GroupView: CornerView {
         self.conversation = conversation
         self.initialAnnouncementMode = initialAnnouncementMode
 
-        renderConversation()
+        renderConversation(alreadyInTheGroup: true)
 
         let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in
-            let participents = ParticipantDAO.shared.getGroupIconParticipants(conversationId: conversationId)
             let participantCount = ParticipantDAO.shared.getCount(conversationId: conversationId)
             self?.isAdmin = ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: AccountAPI.shared.accountUserId)
             DispatchQueue.main.async {
-                self?.renderParticipants(participants: participents, participantCount: participantCount)
+                self?.renderParticipants(count: participantCount)
             }
         }
     }
 
-    private func renderConversation(alreadyInTheGroup: Bool = true, showViewGroup: Bool = false) {
-        joinTopLineView.isHidden = alreadyInTheGroup
-        joinBottomLineView.isHidden = alreadyInTheGroup
+    private func renderConversation(alreadyInTheGroup: Bool) {
+        inGroupActionsStackView.isHidden = !alreadyInTheGroup
         joinButton.isHidden = alreadyInTheGroup
-        moreButton.isHidden = !alreadyInTheGroup || showViewGroup
-        viewButton.isHidden = !showViewGroup
-        participantsTapRecognizer.isEnabled = alreadyInTheGroup
+        moreButton.isHidden = !alreadyInTheGroup
+        viewButton.isHidden = !alreadyInTheGroup
         
         avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
         nameLabel.text = conversation.name
@@ -92,55 +79,40 @@ class GroupView: CornerView {
         announcementLabel.mode = initialAnnouncementMode
         announcementLabel.isHidden = conversation.announcement.isEmpty
         announcementScrollViewHeightConstraint.constant = announcementLabel.intrinsicContentSize.height
-        announcementScrollViewBottomConstraint.constant = conversation.announcement.isEmpty ? 15 : 30
     }
-
-    private func renderParticipants(participants: [ParticipantUser], participantCount: Int) {
-        for idx in 0..<4 {
-            let participantView = participantViews[idx]
-            if idx < participants.count {
-                participantView?.setImage(user: participants[idx])
-                participantView?.isHidden = false
-            } else {
-                participantView?.isHidden = true
-            }
-        }
-        if participantCount > 4 {
-            participantCountLabel.text = "+\(participantCount - 4)"
-            participantCountLabel.isHidden = false
-        } else {
-            participantCountLabel.isHidden = true
-        }
+    
+    private func renderParticipants(count: Int) {
+        groupMembersLabel.text = Localized.GROUP_TITLE_MEMBERS(count: "\(count)")
     }
-
+    
     @IBAction func moreAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         let alc = UIAlertController(title: conversation.name, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_PARTICIPANTS, style: .default, handler: { [weak self] (action) in
-            self?.participantSettingsAction()
+        alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_PARTICIPANTS, style: .default, handler: { (action) in
+            self.showParticipantsAction(alc)
         }))
         if isAdmin {
-            alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_ANNOUNCEMENT, style: .default, handler: { [weak self](action) in
-                self?.editAnnouncementAction()
+            alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_ANNOUNCEMENT, style: .default, handler: { (action) in
+                self.editAnnouncementAction()
             }))
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
-                self?.editGroupNameAction()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { (action) in
+                self.editGroupNameAction()
             }))
         }
         if conversation.isMuted {
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_UNMUTE, style: .default, handler: { [weak self](action) in
-                self?.unmuteAction()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_UNMUTE, style: .default, handler: { (action) in
+                self.unmuteAction()
             }))
         } else {
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_MUTE, style: .default, handler: { [weak self](action) in
-                self?.muteAction()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_MUTE, style: .default, handler: { (action) in
+                self.muteAction()
             }))
         }
-        alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_CLEAR, style: .destructive, handler: { [weak self] (action) in
-            self?.clearChatAction()
+        alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_CLEAR, style: .destructive, handler: { (action) in
+            self.clearChatAction()
         }))
-        alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_EXIT, style: .destructive, handler: { [weak self] (action) in
-            self?.exitGroupAction()
+        alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_EXIT, style: .destructive, handler: { (action) in
+            self.exitGroupAction()
         }))
 
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
@@ -148,11 +120,14 @@ class GroupView: CornerView {
     }
 
     @IBAction func viewAction(_ sender: Any) {
-        guard !viewButton.isBusy, conversationResponse != nil else {
+        guard conversationResponse != nil else {
+            superView?.dismissPopupControllerAnimated()
+            return
+        }
+        guard !viewButton.isBusy else {
             return
         }
         viewButton.isBusy = true
-
         saveConversation(conversation: conversationResponse)
     }
     
@@ -179,7 +154,13 @@ class GroupView: CornerView {
     @IBAction func dismissAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
     }
-
+    
+    @IBAction func showParticipantsAction(_ sender: Any) {
+        superView?.dismissPopupControllerAnimated()
+        let vc = GroupParticipentViewController.instance(conversation: conversation)
+        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+    }
+    
     private func saveConversation(conversation: ConversationResponse) {
         guard UIApplication.currentConversationId() != conversation.conversationId else {
             superView?.dismissPopupControllerAnimated()
@@ -210,12 +191,7 @@ class GroupView: CornerView {
 }
 
 extension GroupView {
-
-    @objc func participentsAction(_ recognizer: UIGestureRecognizer) {
-        superView?.dismissPopupControllerAnimated()
-        participantSettingsAction()
-    }
-
+    
     private func editAnnouncementAction() {
         UIApplication.rootNavigationController()?.pushViewController(GroupAnnouncementViewController.instance(conversation: conversation), animated: true)
     }
@@ -224,11 +200,7 @@ extension GroupView {
         changeNameController.textFields?[0].text = conversation.name
         UIApplication.currentActivity()?.present(changeNameController, animated: true, completion: nil)
     }
-
-    private func participantSettingsAction() {
-        UIApplication.rootNavigationController()?.pushViewController(GroupParticipentViewController.instance(conversation: conversation), animated: true)
-    }
-
+    
     private func clearChatAction() {
         let conversationId = conversation.conversationId
         DispatchQueue.global().async {

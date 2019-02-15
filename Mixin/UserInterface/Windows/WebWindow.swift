@@ -11,6 +11,7 @@ class WebWindow: BottomSheetView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webViewWrapperView: UIView!
     @IBOutlet weak var longPressGestureRecognizer: UILongPressGestureRecognizer!
+    @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
     
     @IBOutlet weak var titleHeightConstraint: NSLayoutConstraint!
     
@@ -57,6 +58,7 @@ class WebWindow: BottomSheetView {
         webView.allowsBackForwardNavigationGestures = true
         webView.navigationDelegate = self
         webView.uiDelegate = self
+        webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
         webViewTitleObserver = webView.observe(\.title) { [weak self] (_, _) in
             self?.updateTitle()
         }
@@ -113,6 +115,25 @@ class WebWindow: BottomSheetView {
     
     @IBAction func dismissAction(_ sender: Any) {
         dismissPopupControllerAnimated()
+    }
+    
+    @IBAction func screenEdgePanAction(_ recognizer: WebViewScreenEdgePanGestureRecognizer) {
+        switch recognizer.state {
+        case .changed:
+            popupView.transform = CGAffineTransform(scaleX: 1 - 0.2 * recognizer.fractionComplete,
+                                                    y: 1 - 0.2 * recognizer.fractionComplete)
+        case .ended:
+            UIView.animate(withDuration: 0.25, animations: {
+                self.popupView.transform = .identity
+            })
+            dismissPopupControllerAnimated()
+        case .cancelled:
+            UIView.animate(withDuration: 0.25, animations: {
+                self.popupView.transform = .identity
+            })
+        default:
+            break
+        }
     }
     
     @IBAction func longPressAction(_ recognizer: UILongPressGestureRecognizer) {

@@ -123,11 +123,11 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
         if isDeleteStickers {
             cell.render(sticker: stickers[indexPath.row], isDeleteStickers: isDeleteStickers)
         } else {
-            if indexPath.row == stickers.count {
+            if indexPath.row == 0 {
                 cell.selectionImageView.isHidden = true
                 cell.stickerImageView.image = #imageLiteral(resourceName: "ic_sticker_add")
             } else {
-                cell.render(sticker: stickers[indexPath.row], isDeleteStickers: isDeleteStickers)
+                cell.render(sticker: stickers[indexPath.row-1], isDeleteStickers: isDeleteStickers)
             }
         }
 
@@ -135,7 +135,7 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard !isDeleteStickers, indexPath.row == stickers.count else {
+        guard !isDeleteStickers, indexPath.row == 0 else {
             return
         }
 

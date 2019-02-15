@@ -8,6 +8,7 @@ public class Localized {
     public static let DIALOG_BUTTON_CHANGE = LocalizedString("dialog_button_change", comment: "Change")
     public static let DIALOG_BUTTON_CONFIRM = LocalizedString("dialog_button_confirm", comment: "Confirm")
     public static let DIALOG_BUTTON_DISABLE = LocalizedString("dialog_button_disable", comment: "Disable")
+    public static let DIALOG_BUTTON_NO_REMIND = LocalizedString("dialog_button_no_remind", comment: "Don't remind me again")
     public static let ACTION_NEXT = LocalizedString("action_next", comment: "Next")
     public static let ACTION_REMOVE = LocalizedString("action_remove", comment: "Remove")
     public static let ACTION_CAMERA = LocalizedString("action_camera", comment: "Camera")

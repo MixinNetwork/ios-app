@@ -8,6 +8,7 @@
 "dialog_button_confirm" = "Confirm";
 "dialog_button_got_it" = "Got It";
 "dialog_button_disable" = "Disable";
+"dialog_button_no_remind" = "Don't remind me again";
 "dialog_progress_logout" = "Log out...";
 "dialog_progress_connect" = "Connecting...";
 "action_next" = "Next";
@@ -29,6 +30,7 @@
 "action_filter" = "Filter";
 "action_skip" = "Skip";
 "action_deauthorize" = "Deauthorize";
+"wallet_deposit_tips" = "Don’t remind me again";
 "menu_delete" = "Delete";
 "no_result" = "No result";
 "title_loading" = "Loading...";
@@ -277,7 +279,7 @@
 "wallet_address" = "Address";
 "wallet_account_name" = "Account Name";
 "wallet_account_memo" = "Account Memo";
-"wallet_deposit_account_notice" = "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin, deposit will arrive after at least %@ block confirmations.";
+"wallet_deposit_account_notice" = "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin Messenger, deposit will arrive after at least %@ block confirmations.";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";

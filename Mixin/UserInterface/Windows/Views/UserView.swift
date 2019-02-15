@@ -17,6 +17,7 @@ class UserView: CornerView {
     @IBOutlet weak var developButton: CornerButton!
     @IBOutlet weak var appPlaceView: UIView!
 
+    @IBOutlet weak var avatarImageViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var actionButtonNoDescriptionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var descriptionScrollViewHeightConstraint: NSLayoutConstraint!
     
@@ -90,7 +91,8 @@ class UserView: CornerView {
         } else {
             verifiedImageView.isHidden = true
         }
-
+        avatarImageViewTopConstraint.constant = user.isBot ? 55 : 86
+        
         layoutIfNeeded()
         if user.isBot, let appDescription = user.appDescription, !appDescription.isEmpty {
             descriptionLabel.text = appDescription

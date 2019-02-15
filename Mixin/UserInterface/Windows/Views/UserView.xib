@@ -63,15 +63,15 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="64c-sh-04i" customClass="CornerButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="13.5" y="0.0" width="61" height="24"/>
-                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <rect key="frame" x="14.5" y="0.0" width="59" height="24"/>
+                            <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="24" id="FzG-XA-UCr"/>
                             </constraints>
-                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <inset key="contentEdgeInsets" minX="8" minY="0.0" maxX="8" maxY="0.0"/>
                             <state key="normal" title="Crossle">
-                                <color key="titleColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -124,14 +124,14 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fEf-ht-1u9">
-                            <rect key="frame" x="65" y="0.0" width="30" height="68"/>
+                            <rect key="frame" x="69.5" y="0.0" width="30" height="68"/>
                             <state key="normal" image="ic_share"/>
                             <connections>
                                 <action selector="shareAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="KZW-b9-zZh"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mdx-JU-EIZ">
-                            <rect key="frame" x="135" y="0.0" width="30" height="68"/>
+                            <rect key="frame" x="144.5" y="0.0" width="30" height="68"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <state key="normal" image="ic_send_msg"/>
                             <connections>
@@ -139,8 +139,8 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i6u-Sj-8sl" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="205" y="0.0" width="44" height="68"/>
-                            <state key="normal" image="ic_titlebar_more"/>
+                            <rect key="frame" x="219" y="0.0" width="30" height="68"/>
+                            <state key="normal" image="ic_more"/>
                             <connections>
                                 <action selector="moreAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="ipL-w0-PeU"/>
                             </connections>
@@ -199,6 +199,7 @@
                 <outlet property="addContactButton" destination="422-sY-vUK" id="Gto-ms-bS1"/>
                 <outlet property="appPlaceView" destination="VAa-OZ-kfU" id="3dk-Yp-VBt"/>
                 <outlet property="avatarImageView" destination="Iu9-go-9Om" id="6Ay-vA-mAi"/>
+                <outlet property="avatarImageViewTopConstraint" destination="K9X-eC-Inv" id="gBE-c5-jpt"/>
                 <outlet property="descriptionLabel" destination="Rbl-cu-9jj" id="gAf-OX-FE4"/>
                 <outlet property="descriptionScrollView" destination="syg-ya-iZc" id="6QZ-Au-x12"/>
                 <outlet property="descriptionScrollViewHeightConstraint" destination="SkC-mi-RYS" id="vTb-l2-76z"/>
@@ -216,10 +217,10 @@
     <resources>
         <image name="ic_add_friend" width="25" height="24"/>
         <image name="ic_dialog_close" width="26" height="26"/>
+        <image name="ic_more" width="30" height="30"/>
         <image name="ic_place_holder" width="38" height="38"/>
         <image name="ic_send_msg" width="30" height="30"/>
         <image name="ic_share" width="30" height="30"/>
-        <image name="ic_titlebar_more" width="44" height="44"/>
         <image name="ic_user_verified" width="14" height="14"/>
     </resources>
 </document>

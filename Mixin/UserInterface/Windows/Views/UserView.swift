@@ -156,6 +156,11 @@ class UserView: CornerView {
     @IBAction func moreAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         let alc = UIAlertController(title: user.fullName, message: user.identityNumber, preferredStyle: .actionSheet)
+        if user.isBot {
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_OPEN_BOT, style: .default, handler: { [weak self](action) in
+                self?.openApp()
+            }))
+        }
         alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
             self?.shareAction(alc)
         }))
@@ -212,6 +217,28 @@ class UserView: CornerView {
         superView?.dismissPopupControllerAnimated()
         let vc = SendMessagePeerSelectionViewController.instance(content: .contact(user.userId))
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+    }
+    
+    private func openApp() {
+        let userId = user.userId
+        let conversationId: String
+        if let vc = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController {
+            conversationId = vc.conversationId
+        } else {
+            conversationId = self.conversationId
+        }
+        DispatchQueue.global().async { [weak self] in
+            guard let app = AppDAO.shared.getApp(ofUserId: userId), let url = URL(string: app.homeUri) else {
+                return
+            }
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.superView?.dismissPopupControllerAnimated()
+                WebWindow.instance(conversationId: conversationId, app: app).presentPopupControllerAnimated(url: url)
+            }
+        }
     }
     
     private func addMuteAlertAction(alc: UIAlertController) {

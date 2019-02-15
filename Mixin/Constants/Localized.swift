@@ -296,6 +296,7 @@ public class Localized {
 
     // Profile
     public static let PROFILE_TITLE = LocalizedString("profile_title", comment: "Info")
+    public static let PROFILE_OPEN_BOT = LocalizedString("profile_open_bot", comment: "Open App")
     public static func PROFILE_MIXIN_ID(id: String) -> String {
         return String(format: LocalizedString("profile_mixin_id", comment: "Mixin ID: %@"), id)
     }

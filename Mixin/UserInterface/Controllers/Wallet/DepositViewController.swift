@@ -49,7 +49,7 @@ class DepositViewController: UIViewController {
 
                     let alc = UIAlertController(title: "", message: notice, preferredStyle: .alert)
                     if WalletUserDefault.shared.depositRemind == DepositViewController.depositRemindAllowDisable {
-                        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_NO_REMIND, style: .cancel, handler: { (_) in
+                        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_NO_REMIND, style: .default, handler: { (_) in
                             WalletUserDefault.shared.depositRemind = DepositViewController.depositRemindDisabled
                         }))
                     }

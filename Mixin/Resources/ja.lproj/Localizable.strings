@@ -197,7 +197,7 @@
 "sticker_add_title" = "ステッカーを追加";
 "sticker_remove_title" = "ステッカーを削除";
 "sticker_add_failed" = "ステッカーを追加できませんでした";
-"sticker_remove_failed" = "ステッカーを削除できませんでした;
+"sticker_remove_failed" = "ステッカーを削除できませんでした";
 "sticker_add_required" = "1KBを超え800KB未満のサイズ、幅と高さが64〜512ピクセルのステッカーファイルが必要です。";
 "sticker_add_limit" = "ステッカーが多すぎます。";
 
@@ -267,7 +267,7 @@
 "wallet_change_password_success" = "ウォレットのPINを正しく変更する";
 "wallet_set_password_success" = "ウォレットのPINを正しく設定する";
 "wallet_snapshot_from" = " %@ から";
-"wallet_snapshot_to" = " %@" まで;
+"wallet_snapshot_to" = " %@ まで";
 "wallet_caption_deposit" = "預金";
 "wallet_caption_transfer" = "振込をする";
 "wallet_deposit" = "預金";
@@ -285,7 +285,7 @@
 "wallet_withdraw_amount" = "金額";
 "wallet_withdraw_memo" = "メモ（オプション）";
 "wallet_button_add_address" = "タップして住所を追加";
-"wallet_hint_transaction_fee" = ％@ を引き出すには、％@ の取引手数料が必要です。";
+"wallet_hint_transaction_fee" = "％@ を引き出すには、％@ の取引手数料が必要です。";
 "wallet_password_address_tips" = "あなたのアドレスを保護するためにPINを確認してください。";
 "wallet_withdrawal_asset" = "出金 %@ ";
 "wallet_withdrawal_pay_password" = "PINによる引き落とし";
@@ -431,7 +431,7 @@
 "profile_unmute" = "消音を解除";
 "profile_mute" = "消音";
 "profile_toast_unmuted" = "消音解除しました";
-"profile_toast_muted" = " ％@ まで消音しました;
+"profile_toast_muted" = " ％@ まで消音しました";
 
 // Home
 "button_title_contacts_and_chats" = "連絡先とチャット";

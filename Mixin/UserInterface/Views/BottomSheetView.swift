@@ -34,7 +34,8 @@ class BottomSheetView: UIView {
         window.addSubview(self)
         self.alpha = 0
 
-        UIView.animate(withDuration: 0.25, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
             self.popAnimationBody()
         })
     }
@@ -42,7 +43,8 @@ class BottomSheetView: UIView {
     @objc func dismissPopupControllerAnimated() {
         self.alpha = 1.0
         isShowing = false
-        UIView.animate(withDuration: 0.25, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
             self.alpha = 0
             self.popupView.center = self.getAnimationStartPoint()
         }, completion: { (finished: Bool) -> Void in
@@ -97,7 +99,8 @@ extension BottomSheetView {
         }
         self.alpha = 0
         self.popupView.center = getAnimationStartPoint()
-        UIView.animate(withDuration: 0.25, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
             self.popAnimationBody()
         })
     }
@@ -105,7 +108,8 @@ extension BottomSheetView {
     func dismissView() {
         self.alpha = 1.0
         isShowing = false
-        UIView.animate(withDuration: 0.25, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
             self.alpha = 0
             self.popupView.center = self.getAnimationStartPoint()
         })

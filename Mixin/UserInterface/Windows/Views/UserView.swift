@@ -227,15 +227,11 @@ class UserView: CornerView {
         } else {
             conversationId = self.conversationId
         }
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async {
             guard let app = AppDAO.shared.getApp(ofUserId: userId), let url = URL(string: app.homeUri) else {
                 return
             }
             DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.superView?.dismissPopupControllerAnimated()
                 WebWindow.instance(conversationId: conversationId, app: app).presentPopupControllerAnimated(url: url)
             }
         }

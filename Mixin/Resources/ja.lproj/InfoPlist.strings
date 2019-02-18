@@ -1,6 +1,6 @@
 "CFBundleDisplayName" = "Mixin";
-"NSContactsUsageDescription" = "Mixin uses your address book to connect you with your contacts.";
-"NSCameraUsageDescription" = "Mixin uses the camera to set profile photo, and send photo to your contact in chat.";
-"NSPhotoLibraryUsageDescription" = "Mixin uses the photo library to set profile photo, and send photo to your contact in chat.";
-"NSMicrophoneUsageDescription" = "Mixin uses your microphone to record voice messages to share with your contacts.";
-"NSFaceIDUsageDescription" = "Mixin uses Face ID to authorize payment";
+"NSContactsUsageDescription" = "Mixinはあなたのアドレス帳を使ってあなたとあなたの連絡先をつなげます。";
+"NSCameraUsageDescription" = "Mixinはカメラを使ってプロフィール写真を設定し、チャットであなたの連絡先に写真を送信します。";
+"NSPhotoLibraryUsageDescription" = "Mixinはフォトライブラリを使用してプロフィール写真を設定し、チャットで連絡先に写真を送信します。";
+"NSMicrophoneUsageDescription" = "Mixinはマイクを使ってボイスメッセージを録音し、連絡先と共有します。";
+"NSFaceIDUsageDescription" = "MixinはFace IDを使って支払いを承認します";

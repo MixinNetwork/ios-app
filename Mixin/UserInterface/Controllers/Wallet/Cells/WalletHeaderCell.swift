@@ -32,7 +32,7 @@ class WalletHeaderCell: UITableViewCell {
     ]
     
     static func height(usdBalanceIsMoreThanZero: Bool) -> CGFloat {
-        return usdBalanceIsMoreThanZero ? 187 : 135
+        return usdBalanceIsMoreThanZero ? 159 : 107
     }
     
     override func awakeFromNib() {

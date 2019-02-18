@@ -94,7 +94,11 @@ extension DepositViewController: ContainerViewControllerDelegate {
     }
 
     func barRightButtonTappedAction() {
-        UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/en-us/articles/360018789931-How-to-deposit-on-Mixin-Messenger-")
+        if asset.isAccount {
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/en-us/articles/360023738212-How-to-deposit-EOS-to-Mixin-Messenger-")
+        } else {
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/en-us/articles/360018789931-How-to-deposit-on-Mixin-Messenger-")
+        }
     }
     
 }

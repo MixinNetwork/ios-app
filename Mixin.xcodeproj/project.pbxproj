@@ -1066,6 +1066,8 @@
 		DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshStickerJob.swift; sourceTree = "<group>"; };
 		DF68F1852014CF5E001C4225 /* StickerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerAPI.swift; sourceTree = "<group>"; };
 		DF68F18B201567D6001C4225 /* StickerRelationshipDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerRelationshipDAO.swift; sourceTree = "<group>"; };
+		DF6CF2E6221A801600B65294 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DF6CF2E7221A801600B65294 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DF6DB83C2024EAD10060CF31 /* PaymentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentResponse.swift; sourceTree = "<group>"; };
 		DF6DB8402028C1A60060CF31 /* AppButtonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonData.swift; sourceTree = "<group>"; };
 		DF6ED3EA1FE36F3E00E958A3 /* JobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobQueue.swift; sourceTree = "<group>"; };
@@ -2474,6 +2476,7 @@
 				en,
 				Base,
 				"zh-Hans",
+				ja,
 			);
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
@@ -3194,6 +3197,7 @@
 			children = (
 				DF5D9F451F9CD29A0036D5FD /* en */,
 				DF8CECFA1FC58D7D00E40064 /* zh-Hans */,
+				DF6CF2E6221A801600B65294 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -3203,6 +3207,7 @@
 			children = (
 				DF8CECFE1FC58DBD00E40064 /* en */,
 				DF8CED001FC58DC000E40064 /* zh-Hans */,
+				DF6CF2E7221A801600B65294 /* ja */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

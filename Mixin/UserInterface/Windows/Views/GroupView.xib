@@ -40,7 +40,7 @@
                     </userDefinedRuntimeAttributes>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="eCR-rs-Cgf">
-                    <rect key="frame" x="30" y="148" width="325" height="57"/>
+                    <rect key="frame" x="30" y="148" width="325" height="41"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Mixin Team" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYa-yc-XuN">
                             <rect key="frame" x="0.0" y="0.0" width="325" height="24"/>
@@ -50,7 +50,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 Group memebers" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wV3-wM-YUi">
-                            <rect key="frame" x="0.0" y="25" width="325" height="32"/>
+                            <rect key="frame" x="0.0" y="25" width="325" height="16"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -58,7 +58,7 @@
                     </subviews>
                 </stackView>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z1B-ee-Nrm">
-                    <rect key="frame" x="30" y="219" width="325" height="60"/>
+                    <rect key="frame" x="30" y="203" width="325" height="60"/>
                     <subviews>
                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="f3U-ow-eCY" customClass="CollapsingLabel" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="6" y="0.0" width="313" height="128"/>
@@ -76,7 +76,7 @@
                     </constraints>
                 </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gUD-L0-6L5">
-                    <rect key="frame" x="67" y="286" width="251" height="68"/>
+                    <rect key="frame" x="67" y="270" width="251" height="68"/>
                     <subviews>
                         <stackView contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="vaq-c9-RoT">
                             <rect key="frame" x="0.0" y="0.0" width="251" height="68"/>
@@ -145,7 +145,7 @@
                 <constraint firstItem="X5N-nU-0Nd" firstAttribute="top" secondItem="Zlp-75-Ixx" secondAttribute="top" id="aLU-C3-Lwg"/>
                 <constraint firstItem="Z1B-ee-Nrm" firstAttribute="top" secondItem="eCR-rs-Cgf" secondAttribute="bottom" constant="14" id="gLc-Kc-O4n"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="Z1B-ee-Nrm" secondAttribute="trailing" constant="30" id="h7K-uj-Wua"/>
-                <constraint firstItem="Zlp-75-Ixx" firstAttribute="bottom" secondItem="gUD-L0-6L5" secondAttribute="bottom" id="krg-ed-TxZ"/>
+                <constraint firstItem="Zlp-75-Ixx" firstAttribute="bottom" secondItem="gUD-L0-6L5" secondAttribute="bottom" constant="16" id="krg-ed-TxZ"/>
                 <constraint firstItem="eCR-rs-Cgf" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="30" id="lYa-z0-7lf"/>
                 <constraint firstItem="eCR-rs-Cgf" firstAttribute="top" secondItem="9f1-By-myT" secondAttribute="bottom" constant="8" id="oYf-cl-fFg"/>
             </constraints>

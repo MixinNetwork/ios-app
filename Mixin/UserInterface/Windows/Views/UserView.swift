@@ -21,6 +21,8 @@ class UserView: CornerView {
     @IBOutlet weak var actionButtonNoDescriptionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var descriptionScrollViewHeightConstraint: NSLayoutConstraint!
     
+    private let noDescriptionScrollViewHeight: CGFloat = 22
+    
     private weak var superView: BottomSheetView?
     private var user: UserItem!
     private var appCreator: UserItem?
@@ -101,7 +103,7 @@ class UserView: CornerView {
             developButton.isHidden = false
             appPlaceView.isHidden = false
         } else {
-            descriptionScrollViewHeightConstraint.constant = 0
+            descriptionScrollViewHeightConstraint.constant = noDescriptionScrollViewHeight
             descriptionLabel.isHidden = true
             actionButtonNoDescriptionTopConstraint.priority = .defaultHigh
             developButton.isHidden = true

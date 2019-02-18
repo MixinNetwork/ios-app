@@ -16,6 +16,8 @@ class GroupView: CornerView {
     
     @IBOutlet weak var announcementScrollViewHeightConstraint: NSLayoutConstraint!
     
+    private let noAnnouncementScrollViewHeight: CGFloat = 22
+    
     private weak var superView: BottomSheetView?
     private var conversation: ConversationItem!
     private var conversationResponse: ConversationResponse!
@@ -78,7 +80,11 @@ class GroupView: CornerView {
         announcementLabel.text = conversation.announcement
         announcementLabel.mode = initialAnnouncementMode
         announcementLabel.isHidden = conversation.announcement.isEmpty
-        announcementScrollViewHeightConstraint.constant = announcementLabel.intrinsicContentSize.height
+        if conversation.announcement.isEmpty {
+            announcementScrollViewHeightConstraint.constant = noAnnouncementScrollViewHeight
+        } else {
+            announcementScrollViewHeightConstraint.constant = announcementLabel.intrinsicContentSize.height
+        }
     }
     
     private func renderParticipants(count: Int) {

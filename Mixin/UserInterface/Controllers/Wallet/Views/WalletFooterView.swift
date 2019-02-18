@@ -1,6 +1,6 @@
 import UIKit
 
-class SeparatorShadowView: UIView {
+class WalletFooterView: UITableViewHeaderFooterView {
     
     let shadowProviderLayer = CALayer()
     
@@ -9,8 +9,8 @@ class SeparatorShadowView: UIView {
         prepare()
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
         prepare()
     }
     
@@ -21,6 +21,7 @@ class SeparatorShadowView: UIView {
     }
     
     private func prepare() {
+        clipsToBounds = true
         layer.addSublayer(shadowProviderLayer)
         shadowProviderLayer.backgroundColor = UIColor.white.cgColor
         shadowProviderLayer.shadowColor = UIColor(rgbValue: 0xC3C3C3).cgColor

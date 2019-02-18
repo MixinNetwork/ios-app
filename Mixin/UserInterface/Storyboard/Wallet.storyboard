@@ -70,14 +70,14 @@
                                 <rect key="frame" x="0.0" y="76" width="414" height="0.0"/>
                                 <color key="backgroundColor" red="0.1215686275" green="0.70588235290000001" blue="0.98823529409999999" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1Bd-So-GRm">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="1Bd-So-GRm">
                                 <rect key="frame" x="0.0" y="75.666666666666686" width="414" height="660.33333333333326"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="wallet_header" rowHeight="159" id="ZSx-rD-maP" customClass="WalletHeaderCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="159"/>
+                                        <rect key="frame" x="0.0" y="55.333333333333343" width="414" height="159"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZSx-rD-maP" id="F36-LN-Rge">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="159"/>
@@ -357,7 +357,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="wallet_add_asset" rowHeight="90" id="wP8-IX-wyz" customClass="WalletAddAssetCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="187" width="414" height="90"/>
+                                        <rect key="frame" x="0.0" y="214.33333333333337" width="414" height="90"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wP8-IX-wyz" id="qHV-Uw-RMg">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="90"/>

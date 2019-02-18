@@ -78,26 +78,29 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gUD-L0-6L5">
                     <rect key="frame" x="67" y="330" width="251" height="68"/>
                     <subviews>
-                        <stackView contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="vaq-c9-RoT">
+                        <stackView contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vaq-c9-RoT">
                             <rect key="frame" x="0.0" y="0.0" width="251" height="68"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ho-X8-CJy">
-                                    <rect key="frame" x="0.0" y="0.0" width="30" height="68"/>
+                                    <rect key="frame" x="0.0" y="15" width="44" height="38"/>
+                                    <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                                     <state key="normal" image="ic_group_member"/>
                                     <connections>
                                         <action selector="showParticipantsAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="J6h-T4-sNA"/>
                                     </connections>
                                 </button>
                                 <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gqf-oP-J5h" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="110.5" y="0.0" width="30" height="68"/>
+                                    <rect key="frame" x="103.5" y="12" width="44" height="44"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                                     <state key="normal" image="ic_send_msg"/>
                                     <connections>
                                         <action selector="viewAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="E2p-Be-yNR"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UMD-Uz-cTl" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="221" y="0.0" width="30" height="68"/>
+                                    <rect key="frame" x="207" y="12" width="44" height="44"/>
+                                    <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                                     <state key="normal" image="ic_more"/>
                                     <connections>
                                         <action selector="moreAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="dzg-2x-dKW"/>
@@ -109,8 +112,9 @@
                             </constraints>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QMv-Y9-3eD" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="91.5" y="0.0" width="68" height="68"/>
+                            <rect key="frame" x="103.5" y="12" width="44" height="44"/>
                             <constraints>
+                                <constraint firstAttribute="width" constant="44" id="Zln-Ck-htt"/>
                                 <constraint firstAttribute="width" secondItem="QMv-Y9-3eD" secondAttribute="height" id="chD-vY-y8f"/>
                             </constraints>
                             <state key="normal" image="ic_join_group"/>
@@ -122,13 +126,12 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="QMv-Y9-3eD" firstAttribute="centerX" secondItem="gUD-L0-6L5" secondAttribute="centerX" id="6EO-rS-3w1"/>
-                        <constraint firstItem="QMv-Y9-3eD" firstAttribute="top" secondItem="gUD-L0-6L5" secondAttribute="top" id="IK4-Wg-ID6"/>
+                        <constraint firstItem="QMv-Y9-3eD" firstAttribute="centerY" secondItem="gUD-L0-6L5" secondAttribute="centerY" id="UWQ-XV-bgk"/>
                         <constraint firstItem="vaq-c9-RoT" firstAttribute="leading" secondItem="gUD-L0-6L5" secondAttribute="leading" id="aif-Yn-ypa"/>
                         <constraint firstAttribute="trailing" secondItem="vaq-c9-RoT" secondAttribute="trailing" id="hT0-gk-Zhp"/>
                         <constraint firstItem="vaq-c9-RoT" firstAttribute="top" secondItem="gUD-L0-6L5" secondAttribute="top" id="jiI-9c-1WW"/>
                         <constraint firstAttribute="height" constant="68" id="lbA-7M-jJW"/>
                         <constraint firstAttribute="bottom" secondItem="vaq-c9-RoT" secondAttribute="bottom" id="pog-K0-mJM"/>
-                        <constraint firstAttribute="bottom" secondItem="QMv-Y9-3eD" secondAttribute="bottom" id="v4i-2r-5zd"/>
                     </constraints>
                 </view>
             </subviews>

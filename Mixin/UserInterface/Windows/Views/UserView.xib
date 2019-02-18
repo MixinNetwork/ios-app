@@ -112,34 +112,38 @@
                         <constraint firstAttribute="trailing" secondItem="Rbl-cu-9jj" secondAttribute="trailing" id="ygP-Mz-6Fr"/>
                     </constraints>
                 </scrollView>
-                <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="Tvr-3M-1aD">
+                <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Tvr-3M-1aD">
                     <rect key="frame" x="63" y="280" width="249" height="68"/>
                     <subviews>
                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="422-sY-vUK" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="25" height="68"/>
+                            <rect key="frame" x="0.0" y="12" width="43" height="44"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <inset key="contentEdgeInsets" minX="9" minY="10" maxX="9" maxY="10"/>
                             <state key="normal" image="ic_add_friend"/>
                             <connections>
                                 <action selector="addAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="2VW-hp-0DC"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fEf-ht-1u9">
-                            <rect key="frame" x="69.5" y="0.0" width="30" height="68"/>
+                            <rect key="frame" x="67.5" y="12" width="44" height="44"/>
+                            <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                             <state key="normal" image="ic_share"/>
                             <connections>
                                 <action selector="shareAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="KZW-b9-zZh"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mdx-JU-EIZ">
-                            <rect key="frame" x="144.5" y="0.0" width="30" height="68"/>
+                            <rect key="frame" x="136.5" y="12" width="44" height="44"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                             <state key="normal" image="ic_send_msg"/>
                             <connections>
                                 <action selector="sendAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="gKH-Yl-8rx"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i6u-Sj-8sl" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="219" y="0.0" width="30" height="68"/>
+                            <rect key="frame" x="205" y="12" width="44" height="44"/>
+                            <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                             <state key="normal" image="ic_more"/>
                             <connections>
                                 <action selector="moreAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="ipL-w0-PeU"/>

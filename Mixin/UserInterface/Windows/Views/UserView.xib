@@ -124,8 +124,16 @@
                                 <action selector="addAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="2VW-hp-0DC"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aFr-aK-zbi">
+                            <rect key="frame" x="50.5" y="12" width="44" height="44"/>
+                            <inset key="contentEdgeInsets" minX="9" minY="11" maxX="9" maxY="11"/>
+                            <state key="normal" image="ic_open_app"/>
+                            <connections>
+                                <action selector="openApp:" destination="VIH-5N-txF" eventType="touchUpInside" id="ukn-Jc-rdg"/>
+                            </connections>
+                        </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fEf-ht-1u9">
-                            <rect key="frame" x="67.5" y="12" width="44" height="44"/>
+                            <rect key="frame" x="102" y="12" width="44" height="44"/>
                             <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                             <state key="normal" image="ic_share"/>
                             <connections>
@@ -133,7 +141,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mdx-JU-EIZ">
-                            <rect key="frame" x="136.5" y="12" width="44" height="44"/>
+                            <rect key="frame" x="153.5" y="12" width="44" height="44"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                             <state key="normal" image="ic_send_msg"/>
@@ -210,6 +218,7 @@
                 <outlet property="fullnameLabel" destination="1Xo-ZO-T44" id="ArF-Jv-5ue"/>
                 <outlet property="idLabel" destination="CTg-iC-2aR" id="joZ-a6-ogY"/>
                 <outlet property="moreButton" destination="i6u-Sj-8sl" id="AWS-rm-Jak"/>
+                <outlet property="openAppButton" destination="aFr-aK-zbi" id="WKE-03-P1i"/>
                 <outlet property="sendButton" destination="Mdx-JU-EIZ" id="Lh7-8Y-33Y"/>
                 <outlet property="shareContactButton" destination="fEf-ht-1u9" id="XVS-cc-KAO"/>
                 <outlet property="verifiedImageView" destination="t4Y-mk-GVy" id="fOx-eB-sZh"/>
@@ -221,6 +230,7 @@
         <image name="ic_add_friend" width="25" height="24"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_more" width="30" height="30"/>
+        <image name="ic_open_app" width="26" height="22"/>
         <image name="ic_place_holder" width="38" height="38"/>
         <image name="ic_send_msg" width="30" height="30"/>
         <image name="ic_share" width="30" height="30"/>

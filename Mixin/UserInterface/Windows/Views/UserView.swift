@@ -10,6 +10,7 @@ class UserView: CornerView {
     @IBOutlet weak var descriptionScrollView: UIScrollView!
     @IBOutlet weak var descriptionLabel: CollapsingLabel!
     @IBOutlet weak var addContactButton: StateResponsiveButton!
+    @IBOutlet weak var openAppButton: UIButton!
     @IBOutlet weak var shareContactButton: UIButton!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var verifiedImageView: UIImageView!
@@ -121,10 +122,12 @@ class UserView: CornerView {
         relationship = user.relationship
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         let isStranger = user.relationship == Relationship.STRANGER.rawValue
+        let canAddContact = !isStranger || isBlocked
         let block = {
-            self.addContactButton.isHidden = !isStranger || isBlocked
+            self.addContactButton.isHidden = canAddContact
             self.sendButton.isHidden = isBlocked
-            self.shareContactButton.isHidden = !self.addContactButton.isHidden
+            self.shareContactButton.isHidden = !canAddContact || user.isBot
+            self.openAppButton.isHidden = !canAddContact || !user.isBot
         }
         if animated {
             UIView.animate(withDuration: 0.15, animations: {
@@ -217,6 +220,11 @@ class UserView: CornerView {
         superView?.dismissPopupControllerAnimated()
         let vc = SendMessagePeerSelectionViewController.instance(content: .contact(user.userId))
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+    }
+    
+    @IBAction func openApp(_ sender: Any) {
+        superView?.dismissPopupControllerAnimated()
+        openApp()
     }
     
     private func openApp() {

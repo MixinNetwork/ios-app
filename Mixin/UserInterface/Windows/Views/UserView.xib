@@ -199,7 +199,6 @@
                 <outlet property="addContactButton" destination="422-sY-vUK" id="Gto-ms-bS1"/>
                 <outlet property="appPlaceView" destination="VAa-OZ-kfU" id="3dk-Yp-VBt"/>
                 <outlet property="avatarImageView" destination="Iu9-go-9Om" id="6Ay-vA-mAi"/>
-                <outlet property="avatarImageViewTopConstraint" destination="K9X-eC-Inv" id="gBE-c5-jpt"/>
                 <outlet property="descriptionLabel" destination="Rbl-cu-9jj" id="gAf-OX-FE4"/>
                 <outlet property="descriptionScrollView" destination="syg-ya-iZc" id="6QZ-Au-x12"/>
                 <outlet property="descriptionScrollViewHeightConstraint" destination="SkC-mi-RYS" id="vTb-l2-76z"/>

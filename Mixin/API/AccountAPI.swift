@@ -97,8 +97,8 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.me, parameters: param, completion: completion)
     }
 
-    func updateSession(deviceToken: String) {
-        let sessionRequest = SessionRequest(notification_token: deviceToken)
+    func updateSession(deviceToken: String, pushkit_token: String) {
+        let sessionRequest = SessionRequest(notification_token: deviceToken, pushkit_token: pushkit_token)
         request(method: .post, url: url.session, parameters: sessionRequest.toParameters(), encoding: EncodableParameterEncoding<SessionRequest>()) { (result: APIResult<Account>) in
 
         }

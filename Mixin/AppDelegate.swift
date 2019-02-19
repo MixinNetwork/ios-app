@@ -5,6 +5,7 @@ import Firebase
 import SDWebImage
 import YYImage
 import GiphyCoreSDK
+import PushKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -34,6 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().registerNotificationCategory()
         UNUserNotificationCenter.current().delegate = self
+        let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
+        pkpushRegistry.delegate = self
+        pkpushRegistry.desiredPushTypes = [.voIP]
         checkLogin()
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
@@ -114,10 +118,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
 }
 
+extension AppDelegate: PKPushRegistryDelegate {
+
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
+        AccountAPI.shared.updateSession(deviceToken: "", pushkit_token: pushCredentials.token.toHexString())
+        print("voip token: \(pushCredentials.token.toHexString())")
+    }
+
+
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
+        
+    }
+
+}
+
 extension AppDelegate: UNUserNotificationCenterDelegate {
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        AccountAPI.shared.updateSession(deviceToken: deviceToken.toHexString())
+        AccountAPI.shared.updateSession(deviceToken: deviceToken.toHexString(), pushkit_token: "")
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {

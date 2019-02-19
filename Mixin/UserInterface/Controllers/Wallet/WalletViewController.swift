@@ -117,10 +117,8 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
                 firstUSDBalance = 0
             }
             return WalletHeaderCell.height(usdBalanceIsMoreThanZero: firstUSDBalance > 0)
-        case 1:
-            return WalletAssetCell.height
         default:
-            return WalletAddAssetCell.height
+            return WalletAssetCell.height
         }
     }
     
@@ -141,7 +139,7 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return section == 1 ? 0 : footerHeight
+        return section == 1 ? .leastNormalMagnitude : footerHeight
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

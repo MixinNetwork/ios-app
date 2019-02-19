@@ -20,11 +20,8 @@ class WalletHeaderCell: UITableViewCell {
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
-    private let usdIntegerAttribute = [
+    private let usdBalanceAttributes = [
         NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 40)!
-    ]
-    private let usdFractionAttribute = [
-        NSAttributedString.Key.font: UIFont(name: "DINCondensed-Bold", size: 24)!
     ]
     private let btcValueAttributes: [NSAttributedString.Key: Any] = [
         .font: UIFont(name: "DINCondensed-Bold", size: 14)!,
@@ -114,18 +111,11 @@ extension WalletHeaderCell {
     }
     
     private func attributedString(usdBalance: Double) -> NSAttributedString? {
-        let zeroInteger = "0"
-        let zeroFraction = "00"
         if usdBalance == 0 {
-            let str = zeroInteger + currentDecimalSeparator + zeroFraction
-            return NSAttributedString(string: str, attributes: usdIntegerAttribute)
+            let str = "0" + currentDecimalSeparator + "00"
+            return NSAttributedString(string: str, attributes: usdBalanceAttributes)
         } else if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
-            let components = localizedUSDBalance.components(separatedBy: currentDecimalSeparator)
-            let integer = (components.first ?? zeroInteger) + currentDecimalSeparator
-            let str = NSMutableAttributedString(string: integer, attributes: usdIntegerAttribute)
-            let fraction = components.count < 2 ? zeroFraction : components[1]
-            str.append(NSAttributedString(string: fraction, attributes: usdFractionAttribute))
-            return str
+            return NSAttributedString(string: localizedUSDBalance, attributes: usdBalanceAttributes)
         } else {
             return nil
         }

@@ -70,9 +70,9 @@
                                 <rect key="frame" x="0.0" y="76" width="414" height="0.0"/>
                                 <color key="backgroundColor" red="0.1215686275" green="0.70588235290000001" blue="0.98823529409999999" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="1Bd-So-GRm">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="1Bd-So-GRm">
                                 <rect key="frame" x="0.0" y="75.666666666666686" width="414" height="660.33333333333326"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -87,7 +87,7 @@
                                                     <rect key="frame" x="0.0" y="11" width="414" height="143"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IHE-HM-Hdw">
-                                                            <rect key="frame" x="123.33333333333333" y="0.0" width="167.66666666666669" height="40"/>
+                                                            <rect key="frame" x="143.66666666666666" y="0.0" width="126.99999999999997" height="40"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rtr-Z3-phX">
                                                                     <rect key="frame" x="0.0" y="0.0" width="11.333333333333334" height="21.666666666666668"/>
@@ -96,16 +96,11 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGd-qQ-SHD" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                                                    <rect key="frame" x="18.333333333333329" y="2" width="149.33333333333337" height="46.666666666666664"/>
+                                                                    <rect key="frame" x="15.33333333333335" y="2" width="111.66666666666669" height="40"/>
                                                                     <attributedString key="attributedText">
-                                                                        <fragment content="65536.">
+                                                                        <fragment content="65536.55">
                                                                             <attributes>
-                                                                                <font key="NSFont" size="40" name="MixinCondensed-Regular"/>
-                                                                            </attributes>
-                                                                        </fragment>
-                                                                        <fragment content="00">
-                                                                            <attributes>
-                                                                                <font key="NSFont" size="24" name="MixinCondensed-Regular"/>
+                                                                                <font key="NSFont" size="40" name="DINCondensed-Bold"/>
                                                                             </attributes>
                                                                         </fragment>
                                                                     </attributedString>
@@ -115,7 +110,7 @@
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstItem="Rtr-Z3-phX" firstAttribute="top" secondItem="IHE-HM-Hdw" secondAttribute="top" id="0LK-NL-VtV"/>
-                                                                <constraint firstItem="eGd-qQ-SHD" firstAttribute="leading" secondItem="Rtr-Z3-phX" secondAttribute="trailing" constant="7" id="9kk-gS-6L9"/>
+                                                                <constraint firstItem="eGd-qQ-SHD" firstAttribute="leading" secondItem="Rtr-Z3-phX" secondAttribute="trailing" constant="4" id="9kk-gS-6L9"/>
                                                                 <constraint firstAttribute="height" constant="40" id="fc0-jA-Hqi"/>
                                                                 <constraint firstAttribute="trailing" secondItem="eGd-qQ-SHD" secondAttribute="trailing" id="nCJ-gj-NS0"/>
                                                                 <constraint firstItem="Rtr-Z3-phX" firstAttribute="leading" secondItem="IHE-HM-Hdw" secondAttribute="leading" id="wdm-Mq-OYW"/>
@@ -123,16 +118,16 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JDj-Ex-KE6">
-                                                            <rect key="frame" x="181.66666666666666" y="47" width="50.666666666666657" height="14"/>
+                                                            <rect key="frame" x="180.33333333333334" y="47" width="53.333333333333343" height="12"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4.617" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7s3-8d-IEj">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="23.666666666666668" height="14"/>
-                                                                    <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="14"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="20.333333333333332" height="12"/>
+                                                                    <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="12"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l67-0u-hKp">
-                                                                    <rect key="frame" x="26.666666666666686" y="-1.3333333333333357" width="24" height="14.333333333333334"/>
+                                                                    <rect key="frame" x="29.333333333333314" y="-2.6666666666666643" width="24" height="14.333333333333334"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
@@ -145,11 +140,11 @@
                                                                 <constraint firstAttribute="bottom" secondItem="7s3-8d-IEj" secondAttribute="bottom" id="Oca-QW-Yxa"/>
                                                                 <constraint firstItem="l67-0u-hKp" firstAttribute="firstBaseline" secondItem="7s3-8d-IEj" secondAttribute="firstBaseline" id="Odg-oy-2bK"/>
                                                                 <constraint firstAttribute="trailing" secondItem="l67-0u-hKp" secondAttribute="trailing" id="UgN-8N-0gX"/>
-                                                                <constraint firstItem="l67-0u-hKp" firstAttribute="leading" secondItem="7s3-8d-IEj" secondAttribute="trailing" constant="3" id="w4j-79-XwX"/>
+                                                                <constraint firstItem="l67-0u-hKp" firstAttribute="leading" secondItem="7s3-8d-IEj" secondAttribute="trailing" constant="9" id="w4j-79-XwX"/>
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y25-bj-M31">
-                                                            <rect key="frame" x="0.0" y="84" width="414" height="38"/>
+                                                            <rect key="frame" x="0.0" y="82" width="414" height="38"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VuY-Uo-TGR" customClass="BarChartView" customModule="Mixin" customModuleProvider="target">
                                                                     <rect key="frame" x="20" y="0.0" width="374" height="4"/>
@@ -356,18 +351,18 @@
                                             <outlet property="usdValueLabel" destination="eGd-qQ-SHD" id="gNH-Ga-gLl"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="wallet_add_asset" rowHeight="90" id="wP8-IX-wyz" customClass="WalletAddAssetCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="214.33333333333337" width="414" height="90"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="wallet_add_asset" rowHeight="74" id="wP8-IX-wyz">
+                                        <rect key="frame" x="0.0" y="214.33333333333334" width="414" height="74.000000000000028"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wP8-IX-wyz" id="qHV-Uw-RMg">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="90"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="UMD-vv-2fj">
-                                                    <rect key="frame" x="166" y="36.666666666666664" width="82.333333333333314" height="17"/>
+                                                    <rect key="frame" x="166" y="28.666666666666671" width="82.333333333333314" height="17"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_add" translatesAutoresizingMaskIntoConstraints="NO" id="L46-g3-KvM">
-                                                            <rect key="frame" x="0.0" y="3.3333333333333357" width="10" height="10"/>
+                                                            <rect key="frame" x="0.0" y="3.3333333333333321" width="10" height="10"/>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add asset" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XGc-3R-RCZ">
                                                             <rect key="frame" x="18" y="0.0" width="64.333333333333329" height="17"/>
@@ -381,13 +376,13 @@
                                                     </subviews>
                                                 </stackView>
                                             </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="UMD-vv-2fj" firstAttribute="centerX" secondItem="qHV-Uw-RMg" secondAttribute="centerX" id="KuQ-Jr-kLR"/>
                                                 <constraint firstItem="UMD-vv-2fj" firstAttribute="centerY" secondItem="qHV-Uw-RMg" secondAttribute="centerY" id="wsm-Co-gej"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>

@@ -2,15 +2,13 @@ import UIKit
 
 class WalletAssetCell: UITableViewCell {
     
-    static let height: CGFloat = 96
+    static let height: CGFloat = 74
     static let balanceAttributes: [NSAttributedString.Key: Any] = [
-        .font: UIFont(name: "DINCondensed-Bold", size: 24)!,
+        .font: UIFont(name: "DINCondensed-Bold", size: 19)!,
         .kern: 0.7
     ]
     
-    @IBOutlet weak var cardView: ShadowedCardView!
-    @IBOutlet weak var iconImageView: CornerImageView!
-    @IBOutlet weak var chainImageView: CornerImageView!
+    @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var balanceLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var changeLabel: InsetLabel!
@@ -21,34 +19,27 @@ class WalletAssetCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         balanceLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
-        symbolLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
-        changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
+        symbolLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 3, right: 0)
+        changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 4, right: 0)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        iconImageView.sd_cancelCurrentImageLoad()
-        chainImageView.sd_cancelCurrentImageLoad()
+        assetIconView.prepareForReuse()
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        cardView.setHighlighted(selected, animated: animated)
-    }
-    
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        super.setHighlighted(highlighted, animated: animated)
-        cardView.setHighlighted(highlighted, animated: animated)
-    }
+//    override func setSelected(_ selected: Bool, animated: Bool) {
+//        super.setSelected(selected, animated: animated)
+//        cardView.setHighlighted(selected, animated: animated)
+//    }
+//
+//    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+//        super.setHighlighted(highlighted, animated: animated)
+//        cardView.setHighlighted(highlighted, animated: animated)
+//    }
     
     func render(asset: AssetItem) {
-        iconImageView.sd_setImage(with: URL(string: asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
-        if let chainIconUrl = asset.chainIconUrl {
-            chainImageView.sd_setImage(with: URL(string: chainIconUrl))
-            chainImageView.isHidden = false
-        } else {
-            chainImageView.isHidden = true
-        }
+        assetIconView.setIcon(asset: asset)
         let balance: String
         if asset.balance == "0" {
             balance = "0\(currentDecimalSeparator)00"

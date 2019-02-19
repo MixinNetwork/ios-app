@@ -67,7 +67,7 @@
                                     <constraints>
                                         <constraint firstAttribute="width" constant="66" id="Ffg-Oy-4yz"/>
                                     </constraints>
-                                    <state key="normal" image="ic_web_close"/>
+                                    <state key="normal" image="ic_dialog_close"/>
                                     <connections>
                                         <action selector="dismissAction:" destination="Qmy-MR-oXV" eventType="touchUpInside" id="9Zb-ah-xGi"/>
                                     </connections>
@@ -158,6 +158,6 @@
         </screenEdgePanGestureRecognizer>
     </objects>
     <resources>
-        <image name="ic_web_close" width="26" height="26"/>
+        <image name="ic_dialog_close" width="16" height="16"/>
     </resources>
 </document>

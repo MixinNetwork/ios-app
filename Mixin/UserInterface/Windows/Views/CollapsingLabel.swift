@@ -38,12 +38,12 @@ class CollapsingLabel: CoreTextLabel {
             typesetIfNeeded(oldValue: oldValue, newValue: text)
         }
     }
-    var font = UIFont.systemFont(ofSize: 16) {
+    var font = UIFont.systemFont(ofSize: 14) {
         didSet {
             typesetIfNeeded(oldValue: oldValue, newValue: font)
         }
     }
-    var textColor = UIColor.darkGray {
+    var textColor = UIColor(rgbValue: 0x3A3C3E) {
         didSet {
             typesetIfNeeded(oldValue: oldValue, newValue: textColor)
         }

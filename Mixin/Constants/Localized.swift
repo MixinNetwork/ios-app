@@ -265,7 +265,10 @@ public class Localized {
     public static let GROUP_MENU_EXIT = LocalizedString("group_menu_exit", comment: "Delete and Exit")
     public static let GROUP_MENU_ANNOUNCEMENT = LocalizedString("group_menu_announcement", comment: "Edit Group Description")
     public static let GROUP_MENU_PARTICIPANTS = LocalizedString("group_menu_participants", comment: "Participants")
-
+    public static func GROUP_TITLE_MEMBERS(count: String) -> String {
+        return String(format: LocalizedString("group_title_members", comment: "%@ Group members"), count)
+    }
+    
     // QRCode
     public static let MYQRCODE_TITLE = LocalizedString("myqrcode_title", comment: "My QR Code")
     public static let MYQRCODE_PROMPT = LocalizedString("myqrcode_prompt", comment: "Scan the QR Code to add me on Mixin")
@@ -293,6 +296,7 @@ public class Localized {
 
     // Profile
     public static let PROFILE_TITLE = LocalizedString("profile_title", comment: "Info")
+    public static let PROFILE_OPEN_BOT = LocalizedString("profile_open_bot", comment: "Open App")
     public static func PROFILE_MIXIN_ID(id: String) -> String {
         return String(format: LocalizedString("profile_mixin_id", comment: "Mixin ID: %@"), id)
     }

@@ -253,6 +253,7 @@
 "group_menu_delete" = "Delete Chat";
 "group_menu_exit" = "Delete and Exit";
 "group_menu_participants" = "Participants";
+"group_title_members" = "%@ Group members";
 
 "code_recognition_fail_title" = "Unrecognized codes";
 "code_recognition_fail_summary" = "This codes doesn't match any Mixin groups or users.";

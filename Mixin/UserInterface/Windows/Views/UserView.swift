@@ -216,7 +216,6 @@ class UserView: CornerView {
     }
     
     @IBAction func shareAction(_ sender: Any) {
-        superView?.dismissPopupControllerAnimated()
         let vc = SendMessagePeerSelectionViewController.instance(content: .contact(user.userId))
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
     }

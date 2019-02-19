@@ -115,7 +115,7 @@
                 <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Tvr-3M-1aD">
                     <rect key="frame" x="63" y="241" width="249" height="68"/>
                     <subviews>
-                        <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="422-sY-vUK" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                        <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="422-sY-vUK" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="12" width="43" height="44"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="9" minY="10" maxX="9" maxY="10"/>

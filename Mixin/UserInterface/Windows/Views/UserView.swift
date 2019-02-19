@@ -9,7 +9,7 @@ class UserView: CornerView {
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var descriptionScrollView: UIScrollView!
     @IBOutlet weak var descriptionLabel: CollapsingLabel!
-    @IBOutlet weak var addContactButton: StateResponsiveButton!
+    @IBOutlet weak var addContactButton: BusyButton!
     @IBOutlet weak var openAppButton: UIButton!
     @IBOutlet weak var shareContactButton: UIButton!
     @IBOutlet weak var sendButton: UIButton!
@@ -122,19 +122,11 @@ class UserView: CornerView {
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         let isStranger = user.relationship == Relationship.STRANGER.rawValue
         let canAddContact = !isStranger || isBlocked
-        let block = {
-            self.addContactButton.isHidden = canAddContact
-            self.sendButton.isHidden = isBlocked
-            self.shareContactButton.isHidden = !canAddContact || user.isBot
-            self.openAppButton.isHidden = !canAddContact || !user.isBot
-        }
-        if animated {
-            UIView.animate(withDuration: 0.15, animations: {
-                block()
-            })
-        } else {
-            block()
-        }
+
+        addContactButton.isHidden = canAddContact
+        sendButton.isHidden = isBlocked
+        shareContactButton.isHidden = !canAddContact || user.isBot
+        openAppButton.isHidden = !canAddContact || !user.isBot
     }
 
     @IBAction func appCreatorAction(_ sender: Any) {

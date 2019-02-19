@@ -14,9 +14,8 @@ class GroupView: CornerView {
     @IBOutlet weak var inGroupActionsStackView: UIStackView!
     @IBOutlet weak var joinButton: BusyButton!
     
+    @IBOutlet weak var announcementScrollViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var announcementScrollViewHeightConstraint: NSLayoutConstraint!
-    
-    private let noAnnouncementScrollViewHeight: CGFloat = 22
     
     private weak var superView: BottomSheetView?
     private var conversation: ConversationItem!
@@ -81,9 +80,11 @@ class GroupView: CornerView {
         announcementLabel.mode = initialAnnouncementMode
         announcementLabel.isHidden = conversation.announcement.isEmpty
         if conversation.announcement.isEmpty {
-            announcementScrollViewHeightConstraint.constant = noAnnouncementScrollViewHeight
+            announcementScrollViewHeightConstraint.constant = 0
+            announcementScrollViewTopConstraint.constant = 7
         } else {
             announcementScrollViewHeightConstraint.constant = announcementLabel.intrinsicContentSize.height
+            announcementScrollViewTopConstraint.constant = 14
         }
     }
     

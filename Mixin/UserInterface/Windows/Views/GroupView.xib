@@ -28,29 +28,29 @@
                     </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="9f1-By-myT" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="137.5" y="86" width="110" height="110"/>
+                    <rect key="frame" x="147.5" y="70" width="90" height="90"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="110" id="nde-tu-eTb"/>
+                        <constraint firstAttribute="height" constant="90" id="nde-tu-eTb"/>
                         <constraint firstAttribute="width" secondItem="9f1-By-myT" secondAttribute="height" multiplier="1:1" id="rT4-IZ-zmG"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <integer key="value" value="55"/>
+                            <real key="value" value="45"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="eCR-rs-Cgf">
-                    <rect key="frame" x="30" y="207" width="325" height="41"/>
+                    <rect key="frame" x="30" y="170" width="325" height="77"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Mixin Team" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYa-yc-XuN">
                             <rect key="frame" x="0.0" y="0.0" width="325" height="24"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 Group memebers" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wV3-wM-YUi">
-                            <rect key="frame" x="0.0" y="26" width="325" height="15"/>
+                            <rect key="frame" x="0.0" y="26" width="325" height="51"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -58,7 +58,7 @@
                     </subviews>
                 </stackView>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z1B-ee-Nrm">
-                    <rect key="frame" x="30" y="263" width="325" height="60"/>
+                    <rect key="frame" x="30" y="262" width="325" height="60"/>
                     <subviews>
                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="f3U-ow-eCY" customClass="CollapsingLabel" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="6" y="0.0" width="313" height="128"/>
@@ -140,17 +140,17 @@
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="gUD-L0-6L5" secondAttribute="trailing" constant="67" id="0Xm-PQ-CSo"/>
                 <constraint firstItem="gUD-L0-6L5" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="67" id="Bqq-ET-04g"/>
                 <constraint firstAttribute="trailing" secondItem="X5N-nU-0Nd" secondAttribute="trailing" id="BwR-XZ-F0G"/>
-                <constraint firstItem="gUD-L0-6L5" firstAttribute="top" secondItem="Z1B-ee-Nrm" secondAttribute="bottom" constant="7" id="CiF-fe-qst"/>
+                <constraint firstItem="gUD-L0-6L5" firstAttribute="top" secondItem="Z1B-ee-Nrm" secondAttribute="bottom" constant="8" id="CiF-fe-qst"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="eCR-rs-Cgf" secondAttribute="trailing" constant="30" id="GkJ-hx-6BK"/>
                 <constraint firstItem="Z1B-ee-Nrm" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="30" id="Oe1-nc-g2q"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="centerX" secondItem="8ZX-DU-9oC" secondAttribute="centerX" id="Qke-oC-sSP"/>
-                <constraint firstItem="9f1-By-myT" firstAttribute="top" secondItem="8ZX-DU-9oC" secondAttribute="top" constant="86" id="URV-eq-6C8"/>
+                <constraint firstItem="9f1-By-myT" firstAttribute="top" secondItem="8ZX-DU-9oC" secondAttribute="top" constant="70" id="URV-eq-6C8"/>
                 <constraint firstItem="X5N-nU-0Nd" firstAttribute="top" secondItem="Zlp-75-Ixx" secondAttribute="top" id="aLU-C3-Lwg"/>
                 <constraint firstItem="Z1B-ee-Nrm" firstAttribute="top" secondItem="eCR-rs-Cgf" secondAttribute="bottom" constant="15" id="gLc-Kc-O4n"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="Z1B-ee-Nrm" secondAttribute="trailing" constant="30" id="h7K-uj-Wua"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="bottom" secondItem="gUD-L0-6L5" secondAttribute="bottom" constant="16" id="krg-ed-TxZ"/>
                 <constraint firstItem="eCR-rs-Cgf" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="30" id="lYa-z0-7lf"/>
-                <constraint firstItem="eCR-rs-Cgf" firstAttribute="top" secondItem="9f1-By-myT" secondAttribute="bottom" constant="11" id="oYf-cl-fFg"/>
+                <constraint firstItem="eCR-rs-Cgf" firstAttribute="top" secondItem="9f1-By-myT" secondAttribute="bottom" constant="10" id="oYf-cl-fFg"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
@@ -165,6 +165,7 @@
                 <outlet property="announcementLabel" destination="f3U-ow-eCY" id="Fpl-3i-dPe"/>
                 <outlet property="announcementScrollView" destination="Z1B-ee-Nrm" id="Paa-Ap-Te2"/>
                 <outlet property="announcementScrollViewHeightConstraint" destination="egz-w2-F17" id="wgF-xq-Yn1"/>
+                <outlet property="announcementScrollViewTopConstraint" destination="gLc-Kc-O4n" id="Fl8-QU-eIO"/>
                 <outlet property="avatarImageView" destination="9f1-By-myT" id="sUK-Xm-k0M"/>
                 <outlet property="groupMembersLabel" destination="wV3-wM-YUi" id="EUO-TT-N7E"/>
                 <outlet property="inGroupActionsStackView" destination="vaq-c9-RoT" id="AMc-tl-75e"/>

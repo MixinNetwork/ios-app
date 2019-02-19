@@ -364,6 +364,7 @@
 		DF2209301FFFE96500D470EF /* SessionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22092F1FFFE96500D470EF /* SessionRequest.swift */; };
 		DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */; };
 		DF22D94D1FDE500500243CAE /* SystemConversationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22D94C1FDE500500243CAE /* SystemConversationData.swift */; };
+		DF233CE12202F5BE005F2FD1 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF233CE02202F5BE005F2FD1 /* UserSession.swift */; };
 		DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2819742014669E001EE5FA /* RefreshAccountJob.swift */; };
 		DF2A24481FC7CFA8003A8C1E /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2A24471FC7CF87003A8C1E /* LocalAuthentication.framework */; };
 		DF2A244A1FC7E25B003A8C1E /* ErrorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A24491FC7E25B003A8C1E /* ErrorExtension.swift */; };
@@ -999,6 +1000,7 @@
 		DF22092F1FFFE96500D470EF /* SessionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRequest.swift; sourceTree = "<group>"; };
 		DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPlainData.swift; sourceTree = "<group>"; };
 		DF22D94C1FDE500500243CAE /* SystemConversationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemConversationData.swift; sourceTree = "<group>"; };
+		DF233CE02202F5BE005F2FD1 /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		DF2819742014669E001EE5FA /* RefreshAccountJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAccountJob.swift; sourceTree = "<group>"; };
 		DF2A24471FC7CF87003A8C1E /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		DF2A24491FC7E25B003A8C1E /* ErrorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorExtension.swift; sourceTree = "<group>"; };
@@ -2402,6 +2404,7 @@
 				DF8DA1971FD5301200425CEC /* Participant.swift */,
 				DF65AAF420514B3B004E3459 /* ParticipantUser.swift */,
 				DF114B0920206D3300EA8F9C /* App.swift */,
+				DF233CE02202F5BE005F2FD1 /* UserSession.swift */,
 				DFF353111FEEB72C00058453 /* Snapshot.swift */,
 				DF17B51620526050006447C2 /* SnapshotItem.swift */,
 				DF2A3CD72016DC860095F024 /* Sticker.swift */,
@@ -3006,6 +3009,7 @@
 				DFF3530A1FEE9E1200058453 /* TransferResponse.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				DFF21459209ABA6500612234 /* GroupWindow.swift in Sources */,
+				DF233CE12202F5BE005F2FD1 /* UserSession.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
 				DFE48ADC20EB8165003E0BF8 /* ConversationStorageUsage.swift in Sources */,
 				DF114B062020551900EA8F9C /* AppDAO.swift in Sources */,

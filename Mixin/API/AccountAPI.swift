@@ -22,6 +22,8 @@ final class AccountAPI: BaseAPI {
 
         static let verifyPin = "pin/verify"
         static let updatePin = "pin/update"
+
+        static let sessions = "sessions/fetch"
     }
     
     private lazy var jsonEncoder = JSONEncoder()
@@ -100,6 +102,10 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.session, parameters: sessionRequest.toParameters(), encoding: EncodableParameterEncoding<SessionRequest>()) { (result: APIResult<Account>) in
 
         }
+    }
+
+    func getSessions(userIds: [String], completion: @escaping (APIResult<[UserSession]>) -> Void) {
+        request(method: .post, url: url.sessions, parameters: userIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
     }
     
     func preferences(userRequest: UserRequest, completion: @escaping (APIResult<UserResponse>) -> Void) {

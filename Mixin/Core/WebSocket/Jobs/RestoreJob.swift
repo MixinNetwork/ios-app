@@ -68,18 +68,7 @@ class RestoreJob: BaseJob {
             Bugsnag.notifyError(error)
         }
     }
-
-    static func isRestoreChat() -> Bool {
-        guard FileManager.default.ubiquityIdentityToken != nil else {
-            return false
-        }
-        guard let backupDir = MixinFile.iCloudBackupDirectory, FileManager.default.fileExists(atPath: backupDir.path) else {
-            return false
-        }
-        
-        return backupDir.appendingPathComponent(MixinFile.backupDatabase.lastPathComponent).cloudExist()
-    }
-
+    
     private func downloadFromCloud(url: URL) throws {
         guard url.cloudExist() else {
             return

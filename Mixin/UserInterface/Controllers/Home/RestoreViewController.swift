@@ -7,6 +7,7 @@ import Zip
 class RestoreViewController: UIViewController {
 
     @IBOutlet weak var restoreButton: StateResponsiveButton!
+    @IBOutlet weak var progressLabel: UILabel!
     @IBOutlet weak var skipButton: UIButton!
 
     private var stopDownload = false
@@ -25,6 +26,8 @@ class RestoreViewController: UIViewController {
         }
         restoreButton.isBusy = true
         skipButton.isHidden = true
+        progressLabel.isHidden = false
+        updateProgressLabel(progress: 0)
         DispatchQueue.global().async {
             guard FileManager.default.ubiquityIdentityToken != nil else {
                 return
@@ -34,7 +37,9 @@ class RestoreViewController: UIViewController {
             }
 
             do {
+                self.updateProgressLabel(progress: 0.01)
                 try self.restoreDatabase(backupDir: backupDir)
+                self.updateProgressLabel(progress: 0.3)
                 try self.restorePhotosAndAudios(backupDir: backupDir)
                 AccountUserDefault.shared.hasRestoreChat = false
                 DispatchQueue.main.async {
@@ -48,6 +53,7 @@ class RestoreViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.restoreButton.isBusy = false
                     self.skipButton.isHidden = false
+                    self.progressLabel.isHidden = true
                 }
                 Bugsnag.notifyError(error)
             }
@@ -111,6 +117,7 @@ class RestoreViewController: UIViewController {
 
         try FileManager.default.createDirectoryIfNeeded(dir: chatDir)
         
+        var totalProgress: Float = 0.3
         for category in categories {
             let cloudURL = backupDir.appendingPathComponent("mixin.\(category.rawValue.lowercased()).zip")
 
@@ -128,7 +135,9 @@ class RestoreViewController: UIViewController {
             let localDir = chatDir.appendingPathComponent(category.rawValue)
 
             do {
-                try Zip.unzipFile(localZip, destination: localDir, overwrite: true, password: nil)
+                try Zip.unzipFile(localZip, destination: localDir, overwrite: true, password: nil, progress: { (progress) in
+                    self.updateProgressLabel(progress: totalProgress + Float(progress) * 0.35)
+                })
             } catch {
                 #if DEBUG
                 print(error)
@@ -136,6 +145,16 @@ class RestoreViewController: UIViewController {
                 Bugsnag.notifyError(error)
             }
             try? FileManager.default.removeItem(at: localZip)
+            totalProgress += 0.35
         }
     }
+    
+    private func updateProgressLabel(progress: Float) {
+        performSynchronouslyOnMainThread {
+            let number = NSNumber(value: progress)
+            let percentage = NumberFormatter.simplePercentage.string(from: number)
+            progressLabel.text = percentage
+        }
+    }
+    
 }

@@ -21,22 +21,14 @@ class WalletAssetCell: UITableViewCell {
         balanceLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
         symbolLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 3, right: 0)
         changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 4, right: 0)
+        selectedBackgroundView = UIView(frame: bounds)
+        selectedBackgroundView!.backgroundColor = .modernCellSelection
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         assetIconView.prepareForReuse()
     }
-    
-//    override func setSelected(_ selected: Bool, animated: Bool) {
-//        super.setSelected(selected, animated: animated)
-//        cardView.setHighlighted(selected, animated: animated)
-//    }
-//
-//    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-//        super.setHighlighted(highlighted, animated: animated)
-//        cardView.setHighlighted(highlighted, animated: animated)
-//    }
     
     func render(asset: AssetItem) {
         assetIconView.setIcon(asset: asset)

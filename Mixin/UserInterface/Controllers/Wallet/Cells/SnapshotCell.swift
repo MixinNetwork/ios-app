@@ -17,14 +17,10 @@ class SnapshotCell: UITableViewCell {
     
     weak var delegate: SnapshotCellDelegate?
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        setBackgroundHighlighted(selected, animated: animated)
-    }
-    
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        super.setHighlighted(highlighted, animated: animated)
-        setBackgroundHighlighted(highlighted, animated: animated)
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        selectedBackgroundView = UIView(frame: bounds)
+        selectedBackgroundView!.backgroundColor = .modernCellSelection
     }
     
     override func prepareForReuse() {
@@ -93,17 +89,6 @@ class SnapshotCell: UITableViewCell {
             }
         } else {
             pendingDepositProgressView.isHidden = true
-        }
-    }
-    
-    private func setBackgroundHighlighted(_ highlighted: Bool, animated: Bool) {
-        let animation = {
-            self.contentView.backgroundColor = highlighted ? .modernCellSelection : .white
-        }
-        if animated {
-            UIView.animate(withDuration: 0.3, animations: animation)
-        } else {
-            animation()
         }
     }
     

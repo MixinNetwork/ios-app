@@ -122,6 +122,9 @@ extension BackupViewController {
         tableView.deselectRow(at: indexPath, animated: true)
 
         if indexPath.section == 0 && indexPath.row == 0 {
+            guard !BackupJobQueue.shared.isBackingUp else {
+                return
+            }
             if BackupJobQueue.shared.addJob(job: BackupJob(immediatelyBackup: true)) {
                 backingUI()
             }

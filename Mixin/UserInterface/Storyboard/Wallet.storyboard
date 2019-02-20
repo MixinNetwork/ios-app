@@ -873,6 +873,156 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="OP0-s0-DIE">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <view key="tableHeaderView" clipsSubviews="YES" contentMode="scaleToFill" id="t9N-Yl-Ul3" customClass="AssetTableHeaderView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="204"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="FZF-Lv-pQL">
+                                            <rect key="frame" x="36" y="26" width="342" height="51"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OIb-Ux-chy" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="0.0" width="51" height="51"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="OIb-Ux-chy" secondAttribute="height" id="JTB-rz-9v6"/>
+                                                        <constraint firstAttribute="width" constant="51" id="QDW-FL-FgG"/>
+                                                    </constraints>
+                                                </view>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="mve-ky-yYM">
+                                                    <rect key="frame" x="61" y="0.0" width="281" height="51"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="H2I-Dz-BKu">
+                                                            <rect key="frame" x="0.0" y="0.0" width="281" height="34"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" text="6553665536" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aaK-2a-XZi">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="140.66666666666666" height="34"/>
+                                                                    <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="34"/>
+                                                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="XIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uSM-4b-0QI" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                                    <rect key="frame" x="140.66666666666663" y="19.666666666666664" width="140.33333333333337" height="14.333333333333336"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="≈ $4080" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t3B-IR-dY1">
+                                                            <rect key="frame" x="0.0" y="34" width="281" height="17"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
+                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="I3f-eB-HAW">
+                                            <rect key="frame" x="0.0" y="88" width="414" height="60"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Pe-LR-EdM">
+                                                    <rect key="frame" x="0.0" y="0.0" width="207" height="60"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <state key="normal" title="TRANSFER">
+                                                        <color key="titleColor" red="0.10980392156862745" green="0.49019607843137253" blue="0.87450980392156863" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_caption_transfer"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="transfer:" destination="kef-KV-TZS" eventType="touchUpInside" id="zbY-bM-fsz"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lD1-P5-OTx" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                                                    <rect key="frame" x="207" y="0.0" width="207" height="60"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <state key="normal" title="DEPOSIT">
+                                                        <color key="titleColor" red="0.10980392156862745" green="0.49019607843137253" blue="0.87450980392156863" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_caption_deposit"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="deposit:" destination="kef-KV-TZS" eventType="touchUpInside" id="lpe-yR-m1N"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="60" id="hry-hH-Ls6"/>
+                                            </constraints>
+                                        </stackView>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CsL-pa-tlx" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="148" width="414" height="10"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="10" id="cXZ-W9-xYf"/>
+                                            </constraints>
+                                        </view>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GD6-mT-59f">
+                                            <rect key="frame" x="0.0" y="168" width="414" height="36"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transactions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gL7-6v-4pi">
+                                                    <rect key="frame" x="20" y="0.0" width="82.666666666666671" height="36"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" red="0.2274509804" green="0.23529411759999999" blue="0.24313725489999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="profile_transactions"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VMV-d3-Trf">
+                                                    <rect key="frame" x="368" y="0.0" width="36" height="36"/>
+                                                    <state key="normal" image="Wallet/ic_filter"/>
+                                                    <connections>
+                                                        <action selector="presentFilterWindow:" destination="kef-KV-TZS" eventType="touchUpInside" id="4dm-b8-nB6"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="36" id="2ep-qy-VsW"/>
+                                                <constraint firstItem="gL7-6v-4pi" firstAttribute="top" secondItem="GD6-mT-59f" secondAttribute="top" id="5NQ-Sa-ILQ"/>
+                                                <constraint firstAttribute="trailing" secondItem="VMV-d3-Trf" secondAttribute="trailing" constant="10" id="9Op-Rr-wAs"/>
+                                                <constraint firstItem="gL7-6v-4pi" firstAttribute="leading" secondItem="GD6-mT-59f" secondAttribute="leading" constant="20" id="LMV-jN-daZ"/>
+                                                <constraint firstItem="VMV-d3-Trf" firstAttribute="width" secondItem="VMV-d3-Trf" secondAttribute="height" id="bQc-5u-Uv0"/>
+                                                <constraint firstItem="VMV-d3-Trf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gL7-6v-4pi" secondAttribute="trailing" constant="8" id="ekc-je-OQF"/>
+                                                <constraint firstItem="VMV-d3-Trf" firstAttribute="top" secondItem="GD6-mT-59f" secondAttribute="top" id="gvY-Pj-Th8"/>
+                                                <constraint firstAttribute="bottom" secondItem="VMV-d3-Trf" secondAttribute="bottom" id="l7Y-PV-oCe"/>
+                                                <constraint firstAttribute="bottom" secondItem="gL7-6v-4pi" secondAttribute="bottom" id="noN-lZ-rgo"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstItem="CsL-pa-tlx" firstAttribute="leading" secondItem="t9N-Yl-Ul3" secondAttribute="leading" id="4sd-AN-Vai"/>
+                                        <constraint firstItem="GD6-mT-59f" firstAttribute="leading" secondItem="t9N-Yl-Ul3" secondAttribute="leading" id="78R-yz-u4U"/>
+                                        <constraint firstItem="GD6-mT-59f" firstAttribute="top" secondItem="CsL-pa-tlx" secondAttribute="bottom" constant="10" id="Fv9-XU-hau"/>
+                                        <constraint firstItem="FZF-Lv-pQL" firstAttribute="leading" secondItem="t9N-Yl-Ul3" secondAttribute="leading" constant="36" id="HKY-eI-b6H"/>
+                                        <constraint firstItem="I3f-eB-HAW" firstAttribute="leading" secondItem="mhU-mx-dK5" secondAttribute="leading" id="Lr3-DA-USh"/>
+                                        <constraint firstItem="CsL-pa-tlx" firstAttribute="top" secondItem="I3f-eB-HAW" secondAttribute="bottom" id="Mcg-TJ-sMa"/>
+                                        <constraint firstItem="I3f-eB-HAW" firstAttribute="top" secondItem="FZF-Lv-pQL" secondAttribute="bottom" constant="11" id="Ulx-Zy-g9a"/>
+                                        <constraint firstAttribute="bottom" secondItem="GD6-mT-59f" secondAttribute="bottom" id="VwW-Aq-L8S"/>
+                                        <constraint firstItem="mhU-mx-dK5" firstAttribute="trailing" secondItem="I3f-eB-HAW" secondAttribute="trailing" id="Z1e-yS-IyL"/>
+                                        <constraint firstAttribute="trailing" secondItem="FZF-Lv-pQL" secondAttribute="trailing" constant="36" id="bWE-T6-5jd"/>
+                                        <constraint firstItem="FZF-Lv-pQL" firstAttribute="top" secondItem="t9N-Yl-Ul3" secondAttribute="top" constant="26" id="hPj-01-uaq"/>
+                                        <constraint firstAttribute="trailing" secondItem="GD6-mT-59f" secondAttribute="trailing" id="sIG-h8-3HV"/>
+                                        <constraint firstAttribute="trailing" secondItem="CsL-pa-tlx" secondAttribute="trailing" id="vN6-iY-0bj"/>
+                                    </constraints>
+                                    <viewLayoutGuide key="safeArea" id="mhU-mx-dK5"/>
+                                    <connections>
+                                        <outlet property="amountLabel" destination="aaK-2a-XZi" id="BiS-zU-eH8"/>
+                                        <outlet property="assetIconView" destination="OIb-Ux-chy" id="qqe-Ve-o95"/>
+                                        <outlet property="assetIconViewWidthConstraint" destination="QDW-FL-FgG" id="k4i-3R-pZe"/>
+                                        <outlet property="depositButton" destination="lD1-P5-OTx" id="KGh-DF-fCr"/>
+                                        <outlet property="infoStackView" destination="FZF-Lv-pQL" id="Det-OR-vmR"/>
+                                        <outlet property="infoStackViewLeadingConstraint" destination="HKY-eI-b6H" id="M4L-Ac-lWO"/>
+                                        <outlet property="infoStackViewTrailingConstraint" destination="bWE-T6-5jd" id="2jG-T5-YhH"/>
+                                        <outlet property="symbolLabel" destination="uSM-4b-0QI" id="yA4-jl-wgK"/>
+                                        <outlet property="transactionsHeaderView" destination="GD6-mT-59f" id="7IN-NZ-6OK"/>
+                                        <outlet property="usdValueLabel" destination="t3B-IR-dY1" id="U8E-GO-JUy"/>
+                                    </connections>
+                                </view>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -885,6 +1035,7 @@
                         <viewLayoutGuide key="safeArea" id="Caj-Sl-YUj"/>
                     </view>
                     <connections>
+                        <outlet property="tableHeaderView" destination="t9N-Yl-Ul3" id="qxY-bg-qnr"/>
                         <outlet property="tableView" destination="OP0-s0-DIE" id="kjz-nU-FP1"/>
                     </connections>
                 </viewController>
@@ -2064,6 +2215,7 @@
         <image name="Wallet/bg_shadow_top" width="67" height="66"/>
         <image name="Wallet/ic_add" width="10" height="10"/>
         <image name="Wallet/ic_deselected" width="34" height="34"/>
+        <image name="Wallet/ic_filter" width="14" height="14"/>
         <image name="Wallet/ic_force_selected" width="16" height="16"/>
         <image name="Wallet/ic_no_result" width="125" height="125"/>
         <image name="Wallet/ic_selected" width="34" height="34"/>

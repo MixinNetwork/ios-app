@@ -55,7 +55,6 @@ extension AllTransactionsViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
         let snapshot = dataSource.snapshots[indexPath.section][indexPath.row]
         cell.render(snapshot: snapshot)
-        cell.renderDecorationViews(indexPath: indexPath, models: dataSource.snapshots)
         return cell
     }
     

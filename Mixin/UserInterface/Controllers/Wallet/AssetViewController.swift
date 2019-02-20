@@ -140,7 +140,6 @@ extension AssetViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
         cell.render(snapshot: snapshotDataSource.snapshots[indexPath.section][indexPath.row], asset: asset)
-        cell.renderDecorationViews(indexPath: indexPath, models: snapshotDataSource.snapshots)
         cell.delegate = self
         return cell
     }

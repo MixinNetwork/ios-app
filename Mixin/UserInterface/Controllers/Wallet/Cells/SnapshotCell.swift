@@ -6,16 +6,12 @@ protocol SnapshotCellDelegate: class {
 
 class SnapshotCell: UITableViewCell {
     
-    static let height: CGFloat = 60
+    static let height: CGFloat = 50
     
-    @IBOutlet weak var shadowSafeContainerView: UIView!
     @IBOutlet weak var pendingDepositProgressView: UIView!
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var bottomShadowImageView: UIImageView!
-    @IBOutlet weak var selectionView: RoundCornerSelectionView!
-    @IBOutlet weak var separatorLineView: UIView!
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
     
@@ -23,12 +19,12 @@ class SnapshotCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        selectionView.setHighlighted(selected, animated: animated)
+        setBackgroundHighlighted(selected, animated: animated)
     }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
-        selectionView.setHighlighted(highlighted, animated: animated)
+        setBackgroundHighlighted(highlighted, animated: animated)
     }
     
     override func prepareForReuse() {
@@ -92,7 +88,7 @@ class SnapshotCell: UITableViewCell {
             let multiplier = CGFloat(finished) / CGFloat(total)
             if abs(pendingDepositProgressConstraint.multiplier - multiplier) > 0.1 {
                 NSLayoutConstraint.deactivate([pendingDepositProgressConstraint])
-                pendingDepositProgressConstraint = pendingDepositProgressView.widthAnchor.constraint(equalTo: shadowSafeContainerView.widthAnchor, multiplier: multiplier)
+                pendingDepositProgressConstraint = pendingDepositProgressView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: multiplier)
                 NSLayoutConstraint.activate([pendingDepositProgressConstraint])
             }
         } else {
@@ -100,18 +96,15 @@ class SnapshotCell: UITableViewCell {
         }
     }
     
-    func renderDecorationViews(indexPath: IndexPath, models: [[Any]]) {
-        let lastSection = models.count - 1
-        let lastIndexPath = IndexPath(row: models[lastSection].count - 1, section: lastSection)
-        if indexPath == lastIndexPath {
-            bottomShadowImageView.isHidden = false
-            selectionView.roundingCorners = [.bottomLeft, .bottomRight]
-        } else {
-            bottomShadowImageView.isHidden = true
-            selectionView.roundingCorners = []
+    private func setBackgroundHighlighted(_ highlighted: Bool, animated: Bool) {
+        let animation = {
+            self.contentView.backgroundColor = highlighted ? .modernCellSelection : .white
         }
-        separatorLineView.isHidden = models[indexPath.section].count == 1
-            || indexPath.row == models[indexPath.section].count - 1
+        if animated {
+            UIView.animate(withDuration: 0.3, animations: animation)
+        } else {
+            animation()
+        }
     }
     
 }

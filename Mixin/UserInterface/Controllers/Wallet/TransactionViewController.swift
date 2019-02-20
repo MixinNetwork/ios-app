@@ -3,14 +3,13 @@ import UIKit
 class TransactionViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var avatarImageView: AvatarImageView!
+    @IBOutlet weak var amountLabel: UILabel!
+    @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var usdValueLabel: UILabel!
     
-    private enum ReuseId {
-        static let top = "top"
-        static let middle = "middle"
-        static let bottom = "bottom"
-    }
+    private let cellReuseId = "cell"
     
-    private let tableHeaderView = AssetTitleView()
     private var asset: AssetItem!
     private var snapshot: SnapshotItem!
     private var contents: [(title: String, subtitle: String?)]!
@@ -20,9 +19,6 @@ class TransactionViewController: UIViewController {
         view.layoutIfNeeded()
         updateTableViewContentInset()
         makeContents()
-        tableView.tableHeaderView = tableHeaderView
-        tableHeaderView.render(asset: asset, snapshot: snapshot)
-        tableHeaderView.sizeToFit()
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -59,15 +55,7 @@ extension TransactionViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let reuseId: String
-        if indexPath.row == 0 {
-            reuseId = ReuseId.top
-        } else if indexPath.row == contents.count - 1 {
-            reuseId = ReuseId.bottom
-        } else {
-            reuseId = ReuseId.middle
-        }
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseId) as! TransactionCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! TransactionCell
         cell.titleLabel.text = contents[indexPath.row].title
         cell.subtitleLabel.text = contents[indexPath.row].subtitle
         return cell
@@ -79,7 +67,6 @@ extension TransactionViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
         guard snapshot.type == SnapshotType.transfer.rawValue else {
             return
         }

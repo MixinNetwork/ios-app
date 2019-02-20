@@ -191,6 +191,7 @@ extension BackupViewController {
         private func prepare() {
             label.font = .systemFont(ofSize: 13)
             label.textColor = UIColor(red: 0.43, green: 0.43, blue: 0.43, alpha: 1)
+            label.numberOfLines = 0
             addSubview(label)
         }
         

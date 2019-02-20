@@ -70,17 +70,16 @@
                                 <rect key="frame" x="0.0" y="76" width="414" height="0.0"/>
                                 <color key="backgroundColor" red="0.1215686275" green="0.70588235290000001" blue="0.98823529409999999" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="1Bd-So-GRm">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1Bd-So-GRm">
                                 <rect key="frame" x="0.0" y="75.666666666666686" width="414" height="660.33333333333326"/>
                                 <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="wallet_header" rowHeight="159" id="ZSx-rD-maP" customClass="WalletHeaderCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="55.333333333333343" width="414" height="159"/>
+                                    <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="wallet_header" rowHeight="169" id="ZSx-rD-maP" customClass="WalletHeaderCell" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="169"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZSx-rD-maP" id="F36-LN-Rge">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="159"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="169"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tQz-6B-PFb">
@@ -325,12 +324,22 @@
                                                         <constraint firstAttribute="trailing" secondItem="Y25-bj-M31" secondAttribute="trailing" id="kE9-C5-7qK"/>
                                                     </constraints>
                                                 </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSv-5R-vXh" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="159" width="414" height="10"/>
+                                                    <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="10" id="Y9V-rf-adB"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
+                                                <constraint firstItem="TSv-5R-vXh" firstAttribute="top" secondItem="tQz-6B-PFb" secondAttribute="bottom" constant="5" id="0OW-fP-8sx"/>
+                                                <constraint firstAttribute="trailing" secondItem="TSv-5R-vXh" secondAttribute="trailing" id="7wd-Z2-NRo"/>
+                                                <constraint firstItem="TSv-5R-vXh" firstAttribute="leading" secondItem="F36-LN-Rge" secondAttribute="leading" id="AjF-QQ-jp5"/>
                                                 <constraint firstItem="tQz-6B-PFb" firstAttribute="leading" secondItem="F36-LN-Rge" secondAttribute="leading" id="CVe-BX-ghs"/>
-                                                <constraint firstAttribute="bottom" secondItem="tQz-6B-PFb" secondAttribute="bottom" constant="5" id="GR0-4c-iRP"/>
                                                 <constraint firstItem="tQz-6B-PFb" firstAttribute="top" secondItem="F36-LN-Rge" secondAttribute="top" constant="11" id="Pb5-PP-FTT"/>
+                                                <constraint firstAttribute="bottom" secondItem="TSv-5R-vXh" secondAttribute="bottom" id="eBh-wR-5wO"/>
                                                 <constraint firstAttribute="trailing" secondItem="tQz-6B-PFb" secondAttribute="trailing" id="juQ-ht-PHw"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -352,7 +361,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="wallet_add_asset" rowHeight="74" id="wP8-IX-wyz">
-                                        <rect key="frame" x="0.0" y="214.33333333333334" width="414" height="74.000000000000028"/>
+                                        <rect key="frame" x="0.0" y="197" width="414" height="74"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wP8-IX-wyz" id="qHV-Uw-RMg">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>

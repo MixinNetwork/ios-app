@@ -5,8 +5,6 @@ class WalletViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
-    private let footerHeight: CGFloat = 10
-    
     private var assets = [AssetItem]()
     private var pinView: PinTipsView?
 
@@ -28,7 +26,6 @@ class WalletViewController: UIViewController {
         super.viewDidLoad()
         updateTableViewContentInset()
         tableView.register(UINib(nibName: "WalletAssetCell", bundle: .main), forCellReuseIdentifier: ReuseId.asset)
-        tableView.register(WalletFooterView.self, forHeaderFooterViewReuseIdentifier: ReuseId.footer)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -138,18 +135,6 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return section == 1 ? .leastNormalMagnitude : footerHeight
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 1 {
-            return nil
-        } else {
-            return tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer)
-        }
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
@@ -183,7 +168,6 @@ extension WalletViewController {
         static let header = "wallet_header"
         static let asset = "wallet_asset"
         static let addAsset = "wallet_add_asset"
-        static let footer = "footer"
     }
     
     private func updateTableViewContentInset() {

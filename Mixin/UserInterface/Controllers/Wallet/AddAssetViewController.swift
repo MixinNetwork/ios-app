@@ -124,7 +124,9 @@ class AddAssetViewController: UIViewController {
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         let windowHeight = AppDelegate.current.window!.bounds.height
         keyboardPlaceholderHeightConstraint.constant = windowHeight - endFrame.origin.y
-        view.layoutIfNeeded()
+        UIView.performWithoutAnimation {
+            self.view.layoutIfNeeded()
+        }
     }
     
     private func asset(for indexPath: IndexPath) -> AssetItem {

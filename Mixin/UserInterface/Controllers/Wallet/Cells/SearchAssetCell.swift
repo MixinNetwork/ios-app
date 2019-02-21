@@ -2,44 +2,30 @@ import UIKit
 
 class SearchAssetCell: UITableViewCell {
     
-    @IBOutlet weak var assetIconImageView: UIImageView!
-    @IBOutlet weak var chainIconImageView: UIImageView!
+    @IBOutlet weak var checkmarkView: CheckmarkView!
+    @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var selectedImageView: UIImageView!
-    @IBOutlet weak var deselectedImageView: UIImageView!
-    @IBOutlet weak var forceSelectedImageView: UIImageView!
     
     private var forceSelected = false
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if forceSelected {
-            selectedImageView.isHidden = true
-            deselectedImageView.isHidden = true
-            forceSelectedImageView.isHidden = false
+            checkmarkView.status = .forceSelected
         } else {
-            selectedImageView.isHidden = !selected
-            deselectedImageView.isHidden = selected
-            forceSelectedImageView.isHidden = true
+            checkmarkView.status = selected ? .selected : .unselected
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         forceSelected = false
-        assetIconImageView.sd_cancelCurrentImageLoad()
-        chainIconImageView.sd_cancelCurrentImageLoad()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        separatorInset.left = titleLabel.convert(.zero, to: self).x
+        assetIconView.prepareForReuse()
     }
     
     func render(asset: AssetItem, forceSelected: Bool) {
-        assetIconImageView.sd_setImage(with: URL(string: asset.iconUrl), completed: nil)
-        chainIconImageView.sd_setImage(with: URL(string: asset.chainIconUrl ?? ""), completed: nil)
+        assetIconView.setIcon(asset: asset)
         titleLabel.text = asset.symbol
         subtitleLabel.text = asset.name
         self.forceSelected = forceSelected

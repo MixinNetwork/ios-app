@@ -597,89 +597,53 @@
                                     <constraint firstAttribute="height" constant="70" id="ILh-hn-5XA"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="70" estimatedRowHeight="70" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KKk-CI-DI7">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="74" estimatedRowHeight="74" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KKk-CI-DI7">
                                 <rect key="frame" x="0.0" y="70" width="414" height="666"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="separatorColor" red="0.95294117647058818" green="0.95294117647058818" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="add_asset" rowHeight="70" id="uTS-Og-LJ6" customClass="SearchAssetCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="70"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="add_asset" rowHeight="74" id="uTS-Og-LJ6" customClass="SearchAssetCell" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="74"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uTS-Og-LJ6" id="6iD-6T-Nf2">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="69.666666666666671"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="b6t-Ku-o7V">
-                                                    <rect key="frame" x="23" y="14.333333333333332" width="358" height="41.333333333333343"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="b6t-Ku-o7V">
+                                                    <rect key="frame" x="23" y="15" width="358" height="44"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exX-w5-h5K">
-                                                            <rect key="frame" x="0.0" y="3.6666666666666643" width="34" height="34"/>
-                                                            <subviews>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="M88-Nw-8dj">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="34" height="34"/>
-                                                                </imageView>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="J25-5X-nbu">
-                                                                    <rect key="frame" x="0.0" y="24" width="10" height="10"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="height" constant="10" id="0Th-3h-KlW"/>
-                                                                        <constraint firstAttribute="width" constant="10" id="zp5-Ek-Qee"/>
-                                                                    </constraints>
-                                                                </imageView>
-                                                            </subviews>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Wa-he-cg0" customClass="CheckmarkView" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="10" width="24" height="24"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="24" id="Isb-wy-iCK"/>
+                                                                <constraint firstAttribute="height" constant="24" id="OdM-jd-Qdf"/>
+                                                            </constraints>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exX-w5-h5K" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="40" y="0.0" width="44" height="44"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="exX-w5-h5K" secondAttribute="height" id="319-Ph-k7B"/>
-                                                                <constraint firstAttribute="bottom" secondItem="M88-Nw-8dj" secondAttribute="bottom" id="E9W-Tj-IJU"/>
-                                                                <constraint firstItem="J25-5X-nbu" firstAttribute="leading" secondItem="exX-w5-h5K" secondAttribute="leading" id="IbX-6f-dRK"/>
-                                                                <constraint firstItem="M88-Nw-8dj" firstAttribute="leading" secondItem="exX-w5-h5K" secondAttribute="leading" id="Ief-Ji-ZY9"/>
-                                                                <constraint firstItem="M88-Nw-8dj" firstAttribute="top" secondItem="exX-w5-h5K" secondAttribute="top" id="RVJ-ee-8YL"/>
-                                                                <constraint firstAttribute="height" constant="34" id="Xpn-vc-8DP"/>
-                                                                <constraint firstAttribute="bottom" secondItem="J25-5X-nbu" secondAttribute="bottom" id="dUe-Tf-MZB"/>
-                                                                <constraint firstAttribute="trailing" secondItem="M88-Nw-8dj" secondAttribute="trailing" id="x28-Du-yWP"/>
+                                                                <constraint firstAttribute="height" constant="44" id="Xpn-vc-8DP"/>
                                                             </constraints>
                                                         </view>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="500" axis="vertical" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="zOJ-hN-llw">
-                                                            <rect key="frame" x="48" y="0.0" width="280" height="41.333333333333336"/>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="500" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="zOJ-hN-llw">
+                                                            <rect key="frame" x="100" y="2.6666666666666679" width="258" height="38.666666666666657"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BCH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YdU-Zq-G5h">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="18"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="258" height="18"/>
                                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                                                                     <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bitcoin Cash" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ji4-60-dPm">
-                                                                    <rect key="frame" x="0.0" y="26.999999999999996" width="280" height="14.333333333333332"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                    <rect key="frame" x="0.0" y="22.999999999999996" width="258" height="15.666666666666668"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                     <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
                                                         </stackView>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Wa-he-cg0">
-                                                            <rect key="frame" x="342" y="12.666666666666664" width="16" height="16"/>
-                                                            <subviews>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_deselected" translatesAutoresizingMaskIntoConstraints="NO" id="JKn-NJ-Q5K">
-                                                                    <rect key="frame" x="-9" y="-5" width="34" height="34"/>
-                                                                </imageView>
-                                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_selected" translatesAutoresizingMaskIntoConstraints="NO" id="vvN-dJ-qWf">
-                                                                    <rect key="frame" x="-9" y="-3" width="34" height="34"/>
-                                                                </imageView>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_force_selected" translatesAutoresizingMaskIntoConstraints="NO" id="dvG-gz-T8K">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
-                                                                </imageView>
-                                                            </subviews>
-                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <constraints>
-                                                                <constraint firstItem="vvN-dJ-qWf" firstAttribute="centerY" secondItem="1Wa-he-cg0" secondAttribute="centerY" constant="6" id="29r-n5-uqA"/>
-                                                                <constraint firstItem="vvN-dJ-qWf" firstAttribute="centerX" secondItem="1Wa-he-cg0" secondAttribute="centerX" id="6Xx-y2-HwW"/>
-                                                                <constraint firstAttribute="width" constant="16" id="Isb-wy-iCK"/>
-                                                                <constraint firstItem="JKn-NJ-Q5K" firstAttribute="centerY" secondItem="1Wa-he-cg0" secondAttribute="centerY" constant="4" id="Nyo-tp-vSM"/>
-                                                                <constraint firstAttribute="height" constant="16" id="OdM-jd-Qdf"/>
-                                                                <constraint firstItem="JKn-NJ-Q5K" firstAttribute="centerX" secondItem="1Wa-he-cg0" secondAttribute="centerX" id="Qf3-Kr-fLR"/>
-                                                                <constraint firstItem="dvG-gz-T8K" firstAttribute="centerY" secondItem="1Wa-he-cg0" secondAttribute="centerY" id="VNi-KW-6gU"/>
-                                                                <constraint firstItem="dvG-gz-T8K" firstAttribute="centerX" secondItem="1Wa-he-cg0" secondAttribute="centerX" id="jpS-V6-VrU"/>
-                                                            </constraints>
-                                                        </view>
                                                     </subviews>
                                                 </stackView>
                                             </subviews>
@@ -690,11 +654,8 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="assetIconImageView" destination="M88-Nw-8dj" id="R0u-Ek-9s2"/>
-                                            <outlet property="chainIconImageView" destination="J25-5X-nbu" id="VLi-5V-yQZ"/>
-                                            <outlet property="deselectedImageView" destination="JKn-NJ-Q5K" id="A8I-NO-gvp"/>
-                                            <outlet property="forceSelectedImageView" destination="dvG-gz-T8K" id="Tpd-xu-SIE"/>
-                                            <outlet property="selectedImageView" destination="vvN-dJ-qWf" id="H6T-l9-9WP"/>
+                                            <outlet property="assetIconView" destination="exX-w5-h5K" id="Igg-aF-5AS"/>
+                                            <outlet property="checkmarkView" destination="1Wa-he-cg0" id="fEz-QC-ozS"/>
                                             <outlet property="subtitleLabel" destination="ji4-60-dPm" id="rzT-EI-KMg"/>
                                             <outlet property="titleLabel" destination="YdU-Zq-G5h" id="uEC-7Q-PYZ"/>
                                         </connections>
@@ -2123,11 +2084,8 @@
     </scenes>
     <resources>
         <image name="Wallet/ic_add" width="10" height="10"/>
-        <image name="Wallet/ic_deselected" width="34" height="34"/>
         <image name="Wallet/ic_filter" width="14" height="14"/>
-        <image name="Wallet/ic_force_selected" width="16" height="16"/>
         <image name="Wallet/ic_no_result" width="125" height="125"/>
-        <image name="Wallet/ic_selected" width="34" height="34"/>
         <image name="Wallet/ic_token_indicator_left" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>

@@ -11,7 +11,8 @@ class SnapshotCell: UITableViewCell {
     @IBOutlet weak var pendingDepositProgressView: UIView!
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var amountLabel: UILabel!
+    @IBOutlet weak var amountLabel: InsetLabel!
+    @IBOutlet weak var symbolLabel: UILabel!
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
     
@@ -21,6 +22,7 @@ class SnapshotCell: UITableViewCell {
         super.awakeFromNib()
         selectedBackgroundView = UIView(frame: bounds)
         selectedBackgroundView!.backgroundColor = .modernCellSelection
+        amountLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
     }
     
     override func prepareForReuse() {
@@ -90,6 +92,7 @@ class SnapshotCell: UITableViewCell {
         } else {
             pendingDepositProgressView.isHidden = true
         }
+        symbolLabel.text = snapshot.assetSymbol
     }
     
 }

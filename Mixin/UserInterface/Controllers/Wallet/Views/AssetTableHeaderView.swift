@@ -5,7 +5,7 @@ class AssetTableHeaderView: UIView {
     @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var symbolLabel: InsetLabel!
+    @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var usdValueLabel: UILabel!
     @IBOutlet weak var depositButton: BusyButton!
     @IBOutlet weak var transactionsHeaderView: UIView!
@@ -13,11 +13,6 @@ class AssetTableHeaderView: UIView {
     @IBOutlet weak var assetIconViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var infoStackViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var infoStackViewTrailingConstraint: NSLayoutConstraint!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        symbolLabel.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 7, right: 0)
-    }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         amountLabel.preferredMaxLayoutWidth = amountLabelPreferredMaxLayoutWidthThatFits(size.width)

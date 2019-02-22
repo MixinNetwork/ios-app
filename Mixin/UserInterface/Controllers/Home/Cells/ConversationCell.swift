@@ -5,7 +5,7 @@ class ConversationCell: UITableViewCell {
 
     static let cellIdentifier = "cell_identifier_conversation"
 
-    @IBOutlet weak var iconImageView: AvatarImageView!
+    @IBOutlet weak var avatarView: AvatarShadowIconView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var muteImageView: UIImageView!
@@ -16,16 +16,40 @@ class ConversationCell: UITableViewCell {
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
 
+    private var isShowUnread = false
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        let view = UIView()
+        view.backgroundColor = .modernCellSelection
+        selectedBackgroundView = view
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
-        iconImageView?.sd_cancelCurrentImageLoad()
+        avatarView.prepareForReuse()
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        if isShowUnread {
+            unreadLabel.isHidden = selected
+        }
+    }
+
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        if isShowUnread {
+            unreadLabel.isHidden = highlighted
+        }
     }
 
     func render(item: ConversationItem) {
         if item.category == ConversationCategory.CONTACT.rawValue {
-            iconImageView.setImage(with: item.ownerAvatarUrl, identityNumber: item.ownerIdentityNumber, name: item.ownerFullName)
+            avatarView.setImage(with: item.ownerAvatarUrl, identityNumber: item.ownerIdentityNumber, name: item.ownerFullName)
         } else {
-            iconImageView.setGroupImage(with: item.iconUrl, conversationId: item.conversationId)
+            avatarView.setGroupImage(with: item.iconUrl, conversationId: item.conversationId)
         }
         nameLabel.text = item.getConversationName()
         timeLabel.text = item.createdAt.toUTCDate().timeAgo()
@@ -114,7 +138,8 @@ class ConversationCell: UITableViewCell {
                 }
             }
         }
-        
+
+        isShowUnread = item.unseenMessageCount > 0
         if item.unseenMessageCount > 0 {
             unreadLabel.isHidden = false
             unreadLabel.text = "\(item.unseenMessageCount)"

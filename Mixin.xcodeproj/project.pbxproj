@@ -430,6 +430,7 @@
 		DF5D9F3D1F9CA3160036D5FD /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5D9F3C1F9CA3160036D5FD /* UserAPI.swift */; };
 		DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DF5D9F461F9CD29A0036D5FD /* Localizable.strings */; };
 		DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */; };
+		DF6175B4222026FD00624609 /* AvatarShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175B3222026FD00624609 /* AvatarShadowImageView.swift */; };
 		DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */; };
 		DF63E1D920B84B5300A833A7 /* ContactQRCodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */; };
 		DF65AAF3205122A3004E3459 /* MessageBlaze.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF2205122A3004E3459 /* MessageBlaze.swift */; };
@@ -1052,6 +1053,7 @@
 		DF5D9F411F9CD1630036D5FD /* CountryCode.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CountryCode.plist; sourceTree = "<group>"; };
 		DF5D9F451F9CD29A0036D5FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetSendViewController.swift; sourceTree = "<group>"; };
+		DF6175B3222026FD00624609 /* AvatarShadowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarShadowImageView.swift; sourceTree = "<group>"; };
 		DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactQRCodeCell.xib; sourceTree = "<group>"; };
 		DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactQRCodeCell.swift; sourceTree = "<group>"; };
 		DF65AAF2205122A3004E3459 /* MessageBlaze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlaze.swift; sourceTree = "<group>"; };
@@ -1921,6 +1923,8 @@
 			isa = PBXGroup;
 			children = (
 				DF768562200647CC0055F3FF /* BouncingButton.swift */,
+				7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */,
+				DF6175B3222026FD00624609 /* AvatarShadowImageView.swift */,
 				7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */,
 				7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */,
 				7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */,
@@ -1934,7 +1938,6 @@
 				DFF2145C209AC7D400612234 /* ConerLabel.swift */,
 				7B9863921FA3141F00D4B16C /* XibDesignable.swift */,
 				7B2E3E4F1FA07F7B00DDDDEB /* GeneralTableViewHeader.swift */,
-				7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */,
 				7BD89DBD1FB2D59000665635 /* PlaceholderTextView.swift */,
 				7BD51DDB1FB4231400865CB8 /* ConnectionHintView.swift */,
 				7BD51DD91FB4230800865CB8 /* ConnectionHintView.xib */,
@@ -2740,6 +2743,7 @@
 				7B6EC8FE20A91579009A7020 /* VideoDownloadJob.swift in Sources */,
 				7BC8503020CBA69B00A57B83 /* MXNOggOpusReader.m in Sources */,
 				DF2209301FFFE96500D470EF /* SessionRequest.swift in Sources */,
+				DF6175B4222026FD00624609 /* AvatarShadowImageView.swift in Sources */,
 				DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */,
 				DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift in Sources */,

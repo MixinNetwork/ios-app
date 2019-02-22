@@ -8,7 +8,7 @@ class DepositViewController: UIViewController {
     @IBOutlet weak var hintLabel: UILabel!
     
     private var asset: AssetItem!
-    private lazy var depositWindow = DepositWindow.instance()
+    private lazy var depositWindow = QrcodeWindow.instance()
 
     private static let depositRemindEnable = 0
     private static let depositRemindAllowDisable = 1
@@ -108,14 +108,13 @@ extension DepositViewController: DepositFieldViewDelegate {
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView) {
         if asset.isAccount {
             if view == upperDepositFieldView {
-                depositWindow.render(asset: asset, content: .name)
+                depositWindow.render(title: Localized.WALLET_ACCOUNT_NAME, iconUrl: asset.iconUrl, qrcode: asset.accountName ?? "", leftMarkUrl: asset.chainIconUrl)
             } else {
-                depositWindow.render(asset: asset, content: .memo)
+                depositWindow.render(title: Localized.WALLET_ACCOUNT_MEMO, iconUrl: asset.iconUrl, qrcode: asset.accountTag ?? "", leftMarkUrl: asset.chainIconUrl)
             }
         } else {
-            depositWindow.render(asset: asset, content: .address)
+            depositWindow.render(title: Localized.WALLET_ADDRESS, iconUrl: asset.iconUrl, qrcode: asset.publicKey ?? "", leftMarkUrl: asset.chainIconUrl)
         }
         depositWindow.presentView()
     }
-    
 }

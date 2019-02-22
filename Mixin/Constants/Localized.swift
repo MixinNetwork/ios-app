@@ -134,6 +134,8 @@ public class Localized {
     public static let CONTACT_SEARCH_NOT_FOUND = LocalizedString("contact_search_not_found", comment: "user not found")
     public static let CONTACT_AVATAR_PICKING_FAIL = LocalizedString("contact_avatar_picking_fail", comment: "Failed to change your profile photo")
     public static let CONTACT_CHANGE_NAME_FAIL = LocalizedString("contact_change_name_fail", comment: "Failed to change your name")
+    public static let CONTACT_MY_QR_CODE = LocalizedString("contact_my_qr_code", comment: "My QR Code")
+    public static let CONTACT_RECEIVE_MONEY = LocalizedString("contact_receive_money", comment: "Receive Money")
 
     // Chat
     public static let CHAT_MESSAGE_MENU_REPLY = LocalizedString("chat_message_menu_reply", comment: "Reply")
@@ -294,6 +296,7 @@ public class Localized {
     }
     public static let AUTH_ASSETS_MORE = LocalizedString("auth_assets_more", comment: " and more")
     public static let SCAN_QR_CODE = LocalizedString("scan_qr_code", comment: "Scan QR Code")
+    public static let TRANSFER_QRCODE_PROMPT = LocalizedString("transfer_qrcode_prompt", comment: "Scan the QR Code to transfer me on Mixin")
 
     // Profile
     public static let PROFILE_TITLE = LocalizedString("profile_title", comment: "Info")

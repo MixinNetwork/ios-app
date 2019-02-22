@@ -7,6 +7,7 @@ class InviteLinkViewController: UIViewController {
     @IBOutlet weak var linkLabel: UILabel!
 
     private var conversation: ConversationItem!
+    private lazy var qrcodeWindow = QrcodeWindow.instance()
     
     private lazy var shareLinkController: UIActivityViewController? = {
         if let codeUrl = conversation.codeUrl {
@@ -41,8 +42,8 @@ class InviteLinkViewController: UIViewController {
     }
     
     @IBAction func qrCodeAction(_ sender: Any) {
-        let vc = QRCodeViewController.instance(content: .group(conversation))
-        navigationController?.pushViewController(vc, animated: true)
+        qrcodeWindow.render(conversation: conversation)
+        qrcodeWindow.presentView()
     }
     
     class func instance(conversation: ConversationItem) -> UIViewController {

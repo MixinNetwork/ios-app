@@ -299,7 +299,6 @@
 		7BFF3B011FAAE92F0039A1C5 /* SearchResultContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFF3AFF1FAAE92F0039A1C5 /* SearchResultContactCell.swift */; };
 		7BFF3B021FAAE92F0039A1C5 /* SearchResultContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFF3B001FAAE92F0039A1C5 /* SearchResultContactCell.xib */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
-		9B748DD81FA88DB300BC009B /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DD71FA88DB300BC009B /* QRCodeViewController.swift */; };
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
 		9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BB351681FB1A94100EDDD2C /* ConversationDateHeaderView.xib */; };
@@ -314,7 +313,6 @@
 		DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0111FE5598300F98479 /* ExitConversationJob.swift */; };
 		DF05F0191FE90A1B00F98479 /* SignalKeyCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */; };
 		DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */; };
-		DF07391620B86E5200E46EC3 /* ReceiveMoneyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */; };
 		DF0E2D2420FDEB2500BB2658 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0E2D2320FDEB2500BB2658 /* Keychain.swift */; };
 		DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070902048103000E20047 /* BlazeMessageDAO.swift */; };
 		DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1070922049186B00E20047 /* ReceiveMessageService.swift */; };
@@ -378,8 +376,7 @@
 		DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47511FA191A600A07C71 /* UserDAO.swift */; };
 		DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EEF811FA9EF49007C6E03 /* PhoneContactGuideCell.swift */; };
 		DF3EEF841FA9EF54007C6E03 /* PhoneContactGuideCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3EEF831FA9EF54007C6E03 /* PhoneContactGuideCell.xib */; };
-		DF3F6D6920EF2618006D0CBC /* DepositWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3F6D6820EF2618006D0CBC /* DepositWindow.xib */; };
-		DF3F6D6B20EF2627006D0CBC /* DepositWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3F6D6A20EF2627006D0CBC /* DepositWindow.swift */; };
+		DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */; };
 		DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */; };
 		DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */; };
 		DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */; };
@@ -440,6 +437,7 @@
 		DF68F1842014CEAB001C4225 /* RefreshStickerJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */; };
 		DF68F1862014CF5E001C4225 /* StickerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F1852014CF5E001C4225 /* StickerAPI.swift */; };
 		DF68F18C201567D6001C4225 /* StickerRelationshipDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F18B201567D6001C4225 /* StickerRelationshipDAO.swift */; };
+		DF6CF2E9221FDE5D00B65294 /* QrcodeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */; };
 		DF6DB83D2024EAD10060CF31 /* PaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6DB83C2024EAD10060CF31 /* PaymentResponse.swift */; };
 		DF6DB8412028C1A60060CF31 /* AppButtonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6DB8402028C1A60060CF31 /* AppButtonData.swift */; };
 		DF6ED3EB1FE36F3E00E958A3 /* JobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6ED3EA1FE36F3E00E958A3 /* JobQueue.swift */; };
@@ -506,9 +504,6 @@
 		DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA4B36200F627500C696D3 /* SafariServices.framework */; };
 		DFAA4B392010ADF800C696D3 /* PinTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFAA4B382010ADF800C696D3 /* PinTipsView.swift */; };
 		DFAA4B3B2010AE0300C696D3 /* PinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAA4B3A2010AE0300C696D3 /* PinTipsView.xib */; };
-		DFAB3B4120B8569300886838 /* MyQRCodeWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFAB3B4020B8569300886838 /* MyQRCodeWindow.swift */; };
-		DFAB3B4320B856A600886838 /* MyQRCodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAB3B4220B856A600886838 /* MyQRCodeWindow.xib */; };
-		DFAB3B4520B85A0C00886838 /* ReceiveMoneyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */; };
 		DFB2062621A80173006E4341 /* BackupCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */; };
 		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
@@ -923,7 +918,6 @@
 		7BFF3B001FAAE92F0039A1C5 /* SearchResultContactCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchResultContactCell.xib; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
-		9B748DD71FA88DB300BC009B /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDateHeaderView.swift; sourceTree = "<group>"; };
 		9BB351681FB1A94100EDDD2C /* ConversationDateHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationDateHeaderView.xib; sourceTree = "<group>"; };
@@ -938,7 +932,6 @@
 		DF05F0111FE5598300F98479 /* ExitConversationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitConversationJob.swift; sourceTree = "<group>"; };
 		DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyCount.swift; sourceTree = "<group>"; };
 		DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingViewController.swift; sourceTree = "<group>"; };
-		DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMoneyWindow.swift; sourceTree = "<group>"; };
 		DF0E2D2320FDEB2500BB2658 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		DF1070902048103000E20047 /* BlazeMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeMessageDAO.swift; sourceTree = "<group>"; };
 		DF1070922049186B00E20047 /* ReceiveMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiveMessageService.swift; sourceTree = "<group>"; };
@@ -1002,8 +995,7 @@
 		DF3C47511FA191A600A07C71 /* UserDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDAO.swift; sourceTree = "<group>"; };
 		DF3EEF811FA9EF49007C6E03 /* PhoneContactGuideCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactGuideCell.swift; sourceTree = "<group>"; };
 		DF3EEF831FA9EF54007C6E03 /* PhoneContactGuideCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactGuideCell.xib; sourceTree = "<group>"; };
-		DF3F6D6820EF2618006D0CBC /* DepositWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositWindow.xib; sourceTree = "<group>"; };
-		DF3F6D6A20EF2627006D0CBC /* DepositWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWindow.swift; sourceTree = "<group>"; };
+		DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QrcodeWindow.xib; sourceTree = "<group>"; };
 		DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUploadJob.swift; sourceTree = "<group>"; };
 		DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadOrDownloadJob.swift; sourceTree = "<group>"; };
 		DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAttachmentData.swift; sourceTree = "<group>"; };
@@ -1069,6 +1061,7 @@
 		DF68F18B201567D6001C4225 /* StickerRelationshipDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerRelationshipDAO.swift; sourceTree = "<group>"; };
 		DF6CF2E6221A801600B65294 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DF6CF2E7221A801600B65294 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrcodeWindow.swift; sourceTree = "<group>"; };
 		DF6DB83C2024EAD10060CF31 /* PaymentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentResponse.swift; sourceTree = "<group>"; };
 		DF6DB8402028C1A60060CF31 /* AppButtonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonData.swift; sourceTree = "<group>"; };
 		DF6ED3EA1FE36F3E00E958A3 /* JobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobQueue.swift; sourceTree = "<group>"; };
@@ -1137,9 +1130,6 @@
 		DFAA4B36200F627500C696D3 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		DFAA4B382010ADF800C696D3 /* PinTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinTipsView.swift; sourceTree = "<group>"; };
 		DFAA4B3A2010AE0300C696D3 /* PinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinTipsView.xib; sourceTree = "<group>"; };
-		DFAB3B4020B8569300886838 /* MyQRCodeWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyQRCodeWindow.swift; sourceTree = "<group>"; };
-		DFAB3B4220B856A600886838 /* MyQRCodeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyQRCodeWindow.xib; sourceTree = "<group>"; };
-		DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReceiveMoneyWindow.xib; sourceTree = "<group>"; };
 		DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCategoryViewController.swift; sourceTree = "<group>"; };
 		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
@@ -1648,12 +1638,8 @@
 				DFF2145A209ABBB400612234 /* GroupWindow.xib */,
 				DFF21454209A9F8D00612234 /* PhoneContactWindow.swift */,
 				DFF21456209AB2FC00612234 /* PhoneContactWindow.xib */,
-				DFAB3B4020B8569300886838 /* MyQRCodeWindow.swift */,
-				DFAB3B4220B856A600886838 /* MyQRCodeWindow.xib */,
-				DF07391520B86E5200E46EC3 /* ReceiveMoneyWindow.swift */,
-				DFAB3B4420B85A0C00886838 /* ReceiveMoneyWindow.xib */,
-				DF3F6D6A20EF2627006D0CBC /* DepositWindow.swift */,
-				DF3F6D6820EF2618006D0CBC /* DepositWindow.xib */,
+				DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */,
+				DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */,
 				7BF5D02A2170B8EA0062EF14 /* AssetFilterWindow.swift */,
 				7BF5D02C2170B8FB0062EF14 /* AssetFilterWindow.xib */,
 			);
@@ -2247,7 +2233,6 @@
 				DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */,
 				DFB961431FA85F4B00F0922E /* MyProfileViewController.swift */,
 				7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */,
-				9B748DD71FA88DB300BC009B /* QRCodeViewController.swift */,
 				DF46B4041FA9B48500243A8B /* ContactsManager.swift */,
 				7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */,
 				7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */,
@@ -2542,7 +2527,6 @@
 				DF8CECF41FC425F700E40064 /* BlockUserCell.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
-				DFAB3B4320B856A600886838 /* MyQRCodeWindow.xib in Resources */,
 				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				7B4D1128205B8D380074BF60 /* AddressCell.xib in Resources */,
@@ -2552,7 +2536,7 @@
 				DF114B0E2020B85600EA8F9C /* WebWindow.xib in Resources */,
 				DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */,
 				7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */,
-				DF3F6D6920EF2618006D0CBC /* DepositWindow.xib in Resources */,
+				DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
 				DFD294451FA7087800FADAAD /* ContactNavCell.xib in Resources */,
 				DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */,
@@ -2569,7 +2553,6 @@
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
-				DFAB3B4520B85A0C00886838 /* ReceiveMoneyWindow.xib in Resources */,
 				DF2F089520B688DB005786CB /* UserView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2689,10 +2672,8 @@
 				DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */,
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
 				DF3C474E1FA1849500A07C71 /* MessageDAO.swift in Sources */,
-				DF3F6D6B20EF2627006D0CBC /* DepositWindow.swift in Sources */,
 				DFE63C9E1FC6B1C600D6E028 /* EmptyResponse.swift in Sources */,
 				DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */,
-				DFAB3B4120B8569300886838 /* MyQRCodeWindow.swift in Sources */,
 				7B9B8F3D205A27E700DC81AF /* WithdrawalViewController.swift in Sources */,
 				273FACC1205FB9A800513327 /* SessionPreKey.swift in Sources */,
 				DFD87C871FDA9DD300BBCFFC /* NetworkManager.swift in Sources */,
@@ -2733,7 +2714,6 @@
 				DFEEE6F11FE14F44001CCFB5 /* RelationshipRequest.swift in Sources */,
 				DF1A9A801FF25DB600A95188 /* ShowNotificationJob.swift in Sources */,
 				7B7CBBB020BBCD7E005DF80A /* AudioInputViewController.swift in Sources */,
-				9B748DD81FA88DB300BC009B /* QRCodeViewController.swift in Sources */,
 				7B5FEE3E2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift in Sources */,
 				DF53BB732023F466002BF028 /* SwiftMessageExtension.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
@@ -2839,6 +2819,7 @@
 				DF5CDA74204FEBA1004A52BA /* BaseCodable.swift in Sources */,
 				273FACB1205FB9A800513327 /* SignalAddress.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
+				DF6CF2E9221FDE5D00B65294 /* QrcodeWindow.swift in Sources */,
 				DFF353121FEEB72C00058453 /* Snapshot.swift in Sources */,
 				7B894CD620D24BE2004FA5A8 /* AudioInputLockView.swift in Sources */,
 				7B5FEE402101AD790008321F /* ScreenSize.swift in Sources */,
@@ -3050,7 +3031,6 @@
 				DF736F8E1FC096F3001DB063 /* SearchResultAssetCell.swift in Sources */,
 				DFD5F6F720722C8F0017AAF1 /* PinTokenResponse.swift in Sources */,
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
-				DF07391620B86E5200E46EC3 /* ReceiveMoneyWindow.swift in Sources */,
 				27ACB9E72084944C0088B593 /* DecryptionCallback.swift in Sources */,
 				DF6ED3EB1FE36F3E00E958A3 /* JobQueue.swift in Sources */,
 				7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */,

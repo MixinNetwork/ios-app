@@ -8,8 +8,8 @@ class ContactViewController: UITableViewController {
     private var phoneContactSections = [[PhoneContact]]()
     private var sectionIndexTitles = [String]()
     private lazy var phoneContactWindow = PhoneContactWindow.instance()
-    private lazy var myQRCodeWindow = MyQRCodeWindow.instance()
-    private lazy var receiveMoneyWindow = ReceiveMoneyWindow.instance()
+    private lazy var myQRCodeWindow = QrcodeWindow.instance()
+    private lazy var receiveMoneyWindow = QrcodeWindow.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -285,11 +285,17 @@ extension ContactViewController {
 extension ContactViewController: ContactQRCodeCellDelegate {
 
     func receiveMoneyAction() {
-        receiveMoneyWindow.presentView()
+        if let account = AccountAPI.shared.account {
+            receiveMoneyWindow.render(title: Localized.CONTACT_RECEIVE_MONEY, account: account, description: Localized.TRANSFER_QRCODE_PROMPT, qrcode: "mixin://transfer/\(account.user_id)", rightMark: #imageLiteral(resourceName: "ic_receive_money"))
+            receiveMoneyWindow.presentView()
+        }
     }
 
     func myQRCodeAction() {
-        myQRCodeWindow.presentView()
+        if let account = AccountAPI.shared.account {
+            myQRCodeWindow.render(title: Localized.CONTACT_MY_QR_CODE, account: account, description: Localized.MYQRCODE_PROMPT, qrcode: account.code_url, qrcodeForegroundColor: UIColor.systemTint)
+            myQRCodeWindow.presentView()
+        }
     }
 
 }

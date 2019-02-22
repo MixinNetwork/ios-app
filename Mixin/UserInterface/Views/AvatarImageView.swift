@@ -20,6 +20,10 @@ class AvatarImageView: CornerImageView {
         prepare()
     }
 
+    func setGroupImage(conversation: ConversationItem) {
+        setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
+    }
+
     func setGroupImage(with iconUrl: String, conversationId: String) {
         titleLabel.text = nil
         backgroundColor = .clear

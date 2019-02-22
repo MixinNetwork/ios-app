@@ -5,7 +5,7 @@ class TransactionViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var usdValueLabel: UILabel!
     
     private let cellReuseId = "cell"
@@ -17,16 +17,22 @@ class TransactionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layoutIfNeeded()
-        updateTableViewContentInset()
+        symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
+        if let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
+            avatarImageView.setImage(with: snapshot.opponentUserAvatarUrl ?? "", identityNumber: identityNumber, name: name)
+        } else {
+            avatarImageView.image = UIImage(named: "Wallet/ic_transaction_unknown_sender")
+        }
+        amountLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
+        let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
+        if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
+            usdValueLabel.text = "≈ $" + localizedUSDBalance
+        } else {
+            usdValueLabel.text = nil
+        }
         makeContents()
         tableView.dataSource = self
         tableView.delegate = self
-    }
-    
-    @available(iOS 11.0, *)
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        updateTableViewContentInset()
     }
     
     class func instance(asset: AssetItem, snapshot: SnapshotItem) -> UIViewController {
@@ -109,14 +115,6 @@ extension TransactionViewController: UITableViewDelegate {
 }
 
 extension TransactionViewController {
-    
-    private func updateTableViewContentInset() {
-        if view.compatibleSafeAreaInsets.bottom < 1 {
-            tableView.contentInset.bottom = 10
-        } else {
-            tableView.contentInset.bottom = 0
-        }
-    }
     
     private func makeContents() {
         contents = []

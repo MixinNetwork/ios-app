@@ -50,7 +50,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" priority="750" constant="375" id="nyY-HH-79c"/>
                             </constraints>
-                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="LxQ-Qc-OVT" customClass="AlignedCollectionViewFlowLayout" customModule="AlignedCollectionViewFlowLayout">
+                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="20" minimumInteritemSpacing="20" id="LxQ-Qc-OVT" customClass="AlignedCollectionViewFlowLayout" customModule="AlignedCollectionViewFlowLayout">
                                 <size key="itemSize" width="50" height="50"/>
                                 <size key="headerReferenceSize" width="0.0" height="35"/>
                                 <size key="footerReferenceSize" width="0.0" height="0.0"/>

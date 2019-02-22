@@ -2,7 +2,7 @@ import UIKit
 
 extension UIColor {
 
-    static let theme = UIColor(rgbValue: 0x19c2fd)
+    static let theme = UIColor(rgbValue: 0x397EE4)
     static let darkTheme = UIColor(rgbValue: 0x0CAAF5)
     static let backgroundGray = UIColor(rgbValue: 0xf5f5f5)
     static let infoGray = UIColor(rgbValue: 0x7799A9)

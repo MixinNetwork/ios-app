@@ -173,13 +173,12 @@ extension AddAssetViewController: ContainerViewControllerDelegate {
                 items.append(topAssets[index])
             }
         }
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async { [weak navigationController] in
             let assets = items.map(Asset.createAsset)
             AssetDAO.shared.insertOrUpdateAssets(assets: assets)
             DispatchQueue.main.async {
-                self?.navigationController?.popViewController(animated: true)
-                NotificationCenter.default.post(name: .ToastMessageDidAppear,
-                                                object: Localized.TOAST_ADD_ASSET)
+                navigationController?.popViewController(animated: true)
+                navigationController?.showHud(style: .notification, text: Localized.TOAST_ADD_ASSET)
             }
         }
     }
@@ -230,7 +229,7 @@ extension AddAssetViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if isSearching {
             if searchResults[indexPath.row].forceSelected {
-                NotificationCenter.default.post(name: .ToastMessageDidAppear, object: Localized.WALLET_ALREADY_HAD_THE_ASSET)
+                showHud(style: .warning, text: Localized.WALLET_ALREADY_HAD_THE_ASSET)
                 return nil
             } else {
                 return indexPath

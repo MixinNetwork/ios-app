@@ -268,6 +268,7 @@ public class Localized {
     public static func GROUP_TITLE_MEMBERS(count: String) -> String {
         return String(format: LocalizedString("group_title_members", comment: "%@ Group members"), count)
     }
+    public static let GROUP_BUTTON_TITLE_RESET_LINK = LocalizedString("group_button_title_reset_link", comment: "Reset Link")
     
     // QRCode
     public static let MYQRCODE_TITLE = LocalizedString("myqrcode_title", comment: "My QR Code")

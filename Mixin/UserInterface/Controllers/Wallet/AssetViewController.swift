@@ -126,7 +126,7 @@ extension AssetViewController: ContainerViewControllerDelegate {
     }
     
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_titlebar_more")
+        return #imageLiteral(resourceName: "ic_more")
     }
     
 }

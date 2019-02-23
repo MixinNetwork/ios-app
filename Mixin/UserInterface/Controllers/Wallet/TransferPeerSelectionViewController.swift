@@ -20,7 +20,6 @@ class TransferPeerSelectionViewController: PeerSelectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        container?.separatorLineView.backgroundColor = separatorColor
         searchBoxView.separatorLineView.backgroundColor = separatorColor
         tableView.separatorColor = separatorColor
         tableView.rowHeight = 70

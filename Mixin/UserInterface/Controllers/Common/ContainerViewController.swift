@@ -10,8 +10,6 @@ extension UIViewController {
 
 protocol ContainerViewControllerDelegate: class {
     
-    var prefersNavigationBarSeparatorLineHidden: Bool { get }
-    
     func barLeftButtonTappedAction()
 
     func barRightButtonTappedAction()
@@ -24,10 +22,6 @@ protocol ContainerViewControllerDelegate: class {
 }
 
 extension ContainerViewControllerDelegate where Self: UIViewController {
-    
-    var prefersNavigationBarSeparatorLineHidden: Bool {
-        return false
-    }
     
     func prepareBar(rightButton: StateResponsiveButton) {
 
@@ -59,21 +53,17 @@ class ContainerViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var rightButton: StateResponsiveButton!
     @IBOutlet weak var leftButton: UIButton!
-    @IBOutlet weak var separatorLineView: UIView!
     
     @IBOutlet weak var rightButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var rightbuttonHeightConstraint: NSLayoutConstraint!
 
-    fileprivate weak var delegate: ContainerViewControllerDelegate?
-    fileprivate(set) var viewController: UIViewController!
-    fileprivate var controllerTitle = ""
+    private weak var delegate: ContainerViewControllerDelegate?
+    private(set) var viewController: UIViewController!
+    private var controllerTitle = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if delegate?.prefersNavigationBarSeparatorLineHidden ?? false {
-            separatorLineView.isHidden = true
-        }
         prepareBarRightButton()
         navigationBar.layoutIfNeeded()
         titleLabel.text = controllerTitle
@@ -109,6 +99,12 @@ class ContainerViewController: UIViewController {
         }
         delegate.prepareBar(rightButton: rightButton)
         rightButton.saveNormalState()
+    }
+
+    func setSubtitle(subtitle: String) {
+        titleLabel.font = UIFont.systemFont(ofSize: 15)
+        subtitleLabel.text = subtitle
+        subtitleLabel.isHidden = false
     }
 
     @IBAction func backAction(_ sender: Any) {

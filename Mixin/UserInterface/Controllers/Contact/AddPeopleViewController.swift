@@ -57,7 +57,7 @@ class AddPeopleViewController: UIViewController {
     
     class func instance() -> UIViewController {
         let vc = Storyboard.contact.instantiateViewController(withIdentifier: "add_people")
-        return ContainerViewController.instance(viewController: vc, title: Localized.NAVIGATION_TITLE_ADD_PEOPLE)
+        return ContainerViewController.instance(viewController: vc, title: Localized.PROFILE_ADD)
     }
     
     private var keyword: String {

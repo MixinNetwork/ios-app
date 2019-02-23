@@ -35,7 +35,6 @@ class AddAssetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        container?.separatorLineView.backgroundColor = UIColor(rgbValue: 0xF3F3F3)
         textField.delegate = self
         textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
         textField.returnKeyType = .search

@@ -16,8 +16,7 @@ class DepositViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        container?.subtitleLabel.text = asset.symbol
-        container?.subtitleLabel.isHidden = false
+        container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
         let iconUrl = URL(string: asset.iconUrl)
         let chainIconUrl = URL(string: asset.chainIconUrl ?? "")

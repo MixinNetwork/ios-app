@@ -5,19 +5,23 @@ class AddPeopleViewController: UIViewController {
     
     @IBOutlet weak var keywordTextField: UITextField!
     @IBOutlet weak var myIdLabel: UILabel!
-    @IBOutlet weak var searchButtonWrapper: UIView!
-    @IBOutlet weak var searchButton: StateResponsiveButton!
+    @IBOutlet weak var searchButton: RoundedButton!
     
     @IBOutlet weak var searchButtonBottomConstraint: NSLayoutConstraint!
     
     private let legalKeywordCharactersSet = Set("+0123456789")
     private let phoneNumberKit = PhoneNumberKit()
+    private var userWindow = UserWindow.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if let id = AccountAPI.shared.account?.identity_number {
             myIdLabel.text = Localized.CONTACT_MY_IDENTITY_NUMBER(id: id)
         }
+        userWindow.setDismissCallback { [weak self] in
+            self?.keywordTextField.becomeFirstResponder()
+        }
+        searchButton.isEnabled = false
         keywordTextField.becomeFirstResponder()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
@@ -29,7 +33,7 @@ class AddPeopleViewController: UIViewController {
     @IBAction func checkKeywordAction(_ sender: Any) {
         let filteredKeyword = String(keyword.filter(legalKeywordCharactersSet.contains))
         keywordTextField.text = filteredKeyword
-        searchButtonWrapper.isHidden = !isLegalKeyword(filteredKeyword)
+        searchButton.isEnabled = isLegalKeyword(filteredKeyword)
     }
     
     @IBAction func searchAction(_ sender: Any) {
@@ -42,7 +46,7 @@ class AddPeopleViewController: UIViewController {
             switch result {
             case let .success(user):
                 UserDAO.shared.updateUsers(users: [user])
-                UserWindow.instance().updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentView()
+                weakSelf.userWindow.updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentView()
             case let .failure(error):
                 NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
             }
@@ -52,7 +56,9 @@ class AddPeopleViewController: UIViewController {
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         let windowHeight = AppDelegate.current.window!.bounds.height
-        searchButtonBottomConstraint.constant = windowHeight - endFrame.origin.y
+        UIView.animate(withDuration: 0.15) {
+            self.searchButtonBottomConstraint.constant = windowHeight - endFrame.origin.y
+        }
     }
     
     class func instance() -> UIViewController {

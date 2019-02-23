@@ -28,8 +28,9 @@ class RoundedButton: UIButton {
             }
         }
     }
+
+    @IBInspectable var cornerRadius: CGFloat = 20
     
-    private let cornerRadius: CGFloat = 20
     private let backgroundLayer = CAShapeLayer()
     private lazy var activityIndicator = UIActivityIndicatorView(style: .white)
     

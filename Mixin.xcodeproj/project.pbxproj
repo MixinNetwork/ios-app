@@ -435,6 +435,7 @@
 		DF5D9F441F9CD29A0036D5FD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DF5D9F461F9CD29A0036D5FD /* Localizable.strings */; };
 		DF6068C720BECD3100C38C64 /* AssetSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */; };
 		DF6175B4222026FD00624609 /* AvatarShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175B3222026FD00624609 /* AvatarShadowImageView.swift */; };
+		DF6175BA22212BC700624609 /* CALayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175B922212BC700624609 /* CALayerExtension.swift */; };
 		DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */; };
 		DF63E1D920B84B5300A833A7 /* ContactQRCodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */; };
 		DF65AAF3205122A3004E3459 /* MessageBlaze.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF2205122A3004E3459 /* MessageBlaze.swift */; };
@@ -1062,6 +1063,7 @@
 		DF5D9F451F9CD29A0036D5FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DF6068C620BECD3000C38C64 /* AssetSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetSendViewController.swift; sourceTree = "<group>"; };
 		DF6175B3222026FD00624609 /* AvatarShadowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarShadowImageView.swift; sourceTree = "<group>"; };
+		DF6175B922212BC700624609 /* CALayerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CALayerExtension.swift; sourceTree = "<group>"; };
 		DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactQRCodeCell.xib; sourceTree = "<group>"; };
 		DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactQRCodeCell.swift; sourceTree = "<group>"; };
 		DF65AAF2205122A3004E3459 /* MessageBlaze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlaze.swift; sourceTree = "<group>"; };
@@ -1838,6 +1840,7 @@
 				DF17B51420525B47006447C2 /* ArrayExtension.swift */,
 				DF5D9F171F9C5E880036D5FD /* BundleExtension.swift */,
 				DF30D7471FA2BDD200683C1A /* CodableExtension.swift */,
+				DF6175B922212BC700624609 /* CALayerExtension.swift */,
 				DF3C47491FA0BECA00A07C71 /* DataExtension.swift */,
 				DFD294361FA6EF4500FADAAD /* DateExtension.swift */,
 				DF8DA1881FD4F5D700425CEC /* DictionaryExtension.swift */,
@@ -3008,6 +3011,7 @@
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
 				273FACAD205FB9A800513327 /* KeyPair.swift in Sources */,
 				7B287A3420EA5770007278A3 /* AssetExportSession.swift in Sources */,
+				DF6175BA22212BC700624609 /* CALayerExtension.swift in Sources */,
 				7B68F78B2191741300B79978 /* BiometryType.swift in Sources */,
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
 				7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */,

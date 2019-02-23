@@ -183,7 +183,7 @@ extension AddAssetViewController: ContainerViewControllerDelegate {
     
     func prepareBar(rightButton: StateResponsiveButton) {
         rightButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        rightButton.setTitleColor(UIColor(rgbValue: 0x397EE4), for: .normal)
+        rightButton.setTitleColor(.theme, for: .normal)
         rightButton.setTitleColor(UIColor(rgbValue: 0xBBBEC3), for: .disabled)
     }
     

@@ -67,7 +67,7 @@
                                     <constraints>
                                         <constraint firstAttribute="width" constant="66" id="Ffg-Oy-4yz"/>
                                     </constraints>
-                                    <state key="normal" image="ic_web_close"/>
+                                    <state key="normal" image="ic_dialog_close"/>
                                     <connections>
                                         <action selector="dismissAction:" destination="Qmy-MR-oXV" eventType="touchUpInside" id="9Zb-ah-xGi"/>
                                     </connections>
@@ -128,12 +128,14 @@
             <viewLayoutGuide key="safeArea" id="7b3-bB-hYw"/>
             <connections>
                 <outlet property="dismissButton" destination="uvk-a8-USK" id="HYf-br-IUr"/>
+                <outlet property="edgePanGestureRecognizer" destination="riN-2F-VvJ" id="qAW-7n-zlL"/>
                 <outlet property="iconImageView" destination="qk7-V2-agQ" id="a6e-Mz-l16"/>
                 <outlet property="longPressGestureRecognizer" destination="rul-Ns-81m" id="zQa-W8-Oxf"/>
                 <outlet property="popupView" destination="nW9-LR-ccq" id="S6i-Pw-tuJ"/>
                 <outlet property="titleHeightConstraint" destination="Ewj-cl-Uzr" id="sAH-Xt-fdE"/>
                 <outlet property="titleLabel" destination="k5S-YR-Z3Z" id="6Cw-vX-V6L"/>
                 <outlet property="webViewWrapperView" destination="okA-Lg-ndE" id="1Ic-MR-X9a"/>
+                <outletCollection property="gestureRecognizers" destination="riN-2F-VvJ" appends="YES" id="qtB-fk-IF3"/>
             </connections>
             <point key="canvasLocation" x="24.800000000000001" y="51.724137931034484"/>
         </view>
@@ -148,8 +150,14 @@
                 <action selector="moreAction:" destination="Qmy-MR-oXV" id="hK3-u8-jBZ"/>
             </connections>
         </pongPressGestureRecognizer>
+        <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="riN-2F-VvJ" customClass="WebViewScreenEdgePanGestureRecognizer" customModule="Mixin" customModuleProvider="target">
+            <rectEdge key="edges" left="YES"/>
+            <connections>
+                <action selector="screenEdgePanAction:" destination="Qmy-MR-oXV" id="Vks-5m-RIi"/>
+            </connections>
+        </screenEdgePanGestureRecognizer>
     </objects>
     <resources>
-        <image name="ic_web_close" width="26" height="26"/>
+        <image name="ic_dialog_close" width="16" height="16"/>
     </resources>
 </document>

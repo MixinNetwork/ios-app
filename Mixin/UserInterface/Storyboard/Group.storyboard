@@ -429,195 +429,126 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ydE-1Y-cEF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="160"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="339.5"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qan-oM-pca" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="20" width="64" height="64"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="64" id="NNe-aW-vER"/>
-                                            <constraint firstAttribute="width" constant="64" id="vLR-Qv-o76"/>
-                                        </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="32"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </imageView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="ao5-4a-lxR">
-                                        <rect key="frame" x="104" y="20" width="256" height="58"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ao5-4a-lxR">
+                                        <rect key="frame" x="30" y="48" width="315" height="169"/>
                                         <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qan-oM-pca" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="122.5" y="0.0" width="70" height="70"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="70" id="NNe-aW-vER"/>
+                                                    <constraint firstAttribute="width" constant="70" id="vLR-Qv-o76"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="35"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="group name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2oa-eg-ysd">
-                                                <rect key="frame" x="0.0" y="0.0" width="256" height="20.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
+                                                <rect key="frame" x="103" y="80" width="109" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="https://mixin.one/abcdefghijklnmopqrstuvwxyz" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PEv-cY-TFI">
-                                                <rect key="frame" x="0.0" y="26.5" width="256" height="31.5"/>
-                                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="https://mixin.one/abcdefghijklnmopqrstuvwxyz" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PEv-cY-TFI">
+                                                <rect key="frame" x="16" y="114" width="283" height="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anyone with Mixin can follow this link to join this group. Only share it with people you trust." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f37-FL-E8g">
+                                                <rect key="frame" x="0.0" y="140" width="315" height="29"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_invite_hint"/>
+                                                </userDefinedRuntimeAttributes>
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anyone with Mixin can follow this link to join this group. Only share it with people you trust." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f37-FL-E8g">
-                                        <rect key="frame" x="20" y="104" width="335" height="36"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_invite_hint"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="6Um-Rd-otx">
+                                        <rect key="frame" x="42.5" y="253" width="290.5" height="56"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="35t-9C-yJn">
+                                                <rect key="frame" x="0.0" y="0.0" width="63.5" height="56"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_group_link_share" translatesAutoresizingMaskIntoConstraints="NO" id="vB1-mZ-YkH">
+                                                        <rect key="frame" x="21.5" y="0.0" width="20" height="26"/>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Link" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssC-lD-hqw">
+                                                        <rect key="frame" x="0.0" y="40" width="63.5" height="16"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                        <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_share_link"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </label>
+                                                </subviews>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="XVK-e6-SYq" appends="YES" id="Q8J-ch-Wll"/>
+                                                </connections>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="Rbf-4k-Jcb">
+                                                <rect key="frame" x="113.5" y="1" width="63.5" height="54"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_group_link_copy" translatesAutoresizingMaskIntoConstraints="NO" id="nD5-DV-3E2">
+                                                        <rect key="frame" x="20.5" y="0.0" width="22" height="24"/>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copy Link" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HZ4-1J-sHm">
+                                                        <rect key="frame" x="1.5" y="38" width="60" height="16"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                        <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_copy_link"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </label>
+                                                </subviews>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="3ef-kY-pAK" appends="YES" id="f8x-we-SWj"/>
+                                                </connections>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="h8t-aP-sbO">
+                                                <rect key="frame" x="227" y="2.5" width="63.5" height="51"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_group_link_code" translatesAutoresizingMaskIntoConstraints="NO" id="Chd-Df-gMM">
+                                                        <rect key="frame" x="20.5" y="0.0" width="22" height="21"/>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r01-9g-vL3">
+                                                        <rect key="frame" x="4.5" y="35" width="54.5" height="16"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                        <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_qr_code"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </label>
+                                                </subviews>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="V3H-pL-Y4W" appends="YES" id="f68-fN-NWD"/>
+                                                </connections>
+                                            </stackView>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="f37-FL-E8g" firstAttribute="top" secondItem="Qan-oM-pca" secondAttribute="bottom" priority="750" constant="20" id="8jt-XM-qJk"/>
-                                    <constraint firstAttribute="bottom" secondItem="f37-FL-E8g" secondAttribute="bottom" constant="20" id="9Ek-At-s6a"/>
-                                    <constraint firstItem="ao5-4a-lxR" firstAttribute="top" secondItem="Qan-oM-pca" secondAttribute="top" id="FGV-xq-bEM"/>
-                                    <constraint firstItem="f37-FL-E8g" firstAttribute="leading" secondItem="ydE-1Y-cEF" secondAttribute="leading" constant="20" id="NLR-2L-Fgn"/>
-                                    <constraint firstItem="ao5-4a-lxR" firstAttribute="leading" secondItem="Qan-oM-pca" secondAttribute="trailing" constant="20" id="PUe-1s-gY5"/>
-                                    <constraint firstAttribute="trailing" secondItem="ao5-4a-lxR" secondAttribute="trailing" constant="15" id="WnV-5D-72V"/>
-                                    <constraint firstAttribute="trailing" secondItem="f37-FL-E8g" secondAttribute="trailing" constant="20" id="dP5-aT-dPE"/>
-                                    <constraint firstItem="Qan-oM-pca" firstAttribute="top" secondItem="ydE-1Y-cEF" secondAttribute="top" priority="750" constant="20" id="ktz-zb-LPt"/>
-                                    <constraint firstItem="Qan-oM-pca" firstAttribute="leading" secondItem="ydE-1Y-cEF" secondAttribute="leading" constant="20" id="obi-Y8-cOh"/>
+                                    <constraint firstAttribute="trailing" secondItem="ao5-4a-lxR" secondAttribute="trailing" constant="30" id="WnV-5D-72V"/>
+                                    <constraint firstAttribute="bottom" secondItem="6Um-Rd-otx" secondAttribute="bottom" constant="30.5" id="cHI-nH-mOA"/>
+                                    <constraint firstItem="ao5-4a-lxR" firstAttribute="leading" secondItem="ydE-1Y-cEF" secondAttribute="leading" constant="30" id="cdd-uT-4FJ"/>
+                                    <constraint firstItem="6Um-Rd-otx" firstAttribute="centerX" secondItem="ydE-1Y-cEF" secondAttribute="centerX" id="etv-mj-DXs"/>
+                                    <constraint firstItem="6Um-Rd-otx" firstAttribute="top" secondItem="ao5-4a-lxR" secondAttribute="bottom" constant="36" id="h73-ls-je8"/>
+                                    <constraint firstItem="ao5-4a-lxR" firstAttribute="top" secondItem="ydE-1Y-cEF" secondAttribute="top" constant="48" id="jQS-rg-oIw"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="6Um-Rd-otx">
-                                <rect key="frame" x="20" y="180" width="310" height="76.5"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="35t-9C-yJn">
-                                        <rect key="frame" x="0.0" y="0.0" width="59.5" height="76.5"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fqq-yu-s9q" customClass="CornerButton" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="2" y="0.0" width="56" height="56"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="56" id="Ix4-5N-MCe"/>
-                                                    <constraint firstAttribute="height" constant="56" id="gNg-hi-MmC"/>
-                                                </constraints>
-                                                <state key="normal" image="ic_group_link_share"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="shareLinkAction:" destination="Vgw-IN-I6f" eventType="touchUpInside" id="u41-Pw-Ohy"/>
-                                                </connections>
-                                            </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Link" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssC-lD-hqw">
-                                                <rect key="frame" x="0.0" y="62" width="59.5" height="14.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_share_link"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Rbf-4k-Jcb">
-                                        <rect key="frame" x="83.5" y="0.0" width="59.5" height="76.5"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WUP-IZ-59V" customClass="CornerButton" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="2" y="0.0" width="56" height="56"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="56" id="Jg2-i4-7k5"/>
-                                                    <constraint firstAttribute="width" constant="56" id="YnM-3e-nz7"/>
-                                                </constraints>
-                                                <state key="normal" image="ic_group_link_copy"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="copyLinkAction:" destination="Vgw-IN-I6f" eventType="touchUpInside" id="nLy-JU-oON"/>
-                                                </connections>
-                                            </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copy Link" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HZ4-1J-sHm">
-                                                <rect key="frame" x="2" y="62" width="56" height="14.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_copy_link"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="h8t-aP-sbO">
-                                        <rect key="frame" x="167" y="0.0" width="59.5" height="76.5"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bji-oz-JdU" customClass="CornerButton" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="2" y="0.0" width="56" height="56"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="56" id="B8O-bu-JzC"/>
-                                                    <constraint firstAttribute="height" constant="56" id="hYM-aw-Hh3"/>
-                                                </constraints>
-                                                <state key="normal" image="ic_group_link_code"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="qrCodeAction:" destination="Vgw-IN-I6f" eventType="touchUpInside" id="3R8-eM-KoZ"/>
-                                                </connections>
-                                            </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r01-9g-vL3">
-                                                <rect key="frame" x="4.5" y="62" width="50.5" height="14.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_qr_code"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="LBY-4L-JmZ">
-                                        <rect key="frame" x="250.5" y="0.0" width="59.5" height="76.5"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5AM-rO-IIq" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="2" y="0.0" width="56" height="56"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="56" id="M5j-QL-NkX"/>
-                                                    <constraint firstAttribute="width" constant="56" id="nXS-Cz-lja"/>
-                                                </constraints>
-                                                <state key="normal" image="ic_group_link_reset"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="revokeLinkAction:" destination="Vgw-IN-I6f" eventType="touchUpInside" id="m8y-Fy-ZzA"/>
-                                                </connections>
-                                            </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reset Link" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yfy-hq-MhT">
-                                                <rect key="frame" x="0.5" y="62" width="59" height="14.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_reset_link"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                            </stackView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="pJv-DY-WDu" firstAttribute="trailing" secondItem="ydE-1Y-cEF" secondAttribute="trailing" id="GhJ-UH-0hR"/>
-                            <constraint firstItem="6Um-Rd-otx" firstAttribute="leading" secondItem="pJv-DY-WDu" secondAttribute="leading" constant="20" id="IlX-io-Wwj"/>
-                            <constraint firstItem="6Um-Rd-otx" firstAttribute="top" secondItem="ydE-1Y-cEF" secondAttribute="bottom" constant="20" id="LcO-uv-73f"/>
                             <constraint firstItem="ydE-1Y-cEF" firstAttribute="leading" secondItem="pJv-DY-WDu" secondAttribute="leading" id="dMp-IO-voa"/>
                             <constraint firstItem="ydE-1Y-cEF" firstAttribute="top" secondItem="vHW-ia-OQy" secondAttribute="top" id="fD8-4a-eOY"/>
                         </constraints>
@@ -627,10 +558,24 @@
                         <outlet property="groupNameLabel" destination="2oa-eg-ysd" id="CbA-lf-kEX"/>
                         <outlet property="iconImageView" destination="Qan-oM-pca" id="AYt-wW-RLM"/>
                         <outlet property="linkLabel" destination="PEv-cY-TFI" id="tod-Se-Uqm"/>
-                        <outlet property="resetButton" destination="5AM-rO-IIq" id="z8T-Yw-E8X"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y0o-cw-4mb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="XVK-e6-SYq">
+                    <connections>
+                        <action selector="shareLinkAction:" destination="Vgw-IN-I6f" id="9oc-nN-9NK"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="3ef-kY-pAK">
+                    <connections>
+                        <action selector="copyLinkAction:" destination="Vgw-IN-I6f" id="AvM-hY-hfo"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="V3H-pL-Y4W">
+                    <connections>
+                        <action selector="qrCodeAction:" destination="Vgw-IN-I6f" id="ymc-kh-piN"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2157.5999999999999" y="170.46476761619192"/>
         </scene>
@@ -685,10 +630,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_group_link_code" width="24" height="24"/>
-        <image name="ic_group_link_copy" width="24" height="24"/>
-        <image name="ic_group_link_reset" width="24" height="24"/>
-        <image name="ic_group_link_share" width="26" height="26"/>
+        <image name="ic_group_link_code" width="22" height="21"/>
+        <image name="ic_group_link_copy" width="22" height="24"/>
+        <image name="ic_group_link_share" width="20" height="26"/>
         <image name="ic_link" width="28" height="28"/>
         <image name="ic_participant_add" width="28" height="28"/>
         <image name="ic_search" width="12" height="12"/>

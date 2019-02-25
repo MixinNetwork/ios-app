@@ -8,6 +8,7 @@ public class Localized {
     public static let DIALOG_BUTTON_CHANGE = LocalizedString("dialog_button_change", comment: "Change")
     public static let DIALOG_BUTTON_CONFIRM = LocalizedString("dialog_button_confirm", comment: "Confirm")
     public static let DIALOG_BUTTON_DISABLE = LocalizedString("dialog_button_disable", comment: "Disable")
+    public static let DIALOG_BUTTON_NO_REMIND = LocalizedString("dialog_button_no_remind", comment: "Don't remind me again")
     public static let ACTION_NEXT = LocalizedString("action_next", comment: "Next")
     public static let ACTION_REMOVE = LocalizedString("action_remove", comment: "Remove")
     public static let ACTION_CAMERA = LocalizedString("action_camera", comment: "Camera")
@@ -133,6 +134,8 @@ public class Localized {
     public static let CONTACT_SEARCH_NOT_FOUND = LocalizedString("contact_search_not_found", comment: "user not found")
     public static let CONTACT_AVATAR_PICKING_FAIL = LocalizedString("contact_avatar_picking_fail", comment: "Failed to change your profile photo")
     public static let CONTACT_CHANGE_NAME_FAIL = LocalizedString("contact_change_name_fail", comment: "Failed to change your name")
+    public static let CONTACT_MY_QR_CODE = LocalizedString("contact_my_qr_code", comment: "My QR Code")
+    public static let CONTACT_RECEIVE_MONEY = LocalizedString("contact_receive_money", comment: "Receive Money")
 
     // Chat
     public static let CHAT_MESSAGE_MENU_REPLY = LocalizedString("chat_message_menu_reply", comment: "Reply")
@@ -264,7 +267,11 @@ public class Localized {
     public static let GROUP_MENU_EXIT = LocalizedString("group_menu_exit", comment: "Delete and Exit")
     public static let GROUP_MENU_ANNOUNCEMENT = LocalizedString("group_menu_announcement", comment: "Edit Group Description")
     public static let GROUP_MENU_PARTICIPANTS = LocalizedString("group_menu_participants", comment: "Participants")
-
+    public static func GROUP_TITLE_MEMBERS(count: String) -> String {
+        return String(format: LocalizedString("group_title_members", comment: "%@ Group members"), count)
+    }
+    public static let GROUP_BUTTON_TITLE_RESET_LINK = LocalizedString("group_button_title_reset_link", comment: "Reset Link")
+    
     // QRCode
     public static let MYQRCODE_TITLE = LocalizedString("myqrcode_title", comment: "My QR Code")
     public static let MYQRCODE_PROMPT = LocalizedString("myqrcode_prompt", comment: "Scan the QR Code to add me on Mixin")
@@ -289,9 +296,11 @@ public class Localized {
     }
     public static let AUTH_ASSETS_MORE = LocalizedString("auth_assets_more", comment: " and more")
     public static let SCAN_QR_CODE = LocalizedString("scan_qr_code", comment: "Scan QR Code")
+    public static let TRANSFER_QRCODE_PROMPT = LocalizedString("transfer_qrcode_prompt", comment: "Scan the QR Code to transfer me on Mixin")
 
     // Profile
     public static let PROFILE_TITLE = LocalizedString("profile_title", comment: "Info")
+    public static let PROFILE_OPEN_BOT = LocalizedString("profile_open_bot", comment: "Open App")
     public static func PROFILE_MIXIN_ID(id: String) -> String {
         return String(format: LocalizedString("profile_mixin_id", comment: "Mixin ID: %@"), id)
     }
@@ -533,7 +542,13 @@ public class Localized {
     public static func SETTING_BACKUP_LAST(time: String, size: String) -> String {
         return String(format: LocalizedString("setting_backup_last", comment: "Last backup at %@, total size %@"), time, size)
     }
-
+    public static func SETTING_BACKUP_PROGRESS(progress: String) -> String {
+        return String(format: LocalizedString("setting_backup_progress", comment: "Uploading %@"), progress)
+    }
+    public static func SETTING_RESTORE_PROGRESS(progress: String) -> String {
+        return String(format: LocalizedString("setting_restore_progress", comment: "Restoring %@"), progress)
+    }
+    
     // Notifications
     public static let NOTIFICATION_REPLY = LocalizedString("notification_reply", comment: "Reply")
     public static let NOTIFICATION_MUTE = LocalizedString("notification_mute", comment: "Mute")

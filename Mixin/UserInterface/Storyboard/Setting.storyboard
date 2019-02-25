@@ -806,11 +806,42 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="5nz-ff-aT7">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="245"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="DI9-mD-bl5">
+                                    <rect key="frame" x="20" y="35" width="335" height="180"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_backup" translatesAutoresizingMaskIntoConstraints="NO" id="L0K-mV-3EM">
+                                            <rect key="frame" x="109" y="0.0" width="117" height="76"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q2k-IN-s6s">
+                                            <rect key="frame" x="0.0" y="96" width="335" height="84"/>
+                                            <string key="text">Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.</string>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_backup_tips"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="DI9-mD-bl5" secondAttribute="trailing" constant="20" id="4xH-Hi-ZBu"/>
+                                <constraint firstItem="DI9-mD-bl5" firstAttribute="top" secondItem="5nz-ff-aT7" secondAttribute="top" constant="35" id="Ool-YH-aXw"/>
+                                <constraint firstAttribute="bottom" secondItem="DI9-mD-bl5" secondAttribute="bottom" constant="30" id="lat-Mj-xta"/>
+                                <constraint firstItem="DI9-mD-bl5" firstAttribute="leading" secondItem="5nz-ff-aT7" secondAttribute="leading" constant="20" id="vqS-cy-JX3"/>
+                            </constraints>
+                        </view>
                         <sections>
                             <tableViewSection footerTitle="Last backup: Thursday, 3:06 p.m, total size: 2 MB." id="scg-ML-X0g">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="oTN-oQ-Mze">
-                                        <rect key="frame" x="0.0" y="35" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="245" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oTN-oQ-Mze" id="2K7-F4-IMA">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -842,7 +873,7 @@
                             <tableViewSection footerTitle="Automatically back up to iCloud only over Wi-Fi." id="sMg-hc-Tne">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="J3w-Ca-E92" detailTextLabel="RMp-SI-b7a" style="IBUITableViewCellStyleValue1" id="MDe-0H-ZUN">
-                                        <rect key="frame" x="0.0" y="127" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="337" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MDe-0H-ZUN" id="6lD-xC-pCV">
                                             <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
@@ -869,7 +900,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ILJ-gK-vU0">
-                                        <rect key="frame" x="0.0" y="171" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="381" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ILJ-gK-vU0" id="SAe-rA-tZl">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -901,7 +932,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="4ip-On-eQn">
-                                        <rect key="frame" x="0.0" y="215" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="425" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4ip-On-eQn" id="INw-af-djn">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -1292,6 +1323,7 @@
     <resources>
         <image name="bg_mixin" width="375" height="280"/>
         <image name="ic_desktop_off" width="120" height="78"/>
+        <image name="ic_backup" width="117" height="76"/>
         <image name="ic_titlebar_back" width="44" height="44"/>
     </resources>
 </document>

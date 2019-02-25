@@ -14,13 +14,13 @@ final class StickerDAO {
     private static let sqlQueryStickersByAlbum = """
     \(sqlQueryColumns)
     INNER JOIN sticker_relationships sa ON sa.sticker_id = s.sticker_id AND sa.album_id = ?
-    ORDER BY sa.created_at ASC
+    ORDER BY sa.created_at DESC
     """
     private static let sqlQueryFavoriteStickers = """
     \(sqlQueryColumns)
     INNER JOIN sticker_relationships sa ON sa.sticker_id = s.sticker_id
     INNER JOIN albums a ON a.album_id = sa.album_id AND a.category = 'PERSONAL'
-    ORDER BY sa.created_at ASC
+    ORDER BY sa.created_at DESC
     """
 
     static let shared = StickerDAO()

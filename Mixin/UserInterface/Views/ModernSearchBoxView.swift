@@ -1,17 +1,24 @@
 import UIKit
 
+class SearchTextField: UITextField {
+    
+    let textMargin: CGFloat = 16
+    
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        let rect = super.textRect(forBounds: bounds)
+        return CGRect(x: rect.origin.x + textMargin,
+                      y: rect.origin.y,
+                      width: rect.width - textMargin,
+                      height: rect.height)
+    }
+    
+}
+
 class ModernSearchBoxView: UIView, XibDesignable, SearchBox {
     
-    @IBOutlet weak var textFieldBackgroundView: UIView!
     @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var clearButton: UIButton!
-    @IBOutlet weak var separatorLineView: UIView!
     
-    let height: CGFloat = 70
-    
-    private var text: String {
-        return textField.text ?? ""
-    }
+    let height: CGFloat = 40
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -23,55 +30,24 @@ class ModernSearchBoxView: UIView, XibDesignable, SearchBox {
         prepare()
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc func textDidBeginEditing(_ notification: Notification) {
-        guard let textField = notification.object as? UITextField, textField == self.textField else {
-            return
-        }
-        textFieldBackgroundView.isHidden = false
-        UIView.performWithoutAnimation {
-            clearButton.isHidden = text.isEmpty
-        }
-    }
-    
-    @objc func textDidEndEditing(_ notification: Notification) {
-        guard let textField = notification.object as? UITextField, textField == self.textField else {
-            return
-        }
-        if text.isEmpty {
-            textFieldBackgroundView.isHidden = true
-        }
-        UIView.performWithoutAnimation {
-            clearButton.isHidden = true
-        }
-    }
-    
-    @objc func textDidChange(_ notification: Notification) {
-        guard let textField = notification.object as? UITextField, textField == self.textField else {
-            return
-        }
-        UIView.performWithoutAnimation {
-            clearButton.isHidden = text.isEmpty
-        }
-    }
-    
-    @IBAction func clearAction(_ sender: Any) {
+    @objc func clear(_ sender: Any) {
         textField.text = nil
         textField.sendActions(for: .editingChanged)
-        UIView.performWithoutAnimation {
-            clearButton.isHidden = true
-        }
     }
     
     private func prepare() {
         loadXib()
+        let magnifyingGlassImage = UIImage(named: "Wallet/ic_search")
+        textField.leftView = UIImageView(image: magnifyingGlassImage)
+        textField.leftViewMode = .always
+        let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
+        clearButton.addTarget(self, action: #selector(clear(_:)), for: .touchUpInside)
+        let clearImage = UIImage(named: "Wallet/ic_clear")
         clearButton.imageView?.contentMode = .center
-        NotificationCenter.default.addObserver(self, selector: #selector(textDidBeginEditing(_:)), name: UITextField.textDidBeginEditingNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(textDidEndEditing(_:)), name: UITextField.textDidEndEditingNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange(_:)), name: UITextField.textDidChangeNotification, object: nil)
+        clearButton.setImage(clearImage, for: .normal)
+        textField.rightView = clearButton
+        textField.rightViewMode = .whileEditing
+        clearButton.frame = textField.rightViewRect(forBounds: textField.bounds)
     }
     
 }

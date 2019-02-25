@@ -4,6 +4,18 @@ extension NumberFormatter {
     
     static let decimal = NumberFormatter(numberStyle: .decimal)
     
+    static let simplePercentage: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.minimum = 0.01
+        formatter.maximum = 1
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 0
+        formatter.roundingMode = .floor
+        formatter.locale = .current
+        return formatter
+    }()
+    
     convenience init(numberStyle: NumberFormatter.Style, maximumFractionDigits: Int? = nil, roundingMode: NumberFormatter.RoundingMode? = nil, locale: Locale? = nil) {
         self.init()
         self.numberStyle = numberStyle

@@ -9,19 +9,16 @@ class UserView: CornerView {
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var descriptionScrollView: UIScrollView!
     @IBOutlet weak var descriptionLabel: CollapsingLabel!
-    @IBOutlet weak var addContactLineView: UIView!
-    @IBOutlet weak var addContactButton: StateResponsiveButton!
-    @IBOutlet weak var openBotLineView: UIView!
-    @IBOutlet weak var openBotButton: UIButton!
-    @IBOutlet weak var unblockLineView: UIView!
-    @IBOutlet weak var unblockButton: StateResponsiveButton!
-    @IBOutlet weak var sendLineView: UIView!
+    @IBOutlet weak var addContactButton: BusyButton!
+    @IBOutlet weak var openAppButton: UIButton!
+    @IBOutlet weak var shareContactButton: UIButton!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var moreButton: StateResponsiveButton!
     @IBOutlet weak var developButton: CornerButton!
     @IBOutlet weak var appPlaceView: UIView!
 
+    @IBOutlet weak var descriptionScrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var descriptionScrollViewHeightConstraint: NSLayoutConstraint!
     
     private weak var superView: BottomSheetView?
@@ -94,15 +91,17 @@ class UserView: CornerView {
         } else {
             verifiedImageView.isHidden = true
         }
-
+        
         layoutIfNeeded()
         if user.isBot, let appDescription = user.appDescription, !appDescription.isEmpty {
             descriptionLabel.text = appDescription
+            descriptionScrollViewBottomConstraint.constant = 14
             descriptionScrollViewHeightConstraint.constant = descriptionLabel.intrinsicContentSize.height
             descriptionLabel.isHidden = false
             developButton.isHidden = false
             appPlaceView.isHidden = false
         } else {
+            descriptionScrollViewBottomConstraint.constant = 8
             descriptionScrollViewHeightConstraint.constant = 0
             descriptionLabel.isHidden = true
             developButton.isHidden = true
@@ -120,26 +119,14 @@ class UserView: CornerView {
         }
 
         relationship = user.relationship
-        let isBot = user.isBot
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         let isStranger = user.relationship == Relationship.STRANGER.rawValue
-        let block = {
-            self.addContactButton.isHidden = !isStranger || isBlocked
-            self.addContactLineView.isHidden = !isStranger || isBlocked
-            self.sendButton.isHidden = isBlocked
-            self.sendLineView.isHidden = isBlocked
-            self.openBotButton.isHidden = !isBot || isBlocked
-            self.openBotLineView.isHidden = !isBot || isBlocked
-            self.unblockButton.isHidden = !isBlocked
-            self.unblockLineView.isHidden = !isBlocked
-        }
-        if animated {
-            UIView.animate(withDuration: 0.15, animations: {
-                block()
-            })
-        } else {
-            block()
-        }
+        let canAddContact = !isStranger || isBlocked
+
+        addContactButton.isHidden = canAddContact
+        sendButton.isHidden = isBlocked
+        shareContactButton.isHidden = !canAddContact || user.isBot
+        openAppButton.isHidden = !canAddContact || !user.isBot
     }
 
     @IBAction func appCreatorAction(_ sender: Any) {
@@ -163,8 +150,13 @@ class UserView: CornerView {
     @IBAction func moreAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         let alc = UIAlertController(title: user.fullName, message: user.identityNumber, preferredStyle: .actionSheet)
+        if user.isBot {
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_OPEN_BOT, style: .default, handler: { [weak self](action) in
+                self?.openApp()
+            }))
+        }
         alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
-            self?.shareAction()
+            self?.shareAction(alc)
         }))
         alc.addAction(UIAlertAction(title: Localized.PROFILE_TRANSACTIONS, style: .default, handler: { [weak self](action) in
             self?.transactionsAction()
@@ -215,6 +207,34 @@ class UserView: CornerView {
         })
     }
     
+    @IBAction func shareAction(_ sender: Any) {
+        let vc = SendMessagePeerSelectionViewController.instance(content: .contact(user.userId))
+        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+    }
+    
+    @IBAction func openApp(_ sender: Any) {
+        superView?.dismissPopupControllerAnimated()
+        openApp()
+    }
+    
+    private func openApp() {
+        let userId = user.userId
+        let conversationId: String
+        if let vc = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController {
+            conversationId = vc.conversationId
+        } else {
+            conversationId = self.conversationId
+        }
+        DispatchQueue.global().async {
+            guard let app = AppDAO.shared.getApp(ofUserId: userId), let url = URL(string: app.homeUri) else {
+                return
+            }
+            DispatchQueue.main.async {
+                WebWindow.instance(conversationId: conversationId, app: app).presentPopupControllerAnimated(url: url)
+            }
+        }
+    }
+    
     private func addMuteAlertAction(alc: UIAlertController) {
         if user.isMuted {
             alc.addAction(UIAlertAction(title: Localized.PROFILE_UNMUTE, style: .default, handler: { [weak self](action) in
@@ -235,11 +255,6 @@ class UserView: CornerView {
         UserAPI.shared.remarkFriend(userId: user.userId, full_name: aliasName) { [weak self](result) in
             self?.handlerUpdateUser(result)
         }
-    }
-
-    private func shareAction() {
-        let vc = SendMessagePeerSelectionViewController.instance(content: .contact(user.userId))
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
     }
     
     private func transactionsAction() {
@@ -315,19 +330,7 @@ class UserView: CornerView {
             break
         }
     }
-
-    @IBAction func unblockAction(_ sender: Any) {
-        guard !unblockButton.isBusy else {
-            return
-        }
-        unblockButton.isBusy = true
-        UserAPI.shared.unblockUser(userId: user.userId) { [weak self](result) in
-            self?.unblockButton.isBusy = false
-            self?.handlerUpdateUser(result)
-        }
-    }
-
-
+    
     @IBAction func sendAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         if let conversationVC = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController, conversationVC.dataSource?.category == ConversationDataSource.Category.contact && conversationVC.dataSource?.conversation.ownerId == user.userId {
@@ -336,29 +339,7 @@ class UserView: CornerView {
 
         UIApplication.rootNavigationController()?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: user))
     }
-
-    @IBAction func openAction(_ sender: Any) {
-        let userId = user.userId
-        let conversationId: String
-        if let vc = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController {
-            conversationId = vc.conversationId
-        } else {
-            conversationId = self.conversationId
-        }
-        DispatchQueue.global().async { [weak self] in
-            guard let app = AppDAO.shared.getApp(ofUserId: userId), let url = URL(string: app.homeUri) else {
-                return
-            }
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.superView?.dismissPopupControllerAnimated()
-                WebWindow.instance(conversationId: conversationId, app: app).presentPopupControllerAnimated(url: url)
-            }
-        }
-    }
-
+    
     @IBAction func addAction(_ sender: Any) {
         guard !addContactButton.isBusy else {
             return

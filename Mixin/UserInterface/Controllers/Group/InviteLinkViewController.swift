@@ -5,9 +5,9 @@ class InviteLinkViewController: UIViewController {
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var groupNameLabel: UILabel!
     @IBOutlet weak var linkLabel: UILabel!
-    @IBOutlet weak var resetButton: StateResponsiveButton!
 
     private var conversation: ConversationItem!
+    private lazy var qrcodeWindow = QrcodeWindow.instance()
     
     private lazy var shareLinkController: UIActivityViewController? = {
         if let codeUrl = conversation.codeUrl {
@@ -42,21 +42,45 @@ class InviteLinkViewController: UIViewController {
     }
     
     @IBAction func qrCodeAction(_ sender: Any) {
-        let vc = QRCodeViewController.instance(content: .group(conversation))
-        navigationController?.pushViewController(vc, animated: true)
+        qrcodeWindow.render(conversation: conversation)
+        qrcodeWindow.presentView()
     }
     
-    @IBAction func revokeLinkAction(_ sender: Any) {
-        guard !resetButton.isBusy else {
+    class func instance(conversation: ConversationItem) -> UIViewController {
+        let vc = Storyboard.group.instantiateViewController(withIdentifier: "invite_link") as! InviteLinkViewController
+        vc.conversation = conversation
+        return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_INVITE_LINK)
+    }
+    
+}
+
+extension InviteLinkViewController: ContainerViewControllerDelegate {
+
+    func barRightButtonTappedAction() {
+        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.GROUP_BUTTON_TITLE_RESET_LINK, style: .default, handler: { [weak self] (_) in
+            self?.revokeLink()
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        self.present(alc, animated: true, completion: nil)
+    }
+
+    func imageBarRightButton() -> UIImage? {
+        return #imageLiteral(resourceName: "ic_titlebar_more")
+    }
+
+    private func revokeLink() {
+        guard !(container?.rightButton.isBusy ?? true) else {
             return
         }
 
-        resetButton.isBusy = true
+        container?.rightButton.isBusy = true
         ConversationAPI.shared.updateCodeId(conversationId: conversation.conversationId) { [weak self](result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.resetButton.isBusy = false
+
+            weakSelf.container?.rightButton.isBusy = false
             switch result {
             case let .success(response):
                 DispatchQueue.global().async {
@@ -71,11 +95,5 @@ class InviteLinkViewController: UIViewController {
             }
         }
     }
-    
-    class func instance(conversation: ConversationItem) -> UIViewController {
-        let vc = Storyboard.group.instantiateViewController(withIdentifier: "invite_link") as! InviteLinkViewController
-        vc.conversation = conversation
-        return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_INVITE_LINK)
-    }
-    
+
 }

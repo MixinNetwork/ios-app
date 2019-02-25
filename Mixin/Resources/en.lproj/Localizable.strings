@@ -8,6 +8,7 @@
 "dialog_button_confirm" = "Confirm";
 "dialog_button_got_it" = "Got It";
 "dialog_button_disable" = "Disable";
+"dialog_button_no_remind" = "Don't remind me again";
 "dialog_progress_logout" = "Log out...";
 "dialog_progress_connect" = "Connecting...";
 "action_next" = "Next";
@@ -29,6 +30,7 @@
 "action_filter" = "Filter";
 "action_skip" = "Skip";
 "action_deauthorize" = "Deauthorize";
+"wallet_deposit_tips" = "Don’t remind me again";
 "menu_delete" = "Delete";
 "no_result" = "No result";
 "title_loading" = "Loading...";
@@ -251,6 +253,7 @@
 "group_menu_delete" = "Delete Chat";
 "group_menu_exit" = "Delete and Exit";
 "group_menu_participants" = "Participants";
+"group_title_members" = "%@ Group members";
 
 "code_recognition_fail_title" = "Unrecognized codes";
 "code_recognition_fail_summary" = "This codes doesn't match any Mixin groups or users.";
@@ -277,7 +280,7 @@
 "wallet_address" = "Address";
 "wallet_account_name" = "Account Name";
 "wallet_account_memo" = "Account Memo";
-"wallet_deposit_account_notice" = "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin, deposit will arrive after at least %@ block confirmations.";
+"wallet_deposit_account_notice" = "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin Messenger, deposit will arrive after at least %@ block confirmations.";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";
@@ -299,7 +302,7 @@
 "wallet_pin_init_tips1" = "Please set a 6 digit PIN.";
 "wallet_pin_init_tips2" = "Please confirm the 6 digit PIN and remember it. If lost, there is no way to recover your wallet.";
 "wallet_pin_init_tips3" = "Please confirm your 6 digit PIN again. It's rare to see a third confirmation somewhere else, so please remember the PIN is unrecoverable if lost.";
-"wallet_pin_init_tips4" = "Yes, there is a forth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
+"wallet_pin_init_tips4" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "wallet_pin_change_tips" = "Please set a new 6 digit PIN.";
 "wallet_pin_verify_tips" = "Please enter the 6 digit PIN to verify.";
 "wallet_pin_inconsistency" = "The PIN is not the same twice, please reset it";
@@ -492,6 +495,8 @@
 "setting_backup_tips" = "Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.";
 "setting_backup_auto_tips" = "Automatically back up to iCloud only over Wi-Fi.";
 "setting_backup_last" = "Last backup on %@, total size %@.";
+"setting_backup_progress" = "Uploading %@";
+"setting_restore_progress" = "Restoring %@";
 
 // Notifications
 "notification_reply" = "Reply";

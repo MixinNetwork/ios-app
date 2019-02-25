@@ -10,6 +10,8 @@ class VerificationCodeViewController: LoginViewController {
     
     private let resendInterval = 60
     
+    private lazy var backupAvailabilityQuery = BackupAvailabilityQuery()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if let loginInfo = loginInfo {
@@ -61,43 +63,57 @@ class VerificationCodeViewController: LoginViewController {
             let registerationId = Int(SignalProtocol.shared.getRegistrationId())
             let request = AccountRequest.createAccountRequest(verificationCode: code, registrationId: registerationId, pin: nil, sessionSecret: keyPair.publicKey)
             AccountAPI.shared.login(verificationId: verificationId, accountRequest: request, completion: { [weak self] (result) in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.continueButton.isBusy = false
-                switch result {
-                case let .success(account):
-                    AccountUserDefault.shared.storePinToken(pinToken: KeyUtil.rsaDecrypt(pkString: keyPair.privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token))
-                    AccountUserDefault.shared.storeToken(token: keyPair.privateKeyPem)
-                    AccountAPI.shared.account = account
-
-                    if CommonUserDefault.shared.hasForceLogout || !RestoreJob.isRestoreChat() {
-                        CommonUserDefault.shared.hasForceLogout = false
-                        MixinDatabase.shared.configure(reset: true)
-                        DispatchQueue.global().async {
-                            UserDAO.shared.updateAccount(account: account)
-                        }
-                        if account.full_name.isEmpty {
-                            let vc = UsernameViewController.instance()
-                            weakSelf.navigationController?.pushViewController(vc, animated: true)
-                        } else {
-                            ContactAPI.shared.syncContacts()
-                            AppDelegate.current.window?.rootViewController = makeInitialViewController()
-                        }
-                    } else {
-                        AccountUserDefault.shared.hasRestoreChat = true
-                        AccountUserDefault.shared.hasRestoreFilesAndVideos = true
-                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                DispatchQueue.global().async {
+                    guard let weakSelf = self else {
+                        return
                     }
-                case let .failure(error):
-                    weakSelf.continueButton.isEnabled = true
-                    weakSelf.continueButton.isBusy = false
-                    if error.code == 20113 {
-                        weakSelf.verificationCodeField.clear()
-                        weakSelf.verificationCodeField.showError()
-                        weakSelf.invalidCodeLabel.isHidden = false
-                    } else {
-                        weakSelf.alert(error.localizedDescription)
+                    switch result {
+                    case let .success(account):
+                        AccountUserDefault.shared.storePinToken(pinToken: KeyUtil.rsaDecrypt(pkString: keyPair.privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token))
+                        AccountUserDefault.shared.storeToken(token: keyPair.privateKeyPem)
+                        AccountAPI.shared.account = account
+                        
+                        let sema = DispatchSemaphore(value: 0)
+                        var backupExist = false
+                        DispatchQueue.main.sync {
+                            weakSelf.backupAvailabilityQuery.fileExist(callback: { (exist) in
+                                backupExist = exist
+                                sema.signal()
+                            })
+                        }
+                        sema.wait()
+                        if CommonUserDefault.shared.hasForceLogout || !backupExist {
+                            CommonUserDefault.shared.hasForceLogout = false
+                            MixinDatabase.shared.configure(reset: true)
+                            UserDAO.shared.updateAccount(account: account)
+                            DispatchQueue.main.sync {
+                                if account.full_name.isEmpty {
+                                    let vc = UsernameViewController.instance()
+                                    weakSelf.navigationController?.pushViewController(vc, animated: true)
+                                } else {
+                                    ContactAPI.shared.syncContacts()
+                                    AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                                }
+                            }
+                        } else {
+                            DispatchQueue.main.sync {
+                                AccountUserDefault.shared.hasRestoreChat = true
+                                AccountUserDefault.shared.hasRestoreFilesAndVideos = true
+                                AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                            }
+                        }
+                    case let .failure(error):
+                        DispatchQueue.main.sync {
+                            weakSelf.continueButton.isEnabled = true
+                            weakSelf.continueButton.isBusy = false
+                            if error.code == 20113 {
+                                weakSelf.verificationCodeField.clear()
+                                weakSelf.verificationCodeField.showError()
+                                weakSelf.invalidCodeLabel.isHidden = false
+                            } else {
+                                weakSelf.alert(error.localizedDescription)
+                            }
+                        }
                     }
                 }
             })

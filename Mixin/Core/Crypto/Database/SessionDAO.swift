@@ -13,7 +13,8 @@ class SessionDAO: SignalDAO {
         return true
     }
 
-    func deleteAllDevices(address: String) -> Int {
+    @discardableResult
+    func delete(address: String) -> Int {
         return SignalDatabase.shared.delete(table: Session.tableName, condition: Session.Properties.address == address)
     }
 

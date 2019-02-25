@@ -2,8 +2,8 @@ import Foundation
 
 struct BlazeMessage: Encodable {
 
-    let id: String
-    let action: String
+    var id: String
+    var action: String
     var params: BlazeMessageParam?
     let data: String?
     let error: APIError?
@@ -19,15 +19,18 @@ struct BlazeMessage: Encodable {
 
 enum BlazeMessageAction: String {
     case createMessage = "CREATE_MESSAGE"
+    case createSessionMessage = "CREATE_SESSION_MESSAGE"
+    case createSignalKeyMessage = "CREATE_SIGNAL_KEY_MESSAGES"
     case createCall = "CREATE_CALL"
     case acknowledgeMessageReceipt = "ACKNOWLEDGE_MESSAGE_RECEIPT"
     case acknowledgeMessageReceipts = "ACKNOWLEDGE_MESSAGE_RECEIPTS"
+    case acknowledgeSessionMessageReceipts = "ACKNOWLEDGE_SESSION_MESSAGE_RECEIPTS"
     case listPendingMessages = "LIST_PENDING_MESSAGES"
     case error = "ERROR"
     case countSignalKeys = "COUNT_SIGNAL_KEYS"
     case consumeSignalKeys = "CONSUME_SIGNAL_KEYS"
+    case consumeSessionSignalKeys = "CONSUME_SESSION_SIGNAL_KEYS"
     case syncSignalKeys = "SYNC_SIGNAL_KEYS"
-    case CREATE_SIGNAL_KEY_MESSAGES = "CREATE_SIGNAL_KEY_MESSAGES"
 }
 
 extension BlazeMessage {

@@ -17,6 +17,7 @@ struct Job: BaseCodable {
     let conversationId: String?
     let resendMessageId: String?
     var runCount: Int = 0
+    var isSessionMessage: Bool
 
     var isAutoIncrement = true
 
@@ -31,6 +32,7 @@ struct Job: BaseCodable {
         case userId = "user_id"
         case resendMessageId = "resend_message_id"
         case runCount = "run_count"
+        case isSessionMessage = "is_session_message"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
@@ -45,14 +47,14 @@ struct Job: BaseCodable {
         }
     }
 
-    init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, blazeMessage: BlazeMessage? = nil) {
+    init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, blazeMessage: BlazeMessage? = nil, isSessionMessage: Bool = false) {
         self.jobId = jobId
         switch action {
         case .RESEND_MESSAGE:
             self.priority = JobPriority.RESEND_MESSAGE.rawValue
         case .SEND_DELIVERED_ACK_MESSAGE:
             self.priority = JobPriority.SEND_DELIVERED_ACK_MESSAGE.rawValue
-        case .SEND_ACK_MESSAGE:
+        case .SEND_ACK_MESSAGE, .SEND_SESSION_ACK_MESSAGE:
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         default:
             self.priority = JobPriority.SEND_MESSAGE.rawValue
@@ -66,6 +68,7 @@ struct Job: BaseCodable {
         } else {
             self.blazeMessage = nil
         }
+        self.isSessionMessage = isSessionMessage
     }
 }
 
@@ -80,7 +83,7 @@ extension Job {
 
 extension Job {
 
-    init(message: Message) {
+    init(message: Message, isSessionMessage: Bool = false) {
         let param = BlazeMessageParam(conversationId: message.conversationId,
                                       recipientId: nil,
                                       category: message.category,
@@ -91,10 +94,12 @@ extension Job {
                                       quoteMessageId: nil,
                                       keys: nil,
                                       recipients: nil,
-                                      messages: nil)
+                                      messages: nil,
+                                      sessionId: nil,
+                                      transferId: nil)
         let action = BlazeMessageAction.createMessage.rawValue
         let blazeMessage = BlazeMessage(params: param, action: action)
-        self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
+        self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage, isSessionMessage: isSessionMessage)
     }
     
     init(webRTCMessage message: Message, recipientId: String) {
@@ -108,7 +113,9 @@ extension Job {
                                       quoteMessageId: message.quoteMessageId,
                                       keys: nil,
                                       recipients: nil,
-                                      messages: nil)
+                                      messages: nil,
+                                      sessionId: nil,
+                                      transferId: nil)
         let action = BlazeMessageAction.createCall.rawValue
         let blazeMessage = BlazeMessage(params: param, action: action)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
@@ -133,6 +140,7 @@ enum JobAction: String {
     case SEND_KEY
     case SEND_MESSAGE
     case SEND_ACK_MESSAGE
+    case SEND_SESSION_ACK_MESSAGE
     case SEND_DELIVERED_ACK_MESSAGE
 }
 

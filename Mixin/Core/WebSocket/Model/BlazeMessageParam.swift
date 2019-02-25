@@ -13,8 +13,11 @@ struct BlazeMessageParam: Codable {
     var quoteMessageId: String? = nil
 
     var keys: SignalKeyRequest? = nil
-    var recipients: [String]? = nil
+    var recipients: [BlazeSessionMessageParam]? = nil
     var messages: [TransferMessage]? = nil
+
+    var sessionId: String? = nil
+    var transferId: String? = nil
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -29,6 +32,9 @@ struct BlazeMessageParam: Codable {
         case keys
         case recipients
         case messages
+
+        case sessionId = "session_id"
+        case transferId = "transfer_id"
     }
 }
 
@@ -52,7 +58,7 @@ extension BlazeMessageParam {
         self.category = MessageCategory.SIGNAL_KEY.rawValue
     }
 
-    init(consumeSignalKeys recipients: [String]) {
+    init(consumeSignalKeys recipients: [BlazeSessionMessageParam]) {
         self.recipients = recipients
     }
 
@@ -67,5 +73,16 @@ extension BlazeMessageParam {
 
     init(messages: [TransferMessage]) {
         self.messages = messages
+    }
+
+    init(userId: String, sessionId: String, encoded: String) {
+        self.conversationId = userId
+        self.recipientId = userId
+        self.messageId = UUID().uuidString.lowercased()
+        self.category = MessageCategory.PLAIN_JSON.rawValue
+        self.data = encoded
+        self.status = MessageStatus.SENDING.rawValue
+        self.sessionId = sessionId
+        self.transferId = userId
     }
 }

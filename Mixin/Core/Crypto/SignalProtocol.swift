@@ -47,13 +47,17 @@ class SignalProtocol {
         return data != nil
     }
 
-    func containsSession(recipient: String) -> Bool {
-        let address = SignalAddress(name: recipient, deviceId: DEFAULT_DEVICE_ID)
+    func containsSession(recipient: String, deviceId: Int32 = SignalProtocol.shared.DEFAULT_DEVICE_ID) -> Bool {
+        let address = SignalAddress(name: recipient, deviceId: deviceId)
         return store.sessionStore.containsSession(for: address)
     }
 
-    func buildSession(conversationId: String, recipientId: String, signalKey: SignalKeyResponse) throws {
-        let address = SignalAddress(name: signalKey.userId!, deviceId: DEFAULT_DEVICE_ID)
+    func deleteSession(userId: String) {
+        SessionDAO.shared.delete(address: userId)
+    }
+
+    func processSession(userId: String, signalKey: SignalKeyResponse, deviceId: Int32 = SignalProtocol.shared.DEFAULT_DEVICE_ID) throws {
+        let address = SignalAddress(name: userId, deviceId: deviceId)
         let sessionBuilder = SessionBuilder(for: address, in: store)
         let sessionPreKeyBuild = SessionPreKeyBundle(registrationId: signalKey.registrationId,
                                                      deviceId: Int32(DEFAULT_DEVICE_ID),
@@ -78,17 +82,22 @@ class SignalProtocol {
     }
 
     func encryptSenderKey(conversationId: String, senderId: String, recipientId: String) throws -> String {
-        let skdm = try getSenderKeyDistribution(groupId: conversationId, senderId: senderId)
-        let sessionCipher = SessionCipher(for: SignalAddress(name: recipientId, deviceId: DEFAULT_DEVICE_ID), in: store)
-        let cipherMessage = try sessionCipher.encrypt(skdm.message)
+        let senderKeyDistributionMessage = try getSenderKeyDistribution(groupId: conversationId, senderId: senderId)
+        let cipherMessage = try encryptSession(content: senderKeyDistributionMessage.message, destination: recipientId)
         let compose = ComposeMessageData(keyType: cipherMessage.type.rawValue, cipher: cipherMessage.message, resendMessageId: nil)
         return encodeMessageData(data: compose)
     }
 
-    func encryptSessionMessageData(conversationId: String, recipientId: String, content: String, resendMessageId: String? = nil) throws -> String {
-        let sessionCipher = SessionCipher(for: SignalAddress(name: recipientId, deviceId: DEFAULT_DEVICE_ID), in: store)
-        let cipherMessage = try sessionCipher.encrypt(content.data(using: .utf8)!)
-        let data = encodeMessageData(data: ComposeMessageData(keyType: cipherMessage.type.rawValue, cipher: cipherMessage.message, resendMessageId: resendMessageId))
+    func encryptSessionMessageData(recipientId: String, content: String, resendMessageId: String? = nil) throws -> String {
+        let cipher = try encryptSession(content: content.data(using: .utf8)!, destination: recipientId)
+        let data = encodeMessageData(data: ComposeMessageData(keyType: cipher.type.rawValue, cipher: cipher.message, resendMessageId: resendMessageId))
+        return data
+    }
+
+    func encryptTransferSessionMessageData(recipientId: String, content: String, sessionId: String) throws -> String {
+        let deviceId = sessionId.hashCode()
+        let cipher = try encryptSession(content: content.data(using: .utf8)!, destination: recipientId, deviceId: deviceId)
+        let data = encodeMessageData(data: ComposeMessageData(keyType: cipher.type.rawValue, cipher: cipher.message, resendMessageId: nil))
         return data
     }
 
@@ -105,8 +114,8 @@ class SignalProtocol {
         return data
     }
 
-    func decrypt(groupId: String, senderId: String, keyType: UInt8, cipherText: Data, category: String, callback: @escaping DecryptionCallback) throws {
-        let sourceAddress = SignalAddress(name: senderId, deviceId: DEFAULT_DEVICE_ID)
+    func decrypt(groupId: String, senderId: String, keyType: UInt8, cipherText: Data, category: String, deviceId: Int32 = SignalProtocol.shared.DEFAULT_DEVICE_ID, callback: @escaping DecryptionCallback) throws {
+        let sourceAddress = SignalAddress(name: senderId, deviceId: deviceId)
         let sessionCipher = SessionCipher(for: sourceAddress, in: store)
         if category == MessageCategory.SIGNAL_KEY.rawValue {
             if keyType == CiphertextMessage.MessageType.preKey.rawValue {
@@ -132,6 +141,11 @@ class SignalProtocol {
                 _ = try groupCipher.decrypt(CiphertextMessage(type: .senderKey, message: cipherText), callback: callback)
             }
         }
+    }
+
+    private func encryptSession(content: Data, destination: String, deviceId: Int32 = SignalProtocol.shared.DEFAULT_DEVICE_ID) throws -> CiphertextMessage {
+        let sessionCipher = SessionCipher(for: SignalAddress(name: destination, deviceId: deviceId), in: store)
+        return try sessionCipher.encrypt(content)
     }
 
     func processGroupSession(groupId: String, sender: SignalAddress, data: Data) {

@@ -446,6 +446,7 @@
 		DF6175C12223985C00624609 /* ProvisionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BE2223985C00624609 /* ProvisionMessage.swift */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
 		DF6175C5222398E200624609 /* ProfileKeyUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C4222398E100624609 /* ProfileKeyUtil.swift */; };
+		DF6175C72223E5D000624609 /* BlazeSessionMessageParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C62223E5D000624609 /* BlazeSessionMessageParam.swift */; };
 		DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */; };
 		DF63E1D920B84B5300A833A7 /* ContactQRCodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */; };
 		DF65AAF3205122A3004E3459 /* MessageBlaze.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF2205122A3004E3459 /* MessageBlaze.swift */; };
@@ -1085,6 +1086,7 @@
 		DF6175BE2223985C00624609 /* ProvisionMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisionMessage.swift; sourceTree = "<group>"; };
 		DF6175C2222398BB00624609 /* MixinURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinURL.swift; sourceTree = "<group>"; };
 		DF6175C4222398E100624609 /* ProfileKeyUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileKeyUtil.swift; sourceTree = "<group>"; };
+		DF6175C62223E5D000624609 /* BlazeSessionMessageParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeSessionMessageParam.swift; sourceTree = "<group>"; };
 		DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactQRCodeCell.xib; sourceTree = "<group>"; };
 		DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactQRCodeCell.swift; sourceTree = "<group>"; };
 		DF65AAF2205122A3004E3459 /* MessageBlaze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlaze.swift; sourceTree = "<group>"; };
@@ -2202,6 +2204,7 @@
 			children = (
 				DF8DA19F1FD64B7900425CEC /* BlazeMessage.swift */,
 				DF8DA1A11FD64C1E00425CEC /* BlazeMessageParam.swift */,
+				DF6175C62223E5D000624609 /* BlazeSessionMessageParam.swift */,
 				DF8DA1A31FD64C5800425CEC /* BlazeMessageData.swift */,
 				27D6E8D12045473300BA678A /* TransferMessage.swift */,
 				DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */,
@@ -2998,6 +3001,7 @@
 				7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
 				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
+				DF6175C72223E5D000624609 /* BlazeSessionMessageParam.swift in Sources */,
 				DFF353001FEE516F00058453 /* Asset.swift in Sources */,
 				DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */,
 				273FACB7205FB9A800513327 /* SignalStore.swift in Sources */,

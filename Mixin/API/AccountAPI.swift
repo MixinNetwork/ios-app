@@ -42,6 +42,10 @@ final class AccountAPI: BaseAPI {
         return account?.user_id ?? ""
     }
 
+    var accountSessionId: String {
+        return account?.session_id ?? ""
+    }
+
     var accountIdentityNumber: String {
         return account?.identity_number ?? "00000"
     }

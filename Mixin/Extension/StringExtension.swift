@@ -72,6 +72,28 @@ extension String {
         return GoutilsUuidFromBytes(digestData, &error)
     }
 
+    func hashCode() -> Int32 {
+        let components = self.split(separator: "-")
+
+        var mostSigBits = Int64(components[0], radix: 16)!
+        mostSigBits <<= 16
+
+        let c1 = Int64(components[1], radix: 16)!
+        mostSigBits |= c1
+        mostSigBits <<= 16
+        let c2 = Int64(components[2], radix: 16)!
+        mostSigBits |= c2
+
+        var leastSigBits = Int64(components[3], radix: 16)!
+        leastSigBits <<= 48
+        let c4 = Int64(components[4], radix: 16)!
+        leastSigBits |= c4
+
+        let hilo = mostSigBits ^ leastSigBits
+
+        return Int32(truncatingIfNeeded: hilo>>32) ^ Int32(truncatingIfNeeded: hilo)
+    }
+
     subscript (i: Int) -> String {
         guard i < count else {
             return ""

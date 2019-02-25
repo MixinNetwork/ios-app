@@ -38,6 +38,6 @@ class MixinSessionStore: SessionStore {
     }
 
     func deleteAllSessions(for name: String) -> Int? {
-        return SessionDAO.shared.deleteAllDevices(address: name)
+        return SessionDAO.shared.delete(address: name)
     }
 }

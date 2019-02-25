@@ -13,6 +13,8 @@ struct BlazeMessageData: Codable {
     let source: String
     let quoteMessageId: String
     let representativeId: String
+    var sessinId: String? = nil
+    var transferId: String? = nil
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -26,6 +28,8 @@ struct BlazeMessageData: Codable {
         case source
         case quoteMessageId = "quote_message_id"
         case representativeId = "representative_id"
+        case sessinId = "session_id"
+        case transferId = "transfer_id"
     }
 }
 

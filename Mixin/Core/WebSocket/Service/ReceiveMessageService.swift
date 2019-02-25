@@ -31,24 +31,43 @@ class ReceiveMessageService: MixinService {
 
             if blazeMessage.action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue {
                 MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
+                ReceiveMessageService.shared.sendSessionAck(status: data.status, messageId: data.messageId)
                 CryptoUserDefault.shared.statusOffset = data.updatedAt.toUTCDate().nanosecond()
             } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                 if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
+                    ReceiveMessageService.shared.sendSessionAck(status: data.status, messageId: data.messageId)
                 } else {
-                    var success = false
-                    defer {
-                        FileManager.default.writeLog(conversationId: data.conversationId, log: "[Receive][\(data.category)]...\(data.messageId)...\(data.createdAt)...insertOrReplace:\(success)")
-                    }
                     guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, data: blazeMessage.data, createdAt: data.createdAt) else {
-                        UIApplication.trackError("ReceiveMessageService", action: "receiveMessage insert failed")
                         return
                     }
-                    success = true
+                    ReceiveMessageService.shared.processReceiveMessages()
+                }
+            } else if blazeMessage.action == BlazeMessageAction.createSessionMessage.rawValue {
+                if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty && data.sessinId == AccountAPI.shared.accountSessionId {
+
+                } else {
+                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, data: blazeMessage.data, createdAt: data.createdAt) else {
+                        return
+                    }
                     ReceiveMessageService.shared.processReceiveMessages()
                 }
             }
         }
+    }
+
+    private func sendSessionAck(status: String, messageId: String) {
+        guard let sessionId = AccountUserDefault.shared.extensionSession else {
+            return
+        }
+
+        let transferPlainData = TransferPlainData(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPT.rawValue, messageId: messageId, messages: nil, status: status)
+
+        let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
+        let params = BlazeMessageParam(userId: AccountAPI.shared.accountUserId, sessionId: sessionId, encoded: encoded)
+        let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createSessionMessage.rawValue)
+
+        SendMessageService.shared.sendMessage(blazeMessage: blazeMessage, action: .SEND_SESSION_ACK_MESSAGE)
     }
 
     func processReceiveMessages() {
@@ -262,7 +281,9 @@ class ReceiveMessageService: MixinService {
                 }
                 content = decoded
             }
-            MessageDAO.shared.insertMessage(message: Message.createMessage(textMessage: content, data: data), messageSource: data.source)
+            let message = Message.createMessage(textMessage: content, data: data)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+            SendMessageService.shared.sendMessageToSession(message: message)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -270,7 +291,11 @@ class ReceiveMessageService: MixinService {
             guard let height = transferMediaData.height, let width = transferMediaData.width, height > 0, width > 0, !(transferMediaData.mimeType?.isEmpty ?? true) else {
                 return
             }
-            MessageDAO.shared.insertMessage(message: Message.createMessage(mediaData: transferMediaData, data: data), messageSource: data.source)
+            let message = Message.createMessage(mediaData: transferMediaData, data: data)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+            if data.category.hasSuffix("_IMAGE") {
+                SendMessageService.shared.sendMessageToSession(message: message)
+            }
         } else if data.category.hasSuffix("_DATA")  {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -529,10 +554,10 @@ class ReceiveMessageService: MixinService {
         }
 
         FileManager.default.writeLog(conversationId: conversationId, log: "[ReceiveMessageService][REQUEST_REQUEST_MESSAGES]...messages:[\(messages.joined(separator: ","))]")
-        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages)
+        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages, status: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil, sessionId: nil, transferId: nil)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_MESSAGES)
     }
@@ -542,10 +567,10 @@ class ReceiveMessageService: MixinService {
             return
         }
 
-        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil)
+        let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil, status: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil, sessionId: nil, transferId: nil)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_KEY)
     }
@@ -627,7 +652,7 @@ extension ReceiveMessageService {
             UserDAO.shared.insertSystemUser(userId: userId)
         }
 
-        let message = Message.createMessage(systemMessage: sysMessage.action, participantId: sysMessage.participantId, userId: userId, data: data)
+        var message = Message.createMessage(systemMessage: sysMessage.action, participantId: sysMessage.participantId, userId: userId, data: data)
         switch sysMessage.action {
         case SystemConversationAction.ADD.rawValue, SystemConversationAction.JOIN.rawValue:
             guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser else {
@@ -689,6 +714,11 @@ extension ReceiveMessageService {
         }
 
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+
+        if let uid = sysMessage.userId {
+            message.userId = uid
+        }
+        SendMessageService.shared.sendMessageToSession(message: message)
     }
 
     private func handlerSystemMessageDataError(action: String, data: Data) {

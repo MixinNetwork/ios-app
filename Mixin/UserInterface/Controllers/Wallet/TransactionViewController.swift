@@ -18,10 +18,10 @@ class TransactionViewController: UIViewController {
         super.viewDidLoad()
         view.layoutIfNeeded()
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
-        if let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
+        if snapshot.type == SnapshotType.transfer.rawValue, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
             avatarImageView.setImage(with: snapshot.opponentUserAvatarUrl ?? "", identityNumber: identityNumber, name: name)
         } else {
-            avatarImageView.image = UIImage(named: "Wallet/ic_transaction_unknown_sender")
+            avatarImageView.image = UIImage(named: "Wallet/ic_transaction_external_large")
         }
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
         if snapshot.amount.hasMinusPrefix {

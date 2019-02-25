@@ -37,17 +37,10 @@ class SnapshotCell: UITableViewCell {
     }
     
     func render(snapshot: SnapshotItem, asset: AssetItem? = nil) {
-        switch snapshot.type {
-        case SnapshotType.deposit.rawValue, SnapshotType.pendingDeposit.rawValue:
-            iconImageView.image = UIImage(named: "Wallet/ic_deposit")
-        case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
-            iconImageView.image = UIImage(named: "Wallet/ic_withdrawal")
-        case SnapshotType.transfer.rawValue:
-            if let iconUrl = snapshot.opponentUserAvatarUrl, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
-                iconImageView.setImage(with: iconUrl, identityNumber: identityNumber, name: name)
-            }
-        default:
-            break
+        if snapshot.type == SnapshotType.transfer.rawValue, let iconUrl = snapshot.opponentUserAvatarUrl, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
+            iconImageView.setImage(with: iconUrl, identityNumber: identityNumber, name: name)
+        } else {
+            iconImageView.image = UIImage(named: "Wallet/ic_transaction_external")
         }
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:

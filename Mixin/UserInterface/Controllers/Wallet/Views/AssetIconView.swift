@@ -69,6 +69,7 @@ class AssetIconView: UIView {
     }
     
     private func prepare() {
+        backgroundColor = .clear
         iconImageView.clipsToBounds = true
         chainBackgroundView.backgroundColor = .white
         chainBackgroundView.clipsToBounds = true

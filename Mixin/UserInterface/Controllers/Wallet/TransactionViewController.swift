@@ -23,13 +23,19 @@ class TransactionViewController: UIViewController {
         } else {
             avatarImageView.image = UIImage(named: "Wallet/ic_transaction_unknown_sender")
         }
-        amountLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
-        let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
+        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
+        if snapshot.amount.hasMinusPrefix {
+            amountLabel.textColor = .walletRed
+        } else {
+            amountLabel.textColor = .walletGreen
+        }
+        let usdBalance = asset.priceUsd.doubleValue * snapshot.amount.doubleValue
         if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
             usdValueLabel.text = "≈ $" + localizedUSDBalance
         } else {
             usdValueLabel.text = nil
         }
+        symbolLabel.text = snapshot.assetSymbol
         makeContents()
         tableView.dataSource = self
         tableView.delegate = self

@@ -2608,17 +2608,17 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				$SRCROOT/R.ignore.generated.swift,
+				"$TEMP_DIR/rswift-lastrun",
 			);
 			name = R.swift;
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				$SRCROOT/Mixin/R.generated.swift,
+				$SRCROOT/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT\"\ndate > \"$SRCROOT/R.ignore.generated.swift\"\n";
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
 		};
 		F5646909209AA0566E934C2C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

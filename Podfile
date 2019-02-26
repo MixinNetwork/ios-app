@@ -25,6 +25,6 @@ target 'Mixin' do
   pod 'GiphyCoreSDK'
   pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'
-  pod 'R.swift', '~> 5.0.0.alpha.2'
+  pod 'R.swift'
 
 end

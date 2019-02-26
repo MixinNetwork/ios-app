@@ -121,13 +121,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate: PKPushRegistryDelegate {
 
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
-        AccountAPI.shared.updateSession(deviceToken: "", pushkit_token: pushCredentials.token.toHexString())
+        AccountAPI.shared.updateSession(deviceToken: "", voip_token: pushCredentials.token.toHexString())
         print("voip token: \(pushCredentials.token.toHexString())")
     }
 
 
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
-        
+        WebSocketService.shared.checkConnectStatus()
     }
 
 }
@@ -135,7 +135,7 @@ extension AppDelegate: PKPushRegistryDelegate {
 extension AppDelegate: UNUserNotificationCenterDelegate {
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        AccountAPI.shared.updateSession(deviceToken: deviceToken.toHexString(), pushkit_token: "")
+        AccountAPI.shared.updateSession(deviceToken: deviceToken.toHexString(), voip_token: "")
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {

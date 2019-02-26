@@ -58,10 +58,10 @@
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
 "permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "toast_operation_failed" = "The operation failed, please try again later";
-"toast_copied" = "Successfully copied to clipboard";
-"toast_add_asset" = "Successfully added selected assets";
-"permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
+"toast_copied" = "Copied";
 "toast_added" = "Added";
+"toast_saved" = "Saved";
+"permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
 "screen_captured_pin_leaking_hint" = "Screen recorder detected, PIN may be recorded.";
 "biometry_suggestion" = " %@ is suggested.";

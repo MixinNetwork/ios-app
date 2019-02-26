@@ -74,12 +74,12 @@ public class Localized {
     public static let PERMISSION_DENIED_PHOTO_LIBRARY = LocalizedString("permission_denied_photo_library", comment: "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.")
     public static let PERMISSION_DENIED_MICROPHONE = LocalizedString("permission_denied_microphone", comment: "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.")
     public static let TOAST_OPERATION_FAILED = LocalizedString("toast_operation_failed", comment: "The operation failed, please try again later")
-    public static let TOAST_ADDED = LocalizedString("toast_added", comment: "Added")
     public static func TOAST_ERROR(errorCode: Int, errorMessage: String) -> String {
         return String(format: LocalizedString("toast_error", comment: "ERROR %@: %@"), "\(errorCode)", errorMessage)
     }
-    public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Successfully copied to clipboard")
-    public static let TOAST_ADD_ASSET = LocalizedString("toast_add_asset", comment: "Successfully added")
+    public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Copied")
+    public static let TOAST_ADDED = LocalizedString("toast_added", comment: "Added")
+    public static let TOAST_SAVED = LocalizedString("toast_saved", comment: "Saved")
     public static let SCREEN_CAPTURED_PIN_LEAKING_HINT = LocalizedString("screen_captured_pin_leaking_hint", comment: "Screen recorder detected, PIN may be recorded.")
     public static func BIOMETRY_SUGGESTION(biometricType: String) -> String {
         return String(format: LocalizedString("biometry_suggestion", comment: " %@ is suggested."), biometricType)

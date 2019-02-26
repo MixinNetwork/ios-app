@@ -54,10 +54,10 @@
 "permission_denied_camera" = "Mixin はあなたのカメラを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "permission_denied_microphone" = "Mixinはあなたのマイクを使う権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";
-"toast_copied" = "クリップボードにコピーされました";
-"toast_add_asset" = "追加成功";
-"permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
+"toast_copied" = "コピーしました";
 "toast_added" = "追加しました";
+"toast_saved" = "セーブしました";
+"permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_error" = "エラー %@: %@";
 "screen_captured_pin_leaking_hint" = "スクリーンレコーダーが検出され、PINが記録されている.";
 "biometry_suggestion" = " %@ が提案されています.";

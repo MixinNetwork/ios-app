@@ -178,7 +178,7 @@ extension AddAssetViewController: ContainerViewControllerDelegate {
             AssetDAO.shared.insertOrUpdateAssets(assets: assets)
             DispatchQueue.main.async {
                 navigationController?.popViewController(animated: true)
-                navigationController?.showHud(style: .notification, text: Localized.TOAST_ADD_ASSET)
+                navigationController?.showHud(style: .notification, text: Localized.TOAST_SAVED)
             }
         }
     }

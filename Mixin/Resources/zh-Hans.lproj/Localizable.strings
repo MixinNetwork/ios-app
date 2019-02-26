@@ -56,10 +56,10 @@
 "toast_api_error_unavailable_phone_number" = "此手机号已被使用";
 "permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
 "permission_denied_microphone" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
-"toast_copied" = "已复制到剪贴板";
-"toast_add_asset" = "已添加";
-"permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
+"toast_copied" = "已复制";
 "toast_added" = "已添加";
+"toast_saved" = "已保存";
+"permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "toast_error" = "错误 %@：%@";
 "screen_captured_pin_leaking_hint" = "检测到正在进行屏幕录制，支付密码可能会录入视频！";
 "biometry_suggestion" = "建议使用%@支付";

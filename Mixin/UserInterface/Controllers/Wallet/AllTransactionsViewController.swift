@@ -54,8 +54,7 @@ extension AllTransactionsViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
         let snapshot = dataSource.snapshots[indexPath.section][indexPath.row]
-        cell.render(snapshot: snapshot)
-        cell.symbolLabel.isHidden = false
+        cell.render(snapshot: snapshot, showSymbol: true)
         return cell
     }
     

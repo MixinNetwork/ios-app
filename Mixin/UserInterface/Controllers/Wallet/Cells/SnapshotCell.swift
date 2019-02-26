@@ -12,7 +12,6 @@ class SnapshotCell: UITableViewCell {
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var amountLabel: InsetLabel!
-    @IBOutlet weak var symbolLabel: UILabel!
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
     
@@ -36,7 +35,7 @@ class SnapshotCell: UITableViewCell {
         delegate?.walletSnapshotCellDidSelectIcon(self)
     }
     
-    func render(snapshot: SnapshotItem, asset: AssetItem? = nil) {
+    func render(snapshot: SnapshotItem, asset: AssetItem? = nil, showSymbol: Bool = false) {
         if snapshot.type == SnapshotType.transfer.rawValue, let iconUrl = snapshot.opponentUserAvatarUrl, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
             iconImageView.setImage(with: iconUrl, identityNumber: identityNumber, name: name)
         } else {
@@ -85,7 +84,14 @@ class SnapshotCell: UITableViewCell {
         } else {
             pendingDepositProgressView.isHidden = true
         }
-        symbolLabel.text = snapshot.assetSymbol
+
+        if showSymbol {
+            guard let transactionType = titleLabel.text, let symbol = snapshot.assetSymbol else {
+                return
+            }
+
+            titleLabel.text = transactionType + " " + symbol
+        }
     }
     
 }

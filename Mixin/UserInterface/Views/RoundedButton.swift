@@ -50,8 +50,6 @@ class RoundedButton: UIButton {
     }
     
     private func prepare() {
-        contentEdgeInsets = UIEdgeInsets(top: 12, left: 26, bottom: 12, right: 26)
-        titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
         setTitleColor(.white, for: .normal)
         updatePaths()
         backgroundLayer.fillColor = UIColor.theme.cgColor
@@ -62,6 +60,7 @@ class RoundedButton: UIButton {
     }
     
     private func updatePaths() {
+        let cornerRadius = bounds.height / 2
         backgroundLayer.path = CGPath(roundedRect: bounds, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)
         let rect = CGRect(x: 0, y: 6, width: bounds.width, height: bounds.height)
         backgroundLayer.shadowPath = CGPath(roundedRect: rect, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)

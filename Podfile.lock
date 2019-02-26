@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (4.7.3)
+  - AlignedCollectionViewFlowLayout (1.1.2)
   - Base64 (1.1.2)
   - Bugsnag (5.17.0)
   - DeviceGuru (4.0.5)
@@ -89,6 +90,7 @@ PODS:
 
 DEPENDENCIES:
   - "Alamofire (from `git@github.com:over140/Alamofire.git`, branch `master`)"
+  - AlignedCollectionViewFlowLayout
   - Bugsnag
   - DeviceGuru
   - Firebase/Analytics
@@ -110,6 +112,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - AlignedCollectionViewFlowLayout
     - Base64
     - Bugsnag
     - DeviceGuru
@@ -166,6 +169,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: 5f691e36644ab9a04e6df58bfa74b2d627a6919b
+  AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   Bugsnag: 9c904fdb98c8f4af3ee0c5235bb3b19cd23fa19b
   DeviceGuru: a2d65bf7733941f7a10a4365661cb47dc65e02fc
@@ -194,6 +198,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: bc65395caafc78ab7c4045fde301275bb5ff4eb9
+PODFILE CHECKSUM: 174b1a8daa09212b9d1d2c1fac496568f2ee951f
 
 COCOAPODS: 1.6.0.beta.2

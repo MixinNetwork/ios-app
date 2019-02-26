@@ -120,6 +120,19 @@ extension String {
     
 }
 
+extension Optional where Wrapped == String {
+    
+    var isNilOrEmpty: Bool {
+        switch self {
+        case .some(let value):
+            return value.isEmpty
+        case .none:
+            return false
+        }
+    }
+    
+}
+
 extension NSAttributedString.Key {
     static let ctFont = kCTFontAttributeName as NSAttributedString.Key
     static let ctForegroundColor = kCTForegroundColorAttributeName as NSAttributedString.Key

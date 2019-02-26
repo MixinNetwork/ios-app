@@ -1,6 +1,7 @@
 import UIKit
 
 protocol DepositFieldViewDelegate: class {
+    func depositFieldViewDidCopyContent(_ view: DepositFieldView)
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView)
 }
 
@@ -26,7 +27,7 @@ class DepositFieldView: UIView, XibDesignable {
     
     @IBAction func copyAction(_ sender: Any) {
         UIPasteboard.general.string = contentLabel.text
-        NotificationCenter.default.afterPostOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_COPIED)
+        delegate?.depositFieldViewDidCopyContent(self)
     }
     
     @IBAction func showQRCodeAction(_ sender: Any) {

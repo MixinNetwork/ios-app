@@ -56,6 +56,7 @@
 "toast_api_error_unavailable_phone_number" = "此手机号已被使用";
 "permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
 "permission_denied_microphone" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
+"toast_operation_failed" = "操作失败，请稍后重试";
 "toast_copied" = "已复制";
 "toast_added" = "已添加";
 "toast_saved" = "已保存";
@@ -343,7 +344,6 @@
 "transaction_date" = "时间";
 "transaction_sender" = "发送者";
 "transaction_receiver" = "接收者";
-"transaction_address" = "地址";
 "transaction_transaction_hash" = "交易哈希";
 "transaction_type_deposit" = "充值";
 "transaction_type_transfer" = "转账";

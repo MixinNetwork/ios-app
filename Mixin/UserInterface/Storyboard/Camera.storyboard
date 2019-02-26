@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="HelveticaNeue.ttc">
-            <string>HelveticaNeue</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Camera View Controller-->
         <scene sceneID="tvl-hK-adp">
@@ -80,10 +74,10 @@
                                 </constraints>
                             </view>
                             <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WmQ-ju-XH1">
-                                <rect key="frame" x="135" y="38.5" width="49.5" height="19.5"/>
+                                <rect key="frame" x="135.5" y="38" width="49.5" height="20"/>
                                 <subviews>
                                     <view clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="98N-CS-DAD">
-                                        <rect key="frame" x="0.0" y="5.5" width="8" height="8"/>
+                                        <rect key="frame" x="0.0" y="6" width="8" height="8"/>
                                         <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="8" id="6TJ-DF-h4L"/>
@@ -151,7 +145,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="2X6-GY-egt">
-                                        <rect key="frame" x="30.5" y="157.5" width="260" height="193.5"/>
+                                        <rect key="frame" x="30" y="157.5" width="260" height="193.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code Camera" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VMD-0x-hnr">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="29"/>
@@ -211,7 +205,7 @@
                                             <rect key="frame" x="8" y="8" width="18" height="18"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TEXT QR CODE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1O2-fn-vXH">
-                                            <rect key="frame" x="34" y="10" width="88.5" height="14.5"/>
+                                            <rect key="frame" x="34" y="9.5" width="88.5" height="14.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -304,96 +298,6 @@
             </objects>
             <point key="canvasLocation" x="734" y="551"/>
         </scene>
-        <!--Send To View Controller-->
-        <scene sceneID="dbd-9o-btO">
-            <objects>
-                <viewController storyboardIdentifier="sendto" id="yNe-Tz-MhX" customClass="SendToViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="icT-34-u1z">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ULW-06-CVf">
-                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Ht-EM-U4v">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                        <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="500" image="ic_search" translatesAutoresizingMaskIntoConstraints="NO" id="vD4-dk-n0K">
-                                                <rect key="frame" x="0.0" y="0.0" width="36" height="44"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="36" id="OnI-EX-he9"/>
-                                                </constraints>
-                                            </imageView>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search" textAlignment="natural" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="RDm-qi-LoK">
-                                                <rect key="frame" x="36" y="0.0" width="284" height="44"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <integer key="value" value="18"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="button_title_search"/>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="searchAction:" destination="yNe-Tz-MhX" eventType="editingChanged" id="aJV-qT-jaA"/>
-                                                </connections>
-                                            </textField>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="4Ht-EM-U4v" firstAttribute="leading" secondItem="ULW-06-CVf" secondAttribute="leading" id="3VC-xC-hLY"/>
-                                    <constraint firstAttribute="trailing" secondItem="4Ht-EM-U4v" secondAttribute="trailing" id="Eeb-k1-YxL"/>
-                                    <constraint firstItem="4Ht-EM-U4v" firstAttribute="top" secondItem="ULW-06-CVf" secondAttribute="top" id="IQG-Rg-P2T"/>
-                                    <constraint firstAttribute="height" constant="44" id="fKN-s1-wEY"/>
-                                    <constraint firstAttribute="bottom" secondItem="4Ht-EM-U4v" secondAttribute="bottom" id="uut-fg-Dre"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="18"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ovA-uO-vRu">
-                                <rect key="frame" x="0.0" y="63" width="320" height="1"/>
-                                <color key="backgroundColor" red="0.81960784310000001" green="0.81960784310000001" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="1xP-Gu-jkd" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
-                                </constraints>
-                            </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="oFA-mR-fhT">
-                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <sections/>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="ovA-uO-vRu" firstAttribute="leading" secondItem="gvr-FO-Hb9" secondAttribute="leading" id="5N3-uv-z9z"/>
-                            <constraint firstItem="oFA-mR-fhT" firstAttribute="leading" secondItem="gvr-FO-Hb9" secondAttribute="leading" id="A06-pc-O7l"/>
-                            <constraint firstItem="gvr-FO-Hb9" firstAttribute="trailing" secondItem="ovA-uO-vRu" secondAttribute="trailing" id="HYh-kS-g1n"/>
-                            <constraint firstItem="oFA-mR-fhT" firstAttribute="top" secondItem="ULW-06-CVf" secondAttribute="bottom" id="JqD-Cb-2Em"/>
-                            <constraint firstItem="gvr-FO-Hb9" firstAttribute="trailing" secondItem="oFA-mR-fhT" secondAttribute="trailing" id="L3e-i3-rrV"/>
-                            <constraint firstItem="ovA-uO-vRu" firstAttribute="bottom" secondItem="ULW-06-CVf" secondAttribute="bottom" id="Rd9-uS-l0C"/>
-                            <constraint firstItem="gvr-FO-Hb9" firstAttribute="top" secondItem="ULW-06-CVf" secondAttribute="top" id="TeN-hi-3V6"/>
-                            <constraint firstItem="gvr-FO-Hb9" firstAttribute="trailing" secondItem="ULW-06-CVf" secondAttribute="trailing" id="bJb-uo-a4B"/>
-                            <constraint firstItem="ULW-06-CVf" firstAttribute="leading" secondItem="gvr-FO-Hb9" secondAttribute="leading" id="huw-u6-jGi"/>
-                            <constraint firstItem="gvr-FO-Hb9" firstAttribute="bottom" secondItem="oFA-mR-fhT" secondAttribute="bottom" id="uev-Ry-7aQ"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="gvr-FO-Hb9"/>
-                    </view>
-                    <connections>
-                        <outlet property="keywordTextField" destination="RDm-qi-LoK" id="5fG-i2-gMV"/>
-                        <outlet property="tableView" destination="oFA-mR-fhT" id="WTg-1k-d3s"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="piK-Co-bUK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1450" y="551"/>
-        </scene>
     </scenes>
     <resources>
         <image name="ic_camera_flash_off" width="44" height="44"/>
@@ -402,6 +306,5 @@
         <image name="ic_camera_swap" width="44" height="44"/>
         <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_notification_qrcode" width="18" height="18"/>
-        <image name="ic_search" width="12" height="12"/>
     </resources>
 </document>

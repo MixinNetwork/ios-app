@@ -3,7 +3,7 @@ import UIKit
 class TransferPeerSelectionViewController: PeerSelectionViewController {
     
     override class var usesModernStyle: Bool {
-        return true
+        return false
     }
     
     var asset: AssetItem!

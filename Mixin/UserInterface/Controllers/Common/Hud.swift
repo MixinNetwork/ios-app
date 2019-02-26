@@ -61,14 +61,12 @@ class Hud {
     
     static func show(style: Style, text: String, on view: UIView) {
         let container = UIView(frame: view.bounds)
+        container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(container)
-        view.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
         let hudView = View(effect: UIBlurEffect(style: .dark))
         hudView.render(style: style, text: text)
         hudView.alpha = 0
-        view.addSubview(hudView)
+        container.addSubview(hudView)
         hudView.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
             make.width.lessThanOrEqualTo(view.snp.width).multipliedBy(0.5)

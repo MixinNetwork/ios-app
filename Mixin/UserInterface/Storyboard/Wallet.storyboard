@@ -961,7 +961,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3jx-1E-qdc">
-                                        <rect key="frame" x="0.0" y="5" width="414" height="569"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="569"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tB5-S1-fay" customClass="DepositFieldView" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="248"/>
@@ -1003,7 +1003,7 @@
                                 <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="3jx-1E-qdc" firstAttribute="leading" secondItem="QBi-Sl-cc1" secondAttribute="leading" id="3Fz-re-Idc"/>
-                                    <constraint firstItem="3jx-1E-qdc" firstAttribute="top" secondItem="QBi-Sl-cc1" secondAttribute="top" constant="5" id="47J-yM-sZD"/>
+                                    <constraint firstItem="3jx-1E-qdc" firstAttribute="top" secondItem="QBi-Sl-cc1" secondAttribute="top" id="47J-yM-sZD"/>
                                     <constraint firstItem="3jx-1E-qdc" firstAttribute="width" secondItem="QBi-Sl-cc1" secondAttribute="width" id="Le9-mj-7cg"/>
                                     <constraint firstAttribute="trailing" secondItem="3jx-1E-qdc" secondAttribute="trailing" id="aZP-ch-nK5"/>
                                     <constraint firstAttribute="bottom" secondItem="3jx-1E-qdc" secondAttribute="bottom" id="zEC-bX-Lox"/>

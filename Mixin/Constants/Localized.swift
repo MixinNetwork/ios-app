@@ -74,12 +74,12 @@ public class Localized {
     public static let PERMISSION_DENIED_PHOTO_LIBRARY = LocalizedString("permission_denied_photo_library", comment: "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.")
     public static let PERMISSION_DENIED_MICROPHONE = LocalizedString("permission_denied_microphone", comment: "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.")
     public static let TOAST_OPERATION_FAILED = LocalizedString("toast_operation_failed", comment: "The operation failed, please try again later")
-    public static let TOAST_ADDED = LocalizedString("toast_added", comment: "Added")
     public static func TOAST_ERROR(errorCode: Int, errorMessage: String) -> String {
         return String(format: LocalizedString("toast_error", comment: "ERROR %@: %@"), "\(errorCode)", errorMessage)
     }
-    public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Successfully copied to clipboard")
-    public static let TOAST_ADD_ASSET = LocalizedString("toast_add_asset", comment: "Successfully added selected assets")
+    public static let TOAST_COPIED = LocalizedString("toast_copied", comment: "Copied")
+    public static let TOAST_ADDED = LocalizedString("toast_added", comment: "Added")
+    public static let TOAST_SAVED = LocalizedString("toast_saved", comment: "Saved")
     public static let SCREEN_CAPTURED_PIN_LEAKING_HINT = LocalizedString("screen_captured_pin_leaking_hint", comment: "Screen recorder detected, PIN may be recorded.")
     public static func BIOMETRY_SUGGESTION(biometricType: String) -> String {
         return String(format: LocalizedString("biometry_suggestion", comment: " %@ is suggested."), biometricType)
@@ -343,7 +343,7 @@ public class Localized {
     // Wallet
     public static let WALLET_TITLE = LocalizedString("wallet_title", comment: "Wallet")
     public static let WALLET_TITLE_ADD_ASSET = LocalizedString("wallet_title_add_asset", comment: "Add asset")
-    public static let WALLET_ALREADY_HAD_THE_ASSET = LocalizedString("wallet_already_had_the_asset", comment: "You already had the asset")
+    public static let WALLET_ALREADY_HAD_THE_ASSET = LocalizedString("wallet_already_had_the_asset", comment: "Already had")
     public static let WALLET_TRANSFER_OUT = LocalizedString("wallet_transfer_out", comment: "Transfer Out")
     public static let TRANSFER_ERROR_BALANCE_INSUFFICIENT = LocalizedString("transfer_error_balance_insufficient", comment: "Insufficient balance")
     public static let TRANSFER_ERROR_FEE_INSUFFICIENT = LocalizedString("transfer_error_fee_insufficient", comment: "Insufficient transaction fee")

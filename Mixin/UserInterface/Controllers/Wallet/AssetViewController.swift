@@ -3,13 +3,13 @@ import UIKit
 class AssetViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableHeaderView: AssetTableHeaderView!
     
     private enum ReuseId {
         static let cell  = "snapshot"
         static let header = "header"
     }
     
-    private let tableHeaderView = AssetTableHeaderView()
     private let loadMoreThreshold = 20
     
     private var asset: AssetItem!
@@ -26,12 +26,8 @@ class AssetViewController: UIViewController {
         super.viewDidLoad()
         view.layoutIfNeeded()
         updateTableViewContentInset()
-        updateTableFooterView()
-        tableHeaderView.filterButton.addTarget(self, action: #selector(presentFilterWindow(_:)), for: .touchUpInside)
-        tableHeaderView.titleView.transferButton.addTarget(self, action: #selector(transfer(_:)), for: .touchUpInside)
-        tableHeaderView.titleView.depositButton.addTarget(self, action: #selector(deposit(_:)), for: .touchUpInside)
-        tableView.tableHeaderView = tableHeaderView
-        tableHeaderView.titleView.render(asset: asset)
+        updateTableHeaderFooterView()
+        tableHeaderView.render(asset: asset)
         tableHeaderView.sizeToFit()
         tableView.register(UINib(nibName: "SnapshotCell", bundle: .main), forCellReuseIdentifier: ReuseId.cell)
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
@@ -43,7 +39,7 @@ class AssetViewController: UIViewController {
                 return
             }
             weakSelf.tableView.reloadData()
-            weakSelf.updateTableFooterView()
+            weakSelf.updateTableHeaderFooterView()
         }
         snapshotDataSource.reloadFromLocal()
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
@@ -67,17 +63,17 @@ class AssetViewController: UIViewController {
         reloadAsset()
     }
     
-    @objc func presentFilterWindow(_ sender: Any) {
+    @IBAction func presentFilterWindow(_ sender: Any) {
         filterWindow.presentPopupControllerAnimated()
     }
     
-    @objc func transfer(_ sender: Any) {
+    @IBAction func transfer(_ sender: Any) {
         let vc = TransferPeerSelectionViewController.instance(asset: asset)
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    @objc func deposit(_ sender: Any) {
-        guard !tableHeaderView.titleView.depositButton.isBusy else {
+    @IBAction func deposit(_ sender: Any) {
+        guard !tableHeaderView.depositButton.isBusy else {
             return
         }
         let vc = DepositViewController.instance(asset: asset)
@@ -144,7 +140,6 @@ extension AssetViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
         cell.render(snapshot: snapshotDataSource.snapshots[indexPath.section][indexPath.row], asset: asset)
-        cell.renderDecorationViews(indexPath: indexPath, models: snapshotDataSource.snapshots)
         cell.delegate = self
         return cell
     }
@@ -194,7 +189,7 @@ extension AssetViewController: AssetFilterWindowDelegate {
         tableView.setContentOffset(.zero, animated: false)
         tableView.layoutIfNeeded()
         snapshotDataSource.setSort(sort, filter: filter)
-        updateTableFooterView()
+        updateTableHeaderFooterView()
     }
     
 }
@@ -205,7 +200,8 @@ extension AssetViewController: SnapshotCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return
         }
-        guard let userId = snapshotDataSource.snapshots[indexPath.section][indexPath.row].opponentUserId else {
+        let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
+        guard snapshot.type == SnapshotType.transfer.rawValue, let userId = snapshot.opponentUserId else {
             return
         }
         DispatchQueue.global().async {
@@ -242,14 +238,14 @@ extension AssetViewController {
                     return
                 }
                 UIView.performWithoutAnimation {
-                    weakSelf.tableHeaderView.titleView.render(asset: asset)
-                    weakSelf.updateTableFooterView()
+                    weakSelf.tableHeaderView.render(asset: asset)
+                    weakSelf.updateTableHeaderFooterView()
                 }
             }
         }
     }
     
-    private func updateTableFooterView() {
+    private func updateTableHeaderFooterView() {
         if snapshotDataSource.snapshots.isEmpty {
             tableHeaderView.transactionsHeaderView.isHidden = false
             noTransactionFooterView.frame.size.height = {

@@ -64,7 +64,7 @@ class SnapshotDataSource {
                 weakSelf.snapshots = snapshots
                 weakSelf.onReload?()
                 weakSelf.isLoading = false
-                if titles.isEmpty {
+                if filteredItemsCount < SnapshotDataSource.numberOfItemsPerPage {
                     weakSelf.loadMoreIfPossible()
                 }
             }
@@ -126,7 +126,7 @@ class SnapshotDataSource {
                     weakSelf.loadMoreRemoteSnapshotsIfNeeded()
                 }
                 weakSelf.isLoading = false
-                if titles.isEmpty {
+                if filteredItemsCount < SnapshotDataSource.numberOfItemsPerPage {
                     weakSelf.loadMoreIfPossible()
                 }
             }

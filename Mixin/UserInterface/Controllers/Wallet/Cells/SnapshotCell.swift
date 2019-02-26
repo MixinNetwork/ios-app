@@ -6,29 +6,22 @@ protocol SnapshotCellDelegate: class {
 
 class SnapshotCell: UITableViewCell {
     
-    static let height: CGFloat = 60
+    static let height: CGFloat = 50
     
-    @IBOutlet weak var shadowSafeContainerView: UIView!
     @IBOutlet weak var pendingDepositProgressView: UIView!
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var bottomShadowImageView: UIImageView!
-    @IBOutlet weak var selectionView: RoundCornerSelectionView!
-    @IBOutlet weak var separatorLineView: UIView!
+    @IBOutlet weak var amountLabel: InsetLabel!
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
     
     weak var delegate: SnapshotCellDelegate?
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        selectionView.setHighlighted(selected, animated: animated)
-    }
-    
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        super.setHighlighted(highlighted, animated: animated)
-        selectionView.setHighlighted(highlighted, animated: animated)
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        selectedBackgroundView = UIView(frame: bounds)
+        selectedBackgroundView!.backgroundColor = .modernCellSelection
+        amountLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
     }
     
     override func prepareForReuse() {
@@ -42,18 +35,11 @@ class SnapshotCell: UITableViewCell {
         delegate?.walletSnapshotCellDidSelectIcon(self)
     }
     
-    func render(snapshot: SnapshotItem, asset: AssetItem? = nil) {
-        switch snapshot.type {
-        case SnapshotType.deposit.rawValue, SnapshotType.pendingDeposit.rawValue:
-            iconImageView.image = UIImage(named: "Wallet/ic_deposit")
-        case SnapshotType.withdrawal.rawValue, SnapshotType.fee.rawValue, SnapshotType.rebate.rawValue:
-            iconImageView.image = UIImage(named: "Wallet/ic_withdrawal")
-        case SnapshotType.transfer.rawValue:
-            if let iconUrl = snapshot.opponentUserAvatarUrl, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
-                iconImageView.setImage(with: iconUrl, identityNumber: identityNumber, name: name)
-            }
-        default:
-            break
+    func render(snapshot: SnapshotItem, asset: AssetItem? = nil, showSymbol: Bool = false) {
+        if snapshot.type == SnapshotType.transfer.rawValue, let iconUrl = snapshot.opponentUserAvatarUrl, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
+            iconImageView.setImage(with: iconUrl, identityNumber: identityNumber, name: name)
+        } else {
+            iconImageView.image = UIImage(named: "Wallet/ic_transaction_external")
         }
         switch snapshot.type {
         case SnapshotType.deposit.rawValue:
@@ -92,26 +78,20 @@ class SnapshotCell: UITableViewCell {
             let multiplier = CGFloat(finished) / CGFloat(total)
             if abs(pendingDepositProgressConstraint.multiplier - multiplier) > 0.1 {
                 NSLayoutConstraint.deactivate([pendingDepositProgressConstraint])
-                pendingDepositProgressConstraint = pendingDepositProgressView.widthAnchor.constraint(equalTo: shadowSafeContainerView.widthAnchor, multiplier: multiplier)
+                pendingDepositProgressConstraint = pendingDepositProgressView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: multiplier)
                 NSLayoutConstraint.activate([pendingDepositProgressConstraint])
             }
         } else {
             pendingDepositProgressView.isHidden = true
         }
-    }
-    
-    func renderDecorationViews(indexPath: IndexPath, models: [[Any]]) {
-        let lastSection = models.count - 1
-        let lastIndexPath = IndexPath(row: models[lastSection].count - 1, section: lastSection)
-        if indexPath == lastIndexPath {
-            bottomShadowImageView.isHidden = false
-            selectionView.roundingCorners = [.bottomLeft, .bottomRight]
-        } else {
-            bottomShadowImageView.isHidden = true
-            selectionView.roundingCorners = []
+
+        if showSymbol {
+            guard let transactionType = titleLabel.text, let symbol = snapshot.assetSymbol else {
+                return
+            }
+
+            titleLabel.text = transactionType + " " + symbol
         }
-        separatorLineView.isHidden = models[indexPath.section].count == 1
-            || indexPath.row == models[indexPath.section].count - 1
     }
     
 }

@@ -3,14 +3,13 @@ import UIKit
 class TransactionViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var avatarImageView: AvatarImageView!
+    @IBOutlet weak var amountLabel: UILabel!
+    @IBOutlet weak var symbolLabel: InsetLabel!
+    @IBOutlet weak var usdValueLabel: UILabel!
     
-    private enum ReuseId {
-        static let top = "top"
-        static let middle = "middle"
-        static let bottom = "bottom"
-    }
+    private let cellReuseId = "cell"
     
-    private let tableHeaderView = AssetTitleView()
     private var asset: AssetItem!
     private var snapshot: SnapshotItem!
     private var contents: [(title: String, subtitle: String?)]!
@@ -18,19 +17,28 @@ class TransactionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layoutIfNeeded()
-        updateTableViewContentInset()
+        symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
+        if snapshot.type == SnapshotType.transfer.rawValue, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
+            avatarImageView.setImage(with: snapshot.opponentUserAvatarUrl ?? "", identityNumber: identityNumber, name: name)
+        } else {
+            avatarImageView.image = UIImage(named: "Wallet/ic_transaction_external_large")
+        }
+        amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
+        if snapshot.amount.hasMinusPrefix {
+            amountLabel.textColor = .walletRed
+        } else {
+            amountLabel.textColor = .walletGreen
+        }
+        let usdBalance = asset.priceUsd.doubleValue * snapshot.amount.doubleValue
+        if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
+            usdValueLabel.text = "≈ $" + localizedUSDBalance
+        } else {
+            usdValueLabel.text = nil
+        }
+        symbolLabel.text = snapshot.assetSymbol
         makeContents()
-        tableView.tableHeaderView = tableHeaderView
-        tableHeaderView.render(asset: asset, snapshot: snapshot)
-        tableHeaderView.sizeToFit()
         tableView.dataSource = self
         tableView.delegate = self
-    }
-    
-    @available(iOS 11.0, *)
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        updateTableViewContentInset()
     }
     
     class func instance(asset: AssetItem, snapshot: SnapshotItem) -> UIViewController {
@@ -59,15 +67,7 @@ extension TransactionViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let reuseId: String
-        if indexPath.row == 0 {
-            reuseId = ReuseId.top
-        } else if indexPath.row == contents.count - 1 {
-            reuseId = ReuseId.bottom
-        } else {
-            reuseId = ReuseId.middle
-        }
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseId) as! TransactionCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! TransactionCell
         cell.titleLabel.text = contents[indexPath.row].title
         cell.subtitleLabel.text = contents[indexPath.row].subtitle
         return cell
@@ -79,7 +79,6 @@ extension TransactionViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
         guard snapshot.type == SnapshotType.transfer.rawValue else {
             return
         }
@@ -122,14 +121,6 @@ extension TransactionViewController: UITableViewDelegate {
 }
 
 extension TransactionViewController {
-    
-    private func updateTableViewContentInset() {
-        if view.compatibleSafeAreaInsets.bottom < 1 {
-            tableView.contentInset.bottom = 10
-        } else {
-            tableView.contentInset.bottom = 0
-        }
-    }
     
     private func makeContents() {
         contents = []

@@ -58,10 +58,10 @@
 "permission_denied_camera" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
 "permission_denied_microphone" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "toast_operation_failed" = "The operation failed, please try again later";
-"toast_copied" = "Successfully copied to clipboard";
-"toast_add_asset" = "Successfully added selected assets";
-"permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
+"toast_copied" = "Copied";
 "toast_added" = "Added";
+"toast_saved" = "Saved";
+"permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
 "screen_captured_pin_leaking_hint" = "Screen recorder detected, PIN may be recorded.";
 "biometry_suggestion" = " %@ is suggested.";
@@ -262,7 +262,7 @@
 "wallet_title" = "Wallet";
 "wallet_title_withdrawal" = "Withdrawal";
 "wallet_title_add_asset" = "Add asset";
-"wallet_already_had_the_asset" = "You already had the asset";
+"wallet_already_had_the_asset" = "Already had";
 "wallet_transfer_out" = "Transfer Out";
 "wallet_symbol_other" = "Other";
 "wallet_password_verify_title" = "Old PIN";

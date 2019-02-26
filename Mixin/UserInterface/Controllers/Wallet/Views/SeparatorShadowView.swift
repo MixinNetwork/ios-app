@@ -21,8 +21,9 @@ class SeparatorShadowView: UIView {
     }
     
     private func prepare() {
+        clipsToBounds = true
         layer.addSublayer(shadowProviderLayer)
-        shadowProviderLayer.backgroundColor = UIColor.white.cgColor
+        shadowProviderLayer.backgroundColor = UIColor.red.cgColor
         shadowProviderLayer.shadowColor = UIColor(rgbValue: 0xC3C3C3).cgColor
         shadowProviderLayer.shadowOpacity = 0.2
         shadowProviderLayer.shadowOffset = CGSize(width: 0, height: 2)

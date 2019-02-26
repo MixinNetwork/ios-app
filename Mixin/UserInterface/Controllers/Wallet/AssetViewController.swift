@@ -201,7 +201,8 @@ extension AssetViewController: SnapshotCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return
         }
-        guard let userId = snapshotDataSource.snapshots[indexPath.section][indexPath.row].opponentUserId else {
+        let snapshot = snapshotDataSource.snapshots[indexPath.section][indexPath.row]
+        guard snapshot.type == SnapshotType.transfer.rawValue, let userId = snapshot.opponentUserId else {
             return
         }
         DispatchQueue.global().async {

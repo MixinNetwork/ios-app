@@ -556,7 +556,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="50" id="9Bq-OZ-R0P"/>
                                                 </constraints>
-                                                <state key="normal" image="ic_titlebar_back"/>
+                                                <state key="normal" image="ic_title_back"/>
                                                 <connections>
                                                     <action selector="backAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="FG6-cG-FYk"/>
                                                 </connections>
@@ -2419,7 +2419,7 @@
         <image name="ic_play" width="38" height="38"/>
         <image name="ic_sticker_frame" width="325" height="325"/>
         <image name="ic_sticker_normal" width="20" height="20"/>
-        <image name="ic_titlebar_back" width="44" height="44"/>
+        <image name="ic_title_back" width="9" height="17"/>
         <image name="ic_titlebar_close" width="44" height="44"/>
         <image name="ic_user_verified" width="14" height="14"/>
         <image name="ic_wallet_xin" width="40" height="40"/>

@@ -7,7 +7,12 @@ class GroupMemberCell: UITableViewCell {
     @IBOutlet weak var roleLabel: UILabel!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var verifiedImageView: UIImageView!
-    
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        selectedBackgroundView = UIView.createSelectedBackgroundView()
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         separatorInset.left = nameLabel.frame.origin.x

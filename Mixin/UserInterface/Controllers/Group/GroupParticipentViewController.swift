@@ -2,15 +2,10 @@ import UIKit
 
 class GroupParticipentViewController: UIViewController {
 
-    @IBOutlet weak var keywordTextField: UITextField!
+    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
     @IBOutlet weak var tableView: UITableView!
 
-    private let addMemberCellReuseId = "AddMember"
-    private let inviteLinkCellReuseId = "InviteLink"
     private let memberCellReuseId = "GroupMember"
-
-    private var addMemberCell: UITableViewCell!
-    private var inviteLinkCell: UITableViewCell!
     
     private var currentAccountRole = ""
     private var conversation: ConversationItem!
@@ -19,7 +14,7 @@ class GroupParticipentViewController: UIViewController {
     private var searchResult = [UserItem]()
 
     private var isSearching: Bool {
-        return !(keywordTextField.text ?? "").isEmpty
+        return !(searchBoxView.textField.text ?? "").isEmpty
     }
     private var hasAdminPrivileges: Bool {
         return currentAccountRole == ParticipantRole.ADMIN.rawValue
@@ -33,7 +28,8 @@ class GroupParticipentViewController: UIViewController {
         super.viewDidLoad()
         fetchParticipants()
         prepareTableView()
-        keywordTextField.delegate = self
+        searchBoxView.textField.delegate = self
+        searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: conversation.conversationId))
@@ -44,7 +40,7 @@ class GroupParticipentViewController: UIViewController {
     }
 
     @IBAction func searchAction(_ sender: Any) {
-        let keyword = (keywordTextField.text ?? "").uppercased()
+        let keyword = (searchBoxView.textField.text ?? "").uppercased()
         if keyword.isEmpty {
             searchResult = []
         } else {
@@ -81,6 +77,33 @@ class GroupParticipentViewController: UIViewController {
     
 }
 
+extension GroupParticipentViewController: ContainerViewControllerDelegate {
+
+    func barRightButtonTappedAction() {
+        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.GROUP_NAVIGATION_TITLE_ADD_MEMBER, style: .default, handler: { [weak self](_) in
+            guard let weakSelf = self else {
+                return
+            }
+            let vc = AddMemberViewController.instance(appendMembersToExistedGroupOfConversationId: weakSelf.conversation.conversationId)
+            weakSelf.navigationController?.pushViewController(vc, animated: true)
+        }))
+        alc.addAction(UIAlertAction(title: Localized.GROUP_NAVIGATION_TITLE_INVITE_LINK, style: .default, handler: { [weak self](_) in
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.navigationController?.pushViewController(InviteLinkViewController.instance(conversation: weakSelf.conversation), animated: true)
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        self.present(alc, animated: true, completion: nil)
+    }
+
+    func imageBarRightButton() -> UIImage? {
+        return R.image.ic_title_add()
+    }
+
+}
+
 // MARK: - UITableViewDataSource
 extension GroupParticipentViewController: UITableViewDataSource {
     
@@ -88,7 +111,7 @@ extension GroupParticipentViewController: UITableViewDataSource {
         if isSearching {
             return searchResult.count
         } else {
-            return showAdminActions ? participants.count + 2 : participants.count
+            return participants.count
         }
     }
     
@@ -100,16 +123,10 @@ extension GroupParticipentViewController: UITableViewDataSource {
             cell = participantCell
         } else {
             let showAdminActions = self.showAdminActions
-            if showAdminActions && indexPath.row == 0 {
-                cell = addMemberCell
-            } else if showAdminActions && indexPath.row == 1 {
-                cell = inviteLinkCell
-            } else {
-                let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
-                let participantCell = tableView.dequeueReusableCell(withIdentifier: memberCellReuseId) as! GroupMemberCell
-                participantCell.render(user: participants[idx])
-                cell = participantCell
-            }
+            let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
+            let participantCell = tableView.dequeueReusableCell(withIdentifier: memberCellReuseId) as! GroupMemberCell
+            participantCell.render(user: participants[idx])
+            cell = participantCell
         }
         return cell
     }
@@ -120,7 +137,7 @@ extension GroupParticipentViewController: UITableViewDataSource {
 extension GroupParticipentViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 80
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -133,12 +150,7 @@ extension GroupParticipentViewController: UITableViewDelegate {
             showMenuAction(participant: participant, indexPath: indexPath)
         } else {
             let showAdminActions = self.showAdminActions
-            if showAdminActions && indexPath.row == 0 {
-                let vc = AddMemberViewController.instance(appendMembersToExistedGroupOfConversationId: conversation.conversationId)
-                navigationController?.pushViewController(vc, animated: true)
-            } else if showAdminActions && indexPath.row == 1 {
-                navigationController?.pushViewController(InviteLinkViewController.instance(conversation: conversation), animated: true)
-            } else if let cell = tableView.cellForRow(at: indexPath) as? GroupMemberCell, !cell.loadingView.isAnimating {
+            if let cell = tableView.cellForRow(at: indexPath) as? GroupMemberCell, !cell.loadingView.isAnimating {
                 let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
                 let participant = participants[idx]
                 guard participant.userId != AccountAPI.shared.accountUserId else {
@@ -179,8 +191,6 @@ extension GroupParticipentViewController {
     
     private func prepareTableView() {
         tableView.register(UINib(nibName: "GroupMemberCell", bundle: .main), forCellReuseIdentifier: memberCellReuseId)
-        addMemberCell = tableView.dequeueReusableCell(withIdentifier: addMemberCellReuseId)
-        inviteLinkCell = tableView.dequeueReusableCell(withIdentifier: inviteLinkCellReuseId)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -203,9 +213,9 @@ extension GroupParticipentViewController {
                 }) {
                     weakSelf.currentAccountRole = my.role
                 }
-                weakSelf.searchAction(weakSelf.keywordTextField)
+                weakSelf.searchAction(weakSelf.searchBoxView.textField)
                 if weakSelf.searchResult.count == 0 {
-                    weakSelf.keywordTextField.text = ""
+                    weakSelf.searchBoxView.textField.text = ""
                     weakSelf.view.endEditing(true)
                     weakSelf.tableView.reloadData()
                 }
@@ -259,8 +269,8 @@ extension GroupParticipentViewController {
 extension GroupParticipentViewController: UITextFieldDelegate {
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        keywordTextField.text = nil
-        keywordTextField.resignFirstResponder()
+        searchBoxView.textField.text = nil
+        searchBoxView.textField.resignFirstResponder()
         tableView.reloadData()
         return false
     }

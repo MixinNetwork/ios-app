@@ -56,8 +56,9 @@ class AddPeopleViewController: UIViewController {
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         let windowHeight = AppDelegate.current.window!.bounds.height
+        self.searchButtonBottomConstraint.constant = windowHeight - endFrame.origin.y + 20
         UIView.animate(withDuration: 0.15) {
-            self.searchButtonBottomConstraint.constant = windowHeight - endFrame.origin.y
+            self.view.layoutIfNeeded()
         }
     }
     

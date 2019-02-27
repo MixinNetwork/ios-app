@@ -49,6 +49,16 @@ extension UIView {
     }
 }
 
+extension UIView {
+
+    static func createSelectedBackgroundView(backgroundColor: UIColor = .modernCellSelection) -> UIView {
+        let view = UIView()
+        view.backgroundColor = backgroundColor
+        return view
+    }
+
+}
+
 extension UIView.AnimationCurve {
     
     static let overdamped = UIView.AnimationCurve(rawValue: 7) ?? .easeOut

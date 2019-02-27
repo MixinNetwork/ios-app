@@ -7,9 +7,9 @@ class ContactViewController: UITableViewController {
     private var showPhoneContactTips = false
     private var phoneContactSections = [[PhoneContact]]()
     private var sectionIndexTitles = [String]()
-    private lazy var phoneContactWindow = PhoneContactWindow.instance()
     private lazy var myQRCodeWindow = QrcodeWindow.instance()
     private lazy var receiveMoneyWindow = QrcodeWindow.instance()
+    private lazy var userWindow = UserWindow.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -165,14 +165,12 @@ extension ContactViewController {
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
-        case 0:
+        case 0, 1:
             return CGFloat.leastNormalMagnitude
-        case 1:
-            return 10
         case 2:
-            return 30
+            return 40
         default:
-            return showPhoneContactTips ? 10 : (sectionIndexTitles.count > 0 ? 30 : 0)
+            return showPhoneContactTips ? CGFloat.leastNormalMagnitude : (sectionIndexTitles.count > 0 ? 40 : CGFloat.leastNormalMagnitude)
         }
     }
 
@@ -180,7 +178,7 @@ extension ContactViewController {
         if section == 3 && showPhoneContactTips {
             return 50
         }
-        return 10
+        return CGFloat.leastNormalMagnitude
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -188,7 +186,7 @@ extension ContactViewController {
         case 0:
             return 2
         case 1:
-            return 2
+            return 1
         case 2:
             return contacts.count
         default:
@@ -220,7 +218,6 @@ extension ContactViewController {
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: ContactQRCodeCell.cellIdentifier) as! ContactQRCodeCell
-                cell.render(separatorColor: tableView.separatorColor!)
                 if cell.delegate == nil {
                     cell.delegate = self
                 }
@@ -228,7 +225,9 @@ extension ContactViewController {
             }
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: ContactNavCell.cellIdentifier) as! ContactNavCell
-            cell.render(row: indexPath.row)
+            if cell.delegate == nil {
+                cell.delegate = self
+            }
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: PeerCell.cellIdentifier) as! PeerCell
@@ -255,26 +254,18 @@ extension ContactViewController {
         
         switch indexPath.section {
         case 0:
-            if indexPath.row == 0 {
-                navigationController?.pushViewController(MyProfileViewController.instance(), animated: true)
+            guard let account = AccountAPI.shared.account else {
+                return
             }
+            userWindow.updateUser(user: UserItem.createUser(from: account))
+            userWindow.presentView()
         case 1:
-            switch indexPath.row {
-            case 0:
-                navigationController?.pushViewController(AddMemberViewController.instance(), animated: true)
-            case 1:
-                navigationController?.pushViewController(AddPeopleViewController.instance(), animated: true)
-            default:
-                break
-            }
+            break
         case 2:
             navigationController?.pushViewController(ConversationViewController.instance(ownerUser: contacts[indexPath.row]), animated: true)
         default:
             if showPhoneContactTips {
                 requestAccessPhoneContactAction()
-            } else {
-                let phoneContact = phoneContactSections[indexPath.section - 3][indexPath.row]
-                phoneContactWindow.updatePhoneContact(phoneContact: phoneContact).presentView()
             }
             break
         }
@@ -295,6 +286,18 @@ extension ContactViewController: ContactQRCodeCellDelegate {
             myQRCodeWindow.render(title: Localized.CONTACT_MY_QR_CODE, account: account, description: Localized.MYQRCODE_PROMPT, qrcode: account.code_url, qrcodeForegroundColor: UIColor.systemTint)
             myQRCodeWindow.presentView()
         }
+    }
+
+}
+
+extension ContactViewController: ContactNavCellDelegate {
+
+    func newGroupAction() {
+        navigationController?.pushViewController(AddMemberViewController.instance(), animated: true)
+    }
+
+    func addContactAction() {
+        navigationController?.pushViewController(AddPeopleViewController.instance(), animated: true)
     }
 
 }

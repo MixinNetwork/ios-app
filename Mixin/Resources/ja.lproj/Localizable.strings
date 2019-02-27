@@ -99,13 +99,13 @@
 "contact_qr_code_summary" = "友人のMixin QRコードをスキャン";
 "contact_invite_title" = "友達を招待";
 "contact_invite_summary" = "私の招待コードは %@";
-"contact_invite" = "こんにちは、Mixin Messenger を使用してチャットします。 こちらからダウンロードしてください: https://mixin.one .";
+"contact_invite" = "こんにちは、Mixin Messenger を使用してチャットします。 こちらからダウンロードしてください: https://mixin.one/messenger";
 "contact_profile_title" = "私のプロフィール";
 "contact_phone_contact" = "連絡先をアップロード";
 "contact_phone_contact_summary" = "他のMixinの友達を見つけるために携帯の連絡先をアップロードする.";
 "contact_my_identity_number" = "私のMixin ID: %@";
 "contact_error_compose_avatar" = "アバターを作成できませんでした。 代わりに別の写真を試してください。";
-"contact_phone_contact_invite" = "Mixinに招待";
+"contact_phone_contact_invite" = "招待";
 "contact_identity_number" = "Mixin ID: %@";
 "contact_mobile" = "携帯: %@";
 "contact_search_not_found" = "ユーザーが見つかりません";
@@ -125,6 +125,7 @@
 "home_start_messaging" = "メッセージングを開始";
 "home_cell_action_pin" = "Pin";
 "home_cell_action_unpin" = "Unpin";
+"home_title" = "チャット";
 
 // Chat
 "chat_message_menu_reply" = "返信";
@@ -414,7 +415,8 @@
 "profile_full_name" = "名前";
 "profile_my_qrcode" = "私のQRコード";
 "profile_my_invitation_code" = "私の招待コード";
-"profile_change_number" = "変更番号";
+"profile_change_number" = "変更電話番号";
+"profile_change_avatar" = "プロフィール写真の変更";
 "profile_change_number_confirmation" = "電話番号を変更しますか？";
 "profile_change_number_succeeded" = "電話番号を変更しました";
 "profile_change_number_verify_pin" = "PINを確認";

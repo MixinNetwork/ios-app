@@ -1,49 +1,66 @@
 import UIKit
+import Bugsnag
 
 class NewGroupViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var groupImageView: CornerImageView!
+    @IBOutlet weak var participentLabel: UILabel!
+    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var createButton: RoundedButton!
+    
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
 
-    private let groupNameCellReuseId = "GroupName"
-    private let groupMemberCellReuseId = "GroupMember"
     private let conversationId = UUID().uuidString.lowercased()
-
-    private var rightButton: StateResponsiveButton?
-    private var groupNameCell: GroupNameCell!
-    private var staticCells: [UITableViewCell]!
     private var members = [GroupUser]()
 
     private var groupName: String {
-        return groupNameCell.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UINib(nibName: "GroupMemberCell", bundle: .main), forCellReuseIdentifier: groupMemberCellReuseId)
-        groupNameCell = tableView.dequeueReusableCell(withIdentifier: groupNameCellReuseId) as? GroupNameCell
-        staticCells = [groupNameCell]
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.tableFooterView = UIView()
 
-        groupNameCell.textField.addTarget(self, action: #selector(nameChangedAction(_:)), for: .editingChanged)
-        groupNameCell.textField.becomeFirstResponder()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        nameTextField.addTarget(self, action: #selector(nameChangedAction(_:)), for: .editingChanged)
+        participentLabel.text = Localized.GROUP_TITLE_MEMBERS(count: "\(members.count)")
+        loadGroupIcon()
+        nameTextField.becomeFirstResponder()
     }
 
     @objc func nameChangedAction(_ sender: Any) {
-        rightButton?.isEnabled = !groupName.isEmpty
+        createButton.isEnabled = !groupName.isEmpty
     }
 
-    @IBAction func popAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
+        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+        let windowHeight = AppDelegate.current.window!.bounds.height
+        self.bottomConstraint.constant = windowHeight - endFrame.origin.y + 20
+        UIView.animate(withDuration: 0.15) {
+            self.view.layoutIfNeeded()
+        }
     }
-    
-    private func createAction() {
-        guard let rightButton = self.rightButton else {
+
+    private func loadGroupIcon() {
+        let participants: [ParticipantUser] = members.map { (user) in
+            return ParticipantUser.createParticipantUser(conversationId: conversationId, user: user)
+        }
+        DispatchQueue.global().async { [weak self] in
+            guard let groupImage = UIImage.createGroupImage(participants: participants) else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                self?.groupImageView.image = groupImage
+            }
+        }
+    }
+
+    @IBAction func createAction(_ sender: Any) {
+        guard !createButton.isBusy else {
             return
         }
 
-        rightButton.isBusy = true
+        createButton.isBusy = true
 
         let participants = members.map {
             ParticipantRequest(userId: $0.userId, role: "")
@@ -55,14 +72,43 @@ class NewGroupViewController: UIViewController {
             }
             switch result {
             case let .success(response):
+                weakSelf.saveGroupImage()
                 weakSelf.saveConversation(conversation: response)
             case .failure:
                 if !NetworkManager.shared.isReachable {
                     weakSelf.saveOfflineConversation()
                 } else {
-                    weakSelf.rightButton?.isBusy = false
+                    weakSelf.createButton.isBusy = false
                 }
             }
+        }
+    }
+    
+    private func saveGroupImage() {
+        guard let groupImage = groupImageView.image else {
+            return
+        }
+
+        let participantIds: [String] = members.map { (member) in
+            if member.avatarUrl.isEmpty {
+                return String(member.fullName.prefix(1))
+            } else {
+                return member.avatarUrl
+            }
+        }
+        let imageFile = conversationId + "-" + participantIds.joined().md5() + ".png"
+        let imageUrl = MixinFile.groupIconsUrl.appendingPathComponent(imageFile)
+        
+        guard !FileManager.default.fileExists(atPath: imageUrl.path) else {
+            return
+        }
+
+        do {
+            if let data = groupImage.pngData() {
+                try data.write(to: imageUrl)
+            }
+        } catch {
+            Bugsnag.notifyError(error)
         }
     }
 
@@ -85,7 +131,7 @@ class NewGroupViewController: UIViewController {
         DispatchQueue.global().async { [weak self] in
             guard ConversationDAO.shared.createConversation(conversation: conversation, targetStatus: .SUCCESS) else {
                 DispatchQueue.main.async {
-                    self?.rightButton?.isBusy = false
+                    self?.createButton.isBusy = false
                 }
                 return
             }
@@ -104,82 +150,4 @@ class NewGroupViewController: UIViewController {
         return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_NEW_GROUP)
     }
 
-}
-
-extension NewGroupViewController: ContainerViewControllerDelegate {
-
-    func barRightButtonTappedAction() {
-        createAction()
-    }
-
-    func textBarRightButton() -> String? {
-        return Localized.GROUP_BUTTON_TITLE_CREATE
-    }
-
-    func prepareBar(rightButton: StateResponsiveButton) {
-        self.rightButton = rightButton
-    }
-
-}
-
-extension NewGroupViewController: UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return staticCells.count
-        } else {
-            return members.count
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            return staticCells[indexPath.row]
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: groupMemberCellReuseId) as! GroupMemberCell
-            cell.render(user: members[indexPath.row])
-            return cell
-        }
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-
-}
-
-extension NewGroupViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0:
-            return indexPath.row == 0 ? 60 : 44
-        default:
-            return 60
-        }
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? .leastNormalMagnitude : 20
-    }
-
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 10
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        guard indexPath.section == 0 else {
-            return
-        }
-
-        if indexPath.row == 0 {
-            changeNameAction()
-        }
-    }
-
-    private func changeNameAction() {
-        groupNameCell.textField.becomeFirstResponder()
-    }
-    
 }

@@ -3,20 +3,22 @@ import MobileCoreServices
 import RSKImageCropper
 import Photos
 
-protocol ImagePickerControllerDelegate {
+protocol ImagePickerControllerDelegate: class {
     func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage)
 }
 
 class ImagePickerController: NSObject {
     
-    weak var viewController: (UIViewController & ImagePickerControllerDelegate)?
+    weak var viewController: UIViewController!
+    weak var delegate: ImagePickerControllerDelegate!
     var initialCameraPosition = UIImagePickerController.CameraDevice.rear
     var cropImageAfterPicked = false
     
-    init(initialCameraPosition: UIImagePickerController.CameraDevice, cropImageAfterPicked: Bool, parent: (UIViewController & ImagePickerControllerDelegate)) {
+    init(initialCameraPosition: UIImagePickerController.CameraDevice, cropImageAfterPicked: Bool, parent: UIViewController, delegate: ImagePickerControllerDelegate) {
         self.initialCameraPosition = initialCameraPosition
         self.cropImageAfterPicked = cropImageAfterPicked
         self.viewController = parent
+        self.delegate = delegate
     }
     
     private lazy var selectSourceController: UIAlertController = {
@@ -100,7 +102,7 @@ extension ImagePickerController: UIImagePickerControllerDelegate {
                 })
             } else {
                 picker.dismiss(animated: true, completion: nil)
-                weakSelf.viewController?.imagePickerController(weakSelf, didPickImage: image)
+                weakSelf.delegate?.imagePickerController(weakSelf, didPickImage: image)
             }
         }
         
@@ -120,7 +122,7 @@ extension ImagePickerController: UIImagePickerControllerDelegate {
 extension ImagePickerController: RSKImageCropViewControllerDelegate {
     func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat) {
         controller.dismiss(animated: true, completion: nil)
-        viewController?.imagePickerController(self, didPickImage: croppedImage)
+        delegate?.imagePickerController(self, didPickImage: croppedImage)
     }
 
  

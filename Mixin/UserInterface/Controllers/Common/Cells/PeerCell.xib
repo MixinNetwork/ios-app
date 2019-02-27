@@ -19,16 +19,21 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="quT-F3-GTi">
-                        <rect key="frame" x="36" y="0.0" width="131" height="69.5"/>
+                        <rect key="frame" x="36" y="0.0" width="134.5" height="69.5"/>
                         <subviews>
                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1gI-O1-4ow">
-                                <rect key="frame" x="-12" y="0.0" width="12" height="69.5"/>
+                                <rect key="frame" x="-28" y="0.0" width="28" height="69.5"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_row_selected" translatesAutoresizingMaskIntoConstraints="NO" id="SO6-tG-AG7">
-                                        <rect key="frame" x="0.0" y="27" width="0.0" height="16"/>
-                                    </imageView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="brw-IY-lXs" customClass="CheckmarkView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="27" width="16" height="16"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="16" id="KTQ-VN-SUw"/>
+                                            <constraint firstAttribute="width" constant="16" id="uD7-8O-1ja"/>
+                                        </constraints>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pDu-I0-3LC">
-                                        <rect key="frame" x="8" y="0.0" width="4" height="69.5"/>
+                                        <rect key="frame" x="24" y="0.0" width="4" height="69.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="4" id="rfJ-Be-0wa"/>
@@ -56,13 +61,13 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OVER140" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRI-4Q-epo">
-                                <rect key="frame" x="66" y="26" width="65" height="18"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <rect key="frame" x="66" y="25" width="68.5" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_verified" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-cl-1PO">
-                                <rect key="frame" x="131" y="28" width="0.0" height="14"/>
+                                <rect key="frame" x="134.5" y="28" width="0.0" height="14"/>
                             </imageView>
                         </subviews>
                     </stackView>
@@ -77,19 +82,18 @@
             </tableViewCellContentView>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="checkmarkView" destination="brw-IY-lXs" id="I5X-tI-kNu"/>
                 <outlet property="contentStackViewLeadingConstraint" destination="me3-4D-vUq" id="kID-Rg-v8o"/>
                 <outlet property="contentStackViewTrailingConstraint" destination="30h-Eo-R6l" id="pnu-SV-G8k"/>
                 <outlet property="iconImageView" destination="iFO-O2-lo4" id="ewo-BB-pP1"/>
                 <outlet property="identityImageView" destination="Xv7-cl-1PO" id="vFw-6d-acd"/>
                 <outlet property="nameLabel" destination="jRI-4Q-epo" id="Tmq-xU-6cf"/>
-                <outlet property="selectionImageView" destination="SO6-tG-AG7" id="Dzu-Ra-YE0"/>
                 <outlet property="selectionView" destination="1gI-O1-4ow" id="zp2-lL-9mp"/>
             </connections>
             <point key="canvasLocation" x="-127.5" y="-98"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="ic_row_selected" width="16" height="16"/>
         <image name="ic_user_verified" width="14" height="14"/>
     </resources>
 </document>

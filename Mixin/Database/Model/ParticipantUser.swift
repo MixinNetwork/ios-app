@@ -27,4 +27,9 @@ extension ParticipantUser {
         return ParticipantUser(conversationId: conversationId, role: "", userId: user.userId, userFullName: user.fullName, userAvatarUrl: user.avatarUrl, userIdentityNumber: user.identityNumber)
     }
 
+    static func createParticipantUser(conversationId: String, user: GroupUser) -> ParticipantUser {
+        return ParticipantUser(conversationId: conversationId, role: "", userId: user.userId, userFullName: user.fullName, userAvatarUrl: user.avatarUrl, userIdentityNumber: user.identityNumber)
+    }
+
+
 }

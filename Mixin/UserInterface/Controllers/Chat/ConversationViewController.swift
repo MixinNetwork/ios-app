@@ -103,7 +103,7 @@ class ConversationViewController: UIViewController {
     private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     
-    private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
+    private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
     private lazy var lastInputWrapperBottomConstant = view.compatibleSafeAreaInsets.bottom
@@ -654,7 +654,10 @@ class ConversationViewController: UIViewController {
             } else if message.category.hasSuffix("_CONTACT"), let shareUserId = message.sharedUserId {
                 makeInputTextViewResignFirstResponderIfItIs()
                 if shareUserId == AccountAPI.shared.accountUserId {
-                    navigationController?.pushViewController(withBackRoot: MyProfileViewController.instance())
+                    guard let account = AccountAPI.shared.account else {
+                        return
+                    }
+                    UserWindow.instance().updateUser(user: UserItem.createUser(from: account)).presentView()
                 } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
                     UserWindow.instance().updateUser(user: user).presentView()
                 }

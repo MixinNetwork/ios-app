@@ -101,13 +101,13 @@
 "contact_qr_code_summary" = "扫描好友的二维码";
 "contact_invite_title" = "邀请好友";
 "contact_invite_summary" = "我的邀请码 %@";
-"contact_invite" = "我正在使用 Mixin 聊天。下载：https://mixin.one .";
+"contact_invite" = "我正在使用 Mixin 聊天。下载：https://mixin.one/messenger";
 "contact_profile_title" = "我的";
 "contact_phone_contact" = "上传通讯录找好友";
 "contact_phone_contact_summary" = "上传你的手机通讯录，如果你的通讯录中有朋友已经注册了 Mixin，系统会帮你自动添加为好友";
 "contact_my_identity_number" = "我的 Mixin ID: %@";
 "contact_error_compose_avatar" = "头像解析失败，请尝试使用其他图片。";
-"contact_phone_contact_invite" = "邀请至 Mixin";
+"contact_phone_contact_invite" = "邀请";
 "contact_identity_number" = "Mixin ID: %@";
 "contact_mobile" = "手机号: %@";
 "contact_search_not_found" = "找不到这个用户";
@@ -125,6 +125,7 @@
 // Home
 "home_start_messaging_guide" = "你可以与你的 Mixin 好友一起聊天。";
 "home_start_messaging" = "开始聊天";
+"home_title" = "聊天";
 
 // Chat
 "chat_message_menu_reply" = "回复";
@@ -418,6 +419,7 @@
 "profile_my_qrcode" = "我的二维码";
 "profile_my_invitation_code" = "我的邀请码";
 "profile_change_number" = "更换手机号";
+"profile_change_avatar" = "更改头像";
 "profile_change_number_confirmation" = "是否更换手机号？";
 "profile_change_number_succeeded" = "更换手机号成功";
 "profile_change_number_verify_pin" = "验证钱包密码";

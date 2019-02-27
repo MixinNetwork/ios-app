@@ -11,18 +11,9 @@ protocol ContactQRCodeCellDelegate: class {
 class ContactQRCodeCell: UITableViewCell {
 
     static let cellIdentifier = "cell_identifier_qr_code"
-    static let cellHeight: CGFloat = 60
+    static let cellHeight: CGFloat = 66
 
     weak var delegate: ContactQRCodeCellDelegate?
-
-    @IBOutlet weak var separatorView: UIView!
-    
-    func render(separatorColor: UIColor?) {
-        guard let color = separatorColor else {
-            return
-        }
-        separatorView.backgroundColor = color
-    }
 
     @IBAction func receiveMoneyAction(_ sender: Any) {
         delegate?.receiveMoneyAction()

@@ -102,13 +102,13 @@
 "contact_qr_code_summary" = "Scan a friend's Mixin QR Code";
 "contact_invite_title" = "Invite People";
 "contact_invite_summary" = "My invitation code %@";
-"contact_invite" = "Hey, I'm using Mixin Messenger to chat. Download it here: https://mixin.one .";
+"contact_invite" = "Hey, I'm using Mixin Messenger to chat. Download it here: https://mixin.one/messenger";
 "contact_profile_title" = "My Profile";
 "contact_phone_contact" = "Upload Contacts";
 "contact_phone_contact_summary" = "Upload mobile contacts to find other Mixin friends.";
 "contact_my_identity_number" = "My Mixin ID: %@";
 "contact_error_compose_avatar" = "Failed to compose avatar. Try another picture instead.";
-"contact_phone_contact_invite" = "Invite to Mixin";
+"contact_phone_contact_invite" = "Invite";
 "contact_identity_number" = "Mixin ID: %@";
 "contact_mobile" = "Mobile: %@";
 "contact_search_not_found" = "user not found";
@@ -128,6 +128,7 @@
 "home_start_messaging" = "Start Messaging";
 "home_cell_action_pin" = "Pin";
 "home_cell_action_unpin" = "Unpin";
+"home_title" = "Chats";
 
 // Chat
 "chat_message_menu_reply" = "Reply";
@@ -253,7 +254,7 @@
 "group_menu_delete" = "Delete Chat";
 "group_menu_exit" = "Delete and Exit";
 "group_menu_participants" = "Participants";
-"group_title_members" = "%@ Group members";
+"group_title_members" = "%@ Participants";
 
 "code_recognition_fail_title" = "Unrecognized codes";
 "code_recognition_fail_summary" = "This codes doesn't match any Mixin groups or users.";
@@ -418,7 +419,8 @@
 "profile_full_name" = "Name";
 "profile_my_qrcode" = "My QR Code";
 "profile_my_invitation_code" = "My Invitation Code";
-"profile_change_number" = "Change Number";
+"profile_change_avatar" = "Change Profile Photo";
+"profile_change_number" = "Change Phone Number";
 "profile_change_number_confirmation" = "Do you want to change the phone number?";
 "profile_change_number_succeeded" = "Successfully changed phone number";
 "profile_change_number_verify_pin" = "Verify PIN";

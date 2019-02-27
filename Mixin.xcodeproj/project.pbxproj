@@ -514,7 +514,6 @@
 		DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D941FF7C2B6000875BD /* ResendData.swift */; };
 		DFB37D9F1FF94864000875BD /* RotateSignedPreKeyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */; };
 		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
-		DFB961441FA85F4B00F0922E /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB961431FA85F4B00F0922E /* MyProfileViewController.swift */; };
 		DFB9B3981FAAB8B9009503CE /* PhoneContactHeaderFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB9B3971FAAB8B9009503CE /* PhoneContactHeaderFooter.xib */; };
 		DFB9B39A1FAB01E6009503CE /* MixinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3991FAB01E6009503CE /* MixinNavigationController.swift */; };
 		DFB9B3A11FAB2B3E009503CE /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3A01FAB2B3E009503CE /* BaseViewController.swift */; };
@@ -569,8 +568,7 @@
 		DFEE215E200CAE8600D9B3F7 /* AuthorizationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEE215D200CAE8600D9B3F7 /* AuthorizationResponse.swift */; };
 		DFEEE6F11FE14F44001CCFB5 /* RelationshipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEEE6F01FE14F44001CCFB5 /* RelationshipRequest.swift */; };
 		DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF1AD7B22254C6E0087173D /* R.generated.swift */; };
-		DFF21455209A9F8D00612234 /* PhoneContactWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF21454209A9F8D00612234 /* PhoneContactWindow.swift */; };
-		DFF21457209AB2FC00612234 /* PhoneContactWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFF21456209AB2FC00612234 /* PhoneContactWindow.xib */; };
+		DFF1AD7E22256D0C0087173D /* ShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF1AD7D22256D0C0087173D /* ShadowImageView.swift */; };
 		DFF21459209ABA6500612234 /* GroupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF21458209ABA6500612234 /* GroupWindow.swift */; };
 		DFF2145B209ABBB400612234 /* GroupWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFF2145A209ABBB400612234 /* GroupWindow.xib */; };
 		DFF2145D209AC7D400612234 /* ConerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF2145C209AC7D400612234 /* ConerLabel.swift */; };
@@ -1145,7 +1143,6 @@
 		DFB37D941FF7C2B6000875BD /* ResendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendData.swift; sourceTree = "<group>"; };
 		DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateSignedPreKeyJob.swift; sourceTree = "<group>"; };
 		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
-		DFB961431FA85F4B00F0922E /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		DFB9B3971FAAB8B9009503CE /* PhoneContactHeaderFooter.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactHeaderFooter.xib; sourceTree = "<group>"; };
 		DFB9B3991FAB01E6009503CE /* MixinNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinNavigationController.swift; sourceTree = "<group>"; };
 		DFB9B3A01FAB2B3E009503CE /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -1201,8 +1198,7 @@
 		DFEE215D200CAE8600D9B3F7 /* AuthorizationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationResponse.swift; sourceTree = "<group>"; };
 		DFEEE6F01FE14F44001CCFB5 /* RelationshipRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelationshipRequest.swift; sourceTree = "<group>"; };
 		DFF1AD7B22254C6E0087173D /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
-		DFF21454209A9F8D00612234 /* PhoneContactWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactWindow.swift; sourceTree = "<group>"; };
-		DFF21456209AB2FC00612234 /* PhoneContactWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactWindow.xib; sourceTree = "<group>"; };
+		DFF1AD7D22256D0C0087173D /* ShadowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowImageView.swift; sourceTree = "<group>"; };
 		DFF21458209ABA6500612234 /* GroupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupWindow.swift; sourceTree = "<group>"; };
 		DFF2145A209ABBB400612234 /* GroupWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupWindow.xib; sourceTree = "<group>"; };
 		DFF2145C209AC7D400612234 /* ConerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConerLabel.swift; sourceTree = "<group>"; };
@@ -1647,8 +1643,6 @@
 				DF016B2A2096BDB100B8FFDE /* UserWindow.xib */,
 				DFF21458209ABA6500612234 /* GroupWindow.swift */,
 				DFF2145A209ABBB400612234 /* GroupWindow.xib */,
-				DFF21454209A9F8D00612234 /* PhoneContactWindow.swift */,
-				DFF21456209AB2FC00612234 /* PhoneContactWindow.xib */,
 				DF6CF2E8221FDE5C00B65294 /* QrcodeWindow.swift */,
 				DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */,
 				7BF5D02A2170B8EA0062EF14 /* AssetFilterWindow.swift */,
@@ -1935,6 +1929,7 @@
 			children = (
 				DF768562200647CC0055F3FF /* BouncingButton.swift */,
 				7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */,
+				DFF1AD7D22256D0C0087173D /* ShadowImageView.swift */,
 				DF6175B3222026FD00624609 /* AvatarShadowImageView.swift */,
 				7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */,
 				7B5FEE3D2101AA9A0008321F /* ScreenSizeCompatibleLayoutConstraint.swift */,
@@ -2246,7 +2241,6 @@
 			children = (
 				DFD294391FA7066500FADAAD /* Cells */,
 				DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */,
-				DFB961431FA85F4B00F0922E /* MyProfileViewController.swift */,
 				7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */,
 				DF46B4041FA9B48500243A8B /* ContactsManager.swift */,
 				7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */,
@@ -2537,7 +2531,6 @@
 				7BEC4DF121A7D054003336F2 /* WalletAssetCell.xib in Resources */,
 				7B95D52D21743EEF00C95281 /* TransactionsFilterConditionCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
-				DFF21457209AB2FC00612234 /* PhoneContactWindow.xib in Resources */,
 				DF8CECF41FC425F700E40064 /* BlockUserCell.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
@@ -2728,7 +2721,6 @@
 				7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */,
 				273FACBB205FB9A800513327 /* SignedPreKeyStore.swift in Sources */,
 				7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */,
-				DFF21455209A9F8D00612234 /* PhoneContactWindow.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
@@ -2972,6 +2964,7 @@
 				7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
 				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
+				DFF1AD7E22256D0C0087173D /* ShadowImageView.swift in Sources */,
 				DFF353001FEE516F00058453 /* Asset.swift in Sources */,
 				DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */,
 				273FACB7205FB9A800513327 /* SignalStore.swift in Sources */,
@@ -3045,7 +3038,6 @@
 				DF7A40292086EF2F0073E43C /* APIError.swift in Sources */,
 				DFCC433E206B53A5006F50BE /* AccountRequest.swift in Sources */,
 				DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */,
-				DFB961441FA85F4B00F0922E /* MyProfileViewController.swift in Sources */,
 				7B331B6D21B10349000370E9 /* LoadMoreSnapshotsJob.swift in Sources */,
 				7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */,
 				DF2A3CD82016DC860095F024 /* Sticker.swift in Sources */,

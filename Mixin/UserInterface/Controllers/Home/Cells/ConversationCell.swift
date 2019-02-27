@@ -16,33 +16,15 @@ class ConversationCell: UITableViewCell {
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
 
-    private var isShowUnread = false
-
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        let view = UIView()
-        view.backgroundColor = .modernCellSelection
-        selectedBackgroundView = view
+        selectedBackgroundView = UIView.createSelectedBackgroundView()
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarView.prepareForReuse()
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        if isShowUnread {
-            unreadLabel.isHidden = selected
-        }
-    }
-
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        super.setHighlighted(highlighted, animated: animated)
-        if isShowUnread {
-            unreadLabel.isHidden = highlighted
-        }
     }
 
     func render(item: ConversationItem) {
@@ -139,17 +121,16 @@ class ConversationCell: UITableViewCell {
             }
         }
 
-        isShowUnread = item.unseenMessageCount > 0
         if item.unseenMessageCount > 0 {
             unreadLabel.isHidden = false
             unreadLabel.text = "\(item.unseenMessageCount)"
             pinImageView.isHidden = true
+            muteImageView.isHidden = true
         } else {
             unreadLabel.isHidden = true
             pinImageView.isHidden = item.pinTime == nil
+            muteImageView.isHidden = !item.isMuted
         }
-
-        muteImageView.isHidden = !item.isMuted
     }
 
     private func showMessageIndicate(conversation: ConversationItem) {

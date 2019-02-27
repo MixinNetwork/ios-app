@@ -196,26 +196,16 @@ extension UrlWindow {
     }
 
     private func presentUser(user: UserItem, clearNavigationStack: Bool, refreshUser: Bool = true) {
-        if user.userId == AccountAPI.shared.accountUserId {
-            dismissPopupControllerAnimated()
-            let vc = MyProfileViewController.instance()
-            if clearNavigationStack {
-                UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
-            } else {
-                UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
-            }
-        } else {
-            containerView.addSubview(userView)
-            userView.snp.makeConstraints({ (make) in
-                make.edges.equalToSuperview()
-            })
-            userView.updateUser(user: user, refreshUser: refreshUser, superView: self)
-            successHandler()
-            contentHeightConstraint.constant = 0
-            UIView.animate(withDuration: 0.15, animations: {
-                self.layoutIfNeeded()
-            })
-        }
+        containerView.addSubview(userView)
+        userView.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+        userView.updateUser(user: user, refreshUser: refreshUser, superView: self)
+        successHandler()
+        contentHeightConstraint.constant = 0
+        UIView.animate(withDuration: 0.15, animations: {
+            self.layoutIfNeeded()
+        })
     }
     
     private func autoDismissWindow() {

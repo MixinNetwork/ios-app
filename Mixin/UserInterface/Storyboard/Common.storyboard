@@ -35,17 +35,17 @@
                                             <action selector="backAction:" destination="wHN-no-HTy" eventType="touchUpInside" id="WJd-HZ-xyu"/>
                                         </connections>
                                     </button>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="icw-0n-iSf">
-                                        <rect key="frame" x="54" y="10" width="261" height="24"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="icw-0n-iSf">
+                                        <rect key="frame" x="54" y="10.5" width="261" height="23"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Crossle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ABp-yv-qRY">
-                                                <rect key="frame" x="0.0" y="0.0" width="69.5" height="24"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                <rect key="frame" x="97" y="0.0" width="67.5" height="23"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
                                                 <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWA-GK-Nf0">
-                                                <rect key="frame" x="0.0" y="0.0" width="42.5" height="0.0"/>
+                                                <rect key="frame" x="109.5" y="0.0" width="42.5" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -53,10 +53,9 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcg-t3-GeH" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="325" y="-6" width="50" height="56"/>
+                                        <rect key="frame" x="311" y="0.0" width="64" height="44"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="56" id="BEv-5s-60I"/>
-                                            <constraint firstAttribute="width" constant="50" id="L2P-22-Ntf"/>
+                                            <constraint firstAttribute="width" constant="64" id="L2P-22-Ntf"/>
                                         </constraints>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal">
@@ -80,6 +79,7 @@
                                     <constraint firstAttribute="trailing" secondItem="icw-0n-iSf" secondAttribute="trailing" constant="60" id="ocg-2D-FJ0"/>
                                     <constraint firstItem="gcg-t3-GeH" firstAttribute="centerY" secondItem="y4k-Xv-8tX" secondAttribute="centerY" id="qlY-MA-hpu"/>
                                     <constraint firstAttribute="trailing" secondItem="gcg-t3-GeH" secondAttribute="trailing" id="uCO-kR-ANg"/>
+                                    <constraint firstItem="gcg-t3-GeH" firstAttribute="height" secondItem="y4k-Xv-8tX" secondAttribute="height" id="yI9-Y9-fbV"/>
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="eja-ld-qWL" customClass="ConnectionHintView" customModule="Mixin" customModuleProvider="target">
@@ -109,7 +109,6 @@
                         <outlet property="rightButton" destination="gcg-t3-GeH" id="oEA-EI-bG6"/>
                         <outlet property="rightButtonTrailingConstraint" destination="uCO-kR-ANg" id="bbb-HA-omX"/>
                         <outlet property="rightButtonWidthConstraint" destination="L2P-22-Ntf" id="MxH-lX-zvw"/>
-                        <outlet property="rightbuttonHeightConstraint" destination="BEv-5s-60I" id="6VG-VQ-bob"/>
                         <outlet property="subtitleLabel" destination="dWA-GK-Nf0" id="ubb-DS-k2m"/>
                         <outlet property="titleLabel" destination="ABp-yv-qRY" id="4zI-Fi-1uq"/>
                     </connections>

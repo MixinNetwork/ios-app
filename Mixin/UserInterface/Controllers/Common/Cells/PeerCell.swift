@@ -6,7 +6,8 @@ class PeerCell: UITableViewCell {
     static let cellIdentifier = "cell_identifier_contact"
     static let cellHeight: CGFloat = 70
     
-    @IBOutlet weak var selectionImageView: UIImageView!
+    @IBOutlet weak var checkmarkView: CheckmarkView!
+    
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var identityImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -43,7 +44,7 @@ class PeerCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        selectionImageView.layer.applySketchShadow(color: UIColor(rgbValue: 0x397EE4), alpha: 0.3, x: 0, y: 6, blur: 9, spread: 0)
+        selectedBackgroundView = UIView.createSelectedBackgroundView()
     }
 
     override func prepareForReuse() {
@@ -55,9 +56,9 @@ class PeerCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if forceSelected {
-            selectionImageView.image = #imageLiteral(resourceName: "ic_member_disabled")
+            checkmarkView.status = .forceSelected
         } else {
-            selectionImageView.image = selected ? #imageLiteral(resourceName: "ic_row_selected") : #imageLiteral(resourceName: "ic_row_normal")
+            checkmarkView.status = selected ? .selected : .unselected
         }
     }
     

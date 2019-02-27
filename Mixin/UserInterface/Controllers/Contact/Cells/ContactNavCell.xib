@@ -1,59 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="78" id="gBT-V8-a8z" userLabel="ContactNavCell" customClass="ContactNavCell" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="72" id="gBT-V8-a8z" userLabel="ContactNavCell" customClass="ContactNavCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gBT-V8-a8z" id="XZ4-gd-lxM">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="63.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="71.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qep-5h-mGg">
-                        <rect key="frame" x="15" y="12" width="40" height="40"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="MVv-rg-GKY">
+                        <rect key="frame" x="27" y="15" width="142" height="32"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_new_group" translatesAutoresizingMaskIntoConstraints="NO" id="vyp-1J-72u" customClass="ShadowImageView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowY">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowBlur">
+                                        <real key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                        <color key="value" red="0.95294117647058818" green="0.58823529411764708" blue="0.17254901960784313" alpha="0.20999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Group Chat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ng3-e1-fBd">
+                                <rect key="frame" x="42" y="8" width="100" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.2274509804" green="0.23529411759999999" blue="0.24313725489999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_new_group_title"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="uiU-3s-5AE">
+                        <rect key="frame" x="214.5" y="15" width="118" height="32"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_search" translatesAutoresizingMaskIntoConstraints="NO" id="a3o-YN-c6F" customClass="ShadowImageView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowY">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                        <color key="value" red="0.16078431372549018" green="0.74509803921568629" blue="0.45098039215686275" alpha="0.2088257285" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowBlur">
+                                        <real key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Contact" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKU-nb-LfW">
+                                <rect key="frame" x="42" y="8" width="76" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.2274509804" green="0.23529411759999999" blue="0.24313725489999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_add_title"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XLv-9d-Dt3">
+                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="61.5"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                        <state key="normal">
+                            <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </state>
+                        <connections>
+                            <action selector="newGroupAction:" destination="gBT-V8-a8z" eventType="touchUpInside" id="A6a-zn-ceU"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xds-V0-udq">
+                        <rect key="frame" x="187.5" y="0.0" width="187.5" height="61.5"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                        <state key="normal">
+                            <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </state>
+                        <connections>
+                            <action selector="addContactAction:" destination="gBT-V8-a8z" eventType="touchUpInside" id="os8-s6-NdS"/>
+                        </connections>
+                    </button>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ckc-dP-1Ud" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="61.5" width="375" height="10"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="40" id="1Ew-px-myO"/>
-                            <constraint firstAttribute="height" constant="40" id="AtC-Iw-lE6"/>
+                            <constraint firstAttribute="height" constant="10" id="iF7-zd-nTn"/>
                         </constraints>
-                    </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Group Chat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AAh-V1-Eh2">
-                        <rect key="frame" x="70" y="12" width="120.5" height="20"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create a group chat with up to 100 friends" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXl-Oj-4Ry">
-                        <rect key="frame" x="70" y="38" width="268.5" height="17"/>
-                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                    </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="Qep-5h-mGg" firstAttribute="centerY" secondItem="XZ4-gd-lxM" secondAttribute="centerY" id="HSs-iZ-JcP"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="vXl-Oj-4Ry" secondAttribute="trailing" constant="15" id="HxP-Wz-9cL"/>
-                    <constraint firstItem="AAh-V1-Eh2" firstAttribute="leading" secondItem="Qep-5h-mGg" secondAttribute="trailing" constant="15" id="Pmz-ix-cEd"/>
-                    <constraint firstItem="vXl-Oj-4Ry" firstAttribute="top" secondItem="AAh-V1-Eh2" secondAttribute="bottom" constant="6" id="QH4-5i-tse"/>
-                    <constraint firstItem="vXl-Oj-4Ry" firstAttribute="leading" secondItem="Qep-5h-mGg" secondAttribute="trailing" constant="15" id="aUm-OM-gqo"/>
-                    <constraint firstItem="AAh-V1-Eh2" firstAttribute="top" secondItem="Qep-5h-mGg" secondAttribute="top" id="qg6-yq-x2O"/>
-                    <constraint firstItem="Qep-5h-mGg" firstAttribute="leading" secondItem="XZ4-gd-lxM" secondAttribute="leading" constant="15" id="tNq-jo-cPr"/>
+                    <constraint firstItem="XLv-9d-Dt3" firstAttribute="leading" secondItem="XZ4-gd-lxM" secondAttribute="leading" id="0H5-P3-QZB"/>
+                    <constraint firstItem="uiU-3s-5AE" firstAttribute="centerY" secondItem="xds-V0-udq" secondAttribute="centerY" id="4RH-pV-yHq"/>
+                    <constraint firstAttribute="trailing" secondItem="ckc-dP-1Ud" secondAttribute="trailing" id="4yv-M6-7Sr"/>
+                    <constraint firstAttribute="trailing" secondItem="xds-V0-udq" secondAttribute="trailing" id="8VU-aJ-4od"/>
+                    <constraint firstItem="ckc-dP-1Ud" firstAttribute="leading" secondItem="XZ4-gd-lxM" secondAttribute="leading" id="8qS-G0-sLx"/>
+                    <constraint firstItem="xds-V0-udq" firstAttribute="top" secondItem="XZ4-gd-lxM" secondAttribute="top" id="FrA-i7-wU6"/>
+                    <constraint firstAttribute="bottom" secondItem="ckc-dP-1Ud" secondAttribute="bottom" id="N8R-Qa-zlB"/>
+                    <constraint firstItem="MVv-rg-GKY" firstAttribute="centerY" secondItem="XLv-9d-Dt3" secondAttribute="centerY" id="NPv-RL-PUT"/>
+                    <constraint firstItem="xds-V0-udq" firstAttribute="width" secondItem="XZ4-gd-lxM" secondAttribute="width" multiplier="0.5" id="P7r-fs-7Fo"/>
+                    <constraint firstItem="XLv-9d-Dt3" firstAttribute="top" secondItem="XZ4-gd-lxM" secondAttribute="top" id="TTh-vM-Jqi"/>
+                    <constraint firstItem="uiU-3s-5AE" firstAttribute="leading" secondItem="xds-V0-udq" secondAttribute="leading" constant="27" id="jTw-Gg-jnS"/>
+                    <constraint firstAttribute="bottom" secondItem="XLv-9d-Dt3" secondAttribute="bottom" constant="10" id="pKM-yP-bX4"/>
+                    <constraint firstItem="XLv-9d-Dt3" firstAttribute="width" secondItem="XZ4-gd-lxM" secondAttribute="width" multiplier="0.5" id="q1e-K0-4Ja"/>
+                    <constraint firstItem="MVv-rg-GKY" firstAttribute="leading" secondItem="XLv-9d-Dt3" secondAttribute="leading" constant="27" id="qfT-4h-Oca"/>
+                    <constraint firstAttribute="bottom" secondItem="xds-V0-udq" secondAttribute="bottom" constant="10" id="qtj-WH-rcr"/>
                 </constraints>
             </tableViewCellContentView>
-            <connections>
-                <outlet property="iconImageView" destination="Qep-5h-mGg" id="SUa-3P-rGx"/>
-                <outlet property="summaryLabel" destination="vXl-Oj-4Ry" id="JrS-W8-Jw2"/>
-                <outlet property="titleLabel" destination="AAh-V1-Eh2" id="HAo-JD-iRt"/>
-            </connections>
             <point key="canvasLocation" x="-127.5" y="-98"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="ic_contact_new_group" width="32" height="32"/>
+        <image name="ic_contact_search" width="32" height="32"/>
+    </resources>
 </document>

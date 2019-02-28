@@ -17,63 +17,69 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fOr-fg-HtP">
-                    <rect key="frame" x="0.0" y="144" width="375" height="531"/>
+                    <rect key="frame" x="0.0" y="122" width="375" height="553"/>
                     <subviews>
                         <stackView contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="frM-el-avD">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+                            <rect key="frame" x="20" y="0.0" width="355" height="70"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gGh-u5-dCZ">
-                                    <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="gGh-u5-dCZ" secondAttribute="height" id="IyW-W6-fa8"/>
-                                    </constraints>
-                                    <state key="normal" image="ic_titlebar_close"/>
-                                </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Filter" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDR-7S-RXH">
-                                    <rect key="frame" x="168.5" y="0.0" width="38.5" height="56"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Filter" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDR-7S-RXH">
+                                    <rect key="frame" x="0.0" y="0.0" width="46.5" height="70"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                    <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_filter"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cmM-iO-8Rf">
-                                    <rect key="frame" x="299" y="0.0" width="76" height="56"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <inset key="contentEdgeInsets" minX="16" minY="0.0" maxX="16" maxY="0.0"/>
-                                    <state key="normal" title="Apply"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_apply"/>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="applyAction:" destination="KVf-Oz-L7N" eventType="touchUpInside" id="q6j-qX-JmT"/>
-                                    </connections>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gGh-u5-dCZ">
+                                    <rect key="frame" x="285" y="0.0" width="70" height="70"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="gGh-u5-dCZ" secondAttribute="height" id="IyW-W6-fa8"/>
+                                    </constraints>
+                                    <state key="normal" image="ic_dialog_close"/>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="56" id="OGh-SI-zPM"/>
-                                <constraint firstItem="uDR-7S-RXH" firstAttribute="centerX" secondItem="frM-el-avD" secondAttribute="centerX" priority="750" id="nXi-hI-OqU"/>
+                                <constraint firstAttribute="height" constant="70" id="OGh-SI-zPM"/>
                             </constraints>
                         </stackView>
-                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Ni8-Lz-qpp">
-                            <rect key="frame" x="0.0" y="56" width="375" height="475"/>
-                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="83D-YB-TlR">
+                            <rect key="frame" x="20" y="70" width="335" height="375"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" priority="750" constant="475" id="dch-6k-m8v"/>
+                                <constraint firstAttribute="height" priority="750" constant="375" id="nyY-HH-79c"/>
                             </constraints>
-                        </tableView>
+                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="20" minimumInteritemSpacing="20" id="LxQ-Qc-OVT" customClass="AlignedCollectionViewFlowLayout" customModule="AlignedCollectionViewFlowLayout">
+                                <size key="itemSize" width="50" height="50"/>
+                                <size key="headerReferenceSize" width="0.0" height="35"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                        </collectionView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7XJ-aR-ExP" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="140.5" y="483" width="94" height="42"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                            <state key="normal" title="Apply"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_apply"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="applyAction:" destination="KVf-Oz-L7N" eventType="touchUpInside" id="JIz-XW-UcV"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="83D-YB-TlR" firstAttribute="top" secondItem="frM-el-avD" secondAttribute="bottom" id="LSV-H6-5vx"/>
                         <constraint firstAttribute="trailing" secondItem="frM-el-avD" secondAttribute="trailing" id="QlE-z0-K8L"/>
-                        <constraint firstItem="frM-el-avD" firstAttribute="leading" secondItem="fOr-fg-HtP" secondAttribute="leading" id="Suy-CE-iAK"/>
-                        <constraint firstAttribute="trailing" secondItem="Ni8-Lz-qpp" secondAttribute="trailing" id="aBD-cO-agi"/>
-                        <constraint firstItem="Ni8-Lz-qpp" firstAttribute="top" secondItem="frM-el-avD" secondAttribute="bottom" id="d28-KR-inD"/>
-                        <constraint firstAttribute="bottom" secondItem="Ni8-Lz-qpp" secondAttribute="bottom" id="mSk-qH-vqB"/>
+                        <constraint firstItem="frM-el-avD" firstAttribute="leading" secondItem="fOr-fg-HtP" secondAttribute="leading" constant="20" id="Suy-CE-iAK"/>
+                        <constraint firstAttribute="trailing" secondItem="83D-YB-TlR" secondAttribute="trailing" constant="20" id="XqM-Rv-wt4"/>
+                        <constraint firstItem="83D-YB-TlR" firstAttribute="leading" secondItem="fOr-fg-HtP" secondAttribute="leading" constant="20" id="gQw-hE-mCP"/>
+                        <constraint firstItem="7XJ-aR-ExP" firstAttribute="centerX" secondItem="fOr-fg-HtP" secondAttribute="centerX" id="mYR-Qd-iyE"/>
                         <constraint firstItem="frM-el-avD" firstAttribute="top" secondItem="fOr-fg-HtP" secondAttribute="top" id="nbJ-4Q-1v3"/>
-                        <constraint firstItem="Ni8-Lz-qpp" firstAttribute="leading" secondItem="fOr-fg-HtP" secondAttribute="leading" id="w7W-nl-uHW"/>
+                        <constraint firstItem="7XJ-aR-ExP" firstAttribute="top" secondItem="83D-YB-TlR" secondAttribute="bottom" constant="38" id="pOd-3r-dg1"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -87,19 +93,20 @@
                 <constraint firstItem="pf7-Pb-33Y" firstAttribute="trailing" secondItem="fOr-fg-HtP" secondAttribute="trailing" id="CXr-xw-MVQ"/>
                 <constraint firstItem="fOr-fg-HtP" firstAttribute="leading" secondItem="pf7-Pb-33Y" secondAttribute="leading" id="FXs-cL-PK4"/>
                 <constraint firstAttribute="bottom" secondItem="fOr-fg-HtP" secondAttribute="bottom" constant="-8" id="IER-Yn-akD"/>
+                <constraint firstItem="pf7-Pb-33Y" firstAttribute="bottom" secondItem="7XJ-aR-ExP" secondAttribute="bottom" constant="20" id="nEY-z2-bfE"/>
                 <constraint firstItem="fOr-fg-HtP" firstAttribute="top" relation="greaterThanOrEqual" secondItem="pf7-Pb-33Y" secondAttribute="top" id="saS-lp-e6L"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="pf7-Pb-33Y"/>
             <connections>
+                <outlet property="collectionView" destination="83D-YB-TlR" id="T9W-kP-RO5"/>
+                <outlet property="collectionViewHeightConstraint" destination="nyY-HH-79c" id="vzv-ew-yXS"/>
                 <outlet property="dismissButton" destination="gGh-u5-dCZ" id="IPt-Kc-ROE"/>
                 <outlet property="popupView" destination="fOr-fg-HtP" id="lbR-sb-K12"/>
-                <outlet property="tableView" destination="Ni8-Lz-qpp" id="YPI-Eu-Zj2"/>
-                <outlet property="tableViewHeightConstraint" destination="dch-6k-m8v" id="fak-ZU-PBh"/>
             </connections>
-            <point key="canvasLocation" x="25.5" y="52.5"/>
+            <point key="canvasLocation" x="24.800000000000001" y="51.724137931034484"/>
         </view>
     </objects>
     <resources>
-        <image name="ic_titlebar_close" width="44" height="44"/>
+        <image name="ic_dialog_close" width="26" height="26"/>
     </resources>
 </document>

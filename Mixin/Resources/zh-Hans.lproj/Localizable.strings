@@ -56,10 +56,11 @@
 "toast_api_error_unavailable_phone_number" = "此手机号已被使用";
 "permission_denied_camera" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
 "permission_denied_microphone" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
-"toast_copied" = "已复制到剪贴板";
-"toast_add_asset" = "已添加所选资产";
-"permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
+"toast_operation_failed" = "操作失败，请稍后重试";
+"toast_copied" = "已复制";
 "toast_added" = "已添加";
+"toast_saved" = "已保存";
+"permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "toast_error" = "错误 %@：%@";
 "screen_captured_pin_leaking_hint" = "检测到正在进行屏幕录制，支付密码可能会录入视频！";
 "biometry_suggestion" = "建议使用%@支付";
@@ -260,7 +261,7 @@
 "wallet_title" = "钱包";
 "wallet_title_withdrawal" = "提现";
 "wallet_title_add_asset" = "添加资产";
-"wallet_already_has_the_asset" = "您已添加过该资产";
+"wallet_already_had_the_asset" = "已拥有该资产";
 "wallet_transfer_out" = "转出";
 "wallet_symbol_other" = "其它";
 "wallet_password_verify_title" = "验证旧的支付密码";
@@ -343,7 +344,6 @@
 "transaction_date" = "时间";
 "transaction_sender" = "发送者";
 "transaction_receiver" = "接收者";
-"transaction_address" = "地址";
 "transaction_transaction_hash" = "交易哈希";
 "transaction_type_deposit" = "充值";
 "transaction_type_transfer" = "转账";

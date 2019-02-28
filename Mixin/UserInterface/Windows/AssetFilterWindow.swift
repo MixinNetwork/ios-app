@@ -1,4 +1,5 @@
 import UIKit
+import AlignedCollectionViewFlowLayout
 
 protocol AssetFilterWindowDelegate: class {
     func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter)
@@ -7,12 +8,12 @@ protocol AssetFilterWindowDelegate: class {
 class AssetFilterWindow: BottomSheetView {
     
     @IBOutlet weak var dismissButton: UIButton!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var collectionView: UICollectionView!
     
-    @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     
     weak var delegate: AssetFilterWindowDelegate?
-
+    
     private(set) var sort = Snapshot.Sort.createdAt
     private(set) var filter = Snapshot.Filter.all
     
@@ -20,6 +21,7 @@ class AssetFilterWindow: BottomSheetView {
     private lazy var filterDraft = filter
     
     private let cellReuseId = "cell"
+    private let headerReuseId = "header"
     private let headers = [
         Localized.TRANSACTIONS_FILTER_SORT_BY,
         Localized.TRANSACTIONS_FILTER_FILTER_BY
@@ -46,18 +48,22 @@ class AssetFilterWindow: BottomSheetView {
     override func awakeFromNib() {
         super.awakeFromNib()
         dismissButton.addTarget(self, action: #selector(dismissPopupControllerAnimated), for: .touchUpInside)
-        tableView.register(UINib(nibName: "TransactionsFilterConditionCell", bundle: .main), forCellReuseIdentifier: cellReuseId)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.reloadData()
+        collectionView.register(UINib(nibName: "TransactionsFilterConditionCell", bundle: .main),
+                                forCellWithReuseIdentifier: cellReuseId)
+        collectionView.register(AssetFilterHeaderView.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: headerReuseId)
+        collectionView.allowsMultipleSelection = true
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        if let layout = collectionView.collectionViewLayout as? AlignedCollectionViewFlowLayout {
+            layout.estimatedItemSize = CGSize(width: 96, height: 42)
+            layout.horizontalAlignment = .left
+        }
+        collectionView.reloadData()
         reloadSelection()
-        updateTableViewHeightAndScrollingEnabledIfNeeded()
-    }
-    
-    @available(iOS 11.0, *)
-    override func safeAreaInsetsDidChange() {
-        super.safeAreaInsetsDidChange()
-        updateTableViewHeightAndScrollingEnabledIfNeeded()
+        layoutIfNeeded()
+        updatecollectionViewHeightAndScrollingEnabledIfNeeded()
     }
     
     override func presentPopupControllerAnimated() {
@@ -76,52 +82,62 @@ class AssetFilterWindow: BottomSheetView {
     
 }
 
-extension AssetFilterWindow: UITableViewDataSource {
+extension AssetFilterWindow: UICollectionViewDataSource {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return titles[section].count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId, for: indexPath) as! TransactionsFilterConditionCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! TransactionsFilterConditionCell
         cell.titleLabel.text = titles[indexPath.section][indexPath.row]
         return cell
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return headers.count
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return headers[section]
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseId, for: indexPath) as! AssetFilterHeaderView
+        view.label.text = headers[indexPath.section]
+        return view
     }
-
+    
 }
 
-extension AssetFilterWindow: UITableViewDelegate {
+extension AssetFilterWindow: UICollectionViewDelegate {
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            let indexPathToDeselect = IndexPath(row: 1 - indexPath.row, section: indexPath.section)
-            tableView.deselectRow(at: indexPathToDeselect, animated: true)
+            let indexPathToDeselect = IndexPath(item: 1 - indexPath.row, section: indexPath.section)
+            collectionView.deselectItem(at: indexPathToDeselect, animated: false)
             sortDraft = indexPath.row == 0 ? .createdAt : .amount
         } else {
-            for indexPathToDeselect in tableView.indexPathsForSelectedRows ?? [] {
+            for indexPathToDeselect in collectionView.indexPathsForSelectedItems ?? [] {
                 guard indexPathToDeselect.section == 1 && indexPathToDeselect != indexPath else {
                     continue
                 }
-                tableView.deselectRow(at: indexPathToDeselect, animated: true)
+                collectionView.deselectItem(at: indexPathToDeselect, animated: false)
             }
             filterDraft = filter(for: indexPath.row)
         }
     }
     
-    func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        return false
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+}
+
+extension AssetFilterWindow: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        if section == 0 {
+            return UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)
+        } else {
+            return .zero
+        }
     }
     
 }
@@ -129,34 +145,34 @@ extension AssetFilterWindow: UITableViewDelegate {
 extension AssetFilterWindow {
     
     private func reloadSelection() {
-        for indexPath in tableView.indexPathsForSelectedRows ?? [] {
-            tableView.deselectRow(at: indexPath, animated: false)
+        for indexPath in collectionView.indexPathsForSelectedItems ?? [] {
+            collectionView.deselectItem(at: indexPath, animated: false)
         }
         switch sort {
         case .createdAt:
-            tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+            collectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
         case .amount:
-            tableView.selectRow(at: IndexPath(row: 1, section: 0), animated: false, scrollPosition: .none)
+            collectionView.selectItem(at: IndexPath(item: 1, section: 0), animated: false, scrollPosition: .top)
         }
         switch filter {
         case .all:
-            tableView.selectRow(at: IndexPath(row: 0, section: 1), animated: false, scrollPosition: .none)
+            collectionView.selectItem(at: IndexPath(item: 0, section: 1), animated: false, scrollPosition: .top)
         case .transfer:
-            tableView.selectRow(at: IndexPath(row: 1, section: 1), animated: false, scrollPosition: .none)
+            collectionView.selectItem(at: IndexPath(item: 1, section: 1), animated: false, scrollPosition: .top)
         case .deposit:
-            tableView.selectRow(at: IndexPath(row: 2, section: 1), animated: false, scrollPosition: .none)
+            collectionView.selectItem(at: IndexPath(item: 2, section: 1), animated: false, scrollPosition: .top)
         case .withdrawal:
-            tableView.selectRow(at: IndexPath(row: 3, section: 1), animated: false, scrollPosition: .none)
+            collectionView.selectItem(at: IndexPath(item: 3, section: 1), animated: false, scrollPosition: .top)
         case .fee:
-            tableView.selectRow(at: IndexPath(row: 4, section: 1), animated: false, scrollPosition: .none)
+            collectionView.selectItem(at: IndexPath(item: 4, section: 1), animated: false, scrollPosition: .top)
         case .rebate:
-            tableView.selectRow(at: IndexPath(row: 5, section: 1), animated: false, scrollPosition: .none)
+            collectionView.selectItem(at: IndexPath(item: 5, section: 1), animated: false, scrollPosition: .top)
         }
     }
     
-    private func updateTableViewHeightAndScrollingEnabledIfNeeded() {
-        tableViewHeightConstraint.constant = ceil(tableView.contentSize.height) + 8
-        tableView.isScrollEnabled = tableView.contentSize.height >= tableView.frame.height
+    private func updatecollectionViewHeightAndScrollingEnabledIfNeeded() {
+        collectionViewHeightConstraint.constant = ceil(collectionView.contentSize.height)
+        collectionView.isScrollEnabled = collectionView.contentSize.height >= collectionView.frame.height
     }
     
     private func filter(for row: Int) -> Snapshot.Filter {

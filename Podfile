@@ -24,5 +24,7 @@ target 'Mixin' do
   pod 'WCDB.swift', :git => 'git@github.com:MixinNetwork/wcdb.git', :branch => 'swift4.2'
   pod 'GiphyCoreSDK'
   pod 'GoogleWebRTC'
+  pod 'AlignedCollectionViewFlowLayout'
+  pod 'R.swift'
 
 end

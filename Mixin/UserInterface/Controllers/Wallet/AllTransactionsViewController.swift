@@ -54,8 +54,7 @@ extension AllTransactionsViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
         let snapshot = dataSource.snapshots[indexPath.section][indexPath.row]
-        cell.render(snapshot: snapshot)
-        cell.renderDecorationViews(indexPath: indexPath, models: dataSource.snapshots)
+        cell.render(snapshot: snapshot, showSymbol: true)
         return cell
     }
     
@@ -112,7 +111,7 @@ extension AllTransactionsViewController: ContainerViewControllerDelegate {
     }
     
     func imageBarRightButton() -> UIImage? {
-        return UIImage(named: "Wallet/ic_filter_dark")
+        return UIImage(named: "Wallet/ic_filter_large")
     }
     
 }

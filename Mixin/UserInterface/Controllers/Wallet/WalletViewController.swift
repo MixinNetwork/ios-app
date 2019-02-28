@@ -4,7 +4,7 @@ import LocalAuthentication
 class WalletViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-
+    
     private var assets = [AssetItem]()
     private var pinView: PinTipsView?
 
@@ -25,8 +25,7 @@ class WalletViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateTableViewContentInset()
-        tableView.register(UINib(nibName: "WalletAssetCell", bundle: .main),
-                           forCellReuseIdentifier: ReuseId.asset)
+        tableView.register(UINib(nibName: "WalletAssetCell", bundle: .main), forCellReuseIdentifier: ReuseId.asset)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -115,10 +114,8 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
                 firstUSDBalance = 0
             }
             return WalletHeaderCell.height(usdBalanceIsMoreThanZero: firstUSDBalance > 0)
-        case 1:
-            return WalletAssetCell.height
         default:
-            return WalletAddAssetCell.height
+            return WalletAssetCell.height
         }
     }
     

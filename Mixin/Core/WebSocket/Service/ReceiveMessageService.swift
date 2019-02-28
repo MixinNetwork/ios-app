@@ -31,12 +31,12 @@ class ReceiveMessageService: MixinService {
 
             if blazeMessage.action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue {
                 MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
-                ReceiveMessageService.shared.sendSessionAck(status: data.status, messageId: data.messageId)
+                ReceiveMessageService.shared.sendSessionStatus(messageId: data.messageId, status: data.status)
                 CryptoUserDefault.shared.statusOffset = data.updatedAt.toUTCDate().nanosecond()
             } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                 if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
-                    ReceiveMessageService.shared.sendSessionAck(status: data.status, messageId: data.messageId)
+                    ReceiveMessageService.shared.sendSessionStatus(messageId: data.messageId, status: data.status)
                 } else {
                     guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, data: blazeMessage.data, createdAt: data.createdAt) else {
                         return
@@ -44,7 +44,7 @@ class ReceiveMessageService: MixinService {
                     ReceiveMessageService.shared.processReceiveMessages()
                 }
             } else if blazeMessage.action == BlazeMessageAction.createSessionMessage.rawValue {
-                if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty && data.sessinId == AccountAPI.shared.accountSessionId {
+                if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty && data.sessionId == AccountAPI.shared.accountSessionId {
 
                 } else {
                     guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, data: blazeMessage.data, createdAt: data.createdAt) else {
@@ -56,18 +56,11 @@ class ReceiveMessageService: MixinService {
         }
     }
 
-    private func sendSessionAck(status: String, messageId: String) {
-        guard let sessionId = AccountUserDefault.shared.extensionSession else {
+    private func sendSessionStatus(messageId: String, status: String) {
+        guard AccountUserDefault.shared.extensionSession != nil else {
             return
         }
-
-        let transferPlainData = TransferPlainData(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPT.rawValue, messageId: messageId, messages: nil, status: status)
-
-        let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
-        let params = BlazeMessageParam(userId: AccountAPI.shared.accountUserId, sessionId: sessionId, encoded: encoded)
-        let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createSessionMessage.rawValue)
-
-        SendMessageService.shared.sendMessage(blazeMessage: blazeMessage, action: .SEND_SESSION_ACK_MESSAGE)
+        SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: status)
     }
 
     func processReceiveMessages() {
@@ -283,7 +276,7 @@ class ReceiveMessageService: MixinService {
             }
             let message = Message.createMessage(textMessage: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendMessageToSession(message: message)
+            SendMessageService.shared.sendSessionMessage(message: message)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -294,7 +287,7 @@ class ReceiveMessageService: MixinService {
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
             if data.category.hasSuffix("_IMAGE") {
-                SendMessageService.shared.sendMessageToSession(message: message)
+                SendMessageService.shared.sendSessionMessage(message: message)
             }
         } else if data.category.hasSuffix("_DATA")  {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
@@ -502,42 +495,61 @@ class ReceiveMessageService: MixinService {
 
         switch data.category {
         case MessageCategory.PLAIN_JSON.rawValue:
-            guard let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferPlainData.self, from: base64Data)) else {
-                return
-            }
-
-            if let user = UserDAO.shared.getUser(userId: data.userId) {
-                FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessPlainMessage][\(user.fullName)][\(data.category)][\(plainData.action)]...messageId:\(data.messageId)...\(data.createdAt)")
-            }
-
-            defer {
-                updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
-                MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
-            }
-
-            switch plainData.action {
-            case PlainDataAction.RESEND_KEY.rawValue:
-                guard !JobDAO.shared.isExist(conversationId: data.conversationId, userId: data.userId, action: .RESEND_KEY) else {
+            if data.isSessionMessage {
+                guard let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferPlainAckData.self, from: base64Data)) else {
                     return
                 }
-                guard SignalProtocol.shared.containsSession(recipient: data.userId) else {
+                if plainData.action == PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue {
+                    for message in plainData.messages {
+                        guard message.status == MessageStatus.READ.rawValue else {
+                            continue
+                        }
+                        MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: message.status)
+                    }
+                    SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
+                }
+            } else {
+                guard let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferPlainData.self, from: base64Data)) else {
                     return
                 }
-                SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: data.userId, action: .RESEND_KEY)
-            case PlainDataAction.RESEND_MESSAGES.rawValue:
-                guard let messageIds = plainData.messages, messageIds.count > 0 else {
-                    return
+
+                if let user = UserDAO.shared.getUser(userId: data.userId) {
+                    FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessPlainMessage][\(user.fullName)][\(data.category)][\(plainData.action)]...messageId:\(data.messageId)...\(data.createdAt)")
                 }
-                SendMessageService.shared.resendMessages(conversationId: data.conversationId, userId: data.userId, messageIds: messageIds)
-            case PlainDataAction.NO_KEY.rawValue:
-                SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId)
-            default:
-                break
+
+                defer {
+                    updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+                    MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
+                }
+
+                switch plainData.action {
+                case PlainDataAction.RESEND_KEY.rawValue:
+                    guard !JobDAO.shared.isExist(conversationId: data.conversationId, userId: data.userId, action: .RESEND_KEY) else {
+                        return
+                    }
+                    guard SignalProtocol.shared.containsSession(recipient: data.userId) else {
+                        return
+                    }
+                    SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: data.userId, action: .RESEND_KEY)
+                case PlainDataAction.RESEND_MESSAGES.rawValue:
+                    guard let messageIds = plainData.messages, messageIds.count > 0 else {
+                        return
+                    }
+                    SendMessageService.shared.resendMessages(conversationId: data.conversationId, userId: data.userId, messageIds: messageIds)
+                case PlainDataAction.NO_KEY.rawValue:
+                    SignalProtocol.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId)
+                default:
+                    break
+                }
             }
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
             _ = syncUser(userId: data.getSenderId())
             processDecryptSuccess(data: data, plainText: data.data)
-            updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+            if data.isSessionMessage {
+                SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
+            } else {
+                updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
+            }
         default:
             break
         }
@@ -557,7 +569,7 @@ class ReceiveMessageService: MixinService {
         let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages, status: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil, sessionId: nil, transferId: nil)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_MESSAGES)
     }
@@ -570,7 +582,7 @@ class ReceiveMessageService: MixinService {
         let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil, status: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: messageId, quoteMessageId: nil, keys: nil, recipients: nil, messages: nil, sessionId: nil, transferId: nil)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_KEY)
     }
@@ -594,6 +606,8 @@ extension ReceiveMessageService {
             }
         case MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue:
             processSystemSnapshotMessage(data: data)
+        case MessageCategory.SYSTEM_EXTENSION_SESSION.rawValue:
+            processSessionSystemConversationMessage(data: data)
         default:
             return
         }
@@ -623,6 +637,28 @@ extension ReceiveMessageService {
         SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
         MessageDAO.shared.insertMessage(message: Message.createMessage(snapshotMesssage: snapshot, data: data), messageSource: data.source)
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+    }
+
+    private func processSessionSystemConversationMessage(data: BlazeMessageData) {
+        guard let base64Data = Data(base64Encoded: data.data), let sysMessage = (try? jsonDecoder.decode(SystemConversationData.self, from: base64Data)) else {
+            return
+        }
+        guard let sessionId = data.sessionId else {
+            return
+        }
+
+        switch sysMessage.action {
+        case SystemConversationAction.ADD_SESSION.rawValue:
+            AccountUserDefault.shared.extensionSession = sessionId
+            SignalProtocol.shared.deleteSession(userId: data.userId)
+        case SystemConversationAction.REMOVE.rawValue:
+            AccountUserDefault.shared.extensionSession = nil
+            SignalProtocol.shared.deleteSession(userId: data.userId)
+        default:
+            break
+        }
+
+        SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
     }
 
     private func processSystemConversationMessage(data: BlazeMessageData) {
@@ -714,11 +750,7 @@ extension ReceiveMessageService {
         }
 
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-
-        if let uid = sysMessage.userId {
-            message.userId = uid
-        }
-        SendMessageService.shared.sendMessageToSession(message: message)
+        SendMessageService.shared.sendSessionMessage(message: message)
     }
 
     private func handlerSystemMessageDataError(action: String, data: Data) {

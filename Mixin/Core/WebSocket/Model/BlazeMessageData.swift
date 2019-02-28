@@ -13,7 +13,7 @@ struct BlazeMessageData: Codable {
     let source: String
     let quoteMessageId: String
     let representativeId: String
-    var sessinId: String? = nil
+    var sessionId: String? = nil
     var transferId: String? = nil
 
     enum CodingKeys: String, CodingKey {
@@ -28,7 +28,7 @@ struct BlazeMessageData: Codable {
         case source
         case quoteMessageId = "quote_message_id"
         case representativeId = "representative_id"
-        case sessinId = "session_id"
+        case sessionId = "session_id"
         case transferId = "transfer_id"
     }
 }
@@ -40,6 +40,10 @@ extension BlazeMessageData {
             return userId
         }
         return representativeId
+    }
+
+    var isSessionMessage: Bool {
+        return userId == AccountAPI.shared.accountUserId && sessionId != nil
     }
 
 }

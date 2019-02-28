@@ -118,7 +118,7 @@ class MixinService {
         }
         let plainData = TransferPlainData(action: PlainDataAction.NO_KEY.rawValue, messageId: nil, messages: nil, status: nil)
         let encoded = (try? jsonEncoder.encode(plainData))?.base64EncodedString() ?? ""
-        let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, offset: nil, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased(), quoteMessageId: nil, keys: nil, recipients: nil, messages: nil, sessionId: nil, transferId: nil)
+        let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased())
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: recipientId, blazeMessage: blazeMessage, action: .SEND_NO_KEY)
     }
@@ -183,6 +183,10 @@ class MixinService {
     @discardableResult
     internal func deliver(blazeMessage: BlazeMessage) throws -> Bool {
         repeat {
+            guard AccountAPI.shared.didLogin else {
+                return false
+            }
+            
             do {
                 return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
             } catch {

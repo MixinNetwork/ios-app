@@ -14,6 +14,7 @@ struct BlazeMessage: Encodable {
         return action == BlazeMessageAction.createMessage.rawValue
             || action == BlazeMessageAction.createCall.rawValue
             || action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue
+            || action == BlazeMessageAction.createSessionMessage.rawValue
     }
 }
 

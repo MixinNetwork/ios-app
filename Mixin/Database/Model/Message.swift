@@ -164,6 +164,7 @@ enum MessageCategory: String {
     case APP_CARD
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION
+    case SYSTEM_EXTENSION_SESSION
     case SYSTEM_ACCOUNT_SNAPSHOT
     case WEBRTC_AUDIO_OFFER
     case WEBRTC_AUDIO_ANSWER

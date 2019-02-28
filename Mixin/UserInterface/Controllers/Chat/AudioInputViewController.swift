@@ -81,7 +81,7 @@ class AudioInputViewController: UIViewController {
             if isShowingLongPressHint {
                 animateHideLongPressHint()
             }
-            recordImageView.image = #imageLiteral(resourceName: "ic_chat_microphone_highlighted")
+            recordImageView.image = R.image.conversation.ic_mic_on()
             startRecordingIfGranted()
             recordGestureBeganPoint = recordGestureRecognizer.location(in: view)
             slideToCancelContentView.alpha = 1
@@ -256,7 +256,7 @@ extension AudioInputViewController {
     
     private func layoutForStopping() {
         conversationViewController?.setInputWrapperHidden(false)
-        recordImageView.image = #imageLiteral(resourceName: "ic_chat_microphone")
+        recordImageView.image = R.image.conversation.ic_mic_off()
         if isLocked {
             slideToCancelView.alpha = 0
         } else {

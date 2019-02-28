@@ -20,7 +20,7 @@ class ConversationKeyboardManager {
             return inputAccessoryView.frame.height
         }
         set {
-            guard let heightConstraint = inputAccessoryView.constraints.filter({ ($0.firstItem as? UIView) == inputAccessoryView && $0.firstAttribute == .height }).first, heightConstraint.constant != newValue else {
+            guard let heightConstraint = inputAccessoryView.heightConstraint, heightConstraint.constant != newValue else {
                 return
             }
             heightConstraint.constant = newValue
@@ -88,6 +88,12 @@ extension ConversationKeyboardManager {
         weak var manager: ConversationKeyboardManager?
         
         private var observation: NSKeyValueObservation?
+        
+        var heightConstraint: NSLayoutConstraint? {
+            return constraints.filter({
+                ($0.firstItem as? UIView) == self && $0.firstAttribute == .height
+            }).first
+        }
         
         required init?(coder aDecoder: NSCoder) {
             super.init(coder: aDecoder)

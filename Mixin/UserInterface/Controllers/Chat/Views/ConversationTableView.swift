@@ -191,6 +191,14 @@ class ConversationTableView: UITableView {
         setContentOffset(bottomContentOffset, animated: animated)
     }
     
+    func setContentInsetBottom(_ value: CGFloat, automaticallyAdjustContentOffset: Bool) {
+        let newContentOffsetY = contentOffset.y + value - contentInset.bottom
+        contentInset.bottom = value
+        if automaticallyAdjustContentOffset {
+            setContentOffsetYSafely(newContentOffsetY)
+        }
+    }
+    
     func setContentOffsetYSafely(_ y: CGFloat) {
         let bottomContentOffsetY = bottomContentOffset.y
         if bottomContentOffsetY > -contentInset.top {

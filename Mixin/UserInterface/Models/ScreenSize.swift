@@ -31,11 +31,8 @@ enum ScreenSize {
         }
     }()
     
-    static let defaultKeyboardHeight: CGFloat = {
-        return keyboardHeight[.current] ?? 271
-    }()
-    
-    static let minReasonableKeyboardHeight = keyboardHeight.values.min() ?? 271
+    static let defaultKeyboardHeight = keyboardHeight[.current] ?? 271
+    static let minReasonableKeyboardHeight = defaultKeyboardHeight - 20
     
     private static let keyboardHeight: [ScreenSize: CGFloat] = [
         .inch6_5: 346,

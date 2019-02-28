@@ -1,6 +1,6 @@
 import UIKit
 
-class InputTextView: UITextView {
+class ConversationInputTextView: UITextView {
     
     weak var overrideNext: UIResponder?
 
@@ -29,9 +29,7 @@ class InputTextView: UITextView {
     }
 
     private func prepare() {
-        layer.borderColor = UIColor.lightGray.cgColor
-        layer.borderWidth = 1 / UIScreen.main.scale
-        textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        tintColor = .theme
     }
     
 }

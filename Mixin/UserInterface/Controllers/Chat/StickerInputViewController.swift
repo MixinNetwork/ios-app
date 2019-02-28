@@ -66,10 +66,6 @@ class StickerInputViewController: UIViewController {
         }
     }
     
-    static func instance() -> StickerInputViewController {
-        return Storyboard.chat.instantiateViewController(withIdentifier: "sticker_input") as! StickerInputViewController
-    }
-    
 }
 
 extension StickerInputViewController: UICollectionViewDataSource {

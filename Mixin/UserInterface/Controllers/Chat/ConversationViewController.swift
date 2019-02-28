@@ -46,6 +46,7 @@ class ConversationViewController: UIViewController {
 //    @IBOutlet weak var moreMenuHeightConstraint: NSLayoutConstraint!
 //    @IBOutlet weak var moreMenuTopConstraint: NSLayoutConstraint!
 //    @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var inputWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewHiddenConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewShowConstraint: NSLayoutConstraint!
@@ -72,7 +73,7 @@ class ConversationViewController: UIViewController {
 //    private let maxInputRow = 6
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
-    private let animationDuration: TimeInterval = 0.25
+    private let animationDuration: TimeInterval = 0.3
 //    private let moreMenuSegueId = "MoreMenuSegueId"
 //    private let audioInputSegueId = "AudioInputSegueId"
     
@@ -98,6 +99,7 @@ class ConversationViewController: UIViewController {
     private var keyboardManager = ConversationKeyboardManager()
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
+    private var conversationInputViewController: ConversationInputViewController!
 //    private var moreMenuViewController: ConversationMoreMenuViewController?
 //    private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
@@ -209,14 +211,14 @@ class ConversationViewController: UIViewController {
 //        inputTextView.delegate = self
 //        inputTextView.layer.cornerRadius = inputTextViewHeightConstraint.constant / 2
 //        inputTextView.inputAccessoryView = keyboardManager.inputAccessoryView
-        connectionHintView.delegate = self
+//        connectionHintView.delegate = self
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
         updateMoreMenuFixedJobs()
         updateMoreMenuApps()
         updateStrangerTipsView()
-        updateBottomView()
+//        updateBottomView()
         inputWrapperView.isHidden = false
         updateNavigationBar()
         reloadParticipants()
@@ -266,6 +268,20 @@ class ConversationViewController: UIViewController {
 //                view.layoutIfNeeded()
 //            }
 //        }
+        if (container as? UIViewController) == conversationInputViewController {
+            let newHeight = container.preferredContentSize.height
+            inputWrapperViewHeightConstraint.constant = newHeight
+            var bottomInset = newHeight
+            let quotePreviewViewHeight = isShowingQuotePreviewView ? quotePreviewView.frame.height : 0
+            bottomInset += quotePreviewViewHeight
+            tableView.scrollIndicatorInsets.bottom = bottomInset
+            bottomInset += MessageViewModel.bottomSeparatorHeight
+            UIView.animate(withDuration: 0.5) {
+                UIView.setAnimationCurve(.overdamped)
+                self.tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: true)
+                self.view.layoutIfNeeded()
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -273,17 +289,27 @@ class ConversationViewController: UIViewController {
         isAppearanceAnimating = true
         if !didInitData {
             didInitData = true
-            view.layoutIfNeeded()
-            if let draft = CommonUserDefault.shared.getConversationDraft(conversationId) {
+//            view.layoutIfNeeded()
+//            if let draft = CommonUserDefault.shared.getConversationDraft(conversationId) {
 //                inputTextView.text = draft
 //                UIView.performWithoutAnimation {
 //                    textViewDidChange(inputTextView)
 //                }
 //                inputTextView.contentOffset.y = inputTextView.contentSize.height - inputTextView.frame.height
-            }
-            updateTableViewContentInset()
+//            }
+//            updateTableViewContentInset()
+            updateTableViewContentInsetTop()
+            conversationInputViewController = R.storyboard.chat.input()
+            addChild(conversationInputViewController)
+            inputWrapperView.addSubview(conversationInputViewController.view)
+            conversationInputViewController.view.snp.makeConstraints({ (make) in
+                make.edges.equalToSuperview()
+            })
+            conversationInputViewController.didMove(toParent: self)
+            conversationInputViewController.update(opponentUser: ownerUser)
             dataSource.initData {
                 self.updateAccessoryButtons(animated: false)
+                self.conversationInputViewController.finishLoading()
 //                self.stickerInputViewController.reload()
                 DispatchQueue.global().async { [weak self] in
                     self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
@@ -390,7 +416,7 @@ class ConversationViewController: UIViewController {
 //            delay = animationDuration
 //            toggleStickerPanel(delay: 0)
 //        }
-//        makeInputTextViewResignFirstResponderIfItIs()
+//        conversationInputViewController.resignInputTextViewFirstResponder()
 //        DispatchQueue.main.async {
 //            self.toggleMoreMenu(delay: delay)
 //        }
@@ -542,7 +568,7 @@ class ConversationViewController: UIViewController {
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {
 //        if let audioInputViewController = audioInputViewController, audioInputViewController.isShowingLongPressHint {
 //            audioInputViewController.animateHideLongPressHint()
-//            return
+//            return 
 //        }
         if isShowingMenu {
             dismissMenu(animated: true)
@@ -552,6 +578,7 @@ class ConversationViewController: UIViewController {
 //            toggleStickerPanel(delay: 0)
 //            return
 //        }
+        conversationInputViewController.resignInputTextViewFirstResponder()
         if let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)), let cell = tableView.cellForRow(at: indexPath) as? MessageCell, cell.contentFrame.contains(recognizer.location(in: cell)), let viewModel = dataSource?.viewModel(for: indexPath) {
             let message = viewModel.message
             if message.category.hasSuffix("_TEXT"), let cell = cell as? QuoteTextMessageCell, cell.quoteBackgroundImageView.frame.contains(recognizer.location(in: cell)), let quoteMessageId = viewModel.message.quoteMessageId {
@@ -575,7 +602,7 @@ class ConversationViewController: UIViewController {
                 AudioManager.shared.playOrStop(node: node)
             } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue, let item = GalleryItem(message: message) {
                 tableViewContentOffsetShouldFollowInputWrapperPosition = false
-                makeInputTextViewResignFirstResponderIfItIs()
+                conversationInputViewController.resignInputTextViewFirstResponder()
                 AudioManager.shared.stop(deactivateAudioSession: true)
                 tableViewContentOffsetShouldFollowInputWrapperPosition = true
                 view.bringSubviewToFront(galleryWrapperView)
@@ -587,23 +614,23 @@ class ConversationViewController: UIViewController {
                 homeIndicatorAutoHidden = true
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue {
-                    makeInputTextViewResignFirstResponderIfItIs()
+                    conversationInputViewController.resignInputTextViewFirstResponder()
                     openDocumentAction(message: message)
                 } else {
                     attachmentLoadingCellDidSelectNetworkOperation(cell)
                 }
             } else if message.category.hasSuffix("_CONTACT"), let shareUserId = message.sharedUserId {
-                makeInputTextViewResignFirstResponderIfItIs()
+                conversationInputViewController.resignInputTextViewFirstResponder()
                 if shareUserId == AccountAPI.shared.accountUserId {
                     navigationController?.pushViewController(withBackRoot: MyProfileViewController.instance())
                 } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
                     UserWindow.instance().updateUser(user: user).presentView()
                 }
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-                makeInputTextViewResignFirstResponderIfItIs()
+                conversationInputViewController.resignInputTextViewFirstResponder()
                 open(url: .aboutEncryption)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                makeInputTextViewResignFirstResponderIfItIs()
+                conversationInputViewController.resignInputTextViewFirstResponder()
                 DispatchQueue.global().async { [weak self] in
                     guard let assetId = message.snapshotAssetId, let snapshotId = message.snapshotId, let asset = AssetDAO.shared.getAsset(assetId: assetId), let snapshot = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId) else {
                         return
@@ -613,13 +640,13 @@ class ConversationViewController: UIViewController {
                     }
                 }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let action = message.appCard?.action {
-                makeInputTextViewResignFirstResponderIfItIs()
+                conversationInputViewController.resignInputTextViewFirstResponder()
                 open(url: action)
             } else {
-                makeInputTextViewResignFirstResponderIfItIs()
+                conversationInputViewController.resignInputTextViewFirstResponder()
             }
         } else {
-            makeInputTextViewResignFirstResponderIfItIs()
+            conversationInputViewController.resignInputTextViewFirstResponder()
         }
     }
     
@@ -668,7 +695,7 @@ class ConversationViewController: UIViewController {
         } else if let user = sender.object as? UserItem, user.userId == self.ownerUser?.userId {
             self.ownerUser = user
             updateNavigationBar()
-            updateBottomView()
+            conversationInputViewController.update(opponentUser: user)
             updateStrangerTipsView()
         }
         hideLoading()
@@ -706,7 +733,7 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func didChangeStatusBarFrame(_ notification: Notification) {
-        updateTableViewContentInset()
+        updateTableViewContentInsetTop()
     }
     
     @objc func applicationWillTerminate(_ notification: Notification) {
@@ -880,15 +907,15 @@ extension ConversationViewController: UITextViewDelegate {
     
 }
 
-// MARK: - ConnectionHintViewDelegate
-extension ConversationViewController: ConnectionHintViewDelegate {
-    
-    func animateAlongsideConnectionHintView(_ view: ConnectionHintView, changingHeightWithDifference heightDifference: CGFloat) {
-        updateTableViewContentInset()
-        tableView.contentInset.top += view.connectionHintViewHeightConstraint.constant
-    }
-    
-}
+//// MARK: - ConnectionHintViewDelegate
+//extension ConversationViewController: ConnectionHintViewDelegate {
+//
+//    func animateAlongsideConnectionHintView(_ view: ConnectionHintView, changingHeightWithDifference heightDifference: CGFloat) {
+//        updateTableViewContentInset()
+//        tableView.contentInset.top += view.connectionHintViewHeightConstraint.constant
+//    }
+//
+//}
 
 // MARK: - UITableViewDataSource
 extension ConversationViewController: UITableViewDataSource {
@@ -1383,6 +1410,30 @@ extension ConversationViewController: ConversationKeyboardManagerDelegate {
 
 }
 
+// MARK: - ConversationInputViewControllerDelegate
+//extension ConversationViewController: ConversationInputViewControllerDelegate {
+//
+//    func inputViewController(_ viewController: ConversationInputViewController, preferredContentHeightDidChangeTo newHeight: CGFloat, animated: Bool) {
+//        inputWrapperViewHeightConstraint.constant = newHeight
+//        if animated {
+//            UIView.beginAnimations(nil, context: nil)
+//            UIView.setAnimationDuration(animationDuration)
+//            UIView.setAnimationCurve(.overdamped)
+//        }
+//        var bottomInset = newHeight
+//        let quotePreviewViewHeight = isShowingQuotePreviewView ? quotePreviewView.frame.height : 0
+//        bottomInset += quotePreviewViewHeight
+//        tableView.scrollIndicatorInsets.bottom = bottomInset
+//        bottomInset += MessageViewModel.bottomSeparatorHeight
+//        tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: true)
+//        view.layoutIfNeeded()
+//        if animated {
+//            UIView.commitAnimations()
+//        }
+//    }
+//
+//}
+
 // MARK: - UI Related Helpers
 extension ConversationViewController {
     
@@ -1407,18 +1458,8 @@ extension ConversationViewController {
         }
         ownerUser = UserItem.createUser(from: userResponse)
         updateNavigationBar()
-        updateBottomView()
+        conversationInputViewController.update(opponentUser: ownerUser)
         updateStrangerTipsView()
-    }
-    
-    private func updateBottomView() {
-        guard let user = ownerUser else {
-            return
-        }
-        let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
-//        unblockButton.isHidden = !isBlocked
-//        audioInputContainerView.isHidden = isBlocked || isShowingStickerPanel
-//        botButton.isHidden = !user.isBot
     }
     
     private func updateMoreMenuFixedJobs() {
@@ -1432,18 +1473,18 @@ extension ConversationViewController {
     }
     
     private func updateMoreMenuApps() {
-        if Thread.isMainThread {
-            DispatchQueue.global().async { [weak self] in
-                self?.updateMoreMenuApps()
-            }
-        } else {
-            if dataSource?.category == .group {
+//        if Thread.isMainThread {
+//            DispatchQueue.global().async { [weak self] in
+//                self?.updateMoreMenuApps()
+//            }
+//        } else {
+//            if dataSource?.category == .group {
 //                moreMenuViewController?.apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
-            } else if let ownerId = ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
-                self.ownerUserApp = app
-                DispatchQueue.main.async(execute: updateMoreMenuFixedJobs)
-            }
-        }
+//            } else if let ownerId = ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
+//                self.ownerUserApp = app
+//                DispatchQueue.main.async(execute: updateMoreMenuFixedJobs)
+//            }
+//        }
     }
     
     private func updateAccessoryButtons(animated: Bool) {
@@ -1531,27 +1572,32 @@ extension ConversationViewController {
         }
     }
     
-    private func updateTableViewContentInset() {
-        var inset: UIEdgeInsets
-        if #available(iOS 11.0, *), let safeAreaInsets = UIApplication.shared.keyWindow?.rootViewController?.view.safeAreaInsets {
-            inset = safeAreaInsets
-            let statusBarHeight = max(statusBarPlaceholderHeightConstraint.constant, UIApplication.shared.statusBarFrame.height)
-            inset.top = max(statusBarHeight, inset.top)
-        } else {
-            inset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
-        }
-        inset.top += titleViewHeightConstraint.constant
-        let quotePreviewViewHeight = isShowingQuotePreviewView ? quotePreviewView.frame.height : 0
+    private func updateTableViewContentInsetTop() {
+        let top = UIApplication.shared.statusBarFrame.height
+            + titleViewHeightConstraint.constant
+        tableView.contentInset.top = top
+    }
+//    private func updateTableViewContentInset() {
+//        var inset: UIEdgeInsets
+//        if #available(iOS 11.0, *), let safeAreaInsets = UIApplication.shared.keyWindow?.rootViewController?.view.safeAreaInsets {
+//            inset = safeAreaInsets
+//            let statusBarHeight = max(statusBarPlaceholderHeightConstraint.constant, UIApplication.shared.statusBarFrame.height)
+//            inset.top = max(statusBarHeight, inset.top)
+//        } else {
+//            inset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
+//        }
+//        inset.top += titleViewHeightConstraint.constant
+//        let quotePreviewViewHeight = isShowingQuotePreviewView ? quotePreviewView.frame.height : 0
 //        let inputWrapperHeight = ceil(inputTextViewTopConstraint.constant
 //            + inputTextViewHeightConstraint.constant
 //            + inputTextViewBottomConstraint.constant)
 //        inset.bottom = max(inputWrapperBottomConstraint.constant, inset.bottom)
 //            + quotePreviewViewHeight
 //            + inputWrapperHeight
-        tableView.scrollIndicatorInsets = inset
-        inset.bottom += MessageViewModel.bottomSeparatorHeight
-        tableView.contentInset = inset
-    }
+//        tableView.scrollIndicatorInsets = inset
+//        inset.bottom += MessageViewModel.bottomSeparatorHeight
+//        tableView.contentInset = inset
+//    }
     
     private func setQuoteViewHidden(_ hidden: Bool) {
         if hidden {
@@ -1565,7 +1611,7 @@ extension ConversationViewController {
 //        stickerKeyboardSwitcherButton.isHidden = !hidden
 //        sendButton.isHidden = false
         UIView.animate(withDuration: animationDuration) {
-            self.updateTableViewContentInset()
+//            self.updateTableViewContentInset()
             self.view.layoutIfNeeded()
         }
     }
@@ -1610,14 +1656,6 @@ extension ConversationViewController {
         contentViews.forEach {
             $0.isHidden = hidden
         }
-    }
-    
-    private func makeInputTextViewResignFirstResponderIfItIs() {
-//        guard inputTextView.isFirstResponder else {
-//            return
-//        }
-//        keyboardManager.inputAccessoryViewHeight = 0
-//        inputTextView.resignFirstResponder()
     }
     
     private func frameOfPhotoRepresentableCell(_ cell: PhotoRepresentableMessageCell) -> CGRect {

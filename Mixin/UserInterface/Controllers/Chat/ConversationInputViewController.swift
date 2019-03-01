@@ -28,13 +28,34 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var customInputContainerHeightConstraint: NSLayoutConstraint!
     
+    override var preferredContentSize: CGSize {
+        willSet {
+            guard newValue.height >= ScreenSize.minReasonableKeyboardHeight else {
+                return
+            }
+            customInputContainerHeightConstraint.constant = newValue.height - inputBarView.frame.height
+        }
+    }
+    
+    lazy var extensionViewController = R.storyboard.chat.extension()!
+    lazy var stickersViewController = R.storyboard.chat.stickerInput()!
+    lazy var photoViewController = R.storyboard.chat.photo()!
+    lazy var audioViewController = R.storyboard.chat.audioInput()!
+    
+    var minimizedHeight: CGFloat {
+        return quotePreviewWrapperHeightConstraint.constant
+            + inputBarView.frame.height
+            + view.compatibleSafeAreaInsets.bottom
+    }
+    
+    var quote: (message: MessageItem, thumbnail: UIImage?)? {
+        didSet {
+            updateQuotePreview()
+        }
+    }
+    
     private let maxInputRow = 5
     private let interactiveDismissResponder = InteractiveDismissResponder(height: 50)
-    
-    private lazy var extensionViewController = R.storyboard.chat.extension()!
-    private lazy var stickersViewController = R.storyboard.chat.stickerInput()!
-    private lazy var photoViewController = R.storyboard.chat.photo()!
-    private lazy var audioViewController = R.storyboard.chat.audioInput()!
     
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
@@ -54,27 +75,6 @@ class ConversationInputViewController: UIViewController {
                 })
                 new.didMove(toParent: self)
             }
-        }
-    }
-    
-    override var preferredContentSize: CGSize {
-        willSet {
-            guard newValue.height >= ScreenSize.minReasonableKeyboardHeight else {
-                return
-            }
-            customInputContainerHeightConstraint.constant = newValue.height - inputBarView.frame.height
-        }
-    }
-    
-    var minimizedHeight: CGFloat {
-        return quotePreviewWrapperHeightConstraint.constant
-            + inputBarView.frame.height
-            + view.compatibleSafeAreaInsets.bottom
-    }
-    
-    var quote: (message: MessageItem, thumbnail: UIImage?)? {
-        didSet {
-            updateQuotePreview()
         }
     }
     

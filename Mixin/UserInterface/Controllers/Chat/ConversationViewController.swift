@@ -398,10 +398,9 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func tapAction(_ recognizer: UIGestureRecognizer) {
-//        if let audioInputViewController = audioInputViewController, audioInputViewController.isShowingLongPressHint {
-//            audioInputViewController.animateHideLongPressHint()
-//            return 
-//        }
+        if conversationInputViewController.audioViewController.hideLongPressHint() {
+            return
+        }
         if isShowingMenu {
             dismissMenu(animated: true)
             return
@@ -535,14 +534,13 @@ class ConversationViewController: UIViewController {
     
     @objc func menuControllerDidHideMenu(_ notification: Notification) {
         isShowingMenu = false
-//        inputTextView.overrideNext = nil
+        conversationInputViewController.inputTextView.overrideNext = nil
     }
     
     @objc func participantDidChange(_ notification: Notification) {
         guard let conversationId = notification.object as? String, conversationId == self.conversationId else {
             return
         }
-//        updateMoreMenuApps()
         reloadParticipants()
     }
     
@@ -753,7 +751,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                 }
             }
         case .forward:
-//            audioInputViewController?.cancelIfRecording()
+            conversationInputViewController.audioViewController.cancelIfRecording()
             let vc = SendMessagePeerSelectionViewController.instance(content: .message(message))
             navigationController?.pushViewController(vc, animated: true)
         case .reply:

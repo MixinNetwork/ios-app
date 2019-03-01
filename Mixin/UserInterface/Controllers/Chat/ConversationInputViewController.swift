@@ -363,6 +363,7 @@ class ConversationInputViewController: UIViewController {
     private func loadCustomInputViewController(_ viewController: UIViewController) {
         customInputContainerView.alpha = 0
         customInputViewController = viewController
+        viewController.view.layoutIfNeeded()
         UIView.animate(withDuration: 0.5) {
             UIView.setAnimationCurve(.overdamped)
             self.customInputContainerView.alpha = 1

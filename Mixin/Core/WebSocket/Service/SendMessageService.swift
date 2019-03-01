@@ -359,7 +359,7 @@ class SendMessageService: MixinService {
                             if job.isSessionMessage {
                                 try SendMessageService.shared.sendSessionMessage(blazeMessage: blazeMessage, job: job)
                             } else {
-                                try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage, job: job)
+                                try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage, jobOrderId: job.orderId)
                             }
                         }
                     }
@@ -463,7 +463,7 @@ extension SendMessageService {
         FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendSessionMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
     }
 
-    private func sendMessage(blazeMessage: BlazeMessage, job: Job) throws {
+    private func sendMessage(blazeMessage: BlazeMessage, jobOrderId: Int?) throws {
         var blazeMessage = blazeMessage
         guard let messageId = blazeMessage.params?.messageId, let message = MessageDAO.shared.getMessage(messageId: messageId) else {
             return
@@ -513,7 +513,7 @@ extension SendMessageService {
             blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: message.content ?? "")
             try deliverMessage(blazeMessage: blazeMessage)
 
-            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isExistSenderKey:\(isExistSenderKey)...messageId:\(messageId)...messageStatus:\(message.status)...orderId:\(job.jobId ?? 0)")
+            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isExistSenderKey:\(isExistSenderKey)...messageId:\(messageId)...messageStatus:\(message.status)...orderId:\(jobOrderId ?? 0)")
         }
     }
     

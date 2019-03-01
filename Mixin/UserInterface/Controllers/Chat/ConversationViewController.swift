@@ -148,7 +148,6 @@ class ConversationViewController: UIViewController {
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
         updateStrangerTipsView()
-//        updateBottomView()
         inputWrapperView.isHidden = false
         updateNavigationBar()
         reloadParticipants()
@@ -323,21 +322,6 @@ class ConversationViewController: UIViewController {
 //            toggleMoreMenu(delay: 0)
 //        }
     }
-
-//    @IBAction func deleteConversationAction(_ sender: Any) {
-//        guard !self.conversationId.isEmpty else {
-//            return
-//        }
-//        deleteConversationButton.isBusy = true
-//        let conversationId = self.conversationId
-//        DispatchQueue.global().async { [weak self] in
-//            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-//            NotificationCenter.default.postOnMain(name: .ConversationDidChange)
-//            DispatchQueue.main.async {
-//                self?.navigationController?.backToHome()
-//            }
-//        }
-//    }
     
     @IBAction func interactiveDismissInputWrapperAction(_ sender: UIPanGestureRecognizer) {
         let location = sender.location(in: inputWrapperView)
@@ -393,25 +377,6 @@ class ConversationViewController: UIViewController {
             }
         }
     }
-//
-//    @objc func unblockAction(_ sender: Any) {
-//        guard let user = ownerUser else {
-//            return
-//        }
-//        unblockButton.isBusy = true
-//        UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
-//            guard let weakSelf = self else {
-//                return
-//            }
-//            weakSelf.unblockButton.isBusy = false
-//            switch result {
-//            case .success(let userResponse):
-//                weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
-//            case .failure:
-//                break
-//            }
-//        }
-//    }
     
     @objc func addContactAction(_ sender: Any) {
         guard let user = ownerUser else {

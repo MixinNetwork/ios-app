@@ -185,6 +185,9 @@ class ConversationInputViewController: UIViewController {
         }
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         unblockButton.isHidden = !isBlocked
+        if !isBlocked && unblockButton.isBusy {
+            unblockButton.isBusy = false
+        }
         appButton.isHidden = !user.isBot
     }
     
@@ -206,6 +209,36 @@ class ConversationInputViewController: UIViewController {
             inputTextView.resignFirstResponder()
         } else if isExpanded {
             dismissCustomInput(minimize: true)
+        }
+    }
+    
+    @IBAction func unblockAction(_ sender: Any) {
+        guard let user = dataSource.ownerUser else {
+            return
+        }
+        unblockButton.isBusy = true
+        UserAPI.shared.unblockUser(userId: user.userId) { (result) in
+            switch result {
+            case .success(let userResponse):
+                UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: true)
+            case .failure:
+                break
+            }
+        }
+    }
+    
+    @IBAction func deleteConversationAction(_ sender: Any) {
+        guard !dataSource.conversationId.isEmpty else {
+            return
+        }
+        deleteConversationButton.isBusy = true
+        let conversationId = dataSource.conversationId
+        DispatchQueue.global().async { [weak self] in
+            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+            NotificationCenter.default.postOnMain(name: .ConversationDidChange)
+            DispatchQueue.main.async {
+                self?.navigationController?.backToHome()
+            }
         }
     }
     

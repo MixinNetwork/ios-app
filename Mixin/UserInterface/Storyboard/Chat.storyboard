@@ -964,7 +964,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Unblock"/>
                                 <connections>
-                                    <action selector="unblockAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="IxS-pl-eCc"/>
+                                    <action selector="unblockAction:" destination="bmF-xB-4o7" eventType="touchUpInside" id="vWb-ra-aqb"/>
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESl-jK-Lob" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
@@ -975,7 +975,7 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_menu_delete"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="deleteConversationAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="qQL-fb-TYQ"/>
+                                    <action selector="deleteConversationAction:" destination="bmF-xB-4o7" eventType="touchUpInside" id="P7k-Zi-7zz"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4FQ-5O-gCe">

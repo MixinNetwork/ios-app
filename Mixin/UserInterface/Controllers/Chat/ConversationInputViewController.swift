@@ -35,6 +35,7 @@ class ConversationInputViewController: UIViewController {
     
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
+    private var opponentApp: App?
     private var customInputViewController: UIViewController? {
         didSet {
             if let old = oldValue {
@@ -88,11 +89,12 @@ class ConversationInputViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         inputTextView.inputAccessoryView = interactiveDismissResponder
         inputTextView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         inputTextView.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
         lastSafeAreaInsetsBottom = view.compatibleSafeAreaInsets.bottom
         UIView.performWithoutAnimation {
             minimize()
@@ -143,28 +145,18 @@ class ConversationInputViewController: UIViewController {
         stickersViewController.reload()
         
         extensionViewController.loadViewIfNeeded()
-        DispatchQueue.global().async { [weak self] in
-            guard let weakSelf = self else {
-                return
-            }
-            let dataSource = weakSelf.dataSource
-            let ownerUser = dataSource.ownerUser
-            var ownerUserApp: App?
-            if dataSource.category == .group {
-                let apps = AppDAO.shared.getConversationBots(conversationId: dataSource.conversationId)
-                weakSelf.extensionViewController.apps = apps
-            } else if let ownerId = ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
-                ownerUserApp = app
-            }
-            DispatchQueue.main.sync {
-                if dataSource.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-                    weakSelf.extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact]
-                } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
-                    weakSelf.extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact]
-                } else {
-                    weakSelf.extensionViewController.fixedExtensions = [.camera, .file, .contact]
-                }
-            }
+        if dataSource.category == .group {
+            let apps = AppDAO.shared.getConversationBots(conversationId: dataSource.conversationId)
+            extensionViewController.apps = apps
+        } else if let ownerId = dataSource.ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
+            opponentApp = app
+        }
+        if dataSource.category == .contact, let ownerUser = dataSource.ownerUser, !ownerUser.isBot {
+            extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact]
+        } else if let app = opponentApp, app.creatorId == AccountAPI.shared.accountUserId {
+            extensionViewController.fixedExtensions = [.transfer, .camera, .file, .contact]
+        } else {
+            extensionViewController.fixedExtensions = [.camera, .file, .contact]
         }
     }
     
@@ -252,6 +244,21 @@ class ConversationInputViewController: UIViewController {
     
     @objc func saveDraft() {
         CommonUserDefault.shared.setConversationDraft(dataSource.conversationId, draft: trimmedMessageDraft)
+    }
+    
+    @objc func participantDidChange(_ notification: Notification) {
+        guard dataSource.category == .group else {
+            return
+        }
+        guard let conversationId = notification.object as? String, conversationId == dataSource.conversationId else {
+            return
+        }
+        DispatchQueue.global().async {
+            let apps = AppDAO.shared.getConversationBots(conversationId: self.dataSource.conversationId)
+            DispatchQueue.main.sync {
+                self.extensionViewController.apps = apps
+            }
+        }
     }
     
     private func minimize() {

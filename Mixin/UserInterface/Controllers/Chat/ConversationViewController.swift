@@ -168,8 +168,6 @@ class ConversationViewController: UIViewController {
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
-//        updateMoreMenuFixedJobs()
-//        updateMoreMenuApps()
         updateStrangerTipsView()
 //        updateBottomView()
         inputWrapperView.isHidden = false
@@ -213,15 +211,6 @@ class ConversationViewController: UIViewController {
         isAppearanceAnimating = true
         if !didInitData {
             didInitData = true
-//            view.layoutIfNeeded()
-//            if let draft = CommonUserDefault.shared.getConversationDraft(conversationId) {
-//                inputTextView.text = draft
-//                UIView.performWithoutAnimation {
-//                    textViewDidChange(inputTextView)
-//                }
-//                inputTextView.contentOffset.y = inputTextView.contentSize.height - inputTextView.frame.height
-//            }
-//            updateTableViewContentInset()
             updateTableViewContentInsetTop()
             conversationInputViewController = R.storyboard.chat.input()
             addChild(conversationInputViewController)
@@ -259,7 +248,6 @@ class ConversationViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        saveDraft()
         AudioManager.shared.stop(deactivateAudioSession: true)
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath), tableView.rectForRow(at: lastIndexPath).origin.y < tableView.contentOffset.y + tableView.frame.height - tableView.contentInset.bottom {
@@ -1246,35 +1234,6 @@ extension ConversationViewController {
         UIMenuController.shared.setMenuVisible(false, animated: animated)
     }
     
-    private func toggleStickerPanel(delay: TimeInterval) {
-//        stickerPanelContainerHeightConstraint.constant = ConversationKeyboardManager.lastKeyboardHeight
-//        inputWrapperBottomConstraint.constant = isShowingStickerPanel ? view.compatibleSafeAreaInsets.bottom : stickerPanelContainerHeightConstraint.constant
-//        let newAlpha: CGFloat = isShowingStickerPanel ? 0 : 1
-//        stickerKeyboardSwitcherButton.setImage(isShowingStickerPanel ? #imageLiteral(resourceName: "ic_chat_sticker") : #imageLiteral(resourceName: "ic_chat_keyboard"), for: .normal)
-//        sendButton.isHidden = !isShowingStickerPanel || !inputTextView.hasText
-//        toggleStickerPanelSizeButton.isHidden = isShowingStickerPanel
-//        isStickerPanelMax = false
-//        toggleStickerPanelSizeButton.setImage(#imageLiteral(resourceName: "ic_chat_panel_max"), for: .normal)
-//        let offset = inputWrapperBottomConstraint.constant - lastInputWrapperBottomConstant
-//        UIView.animate(withDuration: 0, delay: delay, options: [], animations: {
-//            UIView.setAnimationCurve(.overdamped)
-//            self.stickerInputContainerView.alpha = newAlpha
-//            self.audioInputContainerView.isHidden = !self.isShowingStickerPanel
-//            if self.isShowingStickerPanel {
-//                self.dismissPanelsButton.alpha = 0
-//            }
-//            self.view.layoutIfNeeded()
-//            let contentOffsetY = self.tableView.contentOffset.y
-//            self.updateTableViewContentInset()
-//            self.tableView.setContentOffsetYSafely(contentOffsetY + offset)
-//            FileManager.default.writeLog(conversationId: self.conversationId, log: "[POS]Set contentOffset: \(self.tableView.contentOffset), reason: Toggle sticker panel")
-//        }) { (_) in
-//            self.isShowingStickerPanel = !self.isShowingStickerPanel
-//            self.stickerInputViewController.animated = self.isShowingStickerPanel
-//            self.lastInputWrapperBottomConstant = self.inputWrapperBottomConstraint.constant
-//        }
-    }
-    
     private func updateStrangerTipsView() {
         DispatchQueue.global().async { [weak self] in
             if let ownerUser = self?.ownerUser, ownerUser.relationship == Relationship.STRANGER.rawValue, !MessageDAO.shared.hasSentMessage(toUserId: ownerUser.userId) {
@@ -1297,27 +1256,6 @@ extension ConversationViewController {
             + titleViewHeightConstraint.constant
         tableView.contentInset.top = top
     }
-//    private func updateTableViewContentInset() {
-//        var inset: UIEdgeInsets
-//        if #available(iOS 11.0, *), let safeAreaInsets = UIApplication.shared.keyWindow?.rootViewController?.view.safeAreaInsets {
-//            inset = safeAreaInsets
-//            let statusBarHeight = max(statusBarPlaceholderHeightConstraint.constant, UIApplication.shared.statusBarFrame.height)
-//            inset.top = max(statusBarHeight, inset.top)
-//        } else {
-//            inset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.height, left: 0, bottom: 0, right: 0)
-//        }
-//        inset.top += titleViewHeightConstraint.constant
-//        let quotePreviewViewHeight = isShowingQuotePreviewView ? quotePreviewView.frame.height : 0
-//        let inputWrapperHeight = ceil(inputTextViewTopConstraint.constant
-//            + inputTextViewHeightConstraint.constant
-//            + inputTextViewBottomConstraint.constant)
-//        inset.bottom = max(inputWrapperBottomConstraint.constant, inset.bottom)
-//            + quotePreviewViewHeight
-//            + inputWrapperHeight
-//        tableView.scrollIndicatorInsets = inset
-//        inset.bottom += MessageViewModel.bottomSeparatorHeight
-//        tableView.contentInset = inset
-//    }
     
     private func setQuoteViewHidden(_ hidden: Bool) {
         if hidden {
@@ -1390,18 +1328,6 @@ extension ConversationViewController {
 
 // MARK: - Helpers
 extension ConversationViewController {
-    
-    private var trimmedMessageDraft: String {
-        return ""
-//        return inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-    
-    private func saveDraft() {
-        guard !conversationId.isEmpty else {
-            return
-        }
-        CommonUserDefault.shared.setConversationDraft(conversationId, draft: trimmedMessageDraft)
-    }
     
     private func reloadParticipants() {
         guard dataSource?.category == .group else {

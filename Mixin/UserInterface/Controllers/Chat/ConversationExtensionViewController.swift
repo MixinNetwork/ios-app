@@ -70,7 +70,7 @@ extension ConversationExtensionViewController: UICollectionViewDataSource {
             cell.imageView.image = ext.image
             cell.label.text = ext.title
         } else {
-            let app = apps[indexPath.row]
+            let app = apps[indexPath.row - fixedExtensions.count]
             cell.imageView.sd_setImage(with: URL(string: app.iconUrl), completed: nil)
             cell.label.text = app.name
         }

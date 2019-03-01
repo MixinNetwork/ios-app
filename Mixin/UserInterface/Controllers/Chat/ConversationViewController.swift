@@ -103,14 +103,6 @@ class ConversationViewController: UIViewController {
         return view
     }()
     
-    private var stickerPanelFullsizedHeight: CGFloat {
-        return view.frame.height
-            - 56
-            - max(view.compatibleSafeAreaInsets.top, 20)
-            - view.compatibleSafeAreaInsets.bottom
-            - 55
-    }
-    
     private var unreadBadgeValue: Int = 0 {
         didSet {
             guard unreadBadgeValue != oldValue else {

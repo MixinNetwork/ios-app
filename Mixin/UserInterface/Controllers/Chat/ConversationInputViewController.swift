@@ -266,6 +266,15 @@ class ConversationInputViewController: UIViewController {
         setRightAccessoryButton(stickersButton)
     }
     
+    // TODO: use view controller based web view and present it right here
+    @IBAction func openOpponentAppAction(_ sender: Any) {
+        guard let user = dataSource.ownerUser, user.isBot, let app = opponentApp else {
+            return
+        }
+        dismiss()
+        conversationViewController.openOpponentApp(app)
+    }
+    
     @IBAction func showPhotosAction(_ sender: Any) {
         resignTextViewFirstResponderWithoutNotifyingContentHeightChange()
         photosButton.isSelected.toggle()

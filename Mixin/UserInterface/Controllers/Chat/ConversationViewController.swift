@@ -297,24 +297,6 @@ class ConversationViewController: UIViewController {
         }
     }
     
-//    @IBAction func botAction(_ sender: Any) {
-//        guard let user = ownerUser, user.isBot, let app = self.ownerUserApp else {
-//            return
-//        }
-//        guard let url = URL(string: app.homeUri), !conversationId.isEmpty else {
-//            return
-//        }
-//
-//        if isShowingMoreMenu {
-//            toggleMoreMenu(delay: 0)
-//        }
-//        if isShowingStickerPanel {
-//            toggleStickerPanel(delay: 0)
-//        }
-//        let window = WebWindow.instance(conversationId: conversationId, app: app)
-//        window.presentPopupControllerAnimated(url: url)
-//    }
-    
     @IBAction func dismissPanelsAction(_ sender: Any) {
 //        if isShowingStickerPanel && isStickerPanelMax {
 //            toggleStickerPanel(delay: 0)
@@ -603,7 +585,15 @@ class ConversationViewController: UIViewController {
             weakSelf.present(picker, animated: true, completion: nil)
         }
     }
-
+    
+    func openOpponentApp(_ app: App) {
+        guard let url = URL(string: app.homeUri), !conversationId.isEmpty else {
+            return
+        }
+        let window = WebWindow.instance(conversationId: conversationId, app: app)
+        window.presentPopupControllerAnimated(url: url)
+    }
+    
     func reduceStickerPanelHeightIfMaximized() {
 //        guard isStickerPanelMax else {
 //            return

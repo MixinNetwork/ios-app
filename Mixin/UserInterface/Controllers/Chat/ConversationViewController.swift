@@ -56,7 +56,6 @@ class ConversationViewController: UIViewController {
     private let animationDuration: TimeInterval = 0.3
     
     private var ownerUser: UserItem?
-    private var ownerUserApp: App?
     private var participants = [Participant]()
     private var role = ""
     private var asset: AssetItem?
@@ -65,8 +64,7 @@ class ConversationViewController: UIViewController {
     private var didInitData = false
     private var isShowingMenu = false
     private var isAppearanceAnimating = true
-    private var inputWrapperShouldFollowKeyboardPosition = true
-    private var tableViewContentOffsetShouldFollowInputWrapperPosition = true
+    private var adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
     private var didManuallyStoppedTableViewDecelerating = false
     private var isShowingQuotePreviewView: Bool {
         return quoteMessageId != nil
@@ -200,7 +198,7 @@ class ConversationViewController: UIViewController {
             bottomInset += MessageViewModel.bottomSeparatorHeight
             UIView.animate(withDuration: 0.5) {
                 UIView.setAnimationCurve(.overdamped)
-                self.tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: true)
+                self.tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: self.adjustTableViewContentOffsetWhenInputWrapperHeightChanges)
                 self.view.layoutIfNeeded()
             }
         }
@@ -474,11 +472,6 @@ class ConversationViewController: UIViewController {
             dismissMenu(animated: true)
             return
         }
-//        if isShowingStickerPanel {
-//            toggleStickerPanel(delay: 0)
-//            return
-//        }
-        conversationInputViewController.resignInputTextViewFirstResponder()
         if let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)), let cell = tableView.cellForRow(at: indexPath) as? MessageCell, cell.contentFrame.contains(recognizer.location(in: cell)), let viewModel = dataSource?.viewModel(for: indexPath) {
             let message = viewModel.message
             if message.category.hasSuffix("_TEXT"), let cell = cell as? QuoteTextMessageCell, cell.quoteBackgroundImageView.frame.contains(recognizer.location(in: cell)), let quoteMessageId = viewModel.message.quoteMessageId {
@@ -501,10 +494,10 @@ class ConversationViewController: UIViewController {
                 let node = AudioManager.Node(message: message, path: url.path)
                 AudioManager.shared.playOrStop(node: node)
             } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue, let item = GalleryItem(message: message) {
-                tableViewContentOffsetShouldFollowInputWrapperPosition = false
-                conversationInputViewController.resignInputTextViewFirstResponder()
+                adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
+                conversationInputViewController.dismiss()
+                adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
                 AudioManager.shared.stop(deactivateAudioSession: true)
-                tableViewContentOffsetShouldFollowInputWrapperPosition = true
                 view.bringSubviewToFront(galleryWrapperView)
                 if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, case let .relativeOffset(offset) = viewModel.layoutPosition {
                     galleryViewController.show(item: item, offset: offset)
@@ -514,23 +507,23 @@ class ConversationViewController: UIViewController {
                 homeIndicatorAutoHidden = true
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue {
-                    conversationInputViewController.resignInputTextViewFirstResponder()
+                    conversationInputViewController.dismiss()
                     openDocumentAction(message: message)
                 } else {
                     attachmentLoadingCellDidSelectNetworkOperation(cell)
                 }
             } else if message.category.hasSuffix("_CONTACT"), let shareUserId = message.sharedUserId {
-                conversationInputViewController.resignInputTextViewFirstResponder()
+                conversationInputViewController.dismiss()
                 if shareUserId == AccountAPI.shared.accountUserId {
                     navigationController?.pushViewController(withBackRoot: MyProfileViewController.instance())
                 } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
                     UserWindow.instance().updateUser(user: user).presentView()
                 }
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-                conversationInputViewController.resignInputTextViewFirstResponder()
+                conversationInputViewController.dismiss()
                 open(url: .aboutEncryption)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                conversationInputViewController.resignInputTextViewFirstResponder()
+                conversationInputViewController.dismiss()
                 DispatchQueue.global().async { [weak self] in
                     guard let assetId = message.snapshotAssetId, let snapshotId = message.snapshotId, let asset = AssetDAO.shared.getAsset(assetId: assetId), let snapshot = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId) else {
                         return
@@ -540,13 +533,13 @@ class ConversationViewController: UIViewController {
                     }
                 }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let action = message.appCard?.action {
-                conversationInputViewController.resignInputTextViewFirstResponder()
+                conversationInputViewController.dismiss()
                 open(url: action)
             } else {
-                conversationInputViewController.resignInputTextViewFirstResponder()
+                conversationInputViewController.dismiss()
             }
         } else {
-            conversationInputViewController.resignInputTextViewFirstResponder()
+            conversationInputViewController.dismiss()
         }
     }
     

@@ -67,6 +67,10 @@ class ConversationInputViewController: UIViewController {
         return inputBarView.frame.height + view.compatibleSafeAreaInsets.bottom
     }
     
+    private var isExpanded: Bool {
+        return preferredContentSize.height > minimizedHeight
+    }
+    
     private var conversationViewController: ConversationViewController {
         return parent as! ConversationViewController
     }
@@ -97,7 +101,7 @@ class ConversationInputViewController: UIViewController {
         inputTextView.delegate = self
         lastSafeAreaInsetsBottom = view.compatibleSafeAreaInsets.bottom
         UIView.performWithoutAnimation {
-            minimize()
+            reportMinimizedHeight()
             if let draft = CommonUserDefault.shared.getConversationDraft(dataSource.conversationId), !draft.isEmpty {
                 layoutForInputTextViewIsEmpty(false, animated: false)
                 inputTextView.text = draft
@@ -160,13 +164,6 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
-    func resignInputTextViewFirstResponder() {
-        guard inputTextView.isFirstResponder else {
-            return
-        }
-        inputTextView.resignFirstResponder()
-    }
-    
     func update(opponentUser: UserItem?) {
         if let user = opponentUser {
             let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
@@ -183,10 +180,18 @@ class ConversationInputViewController: UIViewController {
             UIView.setAnimationCurve(.overdamped)
             self.customInputContainerView.alpha = 0
             if minimize {
-                self.minimize()
+                self.reportMinimizedHeight()
             }
         }) { (_) in
             self.customInputViewController = nil
+        }
+    }
+    
+    func dismiss() {
+        if inputTextView.isFirstResponder {
+            inputTextView.resignFirstResponder()
+        } else if isExpanded {
+            dismissCustomInput(minimize: true)
         }
     }
     
@@ -232,7 +237,7 @@ class ConversationInputViewController: UIViewController {
             return
         }
         if keyboardFrameIsInvisible(endFrame) {
-            minimize()
+            reportMinimizedHeight()
         } else {
             let height = inputBarView.frame.height
                 + screenHeight
@@ -261,7 +266,7 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
-    private func minimize() {
+    private func reportMinimizedHeight() {
         preferredContentSize.height = minimizedHeight
     }
     

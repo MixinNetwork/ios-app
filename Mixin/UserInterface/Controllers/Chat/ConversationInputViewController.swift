@@ -26,13 +26,13 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var customInputContainerHeightConstraint: NSLayoutConstraint!
     
     private let maxInputRow = 5
+    private let interactiveDismissResponder = InteractiveDismissResponder(height: 50)
     
     private lazy var extensionViewController = R.storyboard.chat.extension()!
     private lazy var stickersViewController = R.storyboard.chat.stickerInput()!
     private lazy var photoViewController = R.storyboard.chat.photo()!
     private lazy var audioViewController = R.storyboard.chat.audioInput()!
     
-    private var interactiveDismissResponder: InteractiveDismissResponder!
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
     private var customInputViewController: UIViewController? {
@@ -78,18 +78,36 @@ class ConversationInputViewController: UIViewController {
         return UIScreen.main.bounds.height
     }
     
+    private var trimmedMessageDraft: String {
+        return inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.isUserInteractionEnabled = false
+        inputTextView.inputAccessoryView = interactiveDismissResponder
+        inputTextView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        inputTextView.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
         lastSafeAreaInsetsBottom = view.compatibleSafeAreaInsets.bottom
         UIView.performWithoutAnimation {
-            self.minimize()
+            minimize()
+            if let draft = CommonUserDefault.shared.getConversationDraft(dataSource.conversationId), !draft.isEmpty {
+                layoutForInputTextViewIsEmpty(false, animated: false)
+                inputTextView.text = draft
+                textViewDidChange(inputTextView)
+                inputTextView.contentOffset.y = inputTextView.contentSize.height - inputTextView.frame.height
+            }
         }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        saveDraft()
     }
     
     @available(iOS 11.0, *)
@@ -114,12 +132,6 @@ class ConversationInputViewController: UIViewController {
     }
     
     func finishLoading() {
-        interactiveDismissResponder = InteractiveDismissResponder(height: inputBarView.frame.height)
-        inputTextView.inputAccessoryView = interactiveDismissResponder
-        inputTextView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-        inputTextView.delegate = self
-        view.isUserInteractionEnabled = true
-        
         addChild(audioViewController)
         audioInputContainerView.addSubview(audioViewController.view)
         audioViewController.view.snp.makeConstraints({ (make) in
@@ -238,6 +250,10 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    @objc func saveDraft() {
+        CommonUserDefault.shared.setConversationDraft(dataSource.conversationId, draft: trimmedMessageDraft)
+    }
+    
     private func minimize() {
         preferredContentSize.height = minimizedHeight
     }
@@ -309,6 +325,37 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    private func layoutForInputTextViewIsEmpty(_ isEmpty: Bool, animated: Bool) {
+        if animated {
+            UIView.beginAnimations(nil, context: nil)
+            UIView.setAnimationDuration(0.2)
+        }
+        if isEmpty {
+            beginEditingInputTextViewTrailingConstraint.priority = .defaultLow
+            beginEditingRightActionsStackLeadingConstraint.priority = .defaultLow
+            endEditingInputTextViewTrailingConstraint.priority = .defaultHigh
+            endEditingRightActionsStackTrailingConstraint.priority = .defaultHigh
+            inputBarView.layoutIfNeeded()
+            sendButton.alpha = 0
+            rightActionsStackView.alpha = 1
+            audioInputContainerView.alpha = 1
+            inputTextViewRightAccessoryView.alpha = 1
+        } else {
+            beginEditingInputTextViewTrailingConstraint.priority = .defaultHigh
+            beginEditingRightActionsStackLeadingConstraint.priority = .defaultHigh
+            endEditingInputTextViewTrailingConstraint.priority = .defaultLow
+            endEditingRightActionsStackTrailingConstraint.priority = .defaultLow
+            inputBarView.layoutIfNeeded()
+            sendButton.alpha = 1
+            rightActionsStackView.alpha = 0
+            audioInputContainerView.alpha = 0
+            inputTextViewRightAccessoryView.alpha = 0
+        }
+        if animated {
+            UIView.commitAnimations()
+        }
+    }
+    
 }
 
 extension ConversationInputViewController: UITextViewDelegate {
@@ -320,39 +367,15 @@ extension ConversationInputViewController: UITextViewDelegate {
         return true
     }
     
-    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
-        return true
-    }
-    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         guard !audioViewController.isRecording else {
             return false
         }
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         if textView.text.isEmpty && !newText.isEmpty {
-            beginEditingInputTextViewTrailingConstraint.priority = .defaultHigh
-            beginEditingRightActionsStackLeadingConstraint.priority = .defaultHigh
-            endEditingInputTextViewTrailingConstraint.priority = .defaultLow
-            endEditingRightActionsStackTrailingConstraint.priority = .defaultLow
-            UIView.animate(withDuration: 0.2) {
-                self.inputBarView.layoutIfNeeded()
-                self.sendButton.alpha = 1
-                self.rightActionsStackView.alpha = 0
-                self.audioInputContainerView.alpha = 0
-                self.inputTextViewRightAccessoryView.alpha = 0
-            }
+            layoutForInputTextViewIsEmpty(false, animated: true)
         } else if !textView.text.isEmpty && newText.isEmpty {
-            beginEditingInputTextViewTrailingConstraint.priority = .defaultLow
-            beginEditingRightActionsStackLeadingConstraint.priority = .defaultLow
-            endEditingInputTextViewTrailingConstraint.priority = .defaultHigh
-            endEditingRightActionsStackTrailingConstraint.priority = .defaultHigh
-            UIView.animate(withDuration: 0.2) {
-                self.inputBarView.layoutIfNeeded()
-                self.sendButton.alpha = 0
-                self.rightActionsStackView.alpha = 1
-                self.audioInputContainerView.alpha = 1
-                self.inputTextViewRightAccessoryView.alpha = 1
-            }
+            layoutForInputTextViewIsEmpty(true, animated: true)
         }
         return true
     }

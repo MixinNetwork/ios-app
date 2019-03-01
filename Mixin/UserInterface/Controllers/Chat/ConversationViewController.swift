@@ -182,7 +182,6 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeStatusBarFrame(_:)), name: UIApplication.didChangeStatusBarFrameNotification, object: nil)
     }
     
@@ -647,10 +646,6 @@ class ConversationViewController: UIViewController {
     
     @objc func didChangeStatusBarFrame(_ notification: Notification) {
         updateTableViewContentInsetTop()
-    }
-    
-    @objc func applicationWillTerminate(_ notification: Notification) {
-        saveDraft()
     }
     
     // MARK: - Interface

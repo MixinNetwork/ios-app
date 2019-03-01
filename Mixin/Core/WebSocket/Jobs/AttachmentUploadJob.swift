@@ -110,6 +110,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         MessageDAO.shared.updateMessageContentAndMediaStatus(content: content, mediaStatus: .DONE, messageId: message.messageId, conversationId: message.conversationId)
 
         SendMessageService.shared.sendMessage(message: message)
+        SendMessageService.shared.sendSessionMessage(message: message)
     }
 
     internal func getMediaDataText(attachmentId: String, key: Data?, digest: Data?) -> String {

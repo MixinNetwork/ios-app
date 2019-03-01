@@ -143,7 +143,7 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.updatePin, parameters: param, toastError: false, completion: completion)
     }
     
-    func logout(completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func logoutSession(completion: @escaping (APIResult<EmptyResponse>) -> Void) {
         request(method: .post, url: url.logout, completion: completion)
     }
     

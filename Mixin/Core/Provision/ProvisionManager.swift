@@ -1,11 +1,9 @@
 import Foundation
 
 class ProvisionManager {
-    
-    private(set) static var isDesktopLoggedIn = false
-    
+
     static func updateProvision(uuid: String, base64EncodedPublicKey: String, completion: @escaping (Bool) -> Void) {
-        guard !isDesktopLoggedIn else {
+        guard !AccountUserDefault.shared.isDesktopLoggedIn else {
             alert("Already logged in")
             return
         }
@@ -33,17 +31,14 @@ class ProvisionManager {
                 let secret = secretData.base64EncodedString()
                 ProvisioningAPI.shared.update(id: uuid, secret: secret, completion: { (result) in
                     switch result {
-                    case .success(let reponse):
-                        isDesktopLoggedIn = true
+                    case .success:
                         completion(true)
                     case .failure(let error):
-                        isDesktopLoggedIn = false
                         alert(error.localizedDescription)
                         completion(false)
                     }
                 })
             case .failure:
-                isDesktopLoggedIn = false
                 alert("failed to get code")
                 completion(false)
             }

@@ -3,7 +3,7 @@ import Foundation
 struct BlazeMessageData: Codable {
 
     let conversationId: String
-    let userId: String
+    var userId: String
     var messageId: String
     let category: String
     let data: String

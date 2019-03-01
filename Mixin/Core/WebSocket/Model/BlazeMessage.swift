@@ -106,13 +106,13 @@ extension BlazeMessage: Decodable {
         switch action {
         case BlazeMessageAction.listPendingMessages.rawValue:
             data = nil
-        case BlazeMessageAction.createMessage.rawValue, BlazeMessageAction.acknowledgeMessageReceipt.rawValue, BlazeMessageAction.createCall.rawValue:
+        case BlazeMessageAction.createMessage.rawValue, BlazeMessageAction.acknowledgeMessageReceipt.rawValue, BlazeMessageAction.createCall.rawValue, BlazeMessageAction.createSessionMessage.rawValue:
             let messageData: BlazeMessageData? = container.getCodable(key: .data)
             data = messageData != nil ? String(data: try JSONEncoder().encode(messageData), encoding: .utf8) : nil
         case BlazeMessageAction.countSignalKeys.rawValue:
             let count: SignalKeyCount? = container.getCodable(key: .data)
             data = count != nil ? String(data: try JSONEncoder().encode(count), encoding: .utf8) : nil
-        case BlazeMessageAction.consumeSignalKeys.rawValue:
+        case BlazeMessageAction.consumeSignalKeys.rawValue, BlazeMessageAction.consumeSessionSignalKeys.rawValue:
             let keys: [SignalKeyResponse]? = container.getCodable(key: .data)
             data = keys != nil ? String(data: try JSONEncoder().encode(keys), encoding: .utf8) : nil
         default:

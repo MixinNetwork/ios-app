@@ -1,11 +1,14 @@
 import UIKit
 
-class DesktopViewController: UIViewController {
+class DesktopViewController: UITableViewController {
     
     @IBOutlet weak var statusImageView: UIImageView!
-    @IBOutlet var tableView: UITableView!
-    
+    @IBOutlet weak var actionLabel: UILabel!
+    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var actionCell: UITableViewCell!
+
     private let cellReuseId = "cell"
+    private var isDesktopLoggedIn = AccountUserDefault.shared.isDesktopLoggedIn
     
     class func instance() -> UIViewController {
         let vc = Storyboard.setting.instantiateViewController(withIdentifier: "desktop") as! DesktopViewController
@@ -14,68 +17,63 @@ class DesktopViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseId)
-        tableView.dataSource = self
-        tableView.delegate = self
-        updateStatusImageView()
+        NotificationCenter.default.addObserver(self, selector: #selector(sessionChanged), name: .UserSessionDidChange, object: nil)
+        updateStatus(forceUpdate: true)
     }
-    
-    private func updateStatusImageView() {
-        statusImageView.image = ProvisionManager.isDesktopLoggedIn
-            ? UIImage(named: "ic_desktop_on")
-            : UIImage(named: "ic_desktop_off")
-    }
-    
-}
 
-extension DesktopViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+    @objc func sessionChanged() {
+        updateStatus()
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId)!
-        if ProvisionManager.isDesktopLoggedIn {
-            cell.textLabel?.text = Localized.SETTING_DESKTOP_LOG_OUT
-            cell.textLabel?.textColor = .systemTint
-        } else {
-            cell.textLabel?.text = Localized.SCAN_QR_CODE
-            cell.textLabel?.textColor = .black
+    private func updateStatus(forceUpdate: Bool = false) {
+        let isDesktopLoggedIn = AccountUserDefault.shared.isDesktopLoggedIn
+        guard forceUpdate || self.isDesktopLoggedIn != isDesktopLoggedIn else {
+            return
         }
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?  {
-        return nil
-    }
-    
-}
+        self.isDesktopLoggedIn = isDesktopLoggedIn
 
-extension DesktopViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        statusImageView.image = isDesktopLoggedIn ? UIImage(named: "ic_desktop_on") : UIImage(named: "ic_desktop_off")
+        actionLabel.text = isDesktopLoggedIn ? Localized.SETTING_DESKTOP_LOG_OUT : Localized.SCAN_QR_CODE
+
+        if !forceUpdate {
+            actionLabel.isHidden = false
+            indicatorView.stopAnimating()
+            indicatorView.isHidden = true
+            actionCell.isUserInteractionEnabled = true
+        }
+    }
+
+    private func loadingView() {
+        guard !indicatorView.isAnimating else {
+            return
+        }
+        actionCell.isUserInteractionEnabled = false
+        actionLabel.isHidden = true
+        indicatorView.startAnimating()
+        indicatorView.isHidden = false
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if ProvisionManager.isDesktopLoggedIn {
-            
+        if AccountUserDefault.shared.isDesktopLoggedIn {
+            loadingView()
+            AccountAPI.shared.logoutSession { (_) in
+
+            }
         } else {
             let vc = CameraViewController.instance()
             vc.delegate = self
             navigationController?.pushViewController(vc, animated: true)
         }
     }
-    
 }
 
 extension DesktopViewController: CameraViewControllerDelegate {
     
     func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
         if let url = MixinURL(string: string), case let .device(uuid, publicKey) = url {
-            ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { [weak self] success in
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                    self?.updateStatusImageView()
-                }
+            loadingView()
+            ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { _ in
             })
             navigationController?.popViewController(animated: true)
         }

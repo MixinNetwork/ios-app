@@ -358,7 +358,7 @@
         <scene sceneID="RHr-1C-m5g">
             <objects>
                 <tableViewController storyboardIdentifier="desktop" id="j6Z-Xg-NSy" customClass="DesktopViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Ixr-D2-LC6">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Ixr-D2-LC6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -367,13 +367,48 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
-                        <sections/>
+                        <sections>
+                            <tableViewSection id="7jR-BE-h4x">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ZY4-0L-feL">
+                                        <rect key="frame" x="0.0" y="156" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZY4-0L-feL" id="8qS-o7-M7G">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Scan QR Code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ThC-o6-Pwe">
+                                                    <rect key="frame" x="16" y="11.5" width="111.5" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="BPZ-4x-nCg">
+                                                    <rect key="frame" x="16" y="12" width="20" height="20"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="BPZ-4x-nCg" firstAttribute="centerY" secondItem="8qS-o7-M7G" secondAttribute="centerY" id="CcF-of-QLB"/>
+                                                <constraint firstItem="ThC-o6-Pwe" firstAttribute="centerY" secondItem="8qS-o7-M7G" secondAttribute="centerY" id="HXy-7s-Qsi"/>
+                                                <constraint firstItem="BPZ-4x-nCg" firstAttribute="leading" secondItem="ThC-o6-Pwe" secondAttribute="leading" id="dLF-Tu-jgC"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <constraints>
+                                            <constraint firstItem="ThC-o6-Pwe" firstAttribute="leading" secondItem="ZY4-0L-feL" secondAttribute="leadingMargin" id="YSG-bw-QHh"/>
+                                        </constraints>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
                         <connections>
                             <outlet property="dataSource" destination="j6Z-Xg-NSy" id="Zuq-lx-o9V"/>
                             <outlet property="delegate" destination="j6Z-Xg-NSy" id="2wg-aK-43y"/>
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="actionCell" destination="ZY4-0L-feL" id="H7h-fy-CyA"/>
+                        <outlet property="actionLabel" destination="ThC-o6-Pwe" id="Ibl-tT-5vK"/>
+                        <outlet property="indicatorView" destination="BPZ-4x-nCg" id="guW-8t-ho0"/>
                         <outlet property="statusImageView" destination="Z3R-y8-ijL" id="fDi-Sr-lTX"/>
                         <outlet property="tableView" destination="Ixr-D2-LC6" id="4pG-Wb-46Q"/>
                     </connections>
@@ -1322,8 +1357,8 @@
     </scenes>
     <resources>
         <image name="bg_mixin" width="375" height="280"/>
-        <image name="ic_desktop_off" width="120" height="78"/>
         <image name="ic_backup" width="117" height="76"/>
+        <image name="ic_desktop_off" width="120" height="78"/>
         <image name="ic_titlebar_back" width="44" height="44"/>
     </resources>
 </document>

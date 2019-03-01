@@ -91,6 +91,7 @@ class SendMessageService: MixinService {
         }
         if msg.category.hasSuffix("_TEXT") || msg.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") {
             SendMessageService.shared.sendMessage(message: msg)
+            SendMessageService.shared.sendSessionMessage(message: msg)
         } else if msg.category.hasSuffix("_IMAGE") {
             ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: msg))
         } else if msg.category.hasSuffix("_DATA") {
@@ -107,9 +108,6 @@ class SendMessageService: MixinService {
     func sendMessage(message: Message) {
         saveDispatchQueue.async {
             MixinDatabase.shared.insertOrReplace(objects: [Job(message: message)])
-            if message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_IMAGE") {
-                MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, isSessionMessage: true)])
-            }
             SendMessageService.shared.processMessages()
         }
     }
@@ -246,7 +244,7 @@ class SendMessageService: MixinService {
                 SendMessageService.shared.processing = false
             }
             repeat {
-                guard let job = AccountUserDefault.shared.extensionSession != nil ? JobDAO.shared.nextJob() : JobDAO.shared.nextNotSessionJob() else {
+                guard let job = AccountUserDefault.shared.isDesktopLoggedIn ? JobDAO.shared.nextJob() : JobDAO.shared.nextNotSessionJob() else {
                     return
                 }
 

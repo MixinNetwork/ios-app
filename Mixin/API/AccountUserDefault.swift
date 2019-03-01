@@ -42,6 +42,13 @@ class AccountUserDefault {
         }
     }
 
+    var isDesktopLoggedIn: Bool {
+        guard let sessionId = extensionSession else {
+            return false
+        }
+        return !sessionId.isEmpty
+    }
+
     func getToken() -> String? {
         return session.string(forKey: keySessionSecret)
     }

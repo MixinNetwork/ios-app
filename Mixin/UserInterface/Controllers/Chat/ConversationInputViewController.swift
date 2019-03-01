@@ -2,7 +2,7 @@ import UIKit
 
 class ConversationInputViewController: UIViewController {
     
-    @IBOutlet weak var deleteChatButton: BusyButton!
+    @IBOutlet weak var deleteConversationButton: BusyButton!
     @IBOutlet weak var unblockButton: BusyButton!
     @IBOutlet weak var inputBarView: UIView!
     @IBOutlet weak var extensionsSwitch: ConversationExtensionSwitch!
@@ -165,13 +165,12 @@ class ConversationInputViewController: UIViewController {
     }
     
     func update(opponentUser: UserItem?) {
-        if let user = opponentUser {
-            let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
-            unblockButton.isHidden = !isBlocked
-            appButton.isHidden = !user.isBot
-        } else {
-            
+        guard let user = opponentUser else {
+            return
         }
+        let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
+        unblockButton.isHidden = !isBlocked
+        appButton.isHidden = !user.isBot
     }
     
     func dismissCustomInput(minimize: Bool) {

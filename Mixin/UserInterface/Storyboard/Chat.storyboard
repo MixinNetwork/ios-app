@@ -826,31 +826,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="346"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESl-jK-Lob" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="49" id="YpA-4H-cVz"/>
-                                </constraints>
-                                <state key="normal" title="Delete Chat"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_menu_delete"/>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="deleteConversationAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="qQL-fb-TYQ"/>
-                                </connections>
-                            </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iAX-RP-UWF" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="49" id="hWo-JQ-2z1"/>
-                                </constraints>
-                                <state key="normal" title="Unblock"/>
-                                <connections>
-                                    <action selector="unblockAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="IxS-pl-eCc"/>
-                                </connections>
-                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wvu-NM-HOS">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                                 <subviews>
@@ -977,6 +952,25 @@
                                     <constraint firstItem="ucd-YD-Vpg" firstAttribute="top" secondItem="wvu-NM-HOS" secondAttribute="top" constant="9" id="sFq-fP-j0s"/>
                                 </constraints>
                             </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iAX-RP-UWF" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Unblock"/>
+                                <connections>
+                                    <action selector="unblockAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="IxS-pl-eCc"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESl-jK-Lob" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Delete Chat"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_menu_delete"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="deleteConversationAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="qQL-fb-TYQ"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4FQ-5O-gCe">
                                 <rect key="frame" x="0.0" y="50" width="375" height="296"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -990,15 +984,17 @@
                             <constraint firstItem="wvu-NM-HOS" firstAttribute="top" secondItem="cNM-Lj-lhn" secondAttribute="top" id="1jE-M7-30H"/>
                             <constraint firstAttribute="trailing" secondItem="iAX-RP-UWF" secondAttribute="trailing" id="AAz-ww-FzX"/>
                             <constraint firstItem="4FQ-5O-gCe" firstAttribute="leading" secondItem="gsL-BX-yAJ" secondAttribute="leading" id="EpD-b9-jiU"/>
-                            <constraint firstItem="iAX-RP-UWF" firstAttribute="top" secondItem="cNM-Lj-lhn" secondAttribute="top" id="FOb-IU-RHn"/>
+                            <constraint firstItem="iAX-RP-UWF" firstAttribute="top" secondItem="gsL-BX-yAJ" secondAttribute="top" id="FOb-IU-RHn"/>
+                            <constraint firstItem="ESl-jK-Lob" firstAttribute="bottom" secondItem="wvu-NM-HOS" secondAttribute="bottom" id="LqC-8C-hWZ"/>
                             <constraint firstItem="wvu-NM-HOS" firstAttribute="leading" secondItem="cNM-Lj-lhn" secondAttribute="leading" id="QMJ-sA-gv4"/>
-                            <constraint firstItem="ESl-jK-Lob" firstAttribute="top" secondItem="cNM-Lj-lhn" secondAttribute="top" id="Ugm-Cb-69C"/>
+                            <constraint firstItem="ESl-jK-Lob" firstAttribute="top" secondItem="gsL-BX-yAJ" secondAttribute="top" id="Ugm-Cb-69C"/>
+                            <constraint firstItem="iAX-RP-UWF" firstAttribute="bottom" secondItem="wvu-NM-HOS" secondAttribute="bottom" id="aY1-cd-eZi"/>
                             <constraint firstAttribute="trailing" secondItem="ESl-jK-Lob" secondAttribute="trailing" id="d4a-8y-Ei6"/>
                             <constraint firstItem="cNM-Lj-lhn" firstAttribute="trailing" secondItem="wvu-NM-HOS" secondAttribute="trailing" id="fDz-MH-fYz"/>
                             <constraint firstItem="4FQ-5O-gCe" firstAttribute="top" secondItem="wvu-NM-HOS" secondAttribute="bottom" id="k40-nw-0A5"/>
-                            <constraint firstItem="ESl-jK-Lob" firstAttribute="leading" secondItem="cNM-Lj-lhn" secondAttribute="leading" id="tiw-Yz-Oii"/>
+                            <constraint firstItem="ESl-jK-Lob" firstAttribute="leading" secondItem="gsL-BX-yAJ" secondAttribute="leading" id="tiw-Yz-Oii"/>
                             <constraint firstAttribute="trailing" secondItem="4FQ-5O-gCe" secondAttribute="trailing" id="wN3-JC-hk6"/>
-                            <constraint firstItem="iAX-RP-UWF" firstAttribute="leading" secondItem="cNM-Lj-lhn" secondAttribute="leading" id="yyI-UF-BWn"/>
+                            <constraint firstItem="iAX-RP-UWF" firstAttribute="leading" secondItem="gsL-BX-yAJ" secondAttribute="leading" id="yyI-UF-BWn"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cNM-Lj-lhn"/>
                     </view>
@@ -1011,7 +1007,7 @@
                         <outlet property="beginEditingRightActionsStackLeadingConstraint" destination="VsZ-Pr-2Vi" id="Pb8-eE-5Ay"/>
                         <outlet property="customInputContainerHeightConstraint" destination="sbV-IA-hxB" id="hBZ-Xo-IXu"/>
                         <outlet property="customInputContainerView" destination="4FQ-5O-gCe" id="h76-aJ-5Ge"/>
-                        <outlet property="deleteChatButton" destination="ESl-jK-Lob" id="ZRw-ty-YAG"/>
+                        <outlet property="deleteConversationButton" destination="ESl-jK-Lob" id="ZRw-ty-YAG"/>
                         <outlet property="endEditingInputTextViewTrailingConstraint" destination="KF3-vB-nYh" id="Sa0-hP-t4g"/>
                         <outlet property="endEditingRightActionsStackTrailingConstraint" destination="Tgt-eT-M5b" id="3Su-qz-VuZ"/>
                         <outlet property="extensionsSwitch" destination="FB6-Ob-yNa" id="Qvs-AY-sKP"/>

@@ -58,11 +58,13 @@ final class ParticipantDAO {
     func getCount(conversationId: String) -> Int {
         return MixinDatabase.shared.getCount(on: Participant.Properties.userId.count(), fromTable: Participant.tableName, condition: Participant.Properties.conversationId == conversationId)
     }
-
-    func isExistParticipant(conversationId: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Participant.self, condition: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == AccountAPI.shared.accountUserId, inTransaction: false)
+    
+    func userId(_ userId: String, isParticipantOfConversationId conversationId: String) -> Bool {
+        let condition = Participant.Properties.conversationId == conversationId
+            && Participant.Properties.userId == AccountAPI.shared.accountUserId
+        return MixinDatabase.shared.isExist(type: Participant.self, condition: condition, inTransaction: false)
     }
-
+    
     func updateParticipantStatus(userId: String, status: ParticipantStatus) {
         MixinDatabase.shared.update(maps: [(Participant.Properties.status, status.rawValue)], tableName: Participant.tableName, condition: Participant.Properties.userId == userId)
     }

@@ -1323,29 +1323,27 @@ extension ConversationViewController {
         }
         let conversationId = self.conversationId
         DispatchQueue.global().async { [weak self] in
-            if ParticipantDAO.shared.isExistParticipant(conversationId: conversationId) {
+            let isParticipant = ParticipantDAO.shared.userId(AccountAPI.shared.accountUserId, isParticipantOfConversationId: conversationId)
+            if isParticipant {
                 let participants = ParticipantDAO.shared.participants(conversationId: conversationId)
-                self?.role = participants.first(where: { $0.userId == AccountAPI.shared.accountUserId })?.role ?? ""
-                self?.participants = participants
-                DispatchQueue.main.async { [weak self] in
+                DispatchQueue.main.sync {
                     guard let weakSelf = self else {
                         return
                     }
-//                    weakSelf.unblockButton.isHidden = true
-//                    weakSelf.deleteConversationButton.isHidden = true
-//                    weakSelf.audioInputContainerView.isHidden = CommonUserDefault.shared.getConversationDraft(conversationId) != nil
+                    weakSelf.role = participants.first(where: { $0.userId == AccountAPI.shared.accountUserId })?.role ?? ""
+                    weakSelf.participants = participants
+                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = true
                     if weakSelf.dataSource?.category == .group {
                         weakSelf.participantsLabel.text = Localized.GROUP_SECTION_TITLE_MEMBERS(count: weakSelf.participants.count)
                     }
                 }
             } else {
-                DispatchQueue.main.async { [weak self] in
+                DispatchQueue.main.sync {
                     guard let weakSelf = self else {
                         return
                     }
                     weakSelf.participantsLabel.text = Localized.GROUP_REMOVE_TITLE
-//                    weakSelf.deleteConversationButton.isHidden = false
-//                    weakSelf.audioInputContainerView.isHidden = true
+                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = false
                 }
             }
         }

@@ -2,6 +2,7 @@ import UIKit
 
 class ConversationInputViewController: UIViewController {
     
+    @IBOutlet weak var quotePreviewView: QuotePreviewView!
     @IBOutlet weak var deleteConversationButton: BusyButton!
     @IBOutlet weak var unblockButton: BusyButton!
     @IBOutlet weak var inputBarView: UIView!
@@ -17,6 +18,8 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var audioInputContainerView: UIView!
     @IBOutlet weak var customInputContainerView: UIView!
     
+    @IBOutlet weak var quotePreviewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var quotePreviewWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingInputTextViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingRightActionsStackLeadingConstraint: NSLayoutConstraint!
@@ -64,7 +67,15 @@ class ConversationInputViewController: UIViewController {
     }
     
     var minimizedHeight: CGFloat {
-        return inputBarView.frame.height + view.compatibleSafeAreaInsets.bottom
+        return quotePreviewWrapperHeightConstraint.constant
+            + inputBarView.frame.height
+            + view.compatibleSafeAreaInsets.bottom
+    }
+    
+    var quote: (message: MessageItem, thumbnail: UIImage?)? {
+        didSet {
+            updateQuotePreview()
+        }
     }
     
     private var isExpanded: Bool {
@@ -162,6 +173,10 @@ class ConversationInputViewController: UIViewController {
         } else {
             extensionViewController.fixedExtensions = [.camera, .file, .contact]
         }
+        
+        quotePreviewView.dismissAction = { [weak self] in
+            self?.quote = nil
+        }
     }
     
     func update(opponentUser: UserItem?) {
@@ -238,7 +253,8 @@ class ConversationInputViewController: UIViewController {
         if keyboardFrameIsInvisible(endFrame) {
             reportMinimizedHeight()
         } else {
-            let height = inputBarView.frame.height
+            let height = quotePreviewWrapperHeightConstraint.constant
+                + inputBarView.frame.height
                 + screenHeight
                 - endFrame.origin.y
                 - interactiveDismissResponder.height
@@ -364,6 +380,31 @@ class ConversationInputViewController: UIViewController {
         }
         if animated {
             UIView.commitAnimations()
+        }
+    }
+    
+    private func updateQuotePreview() {
+        if let quote = quote {
+            audioViewController.cancelIfRecording()
+            UIView.performWithoutAnimation {
+                quotePreviewView.render(message: quote.message, contentImageThumbnail: quote.thumbnail)
+                quotePreviewView.layoutIfNeeded()
+            }
+            let heightChange = quotePreviewHeightConstraint.constant - quotePreviewWrapperHeightConstraint.constant
+            quotePreviewWrapperHeightConstraint.constant = quotePreviewHeightConstraint.constant
+            if inputTextView.isFirstResponder {
+                if abs(heightChange) > 0 {
+                    preferredContentSize.height += heightChange
+                }
+            } else {
+                inputTextView.becomeFirstResponder()
+            }
+        } else {
+            if quotePreviewWrapperHeightConstraint.constant != 0 {
+                let newHeight = preferredContentSize.height - quotePreviewWrapperHeightConstraint.constant
+                quotePreviewWrapperHeightConstraint.constant = 0
+                preferredContentSize.height = newHeight
+            }
         }
     }
     

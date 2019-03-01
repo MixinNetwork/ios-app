@@ -20,7 +20,6 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var dismissPanelsButton: UIButton!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
-    @IBOutlet weak var quotePreviewView: QuotePreviewView!
     
     @IBOutlet var interactiveDismissInputWrapperRecognizer: UIPanGestureRecognizer!
     
@@ -28,9 +27,6 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var quoteViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var quoteViewHiddenConstraint: NSLayoutConstraint!
-    @IBOutlet weak var quoteViewShowConstraint: NSLayoutConstraint!
     
     static var positions = [String: Position]()
     
@@ -59,16 +55,12 @@ class ConversationViewController: UIViewController {
     private var participants = [Participant]()
     private var role = ""
     private var asset: AssetItem?
-    private var quoteMessageId: String?
     private var quotingMessageId: String?
     private var didInitData = false
     private var isShowingMenu = false
     private var isAppearanceAnimating = true
     private var adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
     private var didManuallyStoppedTableViewDecelerating = false
-    private var isShowingQuotePreviewView: Bool {
-        return quoteMessageId != nil
-    }
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
@@ -144,9 +136,6 @@ class ConversationViewController: UIViewController {
         titleLabel.isUserInteractionEnabled = true
         titleLabel.addGestureRecognizer(reportRecognizer)
         
-        quotePreviewView.dismissAction = { [weak self] in
-            self?.setQuoteViewHidden(true)
-        }
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tapRecognizer.delegate = self
         tableView.addGestureRecognizer(tapRecognizer)
@@ -184,8 +173,6 @@ class ConversationViewController: UIViewController {
             let newHeight = container.preferredContentSize.height
             inputWrapperHeightConstraint.constant = newHeight
             var bottomInset = newHeight
-            let quotePreviewViewHeight = isShowingQuotePreviewView ? quotePreviewView.frame.height : 0
-            bottomInset += quotePreviewViewHeight
             tableView.scrollIndicatorInsets.bottom = bottomInset
             bottomInset += MessageViewModel.bottomSeparatorHeight
             UIView.animate(withDuration: 0.5) {
@@ -723,7 +710,7 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+        return !(gestureRecognizer == tapRecognizer || otherGestureRecognizer == tapRecognizer)
     }
     
 }
@@ -758,12 +745,11 @@ extension ConversationViewController: UITableViewDataSource {
 extension ConversationViewController: ConversationTableViewActionDelegate {
     
     func conversationTableViewCanBecomeFirstResponder(_ tableView: ConversationTableView) -> Bool {
-        return false
-//        return !inputTextView.isFirstResponder
+        return !conversationInputViewController.inputTextView.isFirstResponder
     }
     
     func conversationTableViewLongPressWillBegan(_ tableView: ConversationTableView) {
-//        inputTextView.overrideNext = tableView
+        conversationInputViewController.inputTextView.overrideNext = tableView
     }
     
     func conversationTableView(_ tableView: ConversationTableView, hasActionsforIndexPath indexPath: IndexPath) -> Bool {
@@ -816,20 +802,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             let vc = SendMessagePeerSelectionViewController.instance(content: .message(message))
             navigationController?.pushViewController(vc, animated: true)
         case .reply:
-//            audioInputViewController?.cancelIfRecording()
-            quoteMessageId = message.messageId
-            quotePreviewView.render(message: message, contentImageThumbnail: viewModel.thumbnail)
-            setQuoteViewHidden(false)
-//            inputTextView?.becomeFirstResponder()
-//            let newTableViewHeight = tableView.frame.height - ConversationKeyboardManager.lastKeyboardHeight - inputWrapperView.frame.height
-//            let offsetY = tableView.rectForRow(at: indexPath).maxY - newTableViewHeight + quotePreviewView.frame.height
-//            if offsetY > 0 {
-//                UIView.animate(withDuration: 0.5, animations: {
-//                    UIView.setAnimationCurve(.overdamped)
-//                    tableView.contentOffset.y = offsetY
-//                    FileManager.default.writeLog(conversationId: self.conversationId, log: "[POS]Set contentOffset: \(self.tableView.contentOffset), reason: reply")
-//                })
-//            }
+            conversationInputViewController.quote = (message, viewModel.thumbnail)
         case .add:
             if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
                 StickerAPI.shared.addSticker(stickerId: stickerId, completion: { (result) in
@@ -1240,23 +1213,6 @@ extension ConversationViewController {
         let top = UIApplication.shared.statusBarFrame.height
             + titleViewHeightConstraint.constant
         tableView.contentInset.top = top
-    }
-    
-    private func setQuoteViewHidden(_ hidden: Bool) {
-        if hidden {
-            quoteMessageId = nil
-        }
-        quoteViewShowConstraint.priority = hidden ? .defaultLow : .defaultHigh
-        quoteViewHiddenConstraint.priority = hidden ? .defaultHigh : .defaultLow
-//        inputTextViewLeadingShrinkConstraint.priority = hidden ? .almostRequired : .defaultLow
-//        inputTextViewLeadingExpandedConstraint.priority = hidden ? .defaultLow : .almostRequired
-//        audioInputContainerView.isHidden = !hidden
-//        stickerKeyboardSwitcherButton.isHidden = !hidden
-//        sendButton.isHidden = false
-        UIView.animate(withDuration: animationDuration) {
-//            self.updateTableViewContentInset()
-            self.view.layoutIfNeeded()
-        }
     }
     
     private func blinkCellBackground(at indexPath: IndexPath) {

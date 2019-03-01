@@ -17,6 +17,7 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var audioInputContainerView: UIView!
     @IBOutlet weak var customInputContainerView: UIView!
     
+    @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingInputTextViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingRightActionsStackLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var endEditingInputTextViewTrailingConstraint: NSLayoutConstraint!
@@ -24,13 +25,15 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var customInputContainerHeightConstraint: NSLayoutConstraint!
     
-    private let keyboardManager = ConversationKeyboardManager()
+    private let maxInputRow = 5
     
     private lazy var extensionViewController = R.storyboard.chat.extension()!
     private lazy var stickersViewController = R.storyboard.chat.stickerInput()!
     private lazy var photoViewController = R.storyboard.chat.photo()!
     private lazy var audioViewController = R.storyboard.chat.audioInput()!
     
+    private var interactiveDismissResponder: InteractiveDismissResponder!
+    private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
     private var customInputViewController: UIViewController? {
         didSet {
@@ -50,14 +53,6 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
-    private var conversationViewController: ConversationViewController {
-        return parent as! ConversationViewController
-    }
-    
-    private var dataSource: ConversationDataSource {
-        return conversationViewController.dataSource
-    }
-    
     override var preferredContentSize: CGSize {
         willSet {
             guard newValue.height >= ScreenSize.minReasonableKeyboardHeight else {
@@ -67,17 +62,45 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    var minimizedHeight: CGFloat {
+        return inputBarView.frame.height + view.compatibleSafeAreaInsets.bottom
+    }
+    
+    private var conversationViewController: ConversationViewController {
+        return parent as! ConversationViewController
+    }
+    
+    private var dataSource: ConversationDataSource {
+        return conversationViewController.dataSource
+    }
+    
+    private var screenHeight: CGFloat {
+        return UIScreen.main.bounds.height
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        keyboardManager.delegate = self
-        inputTextView.delegate = self
-        minimizeHeight()
+        view.isUserInteractionEnabled = false
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        lastSafeAreaInsetsBottom = view.compatibleSafeAreaInsets.bottom
+        UIView.performWithoutAnimation {
+            self.minimize()
+        }
     }
     
     @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        minimizeHeight()
+        let diff = view.compatibleSafeAreaInsets.bottom - lastSafeAreaInsetsBottom
+        if abs(diff) > 1 {
+            UIView.performWithoutAnimation {
+                preferredContentSize.height += diff
+            }
+        }
     }
     
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
@@ -91,7 +114,12 @@ class ConversationInputViewController: UIViewController {
     }
     
     func finishLoading() {
-        audioViewController.loadViewIfNeeded()
+        interactiveDismissResponder = InteractiveDismissResponder(height: inputBarView.frame.height)
+        inputTextView.inputAccessoryView = interactiveDismissResponder
+        inputTextView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        inputTextView.delegate = self
+        view.isUserInteractionEnabled = true
+        
         addChild(audioViewController)
         audioInputContainerView.addSubview(audioViewController.view)
         audioViewController.view.snp.makeConstraints({ (make) in
@@ -132,7 +160,6 @@ class ConversationInputViewController: UIViewController {
         guard inputTextView.isFirstResponder else {
             return
         }
-        keyboardManager.inputAccessoryViewHeight = 0
         inputTextView.resignFirstResponder()
     }
     
@@ -146,6 +173,19 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    func dismissCustomInput(minimize: Bool) {
+        setRightAccessoryButton(stickersButton)
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
+            self.customInputContainerView.alpha = 0
+            if minimize {
+                self.minimize()
+            }
+        }) { (_) in
+            self.customInputViewController = nil
+        }
+    }
+    
     @IBAction func extensionToggleAction(_ sender: ConversationExtensionSwitch) {
         resignTextViewFirstResponderWithoutNotifyingContentHeightChange()
         if sender.isOn {
@@ -153,9 +193,7 @@ class ConversationInputViewController: UIViewController {
             loadCustomInputViewController(extensionViewController)
             setRightAccessoryButton(stickersButton)
         } else {
-            removeCurrentCustomInputViewController {
-                self.minimizeHeight()
-            }
+            dismissCustomInput(minimize: true)
         }
     }
     
@@ -167,7 +205,7 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func showKeyboardAction(_ sender: Any) {
-        removeCurrentCustomInputViewController(animationAlongside: nil)
+        dismissCustomInput(minimize: false)
         inputTextView.becomeFirstResponder()
         setRightAccessoryButton(stickersButton)
     }
@@ -178,10 +216,30 @@ class ConversationInputViewController: UIViewController {
         if photosButton.isSelected {
             loadCustomInputViewController(photoViewController)
         } else {
-            removeCurrentCustomInputViewController {
-                self.minimizeHeight()
-            }
+            dismissCustomInput(minimize: true)
         }
+    }
+    
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
+        guard reportHeightChangeWhenKeyboardFrameChanges else {
+            return
+        }
+        guard let endFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+        if keyboardFrameIsInvisible(endFrame) {
+            minimize()
+        } else {
+            let height = inputBarView.frame.height
+                + screenHeight
+                - endFrame.origin.y
+                - interactiveDismissResponder.height
+            preferredContentSize.height = max(minimizedHeight, height)
+        }
+    }
+    
+    private func minimize() {
+        preferredContentSize.height = minimizedHeight
     }
     
     private func increaseHeightIfNeeded() {
@@ -191,10 +249,8 @@ class ConversationInputViewController: UIViewController {
         preferredContentSize.height = ScreenSize.defaultKeyboardHeight + inputBarView.frame.height
     }
     
-    private func minimizeHeight() {
-        let height = inputBarView.frame.height
-            + view.compatibleSafeAreaInsets.bottom
-        preferredContentSize.height = height
+    private func keyboardFrameIsInvisible(_ frame: CGRect) -> Bool {
+        return screenHeight - frame.origin.y <= 1
     }
     
     private func resignTextViewFirstResponderWithoutNotifyingContentHeightChange() {
@@ -213,16 +269,6 @@ class ConversationInputViewController: UIViewController {
             UIView.setAnimationCurve(.overdamped)
             self.customInputContainerView.alpha = 1
             self.increaseHeightIfNeeded()
-        }
-    }
-    
-    private func removeCurrentCustomInputViewController(animationAlongside animation: (() -> Void)?) {
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
-            self.customInputContainerView.alpha = 0
-            animation?()
-        }) { (_) in
-            self.customInputViewController = nil
         }
     }
     
@@ -265,32 +311,6 @@ class ConversationInputViewController: UIViewController {
     
 }
 
-extension ConversationInputViewController: ConversationKeyboardManagerDelegate {
-    
-    func conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(_ manager: ConversationKeyboardManager) -> UIScrollView {
-        return conversationViewController.tableView
-    }
-    
-    func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
-        var height = inputBarView.frame.height
-        if intent == .hide {
-            height += view.compatibleSafeAreaInsets.bottom
-            UIView.performWithoutAnimation {
-                view.backgroundColor = .white
-            }
-        } else if intent == .show {
-            height += AppDelegate.current.window!.frame.height - newFrame.origin.y
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
-                self.view.backgroundColor = .clear
-            }
-        }
-        if reportHeightChangeWhenKeyboardFrameChanges {
-            preferredContentSize.height = height
-        }
-    }
-    
-}
-
 extension ConversationInputViewController: UITextViewDelegate {
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
@@ -304,29 +324,56 @@ extension ConversationInputViewController: UITextViewDelegate {
         return true
     }
     
-    func textViewDidChange(_ textView: UITextView) {
-        if textView.text.isNilOrEmpty {
-            beginEditingInputTextViewTrailingConstraint.priority = .defaultLow
-            beginEditingRightActionsStackLeadingConstraint.priority = .defaultLow
-            endEditingInputTextViewTrailingConstraint.priority = .defaultHigh
-            endEditingRightActionsStackTrailingConstraint.priority = .defaultHigh
-            UIView.animate(withDuration: 0.3) {
-                self.inputBarView.layoutIfNeeded()
-                self.sendButton.alpha = 0
-                self.rightActionsStackView.alpha = 1
-                self.audioInputContainerView.alpha = 1
-            }
-        } else {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard !audioViewController.isRecording else {
+            return false
+        }
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        if textView.text.isEmpty && !newText.isEmpty {
             beginEditingInputTextViewTrailingConstraint.priority = .defaultHigh
             beginEditingRightActionsStackLeadingConstraint.priority = .defaultHigh
             endEditingInputTextViewTrailingConstraint.priority = .defaultLow
             endEditingRightActionsStackTrailingConstraint.priority = .defaultLow
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.2) {
                 self.inputBarView.layoutIfNeeded()
                 self.sendButton.alpha = 1
                 self.rightActionsStackView.alpha = 0
                 self.audioInputContainerView.alpha = 0
+                self.inputTextViewRightAccessoryView.alpha = 0
             }
+        } else if !textView.text.isEmpty && newText.isEmpty {
+            beginEditingInputTextViewTrailingConstraint.priority = .defaultLow
+            beginEditingRightActionsStackLeadingConstraint.priority = .defaultLow
+            endEditingInputTextViewTrailingConstraint.priority = .defaultHigh
+            endEditingRightActionsStackTrailingConstraint.priority = .defaultHigh
+            UIView.animate(withDuration: 0.2) {
+                self.inputBarView.layoutIfNeeded()
+                self.sendButton.alpha = 0
+                self.rightActionsStackView.alpha = 1
+                self.audioInputContainerView.alpha = 1
+                self.inputTextViewRightAccessoryView.alpha = 1
+            }
+        }
+        return true
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        guard let lineHeight = textView.font?.lineHeight else {
+            return
+        }
+        let maxHeight = ceil(lineHeight * CGFloat(maxInputRow)
+            + textView.textContainerInset.top
+            + textView.textContainerInset.bottom)
+        let sizeToFit = CGSize(width: textView.bounds.width,
+                               height: UIView.layoutFittingExpandedSize.height)
+        let contentSize = textView.sizeThatFits(sizeToFit)
+        inputTextView.isScrollEnabled = contentSize.height > maxHeight
+        let newHeight = min(contentSize.height, maxHeight)
+        let heightDifference = newHeight - inputTextViewHeightConstraint.constant
+        if abs(heightDifference) > 0.1 {
+            inputTextViewHeightConstraint.constant = newHeight
+            preferredContentSize.height += heightDifference
+            interactiveDismissResponder.height += heightDifference
         }
     }
     

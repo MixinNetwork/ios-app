@@ -15,38 +15,19 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var scrollToBottomButton: UIButton!
     @IBOutlet weak var unreadBadgeLabel: UILabel!
     @IBOutlet weak var inputWrapperView: UIView!
-//    @IBOutlet weak var moreButton: UIButton!
-//    @IBOutlet weak var botButton: UIButton!
-//    @IBOutlet weak var inputTextView: InputTextView!
-//    @IBOutlet weak var sendButton: UIButton!
-//    @IBOutlet weak var toggleStickerPanelSizeButton: UIButton!
-//    @IBOutlet weak var stickerKeyboardSwitcherButton: UIButton!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var participantsLabel: UILabel!
-//    @IBOutlet weak var unblockButton: StateResponsiveButton!
-//    @IBOutlet weak var deleteConversationButton: StateResponsiveButton!
-//    @IBOutlet weak var stickerInputContainerView: UIView!
-//    @IBOutlet weak var moreMenuContainerView: UIView!
     @IBOutlet weak var dismissPanelsButton: UIButton!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
-//    @IBOutlet weak var audioInputContainerView: UIView!
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
+    
+    @IBOutlet var interactiveDismissInputWrapperRecognizer: UIPanGestureRecognizer!
     
     @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var inputTextViewTopConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var inputTextViewBottomConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var inputTextViewLeadingShrinkConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var inputTextViewLeadingExpandedConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var inputWrapperBottomConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var stickerPanelContainerHeightConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var moreMenuHeightConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var moreMenuTopConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var inputWrapperViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var inputWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewHiddenConstraint: NSLayoutConstraint!
     @IBOutlet weak var quoteViewShowConstraint: NSLayoutConstraint!
@@ -70,12 +51,9 @@ class ConversationViewController: UIViewController {
         }
     }
     
-//    private let maxInputRow = 6
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.3
-//    private let moreMenuSegueId = "MoreMenuSegueId"
-//    private let audioInputSegueId = "AudioInputSegueId"
     
     private var ownerUser: UserItem?
     private var ownerUserApp: App?
@@ -86,9 +64,7 @@ class ConversationViewController: UIViewController {
     private var quotingMessageId: String?
     private var didInitData = false
     private var isShowingMenu = false
-//    private var isShowingStickerPanel = false
     private var isAppearanceAnimating = true
-//    private var isStickerPanelMax = false
     private var inputWrapperShouldFollowKeyboardPosition = true
     private var tableViewContentOffsetShouldFollowInputWrapperPosition = true
     private var didManuallyStoppedTableViewDecelerating = false
@@ -96,12 +72,9 @@ class ConversationViewController: UIViewController {
         return quoteMessageId != nil
     }
     
-    private var keyboardManager = ConversationKeyboardManager()
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
     private var conversationInputViewController: ConversationInputViewController!
-//    private var moreMenuViewController: ConversationMoreMenuViewController?
-//    private var audioInputViewController: AudioInputViewController?
     private var previewDocumentController: UIDocumentInteractionController?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
@@ -111,17 +84,6 @@ class ConversationViewController: UIViewController {
 //    private lazy var giphySearchViewController: GiphySearchViewController = {
 //        let controller = GiphySearchViewController.instance()
 //        controller.conversationViewController = self
-//        return controller
-//    }()
-//    private lazy var stickerInputViewController: StickerInputViewController = {
-//        let controller = StickerInputViewController.instance()
-//        addChild(controller)
-//        stickerInputContainerView.addSubview(controller.view)
-//        controller.view.snp.makeConstraints({ (make) in
-//            make.edges.equalToSuperview()
-//        })
-//        controller.didMove(toParent: self)
-//        stickerInputContainerView.layoutIfNeeded()
 //        return controller
 //    }()
     private lazy var galleryViewController: GalleryViewController = {
@@ -150,10 +112,6 @@ class ConversationViewController: UIViewController {
             - view.compatibleSafeAreaInsets.bottom
             - 55
     }
-    
-//    private var isShowingMoreMenu: Bool {
-//        return moreMenuTopConstraint.constant > 0.1
-//    }
     
     private var unreadBadgeValue: Int = 0 {
         didSet {
@@ -195,8 +153,7 @@ class ConversationViewController: UIViewController {
         reportRecognizer.minimumPressDuration = 2
         titleLabel.isUserInteractionEnabled = true
         titleLabel.addGestureRecognizer(reportRecognizer)
-
-//        audioInputContainerWidthConstraint.constant = 55
+        
         quotePreviewView.dismissAction = { [weak self] in
             self?.setQuoteViewHidden(true)
         }
@@ -207,16 +164,12 @@ class ConversationViewController: UIViewController {
         tableView.delegate = self
         tableView.actionDelegate = self
         tableView.viewController = self
-        keyboardManager.delegate = self
-//        inputTextView.delegate = self
-//        inputTextView.layer.cornerRadius = inputTextViewHeightConstraint.constant / 2
-//        inputTextView.inputAccessoryView = keyboardManager.inputAccessoryView
-//        connectionHintView.delegate = self
+        interactiveDismissInputWrapperRecognizer.delegate = self
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
-        updateMoreMenuFixedJobs()
-        updateMoreMenuApps()
+//        updateMoreMenuFixedJobs()
+//        updateMoreMenuApps()
         updateStrangerTipsView()
 //        updateBottomView()
         inputWrapperView.isHidden = false
@@ -233,44 +186,16 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeStatusBarFrame(_:)), name: UIApplication.didChangeStatusBarFrameNotification, object: nil)
     }
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == moreMenuSegueId, let destination = segue.destination as? ConversationMoreMenuViewController {
-//            moreMenuViewController = destination
-//        } else if segue.identifier == audioInputSegueId, let destination = segue.destination as? AudioInputViewController {
-//            audioInputViewController = destination
-//        }
-//    }
-    
     @available(iOS 11.0, *)
     override var prefersHomeIndicatorAutoHidden: Bool {
         return homeIndicatorAutoHidden
     }
     
-    @available(iOS 11.0, *)
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-//        if inputWrapperBottomConstraint.constant == 0 {
-//            inputWrapperBottomConstraint.constant = view.compatibleSafeAreaInsets.bottom
-//            updateTableViewContentInset()
-//        }
-    }
-    
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         super.preferredContentSizeDidChange(forChildContentContainer: container)
-//        if (container as? UIViewController) == audioInputViewController {
-//            let isExpanding = container.preferredContentSize.width > audioInputContainerWidthConstraint.constant
-//            audioInputContainerWidthConstraint.constant = container.preferredContentSize.width
-//            if isExpanding {
-//                UIView.animate(withDuration: animationDuration, animations: {
-//                    self.view.layoutIfNeeded()
-//                })
-//            } else {
-//                view.layoutIfNeeded()
-//            }
-//        }
         if (container as? UIViewController) == conversationInputViewController {
             let newHeight = container.preferredContentSize.height
-            inputWrapperViewHeightConstraint.constant = newHeight
+            inputWrapperHeightConstraint.constant = newHeight
             var bottomInset = newHeight
             let quotePreviewViewHeight = isShowingQuotePreviewView ? quotePreviewView.frame.height : 0
             bottomInset += quotePreviewViewHeight
@@ -310,7 +235,6 @@ class ConversationViewController: UIViewController {
             dataSource.initData {
                 self.updateAccessoryButtons(animated: false)
                 self.conversationInputViewController.finishLoading()
-//                self.stickerInputViewController.reload()
                 DispatchQueue.global().async { [weak self] in
                     self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
                 }
@@ -410,35 +334,6 @@ class ConversationViewController: UIViewController {
         }
     }
     
-//    @IBAction func moreAction(_ sender: Any) {
-//        var delay: TimeInterval = 0
-//        if isShowingStickerPanel {
-//            delay = animationDuration
-//            toggleStickerPanel(delay: 0)
-//        }
-//        conversationInputViewController.resignInputTextViewFirstResponder()
-//        DispatchQueue.main.async {
-//            self.toggleMoreMenu(delay: delay)
-//        }
-//    }
-//
-//    @IBAction func stickerKeyboardSwitchAction(_ sender: Any) {
-//        var delay: TimeInterval = 0
-//        if isShowingMoreMenu {
-//            toggleMoreMenu(delay: 0)
-//            delay = animationDuration
-//        }
-//        inputWrapperView.backgroundColor = .white
-//        if isShowingStickerPanel {
-//            inputTextView.becomeFirstResponder()
-//        } else {
-//            inputWrapperShouldFollowKeyboardPosition = false
-//            inputTextView.resignFirstResponder()
-//            inputWrapperShouldFollowKeyboardPosition = true
-//            toggleStickerPanel(delay: delay)
-//        }
-//    }
-//
 //    @IBAction func botAction(_ sender: Any) {
 //        guard let user = ownerUser, user.isBot, let app = self.ownerUserApp else {
 //            return
@@ -456,25 +351,7 @@ class ConversationViewController: UIViewController {
 //        let window = WebWindow.instance(conversationId: conversationId, app: app)
 //        window.presentPopupControllerAnimated(url: url)
 //    }
-//
-//    @IBAction func toggleStickerPanelSizeAction(_ sender: Any) {
-//        let dismissButtonAlpha: CGFloat
-//        if isStickerPanelMax {
-//            stickerPanelContainerHeightConstraint.constant = ConversationKeyboardManager.lastKeyboardHeight
-//            dismissButtonAlpha = 0
-//        } else {
-//            stickerPanelContainerHeightConstraint.constant = stickerPanelFullsizedHeight
-//            dismissButtonAlpha = 0.3
-//        }
-//        inputWrapperBottomConstraint.constant = stickerPanelContainerHeightConstraint.constant
-//        isStickerPanelMax = !isStickerPanelMax
-//        toggleStickerPanelSizeButton.animationSwapImage(newImage: isStickerPanelMax ? #imageLiteral(resourceName: "ic_chat_panel_min") : #imageLiteral(resourceName: "ic_chat_panel_max"))
-//        UIView.animate(withDuration: animationDuration, animations: {
-//            self.dismissPanelsButton.alpha = dismissButtonAlpha
-//            self.view.layoutIfNeeded()
-//        })
-//    }
-//
+
 //    @IBAction func sendTextMessageAction(_ sender: Any) {
 //        guard !trimmedMessageDraft.isEmpty else {
 //            return
@@ -507,7 +384,43 @@ class ConversationViewController: UIViewController {
 //            }
 //        }
 //    }
-
+    
+    @IBAction func interactiveDismissInputWrapperAction(_ sender: UIPanGestureRecognizer) {
+        let location = sender.location(in: inputWrapperView)
+        let verticalVelocity = sender.velocity(in: view).y
+        let contentHeight = conversationInputViewController.preferredContentSize.height
+        switch sender.state {
+        case .changed:
+            let isDraggingDown = inputWrapperView.bounds.contains(location)
+            let isDraggingUp = verticalVelocity < 0 && inputWrapperHeightConstraint.constant < contentHeight
+            if isDraggingDown || isDraggingUp {
+                var newHeight = inputWrapperHeightConstraint.constant - sender.translation(in: view).y
+                newHeight = max(newHeight, conversationInputViewController.minimizedHeight)
+                newHeight = min(newHeight, contentHeight)
+                inputWrapperHeightConstraint.constant = newHeight
+                view.layoutIfNeeded()
+            }
+            sender.setTranslation(.zero, in: view)
+        case .ended:
+            if !conversationInputViewController.inputTextView.isFirstResponder {
+                let shouldDismissByVelocity = verticalVelocity > 200 && location.y > -10
+                let shouldDismissByPosition = inputWrapperHeightConstraint.constant < contentHeight / 2
+                let shouldDismiss = verticalVelocity > 0
+                    && (shouldDismissByVelocity || shouldDismissByPosition)
+                if shouldDismiss {
+                    conversationInputViewController.dismissCustomInput(minimize: true)
+                } else {
+                    inputWrapperHeightConstraint.constant = contentHeight
+                    view.layoutIfNeeded()
+                }
+            } else {
+                inputWrapperHeightConstraint.constant = contentHeight
+            }
+        default:
+            break
+        }
+    }
+    
     @objc func blockAction(_ sender: Any) {
         guard let userId = ownerUser?.userId else {
             return
@@ -715,7 +628,7 @@ class ConversationViewController: UIViewController {
         guard let conversationId = notification.object as? String, conversationId == self.conversationId else {
             return
         }
-        updateMoreMenuApps()
+//        updateMoreMenuApps()
         reloadParticipants()
     }
     
@@ -741,28 +654,6 @@ class ConversationViewController: UIViewController {
     }
     
     // MARK: - Interface
-//    func toggleMoreMenu(delay: TimeInterval) {
-//        let dismissButtonAlpha: CGFloat
-//        let shouldHideContainer = isShowingMoreMenu
-//        if isShowingMoreMenu {
-//            moreMenuTopConstraint.constant = 0
-//            dismissButtonAlpha = 0
-//        } else {
-//            moreMenuContainerView.isHidden = false
-//            moreMenuTopConstraint.constant = moreMenuViewController?.contentHeight ?? moreMenuHeightConstraint.constant
-//            dismissButtonAlpha = 0.3
-//        }
-//        UIView.animate(withDuration: animationDuration, delay: delay, options: [], animations: {
-//            UIView.setAnimationCurve(.overdamped)
-//            self.dismissPanelsButton.alpha = dismissButtonAlpha
-//            self.view.layoutIfNeeded()
-//        }) { (success) in
-//            if shouldHideContainer {
-//                self.moreMenuContainerView.isHidden = true
-//            }
-//        }
-//    }
-    
     func documentAction() {
         let vc = UIDocumentPickerViewController(documentTypes: ["public.item", "public.content"], in: .import)
         vc.delegate = self
@@ -863,59 +754,11 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
         return true
     }
     
-}
-
-// MARK: - UITextViewDelegate
-extension ConversationViewController: UITextViewDelegate {
-    
-//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-//        return !(audioInputViewController?.isRecording ?? false)
-//    }
-//
-//    func textViewDidChange(_ textView: UITextView) {
-//        guard let lineHeight = textView.font?.lineHeight else {
-//            return
-//        }
-//        let maxHeight = ceil(lineHeight * CGFloat(maxInputRow) + textView.textContainerInset.top + textView.textContainerInset.bottom)
-//        let contentSize = textView.sizeThatFits(CGSize(width: textView.bounds.width, height: UIView.layoutFittingExpandedSize.height))
-//        inputTextView.isScrollEnabled = contentSize.height > maxHeight
-//        if !trimmedMessageDraft.isEmpty || isShowingQuotePreviewView {
-//            sendButton.isHidden = false
-//            audioInputContainerView.isHidden = true
-//            stickerKeyboardSwitcherButton.isHidden = true
-//        } else {
-//            sendButton.isHidden = true
-//            audioInputContainerView.isHidden = false
-//            stickerKeyboardSwitcherButton.isHidden = false
-//        }
-//        let newHeight = min(contentSize.height, maxHeight)
-//        let heightDifference = newHeight - inputTextViewHeightConstraint.constant
-//        if abs(heightDifference) > 0.1 {
-//            inputTextViewHeightConstraint.constant = newHeight
-//            let newContentOffset = tableView.contentOffset.y + heightDifference
-//            UIView.animate(withDuration: animationDuration, animations: {
-//                self.view.setNeedsLayout()
-//                self.view.layoutIfNeeded()
-//                self.updateTableViewContentInset()
-//                self.tableView.setContentOffsetYSafely(newContentOffset)
-//                FileManager.default.writeLog(conversationId: self.conversationId, log: "[POS]Set contentOffset: \(self.tableView.contentOffset), reason: TextView height change")
-//            }, completion: { (_) in
-//                self.keyboardManager.inputAccessoryViewHeight = self.inputWrapperView.frame.height
-//            })
-//        }
-//    }
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
     
 }
-
-//// MARK: - ConnectionHintViewDelegate
-//extension ConversationViewController: ConnectionHintViewDelegate {
-//
-//    func animateAlongsideConnectionHintView(_ view: ConnectionHintView, changingHeightWithDifference heightDifference: CGFloat) {
-//        updateTableViewContentInset()
-//        tableView.contentInset.top += view.connectionHintViewHeightConstraint.constant
-//    }
-//
-//}
 
 // MARK: - UITableViewDataSource
 extension ConversationViewController: UITableViewDataSource {
@@ -1010,15 +853,15 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             quotePreviewView.render(message: message, contentImageThumbnail: viewModel.thumbnail)
             setQuoteViewHidden(false)
 //            inputTextView?.becomeFirstResponder()
-            let newTableViewHeight = tableView.frame.height - ConversationKeyboardManager.lastKeyboardHeight - inputWrapperView.frame.height
-            let offsetY = tableView.rectForRow(at: indexPath).maxY - newTableViewHeight + quotePreviewView.frame.height
-            if offsetY > 0 {
-                UIView.animate(withDuration: 0.5, animations: {
-                    UIView.setAnimationCurve(.overdamped)
-                    tableView.contentOffset.y = offsetY
-                    FileManager.default.writeLog(conversationId: self.conversationId, log: "[POS]Set contentOffset: \(self.tableView.contentOffset), reason: reply")
-                })
-            }
+//            let newTableViewHeight = tableView.frame.height - ConversationKeyboardManager.lastKeyboardHeight - inputWrapperView.frame.height
+//            let offsetY = tableView.rectForRow(at: indexPath).maxY - newTableViewHeight + quotePreviewView.frame.height
+//            if offsetY > 0 {
+//                UIView.animate(withDuration: 0.5, animations: {
+//                    UIView.setAnimationCurve(.overdamped)
+//                    tableView.contentOffset.y = offsetY
+//                    FileManager.default.writeLog(conversationId: self.conversationId, log: "[POS]Set contentOffset: \(self.tableView.contentOffset), reason: reply")
+//                })
+//            }
         case .add:
             if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
                 StickerAPI.shared.addSticker(stickerId: stickerId, completion: { (result) in
@@ -1341,99 +1184,6 @@ extension ConversationViewController: PhotoAssetPickerDelegate {
     
 }
 
-// MARK: - ConversationKeyboardManagerDelegate
-extension ConversationViewController: ConversationKeyboardManagerDelegate {
-
-    func conversationKeyboardManagerScrollViewForInteractiveKeyboardDismissing(_ manager: ConversationKeyboardManager) -> UIScrollView {
-        return tableView
-    }
-    
-    func conversationKeyboardManager(_ manager: ConversationKeyboardManager, keyboardWillChangeFrameTo newFrame: CGRect, intent: ConversationKeyboardManager.KeyboardIntent) {
-//        guard (presentedViewController == nil) && !(intent == .show && !inputTextView.isFirstResponder) else {
-//            return
-//        }
-//        guard !isAppearanceAnimating && inputWrapperShouldFollowKeyboardPosition else {
-//            return
-//        }
-//        let shouldChangeTableViewContentOffset = intent != .interactivelyChangeFrame
-//            && tableViewContentOffsetShouldFollowInputWrapperPosition
-//        let windowHeight = AppDelegate.current.window!.bounds.height
-//        inputWrapperBottomConstraint.constant = max(windowHeight - newFrame.origin.y - manager.inputAccessoryViewHeight,
-//                                                    view.compatibleSafeAreaInsets.bottom)
-//        let inputWrapperDisplacement = lastInputWrapperBottomConstant - inputWrapperBottomConstraint.constant
-//        if intent == .show {
-//            if isShowingStickerPanel {
-//                UIView.performWithoutAnimation {
-//                    inputWrapperView.backgroundColor = .white
-//                }
-//                dismissPanelsButton.alpha = 0
-//                isShowingStickerPanel = false
-//                toggleStickerPanelSizeButton.isHidden = true
-//                stickerKeyboardSwitcherButton.setImage(#imageLiteral(resourceName: "ic_chat_sticker"), for: .normal)
-//                stickerInputContainerView.alpha = 0
-//            }
-//            if inputTextView.hasText || isShowingQuotePreviewView {
-//                sendButton.isHidden = false
-//            } else {
-//                audioInputContainerView.isHidden = false
-//            }
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
-//                if manager.isShowingKeyboard {
-//                    self.inputWrapperView.backgroundColor = .clear
-//                }
-//            }
-//        } else if intent == .hide {
-//            UIView.performWithoutAnimation {
-//                inputWrapperView.backgroundColor = .white
-//            }
-//        }
-//        if isShowingMoreMenu {
-//            toggleMoreMenu(delay: 0)
-//        }
-//        lastInputWrapperBottomConstant = inputWrapperBottomConstraint.constant
-//        view.layoutIfNeeded()
-//        let contentOffsetY = tableView.contentOffset.y
-//        updateTableViewContentInset()
-//        if !isShowingQuotePreviewView && shouldChangeTableViewContentOffset {
-//            tableView.setContentOffsetYSafely(contentOffsetY - inputWrapperDisplacement)
-//            FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Set contentOffset: \(self.tableView.contentOffset), reason: Keyboard frame change")
-//        }
-//        if intent == .show {
-//            manager.inputAccessoryViewHeight = inputWrapperView.frame.height
-//        } else if intent == .hide {
-//            manager.inputAccessoryViewHeight = 0
-//        }
-//        DispatchQueue.main.async {
-//            self.tableView.setFloatingHeaderViewsHidden(true, animated: true)
-//        }
-    }
-
-}
-
-// MARK: - ConversationInputViewControllerDelegate
-//extension ConversationViewController: ConversationInputViewControllerDelegate {
-//
-//    func inputViewController(_ viewController: ConversationInputViewController, preferredContentHeightDidChangeTo newHeight: CGFloat, animated: Bool) {
-//        inputWrapperViewHeightConstraint.constant = newHeight
-//        if animated {
-//            UIView.beginAnimations(nil, context: nil)
-//            UIView.setAnimationDuration(animationDuration)
-//            UIView.setAnimationCurve(.overdamped)
-//        }
-//        var bottomInset = newHeight
-//        let quotePreviewViewHeight = isShowingQuotePreviewView ? quotePreviewView.frame.height : 0
-//        bottomInset += quotePreviewViewHeight
-//        tableView.scrollIndicatorInsets.bottom = bottomInset
-//        bottomInset += MessageViewModel.bottomSeparatorHeight
-//        tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: true)
-//        view.layoutIfNeeded()
-//        if animated {
-//            UIView.commitAnimations()
-//        }
-//    }
-//
-//}
-
 // MARK: - UI Related Helpers
 extension ConversationViewController {
     
@@ -1460,31 +1210,6 @@ extension ConversationViewController {
         updateNavigationBar()
         conversationInputViewController.update(opponentUser: ownerUser)
         updateStrangerTipsView()
-    }
-    
-    private func updateMoreMenuFixedJobs() {
-//        if dataSource?.category == .contact, let ownerUser = ownerUser, !ownerUser.isBot {
-//            moreMenuViewController?.fixedJobs = [.transfer, .call, .camera, .photo, .file, .contact]
-//        } else if let app = ownerUserApp, app.creatorId == AccountAPI.shared.accountUserId {
-//            moreMenuViewController?.fixedJobs = [.transfer, .camera, .photo, .file, .contact]
-//        } else {
-//            moreMenuViewController?.fixedJobs = [.camera, .photo, .file, .contact]
-//        }
-    }
-    
-    private func updateMoreMenuApps() {
-//        if Thread.isMainThread {
-//            DispatchQueue.global().async { [weak self] in
-//                self?.updateMoreMenuApps()
-//            }
-//        } else {
-//            if dataSource?.category == .group {
-//                moreMenuViewController?.apps = AppDAO.shared.getConversationBots(conversationId: conversationId)
-//            } else if let ownerId = ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
-//                self.ownerUserApp = app
-//                DispatchQueue.main.async(execute: updateMoreMenuFixedJobs)
-//            }
-//        }
     }
     
     private func updateAccessoryButtons(animated: Bool) {

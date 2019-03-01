@@ -71,7 +71,6 @@
 		7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */; };
 		7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */; };
 		7B0E67082179931C0056DE3A /* AssetKeyConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0E67072179931C0056DE3A /* AssetKeyConvertible.swift */; };
-		7B11346B211175AE00B6CD9A /* ConversationKeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B11346A211175AE00B6CD9A /* ConversationKeyboardManager.swift */; };
 		7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */; };
 		7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */; };
 		7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */; };
@@ -242,6 +241,7 @@
 		7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */; };
 		7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC26533207B595500EA7DFF /* ContactMessageCell.swift */; };
 		7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */; };
+		7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC51F032227E69B0032BA15 /* InteractiveDismissResponder.swift */; };
 		7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC681A91FA1DD5600BAB85F /* UsernameViewController.swift */; };
 		7BC80A62221D1C07008586AD /* AssetTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC80A61221D1C06008586AD /* AssetTableHeaderView.swift */; };
 		7BC8503020CBA69B00A57B83 /* MXNOggOpusReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502320CBA69900A57B83 /* MXNOggOpusReader.m */; };
@@ -680,7 +680,6 @@
 		7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MXNAudioPlayerError.swift; sourceTree = "<group>"; };
 		7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HittestBypassWrapperView.swift; sourceTree = "<group>"; };
 		7B0E67072179931C0056DE3A /* AssetKeyConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetKeyConvertible.swift; sourceTree = "<group>"; };
-		7B11346A211175AE00B6CD9A /* ConversationKeyboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationKeyboardManager.swift; sourceTree = "<group>"; };
 		7B1456911FCC186E001B6DED /* TextMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageViewModel.swift; sourceTree = "<group>"; };
 		7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionViewController.swift; sourceTree = "<group>"; };
 		7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionSwitch.swift; sourceTree = "<group>"; };
@@ -850,6 +849,7 @@
 		7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationTableViewCell.swift; sourceTree = "<group>"; };
 		7BC26533207B595500EA7DFF /* ContactMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageCell.swift; sourceTree = "<group>"; };
 		7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotCell.swift; sourceTree = "<group>"; };
+		7BC51F032227E69B0032BA15 /* InteractiveDismissResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveDismissResponder.swift; sourceTree = "<group>"; };
 		7BC681A91FA1DD5600BAB85F /* UsernameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameViewController.swift; sourceTree = "<group>"; };
 		7BC80A61221D1C06008586AD /* AssetTableHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetTableHeaderView.swift; sourceTree = "<group>"; };
 		7BC8502320CBA69900A57B83 /* MXNOggOpusReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNOggOpusReader.m; sourceTree = "<group>"; };
@@ -1409,7 +1409,6 @@
 			isa = PBXGroup;
 			children = (
 				7BEDF9F720510CD300371266 /* ConversationDataSource.swift */,
-				7B11346A211175AE00B6CD9A /* ConversationKeyboardManager.swift */,
 				7B09E5591FD157EB002E45D3 /* MessageViewModel.swift */,
 				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
 				7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */,
@@ -2119,6 +2118,7 @@
 				7BB788B3216C5AA900EDE7B4 /* NoResultFooterView.xib */,
 				7BB788B5216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib */,
 				7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */,
+				7BC51F032227E69B0032BA15 /* InteractiveDismissResponder.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2812,6 +2812,7 @@
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
 				DFAA4B392010ADF800C696D3 /* PinTipsView.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
+				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				DF191194208F104800BD415D /* Job.swift in Sources */,
 				DF8CED021FC6790400E40064 /* MessageAPI.swift in Sources */,
 				DF17B51720526050006447C2 /* SnapshotItem.swift in Sources */,
@@ -3185,7 +3186,6 @@
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,
 				DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,
-				7B11346B211175AE00B6CD9A /* ConversationKeyboardManager.swift in Sources */,
 				7BA4193C209AF7E600DFCD39 /* AppCardData.swift in Sources */,
 				273FACB2205FB9A800513327 /* Fingerprint.swift in Sources */,
 				7BD97DD52179DD3400FAE490 /* WebRTCClient.swift in Sources */,

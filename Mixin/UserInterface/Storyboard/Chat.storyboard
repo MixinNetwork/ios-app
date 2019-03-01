@@ -28,6 +28,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="39" sectionHeaderHeight="44" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0e-5f-Xnl" customClass="ConversationTableView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SystemMessageCell" rowHeight="54" id="GWS-fe-4Pv" customClass="SystemMessageCell" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="44" width="375" height="54"/>
@@ -544,6 +545,9 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="qay-Hg-b7j" appends="YES" id="zyZ-ME-90f"/>
+                                </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zve-bN-jsA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
@@ -650,7 +654,7 @@
                                 <color key="backgroundColor" red="0.1215686275" green="0.70588235290000001" blue="0.98823529409999999" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syC-xp-0cA" customClass="HittestBypassWrapperView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="320" y="556" width="44" height="48"/>
+                                <rect key="frame" x="320" y="561" width="44" height="48"/>
                                 <subviews>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GCS-vh-Dsx">
                                         <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -724,17 +728,17 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y0l-2x-7bv" customClass="QuotePreviewView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="612" width="375" height="60"/>
+                                <rect key="frame" x="0.0" y="617" width="375" height="60"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="NvR-WP-xVN"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6MP-pq-xci">
-                                <rect key="frame" x="0.0" y="612" width="375" height="55"/>
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="MMR-mR-ES3"/>
+                                    <constraint firstAttribute="height" constant="50" id="MMR-mR-ES3"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -785,8 +789,9 @@
                         <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
                         <outlet property="dismissPanelsButton" destination="tBY-wh-HMf" id="gLk-YR-fNU"/>
                         <outlet property="galleryWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
+                        <outlet property="inputWrapperHeightConstraint" destination="MMR-mR-ES3" id="DTB-oj-FYz"/>
                         <outlet property="inputWrapperView" destination="6MP-pq-xci" id="Hyt-Ue-uBz"/>
-                        <outlet property="inputWrapperViewHeightConstraint" destination="MMR-mR-ES3" id="DTB-oj-FYz"/>
+                        <outlet property="interactiveDismissInputWrapperRecognizer" destination="qay-Hg-b7j" id="X0h-0R-eHH"/>
                         <outlet property="loadingView" destination="pcl-Ex-irR" id="Xco-m3-g7P"/>
                         <outlet property="participantsLabel" destination="a4C-sE-rDR" id="OnC-u4-cXC"/>
                         <outlet property="quotePreviewView" destination="y0l-2x-7bv" id="UYG-xX-QdK"/>
@@ -805,6 +810,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w6G-5t-tGm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="qay-Hg-b7j">
+                    <connections>
+                        <action selector="interactiveDismissInputWrapperAction:" destination="RcH-pv-rc2" id="WM4-Wx-o0j"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="785" y="412"/>
         </scene>
@@ -855,7 +865,7 @@
                                             <action selector="extensionToggleAction:" destination="bmF-xB-4o7" eventType="valueChanged" id="BVr-Fq-0HU"/>
                                         </connections>
                                     </view>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ucd-YD-Vpg" customClass="ConversationInputTextView" customModule="Mixin" customModuleProvider="target">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ucd-YD-Vpg" customClass="ConversationInputTextView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="67" y="9" width="203" height="32"/>
                                         <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -934,8 +944,8 @@
                                         </constraints>
                                     </stackView>
                                     <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-kA-7d2">
-                                        <rect key="frame" x="322" y="5" width="42" height="42"/>
-                                        <inset key="contentEdgeInsets" minX="9" minY="9" maxX="9" maxY="9"/>
+                                        <rect key="frame" x="320" y="3" width="44" height="44"/>
+                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                         <state key="normal" image="Conversation/ic_send"/>
                                     </button>
                                     <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B8S-al-j93">
@@ -943,25 +953,25 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="44" id="0Vm-hO-7Ii"/>
+                                            <constraint firstAttribute="height" constant="50" id="TFI-VK-6cN"/>
                                         </constraints>
                                     </containerView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="B8S-al-j93" firstAttribute="top" secondItem="wvu-NM-HOS" secondAttribute="top" id="2qL-sd-AqR"/>
                                     <constraint firstItem="ucd-YD-Vpg" firstAttribute="leading" secondItem="FB6-Ob-yNa" secondAttribute="trailing" constant="16" id="6UX-an-XcL"/>
                                     <constraint firstItem="FB6-Ob-yNa" firstAttribute="leading" secondItem="wvu-NM-HOS" secondAttribute="leading" constant="7" id="84I-DC-4t0"/>
                                     <constraint firstAttribute="bottom" secondItem="FB6-Ob-yNa" secondAttribute="bottom" constant="2" id="8Mg-91-4xV"/>
                                     <constraint firstAttribute="bottom" secondItem="Ccj-kA-7d2" secondAttribute="bottom" constant="3" id="AlJ-cl-Vnm"/>
                                     <constraint firstAttribute="bottom" secondItem="ucd-YD-Vpg" secondAttribute="bottom" constant="9" id="Boe-tV-Yi3"/>
-                                    <constraint firstItem="Ccj-kA-7d2" firstAttribute="leading" secondItem="4Hc-pE-gbi" secondAttribute="trailing" priority="250" constant="14" id="Cnr-xa-PEq"/>
+                                    <constraint firstItem="Ccj-kA-7d2" firstAttribute="leading" secondItem="4Hc-pE-gbi" secondAttribute="trailing" priority="1" constant="14" id="Cnr-xa-PEq"/>
                                     <constraint firstAttribute="trailing" secondItem="Ccj-kA-7d2" secondAttribute="trailing" constant="11" id="Esv-ud-xKL"/>
-                                    <constraint firstItem="aDD-ZD-ky1" firstAttribute="leading" secondItem="ucd-YD-Vpg" secondAttribute="trailing" priority="750" constant="9" id="KF3-vB-nYh"/>
+                                    <constraint firstItem="aDD-ZD-ky1" firstAttribute="leading" secondItem="ucd-YD-Vpg" secondAttribute="trailing" priority="999" constant="9" id="KF3-vB-nYh"/>
                                     <constraint firstAttribute="bottom" secondItem="B8S-al-j93" secondAttribute="bottom" id="LrF-nN-fkK"/>
                                     <constraint firstItem="4Hc-pE-gbi" firstAttribute="trailing" secondItem="ucd-YD-Vpg" secondAttribute="trailing" id="MXb-hf-Vnu"/>
-                                    <constraint firstAttribute="trailing" secondItem="aDD-ZD-ky1" secondAttribute="trailing" priority="750" constant="6" id="Tgt-eT-M5b"/>
+                                    <constraint firstAttribute="trailing" secondItem="aDD-ZD-ky1" secondAttribute="trailing" priority="999" constant="6" id="Tgt-eT-M5b"/>
                                     <constraint firstItem="4Hc-pE-gbi" firstAttribute="centerY" secondItem="ucd-YD-Vpg" secondAttribute="centerY" id="U88-yh-Z7r"/>
-                                    <constraint firstAttribute="trailing" secondItem="aDD-ZD-ky1" secondAttribute="leading" priority="250" id="VsZ-Pr-2Vi"/>
+                                    <constraint firstAttribute="trailing" secondItem="aDD-ZD-ky1" secondAttribute="leading" priority="1" id="VsZ-Pr-2Vi"/>
                                     <constraint firstAttribute="bottom" secondItem="aDD-ZD-ky1" secondAttribute="bottom" constant="3" id="jn0-1g-Rth"/>
                                     <constraint firstItem="B8S-al-j93" firstAttribute="trailing" secondItem="8OM-9c-W5h" secondAttribute="trailing" id="reH-r1-AB4"/>
                                     <constraint firstItem="ucd-YD-Vpg" firstAttribute="top" secondItem="wvu-NM-HOS" secondAttribute="top" constant="9" id="sFq-fP-j0s"/>
@@ -1007,6 +1017,7 @@
                         <outlet property="extensionsSwitch" destination="FB6-Ob-yNa" id="Qvs-AY-sKP"/>
                         <outlet property="inputBarView" destination="wvu-NM-HOS" id="aff-Mp-fI1"/>
                         <outlet property="inputTextView" destination="ucd-YD-Vpg" id="Dqi-dB-Qz5"/>
+                        <outlet property="inputTextViewHeightConstraint" destination="Kzm-2u-qAF" id="vvq-oU-Wdv"/>
                         <outlet property="inputTextViewRightAccessoryView" destination="4Hc-pE-gbi" id="x53-gR-XSA"/>
                         <outlet property="keyboardButton" destination="5G0-uR-okU" id="nP4-6Z-Wtu"/>
                         <outlet property="photosButton" destination="mkF-v2-lFJ" id="Oif-OF-2ST"/>

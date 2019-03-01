@@ -14,8 +14,8 @@ final class SentSenderKeyDAO {
         MixinDatabase.shared.insertOrReplace(objects: keys)
     }
 
-    func batchInsert(conversationId: String, messages: [String], status: Int) {
-        let keys = messages.map { SentSenderKey(conversationId: conversationId, userId: $0, sentToServer: status)}
+    func batchInsert(conversationId: String, messages: [BlazeSessionMessageParam], status: Int) {
+        let keys = messages.map { SentSenderKey(conversationId: conversationId, userId: $0.userId, sentToServer: status)}
         MixinDatabase.shared.insertOrReplace(objects: keys)
     }
 

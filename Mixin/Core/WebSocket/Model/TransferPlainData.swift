@@ -19,7 +19,5 @@ enum PlainDataAction: String {
     case RESEND_KEY
     case NO_KEY
     case RESEND_MESSAGES
-    case ACKNOWLEDGE_MESSAGE_RECEIPT
     case ACKNOWLEDGE_MESSAGE_RECEIPTS
-    case SYNC_SESSION
 }

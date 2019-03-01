@@ -246,8 +246,7 @@ class SendMessageService: MixinService {
                 SendMessageService.shared.processing = false
             }
             repeat {
-                let sessionLogin = AccountUserDefault.shared.extensionSession != nil
-                guard let job = sessionLogin ? JobDAO.shared.nextJob() : JobDAO.shared.nextNotSessionJob() else {
+                guard let job = AccountUserDefault.shared.extensionSession != nil ? JobDAO.shared.nextJob() : JobDAO.shared.nextNotSessionJob() else {
                     return
                 }
 
@@ -373,7 +372,7 @@ class SendMessageService: MixinService {
                     }
                 case JobAction.RESEND_KEY.rawValue:
                     _ = try ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in
-                        return try resendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!, resendKey: true)
+                        return try resendSenderKey(conversationId: job.conversationId!, recipientId: job.userId!)
                     }
                 case JobAction.REQUEST_RESEND_KEY.rawValue:
                     ReceiveMessageService.shared.messageDispatchQueue.sync {
@@ -443,6 +442,10 @@ extension SendMessageService {
                 blazeMessage.params?.data = message.content
             }
             if job.isSessionMessage {
+                guard let sessionId = AccountUserDefault.shared.extensionSession else {
+                    FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isSessionMessage:\(job.isSessionMessage)... extensionSession is nil")
+                    return
+                }
                 blazeMessage.params?.messageId = UUID().uuidString.lowercased()
                 blazeMessage.params?.recipientId = AccountAPI.shared.accountUserId
                 if message.category.hasPrefix("SYSTEM_") {
@@ -451,7 +454,7 @@ extension SendMessageService {
                     blazeMessage.params?.primitiveId = message.userId
                 }
                 blazeMessage.params?.primitiveMessageId = message.messageId
-                blazeMessage.params?.sessionId = AccountUserDefault.shared.extensionSession
+                blazeMessage.params?.sessionId = sessionId
                 blazeMessage.action = BlazeMessageAction.createSessionMessage.rawValue
                 blazeMessage.id = UUID().uuidString.lowercased()
             }
@@ -460,6 +463,7 @@ extension SendMessageService {
             var isExistSenderKey = false
             if job.isSessionMessage {
                 guard let sessionId = AccountUserDefault.shared.extensionSession else {
+                    FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isSessionMessage:\(job.isSessionMessage)... extensionSession is nil")
                     return
                 }
                 _ = try checkSignalSession(recipientId: AccountAPI.shared.accountUserId, sessionId: sessionId)
@@ -467,7 +471,7 @@ extension SendMessageService {
                 blazeMessage.params?.recipientId = AccountAPI.shared.accountUserId
                 blazeMessage.params?.primitiveId = message.userId
                 blazeMessage.params?.primitiveMessageId = message.messageId
-                blazeMessage.params?.sessionId = AccountUserDefault.shared.extensionSession
+                blazeMessage.params?.sessionId = sessionId
                 blazeMessage.action = BlazeMessageAction.createSessionMessage.rawValue
                 blazeMessage.params?.data =  try SignalProtocol.shared.encryptTransferSessionMessageData(recipientId: AccountAPI.shared.accountUserId, content: message.content ?? "", sessionId: sessionId)
                 blazeMessage.id = UUID().uuidString.lowercased()

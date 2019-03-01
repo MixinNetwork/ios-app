@@ -71,7 +71,7 @@ struct Job: BaseCodable {
             self.priority = JobPriority.RESEND_MESSAGE.rawValue
         case .SEND_DELIVERED_ACK_MESSAGE:
             self.priority = JobPriority.SEND_DELIVERED_ACK_MESSAGE.rawValue
-        case .SEND_ACK_MESSAGE, .SEND_SESSION_ACK_MESSAGE:
+        case .SEND_ACK_MESSAGE:
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         default:
             self.priority = JobPriority.SEND_MESSAGE.rawValue
@@ -109,7 +109,8 @@ extension Job {
                                       messageId: message.messageId)
         let action = BlazeMessageAction.createMessage.rawValue
         let blazeMessage = BlazeMessage(params: param, action: action)
-        self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage, isSessionMessage: isSessionMessage)
+        let jobId = isSessionMessage ? UUID().uuidString.lowercased() : blazeMessage.id
+        self.init(jobId: jobId, action: .SEND_MESSAGE, blazeMessage: blazeMessage, isSessionMessage: isSessionMessage)
     }
     
     init(webRTCMessage message: Message, recipientId: String) {

@@ -598,18 +598,26 @@ extension ReceiveMessageService {
         guard data.category.hasPrefix("SYSTEM_") else {
             return
         }
-        
-        switch data.category {
-        case MessageCategory.SYSTEM_CONVERSATION.rawValue:
-            messageDispatchQueue.sync {
-                processSystemConversationMessage(data: data)
+
+        if data.isSessionMessage {
+            switch data.category {
+            case MessageCategory.SYSTEM_EXTENSION_SESSION.rawValue:
+                processSessionSystemConversationMessage(data: data)
+            default:
+                return
             }
-        case MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue:
-            processSystemSnapshotMessage(data: data)
-        case MessageCategory.SYSTEM_EXTENSION_SESSION.rawValue:
-            processSessionSystemConversationMessage(data: data)
-        default:
-            return
+            SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
+        } else {
+            switch data.category {
+            case MessageCategory.SYSTEM_CONVERSATION.rawValue:
+                messageDispatchQueue.sync {
+                    processSystemConversationMessage(data: data)
+                }
+            case MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue:
+                processSystemSnapshotMessage(data: data)
+            default:
+                return
+            }
         }
     }
 
@@ -657,8 +665,6 @@ extension ReceiveMessageService {
         default:
             break
         }
-
-        SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
     }
 
     private func processSystemConversationMessage(data: BlazeMessageData) {
@@ -688,7 +694,7 @@ extension ReceiveMessageService {
             UserDAO.shared.insertSystemUser(userId: userId)
         }
 
-        var message = Message.createMessage(systemMessage: sysMessage.action, participantId: sysMessage.participantId, userId: userId, data: data)
+        let message = Message.createMessage(systemMessage: sysMessage.action, participantId: sysMessage.participantId, userId: userId, data: data)
         switch sysMessage.action {
         case SystemConversationAction.ADD.rawValue, SystemConversationAction.JOIN.rawValue:
             guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser else {

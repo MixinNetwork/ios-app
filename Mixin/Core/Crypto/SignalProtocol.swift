@@ -81,8 +81,8 @@ class SignalProtocol {
         }
     }
 
-    func encryptSenderKey(conversationId: String, senderId: String, recipientId: String) throws -> String {
-        let senderKeyDistributionMessage = try getSenderKeyDistribution(groupId: conversationId, senderId: senderId)
+    func encryptSenderKey(conversationId: String, recipientId: String) throws -> String {
+        let senderKeyDistributionMessage = try getSenderKeyDistribution(groupId: conversationId, senderId: AccountAPI.shared.accountUserId)
         let cipherMessage = try encryptSession(content: senderKeyDistributionMessage.message, destination: recipientId)
         let compose = ComposeMessageData(keyType: cipherMessage.type.rawValue, cipher: cipherMessage.message, resendMessageId: nil)
         return encodeMessageData(data: compose)

@@ -315,16 +315,6 @@ class ConversationViewController: UIViewController {
 //        let window = WebWindow.instance(conversationId: conversationId, app: app)
 //        window.presentPopupControllerAnimated(url: url)
 //    }
-
-//    @IBAction func sendTextMessageAction(_ sender: Any) {
-//        guard !trimmedMessageDraft.isEmpty else {
-//            return
-//        }
-//        dataSource?.sendMessage(type: .SIGNAL_TEXT, quoteMessageId: quoteMessageId , value: trimmedMessageDraft)
-//        inputTextView.text = ""
-//        textViewDidChange(inputTextView)
-//        setQuoteViewHidden(true)
-//    }
     
     @IBAction func dismissPanelsAction(_ sender: Any) {
 //        if isShowingStickerPanel && isStickerPanelMax {

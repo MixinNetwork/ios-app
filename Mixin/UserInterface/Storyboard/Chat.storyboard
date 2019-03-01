@@ -926,6 +926,9 @@
                                         <rect key="frame" x="320" y="3" width="44" height="44"/>
                                         <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                         <state key="normal" image="Conversation/ic_send"/>
+                                        <connections>
+                                            <action selector="sendTextMessageAction:" destination="bmF-xB-4o7" eventType="touchUpInside" id="lQp-Nc-Wyx"/>
+                                        </connections>
                                     </button>
                                     <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B8S-al-j93">
                                         <rect key="frame" x="325" y="0.0" width="44" height="50"/>

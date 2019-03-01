@@ -243,6 +243,19 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    @IBAction func sendTextMessageAction(_ sender: Any) {
+        guard !trimmedMessageDraft.isEmpty else {
+            return
+        }
+        dataSource.sendMessage(type: .SIGNAL_TEXT,
+                               quoteMessageId: quote?.message.messageId,
+                               value: trimmedMessageDraft)
+        inputTextView.text = ""
+        textViewDidChange(inputTextView)
+        layoutForInputTextViewIsEmpty(true, animated: true)
+        quote = nil
+    }
+    
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         guard reportHeightChangeWhenKeyboardFrameChanges else {
             return

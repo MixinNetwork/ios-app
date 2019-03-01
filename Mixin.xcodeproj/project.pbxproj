@@ -582,8 +582,6 @@
 		DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF1AD7B22254C6E0087173D /* R.generated.swift */; };
 		DFF1AD802227D7CA0087173D /* TransferPlainAckData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF1AD7F2227D7CA0087173D /* TransferPlainAckData.swift */; };
 		DFF1AD822227D8020087173D /* BlazeAckMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF1AD812227D8020087173D /* BlazeAckMessage.swift */; };
-		DFF1AD852227D9C60087173D /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFF1AD832227D9C60087173D /* Mixin-Keys.plist */; };
-		DFF1AD862227D9C60087173D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFF1AD842227D9C60087173D /* GoogleService-Info.plist */; };
 		DFF21455209A9F8D00612234 /* PhoneContactWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF21454209A9F8D00612234 /* PhoneContactWindow.swift */; };
 		DFF21457209AB2FC00612234 /* PhoneContactWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFF21456209AB2FC00612234 /* PhoneContactWindow.xib */; };
 		DFF21459209ABA6500612234 /* GroupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF21458209ABA6500612234 /* GroupWindow.swift */; };
@@ -3422,7 +3420,7 @@
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3486,7 +3484,7 @@
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

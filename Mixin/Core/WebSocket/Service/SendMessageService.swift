@@ -113,10 +113,11 @@ class SendMessageService: MixinService {
     }
 
     func sendSessionMessage(message: Message) {
+        guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_IMAGE") || message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
+            return
+        }
         saveDispatchQueue.async {
-            if message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_IMAGE") || message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
-                MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, isSessionMessage: true)])
-            }
+            MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, isSessionMessage: true)])
             SendMessageService.shared.processMessages()
         }
     }
@@ -355,7 +356,11 @@ class SendMessageService: MixinService {
                         if blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                             try SendMessageService.shared.sendCallMessage(blazeMessage: blazeMessage)
                         } else {
-                            try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage, job: job)
+                            if job.isSessionMessage {
+                                try SendMessageService.shared.sendSessionMessage(blazeMessage: blazeMessage, job: job)
+                            } else {
+                                try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage, job: job)
+                            }
                         }
                     }
                 case JobAction.RESEND_MESSAGE.rawValue:
@@ -420,6 +425,44 @@ extension SendMessageService {
         FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][ResendMessage]...messageId:\(messageId)...resendMessageId:\(resendMessageId)...resendUserId:\(recipientId)")
     }
 
+    private func sendSessionMessage(blazeMessage: BlazeMessage, job: Job) throws {
+        guard job.isSessionMessage else {
+            return
+        }
+        guard let messageId = blazeMessage.params?.messageId, let message = MessageDAO.shared.getMessage(messageId: messageId) else {
+            return
+        }
+        guard let sessionId = AccountUserDefault.shared.extensionSession else {
+            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendSessionMessage][\(message.category)]...isSessionMessage:\(job.isSessionMessage)... extensionSession is nil")
+            return
+        }
+
+        var blazeMessage = blazeMessage
+        blazeMessage.action = BlazeMessageAction.createSessionMessage.rawValue
+        blazeMessage.params?.messageId = UUID().uuidString.lowercased()
+        blazeMessage.params?.recipientId = AccountAPI.shared.accountUserId
+        blazeMessage.params?.sessionId = sessionId
+        blazeMessage.params?.primitiveMessageId = message.messageId
+        blazeMessage.params?.primitiveId = message.userId
+
+        if message.category.hasPrefix("PLAIN_") || message.category.hasPrefix("SYSTEM_") {
+            if message.category.hasPrefix("SYSTEM_") {
+                blazeMessage.params?.primitiveId = User.systemUser
+            }
+            if message.category == MessageCategory.PLAIN_TEXT.rawValue {
+                blazeMessage.params?.data = message.content?.base64Encoded()
+            } else {
+                blazeMessage.params?.data = message.content
+            }
+        } else if message.category.hasPrefix("SIGNAL_") {
+            _ = try checkSignalSession(recipientId: AccountAPI.shared.accountUserId, sessionId: sessionId)
+            blazeMessage.params?.data =  try SignalProtocol.shared.encryptTransferSessionMessageData(recipientId: AccountAPI.shared.accountUserId, content: message.content ?? "", sessionId: sessionId)
+        }
+        try deliverMessage(blazeMessage: blazeMessage)
+
+        FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendSessionMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
+    }
+
     private func sendMessage(blazeMessage: BlazeMessage, job: Job) throws {
         var blazeMessage = blazeMessage
         guard let messageId = blazeMessage.params?.messageId, let message = MessageDAO.shared.getMessage(messageId: messageId) else {
@@ -432,79 +475,45 @@ extension SendMessageService {
         blazeMessage.params?.category = message.category
         blazeMessage.params?.quoteMessageId = message.quoteMessageId
 
-        if message.category.hasPrefix("PLAIN_") || (job.isSessionMessage && message.category.hasPrefix("SYSTEM_")) {
+        if message.category.hasPrefix("PLAIN_") {
             try requestCreateConversation(conversation: conversation)
             if message.category == MessageCategory.PLAIN_TEXT.rawValue {
                 blazeMessage.params?.data = message.content?.base64Encoded()
             } else {
                 blazeMessage.params?.data = message.content
             }
-            if job.isSessionMessage {
-                guard let sessionId = AccountUserDefault.shared.extensionSession else {
-                    FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isSessionMessage:\(job.isSessionMessage)... extensionSession is nil")
-                    return
-                }
-                blazeMessage.params?.messageId = UUID().uuidString.lowercased()
-                blazeMessage.params?.recipientId = AccountAPI.shared.accountUserId
-                if message.category.hasPrefix("SYSTEM_") {
-                    blazeMessage.params?.primitiveId = User.systemUser
-                } else {
-                    blazeMessage.params?.primitiveId = message.userId
-                }
-                blazeMessage.params?.primitiveMessageId = message.messageId
-                blazeMessage.params?.sessionId = sessionId
-                blazeMessage.action = BlazeMessageAction.createSessionMessage.rawValue
-                blazeMessage.id = UUID().uuidString.lowercased()
-            }
             try deliverMessage(blazeMessage: blazeMessage)
         } else {
-            var isExistSenderKey = false
-            if job.isSessionMessage {
-                guard let sessionId = AccountUserDefault.shared.extensionSession else {
-                    FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isSessionMessage:\(job.isSessionMessage)... extensionSession is nil")
-                    return
-                }
-                _ = try checkSignalSession(recipientId: AccountAPI.shared.accountUserId, sessionId: sessionId)
-                blazeMessage.params?.messageId = UUID().uuidString.lowercased()
-                blazeMessage.params?.recipientId = AccountAPI.shared.accountUserId
-                blazeMessage.params?.primitiveId = message.userId
-                blazeMessage.params?.primitiveMessageId = message.messageId
-                blazeMessage.params?.sessionId = sessionId
-                blazeMessage.action = BlazeMessageAction.createSessionMessage.rawValue
-                blazeMessage.params?.data =  try SignalProtocol.shared.encryptTransferSessionMessageData(recipientId: AccountAPI.shared.accountUserId, content: message.content ?? "", sessionId: sessionId)
-                blazeMessage.id = UUID().uuidString.lowercased()
+            let isExistSenderKey = SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId)
+            if (isExistSenderKey) {
+                try checkSentSenderKey(conversationId: message.conversationId)
             } else {
-                isExistSenderKey = SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId)
-                if (isExistSenderKey) {
-                    try checkSentSenderKey(conversationId: message.conversationId)
-                } else {
-                    if (conversation.isGroup()) {
-                        switch ConversationAPI.shared.getConversation(conversationId: message.conversationId) {
-                        case let .success(response):
-                            ConversationDAO.shared.updateConversation(conversation: response)
+                if (conversation.isGroup()) {
+                    switch ConversationAPI.shared.getConversation(conversationId: message.conversationId) {
+                    case let .success(response):
+                        ConversationDAO.shared.updateConversation(conversation: response)
+                        try sendGroupSenderKey(conversationId: conversation.conversationId)
+                    case let .failure(error):
+                        if error.code == 404 && conversation.status == ConversationStatus.START.rawValue {
+                            try requestCreateConversation(conversation: conversation)
                             try sendGroupSenderKey(conversationId: conversation.conversationId)
-                        case let .failure(error):
-                            if error.code == 404 && conversation.status == ConversationStatus.START.rawValue {
-                                try requestCreateConversation(conversation: conversation)
-                                try sendGroupSenderKey(conversationId: conversation.conversationId)
-                                break
-                            } else if error.code == 404 || error.code == 403 {
-                                ParticipantDAO.shared.removeParticipant(conversationId: message.conversationId)
-                                return
-                            }
-                            throw error
+                            break
+                        } else if error.code == 404 || error.code == 403 {
+                            ParticipantDAO.shared.removeParticipant(conversationId: message.conversationId)
+                            return
                         }
-                    } else {
-                        try requestCreateConversation(conversation: conversation)
-                        try sendSenderKey(conversationId: conversation.conversationId, recipientId: conversation.ownerId)
+                        throw error
                     }
+                } else {
+                    try requestCreateConversation(conversation: conversation)
+                    try sendSenderKey(conversationId: conversation.conversationId, recipientId: conversation.ownerId)
                 }
-                blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: message.content ?? "")
             }
 
+            blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: message.content ?? "")
             try deliverMessage(blazeMessage: blazeMessage)
 
-            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isExistSenderKey:\(isExistSenderKey)...messageId:\(messageId)...messageStatus:\(message.status)...isSessionMessage:\(job.isSessionMessage)...orderId:\(job.orderId ?? 0)")
+            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isExistSenderKey:\(isExistSenderKey)...messageId:\(messageId)...messageStatus:\(message.status)...orderId:\(job.jobId ?? 0)")
         }
     }
     

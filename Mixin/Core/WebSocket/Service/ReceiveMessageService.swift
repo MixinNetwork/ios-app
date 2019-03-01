@@ -655,7 +655,7 @@ extension ReceiveMessageService {
                 }
             }
         }
-
+        
         switch sysMessage.action {
         case SystemConversationAction.ADD.rawValue, SystemConversationAction.JOIN.rawValue:
             guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser else {
@@ -805,9 +805,7 @@ extension ReceiveMessageService {
 
         switch data.category {
         case MessageCategory.SYSTEM_EXTENSION_SESSION.rawValue:
-            messageDispatchQueue.sync {
-                processSessionSystemConversationMessage(data: data)
-            }
+            processSessionSystemConversationMessage(data: data)
         default:
             return
         }

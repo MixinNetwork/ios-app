@@ -72,7 +72,6 @@
 	<string>Allow Mixin to access your photos</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>fetch</string>
 		<string>voip</string>
 	</array>
 	<key>UIFileSharingEnabled</key>

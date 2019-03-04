@@ -841,7 +841,7 @@
                                             <constraint firstAttribute="width" constant="44" id="vnd-DL-HfI"/>
                                         </constraints>
                                         <connections>
-                                            <action selector="extensionToggleAction:" destination="bmF-xB-4o7" eventType="valueChanged" id="BVr-Fq-0HU"/>
+                                            <action selector="toggleExtensionAction:" destination="bmF-xB-4o7" eventType="valueChanged" id="BVr-Fq-0HU"/>
                                         </connections>
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ucd-YD-Vpg" customClass="ConversationInputTextView" customModule="Mixin" customModuleProvider="target">

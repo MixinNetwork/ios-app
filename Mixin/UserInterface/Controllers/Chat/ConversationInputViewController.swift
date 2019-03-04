@@ -149,6 +149,126 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    @IBAction func unblockAction(_ sender: Any) {
+        guard let user = dataSource.ownerUser else {
+            return
+        }
+        unblockButton.isBusy = true
+        UserAPI.shared.unblockUser(userId: user.userId) { (result) in
+            switch result {
+            case .success(let userResponse):
+                UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: true)
+            case .failure:
+                break
+            }
+        }
+    }
+    
+    @IBAction func deleteConversationAction(_ sender: Any) {
+        guard !dataSource.conversationId.isEmpty else {
+            return
+        }
+        deleteConversationButton.isBusy = true
+        let conversationId = dataSource.conversationId
+        DispatchQueue.global().async { [weak self] in
+            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
+            NotificationCenter.default.postOnMain(name: .ConversationDidChange)
+            DispatchQueue.main.async {
+                self?.navigationController?.backToHome()
+            }
+        }
+    }
+    
+    @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {
+        resignTextViewFirstResponderWithoutReportingContentHeightChange()
+        if sender.isOn {
+            photosButton.isSelected = false
+            setRightAccessoryButton(stickersButton)
+            loadCustomInputViewController(extensionViewController)
+        } else {
+            dismissCustomInput(minimize: true)
+        }
+    }
+    
+    @IBAction func showStickersAction(_ sender: Any) {
+        resignTextViewFirstResponderWithoutReportingContentHeightChange()
+        setRightAccessoryButton(keyboardButton)
+        extensionsSwitch.isOn = false
+        photosButton.isSelected = false
+        loadCustomInputViewController(stickersViewController)
+    }
+    
+    @IBAction func showKeyboardAction(_ sender: Any) {
+        dismissCustomInput(minimize: false)
+        inputTextView.becomeFirstResponder()
+        setRightAccessoryButton(stickersButton)
+    }
+    
+    // TODO: use view controller based web view and present it right here
+    @IBAction func openOpponentAppAction(_ sender: Any) {
+        guard let user = dataSource.ownerUser, user.isBot, let app = opponentApp else {
+            return
+        }
+        dismiss()
+        conversationViewController.openOpponentApp(app)
+    }
+    
+    @IBAction func showPhotosAction(_ sender: Any) {
+        let status = PHPhotoLibrary.authorizationStatus()
+        handlePhotoAuthorizationStatus(status)
+    }
+    
+    @IBAction func sendTextMessageAction(_ sender: Any) {
+        guard !trimmedMessageDraft.isEmpty else {
+            return
+        }
+        dataSource.sendMessage(type: .SIGNAL_TEXT,
+                               quoteMessageId: quote?.message.messageId,
+                               value: trimmedMessageDraft)
+        inputTextView.text = ""
+        textViewDidChange(inputTextView)
+        layoutForInputTextViewIsEmpty(true, animated: true)
+        quote = nil
+    }
+    
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
+        guard reportHeightChangeWhenKeyboardFrameChanges else {
+            return
+        }
+        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        if keyboardFrameIsInvisible(endFrame) {
+            reportMinimizedHeight()
+        } else {
+            let height = quotePreviewWrapperHeightConstraint.constant
+                + inputBarView.frame.height
+                + screenHeight
+                - endFrame.origin.y
+                - interactiveDismissResponder.height
+            preferredContentSize.height = max(minimizedHeight, height)
+        }
+    }
+    
+    @objc func saveDraft() {
+        CommonUserDefault.shared.setConversationDraft(dataSource.conversationId, draft: trimmedMessageDraft)
+    }
+    
+    @objc func participantDidChange(_ notification: Notification) {
+        guard dataSource.category == .group else {
+            return
+        }
+        guard let conversationId = notification.object as? String, conversationId == dataSource.conversationId else {
+            return
+        }
+        DispatchQueue.global().async {
+            let apps = AppDAO.shared.getConversationBots(conversationId: self.dataSource.conversationId)
+            DispatchQueue.main.sync {
+                self.extensionViewController.apps = apps
+            }
+        }
+    }
+    
     func finishLoading() {
         addChild(audioViewController)
         audioInputContainerView.addSubview(audioViewController.view)
@@ -215,125 +335,53 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
-    @IBAction func unblockAction(_ sender: Any) {
-        guard let user = dataSource.ownerUser else {
-            return
-        }
-        unblockButton.isBusy = true
-        UserAPI.shared.unblockUser(userId: user.userId) { (result) in
-            switch result {
-            case .success(let userResponse):
-                UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: true)
-            case .failure:
-                break
-            }
-        }
-    }
+}
+
+extension ConversationInputViewController: UITextViewDelegate {
     
-    @IBAction func deleteConversationAction(_ sender: Any) {
-        guard !dataSource.conversationId.isEmpty else {
-            return
-        }
-        deleteConversationButton.isBusy = true
-        let conversationId = dataSource.conversationId
-        DispatchQueue.global().async { [weak self] in
-            ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
-            NotificationCenter.default.postOnMain(name: .ConversationDidChange)
-            DispatchQueue.main.async {
-                self?.navigationController?.backToHome()
-            }
-        }
-    }
-    
-    @IBAction func extensionToggleAction(_ sender: ConversationExtensionSwitch) {
-        resignTextViewFirstResponderWithoutNotifyingContentHeightChange()
-        if sender.isOn {
-            photosButton.isSelected = false
-            loadCustomInputViewController(extensionViewController)
-            setRightAccessoryButton(stickersButton)
-        } else {
-            dismissCustomInput(minimize: true)
-        }
-    }
-    
-    @IBAction func showStickersAction(_ sender: Any) {
-        resignTextViewFirstResponderWithoutNotifyingContentHeightChange()
-        loadCustomInputViewController(stickersViewController)
-        setRightAccessoryButton(keyboardButton)
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         extensionsSwitch.isOn = false
         photosButton.isSelected = false
-    }
-    
-    @IBAction func showKeyboardAction(_ sender: Any) {
-        dismissCustomInput(minimize: false)
-        inputTextView.becomeFirstResponder()
         setRightAccessoryButton(stickersButton)
+        return true
     }
     
-    // TODO: use view controller based web view and present it right here
-    @IBAction func openOpponentAppAction(_ sender: Any) {
-        guard let user = dataSource.ownerUser, user.isBot, let app = opponentApp else {
-            return
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard !audioViewController.isRecording else {
+            return false
         }
-        dismiss()
-        conversationViewController.openOpponentApp(app)
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        if textView.text.isEmpty && !newText.isEmpty {
+            layoutForInputTextViewIsEmpty(false, animated: true)
+        } else if !textView.text.isEmpty && newText.isEmpty {
+            layoutForInputTextViewIsEmpty(true, animated: true)
+        }
+        return true
     }
     
-    @IBAction func showPhotosAction(_ sender: Any) {
-        let status = PHPhotoLibrary.authorizationStatus()
-        handlePhotoAuthorizationStatus(status)
-    }
-    
-    @IBAction func sendTextMessageAction(_ sender: Any) {
-        guard !trimmedMessageDraft.isEmpty else {
+    func textViewDidChange(_ textView: UITextView) {
+        guard let lineHeight = textView.font?.lineHeight else {
             return
         }
-        dataSource.sendMessage(type: .SIGNAL_TEXT,
-                               quoteMessageId: quote?.message.messageId,
-                               value: trimmedMessageDraft)
-        inputTextView.text = ""
-        textViewDidChange(inputTextView)
-        layoutForInputTextViewIsEmpty(true, animated: true)
-        quote = nil
-    }
-    
-    @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        guard reportHeightChangeWhenKeyboardFrameChanges else {
-            return
-        }
-        guard let endFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-            return
-        }
-        if keyboardFrameIsInvisible(endFrame) {
-            reportMinimizedHeight()
-        } else {
-            let height = quotePreviewWrapperHeightConstraint.constant
-                + inputBarView.frame.height
-                + screenHeight
-                - endFrame.origin.y
-                - interactiveDismissResponder.height
-            preferredContentSize.height = max(minimizedHeight, height)
+        let maxHeight = ceil(lineHeight * CGFloat(maxInputRow)
+            + textView.textContainerInset.top
+            + textView.textContainerInset.bottom)
+        let sizeToFit = CGSize(width: textView.bounds.width,
+                               height: UIView.layoutFittingExpandedSize.height)
+        let contentSize = textView.sizeThatFits(sizeToFit)
+        inputTextView.isScrollEnabled = contentSize.height > maxHeight
+        let newHeight = min(contentSize.height, maxHeight)
+        let heightDifference = newHeight - inputTextViewHeightConstraint.constant
+        if abs(heightDifference) > 0.1 {
+            inputTextViewHeightConstraint.constant = newHeight
+            preferredContentSize.height += heightDifference
+            interactiveDismissResponder.height += heightDifference
         }
     }
     
-    @objc func saveDraft() {
-        CommonUserDefault.shared.setConversationDraft(dataSource.conversationId, draft: trimmedMessageDraft)
-    }
-    
-    @objc func participantDidChange(_ notification: Notification) {
-        guard dataSource.category == .group else {
-            return
-        }
-        guard let conversationId = notification.object as? String, conversationId == dataSource.conversationId else {
-            return
-        }
-        DispatchQueue.global().async {
-            let apps = AppDAO.shared.getConversationBots(conversationId: self.dataSource.conversationId)
-            DispatchQueue.main.sync {
-                self.extensionViewController.apps = apps
-            }
-        }
-    }
+}
+
+extension ConversationInputViewController {
     
     private func reportMinimizedHeight() {
         preferredContentSize.height = minimizedHeight
@@ -350,7 +398,7 @@ class ConversationInputViewController: UIViewController {
         return screenHeight - frame.origin.y <= 1
     }
     
-    private func resignTextViewFirstResponderWithoutNotifyingContentHeightChange() {
+    private func resignTextViewFirstResponderWithoutReportingContentHeightChange() {
         guard inputTextView.isFirstResponder else {
             return
         }
@@ -464,7 +512,7 @@ class ConversationInputViewController: UIViewController {
     }
     
     private func loadPhotoInput() {
-        resignTextViewFirstResponderWithoutNotifyingContentHeightChange()
+        resignTextViewFirstResponderWithoutReportingContentHeightChange()
         photosButton.isSelected.toggle()
         extensionsSwitch.isOn = false
         setRightAccessoryButton(stickersButton)
@@ -483,50 +531,6 @@ class ConversationInputViewController: UIViewController {
             PHPhotoLibrary.requestAuthorization(handlePhotoAuthorizationStatus)
         case .denied, .restricted:
             alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
-        }
-    }
-    
-}
-
-extension ConversationInputViewController: UITextViewDelegate {
-    
-    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        extensionsSwitch.isOn = false
-        photosButton.isSelected = false
-        setRightAccessoryButton(stickersButton)
-        return true
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        guard !audioViewController.isRecording else {
-            return false
-        }
-        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        if textView.text.isEmpty && !newText.isEmpty {
-            layoutForInputTextViewIsEmpty(false, animated: true)
-        } else if !textView.text.isEmpty && newText.isEmpty {
-            layoutForInputTextViewIsEmpty(true, animated: true)
-        }
-        return true
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        guard let lineHeight = textView.font?.lineHeight else {
-            return
-        }
-        let maxHeight = ceil(lineHeight * CGFloat(maxInputRow)
-            + textView.textContainerInset.top
-            + textView.textContainerInset.bottom)
-        let sizeToFit = CGSize(width: textView.bounds.width,
-                               height: UIView.layoutFittingExpandedSize.height)
-        let contentSize = textView.sizeThatFits(sizeToFit)
-        inputTextView.isScrollEnabled = contentSize.height > maxHeight
-        let newHeight = min(contentSize.height, maxHeight)
-        let heightDifference = newHeight - inputTextViewHeightConstraint.constant
-        if abs(heightDifference) > 0.1 {
-            inputTextViewHeightConstraint.constant = newHeight
-            preferredContentSize.height += heightDifference
-            interactiveDismissResponder.height += heightDifference
         }
     }
     

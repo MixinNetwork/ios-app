@@ -28,11 +28,15 @@ class WebSocketService: NSObject {
     private var awaitingPong: Bool = false
     private var pingInterval: TimeInterval = 15
     private var requestHeaderTime: TimeInterval = 0
+    private var lastConnectTime: TimeInterval = 0
+    private var lastNetworkReachabled = true
     
     func connect() {
         guard client == nil else {
             return
         }
+        lastNetworkReachabled = NetworkManager.shared.isReachable
+        lastConnectTime = Date().timeIntervalSince1970
         client = instanceWebSocket()
         client?.setDelegateDispatchQueue(websocketDispatchQueue)
         client?.delegate = self
@@ -164,7 +168,7 @@ extension WebSocketService: SRWebSocketDelegate {
         #if DEBUG
         print("======WebSocketService...didFailWithError...error:\(String(describing: error))")
         #endif
-        reconnect(didClose: false, afterReconnect: true)
+        reconnect(didClose: false)
     }
 
     func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
@@ -175,7 +179,7 @@ extension WebSocketService: SRWebSocketDelegate {
             return
         }
 
-        reconnect(didClose: true, afterReconnect: true)
+        reconnect(didClose: true)
     }
 
     func webSocket(_ webSocket: SRWebSocket!, didReceivePong pongPayload: Data!) {
@@ -223,7 +227,7 @@ extension WebSocketService: SRWebSocketDelegate {
         }
     }
 
-    func reconnect(didClose: Bool, afterReconnect: Bool = false) {
+    func reconnect(didClose: Bool) {
         FileManager.default.writeLog(log: "WebSocketService...reconnect")
         connected = false
         NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: false)
@@ -238,7 +242,8 @@ extension WebSocketService: SRWebSocketDelegate {
         client = nil
         reconnectWorkItem?.cancel()
 
-        if NetworkManager.shared.isReachable && AccountAPI.shared.didLogin && !afterReconnect {
+
+        if AccountAPI.shared.didLogin && NetworkManager.shared.isReachable && (!lastNetworkReachabled || Date().timeIntervalSince1970 - lastConnectTime >= 1) {
             WebSocketService.shared.connect()
         } else {
             let reconnectWorkItem = DispatchWorkItem(block: {

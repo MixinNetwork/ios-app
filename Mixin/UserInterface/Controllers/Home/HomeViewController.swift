@@ -13,6 +13,8 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var bottomNavView: UIView!
     @IBOutlet weak var cameraButton: BouncingButton!
     @IBOutlet weak var qrcodeImageView: UIImageView!
+    @IBOutlet weak var connectingView: UIActivityIndicatorView!
+    @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var bottomNavConstraint: NSLayoutConstraint!
 
@@ -39,6 +41,7 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        connectingView.isHidden = true
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "ConversationCell", bundle: nil), forCellReuseIdentifier: ConversationCell.cellIdentifier)
@@ -46,6 +49,7 @@ class HomeViewController: UIViewController {
         tableView.tableFooterView = UIView()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(socketStatusChange), name: .SocketStatusChanged, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
             self?.searchViewController?.prepare()
         }
@@ -145,6 +149,25 @@ class HomeViewController: UIViewController {
             self.searchContainerView.alpha = 0
         }
     }
+
+    @objc func socketStatusChange(_ sender: Any) {
+        if WebSocketService.shared.connected {
+            guard !connectingView.isHidden else {
+                return
+            }
+            connectingView.stopAnimating()
+            connectingView.isHidden = true
+            titleLabel.text = Localized.HOME_TITLE
+        } else {
+            guard connectingView.isHidden else {
+                return
+            }
+            connectingView.startAnimating()
+            connectingView.isHidden = false
+            titleLabel.text = R.string.localizable.dialog_progress_connect()
+        }
+    }
+
 
     @IBAction func walletAction(_ sender: Any) {
         guard let account = AccountAPI.shared.account else {

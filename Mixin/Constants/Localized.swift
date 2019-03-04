@@ -137,6 +137,9 @@ public class Localized {
     public static let CONTACT_MY_QR_CODE = LocalizedString("contact_my_qr_code", comment: "My QR Code")
     public static let CONTACT_RECEIVE_MONEY = LocalizedString("contact_receive_money", comment: "Receive Money")
 
+    // Home
+    public static let HOME_TITLE = LocalizedString("home_title", comment: "Chats")
+
     // Chat
     public static let CHAT_MESSAGE_MENU_REPLY = LocalizedString("chat_message_menu_reply", comment: "Reply")
     public static let CHAT_MESSAGE_MENU_FORWARD = LocalizedString("chat_message_menu_forward", comment: "Forward")

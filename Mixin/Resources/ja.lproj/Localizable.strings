@@ -30,6 +30,7 @@
 "action_deauthorize" = "認証解除";
 "menu_delete" = "デリート";
 "no_result" = "検索結果はありません";
+"all_photos" = "すべて";
 
 "connection_hint_connecting" = "接続中";
 "connection_hint_waiting" = "再接続を待っています";

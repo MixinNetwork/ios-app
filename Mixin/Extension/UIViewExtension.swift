@@ -60,3 +60,9 @@ extension UILayoutPriority {
     static let almostRequired = UILayoutPriority(999)
 
 }
+
+extension UIVisualEffect {
+    
+    static let darkBlur = UIBlurEffect(style: .dark)
+    
+}

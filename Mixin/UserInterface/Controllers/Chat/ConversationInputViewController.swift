@@ -1,4 +1,5 @@
 import UIKit
+import Photos
 
 class ConversationInputViewController: UIViewController {
     
@@ -39,7 +40,7 @@ class ConversationInputViewController: UIViewController {
     
     lazy var extensionViewController = R.storyboard.chat.extension()!
     lazy var stickersViewController = R.storyboard.chat.stickerInput()!
-    lazy var photoViewController = R.storyboard.chat.photo()!
+    lazy var photoViewController = R.storyboard.chat.photoInput()!
     lazy var audioViewController = R.storyboard.chat.audioInput()!
     
     var minimizedHeight: CGFloat {
@@ -193,6 +194,7 @@ class ConversationInputViewController: UIViewController {
     
     func dismissCustomInput(minimize: Bool) {
         setRightAccessoryButton(stickersButton)
+        photosButton.isSelected = false
         UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)
             self.customInputContainerView.alpha = 0
@@ -258,6 +260,7 @@ class ConversationInputViewController: UIViewController {
         loadCustomInputViewController(stickersViewController)
         setRightAccessoryButton(keyboardButton)
         extensionsSwitch.isOn = false
+        photosButton.isSelected = false
     }
     
     @IBAction func showKeyboardAction(_ sender: Any) {
@@ -276,13 +279,8 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func showPhotosAction(_ sender: Any) {
-        resignTextViewFirstResponderWithoutNotifyingContentHeightChange()
-        photosButton.isSelected.toggle()
-        if photosButton.isSelected {
-            loadCustomInputViewController(photoViewController)
-        } else {
-            dismissCustomInput(minimize: true)
-        }
+        let status = PHPhotoLibrary.authorizationStatus()
+        handlePhotoAuthorizationStatus(status)
     }
     
     @IBAction func sendTextMessageAction(_ sender: Any) {
@@ -363,7 +361,7 @@ class ConversationInputViewController: UIViewController {
     private func loadCustomInputViewController(_ viewController: UIViewController) {
         customInputContainerView.alpha = 0
         customInputViewController = viewController
-        viewController.view.layoutIfNeeded()
+        customInputContainerView.layoutIfNeeded()
         UIView.animate(withDuration: 0.5) {
             UIView.setAnimationCurve(.overdamped)
             self.customInputContainerView.alpha = 1
@@ -461,6 +459,29 @@ class ConversationInputViewController: UIViewController {
                 quotePreviewWrapperHeightConstraint.constant = 0
                 preferredContentSize.height = newHeight
             }
+        }
+    }
+    
+    private func loadPhotoInput() {
+        resignTextViewFirstResponderWithoutNotifyingContentHeightChange()
+        photosButton.isSelected.toggle()
+        extensionsSwitch.isOn = false
+        setRightAccessoryButton(stickersButton)
+        if photosButton.isSelected {
+            loadCustomInputViewController(photoViewController)
+        } else {
+            dismissCustomInput(minimize: true)
+        }
+    }
+    
+    private func handlePhotoAuthorizationStatus(_ status: PHAuthorizationStatus) {
+        switch status {
+        case .authorized:
+            performSynchronouslyOnMainThread(loadPhotoInput)
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization(handlePhotoAuthorizationStatus)
+        case .denied, .restricted:
+            alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
         }
     }
     

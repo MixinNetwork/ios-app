@@ -34,6 +34,7 @@
 "menu_delete" = "Delete";
 "no_result" = "No result";
 "title_loading" = "Loading...";
+"all_photos" = "All Photos";
 
 "connection_hint_connecting" = "Connecting";
 "connection_hint_waiting" = "Waiting to reconnect";

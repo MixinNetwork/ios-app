@@ -195,6 +195,7 @@ class ConversationInputViewController: UIViewController {
     func dismissCustomInput(minimize: Bool) {
         setRightAccessoryButton(stickersButton)
         photosButton.isSelected = false
+        extensionsSwitch.isOn = false
         UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)
             self.customInputContainerView.alpha = 0

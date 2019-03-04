@@ -12,7 +12,7 @@ class ConversationExtensionSwitch: UIControl {
             }
             _isOn = newValue
             UIView.animate(withDuration: animationDuration) {
-                self.updateAppearance()
+                self.updateIconLayer()
             }
         }
     }
@@ -48,19 +48,32 @@ class ConversationExtensionSwitch: UIControl {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        isUserInteractionEnabled = false
-        _isOn.toggle()
-        sendActions(for: .valueChanged)
         UIView.animate(withDuration: animationDuration, animations: {
-            self.updateAppearance()
-        }, completion: { (finished) in
-            self.isUserInteractionEnabled = true
+            self.transform = .identity
+        })
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        UIView.animate(withDuration: animationDuration, animations: {
+            self.transform = .identity
         })
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         iconLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+    }
+    
+    @objc func tapAction(_ sender: UITapGestureRecognizer) {
+        isUserInteractionEnabled = false
+        _isOn.toggle()
+        sendActions(for: .valueChanged)
+        UIView.animate(withDuration: animationDuration, animations: {
+            self.updateIconLayer()
+        }, completion: { (finished) in
+            self.isUserInteractionEnabled = true
+        })
     }
     
     private func prepare() {
@@ -73,14 +86,16 @@ class ConversationExtensionSwitch: UIControl {
         iconLayer.fillColor = offColor
         iconLayer.lineCap = .round
         layer.addSublayer(iconLayer)
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
+        addGestureRecognizer(recognizer)
     }
     
-    private func updateAppearance() {
+    private func updateIconLayer() {
         if _isOn {
-            transform = CGAffineTransform(rotationAngle: .pi / 4)
+            iconLayer.transform = CATransform3DMakeRotation(.pi / 4, 0, 0, 1)
             iconLayer.fillColor = onColor
         } else {
-            transform = .identity
+            iconLayer.transform = CATransform3DIdentity
             iconLayer.fillColor = offColor
         }
     }

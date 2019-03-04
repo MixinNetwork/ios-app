@@ -1,20 +1,9 @@
 import UIKit
 
-class ConversationExtensionCell: UICollectionViewCell {
-    
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var label: UILabel!
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        imageView.sd_cancelCurrentImageLoad()
-    }
-    
-}
-
 class ConversationExtensionViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
     
     var fixedExtensions = [FixedExtension]() {
         didSet {
@@ -32,6 +21,9 @@ class ConversationExtensionViewController: UIViewController {
     }
     
     private let cellReuseId = "extension"
+    private let itemCountPerLine: CGFloat = 4
+    
+    private var availableWidth: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,15 +38,29 @@ class ConversationExtensionViewController: UIViewController {
         updateCollectionViewSectionInsetIfNeeded()
     }
     
-    private func updateCollectionViewSectionInsetIfNeeded() {
-        guard view.compatibleSafeAreaInsets.bottom < 20 else {
-            return
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        let width = view.bounds.width
+            - view.compatibleSafeAreaInsets.horizontal
+            - collectionViewLayout.sectionInset.horizontal
+        
+        if availableWidth != width {
+            availableWidth = width
+            let spacing = width
+                - itemCountPerLine * collectionViewLayout.itemSize.width
+                - collectionViewLayout.sectionInset.horizontal
+            collectionViewLayout.minimumInteritemSpacing = floor(spacing / (itemCountPerLine - 1))
         }
-        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
-            return
-        }
-        layout.sectionInset.bottom = 20
     }
+    
+    private func updateCollectionViewSectionInsetIfNeeded() {
+        if view.compatibleSafeAreaInsets.bottom < 20 {
+            collectionViewLayout.sectionInset.bottom = 20
+        } else {
+            collectionViewLayout.sectionInset.bottom = 0
+        }
+    }
+    
 }
 
 extension ConversationExtensionViewController: UICollectionViewDataSource {

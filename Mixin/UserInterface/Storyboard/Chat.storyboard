@@ -2301,6 +2301,7 @@
                     <size key="freeformSize" width="375" height="296"/>
                     <connections>
                         <outlet property="collectionView" destination="v6s-WT-OmX" id="0uG-3b-fGn"/>
+                        <outlet property="collectionViewLayout" destination="aNm-pA-xS7" id="Kk1-nB-3eq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="11a-8b-sLw" userLabel="First Responder" sceneMemberID="firstResponder"/>

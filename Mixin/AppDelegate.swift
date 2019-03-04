@@ -79,8 +79,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         cancelBackgroundTask()
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
             self.backgroundTaskID = .invalid
+            self.backgroundTime?.invalidate()
+            self.backgroundTime = nil
         })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 60, repeats: false) { (time) in
             self.cancelBackgroundTask()
         }
     }

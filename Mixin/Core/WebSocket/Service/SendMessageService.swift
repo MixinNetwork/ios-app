@@ -113,6 +113,9 @@ class SendMessageService: MixinService {
     }
 
     func sendSessionMessage(message: Message) {
+        guard AccountUserDefault.shared.isDesktopLoggedIn else {
+            return
+        }
         guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_IMAGE") || message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
             return
         }

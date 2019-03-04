@@ -606,10 +606,14 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
 
         if let mixinURL = MixinURL(string: urlString) {
             switch mixinURL {
-            case .codes, .pay, .users, .transfer, .device:
+            case .codes, .pay, .users, .transfer:
                 showNotification(text: Localized.CAMERA_QRCODE_CODES)
             case .send:
                 showNotification(text: urlString)
+            case let .device(uuid, publicKey):
+                ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { _ in
+                })
+                navigationController?.popViewController(animated: true)
             case .unknown:
                 showNotification(text: urlString)
             }

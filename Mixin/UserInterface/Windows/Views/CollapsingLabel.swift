@@ -43,7 +43,7 @@ class CollapsingLabel: CoreTextLabel {
             typesetIfNeeded(oldValue: oldValue, newValue: font)
         }
     }
-    var textColor = UIColor(rgbValue: 0x3A3C3E) {
+    var textColor = UIColor(rgbValue: 0x333333) {
         didSet {
             typesetIfNeeded(oldValue: oldValue, newValue: textColor)
         }

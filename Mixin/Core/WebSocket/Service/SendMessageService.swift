@@ -360,7 +360,7 @@ class SendMessageService: MixinService {
                             try SendMessageService.shared.sendCallMessage(blazeMessage: blazeMessage)
                         } else {
                             if job.isSessionMessage {
-                                try SendMessageService.shared.sendSessionMessage(blazeMessage: blazeMessage, job: job)
+                                try SendMessageService.shared.sendSessionMessage(blazeMessage: blazeMessage)
                             } else {
                                 try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage, jobOrderId: job.orderId)
                             }
@@ -428,15 +428,8 @@ extension SendMessageService {
         FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][ResendMessage]...messageId:\(messageId)...resendMessageId:\(resendMessageId)...resendUserId:\(recipientId)")
     }
 
-    private func sendSessionMessage(blazeMessage: BlazeMessage, job: Job) throws {
-        guard job.isSessionMessage else {
-            return
-        }
-        guard let messageId = blazeMessage.params?.messageId, let message = MessageDAO.shared.getMessage(messageId: messageId) else {
-            return
-        }
-        guard let sessionId = AccountUserDefault.shared.extensionSession else {
-            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendSessionMessage][\(message.category)]...isSessionMessage:\(job.isSessionMessage)... extensionSession is nil")
+    private func sendSessionMessage(blazeMessage: BlazeMessage) throws {
+        guard let messageId = blazeMessage.params?.messageId, let category = blazeMessage.params?.category, let sessionId = AccountUserDefault.shared.extensionSession else {
             return
         }
 
@@ -445,25 +438,24 @@ extension SendMessageService {
         blazeMessage.params?.messageId = UUID().uuidString.lowercased()
         blazeMessage.params?.recipientId = AccountAPI.shared.accountUserId
         blazeMessage.params?.sessionId = sessionId
-        blazeMessage.params?.primitiveMessageId = message.messageId
-        blazeMessage.params?.primitiveId = message.userId
-
-        if message.category.hasPrefix("PLAIN_") || message.category.hasPrefix("SYSTEM_") {
-            if message.category.hasPrefix("SYSTEM_") {
-                blazeMessage.params?.primitiveId = User.systemUser
+        blazeMessage.params?.primitiveMessageId = messageId
+        if category.hasPrefix("SYSTEM_") {
+            blazeMessage.params?.primitiveId = User.systemUser
+        } else if category.hasPrefix("PLAIN_") {
+            guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
+                return
             }
-            if message.category == MessageCategory.PLAIN_TEXT.rawValue {
-                blazeMessage.params?.data = message.content?.base64Encoded()
-            } else {
-                blazeMessage.params?.data = message.content
+            blazeMessage.params?.primitiveId = message.userId
+            blazeMessage.params?.data = message.content?.base64Encoded()
+        } else if category.hasPrefix("SIGNAL_") {
+            guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
+                return
             }
-        } else if message.category.hasPrefix("SIGNAL_") {
+            blazeMessage.params?.primitiveId = message.userId
             _ = try checkSignalSession(recipientId: AccountAPI.shared.accountUserId, sessionId: sessionId)
             blazeMessage.params?.data =  try SignalProtocol.shared.encryptTransferSessionMessageData(recipientId: AccountAPI.shared.accountUserId, content: message.content ?? "", sessionId: sessionId)
         }
         try deliverMessage(blazeMessage: blazeMessage)
-
-        FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendSessionMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
     }
 
     private func sendMessage(blazeMessage: BlazeMessage, jobOrderId: Int?) throws {

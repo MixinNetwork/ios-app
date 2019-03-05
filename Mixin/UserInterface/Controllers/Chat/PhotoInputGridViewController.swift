@@ -19,7 +19,7 @@ class PhotoInputGridViewController: UIViewController {
     
     private let cellReuseId = "grid"
     private let interitemSpacing: CGFloat = 0
-    private let columnCount: CGFloat = UIScreen.main.bounds.width > 375 ? 4 : 3
+    private let columnCount: CGFloat = 3
     private let imageManager = PHCachingImageManager()
     private let utiCheckingImageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()

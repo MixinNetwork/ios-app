@@ -40,16 +40,13 @@ class ConversationExtensionViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        let width = view.bounds.width
-            - view.compatibleSafeAreaInsets.horizontal
-            - collectionViewLayout.sectionInset.horizontal
-        
+        let width = view.bounds.width - view.compatibleSafeAreaInsets.horizontal
         if availableWidth != width {
             availableWidth = width
-            let spacing = width
-                - itemCountPerLine * collectionViewLayout.itemSize.width
-                - collectionViewLayout.sectionInset.horizontal
-            collectionViewLayout.minimumInteritemSpacing = floor(spacing / (itemCountPerLine - 1))
+            let spacing = (width - itemCountPerLine * collectionViewLayout.itemSize.width) / (itemCountPerLine + 1)
+            collectionViewLayout.sectionInset.left = spacing
+            collectionViewLayout.sectionInset.right = spacing
+            collectionViewLayout.minimumInteritemSpacing = spacing
         }
     }
     

@@ -14,14 +14,7 @@ class PhotoInputGridCell: UICollectionViewCell {
     
     var identifier: String?
     
-    override var bounds: CGRect {
-        didSet {
-            guard bounds.size != oldValue.size else {
-                return
-            }
-            updateShadowPath()
-        }
-    }
+    private var lastImageWrapperFrame = CGRect.zero
     
     override var isSelected: Bool {
         didSet {
@@ -32,7 +25,7 @@ class PhotoInputGridCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        updateShadowPath()
+        updateShadowPathIfNeeded()
         contentView.layer.shadowColor = UIColor(rgbValue: 0xC3C3C3).cgColor
         contentView.layer.shadowOpacity = 0.29
         contentView.layer.shadowRadius = 5
@@ -41,12 +34,20 @@ class PhotoInputGridCell: UICollectionViewCell {
         imageWrapperView.insertSubview(visualEffectView, belowSubview: sendLabel)
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateShadowPathIfNeeded()
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil
     }
     
-    private func updateShadowPath() {
+    private func updateShadowPathIfNeeded() {
+        guard imageWrapperView.frame != lastImageWrapperFrame else {
+            return
+        }
         var rect = imageWrapperView.frame
         rect.origin.y += 6
         let path = CGPath(roundedRect: rect,
@@ -54,6 +55,7 @@ class PhotoInputGridCell: UICollectionViewCell {
                           cornerHeight: cornerRadius,
                           transform: nil)
         contentView.layer.shadowPath = path
+        lastImageWrapperFrame = imageWrapperView.frame
     }
     
 }

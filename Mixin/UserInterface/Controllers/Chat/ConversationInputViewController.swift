@@ -209,6 +209,9 @@ class ConversationInputViewController: UIViewController {
     @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {
         resignTextViewFirstResponderWithoutReportingContentHeightChange()
         if sender.isOn {
+            if size == .maximized {
+                setPreferredContentHeight(regularHeight, animated: true)
+            }
             photosButton.isSelected = false
             setRightAccessoryButton(stickersButton)
             loadCustomInputViewController(extensionViewController)

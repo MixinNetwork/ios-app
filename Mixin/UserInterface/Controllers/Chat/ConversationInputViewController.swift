@@ -143,6 +143,16 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reportHeightChangeWhenKeyboardFrameChanges = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        reportHeightChangeWhenKeyboardFrameChanges = false
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         saveDraft()

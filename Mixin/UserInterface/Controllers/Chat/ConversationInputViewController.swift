@@ -1,6 +1,10 @@
 import UIKit
 import Photos
 
+protocol ConversationInputInteractiveResizableViewController {
+    var interactiveResizableScrollView: UIScrollView { get }
+}
+
 class ConversationInputViewController: UIViewController {
     
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
@@ -28,15 +32,6 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var endEditingRightActionsStackTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var customInputContainerHeightConstraint: NSLayoutConstraint!
-    
-    override var preferredContentSize: CGSize {
-        willSet {
-            guard newValue.height >= KeyboardHeight.minReasonable else {
-                return
-            }
-            customInputContainerHeightConstraint.constant = newValue.height - inputBarView.frame.height
-        }
-    }
     
     lazy var extensionViewController = R.storyboard.chat.extension()!
     lazy var stickersViewController = R.storyboard.chat.stickerInput()!
@@ -164,6 +159,14 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        guard size != .minimized else {
+            return
+        }
+        customInputContainerHeightConstraint.constant = view.frame.height - inputBarView.frame.height
+    }
+    
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         super.preferredContentSizeDidChange(forChildContentContainer: container)
         if (container as? UIViewController) == audioViewController {
@@ -287,6 +290,10 @@ class ConversationInputViewController: UIViewController {
         quotePreviewView.dismissAction = { [weak self] in
             self?.quote = nil
         }
+        
+        let recognizer = InteractiveResizeGestureRecognizer(target: self, action: #selector(interactiveResizeAction(_:)))
+        recognizer.delegate = self
+        view.addGestureRecognizer(recognizer)
     }
     
     func update(opponentUser: UserItem?) {
@@ -371,6 +378,54 @@ extension ConversationInputViewController {
         }
     }
     
+    @objc private func interactiveResizeAction(_ recognizer: InteractiveResizeGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            recognizer.sizeWhenBegan = size
+            let location = recognizer.location(in: view)
+            recognizer.beganInInputBar = inputBarView.frame.contains(location)
+            if recognizer.beganInInputBar {
+                recognizer.shouldAdjustContentHeight = true
+            }
+            recognizer.setTranslation(.zero, in: view)
+        case .changed:
+            let location = recognizer.location(in: view)
+            if !recognizer.shouldAdjustContentHeight, inputBarView.frame.contains(location) {
+                recognizer.shouldAdjustContentHeight = true
+            }
+            if recognizer.shouldAdjustContentHeight {
+                if !recognizer.beganInInputBar, let scrollView = (customInputViewController as? ConversationInputInteractiveResizableViewController)?.interactiveResizableScrollView {
+                    scrollView.contentOffset.y += recognizer.translation(in: view).y
+                }
+                UIView.performWithoutAnimation {
+                    preferredContentSize.height = view.frame.height - recognizer.translation(in: view).y
+                }
+            }
+            recognizer.setTranslation(.zero, in: view)
+        case .ended:
+            if recognizer.shouldAdjustContentHeight {
+                let verticalVelocity = recognizer.velocity(in: view).y
+                if recognizer.sizeWhenBegan == .regular {
+                    if verticalVelocity < 0 {
+                        preferredContentSize.height = maximizedHeight
+                    } else if verticalVelocity > 0 && regularHeight - preferredContentSize.height > 60 {
+                        dismissCustomInput(minimize: true)
+                    } else {
+                        preferredContentSize.height = regularHeight
+                    }
+                } else if recognizer.sizeWhenBegan == .maximized {
+                    if verticalVelocity > 0 {
+                        preferredContentSize.height = regularHeight
+                    } else {
+                        preferredContentSize.height = maximizedHeight
+                    }
+                }
+            }
+        default:
+            break
+        }
+    }
+    
 }
 
 // MARK: - Embedded class
@@ -380,6 +435,33 @@ extension ConversationInputViewController {
         case minimized
         case regular
         case maximized
+    }
+    
+    private class InteractiveResizeGestureRecognizer: UIPanGestureRecognizer {
+        
+        var sizeWhenBegan = Size.regular
+        var beganInInputBar = false
+        var shouldAdjustContentHeight = false
+        
+        override func reset() {
+            super.reset()
+            shouldAdjustContentHeight = false
+        }
+        
+    }
+    
+}
+
+// MARK: - UITextViewDelegate
+extension ConversationInputViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return customInputViewController is ConversationInputInteractiveResizableViewController
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        // Avoid conflicting with audio recording
+        return !(otherGestureRecognizer is UILongPressGestureRecognizer)
     }
     
 }

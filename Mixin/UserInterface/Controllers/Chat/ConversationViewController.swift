@@ -47,6 +47,7 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    private let minInputWrapperTopMargin: CGFloat = 112 // Margin to navigation title bar
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.3
@@ -169,7 +170,10 @@ class ConversationViewController: UIViewController {
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         super.preferredContentSizeDidChange(forChildContentContainer: container)
         if (container as? UIViewController) == conversationInputViewController {
-            let newHeight = container.preferredContentSize.height
+            let maxHeight = AppDelegate.current.window!.frame.height
+                - tableView.contentInset.top
+                - minInputWrapperTopMargin
+            let newHeight = min(maxHeight, container.preferredContentSize.height)
             inputWrapperHeightConstraint.constant = newHeight
             var bottomInset = newHeight
             tableView.scrollIndicatorInsets.bottom = bottomInset

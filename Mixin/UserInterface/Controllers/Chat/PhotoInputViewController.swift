@@ -57,6 +57,14 @@ class PhotoInputViewController: UIViewController {
     
 }
 
+extension PhotoInputViewController: ConversationInputInteractiveResizableViewController {
+    
+    var interactiveResizableScrollView: UIScrollView {
+        return gridViewController.collectionView
+    }
+    
+}
+
 extension PhotoInputViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

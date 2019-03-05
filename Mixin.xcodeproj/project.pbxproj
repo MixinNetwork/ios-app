@@ -136,7 +136,7 @@
 		7B61EB8F20978856001C1985 /* AttachmentEncryptingInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61EB8C20978855001C1985 /* AttachmentEncryptingInputStream.swift */; };
 		7B61EB9020978856001C1985 /* AttachmentDecryptingOutputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B61EB8D20978855001C1985 /* AttachmentDecryptingOutputStream.swift */; };
 		7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */; };
-		7B63C48D21A3ED530044C4BF /* TransferPeerSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63C48C21A3ED530044C4BF /* TransferPeerSelectionViewController.swift */; };
+		7B63C48D21A3ED530044C4BF /* SendContactSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63C48C21A3ED530044C4BF /* SendContactSelectionViewController.swift */; };
 		7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */; };
 		7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63C49021A4334C0044C4BF /* DepositFieldView.swift */; };
 		7B68F78B2191741300B79978 /* BiometryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B68F78A2191741300B79978 /* BiometryType.swift */; };
@@ -376,6 +376,7 @@
 		DF3C474E1FA1849500A07C71 /* MessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C474D1FA1849500A07C71 /* MessageDAO.swift */; };
 		DF3C47501FA18EE900A07C71 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C474F1FA18EE900A07C71 /* Message.swift */; };
 		DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47511FA191A600A07C71 /* UserDAO.swift */; };
+		DF3D7B59222D58900065FF5A /* SendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3D7B58222D58900065FF5A /* SendViewController.swift */; };
 		DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EEF811FA9EF49007C6E03 /* PhoneContactGuideCell.swift */; };
 		DF3EEF841FA9EF54007C6E03 /* PhoneContactGuideCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3EEF831FA9EF54007C6E03 /* PhoneContactGuideCell.xib */; };
 		DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */; };
@@ -743,7 +744,7 @@
 		7B61EB8C20978855001C1985 /* AttachmentEncryptingInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentEncryptingInputStream.swift; sourceTree = "<group>"; };
 		7B61EB8D20978855001C1985 /* AttachmentDecryptingOutputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentDecryptingOutputStream.swift; sourceTree = "<group>"; };
 		7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationButton.swift; sourceTree = "<group>"; };
-		7B63C48C21A3ED530044C4BF /* TransferPeerSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPeerSelectionViewController.swift; sourceTree = "<group>"; };
+		7B63C48C21A3ED530044C4BF /* SendContactSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendContactSelectionViewController.swift; sourceTree = "<group>"; };
 		7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositFieldView.xib; sourceTree = "<group>"; };
 		7B63C49021A4334C0044C4BF /* DepositFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFieldView.swift; sourceTree = "<group>"; };
 		7B68F78A2191741300B79978 /* BiometryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometryType.swift; sourceTree = "<group>"; };
@@ -998,6 +999,7 @@
 		DF3C474D1FA1849500A07C71 /* MessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDAO.swift; sourceTree = "<group>"; };
 		DF3C474F1FA18EE900A07C71 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		DF3C47511FA191A600A07C71 /* UserDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDAO.swift; sourceTree = "<group>"; };
+		DF3D7B58222D58900065FF5A /* SendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendViewController.swift; sourceTree = "<group>"; };
 		DF3EEF811FA9EF49007C6E03 /* PhoneContactGuideCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactGuideCell.swift; sourceTree = "<group>"; };
 		DF3EEF831FA9EF54007C6E03 /* PhoneContactGuideCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactGuideCell.xib; sourceTree = "<group>"; };
 		DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QrcodeWindow.xib; sourceTree = "<group>"; };
@@ -2207,7 +2209,7 @@
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				7B0BE45D21A55E6C00B91A1E /* AddAssetViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */,
-				7B63C48C21A3ED530044C4BF /* TransferPeerSelectionViewController.swift */,
+				7B63C48C21A3ED530044C4BF /* SendContactSelectionViewController.swift */,
 				DF8794932074FB4E004A1E55 /* TransactionViewController.swift */,
 				DF16681D20A6F84200C45E31 /* AllTransactionsViewController.swift */,
 				DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */,
@@ -2220,6 +2222,7 @@
 				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
 				DFFDF6842112E591009984B3 /* PinIntervalViewController.swift */,
 				7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */,
+				DF3D7B58222D58900065FF5A /* SendViewController.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -2928,6 +2931,7 @@
 				273FACC8205FB9A800513327 /* PreKeyStoreWrapper.swift in Sources */,
 				7BBF395E205A624F00390712 /* Fee.swift in Sources */,
 				DF2A24521FC8744A003A8C1E /* ParticipantDAO.swift in Sources */,
+				DF3D7B59222D58900065FF5A /* SendViewController.swift in Sources */,
 				273FACB5205FB9A800513327 /* crypto_provider.c in Sources */,
 				7B84358D20D8F89200237242 /* QuotePreviewView.swift in Sources */,
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
@@ -3049,7 +3053,7 @@
 				7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */,
 				DF3C47501FA18EE900A07C71 /* Message.swift in Sources */,
 				DF138975200493C300869685 /* QRCodeResponse.swift in Sources */,
-				7B63C48D21A3ED530044C4BF /* TransferPeerSelectionViewController.swift in Sources */,
+				7B63C48D21A3ED530044C4BF /* SendContactSelectionViewController.swift in Sources */,
 				DF1A9A7A1FF206F500A95188 /* RefreshSnapshotsJob.swift in Sources */,
 				7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */,
 				7BB470491FB1965E0059AE79 /* GroupMemberCell.swift in Sources */,

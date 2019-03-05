@@ -29,9 +29,11 @@
 "action_apply" = "Apply";
 "action_filter" = "Filter";
 "action_skip" = "Skip";
+"action_send_to" = "Send To";
 "action_deauthorize" = "Deauthorize";
 "wallet_deposit_tips" = "Don’t remind me again";
 "menu_delete" = "Delete";
+"menu_edit" = "Edit";
 "no_result" = "No result";
 "title_loading" = "Loading...";
 
@@ -273,8 +275,8 @@
 "wallet_set_password_success" = "Set wallet PIN successfully";
 "wallet_snapshot_from" = "From %@";
 "wallet_snapshot_to" = "To %@";
-"wallet_caption_deposit" = "DEPOSIT";
-"wallet_caption_transfer" = "TRANSFER";
+"wallet_caption_send" = "SEND";
+"wallet_caption_receive" = "RECEIVE";
 "wallet_deposit" = "Deposit";
 "wallet_deposit_confirmations" = "Deposit will arrive after at least %@ block confirmations.";
 "wallet_no_transaction" = "No transaction";
@@ -286,7 +288,7 @@
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";
 "wallet_hide_asset_empty" = "No hidden assets";
-"wallet_menu_withdraw" = "Withdraw";
+"wallet_send_to_address" = "Address";
 "wallet_withdraw_amount" = "Amount";
 "wallet_withdraw_memo" = "Memo (Optional)";
 "wallet_button_add_address" = "Tap to add address";

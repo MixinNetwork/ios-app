@@ -231,10 +231,10 @@ class WalletPasswordViewController: UIViewController {
         return vc
     }
 
-    class func instance(fromChat user: UserItem, conversationId: String, asset: AssetItem?) -> UIViewController {
+    class func instance(fromChat user: UserItem) -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "password") as! WalletPasswordViewController
         vc.walletPasswordType = .initPinStep1
-        vc.transferData = PasswordTransferData(user: user, conversationId: conversationId, asset: asset)
+        vc.transferData = PasswordTransferData(user: user)
         return vc
     }
 
@@ -251,7 +251,7 @@ class WalletPasswordViewController: UIViewController {
                 return
             }
             if let transferData = weakSelf.transferData {
-                self?.navigationController?.pushViewController(withBackChat: TransferViewController.instance(user: transferData.user, conversationId: transferData.conversationId, asset: transferData.asset))
+                self?.navigationController?.pushViewController(withBackChat: SendViewController.instance(asset: nil, type: .contact(transferData.user)))
             } else {
                 self?.navigationController?.pushViewController(withBackRoot: WalletViewController.instance())
             }
@@ -260,8 +260,6 @@ class WalletPasswordViewController: UIViewController {
 
     struct PasswordTransferData {
         let user: UserItem!
-        let conversationId: String!
-        let asset: AssetItem?
     }
 }
 

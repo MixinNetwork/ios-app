@@ -21,10 +21,12 @@ public class Localized {
     public static let ACTION_SELECT = LocalizedString("action_select", comment: "Select")
     public static let ACTION_CLEAR = LocalizedString("action_clear", comment: "Clear")
     public static let ACTION_SEND = LocalizedString("action_send", comment: "Send")
+    public static let ACTION_SEND_TO = LocalizedString("action_send_to", comment: "Send To")
     public static let ACTION_HIDE = LocalizedString("action_hide", comment: "Hide")
     public static let ACTION_SHOW = LocalizedString("action_show", comment: "Show")
     public static let ACTION_DEAUTHORIZE = LocalizedString("action_deauthorize", comment: "Deauthorize")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
+    public static let MENU_EDIT = LocalizedString("menu_edit", comment: "Edit")
 
     public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
     public static let CONNECTION_HINT_WAITING = LocalizedString("connection_hint_waiting", comment: "Waiting to reconnect")
@@ -300,6 +302,7 @@ public class Localized {
     public static let AUTH_ASSETS_MORE = LocalizedString("auth_assets_more", comment: " and more")
     public static let SCAN_QR_CODE = LocalizedString("scan_qr_code", comment: "Scan QR Code")
     public static let TRANSFER_QRCODE_PROMPT = LocalizedString("transfer_qrcode_prompt", comment: "Scan the QR Code to transfer me on Mixin")
+    public static let TRANSFER_BALANCE = LocalizedString("transfer_balance", comment: "BALANCE")
 
     // Profile
     public static let PROFILE_TITLE = LocalizedString("profile_title", comment: "Info")

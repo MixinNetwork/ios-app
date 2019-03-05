@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iyh-gj-jcc">
-                                <rect key="frame" x="0.0" y="63.5" width="375" height="603.5"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y4k-Xv-8tX">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -82,20 +82,13 @@
                                     <constraint firstItem="gcg-t3-GeH" firstAttribute="height" secondItem="y4k-Xv-8tX" secondAttribute="height" id="yI9-Y9-fbV"/>
                                 </constraints>
                             </view>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="eja-ld-qWL" customClass="ConnectionHintView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="375" height="0.0"/>
-                                <color key="backgroundColor" red="0.1215686275" green="0.70588235290000001" blue="0.98823529409999999" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="eja-ld-qWL" secondAttribute="trailing" id="3zE-Xe-vjD"/>
                             <constraint firstItem="Iyh-gj-jcc" firstAttribute="trailing" secondItem="fwU-YY-eBW" secondAttribute="trailing" id="8bs-Ev-5cH"/>
-                            <constraint firstItem="eja-ld-qWL" firstAttribute="top" secondItem="y4k-Xv-8tX" secondAttribute="bottom" id="JBQ-UN-aWO"/>
                             <constraint firstItem="y4k-Xv-8tX" firstAttribute="leading" secondItem="fwU-YY-eBW" secondAttribute="leading" id="MT9-PL-plO"/>
                             <constraint firstItem="Iyh-gj-jcc" firstAttribute="leading" secondItem="fwU-YY-eBW" secondAttribute="leading" id="cA2-V1-EW0"/>
-                            <constraint firstItem="eja-ld-qWL" firstAttribute="leading" secondItem="7DS-bH-jdl" secondAttribute="leading" id="eqy-Ag-PnO"/>
-                            <constraint firstItem="Iyh-gj-jcc" firstAttribute="top" secondItem="eja-ld-qWL" secondAttribute="bottom" constant="-0.5" id="iCD-lz-2Rx"/>
+                            <constraint firstItem="Iyh-gj-jcc" firstAttribute="top" secondItem="y4k-Xv-8tX" secondAttribute="bottom" id="fVa-WW-X5r"/>
                             <constraint firstItem="y4k-Xv-8tX" firstAttribute="trailing" secondItem="fwU-YY-eBW" secondAttribute="trailing" id="jmh-yK-gfF"/>
                             <constraint firstAttribute="bottom" secondItem="Iyh-gj-jcc" secondAttribute="bottom" id="le9-MW-E3r"/>
                             <constraint firstItem="y4k-Xv-8tX" firstAttribute="top" secondItem="fwU-YY-eBW" secondAttribute="top" id="rMG-sO-8mU"/>

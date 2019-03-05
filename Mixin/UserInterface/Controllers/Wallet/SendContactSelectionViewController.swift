@@ -1,6 +1,6 @@
 import UIKit
 
-class TransferPeerSelectionViewController: PeerSelectionViewController {
+class SendContactSelectionViewController: PeerSelectionViewController {
     
     override class var usesModernStyle: Bool {
         return true
@@ -28,10 +28,7 @@ class TransferPeerSelectionViewController: PeerSelectionViewController {
         guard let peer = selections.first, let user = peer.user, let navigationController = navigationController else {
             return
         }
-        let vc = TransferViewController.instance(user: user,
-                                                 conversationId: peer.conversationId,
-                                                 asset: asset,
-                                                 usePresentAnimationWhenPushed: false)
+        let vc = SendViewController.instance(asset: asset, type: .contact(user))
         var viewControllers = navigationController.viewControllers
         if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
             viewControllers.remove(at: index)
@@ -41,7 +38,7 @@ class TransferPeerSelectionViewController: PeerSelectionViewController {
     }
     
     class func instance(asset: AssetItem) -> UIViewController {
-        let vc = TransferPeerSelectionViewController()
+        let vc = SendContactSelectionViewController()
         vc.asset = asset
         return ContainerViewController.instance(viewController: vc, title: Localized.TRANSFER_TITLE_TO)
     }

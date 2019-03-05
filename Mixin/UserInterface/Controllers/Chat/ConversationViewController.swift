@@ -81,7 +81,6 @@ class ConversationViewController: UIViewController {
     private var ownerUserApp: App?
     private var participants = [Participant]()
     private var role = ""
-    private var asset: AssetItem?
     private var quoteMessageId: String?
     private var quotingMessageId: String?
     private var didInitData = false
@@ -226,7 +225,6 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(assetsDidChange(_:)), name: .AssetsDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeStatusBarFrame(_:)), name: UIApplication.didChangeStatusBarFrameNotification, object: nil)
@@ -344,9 +342,6 @@ class ConversationViewController: UIViewController {
             dataSource.initData {
                 self.updateAccessoryButtons(animated: false)
                 self.stickerInputViewController.reload()
-                DispatchQueue.global().async { [weak self] in
-                    self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
-                }
                 self.hideLoading()
             }
         }
@@ -740,12 +735,6 @@ class ConversationViewController: UIViewController {
         reloadParticipants()
     }
     
-    @objc func assetsDidChange(_ notification: Notification) {
-        DispatchQueue.global().async { [weak self] in
-            self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
-        }
-    }
-    
     @objc func didAddMessageOutOfBounds(_ notification: Notification) {
         guard let count = notification.object as? Int else {
             return
@@ -797,9 +786,9 @@ class ConversationViewController: UIViewController {
         }
         let viewController: UIViewController
         if AccountAPI.shared.account?.has_pin ?? false {
-            viewController = TransferViewController.instance(user: user, conversationId: conversationId, asset: asset)
+            viewController = SendViewController.instance(asset: nil, type: .contact(user))
         } else {
-            viewController = WalletPasswordViewController.instance(fromChat:  user, conversationId: conversationId, asset: asset)
+            viewController = WalletPasswordViewController.instance(fromChat:  user)
         }
         navigationController?.pushViewController(viewController, animated: true)
     }

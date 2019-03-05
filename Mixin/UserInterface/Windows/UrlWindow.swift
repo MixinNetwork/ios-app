@@ -152,10 +152,6 @@ extension UrlWindow {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
         DispatchQueue.global().async { [weak self] in
-            var asset: AssetItem?
-            if transfer {
-                asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
-            }
             var user = UserDAO.shared.getUser(userId: userId)
             var refreshUser = true
             if user == nil {
@@ -181,8 +177,7 @@ extension UrlWindow {
                 }
                 if transfer {
                     weakSelf.dismissPopupControllerAnimated()
-                    let conversationId = ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: AccountAPI.shared.accountUserId)
-                    let vc = TransferViewController.instance(user: user, conversationId: conversationId, asset: asset)
+                    let vc = SendViewController.instance(asset: nil, type: .contact(user))
                     if clearNavigationStack {
                         UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
                     } else {
@@ -332,7 +327,7 @@ extension UrlWindow {
                     make.edges.equalToSuperview()
                 })
                 let chainIconUrl = AssetDAO.shared.getChainIconUrl(chainId: payment.asset.chainId)
-                weakSelf.payView.render(isTransfer: true, asset: AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainIconUrl), user: UserItem.createUser(from: payment.recipient), amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
+                weakSelf.payView.render(asset: AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainIconUrl), user: UserItem.createUser(from: payment.recipient), amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
                 weakSelf.successHandler()
             case let .failure(error):
                 weakSelf.failedHandler(error.localizedDescription)

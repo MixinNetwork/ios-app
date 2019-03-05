@@ -49,15 +49,16 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     
     override func loadView() {
         view = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-        searchBoxView = searchBoxViewClass.init(frame: CGRect(x: 0, y: 0, width: 375, height: 70))
+        searchBoxView = searchBoxViewClass.init(frame: CGRect(x: 0, y: 0, width: 375, height: 40))
         view.addSubview(searchBoxView)
         view.addSubview(tableView)
         searchBoxView.snp.makeConstraints { (make) in
-            make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(searchBoxView.height)
+            make.top.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(40)
         }
         tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(searchBoxView.snp.bottom)
+            make.top.equalTo(searchBoxView.snp.bottom).offset(15)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
@@ -69,6 +70,8 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
                                           for: .editingChanged)
         tableView.allowsMultipleSelection = allowsMultipleSelection
         tableView.rowHeight = 60
+        tableView.separatorColor = UIColor.white
+        tableView.separatorStyle = .none
         tableView.register(UINib(nibName: "PeerCell", bundle: .main),
                            forCellReuseIdentifier: ReuseId.cell)
         tableView.register(GeneralTableViewHeader.self,
@@ -260,9 +263,7 @@ extension PeerSelectionViewController {
                 titles = []
                 peers = [contacts.map(Peer.init)]
             case .transferReceivers:
-                titles = [Localized.CHAT_FORWARD_CHATS,
-                          Localized.CHAT_FORWARD_CONTACTS]
-                let conversations = ConversationDAO.shared.conversationList()
+                titles = []
                 let transferAcceptableContacts = contacts.filter({ (user) -> Bool in
                     if user.isBot {
                         return user.appCreatorId == AccountAPI.shared.accountUserId
@@ -270,12 +271,7 @@ extension PeerSelectionViewController {
                         return true
                     }
                 })
-                let transferAcceptableConversations = conversations.filter({ (conversation) -> Bool in
-                    return conversation.category == ConversationCategory.CONTACT.rawValue
-                        && !conversation.ownerIsBot
-                })
-                peers = [transferAcceptableConversations.compactMap(Peer.init),
-                         transferAcceptableContacts.map(Peer.init)]
+                peers = [transferAcceptableContacts.map(Peer.init)]
             case .catalogedContacts:
                 (titles, peers) = PeerSelectionViewController.catalogedPeers(from: contacts)
             }

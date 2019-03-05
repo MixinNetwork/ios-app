@@ -88,7 +88,7 @@ class TransferViewController: UIViewController {
         let memo = memoTextField.text ?? ""
 
         continueButtonFollowsKeyboardPosition = false
-        PayWindow.shared.presentPopupControllerAnimated(isTransfer: true, asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+        PayWindow.shared.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
         continueButtonFollowsKeyboardPosition = true
     }
     

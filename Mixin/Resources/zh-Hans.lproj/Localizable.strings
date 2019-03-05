@@ -24,6 +24,7 @@
 "action_select" = "选择";
 "action_clear" = "清理";
 "action_send" = "发送";
+"action_send_to" = "发送给";
 "action_hide" = "隐藏";
 "action_show" = "显示";
 "action_apply" = "应用";
@@ -31,6 +32,7 @@
 "action_skip" = "跳过";
 "action_deauthorize" = "取消授权";
 "menu_delete" = "删除";
+"menu_edit" = "编辑";
 "no_result" = "未找到相关内容";
 "title_loading" = "正在加载...";
 
@@ -272,8 +274,8 @@
 "wallet_set_password_success" = "设置支付密码成功";
 "wallet_snapshot_from" = "转账来自%@";
 "wallet_snapshot_to" = "转账给%@";
-"wallet_caption_deposit" = "充值";
-"wallet_caption_transfer" = "转账";
+"wallet_caption_send" = "转出";
+"wallet_caption_receive" = "转入";
 "wallet_deposit" = "充值";
 "wallet_deposit_confirmations" = "充值到账至少需要 %@ 个区块确认";
 "wallet_no_transaction" = "暂无转账记录";

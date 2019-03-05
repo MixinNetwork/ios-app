@@ -5,6 +5,7 @@ class AddressViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
+    private lazy var editAction = UITableViewRowAction(style: .normal, title: Localized.MENU_EDIT, handler: tableViewCommitEditAction)
 
     private var asset: AssetItem!
     private var addresses = [Address]()
@@ -72,6 +73,12 @@ extension AddressViewController {
         tableView.setEditing(false, animated: true)
     }
 
+    private func tableViewCommitEditAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        tableView.setEditing(false, animated: true)
+        let vc = NewAddressViewController.instance(asset: asset, address: addresses[indexPath.row])
+        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+    }
+
     private func deleteAction(indexPath: IndexPath) {
         let addressId = addresses[indexPath.row].addressId
         tableView.beginUpdates()
@@ -112,8 +119,17 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc = NewAddressViewController.instance(asset: asset, address: addresses[indexPath.row])
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+        guard let navigationController = navigationController else {
+            return
+        }
+
+        let vc = SendViewController.instance(asset: asset, type: .address(addresses[indexPath.row]))
+        var viewControllers = navigationController.viewControllers
+        if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
+            viewControllers.remove(at: index)
+        }
+        viewControllers.append(vc)
+        navigationController.setViewControllers(viewControllers, animated: true)
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -121,6 +137,6 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return [deleteAction]
+        return [deleteAction, editAction]
     }
 }

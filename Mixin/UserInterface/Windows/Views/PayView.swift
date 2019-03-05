@@ -33,7 +33,6 @@ class PayView: UIStackView {
     private var memo = ""
     private(set) var processing = false
     private var soundId: SystemSoundID = 0
-    private var isTransfer = false
     private var isAutoFillPIN = false
     private var biometricPayTimedOut: Bool {
         return Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime >= WalletUserDefault.shared.pinInterval
@@ -58,8 +57,7 @@ class PayView: UIStackView {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func render(isTransfer: Bool, asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
-        self.isTransfer = isTransfer
+    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -288,7 +286,15 @@ extension PayView: PinFieldDelegate {
             }
             weakSelf.processing = false
             weakSelf.superView?.dismissPopupControllerAnimated()
-            if let lastViewController = UIApplication.rootNavigationController()?.viewControllers.last, lastViewController is TransferViewController || lastViewController is WithdrawalViewController || lastViewController is CameraViewController {
+            guard let lastViewController = UIApplication.rootNavigationController()?.viewControllers.last else {
+                return
+            }
+            if lastViewController is CameraViewController {
+                UIApplication.rootNavigationController()?.popViewController(animated: true)
+            } else if lastViewController is ContainerViewController {
+                guard (lastViewController as? ContainerViewController)?.viewController is SendViewController else {
+                    return
+                }
                 UIApplication.rootNavigationController()?.popViewController(animated: true)
             }
         }

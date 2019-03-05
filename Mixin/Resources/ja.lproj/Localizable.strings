@@ -22,6 +22,7 @@
 "action_select" = "選択";
 "action_clear" = "クリア";
 "action_send" = "送る";
+"action_send_to" = "に送る";
 "action_hide" = "隠す";
 "action_show" = "見せる";
 "action_apply" = "アプライ";
@@ -269,8 +270,8 @@
 "wallet_set_password_success" = "ウォレットのPINを正しく設定する";
 "wallet_snapshot_from" = " %@ から";
 "wallet_snapshot_to" = " %@ まで";
-"wallet_caption_deposit" = "預金";
-"wallet_caption_transfer" = "振込をする";
+"wallet_caption_send" = "振込をする";
+"wallet_caption_receive" = "預金";
 "wallet_deposit" = "預金";
 "wallet_deposit_confirmations" = "入金は少なくとも ％@ ブロックの確認後に到着します。";
 "wallet_no_transaction" = "取引なし";

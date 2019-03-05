@@ -20,6 +20,8 @@ class ConversationDataSource {
     
     var ownerUser: UserItem?
     var firstUnreadMessageId: String?
+    var canScrollToNewIncomingMessage = false
+    
     weak var tableView: ConversationTableView?
     
     private let windowRect = AppDelegate.current.window!.bounds
@@ -974,7 +976,8 @@ extension ConversationDataSource {
             }
             tableView.endUpdates()
             UIView.setAnimationsEnabled(true)
-            let shouldScrollToNewMessage = !tableView.isTracking
+            let shouldScrollToNewMessage = canScrollToNewIncomingMessage
+                && !tableView.isTracking
                 && !tableView.isDecelerating
                 && isLastCell
                 && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)

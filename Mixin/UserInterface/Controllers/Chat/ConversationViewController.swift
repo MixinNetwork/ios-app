@@ -349,6 +349,9 @@ class ConversationViewController: UIViewController {
                 }
                 self.hideLoading()
             }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+                self?.dataSource.canScrollToNewIncomingMessage = true
+            }
         }
     }
     
@@ -748,6 +751,7 @@ class ConversationViewController: UIViewController {
             return
         }
         unreadBadgeValue += count
+        setScrollToBottomWrapperHide(false, animated: true)
     }
     
     @objc func didChangeStatusBarFrame(_ notification: Notification) {
@@ -1495,27 +1499,31 @@ extension ConversationViewController {
         let didReachThreshold = position > showScrollToBottomButtonThreshold
             && tableView.contentOffset.y > tableView.contentInset.top
         let shouldShowScrollToBottomButton = didReachThreshold || !dataSource.didLoadLatestMessage
-        if scrollToBottomWrapperView.alpha < 0.1 && shouldShowScrollToBottomButton {
+        setScrollToBottomWrapperHide(!shouldShowScrollToBottomButton, animated: animated)
+    }
+    
+    private func setScrollToBottomWrapperHide(_ hide: Bool, animated: Bool) {
+        if scrollToBottomWrapperView.alpha < 0.1 && !hide {
             scrollToBottomWrapperHeightConstraint.constant = 48
-            if animated {
-                UIView.beginAnimations(nil, context: nil)
-                UIView.setAnimationDuration(animationDuration)
+            let work = {
+                self.scrollToBottomWrapperView.alpha = 1
+                self.view.layoutIfNeeded()
             }
-            scrollToBottomWrapperView.alpha = 1
             if animated {
-                view.layoutIfNeeded()
-                UIView.commitAnimations()
+                UIView.animate(withDuration: animationDuration, animations: work)
+            } else {
+                work()
             }
-        } else if scrollToBottomWrapperView.alpha > 0.9 && !shouldShowScrollToBottomButton {
+        } else if scrollToBottomWrapperView.alpha > 0.9 && hide {
             scrollToBottomWrapperHeightConstraint.constant = 4
-            if animated {
-                UIView.beginAnimations(nil, context: nil)
-                UIView.setAnimationDuration(animationDuration)
+            let work = {
+                self.scrollToBottomWrapperView.alpha = 0
+                self.view.layoutIfNeeded()
             }
-            scrollToBottomWrapperView.alpha = 0
             if animated {
-                view.layoutIfNeeded()
-                UIView.commitAnimations()
+                UIView.animate(withDuration: animationDuration, animations: work)
+            } else {
+                work()
             }
             unreadBadgeValue = 0
             dataSource?.firstUnreadMessageId = nil

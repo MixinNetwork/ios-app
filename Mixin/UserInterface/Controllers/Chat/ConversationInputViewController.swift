@@ -321,11 +321,11 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
-    func dismiss() {
-        if inputTextView.isFirstResponder {
-            inputTextView.resignFirstResponder()
-        } else if size != .minimized {
-            dismissCustomInput(minimize: true)
+    func resizeToRegularOrDismiss() {
+        if size == .maximized {
+            setPreferredContentHeight(regularHeight, animated: true)
+        } else if size == .regular {
+            dismiss()
         }
     }
     
@@ -517,6 +517,14 @@ extension ConversationInputViewController {
             UIView.performWithoutAnimation {
                 preferredContentSize.height = height
             }
+        }
+    }
+    
+    private func dismiss() {
+        if inputTextView.isFirstResponder {
+            inputTextView.resignFirstResponder()
+        } else if size != .minimized {
+            dismissCustomInput(minimize: true)
         }
     }
     

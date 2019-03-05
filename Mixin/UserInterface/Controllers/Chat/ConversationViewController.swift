@@ -21,8 +21,6 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
     
-    @IBOutlet var interactiveDismissInputWrapperRecognizer: UIPanGestureRecognizer!
-    
     @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
@@ -106,6 +104,12 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    private var maxInputWrapperHeight: CGFloat {
+        return AppDelegate.current.window!.frame.height
+            - tableView.contentInset.top
+            - minInputWrapperTopMargin
+    }
+    
     override var prefersStatusBarHidden: Bool {
         return statusBarHidden
     }
@@ -144,7 +148,6 @@ class ConversationViewController: UIViewController {
         tableView.delegate = self
         tableView.actionDelegate = self
         tableView.viewController = self
-        interactiveDismissInputWrapperRecognizer.delegate = self
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
@@ -170,10 +173,7 @@ class ConversationViewController: UIViewController {
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         super.preferredContentSizeDidChange(forChildContentContainer: container)
         if (container as? UIViewController) == conversationInputViewController {
-            let maxHeight = AppDelegate.current.window!.frame.height
-                - tableView.contentInset.top
-                - minInputWrapperTopMargin
-            let newHeight = min(maxHeight, container.preferredContentSize.height)
+            let newHeight = min(maxInputWrapperHeight, container.preferredContentSize.height)
             inputWrapperHeightConstraint.constant = newHeight
             var bottomInset = newHeight
             tableView.scrollIndicatorInsets.bottom = bottomInset
@@ -200,14 +200,7 @@ class ConversationViewController: UIViewController {
             })
             conversationInputViewController.didMove(toParent: self)
             conversationInputViewController.update(opponentUser: ownerUser)
-            dataSource.initData {
-                self.updateAccessoryButtons(animated: false)
-                self.conversationInputViewController.finishLoading()
-                DispatchQueue.global().async { [weak self] in
-                    self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
-                }
-                self.hideLoading()
-            }
+            dataSource.initData(completion: finishInitialLoading)
         }
     }
     
@@ -309,36 +302,53 @@ class ConversationViewController: UIViewController {
 //        }
     }
     
-    @IBAction func interactiveDismissInputWrapperAction(_ sender: UIPanGestureRecognizer) {
-        let location = sender.location(in: inputWrapperView)
-        let verticalVelocity = sender.velocity(in: view).y
-        let contentHeight = conversationInputViewController.preferredContentSize.height
-        switch sender.state {
+    @objc func downsizeInputWrapperAction(_ recognizer: DownsizeInputWrapperGestureRecognizer) {
+        let location = recognizer.location(in: inputWrapperView)
+        let verticalVelocity = recognizer.velocity(in: view).y
+        let regularInputWrapperHeight = conversationInputViewController.regularHeight
+        var inputWrapperHeight: CGFloat {
+            get {
+                return inputWrapperHeightConstraint.constant
+            }
+            set {
+                inputWrapperHeightConstraint.constant = newValue
+            }
+        }
+        switch recognizer.state {
         case .changed:
-            let isDraggingDown = inputWrapperView.bounds.contains(location)
-            let isDraggingUp = verticalVelocity < 0 && inputWrapperHeightConstraint.constant < contentHeight
-            if isDraggingDown || isDraggingUp {
-                var newHeight = inputWrapperHeightConstraint.constant - sender.translation(in: view).y
+            let shouldMoveDown = verticalVelocity > 0 && location.y > 0
+            let shouldMoveUp = verticalVelocity < 0 && recognizer.hasMovedInputWrapperDuringChangedState
+            if shouldMoveDown || shouldMoveUp {
+                recognizer.hasMovedInputWrapperDuringChangedState = true
+                var newHeight = inputWrapperHeight - recognizer.translation(in: view).y
                 newHeight = max(newHeight, conversationInputViewController.minimizedHeight)
-                newHeight = min(newHeight, contentHeight)
-                inputWrapperHeightConstraint.constant = newHeight
+                newHeight = min(newHeight, maxInputWrapperHeight)
+                inputWrapperHeight = newHeight
                 view.layoutIfNeeded()
             }
-            sender.setTranslation(.zero, in: view)
+            recognizer.setTranslation(.zero, in: view)
         case .ended:
-            if !conversationInputViewController.inputTextView.isFirstResponder {
-                let shouldDismissByVelocity = verticalVelocity > 200 && location.y > -10
-                let shouldDismissByPosition = inputWrapperHeightConstraint.constant < contentHeight / 2
-                let shouldDismiss = verticalVelocity > 0
-                    && (shouldDismissByVelocity || shouldDismissByPosition)
-                if shouldDismiss {
-                    conversationInputViewController.dismissCustomInput(minimize: true)
-                } else {
-                    inputWrapperHeightConstraint.constant = contentHeight
-                    view.layoutIfNeeded()
+            if recognizer.hasMovedInputWrapperDuringChangedState && !conversationInputViewController.inputTextView.isFirstResponder {
+                func setInputWrapperHeight(_ height: CGFloat) {
+                    inputWrapperHeight = height
+                    UIView.animate(withDuration: 0.5) {
+                        UIView.setAnimationCurve(.overdamped)
+                        self.view.layoutIfNeeded()
+                    }
                 }
-            } else {
-                inputWrapperHeightConstraint.constant = contentHeight
+                if verticalVelocity >= 0 {
+                    if inputWrapperHeight > regularInputWrapperHeight {
+                        setInputWrapperHeight(regularInputWrapperHeight)
+                    } else {
+                        conversationInputViewController.dismissCustomInput(minimize: true)
+                    }
+                } else {
+                    if inputWrapperHeight > conversationInputViewController.regularHeight {
+                        setInputWrapperHeight(maxInputWrapperHeight)
+                    } else {
+                        setInputWrapperHeight(regularInputWrapperHeight)
+                    }
+                }
             }
         default:
             break
@@ -414,7 +424,7 @@ class ConversationViewController: UIViewController {
                 AudioManager.shared.playOrStop(node: node)
             } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue, let item = GalleryItem(message: message) {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
-                conversationInputViewController.resizeToRegularOrDismiss()
+                conversationInputViewController.downsizeToRegularOrDismiss()
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
                 AudioManager.shared.stop(deactivateAudioSession: true)
                 view.bringSubviewToFront(galleryWrapperView)
@@ -426,23 +436,23 @@ class ConversationViewController: UIViewController {
                 homeIndicatorAutoHidden = true
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue {
-                    conversationInputViewController.resizeToRegularOrDismiss()
+                    conversationInputViewController.downsizeToRegularOrDismiss()
                     openDocumentAction(message: message)
                 } else {
                     attachmentLoadingCellDidSelectNetworkOperation(cell)
                 }
             } else if message.category.hasSuffix("_CONTACT"), let shareUserId = message.sharedUserId {
-                conversationInputViewController.resizeToRegularOrDismiss()
+                conversationInputViewController.downsizeToRegularOrDismiss()
                 if shareUserId == AccountAPI.shared.accountUserId {
                     navigationController?.pushViewController(withBackRoot: MyProfileViewController.instance())
                 } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
                     UserWindow.instance().updateUser(user: user).presentView()
                 }
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-                conversationInputViewController.resizeToRegularOrDismiss()
+                conversationInputViewController.downsizeToRegularOrDismiss()
                 open(url: .aboutEncryption)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                conversationInputViewController.resizeToRegularOrDismiss()
+                conversationInputViewController.downsizeToRegularOrDismiss()
                 DispatchQueue.global().async { [weak self] in
                     guard let assetId = message.snapshotAssetId, let snapshotId = message.snapshotId, let asset = AssetDAO.shared.getAsset(assetId: assetId), let snapshot = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId) else {
                         return
@@ -452,13 +462,13 @@ class ConversationViewController: UIViewController {
                     }
                 }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let action = message.appCard?.action {
-                conversationInputViewController.resizeToRegularOrDismiss()
+                conversationInputViewController.downsizeToRegularOrDismiss()
                 open(url: action)
             } else {
-                conversationInputViewController.resizeToRegularOrDismiss()
+                conversationInputViewController.downsizeToRegularOrDismiss()
             }
         } else {
-            conversationInputViewController.resizeToRegularOrDismiss()
+            conversationInputViewController.downsizeToRegularOrDismiss()
         }
     }
     
@@ -1217,6 +1227,19 @@ extension ConversationViewController {
 // MARK: - Helpers
 extension ConversationViewController {
     
+    private func finishInitialLoading() {
+        let recognizer = DownsizeInputWrapperGestureRecognizer(target: self, action: #selector(downsizeInputWrapperAction(_:)))
+        recognizer.delegate = self
+        tableView.addGestureRecognizer(recognizer)
+        
+        updateAccessoryButtons(animated: false)
+        conversationInputViewController.finishLoading()
+        DispatchQueue.global().async { [weak self] in
+            self?.asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
+        }
+        hideLoading()
+    }
+    
     private func reloadParticipants() {
         guard dataSource?.category == .group else {
             return
@@ -1347,6 +1370,17 @@ extension ConversationViewController {
         var debugDescription: String {
             return "{\(messageId), \(offset)}"
         }
+    }
+    
+    class DownsizeInputWrapperGestureRecognizer: UIPanGestureRecognizer {
+        
+        var hasMovedInputWrapperDuringChangedState = false
+        
+        override func reset() {
+            super.reset()
+            hasMovedInputWrapperDuringChangedState = false
+        }
+        
     }
     
 }

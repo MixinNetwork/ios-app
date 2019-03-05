@@ -324,7 +324,7 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
-    func resizeToRegularOrDismiss() {
+    func downsizeToRegularOrDismiss() {
         if size == .maximized {
             setPreferredContentHeight(regularHeight, animated: true)
         } else if size == .regular {
@@ -383,7 +383,6 @@ extension ConversationInputViewController {
     @objc private func interactiveResizeAction(_ recognizer: InteractiveResizeGestureRecognizer) {
         switch recognizer.state {
         case .began:
-            recognizer.sizeWhenBegan = size
             let location = recognizer.location(in: view)
             recognizer.beganInInputBar = inputBarView.frame.contains(location)
             if recognizer.beganInInputBar {
@@ -406,19 +405,17 @@ extension ConversationInputViewController {
         case .ended:
             if recognizer.shouldAdjustContentHeight {
                 let verticalVelocity = recognizer.velocity(in: view).y
-                if recognizer.sizeWhenBegan == .regular {
-                    if verticalVelocity < 0 {
-                        setPreferredContentHeight(maximizedHeight, animated: true)
-                    } else if verticalVelocity > 0 && regularHeight - preferredContentSize.height > 60 {
+                if verticalVelocity >= 0 {
+                    if view.frame.height > regularHeight {
+                        setPreferredContentHeight(regularHeight, animated: true)
+                    } else {
                         dismissCustomInput(minimize: true)
-                    } else {
-                        setPreferredContentHeight(regularHeight, animated: true)
                     }
-                } else if recognizer.sizeWhenBegan == .maximized {
-                    if verticalVelocity > 0 {
-                        setPreferredContentHeight(regularHeight, animated: true)
-                    } else {
+                } else {
+                    if view.frame.height > regularHeight {
                         setPreferredContentHeight(maximizedHeight, animated: true)
+                    } else {
+                        setPreferredContentHeight(regularHeight, animated: true)
                     }
                 }
             }
@@ -440,7 +437,6 @@ extension ConversationInputViewController {
     
     private class InteractiveResizeGestureRecognizer: UIPanGestureRecognizer {
         
-        var sizeWhenBegan = Size.regular
         var beganInInputBar = false
         var shouldAdjustContentHeight = false
         

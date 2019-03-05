@@ -545,9 +545,6 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="qay-Hg-b7j" appends="YES" id="zyZ-ME-90f"/>
-                                </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zve-bN-jsA">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
@@ -780,7 +777,6 @@
                         <outlet property="galleryWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
                         <outlet property="inputWrapperHeightConstraint" destination="MMR-mR-ES3" id="DTB-oj-FYz"/>
                         <outlet property="inputWrapperView" destination="6MP-pq-xci" id="Hyt-Ue-uBz"/>
-                        <outlet property="interactiveDismissInputWrapperRecognizer" destination="qay-Hg-b7j" id="X0h-0R-eHH"/>
                         <outlet property="loadingView" destination="pcl-Ex-irR" id="Xco-m3-g7P"/>
                         <outlet property="participantsLabel" destination="a4C-sE-rDR" id="OnC-u4-cXC"/>
                         <outlet property="scrollToBottomButton" destination="hzm-Vh-1BZ" id="i8J-ga-GD1"/>
@@ -795,11 +791,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w6G-5t-tGm" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="qay-Hg-b7j">
-                    <connections>
-                        <action selector="interactiveDismissInputWrapperAction:" destination="RcH-pv-rc2" id="WM4-Wx-o0j"/>
-                    </connections>
-                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="785" y="412"/>
         </scene>

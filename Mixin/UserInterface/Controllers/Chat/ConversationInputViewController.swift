@@ -31,7 +31,7 @@ class ConversationInputViewController: UIViewController {
     
     override var preferredContentSize: CGSize {
         willSet {
-            guard newValue.height >= ScreenSize.minReasonableKeyboardHeight else {
+            guard newValue.height >= KeyboardHeight.minReasonable else {
                 return
             }
             customInputContainerHeightConstraint.constant = newValue.height - inputBarView.frame.height
@@ -47,6 +47,24 @@ class ConversationInputViewController: UIViewController {
         return quotePreviewWrapperHeightConstraint.constant
             + inputBarView.frame.height
             + view.compatibleSafeAreaInsets.bottom
+    }
+    
+    var regularHeight: CGFloat {
+        let keyboardHeight: CGFloat
+        let lastKeyboardHeightIsAvailable = KeyboardHeight.last <= KeyboardHeight.maxReasonable
+            && KeyboardHeight.last >= KeyboardHeight.minReasonable
+        if lastKeyboardHeightIsAvailable {
+            keyboardHeight = KeyboardHeight.last
+        } else {
+            keyboardHeight = KeyboardHeight.default
+        }
+        return quotePreviewWrapperHeightConstraint.constant
+            + inputBarView.frame.height
+            + keyboardHeight
+    }
+    
+    var maximizedHeight: CGFloat {
+        return UIView.layoutFittingExpandedSize.height
     }
     
     var quote: (message: MessageItem, thumbnail: UIImage?)? {
@@ -79,10 +97,6 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
-    private var isExpanded: Bool {
-        return preferredContentSize.height > minimizedHeight
-    }
-    
     private var conversationViewController: ConversationViewController {
         return parent as! ConversationViewController
     }
@@ -95,6 +109,16 @@ class ConversationInputViewController: UIViewController {
         return UIScreen.main.bounds.height
     }
     
+    private var size: Size {
+        if abs(preferredContentSize.height - maximizedHeight) < 1 {
+            return .maximized
+        } else if abs(preferredContentSize.height - minimizedHeight) < 1 {
+            return .minimized
+        } else {
+            return .regular
+        }
+    }
+    
     private var trimmedMessageDraft: String {
         return inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -103,6 +127,7 @@ class ConversationInputViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
@@ -149,6 +174,7 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    // MARK: - Actions
     @IBAction func unblockAction(_ sender: Any) {
         guard let user = dataSource.ownerUser else {
             return
@@ -231,44 +257,7 @@ class ConversationInputViewController: UIViewController {
         quote = nil
     }
     
-    @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        guard reportHeightChangeWhenKeyboardFrameChanges else {
-            return
-        }
-        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-            return
-        }
-        if keyboardFrameIsInvisible(endFrame) {
-            reportMinimizedHeight()
-        } else {
-            let height = quotePreviewWrapperHeightConstraint.constant
-                + inputBarView.frame.height
-                + screenHeight
-                - endFrame.origin.y
-                - interactiveDismissResponder.height
-            preferredContentSize.height = max(minimizedHeight, height)
-        }
-    }
-    
-    @objc func saveDraft() {
-        CommonUserDefault.shared.setConversationDraft(dataSource.conversationId, draft: trimmedMessageDraft)
-    }
-    
-    @objc func participantDidChange(_ notification: Notification) {
-        guard dataSource.category == .group else {
-            return
-        }
-        guard let conversationId = notification.object as? String, conversationId == dataSource.conversationId else {
-            return
-        }
-        DispatchQueue.global().async {
-            let apps = AppDAO.shared.getConversationBots(conversationId: self.dataSource.conversationId)
-            DispatchQueue.main.sync {
-                self.extensionViewController.apps = apps
-            }
-        }
-    }
-    
+    // MARK: - Interface
     func finishLoading() {
         addChild(audioViewController)
         audioInputContainerView.addSubview(audioViewController.view)
@@ -330,19 +319,76 @@ class ConversationInputViewController: UIViewController {
     func dismiss() {
         if inputTextView.isFirstResponder {
             inputTextView.resignFirstResponder()
-        } else if isExpanded {
+        } else if size != .minimized {
             dismissCustomInput(minimize: true)
         }
     }
     
 }
 
+// MARK: - Callbacks
+extension ConversationInputViewController {
+
+    @objc private func keyboardWillChangeFrame(_ notification: Notification) {
+        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
+        if !keyboardWillBeInvisible {
+            KeyboardHeight.last = endFrame.height - interactiveDismissResponder.height
+        }
+        guard reportHeightChangeWhenKeyboardFrameChanges else {
+            return
+        }
+        if keyboardWillBeInvisible {
+            reportMinimizedHeight()
+        } else {
+            let height = quotePreviewWrapperHeightConstraint.constant
+                + inputBarView.frame.height
+                + screenHeight
+                - endFrame.origin.y
+                - interactiveDismissResponder.height
+            preferredContentSize.height = max(minimizedHeight, height)
+        }
+    }
+    
+    @objc private func saveDraft() {
+        CommonUserDefault.shared.setConversationDraft(dataSource.conversationId, draft: trimmedMessageDraft)
+    }
+    
+    @objc private func participantDidChange(_ notification: Notification) {
+        guard dataSource.category == .group else {
+            return
+        }
+        guard let conversationId = notification.object as? String, conversationId == dataSource.conversationId else {
+            return
+        }
+        DispatchQueue.global().async {
+            let apps = AppDAO.shared.getConversationBots(conversationId: self.dataSource.conversationId)
+            DispatchQueue.main.sync {
+                self.extensionViewController.apps = apps
+            }
+        }
+    }
+    
+}
+
+// MARK: - Embedded class
+extension ConversationInputViewController {
+    
+    private enum Size {
+        case minimized
+        case regular
+        case maximized
+    }
+    
+}
+
+// MARK: - UITextViewDelegate
 extension ConversationInputViewController: UITextViewDelegate {
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        extensionsSwitch.isOn = false
-        photosButton.isSelected = false
-        setRightAccessoryButton(stickersButton)
+        dismissCustomInput(minimize: false)
         return true
     }
     
@@ -381,6 +427,7 @@ extension ConversationInputViewController: UITextViewDelegate {
     
 }
 
+// MARK: - Private works
 extension ConversationInputViewController {
     
     private func reportMinimizedHeight() {
@@ -388,14 +435,10 @@ extension ConversationInputViewController {
     }
     
     private func increaseHeightIfNeeded() {
-        guard view.frame.height < ScreenSize.minReasonableKeyboardHeight else {
+        guard view.frame.height < regularHeight else {
             return
         }
-        preferredContentSize.height = ScreenSize.defaultKeyboardHeight + inputBarView.frame.height
-    }
-    
-    private func keyboardFrameIsInvisible(_ frame: CGRect) -> Bool {
-        return screenHeight - frame.origin.y <= 1
+        preferredContentSize.height = regularHeight
     }
     
     private func resignTextViewFirstResponderWithoutReportingContentHeightChange() {

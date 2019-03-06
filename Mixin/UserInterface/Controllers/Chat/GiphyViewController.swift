@@ -76,7 +76,6 @@ class GiphyViewController: StickersCollectionViewController {
         } else {
             let url = urls[indexPath.row - 1].fullsized
             conversationViewController?.dataSource?.sendGif(at: url)
-            conversationViewController?.reduceStickerPanelHeightIfMaximized()
         }
     }
     

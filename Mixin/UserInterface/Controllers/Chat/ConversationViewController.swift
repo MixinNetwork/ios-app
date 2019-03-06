@@ -591,13 +591,6 @@ class ConversationViewController: UIViewController {
         window.presentPopupControllerAnimated(url: url)
     }
     
-    func reduceStickerPanelHeightIfMaximized() {
-//        guard isStickerPanelMax else {
-//            return
-//        }
-//        toggleStickerPanelSizeAction(self)
-    }
-    
     func setInputWrapperHidden(_ hidden: Bool) {
         UIView.animate(withDuration: animationDuration) {
             self.inputWrapperView.alpha = hidden ? 0 : 1

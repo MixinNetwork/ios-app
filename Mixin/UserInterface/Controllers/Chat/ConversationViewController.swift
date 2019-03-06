@@ -17,7 +17,6 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var participantsLabel: UILabel!
-    @IBOutlet weak var dismissPanelsButton: UIButton!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
     
@@ -70,11 +69,7 @@ class ConversationViewController: UIViewController {
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
     private lazy var lastInputWrapperBottomConstant = view.compatibleSafeAreaInsets.bottom
-//    private lazy var giphySearchViewController: GiphySearchViewController = {
-//        let controller = GiphySearchViewController.instance()
-//        controller.conversationViewController = self
-//        return controller
-//    }()
+    
     private lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController.instance(conversationId: conversationId)
         controller.delegate = self
@@ -207,10 +202,6 @@ class ConversationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isAppearanceAnimating = false
-//        if inputTextView.isFirstResponder {
-//            // Workaround for iOS 11 keyboard misplacing
-//            keyboardManager.inputAccessoryViewHeight = inputWrapperView.frame.height
-//        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -292,14 +283,6 @@ class ConversationViewController: UIViewController {
         } else {
             dataSource?.scrollToFirstUnreadMessageOrBottom()
         }
-    }
-    
-    @IBAction func dismissPanelsAction(_ sender: Any) {
-//        if isShowingStickerPanel && isStickerPanelMax {
-//            toggleStickerPanel(delay: 0)
-//        } else {
-//            toggleMoreMenu(delay: 0)
-//        }
     }
     
     @objc func downsizeInputWrapperAction(_ recognizer: DownsizeInputWrapperGestureRecognizer) {
@@ -619,15 +602,6 @@ class ConversationViewController: UIViewController {
         UIView.animate(withDuration: animationDuration) {
             self.inputWrapperView.alpha = hidden ? 0 : 1
         }
-    }
-    
-    func presentGiphySearch(onDisappear: @escaping (() -> Void)) {
-        UIView.animate(withDuration: 0.5) {
-            self.dismissPanelsButton.alpha = 0.3
-        }
-//        giphySearchViewController.onDisappear = onDisappear
-//        giphySearchViewController.prepareForReuse()
-//        present(giphySearchViewController, animated: true, completion: nil)
     }
     
     // MARK: - Class func

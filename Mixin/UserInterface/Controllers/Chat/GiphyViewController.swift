@@ -71,9 +71,8 @@ class GiphyViewController: StickersCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             animated = false
-            conversationViewController?.presentGiphySearch(onDisappear: { [weak self] in
-                self?.animated = true
-            })
+            let vc = R.storyboard.chat.giphy_search()!
+            present(vc, animated: true, completion: nil)
         } else {
             let url = urls[indexPath.row - 1].fullsized
             conversationViewController?.dataSource?.sendGif(at: url)

@@ -14,6 +14,8 @@ class GroupView: CornerView {
     @IBOutlet weak var inGroupActionsStackView: UIStackView!
     @IBOutlet weak var joinButton: BusyButton!
     
+    @IBOutlet weak var showJoinGroupConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideJoinGroupConstraint: NSLayoutConstraint!
     @IBOutlet weak var announcementScrollViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var announcementScrollViewHeightConstraint: NSLayoutConstraint!
     
@@ -71,6 +73,8 @@ class GroupView: CornerView {
     private func renderConversation(alreadyInTheGroup: Bool) {
         inGroupActionsStackView.isHidden = !alreadyInTheGroup
         joinButton.isHidden = alreadyInTheGroup
+        showJoinGroupConstraint.priority = alreadyInTheGroup ? .defaultLow : .defaultHigh
+        hideJoinGroupConstraint.priority = alreadyInTheGroup ? .defaultHigh : .defaultLow
         moreButton.isHidden = !alreadyInTheGroup
         viewButton.isHidden = !alreadyInTheGroup
         

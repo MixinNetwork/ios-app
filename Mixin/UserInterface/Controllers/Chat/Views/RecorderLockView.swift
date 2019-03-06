@@ -2,11 +2,17 @@ import UIKit
 
 class RecorderLockView: UIView {
     
-    let backgroundImageView = UIImageView(image: #imageLiteral(resourceName: "bg_recorder_lock"))
-    let lockShackleImageView = UIImageView(image: #imageLiteral(resourceName: "ic_recorder_lock_shackle"))
-    let lockBodyImageView = UIImageView(image: #imageLiteral(resourceName: "ic_recorder_lock_body"))
-    let lockedImageView = UIImageView(image: #imageLiteral(resourceName: "ic_recorder_locked_lock"))
-    let directionIndicatorImageView = UIImageView(image: #imageLiteral(resourceName: "ic_recorder_lock_direction"))
+    static let backgroundImage = R.image.conversation.bg_recorder_lock()!
+    static let shackleImage = R.image.conversation.ic_recorder_lock_shackle()!
+    static let lockBodyImage = R.image.conversation.ic_recorder_lock_body()!
+    static let lockedImage = R.image.conversation.ic_recorder_lock_locked()!
+    static let directionIndicationImage = R.image.conversation.ic_recorder_lock_direction_up()!
+    
+    let backgroundImageView = UIImageView(image: RecorderLockView.backgroundImage)
+    let lockShackleImageView = UIImageView(image: RecorderLockView.shackleImage)
+    let lockBodyImageView = UIImageView(image: RecorderLockView.lockBodyImage)
+    let lockedImageView = UIImageView(image: RecorderLockView.lockedImage)
+    let directionIndicatorImageView = UIImageView(image: RecorderLockView.directionIndicationImage)
     
     private let lockedIconZoomingTransform = CGAffineTransform(scaleX: 1.3, y: 1.3)
     private let lockedIconZoomingAnimationDuration: TimeInterval = 0.2
@@ -88,17 +94,17 @@ class RecorderLockView: UIView {
 
 extension RecorderLockView {
     
-    static let lockedLockSize = CGSize(width: max(#imageLiteral(resourceName: "ic_recorder_lock_shackle").size.width, #imageLiteral(resourceName: "ic_recorder_lock_body").size.width), height: #imageLiteral(resourceName: "ic_recorder_lock_shackle").size.height + #imageLiteral(resourceName: "ic_recorder_lock_body").size.height + ShackleBottomMargin.end)
+    static let lockedLockSize = CGSize(width: max(shackleImage.size.width, lockBodyImage.size.width), height: shackleImage.size.height + lockBodyImage.size.height + ShackleBottomMargin.end)
     static let verticalDistance: CGFloat = 50
     
     enum BackgroundOrigin {
         static let start = CGPoint(x: 0, y: 0)
-        static let end = CGPoint(x: 0, y: BackgroundOrigin.start.y - verticalDistance)
+        static let end = CGPoint(x: 0, y: start.y - verticalDistance)
     }
     
     enum BackgroundSize {
-        static let start = CGSize(width: #imageLiteral(resourceName: "bg_recorder_lock").size.width, height: 150)
-        static let end = #imageLiteral(resourceName: "bg_recorder_lock").size
+        static let start = CGSize(width: backgroundImage.size.width, height: 150)
+        static let end = backgroundImage.size
     }
     
     enum DirectionIndicatorTopMargin {
@@ -107,23 +113,23 @@ extension RecorderLockView {
     }
     
     enum ShackleBottomMargin {
-        static let start: CGFloat = 0
-        static let end: CGFloat = -10
+        static let start: CGFloat = -1
+        static let end: CGFloat = -5
     }
     
     enum LockBodyCenter {
         static let start = CGPoint(x: BackgroundSize.start.width / 2, y: BackgroundSize.start.height / 2 - 20)
-        static let end = CGPoint(x: BackgroundSize.end.width / 2, y: BackgroundSize.end.height - (BackgroundSize.end.height - lockedLockSize.height) / 2 - #imageLiteral(resourceName: "ic_recorder_lock_body").size.height / 2 - verticalDistance)
+        static let end = CGPoint(x: BackgroundSize.end.width / 2, y: BackgroundSize.end.height - (BackgroundSize.end.height - lockedLockSize.height) / 2 - lockBodyImage.size.height / 2 - verticalDistance)
     }
     
     enum LockShackleCenter {
-        static let start = CGPoint(x: BackgroundSize.start.width / 2, y: LockBodyCenter.start.y - #imageLiteral(resourceName: "ic_recorder_lock_shackle").size.height / 2 - #imageLiteral(resourceName: "ic_recorder_lock_body").size.height / 2)
-        static let end = CGPoint(x: BackgroundSize.end.width / 2, y: (BackgroundSize.end.height - lockedLockSize.height) / 2 + #imageLiteral(resourceName: "ic_recorder_lock_shackle").size.height / 2 - verticalDistance)
+        static let start = CGPoint(x: BackgroundSize.start.width / 2, y: LockBodyCenter.start.y - shackleImage.size.height / 2 - lockBodyImage.size.height / 2 - ShackleBottomMargin.start)
+        static let end = CGPoint(x: BackgroundSize.end.width / 2, y: (BackgroundSize.end.height - lockedLockSize.height) / 2 + shackleImage.size.height / 2 - verticalDistance)
     }
     
     enum DirectionIndicatorCenter {
-        static let start = CGPoint(x: BackgroundSize.start.width / 2, y: LockBodyCenter.start.y + DirectionIndicatorTopMargin.start + #imageLiteral(resourceName: "ic_recorder_lock_direction").size.height / 2)
-        static let end = CGPoint(x: BackgroundSize.end.width / 2, y: LockBodyCenter.end.y + DirectionIndicatorTopMargin.end + #imageLiteral(resourceName: "ic_recorder_lock_direction").size.height / 2)
+        static let start = CGPoint(x: BackgroundSize.start.width / 2, y: LockBodyCenter.start.y + DirectionIndicatorTopMargin.start + directionIndicationImage.size.height / 2)
+        static let end = CGPoint(x: BackgroundSize.end.width / 2, y: LockBodyCenter.end.y + DirectionIndicatorTopMargin.end + directionIndicationImage.size.height / 2)
     }
     
 }

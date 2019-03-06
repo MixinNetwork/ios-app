@@ -2,7 +2,7 @@ import UIKit
 import AVFoundation
 
 class AudioInputViewController: UIViewController {
-
+    
     @IBOutlet weak var recordingIndicatorView: UIView!
     @IBOutlet weak var recordingRedDotView: UIView!
     @IBOutlet weak var timeLabel: UILabel!
@@ -11,7 +11,7 @@ class AudioInputViewController: UIViewController {
     @IBOutlet weak var recordImageView: UIImageView!
     @IBOutlet weak var lockView: RecorderLockView!
     @IBOutlet weak var lockedActionsView: UIView!
-
+    
     @IBOutlet weak var slideViewCenterXConstraint: NSLayoutConstraint!
     @IBOutlet weak var lockViewVisibleConstraint: NSLayoutConstraint!
     @IBOutlet weak var lockViewHiddenConstraint: NSLayoutConstraint!
@@ -20,7 +20,7 @@ class AudioInputViewController: UIViewController {
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
     
     static let maxRecordDuration: TimeInterval = 60
-
+    
     private let animationDuration: TimeInterval = 0.2
     private let updateTimeLabelInterval: TimeInterval = 1
     private let slideToCancelDistance: CGFloat = 80
@@ -65,7 +65,7 @@ class AudioInputViewController: UIViewController {
     
     @IBAction func tapAction(_ sender: Any) {
         if !isShowingLongPressHint {
-            animateShowLongPressHintAndScheduleAutoHiding()
+            flashLongPressHint()
         }
     }
     
@@ -148,7 +148,7 @@ class AudioInputViewController: UIViewController {
         return true
     }
     
-    func animateShowLongPressHintAndScheduleAutoHiding() {
+    func flashLongPressHint() {
         isShowingLongPressHint = true
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(hideLongPressHint), object: nil)
         perform(#selector(hideLongPressHint), with: nil, afterDelay: longPressHintVisibleDuration)
@@ -163,7 +163,7 @@ class AudioInputViewController: UIViewController {
     }
     
     func cancelIfRecording() {
-        guard let recorder = recorder, recorder.isRecording else {
+        guard isRecording else {
             return
         }
         cancelAction(self)
@@ -176,7 +176,7 @@ extension AudioInputViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return recorder == nil
     }
-
+    
 }
 
 extension AudioInputViewController {
@@ -227,7 +227,7 @@ extension AudioInputViewController {
                         self.conversationDataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (tempUrl, metadata))
                     } else {
                         try? FileManager.default.removeItem(at: tempUrl)
-                        self.animateShowLongPressHintAndScheduleAutoHiding()
+                        self.flashLongPressHint()
                     }
                 case .cancelled:
                     break
@@ -238,7 +238,7 @@ extension AudioInputViewController {
             UIApplication.trackError(String(reflecting: self), action: #function, userInfo: ["error": error])
         }
     }
-
+    
 }
 
 extension AudioInputViewController {

@@ -913,10 +913,10 @@
                                         </connections>
                                     </button>
                                     <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B8S-al-j93">
-                                        <rect key="frame" x="325" y="0.0" width="44" height="50"/>
+                                        <rect key="frame" x="325" y="0.0" width="50" height="50"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="44" id="0Vm-hO-7Ii"/>
+                                            <constraint firstAttribute="width" constant="50" id="0Vm-hO-7Ii"/>
                                             <constraint firstAttribute="height" constant="50" id="TFI-VK-6cN"/>
                                         </constraints>
                                     </containerView>
@@ -937,7 +937,7 @@
                                     <constraint firstItem="4Hc-pE-gbi" firstAttribute="centerY" secondItem="ucd-YD-Vpg" secondAttribute="centerY" id="U88-yh-Z7r"/>
                                     <constraint firstAttribute="trailing" secondItem="aDD-ZD-ky1" secondAttribute="leading" priority="1" id="VsZ-Pr-2Vi"/>
                                     <constraint firstAttribute="bottom" secondItem="aDD-ZD-ky1" secondAttribute="bottom" constant="3" id="jn0-1g-Rth"/>
-                                    <constraint firstItem="B8S-al-j93" firstAttribute="trailing" secondItem="8OM-9c-W5h" secondAttribute="trailing" id="reH-r1-AB4"/>
+                                    <constraint firstItem="B8S-al-j93" firstAttribute="trailing" secondItem="8OM-9c-W5h" secondAttribute="trailing" constant="6" id="reH-r1-AB4"/>
                                     <constraint firstItem="ucd-YD-Vpg" firstAttribute="top" secondItem="wvu-NM-HOS" secondAttribute="top" constant="9" id="sFq-fP-j0s"/>
                                 </constraints>
                             </view>
@@ -2025,10 +2025,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="325" height="50"/>
                                 <subviews>
                                     <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tMG-4F-9D7">
-                                        <rect key="frame" x="0.0" y="0.0" width="65.5" height="50"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="80" height="50"/>
                                         <subviews>
                                             <view clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fnf-oR-rOV">
-                                                <rect key="frame" x="12" y="21" width="8" height="8"/>
+                                                <rect key="frame" x="20" y="21" width="8" height="8"/>
                                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="8" id="M7r-Lf-eF5"/>
@@ -2041,8 +2041,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="0:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rcw-bi-HEj">
-                                                <rect key="frame" x="32" y="0.0" width="33.5" height="50"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                <rect key="frame" x="46" y="0.0" width="34" height="50"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -2052,24 +2052,24 @@
                                             <constraint firstAttribute="bottom" secondItem="Rcw-bi-HEj" secondAttribute="bottom" id="SMR-ZP-NRH"/>
                                             <constraint firstAttribute="trailing" secondItem="Rcw-bi-HEj" secondAttribute="trailing" id="bl8-d7-4Mw"/>
                                             <constraint firstItem="Rcw-bi-HEj" firstAttribute="top" secondItem="tMG-4F-9D7" secondAttribute="top" id="lod-05-u3I"/>
-                                            <constraint firstItem="Fnf-oR-rOV" firstAttribute="leading" secondItem="tMG-4F-9D7" secondAttribute="leading" priority="999" constant="12" id="yQM-h5-QrT"/>
+                                            <constraint firstItem="Fnf-oR-rOV" firstAttribute="leading" secondItem="tMG-4F-9D7" secondAttribute="leading" priority="999" constant="20" id="yQM-h5-QrT"/>
                                             <constraint firstItem="Fnf-oR-rOV" firstAttribute="centerY" secondItem="tMG-4F-9D7" secondAttribute="centerY" id="yYg-yt-f1e"/>
-                                            <constraint firstItem="Rcw-bi-HEj" firstAttribute="leading" secondItem="Fnf-oR-rOV" secondAttribute="trailing" constant="12" id="zgd-tz-Br9"/>
+                                            <constraint firstItem="Rcw-bi-HEj" firstAttribute="leading" secondItem="Fnf-oR-rOV" secondAttribute="trailing" constant="18" id="zgd-tz-Br9"/>
                                         </constraints>
                                     </view>
                                     <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="qFv-UZ-fiq">
-                                        <rect key="frame" x="65.5" y="0.0" width="259.5" height="50"/>
+                                        <rect key="frame" x="80" y="0.0" width="245" height="50"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1Ne-86-OPG">
-                                                <rect key="frame" x="70" y="15.5" width="120" height="19.5"/>
+                                                <rect key="frame" x="62.5" y="15.5" width="120" height="19.5"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_chat_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="p8K-Ir-WJM">
-                                                        <rect key="frame" x="0.0" y="4" width="6" height="11"/>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/ic_recorder_lock_direction_left" translatesAutoresizingMaskIntoConstraints="NO" id="p8K-Ir-WJM">
+                                                        <rect key="frame" x="0.0" y="4.5" width="6" height="10"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Slide to cancel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bvp-Rc-r3z">
                                                         <rect key="frame" x="14" y="0.0" width="106" height="19.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_voice_record_cancel"/>
@@ -2098,10 +2098,10 @@
                                 </connections>
                             </imageView>
                             <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="unk-Os-zQq">
-                                <rect key="frame" x="65.5" y="0.0" width="309.5" height="50"/>
+                                <rect key="frame" x="80" y="0.0" width="295" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eyz-oe-6bw">
-                                        <rect key="frame" x="-65.5" y="0.0" width="375" height="50"/>
+                                        <rect key="frame" x="-80" y="0.0" width="375" height="50"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Cancel"/>
                                         <userDefinedRuntimeAttributes>
@@ -2112,7 +2112,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FST-iG-OaY">
-                                        <rect key="frame" x="259.5" y="0.0" width="50" height="50"/>
+                                        <rect key="frame" x="245" y="0.0" width="50" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="FST-iG-OaY" secondAttribute="height" multiplier="1:1" id="cfd-PF-HgZ"/>
                                         </constraints>
@@ -2565,6 +2565,7 @@
         <image name="Conversation/ic_mic_off" width="26" height="26"/>
         <image name="Conversation/ic_photo_off" width="26" height="26"/>
         <image name="Conversation/ic_photo_on" width="26" height="26"/>
+        <image name="Conversation/ic_recorder_lock_direction_left" width="6" height="10"/>
         <image name="Conversation/ic_send" width="24" height="24"/>
         <image name="Conversation/ic_sticker" width="26" height="26"/>
         <image name="chat_video_mask_bottom" width="375" height="130"/>
@@ -2573,7 +2574,6 @@
         <image name="ic_announcement" width="44" height="44"/>
         <image name="ic_bottom" width="44" height="44"/>
         <image name="ic_camera_send" width="36" height="36"/>
-        <image name="ic_chat_arrow" width="6" height="11"/>
         <image name="ic_chat_bg" width="375" height="667"/>
         <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_down" width="44" height="44"/>

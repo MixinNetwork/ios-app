@@ -178,9 +178,14 @@ class ConversationInputViewController: UIViewController {
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         super.preferredContentSizeDidChange(forChildContentContainer: container)
         if (container as? UIViewController) == audioViewController {
+            let isExpanding = container.preferredContentSize.width > audioInputContainerWidthConstraint.constant
             audioInputContainerWidthConstraint.constant = container.preferredContentSize.width
-            UIView.animate(withDuration: 0.3) {
-                self.inputBarView.layoutIfNeeded()
+            if isExpanding {
+                UIView.animate(withDuration: 0.3) {
+                    self.inputBarView.layoutIfNeeded()
+                }
+            } else {
+                inputBarView.layoutIfNeeded()
             }
         }
     }

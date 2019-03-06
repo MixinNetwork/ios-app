@@ -3,15 +3,10 @@ import Foundation
 class ProvisionManager {
 
     static func updateProvision(uuid: String, base64EncodedPublicKey: String, completion: @escaping (Bool) -> Void) {
-        guard !AccountUserDefault.shared.isDesktopLoggedIn else {
-            alert("Already logged in")
-            return
-        }
         let cryptor = MXNProvisionCryptor(signalContext: Signal.context,
                                           base64EncodedPublicKey: base64EncodedPublicKey)
         let identityKeyPair = PreKeyUtil.getIdentityKeyPair()
         guard let profileKey = ProfileKeyUtil.profileKey else {
-            alert("Empty profileKey")
             return
         }
         ProvisioningAPI.shared.code { (response) in
@@ -25,7 +20,6 @@ class ProvisionManager {
                                                provisioningCode: response.code,
                                                profileKey: profileKey)
                 guard let secretData = cryptor.encryptedData(from: message) else {
-                    alert("Empty secretData")
                     return
                 }
                 let secret = secretData.base64EncodedString()
@@ -39,7 +33,6 @@ class ProvisionManager {
                     }
                 })
             case .failure:
-                alert("failed to get code")
                 completion(false)
             }
         }

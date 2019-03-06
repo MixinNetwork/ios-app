@@ -110,6 +110,7 @@
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                     <integer key="value" value="14"/>
                                 </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="profile_add"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="addAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="6DE-6o-SC1"/>
@@ -131,6 +132,7 @@
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                     <integer key="value" value="14"/>
                                 </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="profile_unblock"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="addAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="m63-YE-dsC"/>

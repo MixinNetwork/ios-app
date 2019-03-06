@@ -74,6 +74,7 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                             <integer key="value" value="14"/>
                         </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_join"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <action selector="joinAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="oBg-AI-nx3"/>

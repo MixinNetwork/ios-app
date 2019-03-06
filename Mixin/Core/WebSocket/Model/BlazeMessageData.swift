@@ -43,7 +43,7 @@ extension BlazeMessageData {
     }
 
     var isSessionMessage: Bool {
-        return userId == AccountAPI.shared.accountUserId && sessionId != nil
+        return userId == AccountAPI.shared.accountUserId && sessionId != nil && !(sessionId!.isEmpty)
     }
 
 }

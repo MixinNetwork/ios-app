@@ -115,13 +115,27 @@ class SendViewController: UIViewController {
         guard let asset = self.asset else {
             return
         }
-        let amount = amountTextField.text ?? ""
-        let memo = memoTextField.text ?? ""
+
+        let memo = memoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        var amount = amountTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        if !isInputAssetAmount {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .none
+            formatter.usesGroupingSeparator = false
+            formatter.maximumFractionDigits = 8
+            formatter.roundingMode = .down
+            amount = formatter.string(from: NSNumber(value: amount.doubleValue / asset.priceUsd.doubleValue)) ?? ""
+        }
 
         switch type! {
         case .contact(let user):
             PayWindow.shared.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
         case .address(let address):
+            guard checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
+                navigationController?.showHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
+                return
+            }
             PayWindow.shared.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
         }
     }
@@ -211,6 +225,13 @@ class SendViewController: UIViewController {
 
     private func updateContentOffsetIfNeeded() {
         scrollView.setContentOffset(CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.frame.height), animated: false)
+    }
+
+    private func checkAmount(_ amount: String, isGreaterThanOrEqualToDust dust: String) -> Bool {
+        guard let amount = Decimal(string: amount, locale: .current), let dust = Decimal(string: dust, locale: .us) else {
+            return false
+        }
+        return amount >= dust
     }
 
     private func reloadTransactionFeeHint(addressId: String) {

@@ -197,7 +197,6 @@
 		7B9916D421945A6800C11401 /* WalletAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9916D321945A6800C11401 /* WalletAssetCell.swift */; };
 		7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */; };
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
-		7B9B8F3D205A27E700DC81AF /* WithdrawalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */; };
 		7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */; };
 		7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */; };
 		7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C720A985E70095A51B /* VideoMessageCell.swift */; };
@@ -466,7 +465,6 @@
 		DF8CECDD1FC302EB00E40064 /* TransferTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECDC1FC302EB00E40064 /* TransferTypeView.swift */; };
 		DF8CECDF1FC3053B00E40064 /* TransferTypeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECDE1FC3053B00E40064 /* TransferTypeCell.xib */; };
 		DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */; };
-		DF8CECE31FC3075B00E40064 /* TransferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE21FC3075B00E40064 /* TransferViewController.swift */; };
 		DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE41FC3177100E40064 /* BottomSheetView.swift */; };
 		DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECE61FC317BF00E40064 /* PayWindow.xib */; };
 		DF8CECE91FC411AB00E40064 /* NotificationSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */; };
@@ -805,7 +803,6 @@
 		7B9916D321945A6800C11401 /* WalletAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAssetCell.swift; sourceTree = "<group>"; };
 		7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
-		7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalViewController.swift; sourceTree = "<group>"; };
 		7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageViewModel.swift; sourceTree = "<group>"; };
 		7B9F06C720A985E70095A51B /* VideoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageCell.swift; sourceTree = "<group>"; };
@@ -1095,7 +1092,6 @@
 		DF8CECDC1FC302EB00E40064 /* TransferTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeView.swift; sourceTree = "<group>"; };
 		DF8CECDE1FC3053B00E40064 /* TransferTypeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferTypeCell.xib; sourceTree = "<group>"; };
 		DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeCell.swift; sourceTree = "<group>"; };
-		DF8CECE21FC3075B00E40064 /* TransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferViewController.swift; sourceTree = "<group>"; };
 		DF8CECE41FC3177100E40064 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		DF8CECE61FC317BF00E40064 /* PayWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayWindow.xib; sourceTree = "<group>"; };
 		DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsViewController.swift; sourceTree = "<group>"; };
@@ -1588,7 +1584,6 @@
 				7B14568B1FCC17AD001B6DED /* Model */,
 				DF8CECF51FC5704D00E40064 /* Views */,
 				DFD2943A1FA7067500FADAAD /* Cells */,
-				DF8CECE21FC3075B00E40064 /* TransferViewController.swift */,
 				7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */,
 				DF84281D1FE92A250018B054 /* SendMessagePeerSelectionViewController.swift */,
 				7B8938A42020176200C72070 /* ConversationMoreMenuViewController.swift */,
@@ -2215,7 +2210,6 @@
 				DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */,
 				DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */,
 				DF754CB71FBC7F1200F2F2E5 /* WalletPasswordViewController.swift */,
-				7B9B8F3C205A27E700DC81AF /* WithdrawalViewController.swift */,
 				7B894AF2205BF8660065A1B8 /* AddressViewController.swift */,
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
 				DFF353181FEEC83100058453 /* WalletUserDefault.swift */,
@@ -2708,7 +2702,6 @@
 				DF3C474E1FA1849500A07C71 /* MessageDAO.swift in Sources */,
 				DFE63C9E1FC6B1C600D6E028 /* EmptyResponse.swift in Sources */,
 				DF1070932049186B00E20047 /* ReceiveMessageService.swift in Sources */,
-				7B9B8F3D205A27E700DC81AF /* WithdrawalViewController.swift in Sources */,
 				273FACC1205FB9A800513327 /* SessionPreKey.swift in Sources */,
 				DFD87C871FDA9DD300BBCFFC /* NetworkManager.swift in Sources */,
 				DF5D9F221F9C79E10036D5FD /* BaseAPI.swift in Sources */,
@@ -2911,7 +2904,6 @@
 				DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */,
 				DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */,
 				DF16682220AC3B5D00C45E31 /* ConversationShareContactViewController.swift in Sources */,
-				DF8CECE31FC3075B00E40064 /* TransferViewController.swift in Sources */,
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
 				7B5747411FA08E18005A6BB5 /* MobileNumberViewController.swift in Sources */,
 				DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */,

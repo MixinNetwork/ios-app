@@ -48,7 +48,7 @@ class AddPeopleViewController: UIViewController {
                 UserDAO.shared.updateUsers(users: [user])
                 weakSelf.userWindow.updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentView()
             case let .failure(error):
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
+                weakSelf.navigationController?.showHud(style: .error, text: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
             }
         }
     }

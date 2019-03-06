@@ -52,7 +52,7 @@ class RoundedButton: UIButton {
     private func prepare() {
         setTitleColor(.white, for: .normal)
         updatePaths()
-        backgroundLayer.fillColor = UIColor.theme.cgColor
+        backgroundLayer.fillColor = (isEnabled ? UIColor.theme : UIColor(rgbValue: 0xE5E7EC)).cgColor
         backgroundLayer.shadowColor = UIColor.theme.cgColor
         backgroundLayer.shadowOpacity = 0.15
         backgroundLayer.shadowRadius = 5

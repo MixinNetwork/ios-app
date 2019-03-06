@@ -86,7 +86,6 @@ class HomeViewController: UIViewController {
         needRefresh = false
         DispatchQueue.global().async { [weak self] in
             let conversations = ConversationDAO.shared.conversationList()
-            CommonUserDefault.shared.hasConversation = !conversations.isEmpty
             let groupIcons = conversations.filter({ $0.isNeedCachedGroupIcon() })
             for conversation in groupIcons {
                 ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))

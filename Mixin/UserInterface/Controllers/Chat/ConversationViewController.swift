@@ -8,7 +8,6 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var connectionHintView: ConnectionHintView!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var announcementButton: UIButton!
     @IBOutlet weak var scrollToBottomWrapperView: UIView!
@@ -209,7 +208,6 @@ class ConversationViewController: UIViewController {
         inputTextView.delegate = self
         inputTextView.layer.cornerRadius = inputTextViewHeightConstraint.constant / 2
         inputTextView.inputAccessoryView = keyboardManager.inputAccessoryView
-        connectionHintView.delegate = self
         announcementButton.isHidden = !CommonUserDefault.shared.hasUnreadAnnouncement(conversationId: conversationId)
         dataSource.ownerUser = ownerUser
         dataSource.tableView = tableView
@@ -913,16 +911,6 @@ extension ConversationViewController: UITextViewDelegate {
                 self.keyboardManager.inputAccessoryViewHeight = self.inputWrapperView.frame.height
             })
         }
-    }
-    
-}
-
-// MARK: - ConnectionHintViewDelegate
-extension ConversationViewController: ConnectionHintViewDelegate {
-    
-    func animateAlongsideConnectionHintView(_ view: ConnectionHintView, changingHeightWithDifference heightDifference: CGFloat) {
-        updateTableViewContentInset()
-        tableView.contentInset.top += view.connectionHintViewHeightConstraint.constant
     }
     
 }

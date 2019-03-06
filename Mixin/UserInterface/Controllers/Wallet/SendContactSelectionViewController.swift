@@ -2,10 +2,6 @@ import UIKit
 
 class SendContactSelectionViewController: PeerSelectionViewController {
     
-    override class var usesModernStyle: Bool {
-        return false
-    }
-    
     var asset: AssetItem!
     
     private let separatorColor = UIColor(rgbValue: 0xF3F3F3)

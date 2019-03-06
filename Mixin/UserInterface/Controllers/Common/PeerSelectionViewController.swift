@@ -1,11 +1,7 @@
 import UIKit
 
 class PeerSelectionViewController: UIViewController, ContainerViewControllerDelegate {
-    
-    class var usesModernStyle: Bool {
-        return false
-    }
-    
+
     enum Content {
         case chatsAndContacts
         case contacts
@@ -44,7 +40,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     }
     
     private var searchBoxViewClass: (UIView & SearchBox).Type {
-        return type(of: self).usesModernStyle ? ModernSearchBoxView.self : LegacySearchBoxView.self
+        return ModernSearchBoxView.self
     }
     
     override func loadView() {
@@ -145,7 +141,6 @@ extension PeerSelectionViewController: UITableViewDataSource {
         let peer = self.peer(at: indexPath)
         cell.render(peer: peer)
         cell.supportsMultipleSelection = allowsMultipleSelection
-        cell.usesModernStyle = type(of: self).usesModernStyle
         return cell
     }
     

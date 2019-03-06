@@ -203,6 +203,9 @@
 		7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */; };
 		7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */; };
 		7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C720A985E70095A51B /* VideoMessageCell.swift */; };
+		7B9F810C222EA3690012BFDD /* PopupPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F810B222EA3690012BFDD /* PopupPresentationManager.swift */; };
+		7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F810D222EA3EC0012BFDD /* PopupPresentationAnimator.swift */; };
+		7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F810F222EA40F0012BFDD /* PopupPresentationController.swift */; };
 		7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8AA221ED35200DBFCE2 /* Hud.swift */; };
 		7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */; };
 		7BA4193C209AF7E600DFCD39 /* AppCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193B209AF7E600DFCD39 /* AppCardData.swift */; };
@@ -817,6 +820,9 @@
 		7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageViewModel.swift; sourceTree = "<group>"; };
 		7B9F06C720A985E70095A51B /* VideoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageCell.swift; sourceTree = "<group>"; };
+		7B9F810B222EA3690012BFDD /* PopupPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationManager.swift; sourceTree = "<group>"; };
+		7B9F810D222EA3EC0012BFDD /* PopupPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationAnimator.swift; sourceTree = "<group>"; };
+		7B9F810F222EA40F0012BFDD /* PopupPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationController.swift; sourceTree = "<group>"; };
 		7BA1F8AA221ED35200DBFCE2 /* Hud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hud.swift; sourceTree = "<group>"; };
 		7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		7BA4193B209AF7E600DFCD39 /* AppCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardData.swift; sourceTree = "<group>"; };
@@ -1511,9 +1517,20 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		7B9F810A222EA30A0012BFDD /* Popup Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				7B9F810B222EA3690012BFDD /* PopupPresentationManager.swift */,
+				7B9F810D222EA3EC0012BFDD /* PopupPresentationAnimator.swift */,
+				7B9F810F222EA40F0012BFDD /* PopupPresentationController.swift */,
+			);
+			path = "Popup Presentation";
+			sourceTree = "<group>";
+		};
 		7BA4E091219D999500A2176D /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				7B9F810A222EA30A0012BFDD /* Popup Presentation */,
 				7B26D1CD219EEB5A00AE113A /* Cells */,
 				DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */,
 				7B26D1CB219EEB4000AE113A /* Peer.swift */,
@@ -3166,6 +3183,7 @@
 				DF503D451FED1D3C00C008E7 /* MixinSenderKeyStore.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
+				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
 				DF503D361FECF86D00C008E7 /* SessionDAO.swift in Sources */,
 				DF5D9F3D1F9CA3160036D5FD /* UserAPI.swift in Sources */,
 				7BFF3B011FAAE92F0039A1C5 /* SearchResultContactCell.swift in Sources */,
@@ -3213,6 +3231,7 @@
 				273FACB2205FB9A800513327 /* Fingerprint.swift in Sources */,
 				7BD97DD52179DD3400FAE490 /* WebRTCClient.swift in Sources */,
 				DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */,
+				7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */,
 				DF5CDA77204FF9A0004A52BA /* SignalDAO.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
@@ -3221,6 +3240,7 @@
 				7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */,
 				273FACB8205FB9A800513327 /* SessionStore.swift in Sources */,
 				DF8DA1AD1FD6820600425CEC /* RefreshConversationJob.swift in Sources */,
+				7B9F810C222EA3690012BFDD /* PopupPresentationManager.swift in Sources */,
 				7B07923A21AF96F500316BD2 /* SnapshotDataSource.swift in Sources */,
 				DFA586B21FE3B1E00078BC2C /* AsynchronousJob.swift in Sources */,
 			);

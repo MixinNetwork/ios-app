@@ -91,7 +91,7 @@ extension BottomSheetView {
             self.frame = superView.bounds
 
             self.backgroundColor = windowBackgroundColor
-            let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupControllerAnimated))
+            let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissView))
             gestureRecognizer.delegate = self
             self.addGestureRecognizer(gestureRecognizer)
 
@@ -105,7 +105,7 @@ extension BottomSheetView {
         })
     }
 
-    func dismissView() {
+    @objc func dismissView() {
         self.alpha = 1.0
         isShowing = false
         UIView.animate(withDuration: 0.5, animations: {

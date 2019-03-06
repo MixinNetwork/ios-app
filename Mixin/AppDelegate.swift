@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     private var autoCanceleNotification: DispatchWorkItem?
+    private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
+    private var backgroundTime: Timer?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if RELEASE
@@ -35,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UNUserNotificationCenter.current().registerNotificationCategory()
         UNUserNotificationCenter.current().delegate = self
         checkLogin()
-        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         checkJailbreak()
         if let key = MixinKeys.giphy {
@@ -65,6 +66,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        checkServerData()
+    }
+
+    private func checkServerData() {
+        WebSocketService.shared.checkConnectStatus()
+
+        cancelBackgroundTask()
+        self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            self.backgroundTaskID = .invalid
+        })
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
+            self.cancelBackgroundTask()
+        }
+    }
+
+    private func cancelBackgroundTask() {
+        self.backgroundTime?.invalidate()
+        self.backgroundTime = nil
+        if backgroundTaskID != .invalid {
+            UIApplication.shared.endBackgroundTask(backgroundTaskID)
+            backgroundTaskID = .invalid
+        }
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -75,6 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         UNUserNotificationCenter.current().removeAllNotifications()
         WebSocketService.shared.checkConnectStatus()
+        cancelBackgroundTask()
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {

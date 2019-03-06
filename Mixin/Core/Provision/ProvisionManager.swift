@@ -7,6 +7,7 @@ class ProvisionManager {
                                           base64EncodedPublicKey: base64EncodedPublicKey)
         let identityKeyPair = PreKeyUtil.getIdentityKeyPair()
         guard let profileKey = ProfileKeyUtil.profileKey else {
+            completion(false)
             return
         }
         ProvisioningAPI.shared.code { (response) in
@@ -20,6 +21,7 @@ class ProvisionManager {
                                                provisioningCode: response.code,
                                                profileKey: profileKey)
                 guard let secretData = cryptor.encryptedData(from: message) else {
+                    completion(false)
                     return
                 }
                 let secret = secretData.base64EncodedString()

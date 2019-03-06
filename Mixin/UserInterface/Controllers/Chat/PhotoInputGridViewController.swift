@@ -92,19 +92,20 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
             cell.imageView.image = image
         }
         if asset.mediaType == .video {
+            cell.fileTypeWrapperView.isHidden = false
             cell.gifFileTypeView.isHidden = true
             cell.videoTypeView.isHidden = false
             cell.videoDurationLabel.text = mediaDurationFormatter.string(from: asset.duration)
         } else {
-            PHImageManager.default().requestImageData(for: asset, options: utiCheckingImageRequestOptions, resultHandler: { (_, uti, _, _) in
-                if let uti = uti, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
-                    cell.gifFileTypeView.isHidden = false
-                    cell.videoTypeView.isHidden = true
-                } else {
-                    cell.gifFileTypeView.isHidden = true
-                    cell.videoTypeView.isHidden = true
-                }
-            })
+            if let uti = asset.value(forKey: "uniformTypeIdentifier") as? String, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
+                cell.fileTypeWrapperView.isHidden = false
+                cell.gifFileTypeView.isHidden = false
+                cell.videoTypeView.isHidden = true
+            } else {
+                cell.fileTypeWrapperView.isHidden = true
+                cell.gifFileTypeView.isHidden = true
+                cell.videoTypeView.isHidden = true
+            }
         }
         return cell
     }

@@ -5,6 +5,7 @@ class PhotoInputGridCell: UICollectionViewCell {
     @IBOutlet weak var imageWrapperView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var sendLabel: UILabel!
+    @IBOutlet weak var fileTypeWrapperView: UIView!
     @IBOutlet weak var gifFileTypeView: UILabel!
     @IBOutlet weak var videoTypeView: UIStackView!
     @IBOutlet weak var videoDurationLabel: UILabel!

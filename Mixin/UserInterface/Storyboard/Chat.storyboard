@@ -2061,7 +2061,7 @@
                                         <rect key="frame" x="80" y="0.0" width="245" height="50"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1Ne-86-OPG">
-                                                <rect key="frame" x="62.5" y="15.5" width="120" height="19.5"/>
+                                                <rect key="frame" x="47.5" y="15.5" width="120" height="19.5"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/ic_recorder_lock_direction_left" translatesAutoresizingMaskIntoConstraints="NO" id="p8K-Ir-WJM">
                                                         <rect key="frame" x="0.0" y="4.5" width="6" height="10"/>
@@ -2080,7 +2080,6 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="1Ne-86-OPG" firstAttribute="centerX" secondItem="qFv-UZ-fiq" secondAttribute="centerX" id="5Me-Gt-6Gk"/>
                                             <constraint firstItem="1Ne-86-OPG" firstAttribute="centerY" secondItem="qFv-UZ-fiq" secondAttribute="centerY" id="JnZ-tl-bSN"/>
                                         </constraints>
                                     </view>
@@ -2144,6 +2143,7 @@
                             <constraint firstItem="U7v-cP-WyC" firstAttribute="bottom" secondItem="Zt0-eZ-yAA" secondAttribute="bottom" id="QIF-Qi-QJP"/>
                             <constraint firstItem="unk-Os-zQq" firstAttribute="leading" secondItem="tMG-4F-9D7" secondAttribute="trailing" id="X6Z-01-Grt"/>
                             <constraint firstAttribute="trailing" secondItem="unk-Os-zQq" secondAttribute="trailing" id="bgw-NH-NKQ"/>
+                            <constraint firstItem="1Ne-86-OPG" firstAttribute="centerX" secondItem="U7v-cP-WyC" secondAttribute="centerX" id="dee-ft-teE"/>
                             <constraint firstItem="Zt0-eZ-yAA" firstAttribute="top" secondItem="U7v-cP-WyC" secondAttribute="top" id="dnM-U3-j4W"/>
                             <constraint firstItem="r1K-Cs-6xD" firstAttribute="top" secondItem="GGT-9f-mbQ" secondAttribute="top" id="fab-Wv-38p"/>
                             <constraint firstItem="unk-Os-zQq" firstAttribute="top" secondItem="GGT-9f-mbQ" secondAttribute="top" id="oNk-Mi-7Ht"/>
@@ -2167,7 +2167,7 @@
                         <outlet property="recordingRedDotView" destination="Fnf-oR-rOV" id="K0j-eC-gJn"/>
                         <outlet property="slideToCancelContentView" destination="1Ne-86-OPG" id="Pnx-j3-1d1"/>
                         <outlet property="slideToCancelView" destination="qFv-UZ-fiq" id="vNO-pC-VTn"/>
-                        <outlet property="slideViewCenterXConstraint" destination="5Me-Gt-6Gk" id="Rmx-Se-gCt"/>
+                        <outlet property="slideViewCenterXConstraint" destination="dee-ft-teE" id="VIW-o0-dU5"/>
                         <outlet property="tapGestureRecognizer" destination="lPA-XX-rls" id="PYh-Nh-4pH"/>
                         <outlet property="timeLabel" destination="Rcw-bi-HEj" id="k7b-05-8Io"/>
                     </connections>

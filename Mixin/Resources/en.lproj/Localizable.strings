@@ -9,6 +9,7 @@
 "dialog_button_got_it" = "Got It";
 "dialog_button_disable" = "Disable";
 "dialog_button_no_remind" = "Don't remind me again";
+"dialog_button_login" = "Log In";
 "dialog_progress_logout" = "Log out...";
 "dialog_progress_connect" = "Connecting...";
 "action_next" = "Next";
@@ -61,6 +62,7 @@
 "toast_copied" = "Copied";
 "toast_added" = "Added";
 "toast_saved" = "Saved";
+"toast_logined" = "Logined";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
 "screen_captured_pin_leaking_hint" = "Screen recorder detected, PIN may be recorded.";
@@ -90,6 +92,7 @@
 "toast_recaptcha_timed_out" = "Validation timed out";
 "toast_recaptcha_invalid" = "Recaptcha is invalid.";
 "toast_update_tips" = "Please update Mixin from App Store to continue use the service.";
+"desktop_login_confim" = "Confirm login to Mixin Messenger Desktop";
 
 // Contacts
 "contact_title" = "Contacts";

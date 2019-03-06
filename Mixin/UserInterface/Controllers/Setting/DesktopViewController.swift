@@ -62,22 +62,7 @@ class DesktopViewController: UITableViewController {
             }
         } else {
             let vc = CameraViewController.instance()
-            vc.delegate = self
             navigationController?.pushViewController(vc, animated: true)
         }
     }
-}
-
-extension DesktopViewController: CameraViewControllerDelegate {
-    
-    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
-        if let url = MixinURL(string: string), case let .device(uuid, publicKey) = url {
-            loadingView()
-            ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { _ in
-            })
-            navigationController?.popViewController(animated: true)
-        }
-        return false
-    }
-    
 }

@@ -611,9 +611,7 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
             case .send:
                 showNotification(text: urlString)
             case let .device(uuid, publicKey):
-                ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { _ in
-                })
-                navigationController?.popViewController(animated: true)
+                LoginConfirmWindow.instance(uuid: uuid, publicKey: publicKey).presentView()
             case .unknown:
                 showNotification(text: urlString)
             }

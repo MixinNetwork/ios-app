@@ -7,6 +7,7 @@
 "dialog_button_confirm" = "確認";
 "dialog_button_got_it" = "了解";
 "dialog_button_disable" = "無効";
+"dialog_button_login" = "ログイン";
 "dialog_progress_logout" = "ログアウト...";
 "dialog_progress_connect" = "接続中...";
 "action_next" = "次ヘ";
@@ -57,6 +58,7 @@
 "toast_copied" = "コピーしました";
 "toast_added" = "追加しました";
 "toast_saved" = "セーブしました";
+"toast_logined" = "ログインしました";
 "permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_error" = "エラー %@: %@";
 "screen_captured_pin_leaking_hint" = "スクリーンレコーダーが検出され、PINが記録されている.";
@@ -70,7 +72,6 @@
 "navigation_title_enter_name" = "お名前は何ですか？";
 "landing_welcome_title" = "Mixin へようこそ";
 "text_intro" = " \"%@\" をタップして %@ と%@ 承認";
-
 "text_mobile_number_privacy" = "私たちはあなたの電話番号を公に表示することはありません。";
 "text_confirm_send_code" = " %@ 電話番号を確認してください";
 "text_invalid_verification_code" = "コードが正しくありません。";
@@ -87,6 +88,7 @@
 "toast_recaptcha_timed_out" = "検証がタイムアウトしました";
 "toast_recaptcha_invalid" = "確認コードが無効です。";
 "toast_update_tips" = "App Store から Mixin をアップデートしてサービスを継続してください。";
+"desktop_login_confim" = "Confirm login to Mixin Messenger Desktop";
 
 // Contacts
 "contact_title" = "連絡先";

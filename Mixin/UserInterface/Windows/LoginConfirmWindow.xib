@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="o1N-Mm-Tns" customClass="LoginConfirmWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4af-Sc-29x">
+                    <rect key="frame" x="0.0" y="14" width="375" height="661"/>
+                    <subviews>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EXJ-y2-8uH">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r5O-GW-Vde">
+                                    <rect key="frame" x="309" y="0.0" width="66" height="70"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="66" id="MZx-7x-yiF"/>
+                                    </constraints>
+                                    <state key="normal" image="ic_dialog_close"/>
+                                    <connections>
+                                        <action selector="dismissAction:" destination="o1N-Mm-Tns" eventType="touchUpInside" id="1Jv-FC-Awg"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="r5O-GW-Vde" secondAttribute="bottom" id="41c-2g-0VJ"/>
+                                <constraint firstAttribute="trailing" secondItem="r5O-GW-Vde" secondAttribute="trailing" id="GYv-Xd-Zdz"/>
+                                <constraint firstAttribute="height" constant="70" id="R3V-lA-t4O"/>
+                                <constraint firstItem="r5O-GW-Vde" firstAttribute="top" secondItem="EXJ-y2-8uH" secondAttribute="top" id="ot7-Hx-2Bw"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="13"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_desktop_confirm" translatesAutoresizingMaskIntoConstraints="NO" id="c8a-W9-LfK">
+                            <rect key="frame" x="142.5" y="132" width="90" height="94"/>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oH0-FK-y9T" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="129.5" y="461" width="116" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="42" id="ete-Ss-aOS"/>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="sc4-jz-UwM"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
+                            <state key="normal" title="Log In"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_login"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="loginAction:" destination="o1N-Mm-Tns" eventType="touchUpInside" id="iDc-qK-wXR"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTp-rW-A9R">
+                            <rect key="frame" x="50" y="252" width="275" height="43"/>
+                            <string key="text">Confirm login to 
+Mixin Messenger Desktop</string>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="desktop_login_confim"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fiW-MT-YrZ">
+                            <rect key="frame" x="136.5" y="533" width="102" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                            <state key="normal" title="Cancel">
+                                <color key="titleColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="dismissAction:" destination="o1N-Mm-Tns" eventType="touchUpInside" id="ody-GH-izh"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="EXJ-y2-8uH" secondAttribute="trailing" id="0Mw-YQ-DUL"/>
+                        <constraint firstItem="oH0-FK-y9T" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="Ec7-Lk-pmS"/>
+                        <constraint firstItem="EXJ-y2-8uH" firstAttribute="leading" secondItem="4af-Sc-29x" secondAttribute="leading" id="GcF-Ty-Osc"/>
+                        <constraint firstItem="EXJ-y2-8uH" firstAttribute="top" secondItem="4af-Sc-29x" secondAttribute="top" id="P24-lQ-eo4"/>
+                        <constraint firstAttribute="trailing" secondItem="hTp-rW-A9R" secondAttribute="trailing" constant="50" id="WrZ-Mk-TOp"/>
+                        <constraint firstItem="c8a-W9-LfK" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="aGj-6u-X1O"/>
+                        <constraint firstItem="hTp-rW-A9R" firstAttribute="leading" secondItem="4af-Sc-29x" secondAttribute="leading" constant="50" id="nkz-9A-nuJ"/>
+                        <constraint firstItem="c8a-W9-LfK" firstAttribute="top" secondItem="EXJ-y2-8uH" secondAttribute="bottom" constant="62" id="ofY-lD-Xh7"/>
+                        <constraint firstItem="hTp-rW-A9R" firstAttribute="top" secondItem="c8a-W9-LfK" secondAttribute="bottom" constant="26" id="qNE-0b-nbf"/>
+                        <constraint firstItem="fiW-MT-YrZ" firstAttribute="centerX" secondItem="4af-Sc-29x" secondAttribute="centerX" id="t2P-9g-vAG"/>
+                        <constraint firstItem="oH0-FK-y9T" firstAttribute="top" secondItem="hTp-rW-A9R" secondAttribute="bottom" constant="166" id="tXy-ce-TjU" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                    <real key="value" value="83"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                    <real key="value" value="83"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                                    <real key="value" value="103"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </constraint>
+                        <constraint firstItem="fiW-MT-YrZ" firstAttribute="top" secondItem="oH0-FK-y9T" secondAttribute="bottom" constant="30" id="y24-Lo-Xb7"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="1N0-u4-BA5" firstAttribute="bottom" secondItem="fiW-MT-YrZ" secondAttribute="bottom" constant="76" id="834-cF-nYR" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                            <real key="value" value="38"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                            <real key="value" value="32"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="4af-Sc-29x" firstAttribute="leading" secondItem="1N0-u4-BA5" secondAttribute="leading" id="NXL-wA-NYz"/>
+                <constraint firstAttribute="bottom" secondItem="4af-Sc-29x" secondAttribute="bottom" constant="-8" id="Tb2-fv-LUk"/>
+                <constraint firstItem="1N0-u4-BA5" firstAttribute="trailing" secondItem="4af-Sc-29x" secondAttribute="trailing" id="yOM-sR-ldf"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="1N0-u4-BA5"/>
+            <connections>
+                <outlet property="loginButton" destination="oH0-FK-y9T" id="8yH-Rb-lW5"/>
+                <outlet property="popupView" destination="4af-Sc-29x" id="6m7-lB-pHo"/>
+            </connections>
+            <point key="canvasLocation" x="25.5" y="52.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_desktop_confirm" width="90" height="94"/>
+        <image name="ic_dialog_close" width="26" height="26"/>
+    </resources>
+</document>

@@ -10,9 +10,11 @@ class UserView: CornerView {
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
+    @IBOutlet weak var relationWrapperView: UIView!
+    @IBOutlet weak var unblockButton: BusyButton!
+    @IBOutlet weak var addContactButton: BusyButton!
     @IBOutlet weak var descriptionScrollView: UIScrollView!
     @IBOutlet weak var descriptionLabel: CollapsingLabel!
-    @IBOutlet weak var addContactButton: BusyButton!
     @IBOutlet weak var openAppButton: UIButton!
     @IBOutlet weak var shareContactButton: UIButton!
     @IBOutlet weak var sendButton: UIButton!
@@ -20,7 +22,9 @@ class UserView: CornerView {
     @IBOutlet weak var moreButton: StateResponsiveButton!
     @IBOutlet weak var developButton: CornerButton!
     @IBOutlet weak var appPlaceView: UIView!
-
+    
+    @IBOutlet weak var showRelationWrapperDescriptionTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideRelationWrapperDescriptionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var descriptionScrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var descriptionScrollViewHeightConstraint: NSLayoutConstraint!
     
@@ -129,16 +133,29 @@ class UserView: CornerView {
             guard user.relationship != relationship else {
                 return
             }
-
             relationship = user.relationship
             let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
             let isStranger = user.relationship == Relationship.STRANGER.rawValue
-            let canAddContact = !isStranger || isBlocked
-
-            addContactButton.isHidden = canAddContact
-            sendButton.isHidden = isBlocked
-            shareContactButton.isHidden = !canAddContact || user.isBot
-            openAppButton.isHidden = !canAddContact || !user.isBot
+            
+            if isBlocked {
+                unblockButton.isHidden = false
+                addContactButton.isHidden = true
+                showRelationWrapperDescriptionTopConstraint.priority = .defaultHigh
+                hideRelationWrapperDescriptionTopConstraint.priority = .defaultLow
+            } else if isStranger {
+                unblockButton.isHidden = true
+                addContactButton.isHidden = false
+                showRelationWrapperDescriptionTopConstraint.priority = .defaultHigh
+                hideRelationWrapperDescriptionTopConstraint.priority = .defaultLow
+            } else {
+                unblockButton.isHidden = true
+                addContactButton.isHidden = true
+                showRelationWrapperDescriptionTopConstraint.priority = .defaultLow
+                hideRelationWrapperDescriptionTopConstraint.priority = .defaultHigh
+            }
+            
+            shareContactButton.isHidden = user.isBot
+            openAppButton.isHidden = !user.isBot
         }
     }
 
@@ -398,7 +415,18 @@ class UserView: CornerView {
             self?.handlerUpdateUser(result, notifyContact: true)
         })
     }
-
+    
+    @IBAction func unblockAction(_ sender: Any) {
+        guard !unblockButton.isBusy else {
+            return
+        }
+        unblockButton.isBusy = true
+        UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
+            self?.unblockButton.isBusy = false
+            self?.handlerUpdateUser(result, notifyContact: true)
+        }
+    }
+    
     private func showLoading() {
         NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
     }

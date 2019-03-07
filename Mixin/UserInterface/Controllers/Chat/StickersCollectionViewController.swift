@@ -1,6 +1,6 @@
 import UIKit
 
-class StickersCollectionViewController: UIViewController {
+class StickersCollectionViewController: UIViewController, ConversationAccessible {
     
     let cellReuseId = "StickerCell"
     
@@ -20,10 +20,6 @@ class StickersCollectionViewController: UIViewController {
     
     var isEmpty: Bool {
         return true
-    }
-    
-    var conversationViewController: ConversationViewController? {
-        return parent?.parent?.parent as? ConversationViewController
     }
     
     var animated: Bool = false {

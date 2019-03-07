@@ -8,7 +8,7 @@ class GiphySearchViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: GiphyCollectionViewFlowLayout!
     
-    weak var conversationViewController: ConversationViewController?
+    weak var dataSource: ConversationDataSource?
     
     var onDisappear: (() -> Void)?
     
@@ -145,7 +145,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let url = urls[indexPath.row].fullsized
-        conversationViewController?.dataSource?.sendGif(at: url)
+        dataSource?.sendGif(at: url)
         dismissAction(collectionView)
     }
     

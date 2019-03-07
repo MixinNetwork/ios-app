@@ -72,10 +72,11 @@ class GiphyViewController: StickersCollectionViewController {
         if indexPath.row == 0 {
             animated = false
             let vc = R.storyboard.chat.giphy_search()!
+            vc.dataSource = dataSource
             present(vc, animated: true, completion: nil)
         } else {
             let url = urls[indexPath.row - 1].fullsized
-            conversationViewController?.dataSource?.sendGif(at: url)
+            dataSource?.sendGif(at: url)
         }
     }
     

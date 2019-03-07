@@ -646,10 +646,6 @@
                                     <constraint firstAttribute="bottom" secondItem="tke-V3-5nw" secondAttribute="bottom" id="GLt-j6-kBo"/>
                                 </constraints>
                             </view>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="dsN-LV-cKL" customClass="ConnectionHintView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="76" width="375" height="0.0"/>
-                                <color key="backgroundColor" red="0.1215686275" green="0.70588235290000001" blue="0.98823529409999999" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syC-xp-0cA" customClass="HittestBypassWrapperView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="320" y="561" width="44" height="48"/>
                                 <subviews>
@@ -744,12 +740,9 @@
                             <constraint firstItem="v0e-5f-Xnl" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="f5T-FE-UXQ"/>
                             <constraint firstItem="tke-V3-5nw" firstAttribute="trailing" secondItem="N4V-uq-LHc" secondAttribute="trailing" id="ggf-H8-vmJ"/>
                             <constraint firstItem="NcT-8c-Rhc" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" id="gnY-RU-YrG"/>
-                            <constraint firstItem="dsN-LV-cKL" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="ks5-5o-kIp"/>
                             <constraint firstAttribute="trailing" secondItem="6MP-pq-xci" secondAttribute="trailing" id="lAw-xX-OEM"/>
                             <constraint firstItem="NcT-8c-Rhc" firstAttribute="leading" secondItem="a5z-Op-8GF" secondAttribute="leading" id="nek-DW-Ak9"/>
-                            <constraint firstItem="dsN-LV-cKL" firstAttribute="top" secondItem="Zve-bN-jsA" secondAttribute="bottom" id="paV-IX-OfX"/>
                             <constraint firstItem="N4V-uq-LHc" firstAttribute="trailing" secondItem="syC-xp-0cA" secondAttribute="trailing" constant="11" id="ryY-bD-bte"/>
-                            <constraint firstAttribute="trailing" secondItem="dsN-LV-cKL" secondAttribute="trailing" id="tWU-J0-vc4"/>
                             <constraint firstAttribute="trailing" secondItem="NcT-8c-Rhc" secondAttribute="trailing" id="tht-Gx-KPX"/>
                             <constraint firstAttribute="trailing" secondItem="v0e-5f-Xnl" secondAttribute="trailing" id="ufK-2L-8Df"/>
                             <constraint firstItem="Zve-bN-jsA" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" id="xX2-tz-12Y"/>
@@ -761,7 +754,6 @@
                         <outlet property="announcementButton" destination="GCS-vh-Dsx" id="2Mj-eY-dzp"/>
                         <outlet property="avatarImageView" destination="tCB-t3-VXy" id="tSV-HN-6ST"/>
                         <outlet property="backgroundImageView" destination="MYg-f9-MjM" id="1WJ-qd-DbP"/>
-                        <outlet property="connectionHintView" destination="dsN-LV-cKL" id="0ii-ts-vEA"/>
                         <outlet property="galleryWrapperView" destination="NcT-8c-Rhc" id="4LU-5t-bfk"/>
                         <outlet property="inputWrapperHeightConstraint" destination="MMR-mR-ES3" id="DTB-oj-FYz"/>
                         <outlet property="inputWrapperView" destination="6MP-pq-xci" id="Hyt-Ue-uBz"/>

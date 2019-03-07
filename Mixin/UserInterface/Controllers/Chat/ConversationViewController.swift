@@ -283,7 +283,7 @@ class ConversationViewController: UIViewController {
         switch recognizer.state {
         case .changed:
             let shouldMoveDown = verticalVelocity > 0 && location.y > 0
-            let canMoveUp = !conversationInputViewController.inputTextView.isFirstResponder
+            let canMoveUp = !conversationInputViewController.textView.isFirstResponder
                 || inputWrapperHeight < conversationInputViewController.regularHeight
             let shouldMoveUp = canMoveUp
                 && verticalVelocity < 0
@@ -298,7 +298,7 @@ class ConversationViewController: UIViewController {
             }
             recognizer.setTranslation(.zero, in: view)
         case .ended:
-            if recognizer.hasMovedInputWrapperDuringChangedState && !conversationInputViewController.inputTextView.isFirstResponder {
+            if recognizer.hasMovedInputWrapperDuringChangedState && !conversationInputViewController.textView.isFirstResponder {
                 if verticalVelocity >= 0 {
                     if inputWrapperHeight > regularInputWrapperHeight {
                         conversationInputViewController.setPreferredContentHeightAnimated(.regular)
@@ -493,7 +493,7 @@ class ConversationViewController: UIViewController {
     
     @objc func menuControllerDidHideMenu(_ notification: Notification) {
         isShowingMenu = false
-        conversationInputViewController.inputTextView.overrideNext = nil
+        conversationInputViewController.textView.overrideNext = nil
     }
     
     @objc func participantDidChange(_ notification: Notification) {
@@ -661,11 +661,11 @@ extension ConversationViewController: UITableViewDataSource {
 extension ConversationViewController: ConversationTableViewActionDelegate {
     
     func conversationTableViewCanBecomeFirstResponder(_ tableView: ConversationTableView) -> Bool {
-        return !conversationInputViewController.inputTextView.isFirstResponder
+        return !conversationInputViewController.textView.isFirstResponder
     }
     
     func conversationTableViewLongPressWillBegan(_ tableView: ConversationTableView) {
-        conversationInputViewController.inputTextView.overrideNext = tableView
+        conversationInputViewController.textView.overrideNext = tableView
     }
     
     func conversationTableView(_ tableView: ConversationTableView, hasActionsforIndexPath indexPath: IndexPath) -> Bool {

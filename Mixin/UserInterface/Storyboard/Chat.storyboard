@@ -995,18 +995,15 @@
                         <outlet property="appButton" destination="xUM-vT-Npr" id="ayP-qt-4w8"/>
                         <outlet property="audioInputContainerView" destination="B8S-al-j93" id="rFQ-7R-nct"/>
                         <outlet property="audioInputContainerWidthConstraint" destination="0Vm-hO-7Ii" id="nbr-6F-PXd"/>
-                        <outlet property="beginEditingInputTextViewTrailingConstraint" destination="Cnr-xa-PEq" id="Hem-bL-PnT"/>
                         <outlet property="beginEditingRightActionsStackLeadingConstraint" destination="VsZ-Pr-2Vi" id="Pb8-eE-5Ay"/>
+                        <outlet property="beginEditingTextViewTrailingConstraint" destination="Cnr-xa-PEq" id="Hem-bL-PnT"/>
                         <outlet property="customInputContainerHeightConstraint" destination="sbV-IA-hxB" id="hBZ-Xo-IXu"/>
                         <outlet property="customInputContainerView" destination="4FQ-5O-gCe" id="h76-aJ-5Ge"/>
                         <outlet property="deleteConversationButton" destination="ESl-jK-Lob" id="ZRw-ty-YAG"/>
-                        <outlet property="endEditingInputTextViewTrailingConstraint" destination="KF3-vB-nYh" id="Sa0-hP-t4g"/>
                         <outlet property="endEditingRightActionsStackTrailingConstraint" destination="Tgt-eT-M5b" id="3Su-qz-VuZ"/>
+                        <outlet property="endEditingTextViewTrailingConstraint" destination="KF3-vB-nYh" id="Sa0-hP-t4g"/>
                         <outlet property="extensionsSwitch" destination="FB6-Ob-yNa" id="Qvs-AY-sKP"/>
                         <outlet property="inputBarView" destination="wvu-NM-HOS" id="aff-Mp-fI1"/>
-                        <outlet property="inputTextView" destination="ucd-YD-Vpg" id="Dqi-dB-Qz5"/>
-                        <outlet property="inputTextViewHeightConstraint" destination="Kzm-2u-qAF" id="vvq-oU-Wdv"/>
-                        <outlet property="inputTextViewRightAccessoryView" destination="4Hc-pE-gbi" id="x53-gR-XSA"/>
                         <outlet property="keyboardButton" destination="5G0-uR-okU" id="nP4-6Z-Wtu"/>
                         <outlet property="photosButton" destination="mkF-v2-lFJ" id="Oif-OF-2ST"/>
                         <outlet property="quotePreviewHeightConstraint" destination="TvC-Ue-Y9b" id="aOg-nh-0oI"/>
@@ -1015,6 +1012,9 @@
                         <outlet property="rightActionsStackView" destination="aDD-ZD-ky1" id="9BV-ll-XVf"/>
                         <outlet property="sendButton" destination="Ccj-kA-7d2" id="eSh-Ut-rKY"/>
                         <outlet property="stickersButton" destination="Yf8-Qi-YeA" id="RkK-KC-0bm"/>
+                        <outlet property="textView" destination="ucd-YD-Vpg" id="Dqi-dB-Qz5"/>
+                        <outlet property="textViewHeightConstraint" destination="Kzm-2u-qAF" id="vvq-oU-Wdv"/>
+                        <outlet property="textViewRightAccessoryView" destination="4Hc-pE-gbi" id="x53-gR-XSA"/>
                         <outlet property="unblockButton" destination="iAX-RP-UWF" id="I6N-dn-BhE"/>
                     </connections>
                 </viewController>

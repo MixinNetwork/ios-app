@@ -12,8 +12,8 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var unblockButton: BusyButton!
     @IBOutlet weak var inputBarView: UIView!
     @IBOutlet weak var extensionsSwitch: ConversationExtensionSwitch!
-    @IBOutlet weak var inputTextView: ConversationInputTextView!
-    @IBOutlet weak var inputTextViewRightAccessoryView: UIView!
+    @IBOutlet weak var textView: ConversationInputTextView!
+    @IBOutlet weak var textViewRightAccessoryView: UIView!
     @IBOutlet weak var stickersButton: UIButton!
     @IBOutlet weak var keyboardButton: UIButton!
     @IBOutlet weak var appButton: UIButton!
@@ -25,10 +25,10 @@ class ConversationInputViewController: UIViewController {
     
     @IBOutlet weak var quotePreviewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quotePreviewWrapperHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var inputTextViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var beginEditingInputTextViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var beginEditingTextViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingRightActionsStackLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var endEditingInputTextViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var endEditingTextViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var endEditingRightActionsStackTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var customInputContainerHeightConstraint: NSLayoutConstraint!
@@ -120,7 +120,7 @@ class ConversationInputViewController: UIViewController {
     }
     
     private var trimmedMessageDraft: String {
-        return inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     deinit {
@@ -133,17 +133,17 @@ class ConversationInputViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
-        inputTextView.inputAccessoryView = interactiveDismissResponder
-        inputTextView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-        inputTextView.delegate = self
+        textView.inputAccessoryView = interactiveDismissResponder
+        textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        textView.delegate = self
         lastSafeAreaInsetsBottom = view.compatibleSafeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)
         if let draft = CommonUserDefault.shared.getConversationDraft(dataSource.conversationId), !draft.isEmpty {
             UIView.performWithoutAnimation {
-                layoutForInputTextViewIsEmpty(false, animated: false)
-                inputTextView.text = draft
-                textViewDidChange(inputTextView)
-                inputTextView.contentOffset.y = inputTextView.contentSize.height - inputTextView.frame.height
+                layoutForTextViewIsEmpty(false, animated: false)
+                textView.text = draft
+                textViewDidChange(textView)
+                textView.contentOffset.y = textView.contentSize.height - textView.frame.height
             }
         }
     }
@@ -228,7 +228,7 @@ class ConversationInputViewController: UIViewController {
     
     @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {
         if sender.isOn {
-            if inputTextView.isFirstResponder {
+            if textView.isFirstResponder {
                 contentBeforeExtension = .keyboard
             } else if customInputViewController == stickersViewController {
                 contentBeforeExtension = .sticker
@@ -251,7 +251,7 @@ class ConversationInputViewController: UIViewController {
             case .none:
                 dismissCustomInput(minimize: true)
             case .keyboard:
-                inputTextView.becomeFirstResponder()
+                textView.becomeFirstResponder()
             case .sticker:
                 showStickersAction(sender)
             case .photo:
@@ -270,7 +270,7 @@ class ConversationInputViewController: UIViewController {
     
     @IBAction func showKeyboardAction(_ sender: Any) {
         dismissCustomInput(minimize: false)
-        inputTextView.becomeFirstResponder()
+        textView.becomeFirstResponder()
         setRightAccessoryButton(stickersButton)
     }
     
@@ -295,9 +295,9 @@ class ConversationInputViewController: UIViewController {
         dataSource.sendMessage(type: .SIGNAL_TEXT,
                                quoteMessageId: quote?.message.messageId,
                                value: trimmedMessageDraft)
-        inputTextView.text = ""
-        textViewDidChange(inputTextView)
-        layoutForInputTextViewIsEmpty(true, animated: true)
+        textView.text = ""
+        textViewDidChange(textView)
+        layoutForTextViewIsEmpty(true, animated: true)
         quote = nil
     }
     
@@ -391,7 +391,7 @@ class ConversationInputViewController: UIViewController {
 extension ConversationInputViewController {
 
     @objc private func keyboardWillChangeFrame(_ notification: Notification) {
-        guard inputTextView.isFirstResponder else {
+        guard textView.isFirstResponder else {
             return
         }
         guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
@@ -540,9 +540,9 @@ extension ConversationInputViewController: UITextViewDelegate {
         }
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         if textView.text.isEmpty && !newText.isEmpty {
-            layoutForInputTextViewIsEmpty(false, animated: true)
+            layoutForTextViewIsEmpty(false, animated: true)
         } else if !textView.text.isEmpty && newText.isEmpty {
-            layoutForInputTextViewIsEmpty(true, animated: true)
+            layoutForTextViewIsEmpty(true, animated: true)
         }
         return true
     }
@@ -557,11 +557,11 @@ extension ConversationInputViewController: UITextViewDelegate {
         let sizeToFit = CGSize(width: textView.bounds.width,
                                height: UIView.layoutFittingExpandedSize.height)
         let contentSize = textView.sizeThatFits(sizeToFit)
-        inputTextView.isScrollEnabled = contentSize.height > maxHeight
+        textView.isScrollEnabled = contentSize.height > maxHeight
         let newHeight = min(contentSize.height, maxHeight)
-        let diff = newHeight - inputTextViewHeightConstraint.constant
+        let diff = newHeight - textViewHeightConstraint.constant
         if abs(diff) > 0.1 {
-            inputTextViewHeightConstraint.constant = newHeight
+            textViewHeightConstraint.constant = newHeight
             setPreferredContentHeight(preferredContentHeight + diff, animated: true)
             interactiveDismissResponder.height += diff
         }
@@ -578,19 +578,19 @@ extension ConversationInputViewController {
     }
     
     private func dismiss() {
-        if inputTextView.isFirstResponder {
-            inputTextView.resignFirstResponder()
+        if textView.isFirstResponder {
+            textView.resignFirstResponder()
         } else if height != .minimized {
             dismissCustomInput(minimize: true)
         }
     }
     
     private func resignTextViewFirstResponderWithoutReportingContentHeightChange() {
-        guard inputTextView.isFirstResponder else {
+        guard textView.isFirstResponder else {
             return
         }
         reportHeightChangeWhenKeyboardFrameChanges = false
-        inputTextView.resignFirstResponder()
+        textView.resignFirstResponder()
         reportHeightChangeWhenKeyboardFrameChanges = true
     }
     
@@ -644,31 +644,31 @@ extension ConversationInputViewController {
         }
     }
     
-    private func layoutForInputTextViewIsEmpty(_ isEmpty: Bool, animated: Bool) {
+    private func layoutForTextViewIsEmpty(_ isEmpty: Bool, animated: Bool) {
         if animated {
             UIView.beginAnimations(nil, context: nil)
             UIView.setAnimationDuration(0.2)
         }
         if isEmpty {
-            beginEditingInputTextViewTrailingConstraint.priority = .defaultLow
+            beginEditingTextViewTrailingConstraint.priority = .defaultLow
             beginEditingRightActionsStackLeadingConstraint.priority = .defaultLow
-            endEditingInputTextViewTrailingConstraint.priority = .defaultHigh
+            endEditingTextViewTrailingConstraint.priority = .defaultHigh
             endEditingRightActionsStackTrailingConstraint.priority = .defaultHigh
             inputBarView.layoutIfNeeded()
             sendButton.alpha = 0
             rightActionsStackView.alpha = 1
             audioInputContainerView.alpha = 1
-            inputTextViewRightAccessoryView.alpha = 1
+            textViewRightAccessoryView.alpha = 1
         } else {
-            beginEditingInputTextViewTrailingConstraint.priority = .defaultHigh
+            beginEditingTextViewTrailingConstraint.priority = .defaultHigh
             beginEditingRightActionsStackLeadingConstraint.priority = .defaultHigh
-            endEditingInputTextViewTrailingConstraint.priority = .defaultLow
+            endEditingTextViewTrailingConstraint.priority = .defaultLow
             endEditingRightActionsStackTrailingConstraint.priority = .defaultLow
             inputBarView.layoutIfNeeded()
             sendButton.alpha = 1
             rightActionsStackView.alpha = 0
             audioInputContainerView.alpha = 0
-            inputTextViewRightAccessoryView.alpha = 0
+            textViewRightAccessoryView.alpha = 0
         }
         if animated {
             UIView.commitAnimations()
@@ -684,12 +684,12 @@ extension ConversationInputViewController {
             }
             let diff = quotePreviewHeightConstraint.constant - quotePreviewWrapperHeightConstraint.constant
             quotePreviewWrapperHeightConstraint.constant = quotePreviewHeightConstraint.constant
-            if inputTextView.isFirstResponder {
+            if textView.isFirstResponder {
                 if abs(diff) > 0 {
                     setPreferredContentHeight(preferredContentHeight + diff, animated: true)
                 }
             } else {
-                inputTextView.becomeFirstResponder()
+                textView.becomeFirstResponder()
             }
         } else {
             if quotePreviewWrapperHeightConstraint.constant != 0 {

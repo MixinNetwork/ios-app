@@ -1,6 +1,6 @@
 import UIKit
 
-class ConversationExtensionViewController: UIViewController {
+class ConversationExtensionViewController: UIViewController, ConversationAccessible {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
@@ -63,6 +63,7 @@ class ConversationExtensionViewController: UIViewController {
 extension ConversationExtensionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // TODO: use separated sections for these
         return fixedExtensions.count + apps.count
     }
     
@@ -83,6 +84,29 @@ extension ConversationExtensionViewController: UICollectionViewDataSource {
 }
 
 extension ConversationExtensionViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row < fixedExtensions.count {
+            switch fixedExtensions[indexPath.row] {
+            case .camera:
+                conversationViewController?.imagePickerController.presentCamera()
+            case .file:
+                conversationViewController?.documentAction()
+            case .transfer:
+                conversationViewController?.transferAction()
+            case .contact:
+                conversationViewController?.contactAction()
+            case .call:
+                conversationViewController?.callAction()
+            }
+        } else {
+            let app = apps[indexPath.row - fixedExtensions.count]
+            if let url = URL(string: app.homeUri), let conversationId = dataSource?.conversationId {
+                WebWindow.instance(conversationId: conversationId, app: app)
+                    .presentPopupControllerAnimated(url: url)
+            }
+        }
+    }
     
 }
 

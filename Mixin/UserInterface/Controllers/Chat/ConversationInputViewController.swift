@@ -32,6 +32,7 @@ class ConversationInputViewController: UIViewController {
     @IBOutlet weak var endEditingRightActionsStackTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var customInputContainerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var customInputContainerMinHeightConstraint: NSLayoutConstraint!
     
     lazy var extensionViewController = R.storyboard.chat.extension()!
     lazy var stickersViewController = R.storyboard.chat.stickerInput()!
@@ -305,6 +306,8 @@ class ConversationInputViewController: UIViewController {
     
     // MARK: - Interface
     func finishLoading() {
+        customInputContainerMinHeightConstraint.constant = KeyboardHeight.last
+        
         addChild(audioViewController)
         audioInputContainerView.addSubview(audioViewController.view)
         audioViewController.view.snp.makeConstraints({ (make) in
@@ -401,7 +404,9 @@ extension ConversationInputViewController {
         }
         let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
         if !keyboardWillBeInvisible {
-            KeyboardHeight.last = endFrame.height - interactiveDismissResponder.height
+            let realKeyboardHeight = endFrame.height - interactiveDismissResponder.height
+            customInputContainerMinHeightConstraint.constant = realKeyboardHeight
+            KeyboardHeight.last = realKeyboardHeight
         }
         guard reportHeightChangeWhenKeyboardFrameChanges else {
             return

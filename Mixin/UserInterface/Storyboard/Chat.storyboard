@@ -964,7 +964,8 @@
                                 <rect key="frame" x="0.0" y="50" width="375" height="296"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="296" id="sbV-IA-hxB"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="296" id="Yxp-Zd-bSj"/>
+                                    <constraint firstAttribute="height" priority="750" constant="296" id="sbV-IA-hxB"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -998,6 +999,7 @@
                         <outlet property="beginEditingRightActionsStackLeadingConstraint" destination="VsZ-Pr-2Vi" id="Pb8-eE-5Ay"/>
                         <outlet property="beginEditingTextViewTrailingConstraint" destination="Cnr-xa-PEq" id="Hem-bL-PnT"/>
                         <outlet property="customInputContainerHeightConstraint" destination="sbV-IA-hxB" id="hBZ-Xo-IXu"/>
+                        <outlet property="customInputContainerMinHeightConstraint" destination="Yxp-Zd-bSj" id="qUp-tt-ugm"/>
                         <outlet property="customInputContainerView" destination="4FQ-5O-gCe" id="h76-aJ-5Ge"/>
                         <outlet property="deleteConversationButton" destination="ESl-jK-Lob" id="ZRw-ty-YAG"/>
                         <outlet property="endEditingRightActionsStackTrailingConstraint" destination="Tgt-eT-M5b" id="3Su-qz-VuZ"/>

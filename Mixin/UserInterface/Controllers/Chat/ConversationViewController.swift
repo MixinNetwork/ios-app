@@ -298,7 +298,9 @@ class ConversationViewController: UIViewController {
             }
             recognizer.setTranslation(.zero, in: view)
         case .ended:
-            if recognizer.hasMovedInputWrapperDuringChangedState && !conversationInputViewController.textView.isFirstResponder {
+            let shouldResize = recognizer.hasMovedInputWrapperDuringChangedState
+                && !conversationInputViewController.textView.isFirstResponder
+            if shouldResize {
                 if verticalVelocity >= 0 {
                     if inputWrapperHeight > regularInputWrapperHeight {
                         conversationInputViewController.setPreferredContentHeightAnimated(.regular)

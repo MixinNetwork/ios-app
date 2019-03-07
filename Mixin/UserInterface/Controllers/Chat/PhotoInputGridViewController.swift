@@ -2,7 +2,7 @@ import UIKit
 import Photos
 import MobileCoreServices
 
-class PhotoInputGridViewController: UIViewController {
+class PhotoInputGridViewController: UIViewController, ConversationAccessible {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
@@ -128,7 +128,10 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        // send
+        if let asset = fetchResult?.object(at: indexPath.row) {
+            let vc = AssetSendViewController.instance(asset: asset, dataSource: dataSource)
+            navigationController?.pushViewController(vc, animated: true)
+        }
         return true
     }
     

@@ -165,22 +165,6 @@ class ConversationViewController: UIViewController {
         return homeIndicatorAutoHidden
     }
     
-    override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
-        super.preferredContentSizeDidChange(forChildContentContainer: container)
-        if (container as? UIViewController) == conversationInputViewController {
-            let newHeight = min(maxInputWrapperHeight, container.preferredContentSize.height)
-            inputWrapperHeightConstraint.constant = newHeight
-            var bottomInset = newHeight
-            tableView.scrollIndicatorInsets.bottom = bottomInset
-            bottomInset += MessageViewModel.bottomSeparatorHeight
-            UIView.animate(withDuration: 0.5) {
-                UIView.setAnimationCurve(.overdamped)
-                self.tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: self.adjustTableViewContentOffsetWhenInputWrapperHeightChanges)
-                self.view.layoutIfNeeded()
-            }
-        }
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isAppearanceAnimating = true
@@ -285,7 +269,7 @@ class ConversationViewController: UIViewController {
         }
     }
     
-    @objc func downsizeInputWrapperAction(_ recognizer: DownsizeInputWrapperGestureRecognizer) {
+    @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {
         let location = recognizer.location(in: inputWrapperView)
         let verticalVelocity = recognizer.velocity(in: view).y
         let regularInputWrapperHeight = conversationInputViewController.regularHeight
@@ -300,7 +284,11 @@ class ConversationViewController: UIViewController {
         switch recognizer.state {
         case .changed:
             let shouldMoveDown = verticalVelocity > 0 && location.y > 0
-            let shouldMoveUp = verticalVelocity < 0 && recognizer.hasMovedInputWrapperDuringChangedState
+            let canMoveUp = !conversationInputViewController.inputTextView.isFirstResponder
+                || inputWrapperHeight < conversationInputViewController.regularHeight
+            let shouldMoveUp = canMoveUp
+                && verticalVelocity < 0
+                && recognizer.hasMovedInputWrapperDuringChangedState
             if shouldMoveDown || shouldMoveUp {
                 recognizer.hasMovedInputWrapperDuringChangedState = true
                 var newHeight = inputWrapperHeight - recognizer.translation(in: view).y
@@ -312,24 +300,17 @@ class ConversationViewController: UIViewController {
             recognizer.setTranslation(.zero, in: view)
         case .ended:
             if recognizer.hasMovedInputWrapperDuringChangedState && !conversationInputViewController.inputTextView.isFirstResponder {
-                func setInputWrapperHeight(_ height: CGFloat) {
-                    inputWrapperHeight = height
-                    UIView.animate(withDuration: 0.5) {
-                        UIView.setAnimationCurve(.overdamped)
-                        self.view.layoutIfNeeded()
-                    }
-                }
                 if verticalVelocity >= 0 {
                     if inputWrapperHeight > regularInputWrapperHeight {
-                        setInputWrapperHeight(regularInputWrapperHeight)
+                        conversationInputViewController.setPreferredContentHeightAnimated(.regular)
                     } else {
                         conversationInputViewController.dismissCustomInput(minimize: true)
                     }
                 } else {
                     if inputWrapperHeight > conversationInputViewController.regularHeight {
-                        setInputWrapperHeight(maxInputWrapperHeight)
+                        conversationInputViewController.setPreferredContentHeightAnimated(.maximized)
                     } else {
-                        setInputWrapperHeight(regularInputWrapperHeight)
+                        conversationInputViewController.setPreferredContentHeightAnimated(.regular)
                     }
                 }
             }
@@ -541,6 +522,24 @@ class ConversationViewController: UIViewController {
     }
     
     // MARK: - Interface
+    func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
+        let newHeight = min(maxInputWrapperHeight, preferredContentHeight)
+        inputWrapperHeightConstraint.constant = newHeight
+        var bottomInset = newHeight
+        tableView.scrollIndicatorInsets.bottom = bottomInset
+        bottomInset += MessageViewModel.bottomSeparatorHeight
+        if animated {
+            UIView.beginAnimations(nil, context: nil)
+            UIView.setAnimationDuration(0.5)
+            UIView.setAnimationCurve(.overdamped)
+        }
+        tableView.setContentInsetBottom(bottomInset, automaticallyAdjustContentOffset: adjustTableViewContentOffsetWhenInputWrapperHeightChanges)
+        view.layoutIfNeeded()
+        if animated {
+            UIView.commitAnimations()
+        }
+    }
+    
     func documentAction() {
         let vc = UIDocumentPickerViewController(documentTypes: ["public.item", "public.content"], in: .import)
         vc.delegate = self
@@ -1189,7 +1188,7 @@ extension ConversationViewController {
 extension ConversationViewController {
     
     private func finishInitialLoading() {
-        let recognizer = DownsizeInputWrapperGestureRecognizer(target: self, action: #selector(downsizeInputWrapperAction(_:)))
+        let recognizer = ResizeInputWrapperGestureRecognizer(target: self, action: #selector(resizeInputWrapperAction(_:)))
         recognizer.delegate = self
         tableView.addGestureRecognizer(recognizer)
         
@@ -1333,7 +1332,7 @@ extension ConversationViewController {
         }
     }
     
-    class DownsizeInputWrapperGestureRecognizer: UIPanGestureRecognizer {
+    class ResizeInputWrapperGestureRecognizer: UIPanGestureRecognizer {
         
         var hasMovedInputWrapperDuringChangedState = false
         

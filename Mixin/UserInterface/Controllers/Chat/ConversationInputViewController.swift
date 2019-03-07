@@ -91,6 +91,10 @@ class ConversationInputViewController: UIViewController {
             }
         }
     }
+    // UIViewController's preferredContentSizeDidChange is not fired for same values being set again
+    // Also we need more precisive controller for animations so we declare a custom one
+    // Do not set this var directly, use setPreferredContentHeight:animated:
+    private var preferredContentHeight: CGFloat = 0
     
     private var conversationViewController: ConversationViewController {
         return parent as! ConversationViewController
@@ -104,10 +108,10 @@ class ConversationInputViewController: UIViewController {
         return UIScreen.main.bounds.height
     }
     
-    private var size: Size {
-        if abs(preferredContentSize.height - maximizedHeight) < 1 {
+    private var height: Height {
+        if abs(preferredContentHeight - maximizedHeight) < 1 {
             return .maximized
-        } else if abs(preferredContentSize.height - minimizedHeight) < 1 {
+        } else if abs(preferredContentHeight - minimizedHeight) < 1 {
             return .minimized
         } else {
             return .regular
@@ -163,13 +167,13 @@ class ConversationInputViewController: UIViewController {
         super.viewSafeAreaInsetsDidChange()
         let diff = view.compatibleSafeAreaInsets.bottom - lastSafeAreaInsetsBottom
         if abs(diff) > 1 {
-            setPreferredContentHeight(preferredContentSize.height + diff, animated: false)
+            setPreferredContentHeight(preferredContentHeight + diff, animated: false)
         }
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        guard size != .minimized else {
+        guard height != .minimized else {
             return
         }
         customInputContainerHeightConstraint.constant = view.frame.height - inputBarView.frame.height
@@ -224,8 +228,8 @@ class ConversationInputViewController: UIViewController {
     @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {
         resignTextViewFirstResponderWithoutReportingContentHeightChange()
         if sender.isOn {
-            if size == .maximized {
-                setPreferredContentHeight(regularHeight, animated: true)
+            if height == .maximized {
+                setPreferredContentHeightAnimated(.regular)
             }
             photosButton.isSelected = false
             setRightAccessoryButton(stickersButton)
@@ -329,7 +333,7 @@ class ConversationInputViewController: UIViewController {
         photosButton.isSelected = false
         extensionsSwitch.isOn = false
         if minimize {
-            setPreferredContentHeight(minimizedHeight, animated: true)
+            setPreferredContentHeightAnimated(.minimized)
         }
         UIView.animate(withDuration: 0.5, animations: {
             UIView.setAnimationCurve(.overdamped)
@@ -340,11 +344,24 @@ class ConversationInputViewController: UIViewController {
     }
     
     func downsizeToRegularOrDismiss() {
-        if size == .maximized {
+        if height == .maximized {
             setPreferredContentHeight(regularHeight, animated: true)
-        } else if size == .regular {
+        } else if height == .regular {
             dismiss()
         }
+    }
+    
+    func setPreferredContentHeightAnimated(_ height: Height) {
+        let heightValue: CGFloat
+        switch height {
+        case .minimized:
+            heightValue = minimizedHeight
+        case .regular:
+            heightValue = regularHeight
+        case .maximized:
+            heightValue = maximizedHeight
+        }
+        setPreferredContentHeight(heightValue, animated: true)
     }
     
 }
@@ -367,7 +384,7 @@ extension ConversationInputViewController {
             return
         }
         if keyboardWillBeInvisible {
-            setPreferredContentHeight(minimizedHeight, animated: true)
+            setPreferredContentHeightAnimated(.minimized)
         } else {
             var height = quotePreviewWrapperHeightConstraint.constant
                 + inputBarView.frame.height
@@ -425,15 +442,15 @@ extension ConversationInputViewController {
                 let verticalVelocity = recognizer.velocity(in: view).y
                 if verticalVelocity >= 0 {
                     if view.frame.height > regularHeight {
-                        setPreferredContentHeight(regularHeight, animated: true)
+                        setPreferredContentHeightAnimated(.regular)
                     } else {
                         dismissCustomInput(minimize: true)
                     }
                 } else {
                     if view.frame.height > regularHeight {
-                        setPreferredContentHeight(maximizedHeight, animated: true)
+                        setPreferredContentHeightAnimated(.maximized)
                     } else {
-                        setPreferredContentHeight(regularHeight, animated: true)
+                        setPreferredContentHeightAnimated(.regular)
                     }
                 }
             }
@@ -447,7 +464,7 @@ extension ConversationInputViewController {
 // MARK: - Embedded class
 extension ConversationInputViewController {
     
-    private enum Size {
+    enum Height {
         case minimized
         case regular
         case maximized
@@ -517,7 +534,7 @@ extension ConversationInputViewController: UITextViewDelegate {
         let diff = newHeight - inputTextViewHeightConstraint.constant
         if abs(diff) > 0.1 {
             inputTextViewHeightConstraint.constant = newHeight
-            setPreferredContentHeight(preferredContentSize.height + diff, animated: true)
+            setPreferredContentHeight(preferredContentHeight + diff, animated: true)
             interactiveDismissResponder.height += diff
         }
     }
@@ -528,19 +545,14 @@ extension ConversationInputViewController: UITextViewDelegate {
 extension ConversationInputViewController {
     
     private func setPreferredContentHeight(_ height: CGFloat, animated: Bool) {
-        if animated {
-            preferredContentSize.height = height
-        } else {
-            UIView.performWithoutAnimation {
-                preferredContentSize.height = height
-            }
-        }
+        preferredContentHeight = height
+        conversationViewController.updateInputWrapper(for: preferredContentHeight, animated: animated)
     }
     
     private func dismiss() {
         if inputTextView.isFirstResponder {
             inputTextView.resignFirstResponder()
-        } else if size != .minimized {
+        } else if height != .minimized {
             dismissCustomInput(minimize: true)
         }
     }
@@ -559,7 +571,7 @@ extension ConversationInputViewController {
         customInputViewController = viewController
         customInputContainerView.layoutIfNeeded()
         if view.frame.height < regularHeight {
-            setPreferredContentHeight(regularHeight, animated: true)
+            setPreferredContentHeightAnimated(.regular)
         }
         UIView.animate(withDuration: 0.5) {
             UIView.setAnimationCurve(.overdamped)
@@ -642,18 +654,18 @@ extension ConversationInputViewController {
                 quotePreviewView.render(message: quote.message, contentImageThumbnail: quote.thumbnail)
                 quotePreviewView.layoutIfNeeded()
             }
-            let heightChange = quotePreviewHeightConstraint.constant - quotePreviewWrapperHeightConstraint.constant
+            let diff = quotePreviewHeightConstraint.constant - quotePreviewWrapperHeightConstraint.constant
             quotePreviewWrapperHeightConstraint.constant = quotePreviewHeightConstraint.constant
             if inputTextView.isFirstResponder {
-                if abs(heightChange) > 0 {
-                    setPreferredContentHeight(preferredContentSize.height + heightChange, animated: true)
+                if abs(diff) > 0 {
+                    setPreferredContentHeight(preferredContentHeight + diff, animated: true)
                 }
             } else {
                 inputTextView.becomeFirstResponder()
             }
         } else {
             if quotePreviewWrapperHeightConstraint.constant != 0 {
-                let newHeight = preferredContentSize.height - quotePreviewWrapperHeightConstraint.constant
+                let newHeight = preferredContentHeight - quotePreviewWrapperHeightConstraint.constant
                 quotePreviewWrapperHeightConstraint.constant = 0
                 setPreferredContentHeight(newHeight, animated: true)
             }

@@ -397,7 +397,7 @@ extension ConversationInputViewController {
             return
         }
         if keyboardWillBeInvisible {
-            setPreferredContentHeightAnimated(.minimized)
+            setPreferredContentHeight(minimizedHeight, animated: false)
         } else {
             var height = quotePreviewWrapperHeightConstraint.constant
                 + inputBarView.frame.height
@@ -405,7 +405,7 @@ extension ConversationInputViewController {
                 - endFrame.origin.y
                 - interactiveDismissResponder.height
             height = max(minimizedHeight, height)
-            setPreferredContentHeight(height, animated: true)
+            setPreferredContentHeight(height, animated: false)
         }
     }
     
@@ -582,7 +582,7 @@ extension ConversationInputViewController {
     
     private func setPreferredContentHeight(_ height: CGFloat, animated: Bool) {
         preferredContentHeight = height
-        conversationViewController.updateInputWrapper(for: preferredContentHeight, animated: animated)
+        conversationViewController.updateInputWrapper(for: height, animated: animated)
     }
     
     private func dismiss() {

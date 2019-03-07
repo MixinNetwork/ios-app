@@ -3,30 +3,17 @@ import GiphyCoreSDK
 
 class GiphySearchViewController: UIViewController {
     
-    @IBOutlet weak var dismissButton: UIButton!
-    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var keywordTextField: UITextField!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionViewLayout: GiphyCollectionViewFlowLayout!
     
-    weak var conversationViewController: ConversationViewController?
+    weak var dataSource: ConversationDataSource?
     
     var onDisappear: (() -> Void)?
     
-    override var modalPresentationStyle: UIModalPresentationStyle {
-        get {
-            return .overCurrentContext
-        }
-        set {
-            
-        }
-    }
-    
-    private let cellReuseId = "cell"
-    private let loadingFooterReuseId = "loading"
-    private let noResultFooterReuseId = "no_result"
-    private let giphyPoweredFooterReuseId = "giphy"
     private let limit = 24
-
+    private let topRoundedMaskLayer = CAShapeLayer()
+    
     private var status = Status.loading
     private var urls = [GiphyImageURL]()
     private var isLoadingMore = false
@@ -43,10 +30,6 @@ class GiphySearchViewController: UIViewController {
         }
     }
     
-    private var collectionViewLayout: GiphyCollectionViewFlowLayout? {
-        return collectionView.collectionViewLayout as? GiphyCollectionViewFlowLayout
-    }
-    
     private weak var lastGiphyOperation: Operation?
     
     private lazy var reloadHandler = { [weak self] (response: GPHListMediaResponse?, error: Error?) in
@@ -60,6 +43,7 @@ class GiphySearchViewController: UIViewController {
             weakSelf.collectionView.reloadData()
         }
     }
+    
     private lazy var loadMoreHandler = { [weak self] (response: GPHListMediaResponse?, error: Error?) in
         guard let weakSelf = self, let data = response?.data else {
             return
@@ -78,8 +62,10 @@ class GiphySearchViewController: UIViewController {
         }
     }
     
-    class func instance() -> GiphySearchViewController {
-        return Storyboard.chat.instantiateViewController(withIdentifier: "giphy_search") as! GiphySearchViewController
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        transitioningDelegate = PopupPresentationManager.shared
+        modalPresentationStyle = .custom
     }
     
     override func viewDidLoad() {
@@ -87,16 +73,16 @@ class GiphySearchViewController: UIViewController {
         keywordTextField.delegate = self
         collectionView.keyboardDismissMode = .onDrag
         collectionView.register(AnimatedImageCollectionViewCell.self,
-                                forCellWithReuseIdentifier: cellReuseId)
+                                forCellWithReuseIdentifier: ReuseId.cell)
         collectionView.register(UINib(nibName: "LoadingIndicatorFooterView", bundle: .main),
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                withReuseIdentifier: loadingFooterReuseId)
+                                withReuseIdentifier: ReuseId.Footer.loading)
         collectionView.register(UINib(nibName: "NoResultFooterView", bundle: .main),
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                withReuseIdentifier: noResultFooterReuseId)
+                                withReuseIdentifier: ReuseId.Footer.noResult)
         collectionView.register(UINib(nibName: "GiphyPoweredFooterView", bundle: .main),
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                withReuseIdentifier: giphyPoweredFooterReuseId)
+                                withReuseIdentifier: ReuseId.Footer.giphyPowered)
         collectionView.dataSource = self
         collectionView.delegate = self
         reload()
@@ -114,19 +100,17 @@ class GiphySearchViewController: UIViewController {
         onDisappear?()
     }
     
-    @IBAction func dismissAction(_ sender: Any) {
-        UIView.animate(withDuration: 0.5) {
-            self.conversationViewController?.dismissPanelsButton.alpha = 0
-        }
-        dismiss(animated: true, completion: nil)
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        let path = UIBezierPath(roundedRect: view.bounds,
+                                byRoundingCorners: [.topLeft, .topRight],
+                                cornerRadii: CGSize(width: 8, height: 8))
+        topRoundedMaskLayer.path = path.cgPath
+        view.layer.mask = topRoundedMaskLayer
     }
     
-    func prepareForReuse() {
-        guard isViewLoaded else {
-            return
-        }
-        keywordTextField.text = nil
-        reload()
+    @IBAction func dismissAction(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
     
 }
@@ -153,7 +137,7 @@ extension GiphySearchViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseId.cell, for: indexPath) as! AnimatedImageCollectionViewCell
         cell.imageView.contentMode = .scaleAspectFill
         let url = urls[indexPath.row].preview
         cell.imageView.sd_setImage(with: url, completed: nil)
@@ -170,8 +154,7 @@ extension GiphySearchViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let url = urls[indexPath.row].fullsized
-        conversationViewController?.dataSource?.sendGif(at: url)
-        conversationViewController?.reduceStickerPanelHeightIfMaximized()
+        dataSource?.sendGif(at: url)
         dismissAction(collectionView)
     }
     
@@ -214,14 +197,26 @@ extension GiphySearchViewController {
         case noMoreResult
     }
     
+    enum ReuseId {
+        
+        static let cell = "cell"
+        
+        enum Footer {
+            static let loading = "loading"
+            static let noResult = "no_result"
+            static let giphyPowered = "giphy"
+        }
+        
+    }
+    
     private var footerReuseId: String {
         switch status {
         case .noResult:
-            return noResultFooterReuseId
+            return ReuseId.Footer.noResult
         case .loading:
-            return loadingFooterReuseId
+            return ReuseId.Footer.loading
         case .noMoreResult:
-            return giphyPoweredFooterReuseId
+            return ReuseId.Footer.giphyPowered
         }
     }
     

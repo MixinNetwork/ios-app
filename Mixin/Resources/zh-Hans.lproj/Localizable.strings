@@ -35,6 +35,7 @@
 "menu_edit" = "编辑";
 "no_result" = "未找到相关内容";
 "title_loading" = "正在加载...";
+"all_photos" = "所有照片";
 
 "connection_hint_connecting" = "正在连接";
 "connection_hint_waiting" = "等待重连";

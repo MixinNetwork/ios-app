@@ -27,7 +27,8 @@ public class Localized {
     public static let ACTION_DEAUTHORIZE = LocalizedString("action_deauthorize", comment: "Deauthorize")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
     public static let MENU_EDIT = LocalizedString("menu_edit", comment: "Edit")
-
+    public static let ALL_PHOTOS = LocalizedString("all_photos", comment: "All Photos")
+    
     public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
     public static let CONNECTION_HINT_WAITING = LocalizedString("connection_hint_waiting", comment: "Waiting to reconnect")
     public static func CONNECTION_HINT_PROGRESS(_ progress: Int) -> String {

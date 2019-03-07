@@ -431,21 +431,28 @@ extension ConversationInputViewController {
     }
     
     @objc private func interactiveResizeAction(_ recognizer: InteractiveResizeGestureRecognizer) {
+        let location = recognizer.location(in: view)
+        let verticalVelocity = recognizer.velocity(in: view).y
         switch recognizer.state {
         case .began:
-            let location = recognizer.location(in: view)
             recognizer.beganInInputBar = inputBarView.frame.contains(location)
             if recognizer.beganInInputBar {
                 recognizer.shouldAdjustContentHeight = true
             }
             recognizer.setTranslation(.zero, in: view)
         case .changed:
-            let location = recognizer.location(in: view)
-            if !recognizer.shouldAdjustContentHeight, inputBarView.frame.contains(location) {
-                recognizer.shouldAdjustContentHeight = true
+            let resizableScrollView = (customInputViewController as? ConversationInputInteractiveResizableViewController)?.interactiveResizableScrollView
+            if !recognizer.shouldAdjustContentHeight {
+                let isDraggingUp = inputBarView.frame.contains(location)
+                let canDragDown = verticalVelocity > 0
+                    && (resizableScrollView != nil)
+                    && (resizableScrollView!.contentOffset.y < 1)
+                if isDraggingUp || canDragDown {
+                    recognizer.shouldAdjustContentHeight = true
+                }
             }
             if recognizer.shouldAdjustContentHeight {
-                if !recognizer.beganInInputBar, let scrollView = (customInputViewController as? ConversationInputInteractiveResizableViewController)?.interactiveResizableScrollView {
+                if !recognizer.beganInInputBar, let scrollView = resizableScrollView {
                     scrollView.contentOffset.y += recognizer.translation(in: view).y
                 }
                 let height = view.frame.height - recognizer.translation(in: view).y
@@ -454,7 +461,6 @@ extension ConversationInputViewController {
             recognizer.setTranslation(.zero, in: view)
         case .ended:
             if recognizer.shouldAdjustContentHeight {
-                let verticalVelocity = recognizer.velocity(in: view).y
                 if verticalVelocity >= 0 {
                     if view.frame.height > regularHeight {
                         setPreferredContentHeightAnimated(.regular)

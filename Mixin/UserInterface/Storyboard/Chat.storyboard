@@ -2371,13 +2371,13 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
                                                         </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7q4-aX-cP8">
-                                                            <rect key="frame" x="0.0" y="75.5" width="98" height="22.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_photo_bottom_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="n9G-1i-W0G">
-                                                                    <rect key="frame" x="0.0" y="-7.5" width="98" height="30"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z8T-7O-x04">
-                                                                    <rect key="frame" x="10" y="0.0" width="78" height="14.5"/>
+                                                                    <rect key="frame" x="10" y="75.5" width="78" height="14.5"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JQ2-yd-f9u">
                                                                             <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
@@ -2389,14 +2389,14 @@
                                                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YFJ-6z-9up">
                                                                             <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
                                                                             <subviews>
-                                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="ic_album_video" translatesAutoresizingMaskIntoConstraints="NO" id="qAR-Lc-IyN">
-                                                                                    <rect key="frame" x="0.0" y="2.5" width="16" height="10"/>
+                                                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="Conversation/ic_video" translatesAutoresizingMaskIntoConstraints="NO" id="qAR-Lc-IyN">
+                                                                                    <rect key="frame" x="0.0" y="2.5" width="14" height="10"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 </imageView>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="1010:01" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E1e-SE-IRb">
-                                                                                    <rect key="frame" x="16" y="0.0" width="62" height="14.5"/>
+                                                                                    <rect key="frame" x="14" y="0.0" width="64" height="14.5"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
+                                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
@@ -2422,9 +2422,9 @@
                                                                 <constraint firstAttribute="trailing" secondItem="z8T-7O-x04" secondAttribute="trailing" constant="10" id="T3A-wx-0Fl"/>
                                                                 <constraint firstItem="n9G-1i-W0G" firstAttribute="leading" secondItem="7q4-aX-cP8" secondAttribute="leading" id="Uem-Ba-maG"/>
                                                                 <constraint firstAttribute="bottom" secondItem="z8T-7O-x04" secondAttribute="bottom" constant="8" id="Yre-Wg-ufs"/>
-                                                                <constraint firstItem="z8T-7O-x04" firstAttribute="top" secondItem="7q4-aX-cP8" secondAttribute="top" id="gMD-RM-Uge"/>
                                                                 <constraint firstAttribute="trailing" secondItem="n9G-1i-W0G" secondAttribute="trailing" id="jfK-8N-Wh2"/>
                                                                 <constraint firstAttribute="bottom" secondItem="n9G-1i-W0G" secondAttribute="bottom" id="tQg-8c-DWR"/>
+                                                                <constraint firstItem="n9G-1i-W0G" firstAttribute="top" secondItem="7q4-aX-cP8" secondAttribute="top" id="xzP-lV-5wv"/>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XrW-S4-0IU">
@@ -2443,6 +2443,7 @@
                                                         <constraint firstItem="IYJ-r9-9MA" firstAttribute="top" secondItem="S4T-az-dD5" secondAttribute="top" id="118-gY-j3M"/>
                                                         <constraint firstAttribute="bottom" secondItem="7q4-aX-cP8" secondAttribute="bottom" id="25M-Ww-ZaB"/>
                                                         <constraint firstItem="IYJ-r9-9MA" firstAttribute="leading" secondItem="S4T-az-dD5" secondAttribute="leading" id="2XY-mJ-4oH"/>
+                                                        <constraint firstItem="7q4-aX-cP8" firstAttribute="top" secondItem="S4T-az-dD5" secondAttribute="top" id="FRg-SU-fWi"/>
                                                         <constraint firstItem="7q4-aX-cP8" firstAttribute="leading" secondItem="S4T-az-dD5" secondAttribute="leading" id="QUH-eX-87n"/>
                                                         <constraint firstAttribute="trailing" secondItem="XrW-S4-0IU" secondAttribute="trailing" id="QpR-z8-4wm"/>
                                                         <constraint firstItem="XrW-S4-0IU" firstAttribute="top" secondItem="S4T-az-dD5" secondAttribute="top" id="TKC-PD-lts"/>
@@ -2579,7 +2580,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Conversation/bg_photo_bottom_shadow" width="93" height="30"/>
+        <image name="Conversation/bg_photo_bottom_shadow" width="107" height="107"/>
         <image name="Conversation/ic_app" width="26" height="26"/>
         <image name="Conversation/ic_keyboard" width="26" height="26"/>
         <image name="Conversation/ic_mic_off" width="26" height="26"/>
@@ -2588,9 +2589,9 @@
         <image name="Conversation/ic_recorder_lock_direction_left" width="6" height="10"/>
         <image name="Conversation/ic_send" width="24" height="24"/>
         <image name="Conversation/ic_sticker" width="26" height="26"/>
+        <image name="Conversation/ic_video" width="14" height="10"/>
         <image name="chat_video_mask_bottom" width="375" height="130"/>
         <image name="chat_video_mask_header" width="375" height="76"/>
-        <image name="ic_album_video" width="16" height="10"/>
         <image name="ic_announcement" width="44" height="44"/>
         <image name="ic_bottom" width="44" height="44"/>
         <image name="ic_camera_send" width="36" height="36"/>

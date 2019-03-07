@@ -533,6 +533,17 @@ extension ConversationInputViewController: UITextViewDelegate {
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         dismissCustomInput(minimize: false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) { [weak self] in
+            guard let weakSelf = self, weakSelf.textView.isFirstResponder else {
+                return
+            }
+            weakSelf.view.backgroundColor = .clear
+        }
+        return true
+    }
+    
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        view.backgroundColor = .white
         return true
     }
     

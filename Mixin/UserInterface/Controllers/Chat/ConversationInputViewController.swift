@@ -439,12 +439,14 @@ extension ConversationInputViewController {
             if recognizer.beganInInputBar {
                 recognizer.shouldAdjustContentHeight = true
             }
+            recognizer.canSizeToMinimized = view.frame.height <= regularHeight
             recognizer.setTranslation(.zero, in: view)
         case .changed:
             let resizableScrollView = (customInputViewController as? ConversationInputInteractiveResizableViewController)?.interactiveResizableScrollView
             if !recognizer.shouldAdjustContentHeight {
                 let isDraggingUp = inputBarView.frame.contains(location)
-                let canDragDown = verticalVelocity > 0
+                let canDragDown = view.frame.height > regularHeight
+                    && verticalVelocity > 0
                     && (resizableScrollView != nil)
                     && (resizableScrollView!.contentOffset.y < 1)
                 if isDraggingUp || canDragDown {
@@ -452,20 +454,24 @@ extension ConversationInputViewController {
                 }
             }
             if recognizer.shouldAdjustContentHeight {
+                var translation = recognizer.translation(in: view).y
                 if !recognizer.beganInInputBar, let scrollView = resizableScrollView {
-                    scrollView.contentOffset.y += recognizer.translation(in: view).y
+                    scrollView.contentOffset.y += translation
                 }
-                let height = view.frame.height - recognizer.translation(in: view).y
+                if !recognizer.canSizeToMinimized && (view.frame.height - translation) < regularHeight {
+                    translation /= 2
+                }
+                let height = view.frame.height - translation
                 setPreferredContentHeight(height, animated: false)
             }
             recognizer.setTranslation(.zero, in: view)
         case .ended:
             if recognizer.shouldAdjustContentHeight {
                 if verticalVelocity >= 0 {
-                    if view.frame.height > regularHeight {
-                        setPreferredContentHeightAnimated(.regular)
-                    } else {
+                    if view.frame.height < regularHeight && recognizer.canSizeToMinimized {
                         dismissCustomInput(minimize: true)
+                    } else {
+                        setPreferredContentHeightAnimated(.regular)
                     }
                 } else {
                     if view.frame.height > regularHeight {
@@ -495,10 +501,12 @@ extension ConversationInputViewController {
         
         var beganInInputBar = false
         var shouldAdjustContentHeight = false
+        var canSizeToMinimized = false
         
         override func reset() {
             super.reset()
             shouldAdjustContentHeight = false
+            canSizeToMinimized = false
         }
         
     }

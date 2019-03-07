@@ -591,12 +591,6 @@ class ConversationViewController: UIViewController {
         window.presentPopupControllerAnimated(url: url)
     }
     
-    func setInputWrapperHidden(_ hidden: Bool) {
-        UIView.animate(withDuration: animationDuration) {
-            self.inputWrapperView.alpha = hidden ? 0 : 1
-        }
-    }
-    
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController

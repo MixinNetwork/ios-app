@@ -1,7 +1,7 @@
 import UIKit
 import AVFoundation
 
-class AudioInputViewController: UIViewController {
+class AudioInputViewController: UIViewController, ConversationAccessible {
     
     @IBOutlet weak var recordingIndicatorView: UIView!
     @IBOutlet weak var recordingRedDotView: UIView!
@@ -40,12 +40,6 @@ class AudioInputViewController: UIViewController {
             lockView.isLocked = isLocked
             lockedActionsView.isHidden = !isLocked
         }
-    }
-    private var conversationViewController: ConversationViewController? {
-        return parent as? ConversationViewController
-    }
-    private var conversationDataSource: ConversationDataSource? {
-        return conversationViewController?.dataSource
     }
     
     private lazy var longPressHintView = RecorderLongPressHintView()
@@ -224,7 +218,7 @@ extension AudioInputViewController {
                 case .finished:
                     self.layoutForStopping()
                     if let duration = metadata?.duration, Double(duration) > millisecondsPerSecond {
-                        self.conversationDataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (tempUrl, metadata))
+                        self.dataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (tempUrl, metadata))
                     } else {
                         try? FileManager.default.removeItem(at: tempUrl)
                         self.flashLongPressHint()
@@ -246,7 +240,6 @@ extension AudioInputViewController {
     private func layoutForRecording() {
         hideLongPressHint()
         animateShowLockView()
-        conversationViewController?.setInputWrapperHidden(true)
         slideViewCenterXConstraint.constant = 0
         preferredContentSize.width = UIScreen.main.bounds.width
         UIView.animate(withDuration: animationDuration) {
@@ -256,7 +249,6 @@ extension AudioInputViewController {
     }
     
     private func layoutForStopping() {
-        conversationViewController?.setInputWrapperHidden(false)
         recordImageView.image = R.image.conversation.ic_mic_off()
         if isLocked {
             slideToCancelView.alpha = 0

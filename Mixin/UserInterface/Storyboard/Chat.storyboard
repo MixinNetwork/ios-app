@@ -934,9 +934,9 @@
                                     <constraint firstAttribute="bottom" secondItem="B8S-al-j93" secondAttribute="bottom" id="LrF-nN-fkK"/>
                                     <constraint firstItem="4Hc-pE-gbi" firstAttribute="trailing" secondItem="ucd-YD-Vpg" secondAttribute="trailing" id="MXb-hf-Vnu"/>
                                     <constraint firstAttribute="trailing" secondItem="aDD-ZD-ky1" secondAttribute="trailing" priority="999" constant="6" id="Tgt-eT-M5b"/>
-                                    <constraint firstItem="4Hc-pE-gbi" firstAttribute="centerY" secondItem="ucd-YD-Vpg" secondAttribute="centerY" id="U88-yh-Z7r"/>
                                     <constraint firstAttribute="trailing" secondItem="aDD-ZD-ky1" secondAttribute="leading" priority="1" id="VsZ-Pr-2Vi"/>
                                     <constraint firstAttribute="bottom" secondItem="aDD-ZD-ky1" secondAttribute="bottom" constant="3" id="jn0-1g-Rth"/>
+                                    <constraint firstAttribute="bottom" secondItem="4Hc-pE-gbi" secondAttribute="bottom" constant="7" id="ldL-l1-X1L"/>
                                     <constraint firstItem="B8S-al-j93" firstAttribute="trailing" secondItem="8OM-9c-W5h" secondAttribute="trailing" constant="6" id="reH-r1-AB4"/>
                                     <constraint firstItem="ucd-YD-Vpg" firstAttribute="top" secondItem="wvu-NM-HOS" secondAttribute="top" constant="9" id="sFq-fP-j0s"/>
                                 </constraints>

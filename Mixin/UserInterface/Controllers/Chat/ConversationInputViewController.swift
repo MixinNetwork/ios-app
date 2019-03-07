@@ -668,20 +668,20 @@ extension ConversationInputViewController {
             UIView.setAnimationDuration(0.2)
         }
         if isEmpty {
-            beginEditingTextViewTrailingConstraint.priority = .defaultLow
-            beginEditingRightActionsStackLeadingConstraint.priority = .defaultLow
-            endEditingTextViewTrailingConstraint.priority = .defaultHigh
-            endEditingRightActionsStackTrailingConstraint.priority = .defaultHigh
+            beginEditingTextViewTrailingConstraint.priority = .almostInexist
+            beginEditingRightActionsStackLeadingConstraint.priority = .almostInexist
+            endEditingTextViewTrailingConstraint.priority = .almostRequired
+            endEditingRightActionsStackTrailingConstraint.priority = .almostRequired
             inputBarView.layoutIfNeeded()
             sendButton.alpha = 0
             rightActionsStackView.alpha = 1
             audioInputContainerView.alpha = 1
             textViewRightAccessoryView.alpha = 1
         } else {
-            beginEditingTextViewTrailingConstraint.priority = .defaultHigh
-            beginEditingRightActionsStackLeadingConstraint.priority = .defaultHigh
-            endEditingTextViewTrailingConstraint.priority = .defaultLow
-            endEditingRightActionsStackTrailingConstraint.priority = .defaultLow
+            beginEditingTextViewTrailingConstraint.priority = .almostRequired
+            beginEditingRightActionsStackLeadingConstraint.priority = .almostRequired
+            endEditingTextViewTrailingConstraint.priority = .almostInexist
+            endEditingRightActionsStackTrailingConstraint.priority = .almostInexist
             inputBarView.layoutIfNeeded()
             sendButton.alpha = 1
             rightActionsStackView.alpha = 0

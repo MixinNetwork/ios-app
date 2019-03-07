@@ -58,7 +58,8 @@ extension UIView.AnimationCurve {
 extension UILayoutPriority {
     
     static let almostRequired = UILayoutPriority(999)
-
+    static let almostInexist = UILayoutPriority(1)
+    
 }
 
 extension UIVisualEffect {

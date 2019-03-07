@@ -131,6 +131,7 @@ class ConversationInputViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
@@ -373,7 +374,14 @@ class ConversationInputViewController: UIViewController {
 
 // MARK: - Callbacks
 extension ConversationInputViewController {
-
+    
+    @objc private func keyboardDidShow(_ notification: Notification) {
+        guard textView.isFirstResponder else {
+            return
+        }
+        view.backgroundColor = .clear
+    }
+    
     @objc private func keyboardWillChangeFrame(_ notification: Notification) {
         guard textView.isFirstResponder else {
             return
@@ -510,12 +518,6 @@ extension ConversationInputViewController: UITextViewDelegate {
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         dismissCustomInput(minimize: false)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) { [weak self] in
-            guard let weakSelf = self, weakSelf.textView.isFirstResponder else {
-                return
-            }
-            weakSelf.view.backgroundColor = .clear
-        }
         return true
     }
     

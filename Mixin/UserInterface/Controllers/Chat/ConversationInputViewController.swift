@@ -353,6 +353,9 @@ class ConversationInputViewController: UIViewController {
 extension ConversationInputViewController {
 
     @objc private func keyboardWillChangeFrame(_ notification: Notification) {
+        guard inputTextView.isFirstResponder else {
+            return
+        }
         guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }

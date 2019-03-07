@@ -46,17 +46,9 @@ class ConversationInputViewController: UIViewController {
     }
     
     var regularHeight: CGFloat {
-        let keyboardHeight: CGFloat
-        let lastKeyboardHeightIsAvailable = KeyboardHeight.last <= KeyboardHeight.maxReasonable
-            && KeyboardHeight.last >= KeyboardHeight.minReasonable
-        if lastKeyboardHeightIsAvailable {
-            keyboardHeight = KeyboardHeight.last
-        } else {
-            keyboardHeight = KeyboardHeight.default
-        }
         return quotePreviewWrapperHeightConstraint.constant
             + inputBarView.frame.height
-            + keyboardHeight
+            + customInputHeight
     }
     
     var maximizedHeight: CGFloat {
@@ -122,6 +114,12 @@ class ConversationInputViewController: UIViewController {
     
     private var trimmedMessageDraft: String {
         return textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    private var customInputHeight: CGFloat {
+        let lastKeyboardHeightIsAvailable = KeyboardHeight.last <= KeyboardHeight.maxReasonable
+            && KeyboardHeight.last >= KeyboardHeight.minReasonable
+        return lastKeyboardHeightIsAvailable ? KeyboardHeight.last : KeyboardHeight.default
     }
     
     deinit {
@@ -287,7 +285,7 @@ class ConversationInputViewController: UIViewController {
     
     // MARK: - Interface
     func finishLoading() {
-        customInputContainerMinHeightConstraint.constant = KeyboardHeight.last
+        customInputContainerMinHeightConstraint.constant = customInputHeight
         
         addChild(audioViewController)
         audioInputContainerView.addSubview(audioViewController.view)
@@ -392,9 +390,8 @@ extension ConversationInputViewController {
         }
         let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
         if !keyboardWillBeInvisible {
-            let realKeyboardHeight = endFrame.height - interactiveDismissResponder.height
-            customInputContainerMinHeightConstraint.constant = realKeyboardHeight
-            KeyboardHeight.last = realKeyboardHeight
+            KeyboardHeight.last = endFrame.height - interactiveDismissResponder.height
+            customInputContainerMinHeightConstraint.constant = customInputHeight
         }
         guard reportHeightChangeWhenKeyboardFrameChanges else {
             return

@@ -74,6 +74,7 @@ class ConversationInputViewController: UIViewController {
     private var lastSafeAreaInsetsBottom: CGFloat = 0
     private var reportHeightChangeWhenKeyboardFrameChanges = true
     private var opponentApp: App?
+    private var contentBeforeExtension = Content.none
     private var customInputViewController: UIViewController? {
         didSet {
             if let old = oldValue {
@@ -226,6 +227,17 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {
+        if sender.isOn {
+            if inputTextView.isFirstResponder {
+                contentBeforeExtension = .keyboard
+            } else if customInputViewController == stickersViewController {
+                contentBeforeExtension = .sticker
+            } else if customInputViewController == photoViewController {
+                contentBeforeExtension = .photo
+            } else {
+                contentBeforeExtension = .none
+            }
+        }
         resignTextViewFirstResponderWithoutReportingContentHeightChange()
         if sender.isOn {
             if height == .maximized {
@@ -235,7 +247,16 @@ class ConversationInputViewController: UIViewController {
             setRightAccessoryButton(stickersButton)
             loadCustomInputViewController(extensionViewController)
         } else {
-            dismissCustomInput(minimize: true)
+            switch contentBeforeExtension {
+            case .none:
+                dismissCustomInput(minimize: true)
+            case .keyboard:
+                inputTextView.becomeFirstResponder()
+            case .sticker:
+                showStickersAction(sender)
+            case .photo:
+                showPhotosAction(sender)
+            }
         }
     }
     
@@ -468,6 +489,13 @@ extension ConversationInputViewController {
         case minimized
         case regular
         case maximized
+    }
+    
+    private enum Content {
+        case none
+        case keyboard
+        case sticker
+        case photo
     }
     
     private class InteractiveResizeGestureRecognizer: UIPanGestureRecognizer {

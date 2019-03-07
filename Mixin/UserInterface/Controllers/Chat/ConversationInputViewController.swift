@@ -92,8 +92,9 @@ class ConversationInputViewController: UIViewController {
             }
         }
     }
+    
     // UIViewController's preferredContentSizeDidChange is not fired for same values being set again
-    // Also we need more precisive controller for animations so we declare a custom one
+    // Also we need more precisive controlling for animations so we declare a custom one
     // Do not set this var directly, use setPreferredContentHeight:animated:
     private var preferredContentHeight: CGFloat = 0
     
@@ -135,6 +136,7 @@ class ConversationInputViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        textView.scrollIndicatorInsets = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         textView.delegate = self
         lastSafeAreaInsetsBottom = view.compatibleSafeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)

@@ -5,6 +5,8 @@ import Photos
 
 class ConversationViewController: UIViewController {
     
+    static var positions = [String: Position]()
+    
     @IBOutlet weak var galleryWrapperView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -24,8 +26,6 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperHeightConstraint: NSLayoutConstraint!
-    
-    static var positions = [String: Position]()
     
     var dataSource: ConversationDataSource!
     var conversationId: String {
@@ -68,7 +68,6 @@ class ConversationViewController: UIViewController {
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self)
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
-    private lazy var lastInputWrapperBottomConstant = view.compatibleSafeAreaInsets.bottom
     
     private lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController.instance(conversationId: conversationId)

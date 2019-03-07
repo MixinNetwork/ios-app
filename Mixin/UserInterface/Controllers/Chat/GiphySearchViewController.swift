@@ -3,7 +3,6 @@ import GiphyCoreSDK
 
 class GiphySearchViewController: UIViewController {
     
-    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var keywordTextField: UITextField!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: GiphyCollectionViewFlowLayout!

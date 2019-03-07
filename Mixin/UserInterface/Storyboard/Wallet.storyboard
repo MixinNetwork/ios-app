@@ -1726,96 +1726,46 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oAO-fR-PrC">
-                                <rect key="frame" x="0.0" y="20" width="414" height="56"/>
+                                <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IJi-Z4-Yxb">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="56"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="64" height="44"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="oxf-NG-Mrw"/>
+                                            <constraint firstAttribute="width" constant="64" id="v99-c5-j94"/>
                                         </constraints>
-                                        <state key="normal" image="ic_titlebar_close"/>
+                                        <state key="normal" image="ic_title_close"/>
                                         <connections>
                                             <action selector="backAction:" destination="La6-HZ-0b5" eventType="touchUpInside" id="Mdy-by-08R"/>
                                         </connections>
                                     </button>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="9ck-ru-rHq">
-                                        <rect key="frame" x="60" y="8.6666666666666679" width="294" height="38.666666666666657"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Set PIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rao-Fo-Ce9">
-                                                <rect key="frame" x="117" y="0.0" width="60" height="21.666666666666668"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_title_withdrawal"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="1/4" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k97-vn-y7j">
-                                                <rect key="frame" x="137.33333333333334" y="21.666666666666668" width="19.333333333333343" height="17.000000000000004"/>
-                                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yPQ-Gh-f7I" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="346" y="8" width="68" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="XYI-z7-Xf6"/>
-                                        </constraints>
-                                        <inset key="contentEdgeInsets" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
-                                        <state key="normal" title="Next">
-                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <state key="disabled">
-                                            <color key="titleColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_next"/>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="enabledColor">
-                                                <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="disabledColor">
-                                                <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="nextAction:" destination="La6-HZ-0b5" eventType="touchUpInside" id="F93-Rr-MPL"/>
-                                        </connections>
-                                    </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W4L-Sa-YfA">
-                                        <rect key="frame" x="0.0" y="55" width="414" height="1"/>
-                                        <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="4cc-WD-4td" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
-                                        </constraints>
-                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="0Ce-fD-CRK"/>
-                                    <constraint firstAttribute="trailing" secondItem="9ck-ru-rHq" secondAttribute="trailing" constant="60" id="1la-t3-5hn"/>
+                                    <constraint firstAttribute="height" constant="44" id="0Ce-fD-CRK"/>
                                     <constraint firstItem="IJi-Z4-Yxb" firstAttribute="top" secondItem="oAO-fR-PrC" secondAttribute="top" id="4Wp-SM-7sC"/>
-                                    <constraint firstItem="W4L-Sa-YfA" firstAttribute="leading" secondItem="oAO-fR-PrC" secondAttribute="leading" id="BzE-8S-LZe"/>
-                                    <constraint firstItem="yPQ-Gh-f7I" firstAttribute="centerY" secondItem="oAO-fR-PrC" secondAttribute="centerY" id="MPM-iv-INh"/>
-                                    <constraint firstItem="9ck-ru-rHq" firstAttribute="leading" secondItem="oAO-fR-PrC" secondAttribute="leading" constant="60" id="ZId-w9-uvu"/>
-                                    <constraint firstAttribute="bottom" secondItem="W4L-Sa-YfA" secondAttribute="bottom" id="cHc-gE-LWC"/>
-                                    <constraint firstItem="9ck-ru-rHq" firstAttribute="centerY" secondItem="oAO-fR-PrC" secondAttribute="centerY" id="gi8-ok-B6r"/>
                                     <constraint firstItem="IJi-Z4-Yxb" firstAttribute="leading" secondItem="oAO-fR-PrC" secondAttribute="leading" id="ig3-WH-7WI"/>
                                     <constraint firstAttribute="bottom" secondItem="IJi-Z4-Yxb" secondAttribute="bottom" id="uHG-eT-dhx"/>
-                                    <constraint firstAttribute="trailing" secondItem="yPQ-Gh-f7I" secondAttribute="trailing" id="yby-qW-OV2"/>
-                                    <constraint firstAttribute="trailing" secondItem="W4L-Sa-YfA" secondAttribute="trailing" id="yiW-2Y-u9x"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5rf-dh-Fwx" userLabel="Line">
-                                <rect key="frame" x="30" y="256" width="354" height="1"/>
-                                <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ylq-8e-5gl">
+                                <rect key="frame" x="0.0" y="64" width="414" height="186"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Set a 6 digit Wallet PIN to create your first digital wallet" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xZL-nb-tSx">
+                                        <rect key="frame" x="30" y="75" width="354" height="43"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="dyH-1c-F0j" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
+                                    <constraint firstItem="xZL-nb-tSx" firstAttribute="centerY" secondItem="ylq-8e-5gl" secondAttribute="centerY" multiplier="1.05" constant="-1" id="ADb-9e-duy"/>
+                                    <constraint firstAttribute="trailing" secondItem="xZL-nb-tSx" secondAttribute="trailing" constant="30" id="QiV-hY-TuZ"/>
+                                    <constraint firstItem="xZL-nb-tSx" firstAttribute="leading" secondItem="ylq-8e-5gl" secondAttribute="leading" constant="30" id="vkl-o2-wpy"/>
                                 </constraints>
                             </view>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ToH-VW-Iy6" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="121" y="277" width="172" height="24"/>
+                                <rect key="frame" x="121" y="250" width="172" height="24"/>
                                 <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="172" id="3AL-F2-Ozh"/>
@@ -1825,21 +1775,8 @@
                                     <action selector="pinChangedAction:" destination="La6-HZ-0b5" eventType="editingChanged" id="Sbs-mp-EOB"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2C3-qg-EKM" userLabel="Line">
-                                <rect key="frame" x="30" y="323" width="354" height="1"/>
-                                <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="fc3-Zp-0vb" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
-                                </constraints>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Please set a 6 digit PIN and remember it. If lost, there is no way to recover your wallet." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xZL-nb-tSx">
-                                <rect key="frame" x="30" y="157.66666666666666" width="354" height="38.333333333333343"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="The PIN is too simple and insecure." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssW-jL-Bg4">
-                                <rect key="frame" x="87.000000000000014" y="358" width="240.33333333333337" height="18"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="The PIN is too simple and insecure." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssW-jL-Bg4">
+                                <rect key="frame" x="30" y="314" width="354" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
                                 <nil key="highlightedColor"/>
@@ -1847,72 +1784,47 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_too_simple"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V7r-WU-zaP" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="350" y="692" width="44" height="44"/>
+                                <color key="backgroundColor" red="0.22352941179999999" green="0.4941176471" blue="0.89411764709999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="8tv-gB-RTb"/>
+                                    <constraint firstAttribute="width" constant="44" id="wfW-L3-ddp"/>
+                                </constraints>
+                                <state key="normal" image="ic_action_next"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="22"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="xZL-nb-tSx" firstAttribute="leading" secondItem="5rf-dh-Fwx" secondAttribute="leading" id="7YS-U4-c7g"/>
-                            <constraint firstItem="ssW-jL-Bg4" firstAttribute="top" secondItem="2C3-qg-EKM" secondAttribute="top" constant="35" id="J6B-ik-CfS" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                        <real key="value" value="16"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </constraint>
+                            <constraint firstItem="ylq-8e-5gl" firstAttribute="leading" secondItem="SNe-y6-O1A" secondAttribute="leading" id="2tz-fO-AvR"/>
+                            <constraint firstItem="ylq-8e-5gl" firstAttribute="top" secondItem="oAO-fR-PrC" secondAttribute="bottom" id="ESU-Y4-SMn"/>
+                            <constraint firstItem="SNe-y6-O1A" firstAttribute="bottom" secondItem="V7r-WU-zaP" secondAttribute="bottom" id="GiU-1q-myt"/>
                             <constraint firstItem="oAO-fR-PrC" firstAttribute="top" secondItem="SNe-y6-O1A" secondAttribute="top" id="JKT-0B-usx"/>
-                            <constraint firstItem="2C3-qg-EKM" firstAttribute="leading" secondItem="5rf-dh-Fwx" secondAttribute="leading" id="M4B-HP-S40"/>
-                            <constraint firstItem="SNe-y6-O1A" firstAttribute="trailing" secondItem="5rf-dh-Fwx" secondAttribute="trailing" constant="30" id="SYz-04-8dF"/>
-                            <constraint firstItem="xZL-nb-tSx" firstAttribute="trailing" secondItem="5rf-dh-Fwx" secondAttribute="trailing" id="XG3-oN-hWg"/>
+                            <constraint firstItem="ToH-VW-Iy6" firstAttribute="top" secondItem="oAO-fR-PrC" secondAttribute="bottom" constant="186" id="P6u-2k-WAo"/>
                             <constraint firstItem="ToH-VW-Iy6" firstAttribute="centerX" secondItem="SNe-y6-O1A" secondAttribute="centerX" id="aQN-or-0mi"/>
                             <constraint firstItem="SNe-y6-O1A" firstAttribute="trailing" secondItem="oAO-fR-PrC" secondAttribute="trailing" id="cNy-6T-75A"/>
-                            <constraint firstItem="ToH-VW-Iy6" firstAttribute="top" secondItem="5rf-dh-Fwx" secondAttribute="bottom" constant="20" id="dcP-gt-CpO" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                        <real key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </constraint>
-                            <constraint firstItem="2C3-qg-EKM" firstAttribute="top" secondItem="ToH-VW-Iy6" secondAttribute="bottom" constant="22" id="ebB-va-Ymx" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                        <real key="value" value="9"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </constraint>
-                            <constraint firstItem="5rf-dh-Fwx" firstAttribute="top" secondItem="xZL-nb-tSx" secondAttribute="bottom" constant="60" id="hOv-sH-Oqn" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                        <real key="value" value="20"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                        <real key="value" value="40"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </constraint>
-                            <constraint firstItem="5rf-dh-Fwx" firstAttribute="top" secondItem="oAO-fR-PrC" secondAttribute="bottom" constant="180" id="iFt-lE-GVQ" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                        <real key="value" value="80"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                        <real key="value" value="100"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </constraint>
-                            <constraint firstItem="2C3-qg-EKM" firstAttribute="trailing" secondItem="5rf-dh-Fwx" secondAttribute="trailing" id="otQ-RY-ygP"/>
-                            <constraint firstItem="ssW-jL-Bg4" firstAttribute="centerX" secondItem="SNe-y6-O1A" secondAttribute="centerX" id="pZj-4O-pQO"/>
+                            <constraint firstItem="SNe-y6-O1A" firstAttribute="trailing" secondItem="ylq-8e-5gl" secondAttribute="trailing" id="gXv-U6-pPp"/>
+                            <constraint firstItem="SNe-y6-O1A" firstAttribute="trailing" secondItem="V7r-WU-zaP" secondAttribute="trailing" constant="20" id="kZg-D1-1zJ"/>
+                            <constraint firstItem="SNe-y6-O1A" firstAttribute="trailing" secondItem="ssW-jL-Bg4" secondAttribute="trailing" constant="30" id="kpa-T5-iyZ"/>
+                            <constraint firstItem="ToH-VW-Iy6" firstAttribute="top" secondItem="ylq-8e-5gl" secondAttribute="bottom" id="pOn-OK-uw3"/>
                             <constraint firstItem="oAO-fR-PrC" firstAttribute="leading" secondItem="SNe-y6-O1A" secondAttribute="leading" id="rnY-FD-Lcj"/>
-                            <constraint firstItem="5rf-dh-Fwx" firstAttribute="leading" secondItem="SNe-y6-O1A" secondAttribute="leading" constant="30" id="t2y-6c-Ug8"/>
+                            <constraint firstItem="ssW-jL-Bg4" firstAttribute="leading" secondItem="SNe-y6-O1A" secondAttribute="leading" constant="30" id="tzD-ht-EHI"/>
+                            <constraint firstItem="ssW-jL-Bg4" firstAttribute="top" secondItem="ToH-VW-Iy6" secondAttribute="bottom" constant="40" id="uXZ-b5-tlc"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="SNe-y6-O1A"/>
                     </view>
                     <connections>
                         <outlet property="backButton" destination="IJi-Z4-Yxb" id="0o6-xM-427"/>
-                        <outlet property="errorLabel" destination="ssW-jL-Bg4" id="zGL-CS-byX"/>
-                        <outlet property="nextButton" destination="yPQ-Gh-f7I" id="9Km-wm-e8F"/>
+                        <outlet property="bottomConstraint" destination="GiU-1q-myt" id="oZ6-MY-NVs"/>
+                        <outlet property="nextButton" destination="V7r-WU-zaP" id="wUt-0X-b61"/>
                         <outlet property="pinField" destination="ToH-VW-Iy6" id="7pB-na-S42"/>
-                        <outlet property="subtitleLabel" destination="k97-vn-y7j" id="Iyz-fr-uaC"/>
-                        <outlet property="tipsLabel" destination="xZL-nb-tSx" id="lL3-6W-GbK"/>
-                        <outlet property="titleLabel" destination="Rao-Fo-Ce9" id="0LP-oy-O4q"/>
+                        <outlet property="subtitleLabel" destination="ssW-jL-Bg4" id="O5e-uB-OJF"/>
+                        <outlet property="titleLabel" destination="xZL-nb-tSx" id="LFE-de-wB8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FGA-IM-Cax" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1927,9 +1839,10 @@
         <image name="Wallet/ic_token_indicator_left" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>
+        <image name="ic_action_next" width="11" height="20"/>
         <image name="ic_input_menu" width="11" height="6"/>
         <image name="ic_scan_address" width="44" height="44"/>
-        <image name="ic_titlebar_close" width="44" height="44"/>
+        <image name="ic_title_close" width="15" height="15"/>
         <image name="ic_transfer_exchange" width="14" height="13"/>
     </resources>
 </document>

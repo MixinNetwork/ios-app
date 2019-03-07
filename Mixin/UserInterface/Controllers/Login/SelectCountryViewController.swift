@@ -7,7 +7,7 @@ protocol SelectCountryViewControllerDelegate: class {
 class SelectCountryViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchTextField: UITextField!
+    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
     
     typealias Section = [Country]
     
@@ -18,8 +18,7 @@ class SelectCountryViewController: UIViewController {
     
     var selectedCountry: Country!
     weak var delegate: SelectCountryViewControllerDelegate?
-    
-    private let searchImageView = UIImageView(image: #imageLiteral(resourceName: "ic_search"))
+
     private let headerReuseId = "CountryHeader"
     private let sectionHeaderHeight: CGFloat = 28
     private var sections = [Section]()
@@ -38,11 +37,6 @@ class SelectCountryViewController: UIViewController {
         tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
         tableView.delegate = self
         tableView.dataSource = self
-        searchImageView.bounds = CGRect(x: 0, y: 0, width: 36, height: 28)
-        searchImageView.contentMode = .center
-        searchTextField.delegate = self
-        searchTextField.leftView = searchImageView
-        searchTextField.leftViewMode = .always
         tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
     }
 
@@ -51,7 +45,7 @@ class SelectCountryViewController: UIViewController {
     }
     
     @IBAction func searchAction(_ sender: Any) {
-        let searchText = (searchTextField.text ?? "").uppercased()
+        let searchText = (searchBoxView.textField.text ?? "").uppercased()
         if searchText.isEmpty {
             filteredCountries = []
         } else {
@@ -74,8 +68,8 @@ class SelectCountryViewController: UIViewController {
     }
     
     private var shouldShowFilteredResults: Bool {
-        let searchTextFieldIsEmpty = (searchTextField.text ?? "").isEmpty
-        return searchTextField.isFirstResponder && !searchTextFieldIsEmpty
+        let searchTextFieldIsEmpty = (searchBoxView.textField.text ?? "").isEmpty
+        return searchBoxView.textField.isFirstResponder && !searchTextFieldIsEmpty
     }
     
 }

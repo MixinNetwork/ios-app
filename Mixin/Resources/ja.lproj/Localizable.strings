@@ -70,7 +70,7 @@
 "navigation_title_enter_verification_code" = " %@ に送られてきた4桁のコードを入力してください。";
 "navigation_title_enter_name" = "お名前は何ですか？";
 "landing_welcome_title" = "Mixin へようこそ";
-"text_intro" = " \"%@\" をタップして %@ と%@ 承認";
+"text_intro" = "引き続きがあなたは%@及び%@を同意すると意味します";
 
 "text_mobile_number_privacy" = "私たちはあなたの電話番号を公に表示することはありません。";
 "text_confirm_send_code" = " %@ 電話番号を確認してください";
@@ -294,19 +294,16 @@
 "wallet_withdrawal_reserve" = "％@ には最低 ％@ の予約要件があります。";
 "wallet_blockchian_not_in_sync" = "ブロックチェーンが同期していません。";
 "wallet_no_price" = "N/A";
-"wallet_pin_init_title" = "PINを設定";
-"wallet_pin_confirm_title" = "PINを確認";
-"wallet_pin_new_title" = "新しいPINを設定";
-"wallet_pin_init_tips1" = "6桁のPINを設定してください。";
-"wallet_pin_init_tips2" = "6桁のPINを確認して覚えておいてください。 紛失した場合、財布を取り戻す方法はありません。";
-"wallet_pin_init_tips3" = "6桁のPINをもう一度確認してください。 再度表示されることはありませんので、紛失した場合、PINは元に戻せません。";
-"wallet_pin_init_tips4" = "はい、これが最後のPIN確認です。これは、PINを忘れないようにするための最後の確認です。 紛失した場合、PINは回復不能です。";
-"wallet_pin_change_tips" = "新しい6桁のPINを設定してください。";
-"wallet_pin_verify_tips" = "確認するために6桁のPINを入力してください。";
+"wallet_pin_create_title" = "あなたの最初のデジタルウォレットを作成するために6桁のウォレットPINを設定してください";
+"wallet_pin_confirm_title" = "6桁のPINを確認して覚えておいてください";
+"wallet_pin_confirm_subtitle" = "紛失した場合、財布を取り戻す方法はありません。";
+"wallet_pin_confirm_again_title" = "6桁のPINをもう一度確認してください";
+"wallet_pin_confirm_again_subtitle" = "再度表示されることはありませんので、紛失した場合、PINは元に戻せません。";
+"wallet_pin_new_title" = "新しい6桁のPINを設定してください";
 "wallet_pin_inconsistency" = "PINは同じではありません、それをリセットしてください";
 "wallet_pin_too_simple" = "暗証番号は単純すぎて安全ではありません。";
-"wallet_pin_tips_title" = "ウォレットのPINを入力してください";
-"wallet_pin_tips_description" = "時々あなたはそれを覚えている手助けをするように頼まれるでしょう。";
+"wallet_pin_verify_title" = "ウォレットのPINを入力してください";
+"wallet_pin_remember_description" = "時々あなたはそれを覚えている手助けをするように頼まれるでしょう。";
 "wallet_all_transactions_title" = "全取引";
 "wallet_pin_touch_id_prompt" = "Touch Payを有効にするにはPINを確認してください";
 "wallet_pin_face_id_prompt" = "Face Pay を有効にするにはPINを確認してください";

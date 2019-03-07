@@ -5,8 +5,7 @@ class VerificationCodeViewController: LoginViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var verificationCodeField: VerificationCodeField!
-    @IBOutlet weak var invalidCodeLabel: UILabel!
-    var resendButton: CountDownButton!
+    @IBOutlet weak var resendButton: CountDownButton!
     
     private let resendInterval = 60
     
@@ -18,11 +17,8 @@ class VerificationCodeViewController: LoginViewController {
             let displayNumber = "+\(loginInfo.callingCode) \(loginInfo.mobileNumber)"
             titleLabel.text = Localized.NAVIGATION_TITLE_ENTER_VERIFICATION_CODE(mobileNumber: displayNumber)
         }
-        resendButton = bottomWrapperView.leftButton
-        resendButton.addTarget(self, action: #selector(resendAction(_:)), for: .touchUpInside)
         resendButton.normalTitle = Localized.BUTTON_TITLE_RESEND_CODE
         resendButton.pendingTitleTemplate = Localized.BUTTON_TITLE_RESEND_CODE_PENDING
-        resendButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         resendButton.beginCountDown(resendInterval)
         verificationCodeField.becomeFirstResponder()
     }
@@ -45,7 +41,6 @@ class VerificationCodeViewController: LoginViewController {
         guard let verificationId = loginInfo.verificationId else {
             return
         }
-        invalidCodeLabel.isHidden = true
         let code = verificationCodeField.text
         if code.count != verificationCodeField.numberOfDigits {
             continueButton.isEnabled = false
@@ -109,7 +104,7 @@ class VerificationCodeViewController: LoginViewController {
                             if error.code == 20113 {
                                 weakSelf.verificationCodeField.clear()
                                 weakSelf.verificationCodeField.showError()
-                                weakSelf.invalidCodeLabel.isHidden = false
+                                weakSelf.navigationController?.showHud(style: .error, text: Localized.TEXT_INVALID_VERIFICATION_CODE)
                             } else {
                                 weakSelf.alert(error.localizedDescription)
                             }
@@ -123,12 +118,12 @@ class VerificationCodeViewController: LoginViewController {
     override func continueAction(_ sender: Any) {
         checkVerificationCodeAction(sender)
     }
-    
-    @objc func resendAction(_ sender: Any) {
+
+    @IBAction func resendAction(_ sender: Any) {
         resendButton.isBusy = true
         sendCode(reCaptchaToken: nil)
     }
-    
+
     private func sendCode(reCaptchaToken token: String?) {
         AccountAPI.shared.sendCode(to: loginInfo.fullNumber, reCaptchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {

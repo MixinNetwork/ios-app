@@ -5,18 +5,15 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var verificationCodeField: VerificationCodeField!
     @IBOutlet weak var invalidCodeLabel: UILabel!
-    var resendButton: CountDownButton!
+    @IBOutlet weak var resendButton: CountDownButton!
     
     private let resendInterval = 60
     
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = Localized.NAVIGATION_TITLE_ENTER_VERIFICATION_CODE(mobileNumber: context.newNumberRepresentation)
-        resendButton = bottomWrapperView.leftButton
-        resendButton.addTarget(self, action: #selector(resendAction(_:)), for: .touchUpInside)
         resendButton.normalTitle = Localized.BUTTON_TITLE_RESEND_CODE
         resendButton.pendingTitleTemplate = Localized.BUTTON_TITLE_RESEND_CODE_PENDING
-        resendButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         resendButton.beginCountDown(resendInterval)
         verificationCodeField.becomeFirstResponder()
         bottomWrapperBottomConstraint.update(offset: -(ChangeNumberViewController.lastKeyboardFrame.height + BottomWrapperView.defaultLayoutInset.bottom))

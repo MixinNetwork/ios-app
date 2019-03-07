@@ -6,23 +6,16 @@ class CountryCell: UITableViewCell {
     
     @IBOutlet weak var flagImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var checkMarkImageView: UIImageView!
-    
+    @IBOutlet weak var checkView: CheckmarkView!
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        selectedBackgroundView = UIView()
+        selectedBackgroundView = UIView.createSelectedBackgroundView()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        if animated {
-            UIView.beginAnimations(nil, context: nil)
-            UIView.setAnimationDuration(0.25)
-        }
-        checkMarkImageView.alpha = selected ? 1 : 0
-        if animated {
-            UIView.commitAnimations()
-        }
+        checkView.status = selected ? .selected : .unselected
     }
     
 }

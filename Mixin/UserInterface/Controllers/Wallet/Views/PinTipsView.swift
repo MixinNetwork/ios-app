@@ -91,7 +91,7 @@ class PinTipsView: BottomSheetView {
         }
     }
 
-    class func instance(tips: String = Localized.WALLET_PIN_TIPS_DESCRIPTION, successCallback: ((String) -> Void)? = nil) -> PinTipsView {
+    class func instance(tips: String = Localized.WALLET_PIN_REMEMBER_DESCRIPTION, successCallback: ((String) -> Void)? = nil) -> PinTipsView {
         let view =  Bundle.main.loadNibNamed("PinTipsView", owner: nil, options: nil)?.first as! PinTipsView
         view.tips = tips
         view.successCallback = successCallback

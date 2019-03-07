@@ -8,7 +8,6 @@ class LoginIntroViewController: UIViewController {
         super.viewDidLoad()
         let font = introTextView.font
         let intro = String(format: Localized.TEXT_INTRO,
-                           Localized.BUTTON_TITLE_AGREE_AND_CONTINUE,
                            Localized.BUTTON_TITLE_TERMS_OF_SERVICE,
                            Localized.BUTTON_TITLE_PRIVACY_POLICY)
         let nsIntro = intro as NSString

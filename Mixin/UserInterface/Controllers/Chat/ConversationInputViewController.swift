@@ -133,6 +133,7 @@ class ConversationInputViewController: UIViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         textView.inputAccessoryView = interactiveDismissResponder
@@ -409,6 +410,10 @@ extension ConversationInputViewController {
             height = max(minimizedHeight, height)
             setPreferredContentHeight(height, animated: true)
         }
+    }
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        view.backgroundColor = .white
     }
     
     @objc private func saveDraft() {

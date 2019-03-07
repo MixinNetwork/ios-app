@@ -593,12 +593,12 @@ extension ConversationInputViewController {
     }
     
     private func loadCustomInputViewController(_ viewController: UIViewController) {
-        customInputContainerView.alpha = 0
-        customInputViewController = viewController
-        customInputContainerView.layoutIfNeeded()
         if view.frame.height < regularHeight {
             setPreferredContentHeightAnimated(.regular)
         }
+        customInputContainerView.alpha = 0
+        customInputViewController = viewController
+        customInputContainerView.layoutIfNeeded()
         UIView.animate(withDuration: 0.5) {
             UIView.setAnimationCurve(.overdamped)
             self.customInputContainerView.alpha = 1

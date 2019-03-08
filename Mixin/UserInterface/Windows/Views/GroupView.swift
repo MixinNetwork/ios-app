@@ -11,11 +11,13 @@ class GroupView: CornerView {
     @IBOutlet weak var announcementLabel: CollapsingLabel!
     @IBOutlet weak var viewButton: StateResponsiveButton!
     @IBOutlet weak var moreButton: StateResponsiveButton!
-    @IBOutlet weak var inGroupActionsStackView: UIStackView!
+    @IBOutlet weak var inGroupActionsView: UIView!
     @IBOutlet weak var joinButton: BusyButton!
     
     @IBOutlet weak var showJoinGroupConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideJoinGroupConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showInGroupActionsConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideInGroupActionsConstraint: NSLayoutConstraint!
     @IBOutlet weak var announcementScrollViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var announcementScrollViewHeightConstraint: NSLayoutConstraint!
     
@@ -71,10 +73,19 @@ class GroupView: CornerView {
     }
 
     private func renderConversation(alreadyInTheGroup: Bool) {
-        inGroupActionsStackView.isHidden = !alreadyInTheGroup
+        inGroupActionsView.isHidden = !alreadyInTheGroup
         joinButton.isHidden = alreadyInTheGroup
-        showJoinGroupConstraint.priority = alreadyInTheGroup ? .defaultLow : .defaultHigh
-        hideJoinGroupConstraint.priority = alreadyInTheGroup ? .defaultHigh : .defaultLow
+        if alreadyInTheGroup {
+            showJoinGroupConstraint.priority = .defaultLow
+            hideJoinGroupConstraint.priority = .defaultHigh
+            showInGroupActionsConstraint.priority = .defaultHigh
+            hideInGroupActionsConstraint.priority = .defaultLow
+        } else {
+            showJoinGroupConstraint.priority = .defaultHigh
+            hideJoinGroupConstraint.priority = .defaultLow
+            showInGroupActionsConstraint.priority = .defaultLow
+            hideInGroupActionsConstraint.priority = .defaultHigh
+        }
         moreButton.isHidden = !alreadyInTheGroup
         viewButton.isHidden = !alreadyInTheGroup
         

@@ -68,7 +68,7 @@
                     <inset key="contentEdgeInsets" minX="23" minY="0.0" maxX="19" maxY="0.0"/>
                     <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
                     <state key="normal" title="Join group" image="ic_profile_add">
-                        <color key="titleColor" red="0.10980392160000001" green="0.49019607840000001" blue="0.87450980389999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleColor" red="0.22352941179999999" green="0.4941176471" blue="0.89411764709999997" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -150,13 +150,14 @@
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="gUD-L0-6L5" secondAttribute="trailing" constant="67" id="0Xm-PQ-CSo"/>
                 <constraint firstItem="gUD-L0-6L5" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="67" id="Bqq-ET-04g"/>
                 <constraint firstAttribute="trailing" secondItem="X5N-nU-0Nd" secondAttribute="trailing" id="BwR-XZ-F0G"/>
-                <constraint firstItem="gUD-L0-6L5" firstAttribute="top" secondItem="Z1B-ee-Nrm" secondAttribute="bottom" constant="8" id="CiF-fe-qst"/>
+                <constraint firstItem="gUD-L0-6L5" firstAttribute="top" secondItem="Z1B-ee-Nrm" secondAttribute="bottom" priority="750" constant="8" id="CiF-fe-qst"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="eCR-rs-Cgf" secondAttribute="trailing" constant="30" id="GkJ-hx-6BK"/>
                 <constraint firstItem="Z1B-ee-Nrm" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="30" id="Oe1-nc-g2q"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="centerX" secondItem="8ZX-DU-9oC" secondAttribute="centerX" id="Qke-oC-sSP"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="top" secondItem="8ZX-DU-9oC" secondAttribute="top" constant="70" id="URV-eq-6C8"/>
                 <constraint firstItem="Z1B-ee-Nrm" firstAttribute="top" secondItem="1G1-dY-80a" secondAttribute="bottom" priority="750" constant="12" id="Ve6-42-JVa"/>
                 <constraint firstItem="1G1-dY-80a" firstAttribute="centerX" secondItem="Zlp-75-Ixx" secondAttribute="centerX" id="Yr9-EJ-v8b"/>
+                <constraint firstItem="Zlp-75-Ixx" firstAttribute="bottom" secondItem="Z1B-ee-Nrm" secondAttribute="bottom" priority="250" constant="36" id="ZaA-5V-gWC"/>
                 <constraint firstItem="X5N-nU-0Nd" firstAttribute="top" secondItem="Zlp-75-Ixx" secondAttribute="top" id="aLU-C3-Lwg"/>
                 <constraint firstItem="1G1-dY-80a" firstAttribute="top" secondItem="eCR-rs-Cgf" secondAttribute="bottom" constant="12" id="fjU-xq-N84"/>
                 <constraint firstItem="Z1B-ee-Nrm" firstAttribute="top" secondItem="eCR-rs-Cgf" secondAttribute="bottom" priority="250" constant="15" id="gLc-Kc-O4n"/>
@@ -181,11 +182,13 @@
                 <outlet property="announcementScrollViewTopConstraint" destination="gLc-Kc-O4n" id="Fl8-QU-eIO"/>
                 <outlet property="avatarImageView" destination="9f1-By-myT" id="sUK-Xm-k0M"/>
                 <outlet property="groupMembersLabel" destination="wV3-wM-YUi" id="EUO-TT-N7E"/>
+                <outlet property="hideInGroupActionsConstraint" destination="ZaA-5V-gWC" id="Ieg-x9-CU8"/>
                 <outlet property="hideJoinGroupConstraint" destination="gLc-Kc-O4n" id="Kru-Rt-rEb"/>
-                <outlet property="inGroupActionsStackView" destination="vaq-c9-RoT" id="AMc-tl-75e"/>
+                <outlet property="inGroupActionsView" destination="gUD-L0-6L5" id="Ueh-rG-nh3"/>
                 <outlet property="joinButton" destination="1G1-dY-80a" id="L9X-mf-1z0"/>
                 <outlet property="moreButton" destination="UMD-Uz-cTl" id="QaD-8K-AjD"/>
                 <outlet property="nameLabel" destination="yYa-yc-XuN" id="dX8-YV-ciM"/>
+                <outlet property="showInGroupActionsConstraint" destination="CiF-fe-qst" id="oi4-UU-D4z"/>
                 <outlet property="showJoinGroupConstraint" destination="Ve6-42-JVa" id="9m3-qi-rt2"/>
                 <outlet property="viewButton" destination="gqf-oP-J5h" id="qm9-f6-JI7"/>
             </connections>

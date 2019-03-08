@@ -443,7 +443,10 @@ class ReceiveMessageService: MixinService {
                     ConcurrentJobQueue.shared.addJob(job: RefreshConversationJob(conversationId: data.conversationId))
                 }
                 return
-            case .failure:
+            case let .failure(error):
+                guard error.code != 404 else {
+                    return
+                }
                 ConversationDAO.shared.createPlaceConversation(conversationId: data.conversationId, ownerId: data.userId)
             }
         }

@@ -4,7 +4,6 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var verificationCodeField: VerificationCodeField!
-    @IBOutlet weak var invalidCodeLabel: UILabel!
     @IBOutlet weak var resendButton: CountDownButton!
     
     private let resendInterval = 60
@@ -38,7 +37,6 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
     }
 
     @IBAction func checkVerificationCodeAction(_ sender: Any) {
-        invalidCodeLabel.isHidden = true
         let continueButton = bottomWrapperView.continueButton
         let code = verificationCodeField.text
         let context = self.context
@@ -65,17 +63,13 @@ class ChangeNumberVerificationCodeViewController: ChangeNumberViewController {
                 case let .failure(error):
                     weakSelf.bottomWrapperView.continueButton.isBusy = false
                     weakSelf.verificationCodeField.clear()
-                    if error.code == 20113 {
-                        weakSelf.invalidCodeLabel.isHidden = false
-                    } else {
-                        weakSelf.alert(error.localizedDescription)
-                    }
+                    weakSelf.alert(error.localizedDescription)
                 }
             })
         }
     }
 
-    @objc func resendAction(_ sender: Any) {
+    @IBAction func resendAction(_ sender: Any) {
         resendButton.isBusy = true
         sendCode(reCaptchaToken: nil)
     }

@@ -311,6 +311,9 @@
                                         <color key="value" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="resendAction:" destination="eDG-Uz-dgF" eventType="touchUpInside" id="ceU-qG-LUf"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -327,6 +330,7 @@
                         <viewLayoutGuide key="safeArea" id="XPS-9s-cic"/>
                     </view>
                     <connections>
+                        <outlet property="resendButton" destination="ws3-7P-oba" id="jOn-ZM-F1Z"/>
                         <outlet property="titleLabel" destination="NVx-Gh-fIw" id="DlB-L9-wEi"/>
                         <outlet property="verificationCodeField" destination="Lta-hV-izg" id="HkU-ox-Oh6"/>
                     </connections>

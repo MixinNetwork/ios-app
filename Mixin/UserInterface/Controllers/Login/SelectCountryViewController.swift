@@ -38,6 +38,7 @@ class SelectCountryViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+        searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
     }
 
     @IBAction func dismissAction(_ sender: Any) {

@@ -114,13 +114,16 @@
                                 <rect key="frame" x="20" y="135" width="335" height="54"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Stt-pk-m0M">
-                                        <rect key="frame" x="18" y="18" width="55" height="18"/>
+                                        <rect key="frame" x="18" y="0.0" width="55" height="54"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <inset key="imageEdgeInsets" minX="-12" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" title="+86" image="cn">
                                             <color key="titleColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
+                                        <connections>
+                                            <action selector="selectCountryAction:" destination="0vi-tC-f2o" eventType="touchUpInside" id="nDD-Z0-epl"/>
+                                        </connections>
                                     </button>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="mobile number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7sv-k7-TP5">
                                         <rect key="frame" x="93" y="16" width="242" height="22"/>
@@ -130,13 +133,18 @@
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="placeholder_mobile_number"/>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="mobileNumberEditingEndAction:" destination="0vi-tC-f2o" eventType="editingDidEnd" id="hh7-jr-poL"/>
+                                            <action selector="updateContinueButtonStatusAction:" destination="0vi-tC-f2o" eventType="editingChanged" id="q2b-fA-Dba"/>
+                                        </connections>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="Stt-pk-m0M" firstAttribute="centerY" secondItem="avF-Mz-Ptm" secondAttribute="centerY" id="043-zE-6XA"/>
                                     <constraint firstItem="Stt-pk-m0M" firstAttribute="leading" secondItem="avF-Mz-Ptm" secondAttribute="leading" constant="18" id="F1U-GO-kwk"/>
+                                    <constraint firstAttribute="bottom" secondItem="Stt-pk-m0M" secondAttribute="bottom" id="FPW-SR-Guv"/>
                                     <constraint firstItem="7sv-k7-TP5" firstAttribute="leading" secondItem="Stt-pk-m0M" secondAttribute="trailing" constant="20" id="hnx-LB-3hH"/>
+                                    <constraint firstItem="Stt-pk-m0M" firstAttribute="top" secondItem="avF-Mz-Ptm" secondAttribute="top" id="je7-OF-V4Y"/>
                                     <constraint firstItem="7sv-k7-TP5" firstAttribute="centerY" secondItem="avF-Mz-Ptm" secondAttribute="centerY" id="l9N-u1-9Qp"/>
                                     <constraint firstAttribute="trailing" secondItem="7sv-k7-TP5" secondAttribute="trailing" id="neU-2F-NAE"/>
                                     <constraint firstAttribute="height" constant="54" id="wwB-sG-csH" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">

@@ -16,13 +16,6 @@ class GroupParticipentViewController: UIViewController {
     private var isSearching: Bool {
         return !(searchBoxView.textField.text ?? "").isEmpty
     }
-    private var hasAdminPrivileges: Bool {
-        return currentAccountRole == ParticipantRole.ADMIN.rawValue
-            || currentAccountRole == ParticipantRole.OWNER.rawValue
-    }
-    private var showAdminActions: Bool {
-        return participants.count < 256 && hasAdminPrivileges
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -122,10 +115,8 @@ extension GroupParticipentViewController: UITableViewDataSource {
             participantCell.render(user: searchResult[indexPath.row])
             cell = participantCell
         } else {
-            let showAdminActions = self.showAdminActions
-            let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
             let participantCell = tableView.dequeueReusableCell(withIdentifier: memberCellReuseId) as! GroupMemberCell
-            participantCell.render(user: participants[idx])
+            participantCell.render(user: participants[indexPath.row])
             cell = participantCell
         }
         return cell
@@ -149,10 +140,8 @@ extension GroupParticipentViewController: UITableViewDelegate {
             }
             showMenuAction(participant: participant, indexPath: indexPath)
         } else {
-            let showAdminActions = self.showAdminActions
             if let cell = tableView.cellForRow(at: indexPath) as? GroupMemberCell, !cell.loadingView.isAnimating {
-                let idx = showAdminActions ? indexPath.row - 2 : indexPath.row
-                let participant = participants[idx]
+                let participant = participants[indexPath.row]
                 guard participant.userId != AccountAPI.shared.accountUserId else {
                     return
                 }

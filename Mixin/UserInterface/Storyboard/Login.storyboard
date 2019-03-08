@@ -142,7 +142,7 @@
                                             <constraint firstAttribute="height" constant="44" id="KZ2-uG-DVy"/>
                                             <constraint firstAttribute="width" constant="44" id="mfo-pD-gDu"/>
                                         </constraints>
-                                        <state key="normal" image="ic_titlebar_close"/>
+                                        <state key="normal" image="ic_title_close"/>
                                         <connections>
                                             <action selector="dismissAction:" destination="j2e-RI-8SX" eventType="touchUpInside" id="J5e-io-6Z8"/>
                                         </connections>
@@ -414,6 +414,6 @@
     </scenes>
     <resources>
         <image name="cn" width="20" height="15"/>
-        <image name="ic_titlebar_close" width="44" height="44"/>
+        <image name="ic_title_close" width="15" height="15"/>
     </resources>
 </document>

@@ -4,6 +4,7 @@ import SDWebImage
 class ConversationCell: UITableViewCell {
 
     static let cellIdentifier = "cell_identifier_conversation"
+    static let height: CGFloat = 80
 
     @IBOutlet weak var avatarView: AvatarShadowIconView!
     @IBOutlet weak var nameLabel: UILabel!

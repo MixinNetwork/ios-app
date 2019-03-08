@@ -25,9 +25,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
                            label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)]
         NSLayoutConstraint.activate(constraints)
 
-        contentView.backgroundColor = UIColor.clear
-        backgroundView = UIView()
-        backgroundView?.backgroundColor = UIColor.clear
+        contentView.backgroundColor = .white
     }
     
 }

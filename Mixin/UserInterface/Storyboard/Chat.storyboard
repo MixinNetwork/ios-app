@@ -1024,13 +1024,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kbo-bz-VIU" userLabel="Rounded Corner Cover">
-                                <rect key="frame" x="0.0" y="68" width="375" height="8"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="8" id="bf8-FE-uFl"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GFR-yV-MV6">
                                 <rect key="frame" x="0.0" y="20" width="375" height="56"/>
                                 <subviews>
@@ -1086,11 +1079,6 @@
                                     <constraint firstItem="crI-MB-iYv" firstAttribute="top" secondItem="GFR-yV-MV6" secondAttribute="top" constant="4" id="qu6-bC-Dft"/>
                                     <constraint firstItem="aLB-Ba-I93" firstAttribute="top" secondItem="GFR-yV-MV6" secondAttribute="top" constant="12" id="sRS-gI-gwm"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="52h-5z-nfx">
                                 <rect key="frame" x="0.0" y="76" width="375" height="591"/>
@@ -1117,13 +1105,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Kbo-bz-VIU" firstAttribute="bottom" secondItem="GFR-yV-MV6" secondAttribute="bottom" id="4Rc-b3-nxG"/>
                             <constraint firstAttribute="bottom" secondItem="52h-5z-nfx" secondAttribute="bottom" id="5it-T8-Y4S"/>
                             <constraint firstItem="52h-5z-nfx" firstAttribute="leading" secondItem="3HB-MQ-3dx" secondAttribute="leading" id="DrD-hx-dqQ"/>
                             <constraint firstItem="52h-5z-nfx" firstAttribute="top" secondItem="GFR-yV-MV6" secondAttribute="bottom" id="HbD-hR-dQj"/>
-                            <constraint firstItem="Kbo-bz-VIU" firstAttribute="trailing" secondItem="GFR-yV-MV6" secondAttribute="trailing" id="K2s-nO-W77"/>
                             <constraint firstAttribute="trailing" secondItem="GFR-yV-MV6" secondAttribute="trailing" id="brG-9j-LbB"/>
-                            <constraint firstItem="Kbo-bz-VIU" firstAttribute="leading" secondItem="GFR-yV-MV6" secondAttribute="leading" id="fJ4-3g-nPN"/>
                             <constraint firstAttribute="trailing" secondItem="52h-5z-nfx" secondAttribute="trailing" id="quf-z8-2Gx"/>
                             <constraint firstItem="GFR-yV-MV6" firstAttribute="top" secondItem="Ywi-IC-Z2N" secondAttribute="top" id="ybD-UX-fsN"/>
                             <constraint firstItem="GFR-yV-MV6" firstAttribute="leading" secondItem="3HB-MQ-3dx" secondAttribute="leading" id="zjp-Wp-Bjv"/>

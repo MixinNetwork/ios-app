@@ -144,9 +144,9 @@ extension PhotoInputGridViewController: PHPhotoLibraryChangeObserver {
             return
         }
         DispatchQueue.main.sync {
-            self.fetchResult = changes.fetchResultAfterChanges
             if changes.hasIncrementalChanges {
                 collectionView.performBatchUpdates({
+                    self.fetchResult = changes.fetchResultAfterChanges
                     if let removed = changes.removedIndexes, !removed.isEmpty {
                         let indexPaths = removed.map({ IndexPath(item: $0, section: 0) })
                         collectionView.deleteItems(at: indexPaths)
@@ -165,6 +165,7 @@ extension PhotoInputGridViewController: PHPhotoLibraryChangeObserver {
                     }
                 })
             } else {
+                self.fetchResult = changes.fetchResultAfterChanges
                 collectionView.reloadData()
             }
             resetCachedAssets()

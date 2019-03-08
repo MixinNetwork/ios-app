@@ -15,10 +15,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     var window: UIWindow?
-    private let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
     private var autoCanceleNotification: DispatchWorkItem?
     private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
     private var backgroundTime: Timer?
+    private(set) var voipToken = ""
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if RELEASE
@@ -38,6 +38,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().registerNotificationCategory()
         UNUserNotificationCenter.current().delegate = self
+        let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
+        pkpushRegistry.delegate = self
+        pkpushRegistry.desiredPushTypes = [.voIP]
         checkLogin()
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         checkJailbreak()
@@ -45,11 +48,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             GiphyCore.configure(apiKey: key)
         }
         return true
-    }
-
-    func registryPushKit() {
-        pkpushRegistry.delegate = self
-        pkpushRegistry.desiredPushTypes = [.voIP]
     }
 
     private func checkJailbreak() {
@@ -150,8 +148,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate: PKPushRegistryDelegate {
 
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
-        AccountAPI.shared.updateSession(deviceToken: "", voip_token: pushCredentials.token.toHexString())
-        print("======pushRegistry...voip_token:\(pushCredentials.token.toHexString())")
+        voipToken = pushCredentials.token.toHexString()
+        if AccountAPI.shared.didLogin {
+            AccountAPI.shared.updateSession(deviceToken: "", voip_token: voipToken)
+        }
     }
 
 

@@ -38,10 +38,10 @@
                     </connections>
                 </button>
                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="JE3-86-sR8">
-                    <rect key="frame" x="155.5" y="170" width="64" height="20.5"/>
+                    <rect key="frame" x="155.5" y="170" width="64" height="64.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Crossle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Xo-ZO-T44">
-                            <rect key="frame" x="0.0" y="0.0" width="64" height="20.5"/>
+                            <rect key="frame" x="0.0" y="21.5" width="64" height="21.5"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                             <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -104,7 +104,7 @@
                             <inset key="contentEdgeInsets" minX="19" minY="0.0" maxX="15" maxY="0.0"/>
                             <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <state key="normal" title="Add Contact" image="ic_profile_add">
-                                <color key="titleColor" red="0.10980392160000001" green="0.49019607840000001" blue="0.87450980389999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleColor" red="0.22352941176470587" green="0.49411764705882355" blue="0.89411764705882346" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -126,7 +126,7 @@
                             <inset key="contentEdgeInsets" minX="19" minY="0.0" maxX="15" maxY="0.0"/>
                             <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <state key="normal" title="Unblock" image="ic_profile_unblock">
-                                <color key="titleColor" red="0.10980392160000001" green="0.49019607840000001" blue="0.87450980389999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleColor" red="0.22352941176470587" green="0.49411764705882355" blue="0.89411764705882346" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -135,7 +135,6 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="profile_unblock"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="addAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="m63-YE-dsC"/>
                                 <action selector="unblockAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="Vkj-3O-y1B"/>
                             </connections>
                         </button>

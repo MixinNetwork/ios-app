@@ -410,9 +410,10 @@ class UserView: CornerView {
             return
         }
         addContactButton.isBusy = true
-        UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName, completion: { [weak self](result) in
-            self?.addContactButton.isBusy = false
-            self?.handlerUpdateUser(result, notifyContact: true)
+        UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName, completion: { [weak self] (result) in
+            self?.handlerUpdateUser(result, notifyContact: true, successBlock: {
+                self?.addContactButton.isBusy = false
+            })
         })
     }
     
@@ -422,8 +423,9 @@ class UserView: CornerView {
         }
         unblockButton.isBusy = true
         UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
-            self?.unblockButton.isBusy = false
-            self?.handlerUpdateUser(result, notifyContact: true)
+            self?.handlerUpdateUser(result, notifyContact: true, successBlock: {
+                self?.unblockButton.isBusy = false
+            })
         }
     }
     

@@ -4,25 +4,25 @@ class ChangeNumberNavigationController: UINavigationController {
 
     let backButton = UIButton()
     let dismissButton = UIButton()
-    let topLeftButtonLayoutOffset = UIEdgeInsets(top: 8, left: 9, bottom: 0, right: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
+        backButton.setImage(R.image.ic_title_back(), for: .normal)
         backButton.addTarget(self, action: #selector(backAction(sender:)), for: .touchUpInside)
         backButton.alpha = 0
-        dismissButton.setImage(#imageLiteral(resourceName: "ic_navigation_close"), for: .normal)
+        dismissButton.setImage(R.image.ic_title_close(), for: .normal)
         dismissButton.addTarget(self, action: #selector(dismissAction(sender:)), for: .touchUpInside)
         for button in [backButton, dismissButton] {
             view.addSubview(button)
             button.translatesAutoresizingMaskIntoConstraints = false
             button.snp.makeConstraints { (make) in
+                make.width.height.equalTo(44)
                 if #available(iOS 11.0, *) {
-                    make.top.equalTo(self.view.safeAreaLayoutGuide.snp.topMargin).offset(self.topLeftButtonLayoutOffset.top)
-                    make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leadingMargin).offset(self.topLeftButtonLayoutOffset.left)
+                    make.top.equalTo(self.view.safeAreaLayoutGuide.snp.topMargin)
+                    make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leadingMargin).offset(10)
                 } else {
-                    make.top.equalTo(self.topLayoutGuide.snp.bottom).offset(self.topLeftButtonLayoutOffset.top)
-                    make.leading.equalTo(self.view.snp.leading).offset(self.topLeftButtonLayoutOffset.left)
+                    make.top.equalTo(self.topLayoutGuide.snp.bottom)
+                    make.leading.equalTo(self.view.snp.leading).offset(10)
                 }
             }
         }

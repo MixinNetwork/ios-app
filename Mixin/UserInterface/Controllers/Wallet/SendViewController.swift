@@ -189,21 +189,20 @@ class SendViewController: UIViewController {
         }
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"
     }
-
+    
     @IBAction func switchAssetAction(_ sender: Any) {
         guard !assetSwitchImageView.isHidden else {
             return
         }
-        TransferTypeView.instance().presentPopupControllerAnimated(textfield: amountTextField, assets: availableAssets, asset: asset) { [weak self](asset) in
-            guard let weakSelf = self else {
-                return
-            }
-            weakSelf.asset = asset
-            weakSelf.updateAssetUI()
-        }
+        let vc = R.storyboard.chat.transferType()!
+        vc.delegate = self
+        vc.assets = availableAssets
+        vc.asset = asset
+        vc.transitioningDelegate = PopupPresentationManager.shared
+        vc.modalPresentationStyle = .custom
+        present(vc, animated: true, completion: nil)
     }
-
-
+    
     @IBAction func switchAmountAction(_ sender: Any) {
         guard let asset = self.asset else {
             return
@@ -331,4 +330,13 @@ extension SendViewController: UITextFieldDelegate {
         return false
     }
 
+}
+
+extension SendViewController: TransferTypeViewControllerDelegate {
+    
+    func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem) {
+        self.asset = asset
+        updateAssetUI()
+    }
+    
 }

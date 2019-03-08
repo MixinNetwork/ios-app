@@ -1,17 +1,27 @@
 import UIKit
 
-class TransferTypeView: BottomSheetView {
+protocol TransferTypeViewControllerDelegate: class {
+    func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem)
+}
 
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var keywordTextField: UITextField!
+class TransferTypeViewController: UIViewController {
     
-    private weak var textfield: UITextField?
-
-    private var assets: [AssetItem]!
-    private var asset: AssetItem?
-    private var callback: ((AssetItem) -> Void)?
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
+    
+    weak var delegate: TransferTypeViewControllerDelegate?
+    
+    var assets = [AssetItem]()
+    var asset: AssetItem?
+    
+    private let cellReuseId = "asset"
+    
     private var searchResults = [AssetItem]()
     private var lastKeyword = ""
+    
+    private var keywordTextField: UITextField {
+        return searchBoxView.textField
+    }
     
     private var keyword: String {
         return (keywordTextField.text ?? "")
@@ -23,37 +33,36 @@ class TransferTypeView: BottomSheetView {
         return !keyword.isEmpty
     }
     
-    func presentPopupControllerAnimated(textfield: UITextField, assets: [AssetItem], asset: AssetItem?, callback: @escaping ((AssetItem) -> Void)) {
-        super.presentPopupControllerAnimated()
-        self.textfield = textfield
-        self.asset = asset
-        self.callback = callback
+    override func viewDidLoad() {
+        super.viewDidLoad()
         if let assetId = asset?.assetId, let index = assets.firstIndex(where: { $0.assetId == assetId }) {
             var reordered = assets
             let selected = reordered.remove(at: index)
             reordered.insert(selected, at: 0)
             self.assets = reordered
-        } else {
-            self.assets = assets
         }
         let hiddenAssets = WalletUserDefault.shared.hiddenAssets
         self.assets = self.assets.filter({ (asset) -> Bool in
             return hiddenAssets[asset.assetId] == nil
         })
-        prepareTableView()
+        tableView.tableFooterView = UIView()
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.reloadData()
+        keywordTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
     }
-
+    
     @IBAction func cancelAction(_ sender: Any) {
         if keywordTextField.isFirstResponder {
             keywordTextField.text = nil
             searchAction(sender)
             keywordTextField.resignFirstResponder()
         } else {
-            dismissPopupControllerAnimated()
+            dismiss(animated: true, completion: nil)
         }
     }
     
-    @IBAction func searchAction(_ sender: Any) {
+    @objc func searchAction(_ sender: Any) {
         let keyword = self.keyword
         guard keywordTextField.markedTextRange == nil else {
             if tableView.isDragging {
@@ -76,49 +85,35 @@ class TransferTypeView: BottomSheetView {
         tableView.reloadData()
     }
     
-    override func dismissPopupControllerAnimated() {
-        super.dismissPopupControllerAnimated()
-        textfield?.becomeFirstResponder()
-    }
-
-    class func instance() -> TransferTypeView {
-        return Bundle.main.loadNibNamed("TransferTypeView", owner: nil, options: nil)?.first as! TransferTypeView
-    }
 }
 
-extension TransferTypeView: UITableViewDelegate, UITableViewDataSource {
-
-    private func prepareTableView() {
-        tableView.register(UINib(nibName: "TransferTypeCell", bundle: nil), forCellReuseIdentifier: TransferTypeCell.cellIdentifier)
-        tableView.tableFooterView = UIView()
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.rowHeight = TransferTypeCell.cellHeight
-        tableView.reloadData()
-    }
+extension TransferTypeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return isSearching ? searchResults.count : assets.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TransferTypeCell.cellIdentifier) as! TransferTypeCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! TransferTypeCell
         let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
         if asset.assetId == self.asset?.assetId {
-            cell.accessoryType = .checkmark
+            cell.checkmarkView.status = .selected
         } else {
-            cell.accessoryType = .none
+            cell.checkmarkView.status = .unselected
         }
         cell.render(asset: asset)
         return cell
     }
+    
+}
 
+extension TransferTypeViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let asset = isSearching ? searchResults[indexPath.row] : assets[indexPath.row]
-        callback?(asset)
-        dismissPopupControllerAnimated()
+        delegate?.transferTypeViewController(self, didSelectAsset: asset)
+        dismiss(animated: true, completion: nil)
     }
+    
 }
-
-

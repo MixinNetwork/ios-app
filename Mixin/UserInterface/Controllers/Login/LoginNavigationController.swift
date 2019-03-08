@@ -3,13 +3,6 @@ import UIKit
 class LoginNavigationController: UINavigationController {
 
     let backButton = UIButton()
-    let backButtonLayoutOffset: UIEdgeInsets = {
-        if ScreenSize.current == .inch3_5 {
-            return UIEdgeInsets(top: 4, left: 6, bottom: 0, right: 0)
-        } else {
-            return UIEdgeInsets(top: 8, left: 6, bottom: 0, right: 0)
-        }
-    }()
 
     var lastKeyboardFrame = CGRect.zero
     
@@ -21,18 +14,19 @@ class LoginNavigationController: UINavigationController {
         super.viewDidLoad()
         UIApplication.shared.keyWindow?.endEditing(true)
         SignalProtocol.shared.initSignal()
-        backButton.setImage(#imageLiteral(resourceName: "ic_titlebar_back"), for: .normal)
+        backButton.setImage(R.image.ic_title_back(), for: .normal)
         backButton.addTarget(self, action: #selector(backAction(sender:)), for: .touchUpInside)
         backButton.alpha = 0
         backButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backButton)
         backButton.snp.makeConstraints { (make) in
+            make.width.height.equalTo(44)
             if #available(iOS 11.0, *) {
-                make.top.equalTo(self.view.safeAreaLayoutGuide.snp.topMargin).offset(self.backButtonLayoutOffset.top)
-                make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leadingMargin).offset(self.backButtonLayoutOffset.left)
+                make.top.equalTo(self.view.safeAreaLayoutGuide.snp.topMargin)
+                make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leadingMargin).offset(10)
             } else {
-                make.top.equalTo(self.topLayoutGuide.snp.bottom).offset(self.backButtonLayoutOffset.top)
-                make.leading.equalTo(self.view.snp.leading).offset(self.backButtonLayoutOffset.left)
+                make.top.equalTo(self.topLayoutGuide.snp.bottom)
+                make.leading.equalTo(self.view.snp.leading).offset(10)
             }
         }
         NotificationCenter.default.addObserver(self,
@@ -96,7 +90,7 @@ class LoginNavigationController: UINavigationController {
     
     private func updateBackButtonAlpha(animated: Bool) {
         let alpha: CGFloat
-        if viewControllers.last is LoginIntroViewController || viewControllers.last is UsernameViewController {
+        if viewControllers.last is MobileNumberViewController || viewControllers.last is UsernameViewController {
             alpha = 0
         } else {
             alpha = 1

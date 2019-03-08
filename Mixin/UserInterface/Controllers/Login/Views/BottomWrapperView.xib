@@ -16,20 +16,20 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="60" placeholderIntrinsicHeight="60" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI2-5B-vjP" customClass="LoginContinueButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="315" y="0.0" width="60" height="60"/>
+                <button opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="44" placeholderIntrinsicHeight="44" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI2-5B-vjP" customClass="LoginContinueButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="331" y="0.0" width="44" height="44"/>
                     <color key="backgroundColor" red="0.22352941176470587" green="0.49411764705882355" blue="0.89411764705882346" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <inset key="contentEdgeInsets" minX="2" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" image="ic_next"/>
+                    <state key="normal" image="ic_login_continue"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="color" keyPath="disabledColor">
                             <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="30"/>
+                            <integer key="value" value="22"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </button>
@@ -45,6 +45,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_next" width="13" height="24"/>
+        <image name="ic_login_continue" width="11" height="20"/>
     </resources>
 </document>

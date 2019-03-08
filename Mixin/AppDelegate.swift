@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     var window: UIWindow?
+    private let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
     private var autoCanceleNotification: DispatchWorkItem?
     private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
     private var backgroundTime: Timer?
@@ -37,9 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().registerNotificationCategory()
         UNUserNotificationCenter.current().delegate = self
-        let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
-        pkpushRegistry.delegate = self
-        pkpushRegistry.desiredPushTypes = [.voIP]
         checkLogin()
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         checkJailbreak()
@@ -47,6 +45,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             GiphyCore.configure(apiKey: key)
         }
         return true
+    }
+
+    func registryPushKit() {
+        pkpushRegistry.delegate = self
+        pkpushRegistry.desiredPushTypes = [.voIP]
     }
 
     private func checkJailbreak() {
@@ -148,7 +151,7 @@ extension AppDelegate: PKPushRegistryDelegate {
 
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         AccountAPI.shared.updateSession(deviceToken: "", voip_token: pushCredentials.token.toHexString())
-        print("voip token: \(pushCredentials.token.toHexString())")
+        print("======pushRegistry...voip_token:\(pushCredentials.token.toHexString())")
     }
 
 

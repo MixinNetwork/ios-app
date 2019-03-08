@@ -53,6 +53,7 @@ class HomeViewController: UIViewController {
             UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
                 switch authorizationStatus {
                 case .authorized, .notDetermined, .provisional:
+                    UIApplication.appDelegate().registryPushKit()
                     UNUserNotificationCenter.current().registerForRemoteNotifications()
                 case .denied:
                     break

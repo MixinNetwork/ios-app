@@ -15,6 +15,8 @@ class UserView: CornerView {
     @IBOutlet weak var addContactButton: BusyButton!
     @IBOutlet weak var descriptionScrollView: UIScrollView!
     @IBOutlet weak var descriptionLabel: CollapsingLabel!
+    @IBOutlet weak var editNameButton: UIButton!
+    @IBOutlet weak var changeAvatarButton: UIButton!
     @IBOutlet weak var openAppButton: UIButton!
     @IBOutlet weak var shareContactButton: UIButton!
     @IBOutlet weak var sendButton: UIButton!
@@ -119,11 +121,16 @@ class UserView: CornerView {
         }
 
         if isMe {
+            editNameButton.isHidden = false
+            changeAvatarButton.isHidden = false
+            shareContactButton.isHidden = true
             addContactButton.isHidden = true
             openAppButton.isHidden = true
             sendButton.isHidden = true
-            shareContactButton.isHidden = false
         } else {
+            editNameButton.isHidden = true
+            changeAvatarButton.isHidden = true
+            
             if refreshUser {
                 UserAPI.shared.showUser(userId: user.userId) { [weak self](result) in
                     self?.handlerUpdateUser(result)
@@ -189,7 +196,7 @@ class UserView: CornerView {
 
         if isMe {
             alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
-                self?.editNameAction()
+                self?.editName()
             }))
             alc.addAction(UIAlertAction(title: Localized.PROFILE_CHANGE_AVATAR, style: .default, handler: { [weak self](action) in
                 self?.changeProfilePhoto()
@@ -208,7 +215,7 @@ class UserView: CornerView {
         switch user.relationship {
         case Relationship.FRIEND.rawValue:
             alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
-                self?.editNameAction()
+                self?.editName()
             }))
             addMuteAlertAction(alc: alc)
             alc.addAction(UIAlertAction(title: Localized.PROFILE_REMOVE, style: .destructive, handler: { [weak self](action) in
@@ -261,6 +268,16 @@ class UserView: CornerView {
         openApp()
     }
 
+    @IBAction func editMyNameAction(_ sender: Any) {
+        superView?.dismissPopupControllerAnimated()
+        editName()
+    }
+    
+    @IBAction func changeMyAvatarAction(_ sender: Any) {
+        superView?.dismissPopupControllerAnimated()
+        changeProfilePhoto()
+    }
+    
     private func changeNumber() {
         UIApplication.rootNavigationController()?.present(ChangeNumberNavigationController.instance(), animated: true, completion: nil)
     }
@@ -373,7 +390,7 @@ class UserView: CornerView {
         }
     }
 
-    private func editNameAction() {
+    private func editName() {
         editAliasNameController.textFields?.first?.text = user.fullName
         UIApplication.currentActivity()?.present(editAliasNameController, animated: true, completion: nil)
     }

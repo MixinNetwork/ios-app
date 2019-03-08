@@ -13,11 +13,11 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="VIH-5N-txF" customClass="UserView" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="369"/>
+            <rect key="frame" x="0.0" y="0.0" width="414" height="369"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_place_holder" translatesAutoresizingMaskIntoConstraints="NO" id="Iu9-go-9Om" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="142.5" y="70" width="90" height="90"/>
+                    <rect key="frame" x="162" y="70" width="90" height="90"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="90" id="dJy-We-c4p"/>
                         <constraint firstAttribute="width" secondItem="Iu9-go-9Om" secondAttribute="height" multiplier="1:1" id="eA9-Nd-LZ0"/>
@@ -32,13 +32,13 @@
                     </userDefinedRuntimeAttributes>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h4w-MA-ie4">
-                    <rect key="frame" x="142.5" y="70" width="90" height="90"/>
+                    <rect key="frame" x="162" y="70" width="90" height="90"/>
                     <connections>
                         <action selector="previewAvatarAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="hci-51-y67"/>
                     </connections>
                 </button>
                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="JE3-86-sR8">
-                    <rect key="frame" x="155.5" y="170" width="64" height="64.5"/>
+                    <rect key="frame" x="175" y="170" width="64" height="64.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Crossle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Xo-ZO-T44">
                             <rect key="frame" x="0.0" y="21.5" width="64" height="21.5"/>
@@ -53,7 +53,7 @@
                     </subviews>
                 </stackView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="8fu-LT-QCJ">
-                    <rect key="frame" x="143.5" y="238.5" width="88.5" height="14.5"/>
+                    <rect key="frame" x="163" y="238.5" width="88.5" height="14.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Mixin Id: 32543" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CTg-iC-2aR">
                             <rect key="frame" x="0.0" y="0.0" width="88.5" height="14.5"/>
@@ -92,10 +92,10 @@
                     </subviews>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mMh-Qj-bOy">
-                    <rect key="frame" x="0.0" y="265" width="375" height="28"/>
+                    <rect key="frame" x="0.0" y="265" width="414" height="28"/>
                     <subviews>
                         <button hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A39-6A-pfT" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="130.5" y="0.0" width="114" height="28"/>
+                            <rect key="frame" x="150" y="0.0" width="114" height="28"/>
                             <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="106" id="ElK-Gh-vho"/>
@@ -117,7 +117,7 @@
                             </connections>
                         </button>
                         <button hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v5r-q1-qfh" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="134.5" y="0.0" width="106" height="28"/>
+                            <rect key="frame" x="154" y="0.0" width="106" height="28"/>
                             <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="106" id="9gJ-OQ-bC2"/>
@@ -151,10 +151,10 @@
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syg-ya-iZc">
-                    <rect key="frame" x="30" y="261" width="315" height="16"/>
+                    <rect key="frame" x="30" y="261" width="354" height="16"/>
                     <subviews>
                         <view hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="16" translatesAutoresizingMaskIntoConstraints="NO" id="Rbl-cu-9jj" customClass="CollapsingLabel" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="315" height="16"/>
+                            <rect key="frame" x="0.0" y="0.0" width="354" height="16"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" link="YES"/>
@@ -172,8 +172,24 @@
                     </constraints>
                 </scrollView>
                 <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Tvr-3M-1aD">
-                    <rect key="frame" x="63" y="285" width="249" height="68"/>
+                    <rect key="frame" x="63" y="285" width="288" height="68"/>
                     <subviews>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R1b-NZ-Ak0">
+                            <rect key="frame" x="0.0" y="12" width="0.0" height="44"/>
+                            <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                            <state key="normal" image="ic_edit_name"/>
+                            <connections>
+                                <action selector="editMyNameAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="Hmd-JF-jzM"/>
+                            </connections>
+                        </button>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lrk-mU-vas">
+                            <rect key="frame" x="0.0" y="12" width="0.0" height="44"/>
+                            <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                            <state key="normal" image="ic_change_avatar"/>
+                            <connections>
+                                <action selector="changeMyAvatarAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="2Mf-RQ-Ni9"/>
+                            </connections>
+                        </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aFr-aK-zbi">
                             <rect key="frame" x="0.0" y="12" width="44" height="44"/>
                             <inset key="contentEdgeInsets" minX="9" minY="11" maxX="9" maxY="11"/>
@@ -183,7 +199,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fEf-ht-1u9">
-                            <rect key="frame" x="68.5" y="12" width="44" height="44"/>
+                            <rect key="frame" x="81.5" y="12" width="44" height="44"/>
                             <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                             <state key="normal" image="ic_share"/>
                             <connections>
@@ -191,7 +207,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mdx-JU-EIZ">
-                            <rect key="frame" x="136.5" y="12" width="44" height="44"/>
+                            <rect key="frame" x="162.5" y="12" width="44" height="44"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                             <state key="normal" image="ic_send_msg"/>
@@ -200,7 +216,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i6u-Sj-8sl" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="205" y="12" width="44" height="44"/>
+                            <rect key="frame" x="244" y="12" width="44" height="44"/>
                             <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                             <state key="normal" image="ic_more"/>
                             <connections>
@@ -213,7 +229,7 @@
                     </constraints>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zGB-B7-Mn1">
-                    <rect key="frame" x="309" y="0.0" width="66" height="66"/>
+                    <rect key="frame" x="348" y="0.0" width="66" height="66"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="66" id="8GV-WM-on6"/>
                         <constraint firstAttribute="width" secondItem="zGB-B7-Mn1" secondAttribute="height" multiplier="1:1" id="fOC-ha-UwN"/>
@@ -263,11 +279,13 @@
                 <outlet property="addContactButton" destination="A39-6A-pfT" id="fI2-RY-2hh"/>
                 <outlet property="appPlaceView" destination="VAa-OZ-kfU" id="3dk-Yp-VBt"/>
                 <outlet property="avatarImageView" destination="Iu9-go-9Om" id="6Ay-vA-mAi"/>
+                <outlet property="changeAvatarButton" destination="Lrk-mU-vas" id="7ZO-aP-tjw"/>
                 <outlet property="descriptionLabel" destination="Rbl-cu-9jj" id="gAf-OX-FE4"/>
                 <outlet property="descriptionScrollView" destination="syg-ya-iZc" id="6QZ-Au-x12"/>
                 <outlet property="descriptionScrollViewBottomConstraint" destination="Za6-y9-4ZT" id="lj9-PO-yWm"/>
                 <outlet property="descriptionScrollViewHeightConstraint" destination="SkC-mi-RYS" id="vTb-l2-76z"/>
                 <outlet property="developButton" destination="64c-sh-04i" id="I1c-35-yBP"/>
+                <outlet property="editNameButton" destination="R1b-NZ-Ak0" id="VCy-kG-mH4"/>
                 <outlet property="fullnameLabel" destination="1Xo-ZO-T44" id="ArF-Jv-5ue"/>
                 <outlet property="hideRelationWrapperDescriptionTopConstraint" destination="Vdn-7g-YgG" id="9cQ-o4-ucZ"/>
                 <outlet property="idLabel" destination="CTg-iC-2aR" id="joZ-a6-ogY"/>
@@ -280,11 +298,13 @@
                 <outlet property="unblockButton" destination="v5r-q1-qfh" id="xvN-bh-ft6"/>
                 <outlet property="verifiedImageView" destination="t4Y-mk-GVy" id="fOx-eB-sZh"/>
             </connections>
-            <point key="canvasLocation" x="53.600000000000001" y="-113.79310344827587"/>
+            <point key="canvasLocation" x="160.80000000000001" y="-113.79310344827587"/>
         </view>
     </objects>
     <resources>
+        <image name="ic_change_avatar" width="30" height="30"/>
         <image name="ic_dialog_close" width="26" height="26"/>
+        <image name="ic_edit_name" width="30" height="30"/>
         <image name="ic_more" width="30" height="30"/>
         <image name="ic_open_app" width="26" height="22"/>
         <image name="ic_place_holder" width="38" height="38"/>

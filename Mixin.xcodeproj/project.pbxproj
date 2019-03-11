@@ -303,7 +303,6 @@
 		7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5374820076BB500257D6C /* ShutterAnimationView.swift */; };
 		7BF5D02B2170B8EA0062EF14 /* AssetFilterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5D02A2170B8EA0062EF14 /* AssetFilterWindow.swift */; };
 		7BF5D02D2170B8FB0062EF14 /* AssetFilterWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF5D02C2170B8FB0062EF14 /* AssetFilterWindow.xib */; };
-		7BF653562000DFE8007CCFAA /* AboutContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF653552000DFE8007CCFAA /* AboutContainerViewController.swift */; };
 		7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7837A2179D1AF00BECB4B /* Call.swift */; };
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
@@ -928,7 +927,6 @@
 		7BF5374820076BB500257D6C /* ShutterAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShutterAnimationView.swift; sourceTree = "<group>"; };
 		7BF5D02A2170B8EA0062EF14 /* AssetFilterWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterWindow.swift; sourceTree = "<group>"; };
 		7BF5D02C2170B8FB0062EF14 /* AssetFilterWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssetFilterWindow.xib; sourceTree = "<group>"; };
-		7BF653552000DFE8007CCFAA /* AboutContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutContainerViewController.swift; sourceTree = "<group>"; };
 		7BF7837A2179D1AF00BECB4B /* Call.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
 		7BF9969420CA6F3800FD948F /* Waveform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
@@ -2360,7 +2358,6 @@
 				DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */,
 				DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */,
 				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
-				7BF653552000DFE8007CCFAA /* AboutContainerViewController.swift */,
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 			);
 			path = Setting;
@@ -3197,7 +3194,6 @@
 				DF92A51F20A5BDAD00427B80 /* ResendMessageDAO.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,
 				7BEFDC211FB08E9B00F66885 /* GroupUser.swift in Sources */,
-				7BF653562000DFE8007CCFAA /* AboutContainerViewController.swift in Sources */,
 				DF503D321FECF71400C008E7 /* SenderKey.swift in Sources */,
 				DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */,
 				7BC8503420CBA69B00A57B83 /* MXNAudioPlayer.m in Sources */,

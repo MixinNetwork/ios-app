@@ -117,7 +117,7 @@ extension SettingViewController: UITableViewDelegate {
         case 2:
             vc = AuthorizationsViewController.instance()
         default:
-            vc = AboutContainerViewController.instance()
+            vc = AboutViewController.instance()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

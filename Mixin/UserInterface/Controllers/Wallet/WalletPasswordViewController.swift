@@ -157,7 +157,7 @@ extension WalletPasswordViewController: PinFieldDelegate {
         case .initPinStep1, .changePinStep2:
             if pin == "123456" || Set(pin).count < 3 {
                 pinField.clear()
-                navigationController?.showHud(style: .error, text: Localized.WALLET_PIN_TOO_SIMPLE)
+                alert(Localized.WALLET_PIN_TOO_SIMPLE)
                 return
             }
         default:

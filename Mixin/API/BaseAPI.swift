@@ -160,7 +160,9 @@ class BaseAPI {
                         }
                     default:
                         if toastError {
-                            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.localizedDescription)
+                            DispatchQueue.main.async {
+                                UIApplication.rootNavigationController()?.showHud(style: .error, text: error.localizedDescription)
+                            }
                         }
                     }
                     completion(.failure(error))

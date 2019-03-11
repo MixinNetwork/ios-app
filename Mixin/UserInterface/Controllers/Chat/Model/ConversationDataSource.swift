@@ -476,7 +476,9 @@ extension ConversationDataSource {
         } else if type == .SIGNAL_DATA, let url = value as? URL {
             queue.async {
                 guard FileManager.default.fileSize(url.path) > 0 else {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
+                    DispatchQueue.main.async {
+                        UIApplication.rootNavigationController()?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    }
                     return
                 }
                 var filename = url.lastPathComponent.substring(endChar: ".").lowercased().md5()
@@ -492,7 +494,9 @@ extension ConversationDataSource {
                         try FileManager.default.moveItem(at: url, to: targetUrl)
                     }
                 } catch {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
+                    DispatchQueue.main.async {
+                        UIApplication.rootNavigationController()?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    }
                     return
                 }
                 message.name = url.lastPathComponent
@@ -506,7 +510,9 @@ extension ConversationDataSource {
             queue.async {
                 let asset = AVAsset(url: url)
                 guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
+                    DispatchQueue.main.async {
+                        UIApplication.rootNavigationController()?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    }
                     return
                 }
                 let filename = url.lastPathComponent.substring(endChar: ".")
@@ -516,7 +522,9 @@ extension ConversationDataSource {
                     thumbnail.saveToFile(path: thumbnailURL)
                     message.thumbImage = thumbnail.base64Thumbnail()
                 } else {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_VIDEO_FAILED)
+                    DispatchQueue.main.async {
+                        UIApplication.rootNavigationController()?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    }
                     return
                 }
                 message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
@@ -532,7 +540,9 @@ extension ConversationDataSource {
         } else if type == .SIGNAL_AUDIO, let value = value as? (tempUrl: URL, metadata: MXNAudioMetadata) {
             queue.async {
                 guard FileManager.default.fileSize(value.tempUrl.path) > 0 else {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_AUDIO_FAILED)
+                    DispatchQueue.main.async {
+                        UIApplication.rootNavigationController()?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    }
                     return
                 }
                 let url = MixinFile.url(ofChatDirectory: .audios, filename: UUID().uuidString.lowercased() + ExtensionName.ogg.withDot)
@@ -546,7 +556,9 @@ extension ConversationDataSource {
                     message.mediaDuration = Int64(value.metadata.duration)
                     SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
                 } catch {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_AUDIO_FAILED)
+                    DispatchQueue.main.async {
+                        UIApplication.rootNavigationController()?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    }
                 }
             }
         } else if type == .SIGNAL_STICKER, let sticker = value as? Sticker {
@@ -572,7 +584,9 @@ extension ConversationDataSource {
         let context = SDWebImagePrefetcher.shared.context ?? [.animatedImageClass: YYImage.self]
         SDWebImageManager.shared.loadImage(with: url, options: .highPriority, context: context, progress: nil) { (image, _, _, _, _, _) in
             guard let image = image as? YYImage, let data = image.animatedImageData else {
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
+                DispatchQueue.main.async {
+                    UIApplication.rootNavigationController()?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                }
                 return
             }
             DispatchQueue.global().async {
@@ -589,7 +603,9 @@ extension ConversationDataSource {
                         message.mediaUrl = filename
                     }
                 } catch {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CHAT_SEND_FILE_FAILED)
+                    DispatchQueue.main.async {
+                        UIApplication.rootNavigationController()?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    }
                 }
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: categoryIsGroup)
             }

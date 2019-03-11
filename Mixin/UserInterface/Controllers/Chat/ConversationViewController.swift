@@ -717,12 +717,14 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             conversationInputViewController.quote = (message, viewModel.thumbnail)
         case .add:
             if message.category.hasSuffix("_STICKER"), let stickerId = message.stickerId {
-                StickerAPI.shared.addSticker(stickerId: stickerId, completion: { (result) in
+                StickerAPI.shared.addSticker(stickerId: stickerId, completion: { [weak self](result) in
                     switch result {
                     case let .success(sticker):
                         DispatchQueue.global().async {
                             StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
-                            NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_ADDED)
+                            DispatchQueue.main.async {
+                                 self?.navigationController?.showHud(style: .notification, text: Localized.TOAST_ADDED)
+                            }
                         }
                     case .failure:
                         break
@@ -899,9 +901,10 @@ extension ConversationViewController: CoreTextLabelDelegate {
         alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_OPEN_URL, style: .default, handler: { [weak self](_) in
             self?.open(url: url)
         }))
-        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
+        alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { [weak self](_) in
             UIPasteboard.general.string = url.absoluteString
-            NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_COPIED)
+            self?.navigationController?.showHud(style: .notification, text: Localized.TOAST_COPIED)
+
         }))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)

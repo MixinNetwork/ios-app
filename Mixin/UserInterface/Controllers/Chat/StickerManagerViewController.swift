@@ -90,7 +90,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                         }
                     }
                 case .failure:
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.STICKER_REMOVE_FAILED)
+                    weakSelf.navigationController?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                 }
             })
         } else {

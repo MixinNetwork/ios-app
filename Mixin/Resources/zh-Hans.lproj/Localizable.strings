@@ -30,6 +30,7 @@
 "action_apply" = "应用";
 "action_filter" = "筛选";
 "action_skip" = "跳过";
+"action_copy" = "复制";
 "action_deauthorize" = "取消授权";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";

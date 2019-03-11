@@ -227,7 +227,9 @@ extension GroupView {
         let conversationId = conversation.conversationId
         DispatchQueue.global().async {
             MessageDAO.shared.clearChat(conversationId: conversationId)
-            NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.GROUP_CLEAR_SUCCESS)
+            DispatchQueue.main.async {
+                UIApplication.rootNavigationController()?.showHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
+            }
         }
     }
 
@@ -275,7 +277,7 @@ extension GroupView {
                 } else {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
-                NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: toastMessage)
+                UIApplication.rootNavigationController()?.showHud(style: .notification, text: toastMessage)
             case .failure:
                 break
             }

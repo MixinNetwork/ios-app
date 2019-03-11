@@ -82,9 +82,9 @@ class QrcodeWindow: BottomSheetView {
             DispatchQueue.main.async {
                 self?.dismissPopupControllerAnimated()
                 if success {
-                    NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
+                    UIApplication.rootNavigationController()?.showHud(style: .notification, text: Localized.TOAST_SAVED)
                 } else {
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.CAMERA_SAVE_PHOTO_FAILED)
+                    UIApplication.rootNavigationController()?.showHud(style: .notification, text: Localized.TOAST_OPERATION_FAILED)
                 }
             }
         })

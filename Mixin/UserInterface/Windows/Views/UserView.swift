@@ -383,7 +383,7 @@ class UserView: CornerView {
                 } else {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
-                NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: toastMessage)
+                UIApplication.rootNavigationController()?.showHud(style: .notification, text: toastMessage)
             case .failure:
                 break
             }

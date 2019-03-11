@@ -30,6 +30,7 @@
 "action_filter" = "Filter";
 "action_skip" = "Skip";
 "action_send_to" = "Send To";
+"action_copy" = "Copy";
 "action_deauthorize" = "Deauthorize";
 "wallet_deposit_tips" = "Don’t remind me again";
 "menu_delete" = "Delete";

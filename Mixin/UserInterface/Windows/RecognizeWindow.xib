@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,69 +19,46 @@
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TQ9-9O-96j" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="413.5" width="375" height="261.5"/>
                     <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqB-K4-ipL">
+                            <rect key="frame" x="309" y="0.0" width="66" height="66"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="66" id="6xp-D8-vMo"/>
+                                <constraint firstAttribute="width" constant="66" id="HcD-C4-wQV"/>
+                            </constraints>
+                            <state key="normal" image="ic_dialog_close"/>
+                            <connections>
+                                <action selector="dismissAction:" destination="UYR-5Z-1kS" eventType="touchUpInside" id="Rzl-g3-rF9"/>
+                            </connections>
+                        </button>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="https://www.google.com" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="V5F-62-qhE">
-                            <rect key="frame" x="30" y="100" width="315" height="35.5"/>
+                            <rect key="frame" x="30" y="96" width="315" height="35.5"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             <dataDetectorType key="dataDetectorTypes" link="YES"/>
                         </textView>
-                        <stackView contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EB7-6F-Y1n">
-                            <rect key="frame" x="0.0" y="195.5" width="375" height="58"/>
-                            <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2vh-bz-ZBc">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
-                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="1" id="SN4-Qv-vtf" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
-                                    </constraints>
-                                </view>
-                                <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8mK-Il-JRf" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="1" width="375" height="56"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="56" id="VNz-gY-z1l"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                    <state key="normal" title="Copy"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_message_menu_copy"/>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="copyAction:" destination="UYR-5Z-1kS" eventType="touchUpInside" id="K7i-aa-KzW"/>
-                                    </connections>
-                                </button>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Otu-90-Do9">
-                                    <rect key="frame" x="0.0" y="57" width="375" height="1"/>
-                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="1" id="acI-Zj-lLo" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
-                                    </constraints>
-                                </view>
-                            </subviews>
-                        </stackView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqB-K4-ipL">
-                            <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="56" id="6xp-D8-vMo"/>
-                                <constraint firstAttribute="width" constant="56" id="HcD-C4-wQV"/>
-                            </constraints>
-                            <state key="normal" image="ic_titlebar_close"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uOW-zj-ZNt" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="142.5" y="191.5" width="90" height="42"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                            <state key="normal" title="Copy"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_copy"/>
+                            </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="dismissAction:" destination="UYR-5Z-1kS" eventType="touchUpInside" id="Rzl-g3-rF9"/>
+                                <action selector="copyAction:" destination="UYR-5Z-1kS" eventType="touchUpInside" id="b1E-Hb-5qU"/>
                             </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="uOW-zj-ZNt" firstAttribute="top" secondItem="V5F-62-qhE" secondAttribute="bottom" constant="60" id="AnS-vn-jhf"/>
                         <constraint firstItem="xqB-K4-ipL" firstAttribute="top" secondItem="TQ9-9O-96j" secondAttribute="top" id="Kcg-ha-yt7"/>
-                        <constraint firstAttribute="trailing" secondItem="EB7-6F-Y1n" secondAttribute="trailing" id="fiI-Dc-msc"/>
+                        <constraint firstAttribute="trailing" secondItem="xqB-K4-ipL" secondAttribute="trailing" id="Xn1-AO-ZSp"/>
                         <constraint firstItem="V5F-62-qhE" firstAttribute="leading" secondItem="TQ9-9O-96j" secondAttribute="leading" constant="30" id="nwf-sF-lkO"/>
-                        <constraint firstItem="EB7-6F-Y1n" firstAttribute="top" secondItem="V5F-62-qhE" secondAttribute="bottom" constant="60" id="qSe-8W-V3K"/>
-                        <constraint firstItem="V5F-62-qhE" firstAttribute="top" secondItem="TQ9-9O-96j" secondAttribute="top" constant="100" id="vzS-rX-ltf"/>
+                        <constraint firstItem="uOW-zj-ZNt" firstAttribute="centerX" secondItem="TQ9-9O-96j" secondAttribute="centerX" id="tiM-Vz-Uyq"/>
+                        <constraint firstItem="V5F-62-qhE" firstAttribute="top" secondItem="xqB-K4-ipL" secondAttribute="bottom" constant="30" id="uDY-0v-vc8"/>
                         <constraint firstAttribute="trailing" secondItem="V5F-62-qhE" secondAttribute="trailing" constant="30" id="yAK-Pc-SRc"/>
-                        <constraint firstItem="EB7-6F-Y1n" firstAttribute="leading" secondItem="TQ9-9O-96j" secondAttribute="leading" id="yO1-ue-4r7"/>
-                        <constraint firstItem="xqB-K4-ipL" firstAttribute="leading" secondItem="TQ9-9O-96j" secondAttribute="leading" id="yd7-ZZ-PhR"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -94,8 +71,8 @@
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="TQ9-9O-96j" secondAttribute="trailing" id="0GY-qh-rHq"/>
                 <constraint firstItem="TQ9-9O-96j" firstAttribute="leading" secondItem="UYR-5Z-1kS" secondAttribute="leading" id="AUv-Pb-zGK"/>
+                <constraint firstItem="lRr-3C-PSy" firstAttribute="bottom" secondItem="uOW-zj-ZNt" secondAttribute="bottom" constant="20" id="EyB-dZ-DhZ"/>
                 <constraint firstAttribute="bottom" secondItem="TQ9-9O-96j" secondAttribute="bottom" constant="-8" id="ZWl-62-ZeD"/>
-                <constraint firstItem="lRr-3C-PSy" firstAttribute="bottom" secondItem="EB7-6F-Y1n" secondAttribute="bottom" id="nkY-xF-maj"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="lRr-3C-PSy"/>
             <connections>
@@ -106,6 +83,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_titlebar_close" width="44" height="44"/>
+        <image name="ic_dialog_close" width="26" height="26"/>
     </resources>
 </document>

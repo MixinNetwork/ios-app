@@ -18,7 +18,7 @@ class RecognizeWindow: BottomSheetView {
     @IBAction func copyAction(_ sender: Any) {
         UIPasteboard.general.string = contentTextView.text
         dismissPopupControllerAnimated()
-        NotificationCenter.default.afterPostOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_COPIED)
+        UIApplication.rootNavigationController()?.showHud(style: .notification, text: Localized.TOAST_COPIED)
     }
 
     @IBAction func dismissAction(_ sender: Any) {

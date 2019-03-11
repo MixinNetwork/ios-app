@@ -92,7 +92,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
         let failedBlock = { [weak self] in
             DispatchQueue.main.async {
                 self?.container?.rightButton.isBusy = false
-                NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.STICKER_ADD_FAILED)
+                self?.navigationController?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
             }
         }
 
@@ -103,10 +103,10 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                     if let data = Data(base64Encoded: stickerBase64), let image = UIImage(data: data) {
                         SDWebImageManager.shared.imageCache.store(image, imageData: data, forKey: sticker.assetUrl, cacheType: .disk, completion: nil)
                     }
-                    DispatchQueue.global().async {
+                    DispatchQueue.global().async { [weak self] in
                         StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                         DispatchQueue.main.async {
-                            NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_ADDED)
+                            self?.navigationController?.showHud(style: .notification, text: Localized.TOAST_ADDED)
                             self?.navigationController?.popViewController(animated: true)
                         }
                     }

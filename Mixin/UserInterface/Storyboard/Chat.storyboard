@@ -816,16 +816,16 @@
                                         </connections>
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ucd-YD-Vpg" customClass="ConversationInputTextView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="67" y="9" width="203" height="32"/>
+                                        <rect key="frame" x="67" y="7" width="203" height="36"/>
                                         <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="32" id="Kzm-2u-qAF"/>
+                                            <constraint firstAttribute="height" constant="36" id="Kzm-2u-qAF"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="16"/>
+                                                <integer key="value" value="18"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </textView>
@@ -919,7 +919,7 @@
                                     <constraint firstItem="FB6-Ob-yNa" firstAttribute="leading" secondItem="wvu-NM-HOS" secondAttribute="leading" constant="7" id="84I-DC-4t0"/>
                                     <constraint firstAttribute="bottom" secondItem="FB6-Ob-yNa" secondAttribute="bottom" constant="2" id="8Mg-91-4xV"/>
                                     <constraint firstAttribute="bottom" secondItem="Ccj-kA-7d2" secondAttribute="bottom" constant="3" id="AlJ-cl-Vnm"/>
-                                    <constraint firstAttribute="bottom" secondItem="ucd-YD-Vpg" secondAttribute="bottom" constant="9" id="Boe-tV-Yi3"/>
+                                    <constraint firstAttribute="bottom" secondItem="ucd-YD-Vpg" secondAttribute="bottom" constant="7" id="Boe-tV-Yi3"/>
                                     <constraint firstItem="Ccj-kA-7d2" firstAttribute="leading" secondItem="4Hc-pE-gbi" secondAttribute="trailing" priority="1" constant="14" id="Cnr-xa-PEq"/>
                                     <constraint firstAttribute="trailing" secondItem="Ccj-kA-7d2" secondAttribute="trailing" constant="11" id="Esv-ud-xKL"/>
                                     <constraint firstItem="aDD-ZD-ky1" firstAttribute="leading" secondItem="ucd-YD-Vpg" secondAttribute="trailing" priority="999" constant="9" id="KF3-vB-nYh"/>
@@ -930,7 +930,7 @@
                                     <constraint firstAttribute="bottom" secondItem="aDD-ZD-ky1" secondAttribute="bottom" constant="3" id="jn0-1g-Rth"/>
                                     <constraint firstAttribute="bottom" secondItem="4Hc-pE-gbi" secondAttribute="bottom" constant="7" id="ldL-l1-X1L"/>
                                     <constraint firstItem="B8S-al-j93" firstAttribute="trailing" secondItem="8OM-9c-W5h" secondAttribute="trailing" constant="6" id="reH-r1-AB4"/>
-                                    <constraint firstItem="ucd-YD-Vpg" firstAttribute="top" secondItem="wvu-NM-HOS" secondAttribute="top" constant="9" id="sFq-fP-j0s"/>
+                                    <constraint firstItem="ucd-YD-Vpg" firstAttribute="top" secondItem="wvu-NM-HOS" secondAttribute="top" constant="7" id="sFq-fP-j0s"/>
                                 </constraints>
                             </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iAX-RP-UWF" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">

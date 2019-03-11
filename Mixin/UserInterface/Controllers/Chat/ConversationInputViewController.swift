@@ -598,7 +598,7 @@ extension ConversationInputViewController: UITextViewDelegate {
                                height: UIView.layoutFittingExpandedSize.height)
         let contentSize = textView.sizeThatFits(sizeToFit)
         textView.isScrollEnabled = contentSize.height > maxHeight
-        let newHeight = min(contentSize.height, maxHeight)
+        let newHeight = ceil(min(contentSize.height, maxHeight))
         let diff = newHeight - textViewHeightConstraint.constant
         if abs(diff) > 0.1 {
             textViewHeightConstraint.constant = newHeight

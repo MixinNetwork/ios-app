@@ -2,14 +2,16 @@ import UIKit
 import WCDBSwift
 
 class BackupViewController: UITableViewController {
-
+    
     @IBOutlet weak var switchIncludeFiles: UISwitch!
     @IBOutlet weak var switchIncludeVideos: UISwitch!
     @IBOutlet weak var categoryLabel: UILabel!
     @IBOutlet weak var backupIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var backupLabel: UILabel!
     
-    private lazy var actionSectionFooterView = FooterView()
+    private let footerReuseId = "footer"
+    
+    private lazy var actionSectionFooterView = TitledShadowFooterView()
     private lazy var backupAvailabilityQuery = BackupAvailabilityQuery()
     
     private var timer: Timer?
@@ -26,13 +28,12 @@ class BackupViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        updateTableViewContentInsetBottom()
+        tableView.register(TitledShadowFooterView.self, forHeaderFooterViewReuseIdentifier: footerReuseId)
         switchIncludeFiles.isOn = CommonUserDefault.shared.hasBackupFiles
         switchIncludeVideos.isOn = CommonUserDefault.shared.hasBackupVideos
-
         reloadActionSectionFooterLabel()
         NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
-
         if BackupJobQueue.shared.isBackingUp {
             backingUI()
         } else {
@@ -44,7 +45,14 @@ class BackupViewController: UITableViewController {
             }
         }
     }
-
+    
+    override func viewSafeAreaInsetsDidChange() {
+        if #available(iOS 11.0, *) {
+            super.viewSafeAreaInsetsDidChange()
+        }
+        updateTableViewContentInsetBottom()
+    }
+    
     @objc func backupChanged() {
         timer?.invalidate()
         timer = nil
@@ -54,7 +62,6 @@ class BackupViewController: UITableViewController {
             self.backupIndicatorView.stopAnimating()
             self.backupIndicatorView.isHidden = true
             self.backupLabel.text = Localized.SETTING_BACKUP_NOW
-            self.backupLabel.textColor = .systemTint
             self.switchIncludeFiles.isEnabled = true
             self.switchIncludeVideos.isEnabled = true
             self.tableView.reloadData()
@@ -87,7 +94,6 @@ class BackupViewController: UITableViewController {
         backupIndicatorView.startAnimating()
         backupIndicatorView.isHidden = false
         backupLabel.text = Localized.SETTING_BACKING
-        backupLabel.textColor = .lightGray
         switchIncludeFiles.isEnabled = false
         switchIncludeVideos.isEnabled = false
         reloadActionSectionFooterLabel()
@@ -114,6 +120,14 @@ class BackupViewController: UITableViewController {
         actionSectionFooterView.label.text = text
     }
     
+    private func updateTableViewContentInsetBottom() {
+        if view.compatibleSafeAreaInsets.bottom < 10 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
+    }
+    
 }
 
 extension BackupViewController {
@@ -132,69 +146,19 @@ extension BackupViewController {
             navigationController?.pushViewController(BackupCategoryViewController.instance(), animated: true)
         }
     }
-
-    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        guard section == 1 else {
-            return nil
-        }
-        return Localized.SETTING_BACKUP_AUTO_TIPS
-    }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard section == 0 else {
-            return nil
-        }
-        return actionSectionFooterView
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 0 {
-            let sizeToFit = CGSize(width: tableView.frame.width, height: UIView.layoutFittingExpandedSize.height)
-            let sizeThatFits = actionSectionFooterView.sizeThatFits(sizeToFit)
-            return sizeThatFits.height
+            return actionSectionFooterView
         } else {
-            return super.tableView(tableView, heightForFooterInSection: section)
+            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! TitledShadowFooterView
+            view.label.text = Localized.SETTING_BACKUP_AUTO_TIPS
+            return view
         }
     }
     
-}
-
-extension BackupViewController {
-    
-    class FooterView: UIView {
-        
-        let label = UILabel()
-        
-        private let labelInset = UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 20)
-        
-        required init?(coder aDecoder: NSCoder) {
-            super.init(coder: aDecoder)
-            prepare()
-        }
-        
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            prepare()
-        }
-        
-        override func sizeThatFits(_ size: CGSize) -> CGSize {
-            let sizeToFit = CGSize(width: size.width - labelInset.horizontal, height: size.height - labelInset.vertical)
-            let sizeThatFits = label.sizeThatFits(sizeToFit)
-            return CGSize(width: sizeThatFits.width + labelInset.horizontal, height: sizeThatFits.height + labelInset.vertical)
-        }
-
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            label.frame = bounds.inset(by: labelInset)
-        }
-        
-        private func prepare() {
-            label.font = .systemFont(ofSize: 13)
-            label.textColor = UIColor(red: 0.43, green: 0.43, blue: 0.43, alpha: 1)
-            label.numberOfLines = 0
-            addSubview(label)
-        }
-        
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
     }
     
 }

@@ -19,4 +19,8 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
         shadowView.frame = bounds
     }
     
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return CGSize(width: size.width, height: 10)
+    }
+    
 }

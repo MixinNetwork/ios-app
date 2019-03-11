@@ -28,10 +28,12 @@ class TitledShadowFooterView: UITableViewHeaderFooterView {
             make.height.equalTo(10)
         }
         label.snp.makeConstraints { (make) in
+            // Reduce priority in avoidance of conflicting with UITableViewCell's encapsulated layout
+            let almostRequiredPriority = ConstraintPriority(999)
             make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview().offset(-20).priority(almostRequiredPriority)
             make.top.equalTo(shadowView.snp.bottom).offset(2)
-            make.bottom.equalToSuperview().offset(-16).priority(ConstraintPriority(999))
+            make.bottom.equalToSuperview().offset(-16).priority(almostRequiredPriority)
         }
     }
     

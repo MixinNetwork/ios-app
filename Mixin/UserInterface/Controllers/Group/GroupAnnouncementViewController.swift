@@ -3,10 +3,10 @@ import UIKit
 class GroupAnnouncementViewController: UIViewController {
     
     @IBOutlet weak var textView: UITextView!
-    
-    @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
-    
+    @IBOutlet weak var saveButton: RoundedButton!
+
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+
     private var newAnnouncement: String {
         return textView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
@@ -15,28 +15,48 @@ class GroupAnnouncementViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let padding = textView.textContainer.lineFragmentPadding
-        textView.textContainerInset = UIEdgeInsets(top: 12, left: 12 - padding, bottom: 12, right: 12 - padding)
-        textView.delegate = self
+        textView.layer.cornerRadius = 8
+        textView.layer.masksToBounds = true
+        textView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         textView.becomeFirstResponder()
-        container?.rightButton.isEnabled = true
-        container?.rightButton.setTitleColor(.systemTint, for: .normal)
-        if let conversation = conversation {
+        textView.delegate = self
+        if let conversation = self.conversation {
             textView.text = conversation.announcement
         }
-        view.layoutIfNeeded()
-        updateTextViewHeight()
-        textView.contentOffset.y = max(0, (textViewHeightConstraint.constant - textView.bounds.height))
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+
+    
+    @IBAction func saveAction(_ sender: Any) {
+        guard !saveButton.isBusy else {
+            return
+        }
+        saveButton.isBusy = true
+        ConversationAPI.shared.updateGroupAnnouncement(conversationId: conversation.conversationId, announcement: newAnnouncement) { [weak self] (response) in
+            switch response {
+            case let .success(conversation):
+                let change = ConversationChange(conversationId: conversation.conversationId, action: .updateConversation(conversation: conversation))
+                NotificationCenter.default.post(name: .ConversationDidChange, object: change)
+                self?.navigationController?.showHud(style: .notification, text: Localized.TOAST_SAVED)
+                self?.navigationController?.popViewController(animated: true)
+            case .failure:
+                if let weakSelf = self {
+                    weakSelf.saveButton.isBusy = false
+                    weakSelf.textView.isUserInteractionEnabled = true
+                    weakSelf.textView.becomeFirstResponder()
+                }
+            }
+        }
+    }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        keyboardPlaceholderHeightConstraint.constant = endFrame.height
+        let windowHeight = AppDelegate.current.window!.bounds.height
+        self.bottomConstraint.constant = windowHeight - endFrame.origin.y + 20
         CATransaction.performWithoutAnimation {
             view.layoutIfNeeded()
         }
@@ -52,52 +72,14 @@ class GroupAnnouncementViewController: UIViewController {
     
 }
 
-extension GroupAnnouncementViewController: ContainerViewControllerDelegate {
-    
-    func barRightButtonTappedAction() {
-        guard let actionButton = container?.rightButton, !actionButton.isBusy else {
+extension GroupAnnouncementViewController: UITextViewDelegate {
+
+    func textViewDidChange(_ textView: UITextView) {
+        guard let newAnnouncement = textView.text, let conversation = self.conversation else {
             return
         }
-        textView.isUserInteractionEnabled = false
-        actionButton.isBusy = true
-        ConversationAPI.shared.updateGroupAnnouncement(conversationId: conversation.conversationId, announcement: newAnnouncement) { [weak self] (response) in
-            switch response {
-            case let .success(conversation):
-                let change = ConversationChange(conversationId: conversation.conversationId, action: .updateConversation(conversation: conversation))
-                NotificationCenter.default.post(name: .ConversationDidChange, object: change)
-                self?.navigationController?.popViewController(animated: true)
-            case .failure:
-                if let weakSelf = self {
-                    weakSelf.container?.rightButton.isBusy = false
-                    weakSelf.textView.isUserInteractionEnabled = true
-                    weakSelf.textView.becomeFirstResponder()
-                }
-            }
-        }
-    }
-    
-    func textBarRightButton() -> String? {
-        return Localized.ACTION_SAVE
-    }
-    
-}
 
-extension GroupAnnouncementViewController: UITextViewDelegate {
-    
-    func textViewDidChange(_ textView: UITextView) {
-        updateTextViewHeight()
+        saveButton.isEnabled = !newAnnouncement.isEmpty && newAnnouncement != conversation.announcement
     }
-    
-}
 
-extension GroupAnnouncementViewController {
-    
-    private func updateTextViewHeight() {
-        let sizeToFit = CGSize(width: textView.bounds.width, height: UIView.layoutFittingExpandedSize.height)
-        let height = textView.sizeThatFits(sizeToFit).height
-        textViewHeightConstraint.constant = height
-        view.layoutIfNeeded()
-        textView.isScrollEnabled = textView.bounds.height < height
-    }
-    
 }

@@ -13,6 +13,27 @@ class BackupViewController: UITableViewController {
     
     private lazy var actionSectionFooterView = TitledShadowFooterView()
     private lazy var backupAvailabilityQuery = BackupAvailabilityQuery()
+    private lazy var autoBackupFrequencyController: UIAlertController = {
+        let controller = UIAlertController(title: Localized.SETTING_BACKUP_AUTO, message: Localized.SETTING_BACKUP_AUTO_TIPS, preferredStyle: .actionSheet)
+        controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_DAILY, style: .default, handler: { [weak self] (_) in
+            CommonUserDefault.shared.backupCategory = .daily
+            self?.updateUIOfBackupFrequency()
+        }))
+        controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_WEEKLY, style: .default, handler: { [weak self] (_) in
+            CommonUserDefault.shared.backupCategory = .weekly
+            self?.updateUIOfBackupFrequency()
+        }))
+        controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_MONTHLY, style: .default, handler: { [weak self] (_) in
+            CommonUserDefault.shared.backupCategory = .monthly
+            self?.updateUIOfBackupFrequency()
+        }))
+        controller.addAction(UIAlertAction(title: Localized.SETTING_BACKUP_OFF, style: .default, handler: { [weak self] (_) in
+            CommonUserDefault.shared.backupCategory = .off
+            self?.updateUIOfBackupFrequency()
+        }))
+        controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        return controller
+    }()
     
     private var timer: Timer?
     
@@ -67,21 +88,7 @@ class BackupViewController: UITableViewController {
             self.tableView.reloadData()
         }
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        switch CommonUserDefault.shared.backupCategory {
-        case .daily:
-            categoryLabel.text = Localized.SETTING_BACKUP_DAILY
-        case .weekly:
-            categoryLabel.text = Localized.SETTING_BACKUP_WEEKLY
-        case .monthly:
-            categoryLabel.text = Localized.SETTING_BACKUP_MONTHLY
-        case .off:
-            categoryLabel.text = Localized.SETTING_BACKUP_OFF
-        }
-    }
-
+    
     @IBAction func switchIncludeFiles(_ sender: Any) {
         CommonUserDefault.shared.hasBackupFiles = switchIncludeFiles.isOn
     }
@@ -128,6 +135,19 @@ class BackupViewController: UITableViewController {
         }
     }
     
+    private func updateUIOfBackupFrequency() {
+        switch CommonUserDefault.shared.backupCategory {
+        case .daily:
+            categoryLabel.text = Localized.SETTING_BACKUP_DAILY
+        case .weekly:
+            categoryLabel.text = Localized.SETTING_BACKUP_WEEKLY
+        case .monthly:
+            categoryLabel.text = Localized.SETTING_BACKUP_MONTHLY
+        case .off:
+            categoryLabel.text = Localized.SETTING_BACKUP_OFF
+        }
+    }
+    
 }
 
 extension BackupViewController {
@@ -143,7 +163,7 @@ extension BackupViewController {
                 backingUI()
             }
         } else if indexPath.section == 1 && indexPath.row == 0 {
-            navigationController?.pushViewController(BackupCategoryViewController.instance(), animated: true)
+            present(autoBackupFrequencyController, animated: true, completion: nil)
         }
     }
     

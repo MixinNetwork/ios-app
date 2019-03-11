@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 class TitledShadowFooterView: UITableViewHeaderFooterView {
     
@@ -30,7 +31,7 @@ class TitledShadowFooterView: UITableViewHeaderFooterView {
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
             make.top.equalTo(shadowView.snp.bottom).offset(2)
-            make.bottom.equalToSuperview().offset(-16)
+            make.bottom.equalToSuperview().offset(-16).priority(ConstraintPriority(999))
         }
     }
     

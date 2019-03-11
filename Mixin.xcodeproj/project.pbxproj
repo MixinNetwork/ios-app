@@ -477,7 +477,6 @@
 		DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */; };
 		DF8CECEF1FC4240500E40064 /* BlockUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECEE1FC4240500E40064 /* BlockUserViewController.swift */; };
 		DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */; };
-		DF8CECF41FC425F700E40064 /* BlockUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECF31FC425F700E40064 /* BlockUserCell.xib */; };
 		DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECFF1FC58DBD00E40064 /* InfoPlist.strings */; };
 		DF8CED021FC6790400E40064 /* MessageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CED011FC6790400E40064 /* MessageAPI.swift */; };
 		DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8DA1841FD1B42100425CEC /* BaseJob.swift */; };
@@ -1108,7 +1107,6 @@
 		DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSettingViewController.swift; sourceTree = "<group>"; };
 		DF8CECEE1FC4240500E40064 /* BlockUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserViewController.swift; sourceTree = "<group>"; };
 		DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserCell.swift; sourceTree = "<group>"; };
-		DF8CECF31FC425F700E40064 /* BlockUserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BlockUserCell.xib; sourceTree = "<group>"; };
 		DF8CECFA1FC58D7D00E40064 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DF8CECFE1FC58DBD00E40064 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DF8CED001FC58DC000E40064 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -2108,7 +2106,6 @@
 			isa = PBXGroup;
 			children = (
 				DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */,
-				DF8CECF31FC425F700E40064 /* BlockUserCell.xib */,
 				7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */,
 				7BDBDE6D22363E82006220DF /* SettingCell.swift */,
 				7BDBDE6F22365017006220DF /* SettingCell.xib */,
@@ -2551,7 +2548,6 @@
 				7BEC4DF121A7D054003336F2 /* WalletAssetCell.xib in Resources */,
 				7B95D52D21743EEF00C95281 /* TransactionsFilterConditionCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
-				DF8CECF41FC425F700E40064 /* BlockUserCell.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
 				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,

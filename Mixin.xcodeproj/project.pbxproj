@@ -273,6 +273,7 @@
 		7BDB4725215A666B008B21F9 /* SignalLoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */; };
 		7BDB4727215A6932008B21F9 /* InitialViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */; };
 		7BDBDE5F22327698006220DF /* TransferTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE5E22327698006220DF /* TransferTypeViewController.swift */; };
+		7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6B223636B8006220DF /* ShadowImageView.swift */; };
 		7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */; };
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
 		7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6E16B218089F100C32EE5 /* GCDExtension.swift */; };
@@ -894,6 +895,7 @@
 		7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalLoadingViewController.swift; sourceTree = "<group>"; };
 		7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewControllerFactory.swift; sourceTree = "<group>"; };
 		7BDBDE5E22327698006220DF /* TransferTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeViewController.swift; sourceTree = "<group>"; };
+		7BDBDE6B223636B8006220DF /* ShadowImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowImageView.swift; sourceTree = "<group>"; };
 		7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
 		7BE6E16B218089F100C32EE5 /* GCDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDExtension.swift; sourceTree = "<group>"; };
@@ -1973,6 +1975,7 @@
 				7B015D8021A81C8D000C9F1E /* ModernSearchBoxView.xib */,
 				7BBD2791221E7C9E0047E7D1 /* CheckmarkView.swift */,
 				7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */,
+				7BDBDE6B223636B8006220DF /* ShadowImageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2778,6 +2781,7 @@
 				DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */,
 				DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift in Sources */,
+				7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */,
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				DF114B0C2020B56E00EA8F9C /* WebWindow.swift in Sources */,

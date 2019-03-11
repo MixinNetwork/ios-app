@@ -273,7 +273,11 @@
 		7BDB4725215A666B008B21F9 /* SignalLoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */; };
 		7BDB4727215A6932008B21F9 /* InitialViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */; };
 		7BDBDE5F22327698006220DF /* TransferTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE5E22327698006220DF /* TransferTypeViewController.swift */; };
+		7BDBDE6522361D85006220DF /* SeparatorShadowFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6422361D85006220DF /* SeparatorShadowFooterView.swift */; };
+		7BDBDE6822361FE1006220DF /* TitledShadowFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6722361FE1006220DF /* TitledShadowFooterView.swift */; };
 		7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6B223636B8006220DF /* ShadowImageView.swift */; };
+		7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6D22363E82006220DF /* SettingCell.swift */; };
+		7BDBDE7022365017006220DF /* SettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6F22365017006220DF /* SettingCell.xib */; };
 		7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */; };
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
 		7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6E16B218089F100C32EE5 /* GCDExtension.swift */; };
@@ -895,7 +899,11 @@
 		7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalLoadingViewController.swift; sourceTree = "<group>"; };
 		7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewControllerFactory.swift; sourceTree = "<group>"; };
 		7BDBDE5E22327698006220DF /* TransferTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeViewController.swift; sourceTree = "<group>"; };
+		7BDBDE6422361D85006220DF /* SeparatorShadowFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorShadowFooterView.swift; sourceTree = "<group>"; };
+		7BDBDE6722361FE1006220DF /* TitledShadowFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitledShadowFooterView.swift; sourceTree = "<group>"; };
 		7BDBDE6B223636B8006220DF /* ShadowImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowImageView.swift; sourceTree = "<group>"; };
+		7BDBDE6D22363E82006220DF /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
+		7BDBDE6F22365017006220DF /* SettingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingCell.xib; sourceTree = "<group>"; };
 		7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
 		7BE6E16B218089F100C32EE5 /* GCDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDExtension.swift; sourceTree = "<group>"; };
@@ -1584,6 +1592,14 @@
 			path = include;
 			sourceTree = "<group>";
 		};
+		7BDBDE6622361FA8006220DF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7BDBDE6722361FE1006220DF /* TitledShadowFooterView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		7BF49DD420C3DED600A8510E /* ReCaptcha */ = {
 			isa = PBXGroup;
 			children = (
@@ -1683,7 +1699,6 @@
 				7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */,
 				7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */,
 				7B63C49021A4334C0044C4BF /* DepositFieldView.swift */,
-				7B1AEB5B221D25F000256A18 /* SeparatorShadowView.swift */,
 				7BF0E07B221ABE050053040D /* AssetIconView.swift */,
 			);
 			path = Views;
@@ -1976,6 +1991,8 @@
 				7BBD2791221E7C9E0047E7D1 /* CheckmarkView.swift */,
 				7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */,
 				7BDBDE6B223636B8006220DF /* ShadowImageView.swift */,
+				7B1AEB5B221D25F000256A18 /* SeparatorShadowView.swift */,
+				7BDBDE6422361D85006220DF /* SeparatorShadowFooterView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2097,6 +2114,8 @@
 				DF8CECF11FC4256D00E40064 /* BlockUserCell.swift */,
 				DF8CECF31FC425F700E40064 /* BlockUserCell.xib */,
 				7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */,
+				7BDBDE6D22363E82006220DF /* SettingCell.swift */,
+				7BDBDE6F22365017006220DF /* SettingCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2334,6 +2353,7 @@
 			isa = PBXGroup;
 			children = (
 				DF8CECF01FC4255700E40064 /* Cells */,
+				7BDBDE6622361FA8006220DF /* Views */,
 				DFE356B71FB4994200E0E3A8 /* SettingViewController.swift */,
 				DF1F277B21A53585009A74C6 /* BackupViewController.swift */,
 				DFB2062521A80173006E4341 /* BackupCategoryViewController.swift */,
@@ -2525,6 +2545,7 @@
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */,
 				7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */,
+				7BDBDE7022365017006220DF /* SettingCell.xib in Resources */,
 				DFD294431FA7076600FADAAD /* ContactMeCell.xib in Resources */,
 				7BA4A1CF1FF347130086CD56 /* GroupParticipantCell.xib in Resources */,
 				7B45A51C2189F28E0008F894 /* call.caf in Resources */,
@@ -2858,6 +2879,7 @@
 				DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */,
 				DF3FF05D20134C4C000A0C0A /* DatabaseUserDefault.swift in Sources */,
 				7B0BE46221A57C7100B91A1E /* TopAssetsDAO.swift in Sources */,
+				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,
 				DF5CDA74204FEBA1004A52BA /* BaseCodable.swift in Sources */,
 				273FACB1205FB9A800513327 /* SignalAddress.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
@@ -3051,6 +3073,7 @@
 				7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */,
 				DF2A3CD82016DC860095F024 /* Sticker.swift in Sources */,
 				DF06D921222FAE2200FE7FBC /* SendContactSelectionViewController.swift in Sources */,
+				7BDBDE6522361D85006220DF /* SeparatorShadowFooterView.swift in Sources */,
 				DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */,
 				DF30D7441FA22D4E00683C1A /* WebSocketService.swift in Sources */,
 				DFCC4340206B60CE006F50BE /* KeyUtil.swift in Sources */,
@@ -3163,6 +3186,7 @@
 				DF8DA1A41FD64C5800425CEC /* BlazeMessageData.swift in Sources */,
 				DF503D3C1FECFD9800C008E7 /* SignalDatabase.swift in Sources */,
 				DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */,
+				7BDBDE6822361FE1006220DF /* TitledShadowFooterView.swift in Sources */,
 				DF8DA1AF1FD6832000425CEC /* RefreshUserJob.swift in Sources */,
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,
 				7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */,

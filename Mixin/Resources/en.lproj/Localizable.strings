@@ -32,6 +32,7 @@
 "action_skip" = "Skip";
 "action_send_to" = "Send To";
 "action_copy" = "Copy";
+"action_authorize" = "Authorize";
 "action_deauthorize" = "Deauthorize";
 "wallet_deposit_tips" = "Don’t remind me again";
 "menu_delete" = "Delete";
@@ -73,6 +74,7 @@
 "toast_added" = "Added";
 "toast_saved" = "Saved";
 "toast_logined" = "Logined";
+"toast_authorized" = "Authorized";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
 "screen_captured_pin_leaking_hint" = "Screen recorder detected, PIN may be recorded.";

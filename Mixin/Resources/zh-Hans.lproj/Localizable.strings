@@ -32,6 +32,7 @@
 "action_filter" = "筛选";
 "action_skip" = "跳过";
 "action_copy" = "复制";
+"action_authorize" = "授权";
 "action_deauthorize" = "取消授权";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
@@ -72,6 +73,7 @@
 "toast_added" = "已添加";
 "toast_saved" = "已保存";
 "toast_logined" = "已登录";
+"toast_authorized" = "已授权";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "toast_error" = "错误 %@：%@";
 "screen_captured_pin_leaking_hint" = "检测到正在进行屏幕录制，支付密码可能会录入视频！";

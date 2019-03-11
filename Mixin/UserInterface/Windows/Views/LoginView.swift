@@ -3,33 +3,17 @@ import SwiftMessages
 
 class LoginView: UIView {
 
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var iconImageView: CornerImageView!
-    @IBOutlet weak var authButton: StateResponsiveButton!
     @IBOutlet weak var closeButton: UIButton!
-
-    @IBOutlet weak var contentHeightConstraint: ScreenSizeCompatibleLayoutConstraint!
-    @IBOutlet weak var iconTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var iconBottomConstaint: NSLayoutConstraint!
+    @IBOutlet weak var authorizeButton: RoundedButton!
+    @IBOutlet weak var titleLabel: UILabel!
 
     private weak var superView: UrlWindow?
     private var authInfo: AuthorizationResponse!
     private var assets: [AssetItem] = []
-    private var windowMaximum = false
-    private var minimumWebViewHeight: CGFloat = 428
     private var loginSuccess = false
     private var backgroundWindow: WebWindow?
-
-    private var maximumWebViewHeight: CGFloat {
-        guard let superView = superView else {
-            return minimumWebViewHeight
-        }
-        return superView.frame.height
-            - 56
-            - max(superView.compatibleSafeAreaInsets.top, 20)
-            - superView.compatibleSafeAreaInsets.bottom
-    }
     
     private enum Scope: String {
         case PROFILE = "PROFILE:READ"
@@ -70,23 +54,14 @@ class LoginView: UIView {
     }()
     private var selectedScopes = [Scope.PROFILE.rawValue]
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        authButton.activityIndicator.style = .white
-    }
-
     func render(authInfo: AuthorizationResponse, assets: [AssetItem], superView: UrlWindow) {
         self.authInfo = authInfo
         self.assets = assets
         self.superView = superView
-        if !superView.fromWeb {
-            closeButton.setImage(#imageLiteral(resourceName: "ic_titlebar_close"), for: .normal)
-        }
         
         if let webWindow = UIApplication.shared.keyWindow?.subviews.first(where: { $0 is WebWindow }) as? WebWindow {
             self.backgroundWindow = webWindow
         }
-        contentHeightConstraint.constant = backgroundWindow?.webViewWrapperView.frame.height ?? minimumWebViewHeight
         superView.layoutIfNeeded()
 
         titleLabel.text = authInfo.app.name
@@ -94,29 +69,10 @@ class LoginView: UIView {
 
         prepareTableView()
         tableView.reloadData()
-        windowMaximum = contentHeightConstraint.constant > minimumWebViewHeight
         DispatchQueue.main.async {
             for idx in 0..<self.scopes.count {
                 self.tableView.selectRow(at: IndexPath(row: idx, section: 0), animated: false, scrollPosition: .none)
             }
-        }
-    }
-
-    @IBAction func zoomAction(_ sender: Any) {
-        guard let superView = self.superView else {
-            return
-        }
-        windowMaximum = !windowMaximum
-
-        let oldHeight = contentHeightConstraint.constant
-        let targetHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
-        let scale = targetHeight / oldHeight
-
-        iconTopConstraint.constant = iconTopConstraint.constant * scale
-        iconBottomConstaint.constant = iconBottomConstaint.constant * scale
-        contentHeightConstraint.constant = targetHeight
-        UIView.animate(withDuration: 0.25) {
-            superView.layoutIfNeeded()
         }
     }
 
@@ -140,11 +96,11 @@ class LoginView: UIView {
         superView?.dismissPopupControllerAnimated()
     }
 
-    @IBAction func confirmAction(_ sender: Any) {
-        guard !authButton.isBusy else {
+    @IBAction func authorizeAction(_ sender: Any) {
+        guard !authorizeButton.isBusy else {
             return
         }
-        authButton.isBusy = true
+        authorizeButton.isBusy = true
         let request = AuthorizationRequest(authorizationId: authInfo.authorizationId, scopes: selectedScopes)
         AuthorizeAPI.shared.authorize(authorization: request, completion: { [weak self](result) in
             guard let weakSelf = self else {
@@ -153,14 +109,14 @@ class LoginView: UIView {
             switch result {
             case let .success(response):
                 weakSelf.loginSuccess = true
+                UIApplication.rootNavigationController()?.showHud(style: .notification, text: Localized.TOAST_AUTHORIZED)
                 weakSelf.superView?.dismissPopupControllerAnimated()
                 if UIApplication.rootNavigationController()?.viewControllers.last is CameraViewController {
                     UIApplication.rootNavigationController()?.popViewController(animated: true)
                 }
-
                 UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error):
-                weakSelf.authButton.isBusy = false
+                weakSelf.authorizeButton.isBusy = false
                 SwiftMessages.showToast(message: error.localizedDescription, backgroundColor: .hintRed)
             }
         })
@@ -227,44 +183,7 @@ extension LoginView: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension LoginView: UIScrollViewDelegate {
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let superView = superView, scrollView.isTracking && !scrollView.isDecelerating else {
-            return
-        }
-        let newConstant = contentHeightConstraint.constant + scrollView.contentOffset.y
-        if newConstant <= maximumWebViewHeight {
-            contentHeightConstraint.constant = newConstant
-            superView.layoutIfNeeded()
-            scrollView.contentOffset.y = 0
-            let shouldMaximizeWindow = newConstant > minimumWebViewHeight + (maximumWebViewHeight - minimumWebViewHeight) / 2
-            if windowMaximum != shouldMaximizeWindow {
-                windowMaximum = shouldMaximizeWindow
-            }
-        }
-    }
-    
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        guard let superView = superView else {
-            return
-        }
-        if abs(velocity.y) > 0.01 {
-            let suggestedWindowMaximum = velocity.y > 0
-            if windowMaximum != suggestedWindowMaximum && (suggestedWindowMaximum || targetContentOffset.pointee.y < 0.1) {
-                windowMaximum = suggestedWindowMaximum
-            }
-        }
-        let contentHeight = windowMaximum ? maximumWebViewHeight : minimumWebViewHeight
-        contentHeightConstraint.constant = contentHeight
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-            superView.layoutIfNeeded()
-        }, completion: nil)
-    }
-    
-}
-
-fileprivate extension UIApplication {
+private extension UIApplication {
 
     func tryOpenThirdApp(response: AuthorizationResponse) {
         let callback = response.app.redirectUri

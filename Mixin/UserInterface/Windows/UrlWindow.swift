@@ -7,6 +7,7 @@ class UrlWindow: BottomSheetView {
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var assistView: UIView!
 
     @IBOutlet weak var contentHeightConstraint: NSLayoutConstraint!
 
@@ -136,7 +137,7 @@ extension UrlWindow {
                     UserDAO.shared.updateUsers(users: [user])
                     weakSelf.presentUser(user: UserItem.createUser(from: user), clearNavigationStack: clearNavigationStack, refreshUser: false)
                 } else if let authorization = code.authorization {
-                    weakSelf.load(authorization: authorization)
+                    weakSelf.load(authorization: authorization, fromWeb: fromWeb)
                 } else if let conversation = code.conversation {
                     weakSelf.load(conversation: conversation, codeId: codeId)
                 }
@@ -214,7 +215,7 @@ extension UrlWindow {
         }
     }
 
-    private func load(authorization: AuthorizationResponse) {
+    private func load(authorization: AuthorizationResponse, fromWeb: Bool = false) {
         DispatchQueue.global().async { [weak self] in
             let assets = AssetDAO.shared.getAvailableAssets()
             DispatchQueue.main.async {
@@ -224,6 +225,11 @@ extension UrlWindow {
 
                 weakSelf.showLoginView = true
                 weakSelf.containerView.addSubview(weakSelf.loginView)
+                if fromWeb {
+                    weakSelf.contentHeightConstraint.constant = weakSelf.assistView.frame.height
+                } else {
+                    weakSelf.contentHeightConstraint.constant = weakSelf.assistView.frame.height - 56
+                }
                 weakSelf.loginView.snp.makeConstraints({ (make) in
                     make.edges.equalToSuperview()
                 })

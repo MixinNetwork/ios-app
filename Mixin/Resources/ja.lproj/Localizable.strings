@@ -30,6 +30,7 @@
 "action_filter" = "フィルタ";
 "action_skip" = "スキップ";
 "action_copy" = "コピー";
+"action_authorize" = "認証";
 "action_deauthorize" = "認証解除";
 "menu_delete" = "デリート";
 "no_result" = "検索結果はありません";
@@ -68,6 +69,7 @@
 "toast_added" = "追加しました";
 "toast_saved" = "セーブしました";
 "toast_logined" = "ログインしました";
+"toast_authorized" = "許可された";
 "permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_error" = "エラー %@: %@";
 "screen_captured_pin_leaking_hint" = "スクリーンレコーダーが検出され、PINが記録されている.";

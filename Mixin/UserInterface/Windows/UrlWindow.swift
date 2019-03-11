@@ -44,6 +44,8 @@ class UrlWindow: BottomSheetView {
             return checkTransferUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case .send:
             return checkSendUrl(url: url, fromWeb: fromWeb)
+        case .device:
+            return false
         case .unknown:
             return false
         }

@@ -17,6 +17,9 @@ struct Job: BaseCodable {
     let conversationId: String?
     let resendMessageId: String?
     var runCount: Int = 0
+    var isSessionMessage: Bool
+    var messageId: String?
+    var status: String?
 
     var isAutoIncrement = true
 
@@ -31,6 +34,9 @@ struct Job: BaseCodable {
         case userId = "user_id"
         case resendMessageId = "resend_message_id"
         case runCount = "run_count"
+        case isSessionMessage = "is_session_message"
+        case messageId = "message_id"
+        case status
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
@@ -45,7 +51,20 @@ struct Job: BaseCodable {
         }
     }
 
-    init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, blazeMessage: BlazeMessage? = nil) {
+    init(action: JobAction, messageId: String, status: String, isSessionMessage: Bool) {
+        self.jobId = UUID().uuidString.lowercased()
+        self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
+        self.action = action.rawValue
+        self.userId = nil
+        self.conversationId = nil
+        self.resendMessageId = nil
+        self.blazeMessage = nil
+        self.isSessionMessage = isSessionMessage
+        self.messageId = messageId
+        self.status = status
+    }
+
+    init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, blazeMessage: BlazeMessage? = nil, isSessionMessage: Bool = false) {
         self.jobId = jobId
         switch action {
         case .RESEND_MESSAGE:
@@ -66,6 +85,9 @@ struct Job: BaseCodable {
         } else {
             self.blazeMessage = nil
         }
+        self.isSessionMessage = isSessionMessage
+        self.messageId = nil
+        self.status = nil
     }
 }
 
@@ -80,21 +102,18 @@ extension Job {
 
 extension Job {
 
-    init(message: Message) {
-        let param = BlazeMessageParam(conversationId: message.conversationId,
-                                      recipientId: nil,
+    init(message: Message, isSessionMessage: Bool = false) {
+        var param = BlazeMessageParam(conversationId: message.conversationId,
                                       category: message.category,
-                                      data: nil,
-                                      offset: nil,
                                       status: MessageStatus.SENT.rawValue,
-                                      messageId: message.messageId,
-                                      quoteMessageId: nil,
-                                      keys: nil,
-                                      recipients: nil,
-                                      messages: nil)
+                                      messageId: message.messageId)
+        if message.category.hasPrefix("SYSTEM_") {
+            param.data = message.content
+        }
         let action = BlazeMessageAction.createMessage.rawValue
         let blazeMessage = BlazeMessage(params: param, action: action)
-        self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
+        let jobId = isSessionMessage ? UUID().uuidString.lowercased() : blazeMessage.id
+        self.init(jobId: jobId, action: .SEND_MESSAGE, blazeMessage: blazeMessage, isSessionMessage: isSessionMessage)
     }
     
     init(webRTCMessage message: Message, recipientId: String) {
@@ -102,13 +121,8 @@ extension Job {
                                       recipientId: recipientId,
                                       category: message.category,
                                       data: message.content?.base64Encoded(),
-                                      offset: nil,
-                                      status: nil,
                                       messageId: message.messageId,
-                                      quoteMessageId: message.quoteMessageId,
-                                      keys: nil,
-                                      recipients: nil,
-                                      messages: nil)
+                                      quoteMessageId: message.quoteMessageId)
         let action = BlazeMessageAction.createCall.rawValue
         let blazeMessage = BlazeMessage(params: param, action: action)
         self.init(jobId: blazeMessage.id, action: .SEND_MESSAGE, blazeMessage: blazeMessage)
@@ -134,6 +148,9 @@ enum JobAction: String {
     case SEND_MESSAGE
     case SEND_ACK_MESSAGE
     case SEND_DELIVERED_ACK_MESSAGE
+
+    case SEND_SESSION_MESSAGE
+    case SEND_SESSION_ACK_MESSAGE
 }
 
 

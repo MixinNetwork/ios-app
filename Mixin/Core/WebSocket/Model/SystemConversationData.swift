@@ -23,6 +23,8 @@ enum SystemConversationAction: String {
     case JOIN
     case EXIT
     case ROLE
+    case ADD_SESSION
+    case REMOVE_SESSION
 
     static func getSystemMessage(actionName: String?, userId: String, userFullName: String, participantId: String?, participantFullName: String?, content: String) -> String {
         let action = actionName ?? ""

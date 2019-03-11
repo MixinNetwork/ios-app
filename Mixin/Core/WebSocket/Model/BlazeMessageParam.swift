@@ -13,8 +13,12 @@ struct BlazeMessageParam: Codable {
     var quoteMessageId: String? = nil
 
     var keys: SignalKeyRequest? = nil
-    var recipients: [String]? = nil
+    var recipients: [BlazeSessionMessageParam]? = nil
     var messages: [TransferMessage]? = nil
+
+    var sessionId: String? = nil
+    var primitiveId: String? = nil
+    var primitiveMessageId: String? = nil
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -29,6 +33,10 @@ struct BlazeMessageParam: Codable {
         case keys
         case recipients
         case messages
+
+        case sessionId = "session_id"
+        case primitiveId = "primitive_id"
+        case primitiveMessageId = "primitive_message_id"
     }
 }
 
@@ -38,11 +46,7 @@ extension BlazeMessageParam {
         self.messageId = messageId
         self.status = status
     }
-
-    init(offset: String) {
-        self.offset = offset
-    }
-
+    
     init(conversationId: String, recipientId: String, cipherText: String) {
         self.messageId = UUID().uuidString.lowercased()
         self.status = MessageStatus.SENT.rawValue
@@ -52,7 +56,7 @@ extension BlazeMessageParam {
         self.category = MessageCategory.SIGNAL_KEY.rawValue
     }
 
-    init(consumeSignalKeys recipients: [String]) {
+    init(consumeSignalKeys recipients: [BlazeSessionMessageParam]) {
         self.recipients = recipients
     }
 
@@ -60,12 +64,27 @@ extension BlazeMessageParam {
         self.keys = keys
     }
 
-    init(conversationId: String, messages: [TransferMessage]) {
-        self.conversationId = conversationId
+    init(messages: [TransferMessage]) {
         self.messages = messages
     }
 
-    init(messages: [TransferMessage]) {
+    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeSessionMessageParam]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, primitiveId: String? = nil, primitiveMessageId: String? = nil) {
+        self.conversationId = conversationId
+        self.recipientId = recipientId
+        self.category = category
+        self.data = data
+        self.offset = offset
+
+        self.status = status
+        self.messageId = messageId
+        self.quoteMessageId = quoteMessageId
+
+        self.keys = keys
+        self.recipients = recipients
         self.messages = messages
+
+        self.sessionId = sessionId
+        self.primitiveId = primitiveId
+        self.primitiveMessageId = primitiveMessageId
     }
 }

@@ -20,6 +20,7 @@ class NewAddressViewController: UIViewController {
     }
     private var successCallback: ((Address) -> Void)?
     private var address: Address?
+    private var qrCodeScanningDestination: UIView?
     
     private weak var pinTipsView: PinTipsView?
     
@@ -73,25 +74,18 @@ class NewAddressViewController: UIViewController {
     }
 
     @IBAction func scanAddressAction(_ sender: Any) {
-        navigationController?.pushViewController(CameraViewController.instance(fromWithdrawal: true) { [weak self](address) in
-            guard let weakSelf = self else {
-                return
-            }
-            weakSelf.addressTextView.text = address
-            weakSelf.textViewDidChange(weakSelf.addressTextView)
-        }, animated: true)
+        let vc = CameraViewController.instance()
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
+        qrCodeScanningDestination = addressTextView
     }
 
     @IBAction func scanAccountNameAction(_ sender: Any) {
-        navigationController?.pushViewController(CameraViewController.instance(fromWithdrawal: true) { [weak self](accountName) in
-            guard let weakSelf = self else {
-                return
-            }
-            weakSelf.labelTextField.text = accountName
-            weakSelf.textViewDidChange(weakSelf.addressTextView)
-        }, animated: true)
+        let vc = CameraViewController.instance()
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
+        qrCodeScanningDestination = labelTextField
     }
-
     
     @IBAction func saveAction(_ sender: Any) {
         guard let actionButton = saveButton, !actionButton.isBusy else {
@@ -168,4 +162,78 @@ extension NewAddressViewController: UITextViewDelegate {
         addressTextView.isScrollEnabled = addressTextView.bounds.height < height
     }
 
+}
+
+extension NewAddressViewController: CameraViewControllerDelegate {
+    
+    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
+        if qrCodeScanningDestination == labelTextField {
+            labelTextField.text = string
+            textViewDidChange(addressTextView)
+        } else if qrCodeScanningDestination == addressTextView {
+            addressTextView.text = standarizedAddress(from: string) ?? string
+            textViewDidChange(addressTextView)
+        }
+        qrCodeScanningDestination = nil
+        navigationController?.popViewController(animated: true)
+        return false
+    }
+    
+}
+
+extension NewAddressViewController {
+    
+    private func standarizedAddress(from str: String) -> String? {
+        guard str.hasPrefix("iban:XE") || str.hasPrefix("IBAN:XE") else {
+            return str
+        }
+        guard str.count >= 20 else {
+            return nil
+        }
+        
+        let endIndex = str.index(of: "?") ?? str.endIndex
+        let accountIdentifier = str[str.index(str.startIndex, offsetBy: 9)..<endIndex]
+        
+        guard let address = accountIdentifier.lowercased().base36to16() else {
+            return nil
+        }
+        return "0x\(address)"
+    }
+    
+}
+
+private extension String {
+    
+    private static let base36Alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
+    
+    private static var base36AlphabetMap: [Character: Int] = {
+        var reverseLookup = [Character: Int]()
+        for characterIndex in 0..<String.base36Alphabet.count {
+            let character = base36Alphabet[base36Alphabet.index(base36Alphabet.startIndex, offsetBy: characterIndex)]
+            reverseLookup[character] = characterIndex
+        }
+        return reverseLookup
+    }()
+    
+    func base36to16() -> String? {
+        var bytes = [Int]()
+        for character in self {
+            guard var carry = String.base36AlphabetMap[character] else {
+                return nil
+            }
+            
+            for byteIndex in 0..<bytes.count {
+                carry += bytes[byteIndex] * 36
+                bytes[byteIndex] = carry & 0xff
+                carry >>= 8
+            }
+            
+            while carry > 0 {
+                bytes.append(carry & 0xff)
+                carry >>= 8
+            }
+        }
+        return bytes.reversed().map { String(format: "%02hhx", $0) }.joined()
+    }
+    
 }

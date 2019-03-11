@@ -2,8 +2,8 @@ import Foundation
 
 struct BlazeMessage: Encodable {
 
-    let id: String
-    let action: String
+    var id: String
+    var action: String
     var params: BlazeMessageParam?
     let data: String?
     let error: APIError?
@@ -14,20 +14,24 @@ struct BlazeMessage: Encodable {
         return action == BlazeMessageAction.createMessage.rawValue
             || action == BlazeMessageAction.createCall.rawValue
             || action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue
+            || action == BlazeMessageAction.createSessionMessage.rawValue
     }
 }
 
 enum BlazeMessageAction: String {
     case createMessage = "CREATE_MESSAGE"
+    case createSessionMessage = "CREATE_SESSION_MESSAGE"
+    case createSignalKeyMessage = "CREATE_SIGNAL_KEY_MESSAGES"
     case createCall = "CREATE_CALL"
     case acknowledgeMessageReceipt = "ACKNOWLEDGE_MESSAGE_RECEIPT"
     case acknowledgeMessageReceipts = "ACKNOWLEDGE_MESSAGE_RECEIPTS"
+    case acknowledgeSessionMessageReceipts = "ACKNOWLEDGE_SESSION_MESSAGE_RECEIPTS"
     case listPendingMessages = "LIST_PENDING_MESSAGES"
     case error = "ERROR"
     case countSignalKeys = "COUNT_SIGNAL_KEYS"
     case consumeSignalKeys = "CONSUME_SIGNAL_KEYS"
+    case consumeSessionSignalKeys = "CONSUME_SESSION_SIGNAL_KEYS"
     case syncSignalKeys = "SYNC_SIGNAL_KEYS"
-    case CREATE_SIGNAL_KEY_MESSAGES = "CREATE_SIGNAL_KEY_MESSAGES"
 }
 
 extension BlazeMessage {
@@ -102,13 +106,13 @@ extension BlazeMessage: Decodable {
         switch action {
         case BlazeMessageAction.listPendingMessages.rawValue:
             data = nil
-        case BlazeMessageAction.createMessage.rawValue, BlazeMessageAction.acknowledgeMessageReceipt.rawValue, BlazeMessageAction.createCall.rawValue:
+        case BlazeMessageAction.createMessage.rawValue, BlazeMessageAction.acknowledgeMessageReceipt.rawValue, BlazeMessageAction.createCall.rawValue, BlazeMessageAction.createSessionMessage.rawValue:
             let messageData: BlazeMessageData? = container.getCodable(key: .data)
             data = messageData != nil ? String(data: try JSONEncoder().encode(messageData), encoding: .utf8) : nil
         case BlazeMessageAction.countSignalKeys.rawValue:
             let count: SignalKeyCount? = container.getCodable(key: .data)
             data = count != nil ? String(data: try JSONEncoder().encode(count), encoding: .utf8) : nil
-        case BlazeMessageAction.consumeSignalKeys.rawValue:
+        case BlazeMessageAction.consumeSignalKeys.rawValue, BlazeMessageAction.consumeSessionSignalKeys.rawValue:
             let keys: [SignalKeyResponse]? = container.getCodable(key: .data)
             data = keys != nil ? String(data: try JSONEncoder().encode(keys), encoding: .utf8) : nil
         default:

@@ -71,6 +71,10 @@ class VerificationCodeViewController: LoginViewController {
                         let sema = DispatchSemaphore(value: 0)
                         var backupExist = false
                         DispatchQueue.main.sync {
+                            let voipToken = UIApplication.appDelegate().voipToken
+                            if !voipToken.isEmpty {
+                                AccountAPI.shared.updateSession(deviceToken: "", voip_token: voipToken)
+                            }
                             weakSelf.backupAvailabilityQuery.fileExist(callback: { (exist) in
                                 backupExist = exist
                                 sema.signal()

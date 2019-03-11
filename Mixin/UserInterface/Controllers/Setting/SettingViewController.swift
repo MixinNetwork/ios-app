@@ -19,6 +19,7 @@ class SettingViewController: UIViewController {
         [Localized.SETTING_NOTIFICATION,
          Localized.SETTING_BACKUP_TITLE,
          Localized.SETTING_STORAGE_USAGE],
+        [Localized.SETTING_DESKTOP],
         [Localized.SETTING_AUTHORIZATIONS],
         [Localized.SETTING_ABOUT]
     ]
@@ -115,6 +116,8 @@ extension SettingViewController: UITableViewDelegate {
                 vc = StorageUsageViewController.instance()
             }
         case 2:
+            vc = DesktopViewController.instance()
+        case 3:
             vc = AuthorizationsViewController.instance()
         default:
             vc = AboutViewController.instance()

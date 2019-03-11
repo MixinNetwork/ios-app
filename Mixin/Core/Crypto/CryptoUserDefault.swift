@@ -11,7 +11,8 @@ class CryptoUserDefault {
     private let NEXT_PREKEY_ID = "next_prekey_id"
     private let NEXT_SIGNED_PREKEY_ID = "next_signed_prekey_id"
     private let keyEncryptIterator = "encrypt_iterator"
-
+    private let profileKeyKey = "profile_key"
+    
     let session = UserDefaults(suiteName: SuiteName.crypto)!
 
     var isLoaded: Bool {
@@ -67,7 +68,16 @@ class CryptoUserDefault {
             session.set(newValue, forKey: keyEncryptIterator)
         }
     }
-
+    
+    var profileKey: Data? {
+        get {
+            return session.data(forKey: profileKeyKey)
+        }
+        set {
+            session.set(newValue, forKey: profileKeyKey)
+        }
+    }
+    
     func reset() {
         session.removeObject(forKey: keyIsLoaded)
         session.removeObject(forKey: keyRotateSignedPrekey)

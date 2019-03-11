@@ -38,6 +38,7 @@ class BackupViewController: UITableViewController {
     private var timer: Timer?
     
     deinit {
+        NotificationCenter.default.removeObserver(self)
         timer?.invalidate()
         timer = nil
     }

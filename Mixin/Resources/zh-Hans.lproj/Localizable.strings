@@ -8,6 +8,7 @@
 "dialog_button_confirm" = "确认";
 "dialog_button_got_it" = "知道了";
 "dialog_button_disable" = "暂停使用";
+"dialog_button_login" = "登录";
 "dialog_progress_logout" = "退出登录...";
 "dialog_progress_connect" = "正在连接...";
 "dialog_button_no_remind" = "不再提醒";
@@ -70,6 +71,7 @@
 "toast_copied" = "已复制";
 "toast_added" = "已添加";
 "toast_saved" = "已保存";
+"toast_logined" = "已登录";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "toast_error" = "错误 %@：%@";
 "screen_captured_pin_leaking_hint" = "检测到正在进行屏幕录制，支付密码可能会录入视频！";
@@ -99,6 +101,7 @@
 "toast_recaptcha_timed_out" = "验证超时";
 "toast_recaptcha_invalid" = "验证失败";
 "toast_update_tips" = "请从 App Store 更新 Mixin 至最新版";
+"desktop_login_confim" = "确认登录 Mixin Messenger 桌面端？";
 
 // Contacts
 "contact_title" = "联系人";
@@ -472,6 +475,10 @@
 "setting_blocked_empty" = "没有人被屏蔽";
 "setting_blocked_summary" = "被屏蔽的用户不能给你发消息也不能邀请你入群。";
 "setting_conversation" = "会话";
+"setting_desktop" = "Mixin Messenger 桌面版";
+"setting_desktop_last_active" = "最后登入于 %@";
+"setting_desktop_desktop_on" = "桌面版已登入";
+"setting_desktop_log_out" = "从桌面版退出";
 "setting_authorizations" = "授权";
 "setting_deauthorize_confirmation" = "取消 %@ 授权？";
 "setting_storage_usage" = "存储空间";

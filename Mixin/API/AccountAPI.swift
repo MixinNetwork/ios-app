@@ -22,6 +22,8 @@ final class AccountAPI: BaseAPI {
 
         static let verifyPin = "pin/verify"
         static let updatePin = "pin/update"
+
+        static let sessions = "sessions/fetch"
     }
     
     private lazy var jsonEncoder = JSONEncoder()
@@ -38,6 +40,10 @@ final class AccountAPI: BaseAPI {
 
     var accountUserId: String {
         return account?.user_id ?? ""
+    }
+
+    var accountSessionId: String {
+        return account?.session_id ?? ""
     }
 
     var accountIdentityNumber: String {
@@ -95,11 +101,15 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.me, parameters: param, completion: completion)
     }
 
-    func updateSession(deviceToken: String) {
-        let sessionRequest = SessionRequest(notification_token: deviceToken)
+    func updateSession(deviceToken: String, voip_token: String) {
+        let sessionRequest = SessionRequest(notification_token: deviceToken, voip_token: voip_token)
         request(method: .post, url: url.session, parameters: sessionRequest.toParameters(), encoding: EncodableParameterEncoding<SessionRequest>()) { (result: APIResult<Account>) in
 
         }
+    }
+
+    func getSessions(userIds: [String], completion: @escaping (APIResult<[UserSession]>) -> Void) {
+        request(method: .post, url: url.sessions, parameters: userIds.toParameters(), encoding: JSONArrayEncoding(), completion: completion)
     }
     
     func preferences(userRequest: UserRequest, completion: @escaping (APIResult<UserResponse>) -> Void) {
@@ -133,7 +143,7 @@ final class AccountAPI: BaseAPI {
         request(method: .post, url: url.updatePin, parameters: param, toastError: false, completion: completion)
     }
     
-    func logout(completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func logoutSession(completion: @escaping (APIResult<EmptyResponse>) -> Void) {
         request(method: .post, url: url.logout, completion: completion)
     }
     

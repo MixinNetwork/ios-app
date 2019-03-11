@@ -5,6 +5,7 @@ import Firebase
 import SDWebImage
 import YYImage
 import GiphyCoreSDK
+import PushKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var autoCanceleNotification: DispatchWorkItem?
     private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
     private var backgroundTime: Timer?
+    private(set) var voipToken = ""
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if RELEASE
@@ -36,6 +38,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NetworkManager.shared.startListening()
         UNUserNotificationCenter.current().registerNotificationCategory()
         UNUserNotificationCenter.current().delegate = self
+        let pkpushRegistry = PKPushRegistry(queue: DispatchQueue.main)
+        pkpushRegistry.delegate = self
+        pkpushRegistry.desiredPushTypes = [.voIP]
         checkLogin()
         FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didFinishLaunching...didLogin:\(AccountAPI.shared.didLogin)...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         checkJailbreak()
@@ -75,8 +80,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         cancelBackgroundTask()
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
             self.backgroundTaskID = .invalid
+            self.backgroundTime?.invalidate()
+            self.backgroundTime = nil
         })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 25, repeats: false) { (time) in
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 60, repeats: false) { (time) in
             self.cancelBackgroundTask()
         }
     }
@@ -138,10 +145,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
 }
 
+extension AppDelegate: PKPushRegistryDelegate {
+
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
+        voipToken = pushCredentials.token.toHexString()
+        if AccountAPI.shared.didLogin {
+            AccountAPI.shared.updateSession(deviceToken: "", voip_token: voipToken)
+        }
+    }
+
+
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
+        checkServerData()
+    }
+
+}
+
 extension AppDelegate: UNUserNotificationCenterDelegate {
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        AccountAPI.shared.updateSession(deviceToken: deviceToken.toHexString())
+        AccountAPI.shared.updateSession(deviceToken: deviceToken.toHexString(), voip_token: "")
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {

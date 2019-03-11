@@ -8,6 +8,7 @@ class AccountUserDefault {
     private var keyHasClockSkew = "has_clock_skew"
     private var keyHasRestoreChat = "has_restore_chat"
     private var keyHasRestoreFilesAndVideos = "has_restore_files_videos"
+    private var keyExtensionSession = "extension_session"
 
     static let shared = AccountUserDefault()
 
@@ -30,6 +31,22 @@ class AccountUserDefault {
             return nil
         }
         return account
+    }
+
+    var extensionSession: String? {
+        get {
+            return session.string(forKey: keyExtensionSession)
+        }
+        set {
+            session.set(newValue, forKey: keyExtensionSession)
+        }
+    }
+
+    var isDesktopLoggedIn: Bool {
+        guard let sessionId = extensionSession else {
+            return false
+        }
+        return !sessionId.isEmpty
     }
 
     func getToken() -> String? {

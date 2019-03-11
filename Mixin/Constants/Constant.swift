@@ -36,6 +36,8 @@ extension NSNotification.Name {
     static let HiddenAssetsDidChange = NSNotification.Name("one.mixin.ios.hidden.assets.changed")
 
     static let BackupDidChange = NSNotification.Name("one.mixin.ios.backup.changed")
+
+    static let UserSessionDidChange = NSNotification.Name("one.mixin.ios.session.changed")
 }
 
 enum NotificationActionIdentifier {
@@ -195,61 +197,6 @@ struct MixinFile {
         return url
     }
 
-}
-
-enum MixinURL {
-    
-    static let scheme = "mixin"
-    static let host = "mixin.one"
-    
-    struct Path {
-        static let codes = "codes"
-        static let pay = "pay"
-        static let users = "users"
-        static let transfer = "transfer"
-        static let send = "send"
-    }
-    typealias Host = Path
-    
-    case codes(String)
-    case users(String)
-    case pay
-    case transfer(String)
-    case send
-    case unknown
-    
-    init?(url: URL) {
-        if url.scheme == MixinURL.scheme {
-            if url.host == Host.codes && url.pathComponents.count == 2 {
-                self = .codes(url.pathComponents[1])
-            } else if url.host == Host.pay {
-                self = .pay
-            } else if url.host == Host.users && url.pathComponents.count == 2 {
-                self = .users(url.pathComponents[1])
-            } else if url.host == Host.transfer && url.pathComponents.count == 2 {
-                self = .transfer(url.pathComponents[1])
-            } else if url.host == Host.send {
-                self = .send
-            } else {
-                self = .unknown
-            }
-        } else if url.host == MixinURL.host {
-            if url.pathComponents.count == 3 && url.pathComponents[1] == Path.codes {
-                self = .codes(url.pathComponents[2])
-            } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.pay {
-                self = .pay
-            } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.users {
-                self = .users(url.pathComponents[2])
-            } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.transfer {
-                self = .transfer(url.pathComponents[2])
-            } else {
-                self = .unknown
-            }
-        } else {
-            return nil
-        }
-    }
-    
 }
 
 let muteDuration8H: Int64 = 8 * 60 * 60

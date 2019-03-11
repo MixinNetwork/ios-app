@@ -2,7 +2,7 @@ import UIKit
 import Photos
 import MobileCoreServices
 
-class PhotoInputGridViewController: UIViewController, ConversationAccessible {
+class PhotoInputGridViewController: UIViewController, ConversationAccessible, ConversationInputAccessible {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
@@ -132,6 +132,7 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
             let vc = AssetSendViewController.instance(asset: asset, dataSource: dataSource)
             navigationController?.pushViewController(vc, animated: true)
         }
+        conversationInputViewController?.downsizeToRegularIfMaximized()
         return true
     }
     

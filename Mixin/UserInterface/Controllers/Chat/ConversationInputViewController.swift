@@ -5,6 +5,31 @@ protocol ConversationInputInteractiveResizableViewController {
     var interactiveResizableScrollView: UIScrollView { get }
 }
 
+protocol ConversationInputAccessible {
+    var conversationInputViewController: ConversationInputViewController? { get }
+}
+
+extension ConversationInputAccessible where Self: UIViewController {
+    
+    var conversationInputViewController: ConversationInputViewController? {
+        func findConversationInput(_ vc: UIViewController) -> ConversationInputViewController? {
+            if let vc = vc as? ConversationInputViewController {
+                return vc
+            } else if let parent = vc.parent {
+                return findConversationInput(parent)
+            } else {
+                return nil
+            }
+        }
+        if let parent = parent {
+            return findConversationInput(parent)
+        } else {
+            return nil
+        }
+    }
+    
+}
+
 class ConversationInputViewController: UIViewController {
     
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
@@ -354,6 +379,13 @@ class ConversationInputViewController: UIViewController {
         } else if height == .regular {
             dismiss()
         }
+    }
+    
+    func downsizeToRegularIfMaximized() {
+        guard height == .maximized else {
+            return
+        }
+        setPreferredContentHeightAnimated(.regular)
     }
     
     func setPreferredContentHeightAnimated(_ height: Height) {

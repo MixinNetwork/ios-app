@@ -1,6 +1,6 @@
 import UIKit
 
-class StickersViewController: StickersCollectionViewController {
+class StickersViewController: StickersCollectionViewController, ConversationInputAccessible {
     
     var stickers = [Sticker]()
     
@@ -16,6 +16,7 @@ class StickersViewController: StickersCollectionViewController {
     
     func send(sticker: Sticker) {
         dataSource?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
+        conversationInputViewController?.downsizeToRegularIfMaximized()
         if updateUsedAtAfterSent {
             DispatchQueue.global().async {
                 let newUsedAt = Date().toUTCString()

@@ -1,7 +1,7 @@
 import UIKit
 import GiphyCoreSDK
 
-class GiphyViewController: StickersCollectionViewController {
+class GiphyViewController: StickersCollectionViewController, ConversationInputAccessible {
     
     var urls = [GiphyImageURL]()
     
@@ -74,12 +74,14 @@ class GiphyViewController: StickersCollectionViewController {
             let vc = R.storyboard.chat.giphy_search()!
             vc.dataSource = dataSource
             vc.onDisappear = { [weak self] in
+                self?.conversationInputViewController?.downsizeToRegularIfMaximized()
                 self?.animated = true
             }
             present(vc, animated: true, completion: nil)
         } else {
             let url = urls[indexPath.row - 1].fullsized
             dataSource?.sendGif(at: url)
+            conversationInputViewController?.downsizeToRegularIfMaximized()
         }
     }
     

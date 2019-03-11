@@ -8,7 +8,7 @@ class PhotoInputAlbumCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            textLabel.textColor = isSelected ? UIColor(rgbValue: 0x3A3C3E) : UIColor(rgbValue: 0xBBBEC3)
+            textLabel.textColor = isSelected ? UIColor(rgbValue: 0x3A3C3E) : .accessoryText
         }
     }
     

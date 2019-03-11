@@ -5,15 +5,17 @@ class NewAddressViewController: UIViewController {
     @IBOutlet weak var labelTextField: UITextField!
     @IBOutlet weak var addressTextView: PlaceholderTextView!
     @IBOutlet weak var accountNameButton: UIButton!
+    @IBOutlet weak var saveButton: RoundedButton!
+    @IBOutlet weak var assetView: AssetIconView!
 
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var addressTextViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private var asset: AssetItem!
     private var addressValue: String {
         return addressTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
-    private var label: String {
+    private var labelValue: String {
         return labelTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
     private var successCallback: ((Address) -> Void)?
@@ -26,8 +28,7 @@ class NewAddressViewController: UIViewController {
         addressTextView.delegate = self
         addressTextView.textContainerInset = .zero
         addressTextView.textContainer.lineFragmentPadding = 0
-        container?.rightButton.isEnabled = false
-        container?.rightButton.setTitleColor(.systemTint, for: .normal)
+        assetView.setIcon(asset: asset)
         if let address = address {
             if asset.isAccount {
                 labelTextField.text = address.accountName
@@ -60,7 +61,15 @@ class NewAddressViewController: UIViewController {
     }
 
     @IBAction func checkLabelAndAddressAction(_ sender: Any) {
-        container?.rightButton.isEnabled = !addressValue.isEmpty && !label.isEmpty
+        if let address = address {
+            if asset.isAccount {
+                saveButton.isEnabled = !addressValue.isEmpty && !labelValue.isEmpty && (labelValue != address.accountName || addressValue != address.accountTag)
+            } else {
+                saveButton.isEnabled = !addressValue.isEmpty && !labelValue.isEmpty && (labelValue != address.label || addressValue != address.publicKey)
+            }
+        } else {
+            saveButton.isEnabled = !addressValue.isEmpty && !labelValue.isEmpty
+        }
     }
 
     @IBAction func scanAddressAction(_ sender: Any) {
@@ -84,29 +93,11 @@ class NewAddressViewController: UIViewController {
     }
 
     
-    @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        keyboardPlaceholderHeightConstraint.constant = endFrame.height
-        view.layoutIfNeeded()
-    }
-
-    class func instance(asset: AssetItem, address: Address? = nil, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "new_address") as! NewAddressViewController
-        vc.asset = asset
-        vc.successCallback = successCallback
-        vc.address = address
-        return ContainerViewController.instance(viewController: vc, title: address == nil ? Localized.ADDRESS_NEW_TITLE(symbol: asset.symbol) : Localized.ADDRESS_EDIT_TITLE(symbol: asset.symbol))
-    }
-
-}
-
-extension NewAddressViewController: ContainerViewControllerDelegate {
-
-    func barRightButtonTappedAction() {
-        guard let actionButton = container?.rightButton, !actionButton.isBusy else {
+    @IBAction func saveAction(_ sender: Any) {
+        guard let actionButton = saveButton, !actionButton.isBusy else {
             return
         }
-        guard !addressValue.isEmpty && !label.isEmpty else {
+        guard !addressValue.isEmpty && !labelValue.isEmpty else {
             return
         }
         addressTextView.isUserInteractionEnabled = false
@@ -121,8 +112,8 @@ extension NewAddressViewController: ContainerViewControllerDelegate {
     private func saveAddressAction(pin: String) {
         let assetId = asset.assetId
         let publicKey: String? = asset.isAccount ? nil : addressValue
-        let label: String? = asset.isAccount ? nil : self.label
-        let accountName: String? = asset.isAccount ? self.label : nil
+        let label: String? = asset.isAccount ? nil : self.labelValue
+        let accountName: String? = asset.isAccount ? self.labelValue : nil
         let accountTag: String? = asset.isAccount ? addressValue : nil
         let request = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: pin, accountName: accountName, accountTag: accountTag)
         WithdrawalAPI.shared.save(address: request) { [weak self](result) in
@@ -134,20 +125,34 @@ extension NewAddressViewController: ContainerViewControllerDelegate {
                         WalletUserDefault.shared.lastWithdrawalAddress[assetId] = address.addressId
                     }
                     weakSelf.successCallback?(address)
+                    weakSelf.navigationController?.showHud(style: .notification, text: Localized.TOAST_SAVED)
                     weakSelf.navigationController?.popViewController(animated: true)
                 }
             case .failure:
                 self?.pinTipsView?.removeFromSuperview()
-                self?.container?.rightButton.isBusy = false
+                self?.saveButton.isBusy = false
                 self?.addressTextView.isUserInteractionEnabled = true
                 self?.labelTextField.isEnabled = true
                 self?.addressTextView.becomeFirstResponder()
             }
         }
     }
+    
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
+        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
+        let windowHeight = AppDelegate.current.window!.bounds.height
+        bottomConstraint.constant = windowHeight - endFrame.origin.y + 20
+        UIView.performWithoutAnimation {
+            self.view.layoutIfNeeded()
+        }
+    }
 
-    func textBarRightButton() -> String? {
-        return Localized.ACTION_SAVE
+    class func instance(asset: AssetItem, address: Address? = nil, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
+        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "new_address") as! NewAddressViewController
+        vc.asset = asset
+        vc.successCallback = successCallback
+        vc.address = address
+        return ContainerViewController.instance(viewController: vc, title: address == nil ? Localized.ADDRESS_NEW_TITLE(symbol: asset.symbol) : Localized.ADDRESS_EDIT_TITLE(symbol: asset.symbol))
     }
 
 }
@@ -155,7 +160,7 @@ extension NewAddressViewController: ContainerViewControllerDelegate {
 extension NewAddressViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
-        container?.rightButton.isEnabled = !addressValue.isEmpty && !label.isEmpty
+        checkLabelAndAddressAction(textView)
         let sizeToFit = CGSize(width: addressTextView.bounds.width, height: UIView.layoutFittingExpandedSize.height)
         let height = addressTextView.sizeThatFits(sizeToFit).height
         addressTextViewHeightConstraint.constant = height

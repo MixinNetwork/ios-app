@@ -42,6 +42,12 @@
 "date_format_month" = "E, d MMM";
 "date_format_transation" = "MMM dd, HH:mm";
 
+"search_placeholder_address" = "ラベル";
+"search_placeholder_user" = "MIXIN ID、電話番号";
+"search_placeholder_asset" = "名前、シンボル";
+"search_placeholder_home" = "連絡先、資産、チャット";
+"search_placeholder_participants" = "名前";
+
 // Toast
 "toast_server_error" = "サーバーはメンテナンス中です";
 "toast_api_error_forbidden" = "アクセスが拒否されました";

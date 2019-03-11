@@ -3,17 +3,23 @@ import UIKit
 class AddressViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
 
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
     private lazy var editAction = UITableViewRowAction(style: .normal, title: Localized.MENU_EDIT, handler: tableViewCommitEditAction)
 
     private var asset: AssetItem!
     private var addresses = [Address]()
+    private var searchResult = [Address]()
+    private var isSearching: Bool {
+        return !(searchBoxView.textField.text ?? "").isEmpty
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.rowHeight = 80
+        searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        tableView.rowHeight = 60
         tableView.register(UINib(nibName: "AddressCell", bundle: .main), forCellReuseIdentifier: AddressCell.cellReuseId)
         tableView.dataSource = self
         tableView.delegate = self
@@ -24,6 +30,19 @@ class AddressViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: .AddressDidChange, object: nil, queue: .main) { [weak self] (_) in
             self?.loadAddresses()
         }
+    }
+
+    @IBAction func searchAction(_ sender: Any) {
+        let keyword = (searchBoxView.textField.text ?? "").uppercased()
+        if keyword.isEmpty {
+            searchResult = []
+        } else {
+            let isAccount = asset.isAccount
+            searchResult = addresses.filter {
+                isAccount ? $0.accountName?.uppercased().contains(keyword) ?? false : $0.label?.uppercased().contains(keyword) ?? false
+            }
+        }
+        tableView.reloadData()
     }
 
     private func loadAddresses() {
@@ -56,7 +75,7 @@ extension AddressViewController: ContainerViewControllerDelegate {
     }
 
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_titlebar_add")
+        return R.image.ic_title_add()
     }
 
 }
@@ -107,13 +126,16 @@ extension AddressViewController {
 extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
   
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return addresses.count
+        return isSearching ? searchResult.count : addresses.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: AddressCell.cellReuseId) as! AddressCell
-        cell.render(address: addresses[indexPath.row], asset: asset)
-        cell.accessoryType = .disclosureIndicator
+        if isSearching {
+            cell.render(address: searchResult[indexPath.row], asset: asset)
+        } else {
+            cell.render(address: addresses[indexPath.row], asset: asset)
+        }
         return cell
     }
 
@@ -122,8 +144,9 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
         guard let navigationController = navigationController else {
             return
         }
+        let address = isSearching ? searchResult[indexPath.row] : addresses[indexPath.row]
 
-        let vc = SendViewController.instance(asset: asset, type: .address(addresses[indexPath.row]))
+        let vc = SendViewController.instance(asset: asset, type: .address(address))
         var viewControllers = navigationController.viewControllers
         if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {
             viewControllers.remove(at: index)
@@ -133,7 +156,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        return !isSearching
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {

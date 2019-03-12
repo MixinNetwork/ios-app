@@ -6,7 +6,7 @@ import Zip
 
 class RestoreViewController: UIViewController {
 
-    @IBOutlet weak var restoreButton: StateResponsiveButton!
+    @IBOutlet weak var restoreButton: RoundedButton!
     @IBOutlet weak var progressLabel: UILabel!
     @IBOutlet weak var skipButton: UIButton!
 

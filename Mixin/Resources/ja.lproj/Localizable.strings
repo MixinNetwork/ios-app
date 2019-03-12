@@ -189,8 +189,9 @@
 "chat_quote_type_photo" = "写真";
 "chat_quote_type_video" = "ビデオ";
 "chat_search_giphy" = "GIPHYを検索";
-"chat_restore_tips" = "RiCloudからチャット履歴を復元します。 今すぐ復元しない場合、後で復元することはできません。";
-"chat_restore" = "チャット履歴を復元";
+"chat_restore" = "復元";
+"chat_restore_title" = "iCloudから\nチャット履歴を復元。";
+"chat_restore_subtitle" = "今実行しないと、後で復元することはできません。メッセージを復元した後、バックグラウンドでメディアを復元します。";
 
 // Call
 "call_hint_on_another_call" = "あなたはもう別の電話を受けています。 終了してから試してください。";

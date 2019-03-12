@@ -507,78 +507,112 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_restore" translatesAutoresizingMaskIntoConstraints="NO" id="ccd-OF-Y5G">
-                                <rect key="frame" x="0.0" y="80" width="375" height="280"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sUs-aI-gzW">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xRF-Rk-K9J">
+                                        <rect key="frame" x="301" y="0.0" width="74" height="44"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                        <state key="normal" title="Skip"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_skip"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="skipAction:" destination="je6-dP-iXh" eventType="touchUpInside" id="Bqv-nc-sYL"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="ccd-OF-Y5G" secondAttribute="height" multiplier="75:56" id="J74-9C-Cra"/>
+                                    <constraint firstAttribute="trailing" secondItem="xRF-Rk-K9J" secondAttribute="trailing" id="0j5-lg-5zn"/>
+                                    <constraint firstItem="xRF-Rk-K9J" firstAttribute="top" secondItem="sUs-aI-gzW" secondAttribute="top" id="5dU-ag-SsT"/>
+                                    <constraint firstAttribute="bottom" secondItem="xRF-Rk-K9J" secondAttribute="bottom" id="XFd-HW-VDI"/>
+                                    <constraint firstAttribute="height" constant="44" id="XQc-sb-cFr"/>
+                                </constraints>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_restore" translatesAutoresizingMaskIntoConstraints="NO" id="ccd-OF-Y5G">
+                                <rect key="frame" x="0.0" y="64" width="375" height="180"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="180" id="Az4-Ba-keh" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                                <real key="value" value="100"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </constraint>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HAa-aR-8l8" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="78" y="519" width="219" height="41"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <inset key="contentEdgeInsets" minX="30" minY="10" maxX="30" maxY="10"/>
-                                <state key="normal" title="Restore Chat History"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_restore"/>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="restoreAction:" destination="je6-dP-iXh" eventType="touchUpInside" id="hhM-Gy-8mC"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xRF-Rk-K9J">
-                                <rect key="frame" x="140.5" y="566" width="94" height="41"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <inset key="contentEdgeInsets" minX="30" minY="10" maxX="30" maxY="10"/>
-                                <state key="normal" title="Skip">
-                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_skip"/>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="skipAction:" destination="je6-dP-iXh" eventType="touchUpInside" id="Bqv-nc-sYL"/>
-                                </connections>
-                            </button>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Restoring 10%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TzW-ru-T74">
-                                <rect key="frame" x="0.0" y="576" width="375" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Restore your chat history from iCloud. You will not be able to restore later if you decline to restore now." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKN-Yk-9Wh">
-                                <rect key="frame" x="50" y="360" width="275" height="54"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_restore_tips"/>
-                                </userDefinedRuntimeAttributes>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="pVY-uP-Bar">
+                                <rect key="frame" x="30" y="244" width="315" height="123.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hf7-bf-vIf">
+                                        <rect key="frame" x="0.0" y="0.0" width="315" height="43"/>
+                                        <string key="text">Restore your
+chat history from icloud</string>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_restore_title"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJs-OY-OCz">
+                                        <rect key="frame" x="0.0" y="73" width="315" height="50.5"/>
+                                        <string key="text">You will not be able to restore later if you decline to restore now. you media will restore in the background after your messages restore.</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_restore_subtitle"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="UlL-mJ-MXf">
+                                <rect key="frame" x="20" y="447.5" width="335" height="44"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HAa-aR-8l8" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="120.5" y="0.0" width="94" height="44"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
+                                        <state key="normal" title="Restore"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="chat_restore"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="restoreAction:" destination="je6-dP-iXh" eventType="touchUpInside" id="hhM-Gy-8mC"/>
+                                        </connections>
+                                    </button>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Restoring 10%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TzW-ru-T74">
+                                        <rect key="frame" x="116" y="0.0" width="103.5" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="TzW-ru-T74" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" id="Kho-ih-a0C"/>
-                            <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="hKN-Yk-9Wh" secondAttribute="trailing" constant="50" id="P7k-QC-ZHr"/>
-                            <constraint firstItem="VtA-NB-BK7" firstAttribute="bottom" secondItem="xRF-Rk-K9J" secondAttribute="bottom" constant="60" id="Qu6-Ra-GBZ"/>
-                            <constraint firstItem="hKN-Yk-9Wh" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" constant="50" id="dE4-ks-Q47"/>
-                            <constraint firstItem="hKN-Yk-9Wh" firstAttribute="top" secondItem="ccd-OF-Y5G" secondAttribute="bottom" id="exp-GV-DhW"/>
-                            <constraint firstItem="VtA-NB-BK7" firstAttribute="bottom" secondItem="TzW-ru-T74" secondAttribute="bottom" constant="70" id="fAF-yB-AjH"/>
-                            <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="TzW-ru-T74" secondAttribute="trailing" id="gd6-WQ-8jq"/>
-                            <constraint firstItem="xRF-Rk-K9J" firstAttribute="centerX" secondItem="VtA-NB-BK7" secondAttribute="centerX" id="ggB-f2-hDo"/>
-                            <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="ccd-OF-Y5G" secondAttribute="trailing" id="gt3-TK-jV0"/>
-                            <constraint firstItem="ccd-OF-Y5G" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" id="l1I-b7-zrm"/>
-                            <constraint firstItem="xRF-Rk-K9J" firstAttribute="top" secondItem="HAa-aR-8l8" secondAttribute="bottom" constant="6" id="lsv-82-yor"/>
-                            <constraint firstItem="ccd-OF-Y5G" firstAttribute="top" secondItem="VtA-NB-BK7" secondAttribute="top" constant="60" id="qRA-3Q-n83" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                            <constraint firstItem="sUs-aI-gzW" firstAttribute="leading" secondItem="C0N-w5-vaR" secondAttribute="leading" id="2gy-6p-YDe"/>
+                            <constraint firstItem="UlL-mJ-MXf" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" constant="20" id="39b-VU-Bdr"/>
+                            <constraint firstItem="pVY-uP-Bar" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" constant="30" id="5YI-1J-cu6"/>
+                            <constraint firstItem="sUs-aI-gzW" firstAttribute="top" secondItem="VtA-NB-BK7" secondAttribute="top" id="6vF-tQ-Lf9"/>
+                            <constraint firstItem="UlL-mJ-MXf" firstAttribute="top" secondItem="pVY-uP-Bar" secondAttribute="bottom" constant="80" id="HIy-t0-pmf" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                        <real key="value" value="40"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
-                                        <real key="value" value="60"/>
+                                        <real key="value" value="30"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </constraint>
-                            <constraint firstItem="HAa-aR-8l8" firstAttribute="centerX" secondItem="VtA-NB-BK7" secondAttribute="centerX" id="zmv-ve-oj7"/>
+                            <constraint firstAttribute="trailing" secondItem="sUs-aI-gzW" secondAttribute="trailing" id="VZb-Cw-mO1"/>
+                            <constraint firstItem="pVY-uP-Bar" firstAttribute="top" secondItem="ccd-OF-Y5G" secondAttribute="bottom" id="XaV-tY-NB8"/>
+                            <constraint firstItem="ccd-OF-Y5G" firstAttribute="top" secondItem="sUs-aI-gzW" secondAttribute="bottom" id="akd-3j-GVF"/>
+                            <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="UlL-mJ-MXf" secondAttribute="trailing" constant="20" id="eTr-Fb-bSU"/>
+                            <constraint firstAttribute="trailing" secondItem="pVY-uP-Bar" secondAttribute="trailing" constant="30" id="g2G-aW-r5T"/>
+                            <constraint firstItem="VtA-NB-BK7" firstAttribute="trailing" secondItem="ccd-OF-Y5G" secondAttribute="trailing" id="gt3-TK-jV0"/>
+                            <constraint firstItem="ccd-OF-Y5G" firstAttribute="leading" secondItem="VtA-NB-BK7" secondAttribute="leading" id="l1I-b7-zrm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="VtA-NB-BK7"/>
                     </view>
@@ -590,7 +624,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pPq-Dm-YCs" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1855" y="-278"/>
+            <point key="canvasLocation" x="1853.5999999999999" y="-278.41079460269867"/>
         </scene>
     </scenes>
     <resources>
@@ -598,7 +632,7 @@
         <image name="ic_home_bottom_shadow" width="375" height="122"/>
         <image name="ic_home_camera" width="44" height="44"/>
         <image name="ic_qr_code" width="22" height="22"/>
-        <image name="ic_restore" width="169" height="108"/>
+        <image name="ic_restore" width="85" height="80"/>
         <image name="ic_search" width="17" height="17"/>
         <image name="ic_title_contact" width="23" height="19"/>
         <image name="ic_title_search" width="19" height="19"/>

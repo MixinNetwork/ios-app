@@ -6,7 +6,9 @@ import Alamofire
 class PayWindow: BottomSheetView {
 
     @IBOutlet weak var containerView: UIView!
-        
+    
+    var onDismiss: (() -> Void)?
+    
     private weak var textfield: UITextField?
 
     private let payView = PayView.instance()
@@ -36,6 +38,7 @@ class PayWindow: BottomSheetView {
         }
         super.dismissPopupControllerAnimated()
         textfield?.becomeFirstResponder()
+        onDismiss?()
     }
 
 }

@@ -34,7 +34,8 @@ class SendViewController: UIViewController {
     private var targetUser: UserItem?
     private var targetAddress: Address?
     private var isInputAssetAmount = true
-
+    private var adjustBottomConstraintWhenKeyboardFrameChanges = true
+    
     private lazy var transactionLabelAttribute: [NSAttributedString.Key: Any] = {
         return [.font: transactionFeeHintLabel.font,
                 .foregroundColor: transactionFeeHintLabel.textColor]
@@ -127,16 +128,21 @@ class SendViewController: UIViewController {
             formatter.roundingMode = .down
             amount = formatter.string(from: NSNumber(value: amount.doubleValue / asset.priceUsd.doubleValue)) ?? ""
         }
-
+        
+        adjustBottomConstraintWhenKeyboardFrameChanges = false
+        let payWindow = Bundle.main.loadNibNamed("PayWindow", owner: nil, options: nil)?.first as! PayWindow
+        payWindow.onDismiss = { [weak self] in
+            self?.adjustBottomConstraintWhenKeyboardFrameChanges = true
+        }
         switch type! {
         case .contact(let user):
-            PayWindow.shared.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+            payWindow.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
         case .address(let address):
             guard checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
                 navigationController?.showHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
                 return
             }
-            PayWindow.shared.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+            payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
         }
     }
 
@@ -213,6 +219,9 @@ class SendViewController: UIViewController {
     }
 
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
+        guard adjustBottomConstraintWhenKeyboardFrameChanges else {
+            return
+        }
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         let windowHeight = AppDelegate.current.window!.bounds.height
         self.bottomConstraint.constant = windowHeight - endFrame.origin.y + 20

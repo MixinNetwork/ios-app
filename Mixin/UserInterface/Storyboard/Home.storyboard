@@ -163,8 +163,8 @@
                                     <action selector="cameraAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="bie-cC-3OD"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_qr_code" translatesAutoresizingMaskIntoConstraints="NO" id="IpN-ia-USo">
-                                <rect key="frame" x="176.5" y="616" width="22" height="22"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_home_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="IpN-ia-USo">
+                                <rect key="frame" x="178.5" y="618.5" width="18" height="17"/>
                             </imageView>
                             <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uc0-po-iUR">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -630,9 +630,12 @@ chat history from icloud</string>
     <resources>
         <image name="bg_mixin" width="375" height="280"/>
         <image name="ic_home_bottom_shadow" width="375" height="122"/>
-        <image name="ic_home_camera" width="44" height="44"/>
-        <image name="ic_qr_code" width="22" height="22"/>
+        <image name="ic_home_camera" width="42" height="42"/>
+        <image name="ic_home_qrcode" width="18" height="17"/>
         <image name="ic_restore" width="85" height="80"/>
+        <image name="ic_home_camera" width="42" height="42"/>
+        <image name="ic_home_qrcode" width="18" height="17"/>
+        <image name="ic_restore" width="169" height="108"/>
         <image name="ic_search" width="17" height="17"/>
         <image name="ic_title_contact" width="23" height="19"/>
         <image name="ic_title_search" width="19" height="19"/>

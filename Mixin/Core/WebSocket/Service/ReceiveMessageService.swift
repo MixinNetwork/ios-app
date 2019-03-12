@@ -271,7 +271,7 @@ class ReceiveMessageService: MixinService {
         }
     }
     
-    private func processDecryptSuccess(data: BlazeMessageData, plainText: String) {
+    private func processDecryptSuccess(data: BlazeMessageData, plainText: String, dataUserId: String? = nil) {
         if data.category.hasSuffix("_TEXT") {
             var content = plainText
             if data.category == MessageCategory.PLAIN_TEXT.rawValue {
@@ -282,7 +282,7 @@ class ReceiveMessageService: MixinService {
             }
             let message = Message.createMessage(textMessage: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendSessionMessage(message: message)
+            SendMessageService.shared.sendSessionMessage(message: message, representativeId: dataUserId)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -292,7 +292,7 @@ class ReceiveMessageService: MixinService {
             }
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendSessionMessage(message: message)
+            SendMessageService.shared.sendSessionMessage(message: message, representativeId: dataUserId)
         } else if data.category.hasSuffix("_DATA")  {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -312,7 +312,7 @@ class ReceiveMessageService: MixinService {
             }
             let message = Message.createMessage(stickerData: transferStickerData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendSessionMessage(message: message)
+            SendMessageService.shared.sendSessionMessage(message: message, representativeId: dataUserId)
         } else if data.category.hasSuffix("_CONTACT") {
             guard let base64Data = Data(base64Encoded: plainText), let transferData = (try? jsonDecoder.decode(TransferContactData.self, from: base64Data)) else {
                 return
@@ -535,7 +535,7 @@ class ReceiveMessageService: MixinService {
             }
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
             _ = syncUser(userId: data.getSenderId())
-            processDecryptSuccess(data: data, plainText: data.data)
+            processDecryptSuccess(data: data, plainText: data.data, dataUserId: data.getDataUserId())
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
         default:
             break

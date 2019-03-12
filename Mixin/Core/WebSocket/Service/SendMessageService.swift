@@ -112,7 +112,7 @@ class SendMessageService: MixinService {
         }
     }
 
-    func sendSessionMessage(message: Message) {
+    func sendSessionMessage(message: Message, representativeId: String? = nil) {
         guard AccountUserDefault.shared.isDesktopLoggedIn else {
             return
         }
@@ -445,7 +445,12 @@ extension SendMessageService {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
                 return
             }
-            blazeMessage.params?.primitiveId = message.userId
+            if let representativeId = blazeMessage.params?.representativeId, !representativeId.isEmpty {
+                blazeMessage.params?.primitiveId = representativeId
+                blazeMessage.params?.representativeId = message.userId
+            } else {
+                blazeMessage.params?.primitiveId = message.userId
+            }
             blazeMessage.params?.data = message.content?.base64Encoded()
         } else if category.hasPrefix("SIGNAL_") {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {

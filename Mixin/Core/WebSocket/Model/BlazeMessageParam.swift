@@ -20,6 +20,8 @@ struct BlazeMessageParam: Codable {
     var primitiveId: String? = nil
     var primitiveMessageId: String? = nil
 
+    var representativeId: String? = nil
+
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
         case recipientId = "recipient_id"
@@ -37,6 +39,8 @@ struct BlazeMessageParam: Codable {
         case sessionId = "session_id"
         case primitiveId = "primitive_id"
         case primitiveMessageId = "primitive_message_id"
+
+        case representativeId = "representative_id"
     }
 }
 
@@ -68,7 +72,7 @@ extension BlazeMessageParam {
         self.messages = messages
     }
 
-    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeSessionMessageParam]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, primitiveId: String? = nil, primitiveMessageId: String? = nil) {
+    init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeSessionMessageParam]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, primitiveId: String? = nil, primitiveMessageId: String? = nil, representativeId: String? = nil) {
         self.conversationId = conversationId
         self.recipientId = recipientId
         self.category = category
@@ -86,5 +90,7 @@ extension BlazeMessageParam {
         self.sessionId = sessionId
         self.primitiveId = primitiveId
         self.primitiveMessageId = primitiveMessageId
+
+        self.representativeId = representativeId
     }
 }

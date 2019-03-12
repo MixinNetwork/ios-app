@@ -102,11 +102,12 @@ extension Job {
 
 extension Job {
 
-    init(message: Message, isSessionMessage: Bool = false) {
+    init(message: Message, isSessionMessage: Bool = false, representativeId: String? = nil) {
         var param = BlazeMessageParam(conversationId: message.conversationId,
                                       category: message.category,
                                       status: MessageStatus.SENT.rawValue,
-                                      messageId: message.messageId)
+                                      messageId: message.messageId,
+                                      representativeId: representativeId)
         if message.category.hasPrefix("SYSTEM_") {
             param.data = message.content
         }

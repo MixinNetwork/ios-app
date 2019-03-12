@@ -31,13 +31,16 @@ class ScreenSizeCompatibleLayoutConstraint: NSLayoutConstraint {
             updateConstraint(trait: .inch5_8, value: inch5_8)
         }
     }
-
-    @IBInspectable var inch5_x: CGFloat = 0 {
+    
+    @IBInspectable var inch6_1: CGFloat = 0 {
         didSet {
-            guard UIScreen.main.bounds.height > 720 else {
-                return
-            }
-            constant = inch5_x
+            updateConstraint(trait: .inch6_1, value: inch6_1)
+        }
+    }
+    
+    @IBInspectable var inch6_5: CGFloat = 0 {
+        didSet {
+            updateConstraint(trait: .inch6_5, value: inch6_5)
         }
     }
     

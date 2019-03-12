@@ -87,7 +87,8 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row < fixedExtensions.count {
-            switch fixedExtensions[indexPath.row] {
+            let ext = fixedExtensions[indexPath.row]
+            switch ext {
             case .camera:
                 conversationViewController?.imagePickerController.presentCamera()
             case .file:
@@ -98,6 +99,9 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
                 conversationViewController?.contactAction()
             case .call:
                 conversationViewController?.callAction()
+            }
+            if ext.dismissPanelAfterSent {
+                (parent as? ConversationInputViewController)?.dismissCustomInput(minimize: true)
             }
         } else {
             let app = apps[indexPath.row - fixedExtensions.count]
@@ -114,6 +118,7 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
 extension ConversationExtensionViewController {
     
     enum FixedExtension {
+        
         case camera
         case file
         case transfer
@@ -149,6 +154,11 @@ extension ConversationExtensionViewController {
                 return Localized.CHAT_MENU_CALL
             }
         }
+        
+        var dismissPanelAfterSent: Bool {
+            return self == .transfer || self == .call
+        }
+        
     }
     
 }

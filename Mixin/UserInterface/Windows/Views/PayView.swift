@@ -6,7 +6,7 @@ import AudioToolbox
 
 class PayView: UIStackView {
 
-    @IBOutlet weak var passwordPayView: UIView!
+    @IBOutlet weak var payView: UIView!
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -15,12 +15,11 @@ class PayView: UIStackView {
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoLabel: UILabel!
     @IBOutlet weak var transferLoadingView: UIActivityIndicatorView!
-    @IBOutlet weak var payStatusLabel: UILabel!
-    @IBOutlet weak var paySuccessImageView: UIImageView!
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var memoView: UIView!
-    @IBOutlet weak var assetImageView: AvatarImageView!
-    @IBOutlet weak var blockchainImageView: CornerImageView!
+    @IBOutlet weak var assetIconView: AssetIconView!
+    @IBOutlet weak var statusView: UIView!
+    @IBOutlet weak var paySuccessImageView: UIImageView!
 
     private weak var superView: BottomSheetView?
 
@@ -42,8 +41,6 @@ class PayView: UIStackView {
         super.awakeFromNib()
         if ScreenSize.current == .inch3_5 {
             pinField.cellLength = 8
-            assetImageView.cornerRadius = 12
-            blockchainImageView.cornerRadius = 4
         }
         pinField.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -69,7 +66,6 @@ class PayView: UIStackView {
             avatarImageView.isHidden = false
             nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
             mixinIDLabel.text = user.identityNumber
-            payStatusLabel.text = Localized.TRANSFER_PAY_PASSWORD
         } else if let address = address {
             self.address = address
             avatarImageView.isHidden = true
@@ -80,26 +76,14 @@ class PayView: UIStackView {
                 nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label ?? "")
                 mixinIDLabel.text = address.publicKey?.toSimpleKey()
             }
-            payStatusLabel.text = Localized.WALLET_WITHDRAWAL_PAY_PASSWORD
         }
-        if let url = URL(string: asset.iconUrl) {
-            assetImageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "ic_place_holder"), options: [], completed: nil)
-        }
-        if let chainIconUrl = asset.chainIconUrl,  let chainUrl = URL(string: chainIconUrl) {
-            blockchainImageView.sd_setImage(with: chainUrl)
-            blockchainImageView.isHidden = false
-        } else {
-            blockchainImageView.isHidden = true
-        }
-        memoView.isHidden = memo.isEmpty
-        transferLoadingView.stopAnimating()
-        transferLoadingView.isHidden = true
-        pinField.isHidden = false
+        preparePayView(show: true)
+        assetIconView.setIcon(asset: asset)
         pinField.clear()
+        memoLabel.isHidden = memo.isEmpty
         memoLabel.text = memo
         amountLabel.text = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
         amountExchangeLabel.text = CurrencyFormatter.localizedString(from: amount.doubleValue * asset.priceUsd.doubleValue, format: .legalTender, sign: .never, symbol: .usd)
-        paySuccessImageView.isHidden = true
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
 
@@ -107,6 +91,21 @@ class PayView: UIStackView {
         if !biometricsPayAction() {
             DispatchQueue.main.async(execute: alertScreenCapturedIfNeeded)
         }
+    }
+
+    private func preparePayView(show: Bool) {
+        payView.isHidden = !show
+        statusView.isHidden = show
+        if show {
+            payView.isHidden = false
+            statusView.isHidden = true
+            transferLoadingView.stopAnimating()
+        } else {
+            payView.isHidden = true
+            statusView.isHidden = false
+            transferLoadingView.startAnimating()
+        }
+        paySuccessImageView.isHidden = true
     }
 
     @IBAction func dismissAction(_ sender: Any) {
@@ -175,9 +174,6 @@ extension PayView {
 extension PayView: PinFieldDelegate {
 
     func inputFinished(pin: String) {
-        transferLoadingView.startAnimating()
-        transferLoadingView.isHidden = false
-        pinField.isHidden = true
         transferAction(pin: pin)
     }
 
@@ -189,6 +185,7 @@ extension PayView: PinFieldDelegate {
         let assetId = asset.assetId
         let isWithdrawal = avatarImageView.isHidden
         dismissButton.isEnabled = false
+        preparePayView(show: false)
 
         let completion = { [weak self](result: APIResult<Snapshot>) in
             guard let weakSelf = self else {
@@ -212,7 +209,6 @@ extension PayView: PinFieldDelegate {
                 weakSelf.transferLoadingView.stopAnimating()
                 weakSelf.transferLoadingView.isHidden = true
                 weakSelf.paySuccessImageView.isHidden = false
-                weakSelf.payStatusLabel.text = Localized.ACTION_DONE
                 weakSelf.playSuccessSound()
                 weakSelf.delayDismissWindow()
             case let .failure(error):

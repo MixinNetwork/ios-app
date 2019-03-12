@@ -23,14 +23,14 @@ class ClockSkewViewController: UIViewController {
         }
         continueAction.isBusy = true
 
-        AccountAPI.shared.me { (result) in
+        AccountAPI.shared.me { [weak self](result) in
 
             switch result {
             case .success:
                 AccountUserDefault.shared.hasClockSkew = false
                 AppDelegate.current.window?.rootViewController = makeInitialViewController()
             case .failure:
-                break
+                self?.continueAction.isBusy = false
             }
         }
     }

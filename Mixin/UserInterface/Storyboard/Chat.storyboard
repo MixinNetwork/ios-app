@@ -815,7 +815,7 @@
                                             <action selector="toggleExtensionAction:" destination="bmF-xB-4o7" eventType="valueChanged" id="BVr-Fq-0HU"/>
                                         </connections>
                                     </view>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ucd-YD-Vpg" customClass="ConversationInputTextView" customModule="Mixin" customModuleProvider="target">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ucd-YD-Vpg" customClass="ConversationInputTextView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="67" y="7" width="203" height="36"/>
                                         <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>

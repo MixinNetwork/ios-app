@@ -821,6 +821,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="Kzm-2u-qAF"/>
                                         </constraints>
+                                        <inset key="scrollIndicatorInsets" minX="0.0" minY="16" maxX="0.0" maxY="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         <userDefinedRuntimeAttributes>

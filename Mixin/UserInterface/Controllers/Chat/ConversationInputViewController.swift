@@ -161,7 +161,6 @@ class ConversationInputViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
-        textView.scrollIndicatorInsets = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         textView.delegate = self
         lastSafeAreaInsetsBottom = view.compatibleSafeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)
@@ -596,9 +595,9 @@ extension ConversationInputViewController: UITextViewDelegate {
             + textView.textContainerInset.bottom)
         let sizeToFit = CGSize(width: textView.bounds.width,
                                height: UIView.layoutFittingExpandedSize.height)
-        let contentSize = textView.sizeThatFits(sizeToFit)
-        textView.isScrollEnabled = contentSize.height > maxHeight
-        let newHeight = ceil(min(contentSize.height, maxHeight))
+        let contentHeight = ceil(textView.sizeThatFits(sizeToFit).height)
+        textView.isScrollEnabled = contentHeight > maxHeight
+        let newHeight = min(contentHeight, maxHeight)
         let diff = newHeight - textViewHeightConstraint.constant
         if abs(diff) > 0.1 {
             textViewHeightConstraint.constant = newHeight

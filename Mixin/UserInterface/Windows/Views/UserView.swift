@@ -175,6 +175,10 @@ class UserView: CornerView {
             alc.addAction(UIAlertAction(title: Localized.PROFILE_BLOCK, style: .destructive, handler: { [weak self](action) in
                 self?.blockAction()
             }))
+        case Relationship.BLOCKING.rawValue:
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_UNBLOCK, style: .destructive, handler: { [weak self](action) in
+                self?.unblockAction()
+            }))
         default:
             break
         }
@@ -259,6 +263,13 @@ class UserView: CornerView {
     
     private func transactionsAction() {
         UIApplication.rootNavigationController()?.pushViewController(PeerTransactionsViewController.instance(opponentId: user.userId), animated: true)
+    }
+
+    private func unblockAction() {
+        showLoading()
+        UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
+            self?.handlerUpdateUser(result)
+        }
     }
 
     private func blockAction() {

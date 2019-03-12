@@ -3,7 +3,7 @@ import Foundation
 struct BlazeMessageData: Codable {
 
     let conversationId: String
-    let userId: String
+    var userId: String
     var messageId: String
     let category: String
     let data: String
@@ -13,6 +13,8 @@ struct BlazeMessageData: Codable {
     let source: String
     let quoteMessageId: String
     let representativeId: String
+    var sessionId: String? = nil
+    var primitiveId: String? = nil
 
     enum CodingKeys: String, CodingKey {
         case conversationId = "conversation_id"
@@ -26,6 +28,8 @@ struct BlazeMessageData: Codable {
         case source
         case quoteMessageId = "quote_message_id"
         case representativeId = "representative_id"
+        case sessionId = "session_id"
+        case primitiveId = "primitive_id"
     }
 }
 
@@ -36,6 +40,14 @@ extension BlazeMessageData {
             return userId
         }
         return representativeId
+    }
+
+    func getDataUserId() -> String? {
+        return representativeId.isEmpty ? nil : userId
+    }
+
+    var isSessionMessage: Bool {
+        return userId == AccountAPI.shared.accountUserId && sessionId != nil && !(sessionId!.isEmpty)
     }
 
 }

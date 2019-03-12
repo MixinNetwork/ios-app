@@ -60,6 +60,8 @@ extension SettingViewController {
                 vc = StorageUsageViewController.instance()
             }
         case 2:
+            vc = DesktopViewController.instance()
+        case 3:
             vc = AuthorizationsViewController.instance()
         default:
             vc = AboutContainerViewController.instance()

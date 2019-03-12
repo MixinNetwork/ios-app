@@ -102,7 +102,7 @@ extension Message {
     }
 
     static func createMessage(systemMessage action: String?, participantId: String?, userId: String, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, status: MessageStatus.READ.rawValue, action: action, participantId: participantId, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, content: data.data, status: MessageStatus.READ.rawValue, action: action, participantId: participantId, createdAt: data.createdAt)
     }
 
     static func createMessage(appMessage data: BlazeMessageData) -> Message {
@@ -164,6 +164,7 @@ enum MessageCategory: String {
     case APP_CARD
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION
+    case SYSTEM_EXTENSION_SESSION
     case SYSTEM_ACCOUNT_SNAPSHOT
     case WEBRTC_AUDIO_OFFER
     case WEBRTC_AUDIO_ANSWER

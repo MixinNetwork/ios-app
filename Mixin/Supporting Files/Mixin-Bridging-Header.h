@@ -9,3 +9,4 @@
 #import "MXNAudioRecorder.h"
 #import "MXNAudioPlayer.h"
 #import "MXNFastURLDetector.h"
+#import "MXNProvisionCryptor.h"

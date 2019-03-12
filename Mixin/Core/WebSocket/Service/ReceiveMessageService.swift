@@ -820,6 +820,7 @@ extension ReceiveMessageService {
 
         switch sysMessage.action {
         case SystemConversationAction.ADD_SESSION.rawValue:
+            AccountUserDefault.shared.lastDesktopLogin = Date()
             AccountUserDefault.shared.extensionSession = sessionId
             SignalProtocol.shared.deleteSession(userId: data.userId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)

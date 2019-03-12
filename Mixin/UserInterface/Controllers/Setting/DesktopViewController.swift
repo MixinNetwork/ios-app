@@ -2,13 +2,14 @@ import UIKit
 
 class DesktopViewController: UITableViewController {
     
-    @IBOutlet weak var statusImageView: UIImageView!
-    @IBOutlet weak var actionLabel: UILabel!
-    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
     @IBOutlet weak var actionCell: UITableViewCell!
-
-    private let cellReuseId = "cell"
-    private var isDesktopLoggedIn = AccountUserDefault.shared.isDesktopLoggedIn
+    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var actionLabel: UILabel!
+    @IBOutlet weak var footerLabel: UILabel!
+    
+    private var isDesktopLoggedIn: Bool {
+        return AccountUserDefault.shared.isDesktopLoggedIn
+    }
     
     class func instance() -> UIViewController {
         let vc = Storyboard.setting.instantiateViewController(withIdentifier: "desktop") as! DesktopViewController
@@ -18,51 +19,57 @@ class DesktopViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(sessionChanged), name: .UserSessionDidChange, object: nil)
-        updateStatus(forceUpdate: true)
-    }
-
-    @objc func sessionChanged() {
-        updateStatus()
+        updateLabels()
+        actionCell.selectedBackgroundView = UIView.createSelectedBackgroundView()
     }
     
-    private func updateStatus(forceUpdate: Bool = false) {
-        let isDesktopLoggedIn = AccountUserDefault.shared.isDesktopLoggedIn
-        guard forceUpdate || self.isDesktopLoggedIn != isDesktopLoggedIn else {
-            return
-        }
-        self.isDesktopLoggedIn = isDesktopLoggedIn
-
-        statusImageView.image = isDesktopLoggedIn ? UIImage(named: "ic_desktop_on") : UIImage(named: "ic_desktop_off")
-        actionLabel.text = isDesktopLoggedIn ? Localized.SETTING_DESKTOP_LOG_OUT : Localized.SCAN_QR_CODE
-
-        if !forceUpdate {
-            actionLabel.isHidden = false
-            indicatorView.stopAnimating()
-            indicatorView.isHidden = true
-            actionCell.isUserInteractionEnabled = true
-        }
+    @objc func sessionChanged() {
+        updateLabels()
+        layoutForIsLoading(false)
     }
-
-    private func loadingView() {
-        guard !indicatorView.isAnimating else {
-            return
-        }
-        actionCell.isUserInteractionEnabled = false
-        actionLabel.isHidden = true
-        indicatorView.startAnimating()
-        indicatorView.isHidden = false
-    }
-
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if AccountUserDefault.shared.isDesktopLoggedIn {
-            loadingView()
-            AccountAPI.shared.logoutSession { (_) in
-
-            }
+        if isDesktopLoggedIn {
+            layoutForIsLoading(true)
+            AccountAPI.shared.logoutSession { (_) in }
         } else {
             let vc = CameraViewController.instance()
             navigationController?.pushViewController(vc, animated: true)
         }
     }
+    
+    private func layoutForIsLoading(_ isLoading: Bool) {
+        actionCell.isUserInteractionEnabled = !isLoading
+        actionLabel.isHidden = isLoading
+        isLoading ? indicatorView.startAnimating() : indicatorView.stopAnimating()
+        indicatorView.isHidden = !isLoading
+    }
+    
+    private func updateLabels() {
+        if isDesktopLoggedIn {
+            actionLabel.text = Localized.SETTING_DESKTOP_LOG_OUT
+            footerLabel.text = Localized.SETTING_DESKTOP_DESKTOP_ON
+        } else {
+            actionLabel.text = Localized.SCAN_QR_CODE
+            if let lastLoginDate = AccountUserDefault.shared.lastDesktopLogin {
+                let time = formattedString(from: lastLoginDate)
+                footerLabel.text = Localized.SETTING_DESKTOP_LAST_ACTIVE(time: time)
+            } else {
+                footerLabel.text = nil
+            }
+        }
+    }
+    
+    private func formattedString(from date: Date) -> String {
+        let secondsPerWeek: TimeInterval = 7 * 24 * 60 * 60
+        let formatter: DateFormatter
+        if date.timeIntervalSinceNow < secondsPerWeek {
+            formatter = DateFormatter.nameOfTheDayAndTime
+        } else {
+            formatter = DateFormatter.dateAndTime
+        }
+        return formatter.string(from: date)
+    }
+    
 }

@@ -9,7 +9,8 @@ class AccountUserDefault {
     private var keyHasRestoreChat = "has_restore_chat"
     private var keyHasRestoreFilesAndVideos = "has_restore_files_videos"
     private var keyExtensionSession = "extension_session"
-
+    private var keyLastDesktopLogIn = "last_desktop_login"
+    
     static let shared = AccountUserDefault()
 
     private let session = UserDefaults.standard
@@ -48,7 +49,16 @@ class AccountUserDefault {
         }
         return !sessionId.isEmpty
     }
-
+    
+    var lastDesktopLogin: Date? {
+        get {
+            return session.object(forKey: keyLastDesktopLogIn) as? Date
+        }
+        set {
+            session.set(newValue, forKey: keyLastDesktopLogIn)
+        }
+    }
+    
     func getToken() -> String? {
         return session.string(forKey: keySessionSecret)
     }

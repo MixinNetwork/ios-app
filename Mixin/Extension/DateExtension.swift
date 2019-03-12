@@ -12,6 +12,8 @@ extension DateFormatter {
     static let yyyymmdd = DateFormatter(dateFormat: "yyyyMMdd")
     static let MMMddHHmm = DateFormatter(dateFormat: Localized.DATE_FORMAT_TRANSATION)
     static let filename = DateFormatter(dateFormat: "yyyy-MM-dd_HH:mm:ss")
+    static let nameOfTheDayAndTime = DateFormatter(dateFormat: "EEEE, " + Localized.DATE_FORMAT_DAY)
+    static let dateAndTime = DateFormatter(dateFormat: Localized.DATE_FORMAT_DATE + " " + Localized.DATE_FORMAT_DAY)
     
     convenience init(dateFormat: String) {
         self.init()

@@ -50,6 +50,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(socketStatusChange), name: .SocketStatusChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: .SyncMessageDidAppear, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
             self?.searchViewController?.prepare()
         }
@@ -167,6 +168,26 @@ class HomeViewController: UIViewController {
         }
     }
 
+    @objc func syncStatusChange(_ notification: Notification) {
+        guard WebSocketService.shared.connected, view?.isVisibleInScreen ?? false else {
+            return
+        }
+        guard let progress = notification.object as? Int else {
+            return
+        }
+        if progress >= 100 {
+            titleLabel.text = Localized.HOME_TITLE
+            connectingView.stopAnimating()
+            connectingView.isHidden = true
+        } else {
+            titleLabel.text = Localized.CONNECTION_HINT_PROGRESS(progress)
+            guard connectingView.isHidden else {
+                return
+            }
+            connectingView.startAnimating()
+            connectingView.isHidden = false
+        }
+    }
 
     @IBAction func walletAction(_ sender: Any) {
         guard let account = AccountAPI.shared.account else {

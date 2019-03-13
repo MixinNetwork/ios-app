@@ -1,5 +1,4 @@
 import UIKit
-import SwiftMessages
 
 class ChangeNumberVerifyPINViewController: ChangeNumberViewController {
 

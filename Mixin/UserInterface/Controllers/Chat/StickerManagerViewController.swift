@@ -89,8 +89,8 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                             weakSelf.fetchStickers()
                         }
                     }
-                case .failure:
-                    weakSelf.navigationController?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                case let .failure(error):
+                    UIApplication.showHud(style: .error, text: error.localizedDescription)
                 }
             })
         } else {

@@ -18,7 +18,6 @@ target 'Mixin' do
   pod 'RSKImageCropper'
   pod 'DeviceGuru'
   pod 'JWT', '~> 3.0.0-beta.7'
-  pod 'SwiftMessages'
   pod 'Zip', '~> 1.1'
   pod 'SignalProtocolC', :git => 'git@github.com:MixinMessenger/SignalProtocolC.git', :submodules => true
   pod 'WCDB.swift', :git => 'git@github.com:MixinNetwork/wcdb.git', :branch => 'swift4.2'

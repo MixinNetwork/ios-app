@@ -1,5 +1,4 @@
 import UIKit
-import SwiftMessages
 
 class LoginView: UIView {
 
@@ -86,8 +85,8 @@ class LoginView: UIView {
             switch result {
             case let .success(response):
                 UIApplication.shared.tryOpenThirdApp(response: response)
-            case .failure:
-                break
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -109,7 +108,7 @@ class LoginView: UIView {
             switch result {
             case let .success(response):
                 weakSelf.loginSuccess = true
-                UIApplication.rootNavigationController()?.showHud(style: .notification, text: Localized.TOAST_AUTHORIZED)
+                UIApplication.showHud(style: .notification, text: Localized.TOAST_AUTHORIZED)
                 weakSelf.superView?.dismissPopupControllerAnimated()
                 if UIApplication.rootNavigationController()?.viewControllers.last is CameraViewController {
                     UIApplication.rootNavigationController()?.popViewController(animated: true)
@@ -117,7 +116,7 @@ class LoginView: UIView {
                 UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error):
                 weakSelf.authorizeButton.isBusy = false
-                SwiftMessages.showToast(message: error.localizedDescription, backgroundColor: .hintRed)
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
             }
         })
     }

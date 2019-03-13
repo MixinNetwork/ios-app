@@ -128,9 +128,7 @@ extension SendMessagePeerSelectionViewController {
         let filename = message.messageId + ExtensionName.jpeg.withDot
         let path = MixinFile.url(ofChatDirectory: .photos, filename: filename)
         guard image.saveToFile(path: path), FileManager.default.fileSize(path.path) > 0, image.size.width > 0, image.size.height > 0 else {
-            DispatchQueue.main.async {
-                UIApplication.rootNavigationController()?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
-            }
+            UIApplication.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
             return nil
         }
         message.thumbImage = image.base64Thumbnail()

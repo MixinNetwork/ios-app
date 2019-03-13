@@ -1,6 +1,5 @@
 import UIKit
 import Photos
-import SwiftMessages
 import YYImage
 import SnapKit
 
@@ -451,9 +450,9 @@ extension GalleryItemViewController {
             }, completionHandler: { (success, error) in
                 DispatchQueue.main.async {
                     if success {
-                        SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_SUCCESS, backgroundColor: .hintGreen)
+                        UIApplication.showHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
                     } else {
-                        SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_FAILED, backgroundColor: .hintRed)
+                        UIApplication.showHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
                     }
                 }
             })
@@ -463,9 +462,9 @@ extension GalleryItemViewController {
             }, completionHandler: { (success, error) in
                 DispatchQueue.main.async {
                     if success {
-                        SwiftMessages.showToast(message: Localized.CAMERA_SAVE_VIDEO_SUCCESS, backgroundColor: .hintGreen)
+                        UIApplication.showHud(style: .notification, text: Localized.CAMERA_SAVE_VIDEO_SUCCESS)
                     } else {
-                        SwiftMessages.showToast(message: Localized.CAMERA_SAVE_VIDEO_FAILED, backgroundColor: .hintRed)
+                        UIApplication.showHud(style: .error, text: Localized.CAMERA_SAVE_VIDEO_FAILED)
                     }
                 }
             })

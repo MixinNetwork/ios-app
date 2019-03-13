@@ -57,7 +57,7 @@ class ConversationAPI : BaseAPI {
     }
 
     func joinConversation(codeId: String, completion: @escaping (APIResult<ConversationResponse>) -> Void) {
-        request(method: .post, url: url.join(codeId: codeId), toastError: false, completion: completion)
+        request(method: .post, url: url.join(codeId: codeId), completion: completion)
     }
 
     func addParticipant(conversationId: String, participantUserIds: [String], completion: @escaping (APIResult<ConversationResponse>) -> Void) {

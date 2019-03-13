@@ -1,5 +1,4 @@
 import UIKit
-import SwiftMessages
 import AVKit
 
 protocol GalleryViewControllerDelegate: class {

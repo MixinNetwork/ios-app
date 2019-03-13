@@ -99,7 +99,8 @@ extension ConversationSettingViewController {
                     let newAccount = Account(withAccount: old, receiveMessageSource: .everybody)
                     AccountAPI.shared.account = newAccount
                 }
-            case .failure:
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
                 self?.MessageSourceContactsCell.accessoryType = .checkmark
             }
         })
@@ -123,7 +124,8 @@ extension ConversationSettingViewController {
                     let newAccount = Account(withAccount: old, receiveMessageSource: .contacts)
                     AccountAPI.shared.account = newAccount
                 }
-            case .failure:
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
                 self?.MessageSourceEverybodyCell.accessoryType = .checkmark
             }
         })
@@ -147,7 +149,8 @@ extension ConversationSettingViewController {
                     let newAccount = Account(withAccount: old, acceptConversationSource: .everybody)
                     AccountAPI.shared.account = newAccount
                 }
-            case .failure:
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
                 self?.ConversationSourceContactsCell.accessoryType = .checkmark
             }
         })
@@ -171,7 +174,8 @@ extension ConversationSettingViewController {
                     let newAccount = Account(withAccount: old, acceptConversationSource: .contacts)
                     AccountAPI.shared.account = newAccount
                 }
-            case .failure:
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
                 self?.ConversationSourceEverybodyCell.accessoryType = .checkmark
             }
         })

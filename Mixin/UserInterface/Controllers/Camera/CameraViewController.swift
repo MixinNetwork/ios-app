@@ -1,7 +1,6 @@
 import UIKit
 import AVFoundation
 import Photos
-import SwiftMessages
 import AVKit
 
 enum DetechStatus {
@@ -130,9 +129,9 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
                 if success {
                     weakSelf.displaySnapshotView(show: false)
                     weakSelf.didTakePhoto = false
-                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_SUCCESS, backgroundColor: .hintGreen)
+                    UIApplication.showHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
                 } else {
-                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_FAILED, backgroundColor: .hintRed)
+                    UIApplication.showHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
                 }
                 weakSelf.saveButton.isEnabled = true
                 weakSelf.sendButton.isEnabled = true

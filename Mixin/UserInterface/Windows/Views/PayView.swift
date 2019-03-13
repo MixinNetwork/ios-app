@@ -1,7 +1,6 @@
 import UIKit
 import Foundation
 import LocalAuthentication
-import SwiftMessages
 import AudioToolbox
 
 class PayView: UIStackView {
@@ -218,7 +217,7 @@ extension PayView: PinFieldDelegate {
                     return
                 }
                 if (weakSelf.superView as? UrlWindow)?.fromWeb ?? false {
-                    SwiftMessages.showToast(message: error.localizedDescription, backgroundColor: .hintRed)
+                    UIApplication.showHud(style: .error, text: error.localizedDescription)
                 } else {
                     UIApplication.currentActivity()?.alert(error.localizedDescription, message: nil)
                 }

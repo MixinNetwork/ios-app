@@ -33,8 +33,8 @@ class UsernameViewController: LoginViewController {
                     UserDAO.shared.updateAccount(account: account)
                 }
                 AppDelegate.current.window?.rootViewController = makeInitialViewController()
-            case .failure:
-                break
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
             }
         }
     }

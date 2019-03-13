@@ -1,6 +1,5 @@
 import UIKit
 import LocalAuthentication
-import SwiftMessages
 import Alamofire
 
 class PayWindow: BottomSheetView {

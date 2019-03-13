@@ -232,7 +232,8 @@ extension GroupParticipentViewController {
             switch result {
             case .success:
                 break
-            case .failure:
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
                 cell.stopLoading()
             }
         }
@@ -247,8 +248,8 @@ extension GroupParticipentViewController {
             switch result {
             case .success:
                 break
-            case .failure:
-                break
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
             }
         }
     }

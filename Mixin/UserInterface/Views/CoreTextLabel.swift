@@ -1,5 +1,4 @@
 import UIKit
-import SwiftMessages
 
 protocol CoreTextLabelDelegate: class {
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL)
@@ -15,7 +14,7 @@ extension CoreTextLabelDelegate {
         }))
         alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
             UIPasteboard.general.string = url.absoluteString
-            SwiftMessages.showToast(message: Localized.TOAST_COPIED, backgroundColor: .hintGreen)
+            UIApplication.showHud(style: .notification, text: Localized.TOAST_COPIED)
         }))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         UIApplication.currentActivity()?.present(alert, animated: true, completion: nil)

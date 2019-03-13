@@ -92,7 +92,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
         let failedBlock = { [weak self] in
             DispatchQueue.main.async {
                 self?.container?.rightButton.isBusy = false
-                self?.navigationController?.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                UIApplication.showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
             }
         }
 
@@ -106,7 +106,7 @@ extension StickerAddViewController: ContainerViewControllerDelegate {
                     DispatchQueue.global().async { [weak self] in
                         StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
                         DispatchQueue.main.async {
-                            self?.navigationController?.showHud(style: .notification, text: Localized.TOAST_ADDED)
+                            UIApplication.showHud(style: .notification, text: Localized.TOAST_ADDED)
                             self?.navigationController?.popViewController(animated: true)
                         }
                     }

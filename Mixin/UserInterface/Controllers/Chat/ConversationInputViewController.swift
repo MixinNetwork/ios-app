@@ -231,8 +231,8 @@ class ConversationInputViewController: UIViewController {
             switch result {
             case .success(let userResponse):
                 UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: true)
-            case .failure:
-                break
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
             }
         }
     }

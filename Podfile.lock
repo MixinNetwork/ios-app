@@ -79,9 +79,6 @@ PODS:
   - SocketRocket (0.5.1)
   - SQLiteRepairKit (1.2.1):
     - WCDBOptimizedSQLCipher (~> 1.2.0)
-  - SwiftMessages (6.0.2):
-    - SwiftMessages/App (= 6.0.2)
-  - SwiftMessages/App (6.0.2)
   - WCDB.swift (1.0.7.5):
     - SQLiteRepairKit (~> 1.2.0)
     - WCDBOptimizedSQLCipher (~> 1.2.0)
@@ -109,7 +106,6 @@ DEPENDENCIES:
   - "SignalProtocolC (from `git@github.com:MixinMessenger/SignalProtocolC.git`)"
   - SnapKit
   - "SocketRocket (from `git@github.com:over140/SocketRocket.git`, branch `feature/request`)"
-  - SwiftMessages
   - "WCDB.swift (from `git@github.com:MixinNetwork/wcdb.git`, branch `swift4.2`)"
   - YYImage/WebP
   - Zip (~> 1.1)
@@ -139,7 +135,6 @@ SPEC REPOS:
     - SDWebImageYYPlugin
     - SnapKit
     - SQLiteRepairKit
-    - SwiftMessages
     - WCDBOptimizedSQLCipher
     - YYImage
     - Zip
@@ -200,12 +195,11 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SQLiteRepairKit: 4d21bab9eff6a273f63da6815a0d1659e53f5bde
-  SwiftMessages: 8b3cc68dba2f1c91aac1a74c90b10287aac35371
   WCDB.swift: 87aee41f5ca3aded9c6f9b68b0ef3e88918a5ee2
   WCDBOptimizedSQLCipher: baf44493b0c7a3d49e97bc5b64a3856f6428ddd1
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 935b18f6574caebd9d13f31de00478c301ab1751
+PODFILE CHECKSUM: 71832530b4a78fe751dea996a986978e0788192a
 
 COCOAPODS: 1.6.1

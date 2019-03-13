@@ -1,5 +1,4 @@
 import UIKit
-import SwiftMessages
 
 class RecognizeWindow: BottomSheetView {
 
@@ -18,7 +17,7 @@ class RecognizeWindow: BottomSheetView {
     @IBAction func copyAction(_ sender: Any) {
         UIPasteboard.general.string = contentTextView.text
         dismissPopupControllerAnimated()
-        UIApplication.rootNavigationController()?.showHud(style: .notification, text: Localized.TOAST_COPIED)
+        UIApplication.showHud(style: .notification, text: Localized.TOAST_COPIED)
     }
 
     @IBAction func dismissAction(_ sender: Any) {

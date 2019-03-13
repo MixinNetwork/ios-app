@@ -65,7 +65,7 @@ extension AuthorizationsViewController {
             switch result {
             case .success(let response):
                 self?.load(authorizations: response)
-            case .failure(_):
+            case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     self?.reload()
                 })

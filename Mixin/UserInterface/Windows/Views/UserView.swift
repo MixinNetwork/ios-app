@@ -1,6 +1,5 @@
 import Foundation
 import SDWebImage
-import SwiftMessages
 import MobileCoreServices
 import RSKImageCropper
 import Photos
@@ -78,8 +77,8 @@ class UserView: CornerView {
                     case let .success(user):
                         UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                         creator = UserItem.createUser(from: user)
-                    case .failure:
-                        return
+                    case let .failure(error):
+                        UIApplication.showHud(style: .error, text: error.localizedDescription)
                     }
                 }
                 self?.appCreator = creator
@@ -332,8 +331,8 @@ class UserView: CornerView {
                     DispatchQueue.global().async {
                         UserDAO.shared.updateAccount(account: account)
                     }
-                case .failure:
-                    break
+                case let .failure(error):
+                    UIApplication.showHud(style: .error, text: error.localizedDescription)
                 }
             }
         } else {
@@ -394,9 +393,9 @@ class UserView: CornerView {
                 } else {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
-                UIApplication.rootNavigationController()?.showHud(style: .notification, text: toastMessage)
-            case .failure:
-                break
+                UIApplication.showHud(style: .notification, text: toastMessage)
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -418,8 +417,8 @@ class UserView: CornerView {
         case let .success(user):
             UserDAO.shared.updateUsers(users: [user], notifyContact: notifyContact)
             updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false, superView: superView)
-        case .failure:
-            break
+        case let .failure(error):
+            UIApplication.showHud(style: .error, text: error.localizedDescription)
         }
         completion?()
     }
@@ -520,8 +519,8 @@ extension UserView: ImagePickerControllerDelegate {
                 DispatchQueue.global().async {
                     UserDAO.shared.updateAccount(account: account)
                 }
-            case .failure:
-                break
+            case let .failure(error):
+                UIApplication.showHud(style: .error, text: error.localizedDescription)
             }
         })
     }

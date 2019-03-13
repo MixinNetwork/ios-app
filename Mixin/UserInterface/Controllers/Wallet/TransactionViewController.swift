@@ -115,7 +115,7 @@ extension TransactionViewController: UITableViewDelegate {
             return
         }
         UIPasteboard.general.string = copy.body
-        navigationController?.showHud(style: .notification, text: Localized.TOAST_COPIED)
+        UIApplication.showHud(style: .notification, text: Localized.TOAST_COPIED)
     }
     
 }

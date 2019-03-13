@@ -40,7 +40,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="vtB-yO-ih2">
-                                                    <rect key="frame" x="340" y="20" width="19" height="21"/>
+                                                    <rect key="frame" x="340" y="19" width="19" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </activityIndicatorView>
@@ -68,7 +68,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="puH-LE-t3m">
-                                                    <rect key="frame" x="340" y="21" width="19" height="19"/>
+                                                    <rect key="frame" x="340" y="20" width="19" height="19"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </activityIndicatorView>
@@ -100,7 +100,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="O57-Uj-X2I">
-                                                    <rect key="frame" x="340" y="20" width="19" height="21"/>
+                                                    <rect key="frame" x="340" y="19" width="19" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </activityIndicatorView>
@@ -128,7 +128,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="tvQ-bN-Q59">
-                                                    <rect key="frame" x="340" y="21" width="19" height="19"/>
+                                                    <rect key="frame" x="340" y="20" width="19" height="19"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </activityIndicatorView>
@@ -242,7 +242,7 @@
                                                     <rect key="frame" x="20" y="22" width="20" height="20"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </activityIndicatorView>
-                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="u61-ZM-oE5">
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="u61-ZM-oE5">
                                                     <rect key="frame" x="333" y="0.0" width="42" height="64"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="42" id="Gfn-bp-Ikb"/>
@@ -331,16 +331,16 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="nlN-sg-Adq">
-                                                    <rect key="frame" x="80" y="16.5" width="280" height="41.5"/>
+                                                    <rect key="frame" x="80" y="16.5" width="319" height="41.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2p-Yy-sgH">
-                                                            <rect key="frame" x="0.0" y="0.0" width="280" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="319" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pt1-GX-Ih1">
-                                                            <rect key="frame" x="0.0" y="24.5" width="280" height="17"/>
+                                                            <rect key="frame" x="0.0" y="24.5" width="319" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -443,7 +443,7 @@
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="i5h-gf-BMv">
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="i5h-gf-BMv">
                                             <rect key="frame" x="333" y="0.0" width="42" height="64"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="42" id="dRl-m1-w3V"/>
@@ -662,7 +662,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xpW-mD-8Ia">
-                                                    <rect key="frame" x="70" y="22.5" width="39.5" height="19.5"/>
+                                                    <rect key="frame" x="70" y="22.5" width="39.5" height="19"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -751,7 +751,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Message Preview" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FZk-CU-EAm">
-                                                    <rect key="frame" x="16" y="22" width="133.5" height="20.5"/>
+                                                    <rect key="frame" x="16" y="21.5" width="133.5" height="21"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -926,7 +926,7 @@
                                                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="Setting/ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="B9W-wp-mle">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="B9W-wp-mle">
                                                             <rect key="frame" x="337" y="4" width="6" height="10"/>
                                                         </imageView>
                                                     </subviews>
@@ -1104,7 +1104,7 @@
                                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="about_twitter"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="Setting/ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="SH3-rY-r0g">
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="SH3-rY-r0g">
                                                     <rect key="frame" x="342" y="27" width="6" height="10"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -1128,7 +1128,7 @@
                                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="about_facebook"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="Setting/ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="azk-yN-DNV">
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="azk-yN-DNV">
                                                     <rect key="frame" x="342" y="27" width="6" height="10"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -1152,7 +1152,7 @@
                                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="about_help"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="Setting/ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="XhN-rj-hGh">
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="XhN-rj-hGh">
                                                     <rect key="frame" x="342" y="27" width="6" height="10"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -1176,7 +1176,7 @@
                                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="button_title_terms_of_service"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="Setting/ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="j5D-CB-S6w">
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="j5D-CB-S6w">
                                                     <rect key="frame" x="342" y="27" width="6" height="10"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -1200,7 +1200,7 @@
                                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="button_title_privacy_policy"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="Setting/ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="D6X-fU-MxF">
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="D6X-fU-MxF">
                                                     <rect key="frame" x="342" y="27" width="6" height="10"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -1223,9 +1223,9 @@
     </scenes>
     <resources>
         <image name="Setting/ic_about_app" width="80" height="80"/>
-        <image name="Setting/ic_accessory_disclosure" width="6" height="10"/>
         <image name="Setting/ic_backup" width="93" height="90"/>
         <image name="Setting/ic_desktop" width="90" height="94"/>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
         <image name="ic_place_holder" width="38" height="38"/>
     </resources>
 </document>

@@ -35,7 +35,7 @@
                                 <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="Setting/ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="ANu-K5-LuU">
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="ANu-K5-LuU">
                                 <rect key="frame" x="329" y="4" width="6" height="10"/>
                             </imageView>
                         </subviews>
@@ -55,6 +55,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="Setting/ic_accessory_disclosure" width="6" height="10"/>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
     </resources>
 </document>

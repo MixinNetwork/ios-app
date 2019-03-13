@@ -1,7 +1,13 @@
 import UIKit
 
 class SendViewController: UIViewController {
-
+    
+    enum Opponent {
+        case contact(UserItem)
+        case address(Address)
+    }
+    
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var opponentImageView: AvatarImageView!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var symbolLabel: UILabel!
@@ -11,35 +17,31 @@ class SendViewController: UIViewController {
     @IBOutlet weak var memoTextField: UITextField!
     @IBOutlet weak var continueButton: RoundedButton!
     @IBOutlet weak var switchAssetButton: UIButton!
-    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var assetSwitchImageView: UIImageView!
     @IBOutlet weak var amountSymbolLabel: UILabel!
     @IBOutlet weak var transactionFeeHintLabel: UILabel!
+    @IBOutlet weak var continueWrapperView: UIView!
     
-    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var symbolLeadingConstraint: NSLayoutConstraint!
-
-    enum OpponentType {
-        case contact(UserItem)
-        case address(Address)
-    }
-
+    
     private let placeHolderFont = UIFont.systemFont(ofSize: 16)
     private let amountFont = UIFont.systemFont(ofSize: 17, weight: .semibold)
-    private let tranceId = UUID().uuidString.lowercased()
+    
     private var availableAssets = [AssetItem]()
-    private var type: OpponentType!
+    private var opponent: Opponent!
     private var asset: AssetItem?
     private var targetUser: UserItem?
     private var targetAddress: Address?
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
+    private var viewHasAppeared = false
     
+    private lazy var tranceId = UUID().uuidString.lowercased()
     private lazy var transactionLabelAttribute: [NSAttributedString.Key: Any] = {
         return [.font: transactionFeeHintLabel.font,
                 .foregroundColor: transactionFeeHintLabel.textColor]
     }()
-
     private lazy var transactionLabelBoldAttribute: [NSAttributedString.Key: Any] = {
         let normalFont = transactionFeeHintLabel.font!
         let boldFont: UIFont
@@ -51,15 +53,15 @@ class SendViewController: UIViewController {
         return [.font: boldFont,
                 .foregroundColor: transactionFeeHintLabel.textColor]
     }()
-
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        amountTextField.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-        amountTextField.becomeFirstResponder()
-
-        switch type! {
+        
+        switch opponent! {
         case .contact(let user):
             targetUser = user
             opponentImageView.setImage(with: user)
@@ -70,17 +72,23 @@ class SendViewController: UIViewController {
             opponentImageView.image = R.image.wallet.ic_transaction_external_large()
             reloadTransactionFeeHint(addressId: address.addressId)
         }
-
+        
         if self.asset != nil {
             updateAssetUI()
         } else {
             fetchAvailableAssets()
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        amountTextField.becomeFirstResponder()
+        amountTextField.delegate = self
     }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewHasAppeared = true
     }
+    
     @IBAction func amountEditingChanged(_ sender: Any) {
         guard let asset = self.asset else {
             return
@@ -93,7 +101,7 @@ class SendViewController: UIViewController {
             continueButton.isEnabled = false
             return
         }
-
+        
         if isInputAssetAmount {
             let usdAmount = amountText.doubleValue * asset.priceUsd.doubleValue
             amountExchangeLabel.text = CurrencyFormatter.localizedString(from: usdAmount, format: .legalTender, sign: .never, symbol: .usd)
@@ -101,24 +109,24 @@ class SendViewController: UIViewController {
             let assetAmount = amountText.doubleValue / asset.priceUsd.doubleValue
             amountExchangeLabel.text = CurrencyFormatter.localizedString(from: assetAmount, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
         }
-
+        
         if let constant = amountTextField.attributedText?.size().width {
             symbolLeadingConstraint.constant = constant + 6
             amountSymbolLabel.isHidden = false
             amountSymbolLabel.superview?.layoutIfNeeded()
         }
-
-        continueButton.isEnabled = amountText.doubleValue > 0 
+        
+        continueButton.isEnabled = amountText.doubleValue > 0
     }
-
+    
     @IBAction func continueAction(_ sender: Any) {
         guard let asset = self.asset else {
             return
         }
-
+        
         let memo = memoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         var amount = amountTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
+        
         if !isInputAssetAmount {
             let formatter = NumberFormatter()
             formatter.numberStyle = .none
@@ -133,7 +141,7 @@ class SendViewController: UIViewController {
         payWindow.onDismiss = { [weak self] in
             self?.adjustBottomConstraintWhenKeyboardFrameChanges = true
         }
-        switch type! {
+        switch opponent! {
         case .contact(let user):
             payWindow.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
         case .address(let address):
@@ -143,56 +151,6 @@ class SendViewController: UIViewController {
             }
             payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
         }
-    }
-
-
-    private func fetchAvailableAssets() {
-        switchAssetButton.isUserInteractionEnabled = false
-        DispatchQueue.global().async { [weak self] in
-            if self?.asset == nil {
-                if let defaultAsset = AssetDAO.shared.getDefaultTransferAsset() {
-                    self?.asset = defaultAsset
-                } else {
-                    self?.asset = AssetItem.createDefaultAsset()
-                }
-                DispatchQueue.main.async {
-                    self?.updateAssetUI()
-                }
-            }
-
-            let assets = AssetDAO.shared.getAvailableAssets()
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.availableAssets = assets
-                if assets.count > 1 {
-                    weakSelf.assetSwitchImageView.isHidden = false
-                    weakSelf.switchAssetButton.isUserInteractionEnabled = true
-                }
-            }
-        }
-    }
-
-    private func updateAssetUI() {
-        guard let asset = self.asset else {
-            return
-        }
-
-        symbolLabel.text = asset.name
-        balanceLabel.text = asset.localizedBalance + " " + Localized.TRANSFER_BALANCE
-        assetIconView.setIcon(asset: asset)
-
-        if let address = self.targetAddress {
-            if asset.isAccount {
-                container?.titleLabel.text = address.accountName
-                container?.setSubtitle(subtitle: address.accountTag?.toSimpleKey())
-            } else {
-                container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + (address.label ?? "")
-                container?.setSubtitle(subtitle: address.publicKey?.toSimpleKey())
-            }
-        }
-        amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"
     }
     
     @IBAction func switchAssetAction(_ sender: Any) {
@@ -216,31 +174,90 @@ class SendViewController: UIViewController {
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"
         amountEditingChanged(amountTextField)
     }
-
+    
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         guard adjustBottomConstraintWhenKeyboardFrameChanges else {
             return
         }
-        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        let windowHeight = AppDelegate.current.window!.bounds.height
-        self.bottomConstraint.constant = windowHeight - endFrame.origin.y + 20
-        self.view.layoutIfNeeded()
-        if memoTextField.isFirstResponder {
-            updateContentOffsetIfNeeded()
+        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        let work = {
+            let windowHeight = AppDelegate.current.window!.bounds.height
+            let keyboardHeight = windowHeight - endFrame.origin.y
+            self.continueWrapperBottomConstraint.constant = keyboardHeight
+            self.scrollView.contentInset.bottom = keyboardHeight + self.continueWrapperView.frame.height
+            self.scrollView.scrollIndicatorInsets.bottom = keyboardHeight
+            self.view.layoutIfNeeded()
+        }
+        if viewHasAppeared {
+            work()
+        } else {
+            UIView.performWithoutAnimation {
+                work()
+                if ScreenSize.current == .inch3_5 || ScreenSize.current == .inch4 {
+                    scrollView.contentOffset.y = opponentImageView.frame.maxY
+                }
+            }
         }
     }
-
-    private func updateContentOffsetIfNeeded() {
-        scrollView.setContentOffset(CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.frame.height), animated: false)
+    
+    private func fetchAvailableAssets() {
+        switchAssetButton.isUserInteractionEnabled = false
+        DispatchQueue.global().async { [weak self] in
+            if self?.asset == nil {
+                if let defaultAsset = AssetDAO.shared.getDefaultTransferAsset() {
+                    self?.asset = defaultAsset
+                } else {
+                    self?.asset = AssetItem.createDefaultAsset()
+                }
+                DispatchQueue.main.async {
+                    self?.updateAssetUI()
+                }
+            }
+            
+            let assets = AssetDAO.shared.getAvailableAssets()
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.availableAssets = assets
+                if assets.count > 1 {
+                    weakSelf.assetSwitchImageView.isHidden = false
+                    weakSelf.switchAssetButton.isUserInteractionEnabled = true
+                }
+            }
+        }
     }
-
+    
+    private func updateAssetUI() {
+        guard let asset = self.asset else {
+            return
+        }
+        
+        symbolLabel.text = asset.name
+        balanceLabel.text = asset.localizedBalance + " " + Localized.TRANSFER_BALANCE
+        assetIconView.setIcon(asset: asset)
+        
+        if let address = self.targetAddress {
+            if asset.isAccount {
+                container?.titleLabel.text = address.accountName
+                container?.setSubtitle(subtitle: address.accountTag?.toSimpleKey())
+            } else {
+                container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + (address.label ?? "")
+                container?.setSubtitle(subtitle: address.publicKey?.toSimpleKey())
+            }
+        }
+        amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"
+    }
+    
     private func checkAmount(_ amount: String, isGreaterThanOrEqualToDust dust: String) -> Bool {
         guard let amount = Decimal(string: amount, locale: .current), let dust = Decimal(string: dust, locale: .us) else {
             return false
         }
         return amount >= dust
     }
-
+    
     private func reloadTransactionFeeHint(addressId: String) {
         displayFeeHint(loading: true)
         WithdrawalAPI.shared.address(addressId: addressId) { [weak self](result) in
@@ -257,13 +274,13 @@ class SendViewController: UIViewController {
             }
         }
     }
-
+    
     private func displayFeeHint(loading: Bool) {
         DispatchQueue.main.async { [weak self] in
             self?.transactionFeeHintLabel.isHidden = loading
         }
     }
-
+    
     private func fillFeeHint(address: Address) {
         DispatchQueue.global().async { [weak self] in
             guard let asset = AssetDAO.shared.getAsset(assetId: address.assetId), let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId) else {
@@ -271,7 +288,7 @@ class SendViewController: UIViewController {
                 self?.displayFeeHint(loading: false)
                 return
             }
-
+            
             let feeRepresentation = address.fee + " " + chainAsset.symbol
             var hint = Localized.WALLET_HINT_TRANSACTION_FEE(feeRepresentation: feeRepresentation, name: asset.name)
             var ranges = [(hint as NSString).range(of: feeRepresentation)]
@@ -282,12 +299,12 @@ class SendViewController: UIViewController {
                 ranges.append(NSRange(location: hint.count + reserveRange.location, length: reserveRange.length))
                 hint += reserveHint
             }
-
+            
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
                     return
                 }
-
+                
                 let attributedHint = NSMutableAttributedString(string: hint, attributes: weakSelf.transactionLabelAttribute)
                 for range in ranges {
                     attributedHint.addAttributes(weakSelf.transactionLabelBoldAttribute, range: range)
@@ -297,23 +314,24 @@ class SendViewController: UIViewController {
             }
         }
     }
-
-    class func instance(asset: AssetItem?, type: OpponentType) -> UIViewController {
+    
+    class func instance(asset: AssetItem?, type: Opponent) -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "send") as! SendViewController
-        vc.type = type
+        vc.opponent = type
         vc.asset = asset
-        return ContainerViewController.instance(viewController: vc, title: "")
+        let container = ContainerViewController.instance(viewController: vc, title: "")
+        container.automaticallyAdjustsScrollViewInsets = false
+        return container
     }
-
+    
 }
 
 extension SendViewController: UITextFieldDelegate {
-
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard textField == amountTextField else {
             return true
         }
-
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         if newText.isEmpty {
             return true
@@ -328,7 +346,7 @@ extension SendViewController: UITextFieldDelegate {
             return false
         }
     }
-
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == amountTextField {
             memoTextField.becomeFirstResponder()
@@ -337,7 +355,7 @@ extension SendViewController: UITextFieldDelegate {
         }
         return false
     }
-
+    
 }
 
 extension SendViewController: TransferTypeViewControllerDelegate {

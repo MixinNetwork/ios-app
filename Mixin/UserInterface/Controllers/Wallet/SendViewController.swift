@@ -3,7 +3,6 @@ import UIKit
 class SendViewController: UIViewController {
 
     @IBOutlet weak var opponentImageView: AvatarImageView!
-    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var balanceLabel: UILabel!
@@ -64,7 +63,7 @@ class SendViewController: UIViewController {
         case .contact(let user):
             targetUser = user
             opponentImageView.setImage(with: user)
-            nameLabel.text = user.identityNumber
+            container?.setSubtitle(subtitle: user.identityNumber)
             container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + user.fullName
         case .address(let address):
             targetAddress = address
@@ -187,10 +186,10 @@ class SendViewController: UIViewController {
         if let address = self.targetAddress {
             if asset.isAccount {
                 container?.titleLabel.text = address.accountName
-                nameLabel.text = address.accountTag?.toSimpleKey()
+                container?.setSubtitle(subtitle: address.accountTag?.toSimpleKey())
             } else {
                 container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + (address.label ?? "")
-                nameLabel.text = address.publicKey?.toSimpleKey()
+                container?.setSubtitle(subtitle: address.publicKey?.toSimpleKey())
             }
         }
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"

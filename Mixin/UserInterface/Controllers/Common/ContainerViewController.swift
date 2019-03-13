@@ -101,8 +101,8 @@ class ContainerViewController: UIViewController {
         rightButton.saveNormalState()
     }
 
-    func setSubtitle(subtitle: String) {
-        titleLabel.font = UIFont.systemFont(ofSize: 15)
+    func setSubtitle(subtitle: String?) {
+        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         subtitleLabel.text = subtitle
         subtitleLabel.isHidden = false
     }

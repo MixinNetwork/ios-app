@@ -413,15 +413,15 @@ class UserView: CornerView {
         })
     }
 
-    private func handlerUpdateUser(_ result: APIResult<UserResponse>, notifyContact: Bool = false, successBlock: (() -> Void)? = nil) {
+    private func handlerUpdateUser(_ result: APIResult<UserResponse>, notifyContact: Bool = false, completion: (() -> Void)? = nil) {
         switch result {
         case let .success(user):
             UserDAO.shared.updateUsers(users: [user], notifyContact: notifyContact)
             updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false, superView: superView)
-            successBlock?()
         case .failure:
             break
         }
+        completion?()
     }
     
     @IBAction func sendAction(_ sender: Any) {
@@ -439,7 +439,7 @@ class UserView: CornerView {
         }
         addContactButton.isBusy = true
         UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName, completion: { [weak self] (result) in
-            self?.handlerUpdateUser(result, notifyContact: true, successBlock: {
+            self?.handlerUpdateUser(result, notifyContact: true, completion: {
                 self?.addContactButton.isBusy = false
             })
         })
@@ -451,7 +451,7 @@ class UserView: CornerView {
         }
         unblockButton.isBusy = true
         UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
-            self?.handlerUpdateUser(result, notifyContact: true, successBlock: {
+            self?.handlerUpdateUser(result, notifyContact: true, completion: {
                 self?.unblockButton.isBusy = false
             })
         }

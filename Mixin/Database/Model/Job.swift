@@ -102,14 +102,13 @@ extension Job {
 
 extension Job {
 
-    init(message: Message, isSessionMessage: Bool = false) {
-        var param = BlazeMessageParam(conversationId: message.conversationId,
+    init(message: Message, isSessionMessage: Bool = false, representativeId: String? = nil, data: String? = nil) {
+        let param = BlazeMessageParam(conversationId: message.conversationId,
                                       category: message.category,
+                                      data: data,
                                       status: MessageStatus.SENT.rawValue,
-                                      messageId: message.messageId)
-        if message.category.hasPrefix("SYSTEM_") {
-            param.data = message.content
-        }
+                                      messageId: message.messageId,
+                                      representativeId: representativeId)
         let action = BlazeMessageAction.createMessage.rawValue
         let blazeMessage = BlazeMessage(params: param, action: action)
         let jobId = isSessionMessage ? UUID().uuidString.lowercased() : blazeMessage.id

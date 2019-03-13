@@ -42,6 +42,10 @@ extension BlazeMessageData {
         return representativeId
     }
 
+    func getDataUserId() -> String? {
+        return representativeId.isEmpty ? nil : userId
+    }
+
     var isSessionMessage: Bool {
         return userId == AccountAPI.shared.accountUserId && sessionId != nil && !(sessionId!.isEmpty)
     }

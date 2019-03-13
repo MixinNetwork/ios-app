@@ -28,8 +28,11 @@ class LoginConfirmWindow: BottomSheetView {
             return
         }
         loginButton.isBusy = true
-        ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { _ in
-
+        ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { [weak self](success) in
+            guard !success else {
+                return
+            }
+            self?.loginButton.isBusy = false
         })
     }
 

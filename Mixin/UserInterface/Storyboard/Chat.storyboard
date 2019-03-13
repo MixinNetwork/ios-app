@@ -816,7 +816,7 @@
                                         </connections>
                                     </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ucd-YD-Vpg" customClass="ConversationInputTextView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="67" y="7" width="203" height="36"/>
+                                        <rect key="frame" x="56" y="7" width="214" height="36"/>
                                         <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="Kzm-2u-qAF"/>
@@ -916,7 +916,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="ucd-YD-Vpg" firstAttribute="leading" secondItem="FB6-Ob-yNa" secondAttribute="trailing" constant="16" id="6UX-an-XcL"/>
+                                    <constraint firstItem="ucd-YD-Vpg" firstAttribute="leading" secondItem="FB6-Ob-yNa" secondAttribute="trailing" constant="5" id="6UX-an-XcL"/>
                                     <constraint firstItem="FB6-Ob-yNa" firstAttribute="leading" secondItem="wvu-NM-HOS" secondAttribute="leading" constant="7" id="84I-DC-4t0"/>
                                     <constraint firstAttribute="bottom" secondItem="FB6-Ob-yNa" secondAttribute="bottom" constant="2" id="8Mg-91-4xV"/>
                                     <constraint firstAttribute="bottom" secondItem="Ccj-kA-7d2" secondAttribute="bottom" constant="3" id="AlJ-cl-Vnm"/>

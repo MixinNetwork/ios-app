@@ -112,15 +112,16 @@ class SendMessageService: MixinService {
         }
     }
 
-    func sendSessionMessage(message: Message, representativeId: String? = nil, data: String? = nil) {
+    func sendSessionMessage(message: Message, representativeId: String? = nil, data: String?) {
         guard AccountUserDefault.shared.isDesktopLoggedIn else {
             return
         }
         guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_IMAGE") || message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
             return
         }
+        let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data
         saveDispatchQueue.async {
-            MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, isSessionMessage: true, representativeId: representativeId, data: data)])
+            MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, isSessionMessage: true, representativeId: representativeId, data: content)])
             SendMessageService.shared.processMessages()
         }
     }
@@ -451,16 +452,15 @@ extension SendMessageService {
             } else {
                 blazeMessage.params?.primitiveId = message.userId
             }
-            if category.hasSuffix("_TEXT") {
-                blazeMessage.params?.data = message.content?.base64Encoded()
-            }
         } else if category.hasPrefix("SIGNAL_") {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
                 return
             }
             blazeMessage.params?.primitiveId = message.userId
             _ = try checkSignalSession(recipientId: AccountAPI.shared.accountUserId, sessionId: sessionId)
-            blazeMessage.params?.data =  try SignalProtocol.shared.encryptTransferSessionMessageData(recipientId: AccountAPI.shared.accountUserId, content: message.content ?? "", sessionId: sessionId)
+
+            let content = blazeMessage.params?.data ?? ""
+            blazeMessage.params?.data =  try SignalProtocol.shared.encryptTransferSessionMessageData(recipientId: AccountAPI.shared.accountUserId, content: content, sessionId: sessionId)
         }
         try deliverMessage(blazeMessage: blazeMessage)
     }

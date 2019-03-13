@@ -91,7 +91,7 @@ class SendMessageService: MixinService {
         }
         if msg.category.hasSuffix("_TEXT") || msg.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") {
             SendMessageService.shared.sendMessage(message: msg)
-            SendMessageService.shared.sendSessionMessage(message: msg)
+            SendMessageService.shared.sendSessionMessage(message: msg, data: message.content)
         } else if msg.category.hasSuffix("_IMAGE") {
             ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: msg))
         } else if msg.category.hasSuffix("_DATA") {
@@ -112,15 +112,15 @@ class SendMessageService: MixinService {
         }
     }
 
-    func sendSessionMessage(message: Message, representativeId: String? = nil) {
+    func sendSessionMessage(message: Message, representativeId: String? = nil, data: String? = nil) {
         guard AccountUserDefault.shared.isDesktopLoggedIn else {
             return
         }
-        guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_IMAGE") || message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
+        guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_IMAGE") || message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
             return
         }
         saveDispatchQueue.async {
-            MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, isSessionMessage: true)])
+            MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, isSessionMessage: true, representativeId: representativeId, data: data)])
             SendMessageService.shared.processMessages()
         }
     }
@@ -451,7 +451,9 @@ extension SendMessageService {
             } else {
                 blazeMessage.params?.primitiveId = message.userId
             }
-            blazeMessage.params?.data = message.content?.base64Encoded()
+            if category.hasSuffix("_TEXT") {
+                blazeMessage.params?.data = message.content?.base64Encoded()
+            }
         } else if category.hasPrefix("SIGNAL_") {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
                 return

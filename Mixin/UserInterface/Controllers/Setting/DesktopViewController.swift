@@ -13,7 +13,9 @@ class DesktopViewController: UITableViewController {
     
     class func instance() -> UIViewController {
         let vc = Storyboard.setting.instantiateViewController(withIdentifier: "desktop") as! DesktopViewController
-        return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_DESKTOP)
+        let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_DESKTOP)
+        container.automaticallyAdjustsScrollViewInsets = false
+        return container
     }
     
     override func viewDidLoad() {

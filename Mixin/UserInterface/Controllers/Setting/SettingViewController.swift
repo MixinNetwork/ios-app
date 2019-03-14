@@ -4,10 +4,7 @@ class SettingViewController: UIViewController {
     
     enum ReuseId {
         static let cell = "setting"
-        enum Footer {
-            static let titled = "titled"
-            static let plain = "plain"
-        }
+        static let footer = "footer"
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -31,11 +28,11 @@ class SettingViewController: UIViewController {
         tableView.register(UINib(nibName: "SettingCell", bundle: .main),
                            forCellReuseIdentifier: ReuseId.cell)
         tableView.register(SeparatorShadowFooterView.self,
-                           forHeaderFooterViewReuseIdentifier: ReuseId.Footer.plain)
-        tableView.register(TitledShadowFooterView.self,
-                           forHeaderFooterViewReuseIdentifier: ReuseId.Footer.titled)
+                           forHeaderFooterViewReuseIdentifier: ReuseId.footer)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.estimatedSectionFooterHeight = 10
+        tableView.sectionFooterHeight = UITableView.automaticDimension
         updateBlockedUserCell()
         NotificationCenter.default.addObserver(self, selector: #selector(updateBlockedUserCell), name: .UserDidChange, object: nil)
     }
@@ -126,14 +123,11 @@ extension SettingViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
         if section == 0 {
-            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.Footer.titled) as! TitledShadowFooterView
-            view.label.text = Localized.SETTING_PRIVACY_AND_SECURITY_SUMMARY
-            return view
-        } else {
-            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.Footer.plain)!
-            return view
+            view.text = Localized.SETTING_PRIVACY_AND_SECURITY_SUMMARY
         }
+        return view
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

@@ -11,7 +11,7 @@ class BackupViewController: UITableViewController {
     
     private let footerReuseId = "footer"
     
-    private lazy var actionSectionFooterView = TitledShadowFooterView()
+    private lazy var actionSectionFooterView = SeparatorShadowFooterView()
     private lazy var backupAvailabilityQuery = BackupAvailabilityQuery()
     private lazy var autoBackupFrequencyController: UIAlertController = {
         let controller = UIAlertController(title: Localized.SETTING_BACKUP_AUTO, message: Localized.SETTING_BACKUP_AUTO_TIPS, preferredStyle: .actionSheet)
@@ -50,8 +50,10 @@ class BackupViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(SeparatorShadowFooterView.self, forHeaderFooterViewReuseIdentifier: footerReuseId)
+        tableView.estimatedSectionFooterHeight = 10
+        tableView.sectionFooterHeight = UITableView.automaticDimension
         updateTableViewContentInsetBottom()
-        tableView.register(TitledShadowFooterView.self, forHeaderFooterViewReuseIdentifier: footerReuseId)
         switchIncludeFiles.isOn = CommonUserDefault.shared.hasBackupFiles
         switchIncludeVideos.isOn = CommonUserDefault.shared.hasBackupVideos
         reloadActionSectionFooterLabel()
@@ -125,7 +127,7 @@ class BackupViewController: UITableViewController {
                 text = nil
             }
         }
-        actionSectionFooterView.label.text = text
+        actionSectionFooterView.text = text
     }
     
     private func updateTableViewContentInsetBottom() {
@@ -172,8 +174,8 @@ extension BackupViewController {
         if section == 0 {
             return actionSectionFooterView
         } else {
-            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! TitledShadowFooterView
-            view.label.text = Localized.SETTING_BACKUP_AUTO_TIPS
+            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
+            view.text = Localized.SETTING_BACKUP_AUTO_TIPS
             return view
         }
     }

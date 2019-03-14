@@ -280,7 +280,6 @@
 		7BDB4727215A6932008B21F9 /* InitialViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */; };
 		7BDBDE5F22327698006220DF /* TransferTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE5E22327698006220DF /* TransferTypeViewController.swift */; };
 		7BDBDE6522361D85006220DF /* SeparatorShadowFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6422361D85006220DF /* SeparatorShadowFooterView.swift */; };
-		7BDBDE6822361FE1006220DF /* TitledShadowFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6722361FE1006220DF /* TitledShadowFooterView.swift */; };
 		7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6B223636B8006220DF /* ShadowImageView.swift */; };
 		7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6D22363E82006220DF /* SettingCell.swift */; };
 		7BDBDE7022365017006220DF /* SettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6F22365017006220DF /* SettingCell.xib */; };
@@ -918,7 +917,6 @@
 		7BDB4726215A6932008B21F9 /* InitialViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewControllerFactory.swift; sourceTree = "<group>"; };
 		7BDBDE5E22327698006220DF /* TransferTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeViewController.swift; sourceTree = "<group>"; };
 		7BDBDE6422361D85006220DF /* SeparatorShadowFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorShadowFooterView.swift; sourceTree = "<group>"; };
-		7BDBDE6722361FE1006220DF /* TitledShadowFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitledShadowFooterView.swift; sourceTree = "<group>"; };
 		7BDBDE6B223636B8006220DF /* ShadowImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowImageView.swift; sourceTree = "<group>"; };
 		7BDBDE6D22363E82006220DF /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		7BDBDE6F22365017006220DF /* SettingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingCell.xib; sourceTree = "<group>"; };
@@ -1632,7 +1630,6 @@
 		7BDBDE6622361FA8006220DF /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7BDBDE6722361FE1006220DF /* TitledShadowFooterView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3242,7 +3239,6 @@
 				DF8DA1A41FD64C5800425CEC /* BlazeMessageData.swift in Sources */,
 				DF503D3C1FECFD9800C008E7 /* SignalDatabase.swift in Sources */,
 				DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */,
-				7BDBDE6822361FE1006220DF /* TitledShadowFooterView.swift in Sources */,
 				DF8DA1AF1FD6832000425CEC /* RefreshUserJob.swift in Sources */,
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,
 				7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */,

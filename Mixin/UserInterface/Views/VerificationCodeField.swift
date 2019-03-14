@@ -92,6 +92,8 @@ class VerificationCodeField: UIControl, UITextInputTraits {
         }
     }
     
+    var receivesInput = true
+    
     private var tapRecognizer: UITapGestureRecognizer!
     private var digits: [String] = [] {
         didSet {
@@ -154,6 +156,9 @@ extension VerificationCodeField: UIKeyInput {
     }
     
     func insertText(_ text: String) {
+        guard receivesInput else {
+            return
+        }
         let numberOfUnfilleds = numberOfDigits - digits.count
         let newDigits = text.digits()
         let endIndexOfNewDigits = min(numberOfUnfilleds, newDigits.count)
@@ -165,6 +170,9 @@ extension VerificationCodeField: UIKeyInput {
     }
     
     func deleteBackward() {
+        guard receivesInput else {
+            return
+        }
         guard digits.count > 0 else {
             return
         }
@@ -184,6 +192,9 @@ extension VerificationCodeField: UITextInput {
     }
     
     func replace(_ range: UITextRange, withText text: String) {
+        guard receivesInput else {
+            return
+        }
         guard let range = range as? TextRange else {
             return
         }

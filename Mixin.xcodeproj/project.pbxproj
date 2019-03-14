@@ -125,6 +125,9 @@
 		7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */; };
 		7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDB1223A408A008ACDBB /* LoginMobileNumberViewController.swift */; };
 		7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDB4223A489F008ACDBB /* LoginContext.swift */; };
+		7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDB6223A50D5008ACDBB /* VerificationCodeViewController.swift */; };
+		7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */; };
+		7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */; };
 		7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B56DBD01FEFC5B900B50D82 /* PinField.swift */; };
 		7B5747411FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5747401FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift */; };
 		7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B58433E2175911D0053332F /* SnapKitExtension.swift */; };
@@ -754,6 +757,9 @@
 		7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileNumberViewController.swift; sourceTree = "<group>"; };
 		7B51DDB1223A408A008ACDBB /* LoginMobileNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginMobileNumberViewController.swift; sourceTree = "<group>"; };
 		7B51DDB4223A489F008ACDBB /* LoginContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginContext.swift; sourceTree = "<group>"; };
+		7B51DDB6223A50D5008ACDBB /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
+		7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerificationCodeView.xib; sourceTree = "<group>"; };
+		7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B56DBD01FEFC5B900B50D82 /* PinField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinField.swift; sourceTree = "<group>"; };
 		7B5747401FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileNumberViewController_Legacy.swift; sourceTree = "<group>"; };
 		7B58433E2175911D0053332F /* SnapKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapKitExtension.swift; sourceTree = "<group>"; };
@@ -1502,6 +1508,7 @@
 				7B2E3E4E1FA07F7B00DDDDEB /* Views */,
 				7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */,
 				7B51DDB1223A408A008ACDBB /* LoginMobileNumberViewController.swift */,
+				7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */,
 				7B2E3E4A1FA07F4500DDDDEB /* SelectCountryViewController.swift */,
 				7B92F8241FA1A7D5000B838B /* LoginViewController.swift */,
 				7B5747401FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift */,
@@ -1582,6 +1589,8 @@
 				7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */,
 				7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */,
 				7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */,
+				7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */,
+				7B51DDB6223A50D5008ACDBB /* VerificationCodeViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2604,6 +2613,7 @@
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				DFD294471FA7092800FADAAD /* PeerCell.xib in Resources */,
+				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
@@ -2951,6 +2961,7 @@
 				DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */,
 				7B0E67082179931C0056DE3A /* AssetKeyConvertible.swift in Sources */,
 				DF3FF05B20123BD6000A0C0A /* FileDownloadJob.swift in Sources */,
+				7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */,
 				7B2E3E521FA07F7B00DDDDEB /* CountryCell.swift in Sources */,
 				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
 				DFF353161FEEBC4700058453 /* PeerTransactionSnapshotCell.swift in Sources */,
@@ -3000,6 +3011,7 @@
 				DFA606312013AA4F0006EEE4 /* FileJobQueue.swift in Sources */,
 				27DA337F1FE8F92900A4D16F /* SignalProtocol.swift in Sources */,
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
+				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
 				7B015D7F21A81C81000C9F1E /* ModernSearchBoxView.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,

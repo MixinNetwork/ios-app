@@ -7,6 +7,7 @@ class BusyButton: UIButton {
     var isBusy = false {
         didSet {
             isBusy ? busyIndicator.startAnimating() : busyIndicator.stopAnimating()
+            isUserInteractionEnabled = !isBusy
         }
     }
     

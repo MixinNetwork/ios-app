@@ -120,6 +120,11 @@
 		7B4D112A205BA64B0074BF60 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1129205BA64B0074BF60 /* Address.swift */; };
 		7B4D112C205BC9160074BF60 /* AddressDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112B205BC9160074BF60 /* AddressDAO.swift */; };
 		7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */; };
+		7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */; };
+		7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */; };
+		7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */; };
+		7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDB1223A408A008ACDBB /* LoginMobileNumberViewController.swift */; };
+		7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDB4223A489F008ACDBB /* LoginContext.swift */; };
 		7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B56DBD01FEFC5B900B50D82 /* PinField.swift */; };
 		7B5747411FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5747401FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift */; };
 		7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B58433E2175911D0053332F /* SnapKitExtension.swift */; };
@@ -744,6 +749,11 @@
 		7B4D1129205BA64B0074BF60 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
 		7B4D112B205BC9160074BF60 /* AddressDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDAO.swift; sourceTree = "<group>"; };
 		7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalAPI.swift; sourceTree = "<group>"; };
+		7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueButtonViewController.swift; sourceTree = "<group>"; };
+		7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MobileNumberView.xib; sourceTree = "<group>"; };
+		7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileNumberViewController.swift; sourceTree = "<group>"; };
+		7B51DDB1223A408A008ACDBB /* LoginMobileNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginMobileNumberViewController.swift; sourceTree = "<group>"; };
+		7B51DDB4223A489F008ACDBB /* LoginContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginContext.swift; sourceTree = "<group>"; };
 		7B56DBD01FEFC5B900B50D82 /* PinField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinField.swift; sourceTree = "<group>"; };
 		7B5747401FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileNumberViewController_Legacy.swift; sourceTree = "<group>"; };
 		7B58433E2175911D0053332F /* SnapKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapKitExtension.swift; sourceTree = "<group>"; };
@@ -1488,8 +1498,10 @@
 		7B2E3E491FA07F4500DDDDEB /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				7B51DDB3223A488D008ACDBB /* Model */,
 				7B2E3E4E1FA07F7B00DDDDEB /* Views */,
 				7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */,
+				7B51DDB1223A408A008ACDBB /* LoginMobileNumberViewController.swift */,
 				7B92F8241FA1A7D5000B838B /* LoginViewController.swift */,
 				7B2E3E4A1FA07F4500DDDDEB /* SelectCountryViewController.swift */,
 				7B5747401FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift */,
@@ -1513,6 +1525,14 @@
 			isa = PBXGroup;
 			children = (
 				7B26D1CB219EEB4000AE113A /* Peer.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7B51DDB3223A488D008ACDBB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7B51DDB4223A489F008ACDBB /* LoginContext.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1559,6 +1579,9 @@
 				7B26D1CD219EEB5A00AE113A /* Cells */,
 				DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */,
 				7BA4E092219D99B300A2176D /* PeerSelectionViewController.swift */,
+				7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */,
+				7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */,
+				7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2643,6 +2666,7 @@
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
 				DF2F089520B688DB005786CB /* UserView.xib in Resources */,
+				7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2932,6 +2956,7 @@
 				DFF353161FEEBC4700058453 /* PeerTransactionSnapshotCell.swift in Sources */,
 				DFF1AD802227D7CA0087173D /* TransferPlainAckData.swift in Sources */,
 				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
+				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
 				7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */,
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
 				DFF1AD7C22254C6F0087173D /* R.generated.swift in Sources */,
@@ -3029,6 +3054,7 @@
 				7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */,
 				7B92F8251FA1A7D5000B838B /* LoginViewController.swift in Sources */,
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
+				7B51DDB5223A489F008ACDBB /* LoginContext.swift in Sources */,
 				7BA4A1CE1FF347130086CD56 /* GroupParticipantCell.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
@@ -3060,6 +3086,7 @@
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,
 				DFFDCF8C20ADC83900B4956E /* RecognizeWindow.swift in Sources */,
 				DF6175C72223E5D000624609 /* BlazeSessionMessageParam.swift in Sources */,
+				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,
 				DFF353001FEE516F00058453 /* Asset.swift in Sources */,
 				DFF1AD822227D8020087173D /* BlazeAckMessage.swift in Sources */,
 				DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */,
@@ -3073,6 +3100,7 @@
 				DFF3530A1FEE9E1200058453 /* TransferResponse.swift in Sources */,
 				7B5EF7E420BE9EAC009A7972 /* AudioMessageCell.swift in Sources */,
 				DFF21459209ABA6500612234 /* GroupWindow.swift in Sources */,
+				7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */,
 				DF233CE12202F5BE005F2FD1 /* UserSession.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,

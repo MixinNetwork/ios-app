@@ -1,7 +1,7 @@
 import UIKit
 import PhoneNumberKit
 
-class MobileNumberViewController: LoginViewController {
+class MobileNumberViewController_Legacy: LoginViewController {
 
     @IBOutlet weak var mobileNumberTextField: UITextField!
     @IBOutlet weak var callingCodeButton: UIButton!
@@ -160,7 +160,7 @@ class MobileNumberViewController: LoginViewController {
     
 }
 
-extension MobileNumberViewController: SelectCountryViewControllerDelegate {
+extension MobileNumberViewController_Legacy: SelectCountryViewControllerDelegate {
     
     func selectCountryViewController(_ viewController: SelectCountryViewController, didSelectCountry country: Country) {
         self.country = country

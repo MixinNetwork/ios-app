@@ -121,7 +121,7 @@
 		7B4D112C205BC9160074BF60 /* AddressDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112B205BC9160074BF60 /* AddressDAO.swift */; };
 		7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */; };
 		7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B56DBD01FEFC5B900B50D82 /* PinField.swift */; };
-		7B5747411FA08E18005A6BB5 /* MobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5747401FA08E18005A6BB5 /* MobileNumberViewController.swift */; };
+		7B5747411FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5747401FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift */; };
 		7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B58433E2175911D0053332F /* SnapKitExtension.swift */; };
 		7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5843442175D3EC0053332F /* PendingDeposit.swift */; };
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
@@ -745,7 +745,7 @@
 		7B4D112B205BC9160074BF60 /* AddressDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDAO.swift; sourceTree = "<group>"; };
 		7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalAPI.swift; sourceTree = "<group>"; };
 		7B56DBD01FEFC5B900B50D82 /* PinField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinField.swift; sourceTree = "<group>"; };
-		7B5747401FA08E18005A6BB5 /* MobileNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileNumberViewController.swift; sourceTree = "<group>"; };
+		7B5747401FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileNumberViewController_Legacy.swift; sourceTree = "<group>"; };
 		7B58433E2175911D0053332F /* SnapKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapKitExtension.swift; sourceTree = "<group>"; };
 		7B5843442175D3EC0053332F /* PendingDeposit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingDeposit.swift; sourceTree = "<group>"; };
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
@@ -1492,7 +1492,7 @@
 				7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */,
 				7B92F8241FA1A7D5000B838B /* LoginViewController.swift */,
 				7B2E3E4A1FA07F4500DDDDEB /* SelectCountryViewController.swift */,
-				7B5747401FA08E18005A6BB5 /* MobileNumberViewController.swift */,
+				7B5747401FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift */,
 				7B92F8281FA1B80A000B838B /* VerificationCodeViewController.swift */,
 				7BC681A91FA1DD5600BAB85F /* UsernameViewController.swift */,
 			);
@@ -3003,7 +3003,7 @@
 				DF16682220AC3B5D00C45E31 /* ConversationShareContactViewController.swift in Sources */,
 				7B93CAA5222963120053AE90 /* PhotoInputGridViewController.swift in Sources */,
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
-				7B5747411FA08E18005A6BB5 /* MobileNumberViewController.swift in Sources */,
+				7B5747411FA08E18005A6BB5 /* MobileNumberViewController_Legacy.swift in Sources */,
 				DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */,
 				7B61EB8E20978856001C1985 /* AttachmentCryptography.swift in Sources */,
 				7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */,

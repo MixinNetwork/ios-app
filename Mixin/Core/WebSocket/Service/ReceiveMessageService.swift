@@ -52,6 +52,8 @@ class ReceiveMessageService: MixinService {
                     }
                     ReceiveMessageService.shared.processReceiveMessages()
                 }
+            } else {
+                updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
             }
         }
     }
@@ -762,7 +764,9 @@ extension ReceiveMessageService {
                     guard message.status == MessageStatus.READ.rawValue else {
                         continue
                     }
-                    MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: message.status)
+                    if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: message.status) {
+                        SendMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: message.status)
+                    }
                 }
                 SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
             }

@@ -203,16 +203,18 @@ final class MessageDAO {
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == messageId)
     }
 
-    func updateMessageStatus(messageId: String, status: String) {
+    @discardableResult
+    func updateMessageStatus(messageId: String, status: String) -> Bool {
         guard let oldMessage: Message = MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId) else {
-            return
+            return false
         }
         guard MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: oldMessage.status) else {
-            return
+            return false
         }
         MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
         let change = ConversationChange(conversationId: oldMessage.conversationId, action: .updateMessageStatus(messageId: messageId, newStatus: MessageStatus(rawValue: status) ?? .UNKNOWN))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        return true
     }
 
     func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String) {

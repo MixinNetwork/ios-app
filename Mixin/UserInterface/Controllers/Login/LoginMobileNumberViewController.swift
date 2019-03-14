@@ -42,12 +42,13 @@ class LoginMobileNumberViewController: MobileNumberViewController {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CHANGE, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CONFIRM, style: .default, handler: { _ in
-            self.sendCode()
+            self.requestVerificationCode()
         }))
         present(alert, animated: true, completion: nil)
     }
     
-    private func sendCode(reCaptchaToken token: String? = nil) {
+    private func requestVerificationCode(reCaptchaToken token: String? = nil) {
+        continueButton.isBusy = true
         var ctx = LoginContext(callingCode: country.callingCode,
                                mobileNumber: mobileNumber,
                                fullNumber: fullNumber(withSpacing: false))
@@ -67,7 +68,7 @@ class LoginMobileNumberViewController: MobileNumberViewController {
                     ReCaptchaManager.shared.validate(onViewController: weakSelf, completion: { (result) in
                         switch result {
                         case .success(let token):
-                            self?.sendCode(reCaptchaToken: token)
+                            self?.requestVerificationCode(reCaptchaToken: token)
                         default:
                             self?.continueButton.isBusy = false
                         }

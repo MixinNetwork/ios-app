@@ -35,7 +35,7 @@ class LoginViewController: UIViewController {
         continueButton.addTarget(self, action: #selector(continueAction(_:)), for: .touchUpInside)
         continueButton.isEnabled = false
         if let navigationController = navigationController as? LoginNavigationController {
-            layoutForKeyboardFrame(navigationController.lastKeyboardFrame)
+//            layoutForKeyboardFrame(navigationController.lastKeyboardFrame)
         }
     }
     

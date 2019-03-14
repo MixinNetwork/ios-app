@@ -137,7 +137,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 })
             }
         } else {
-            window.rootViewController = LoginNavigationController.instance()
+            let vc = LoginMobileNumberViewController()
+            let navigationController = LoginNavigationController(rootViewController: vc)
+            window.rootViewController = navigationController
         }
         window.makeKeyAndVisible()
         self.window = window

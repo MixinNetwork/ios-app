@@ -26,6 +26,9 @@ class MobileNumberViewController: ContinueButtonViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if ScreenSize.current == .inch3_5 {
+            contentStackView.spacing = 4
+        }
         updateCallingCodeButtonCaption()
         textField.delegate = self
         textField.becomeFirstResponder()

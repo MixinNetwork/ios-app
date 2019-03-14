@@ -18,6 +18,10 @@ class ContinueButtonViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         continueButton.isHidden = true
+        continueButton.busyIndicator.style = .white
+        continueButton.busyIndicator.backgroundColor = .theme
+        continueButton.busyIndicator.clipsToBounds = true
+        continueButton.busyIndicator.layer.cornerRadius = continueButtonLength / 2
         continueButton.setImage(R.image.ic_action_next(), for: .normal)
         continueButton.backgroundColor = .theme
         continueButton.clipsToBounds = true

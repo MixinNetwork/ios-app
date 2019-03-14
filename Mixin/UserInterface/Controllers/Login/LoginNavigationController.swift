@@ -1,17 +1,18 @@
 import UIKit
 
 class LoginNavigationController: UINavigationController {
-
-    let backButton = UIButton()
-
-    var lastKeyboardFrame = CGRect.zero
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+    let backButton = UIButton()
+    
+    class func instance() -> LoginNavigationController {
+        let vc = LoginMobileNumberViewController()
+        let navigationController = LoginNavigationController(rootViewController: vc)
+        return navigationController
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setNavigationBarHidden(true, animated: false)
         UIApplication.shared.keyWindow?.endEditing(true)
         SignalProtocol.shared.initSignal()
         backButton.setImage(R.image.ic_title_back(), for: .normal)
@@ -29,30 +30,12 @@ class LoginNavigationController: UINavigationController {
                 make.leading.equalTo(self.view.snp.leading).offset(10)
             }
         }
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillChangeFrame(notification:)),
-                                               name: UIResponder.keyboardWillChangeFrameNotification,
-                                               object: nil)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     @objc func backAction(sender: Any) {
         popViewController(animated: true)
     }
     
-    @objc func keyboardWillChangeFrame(notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        lastKeyboardFrame = endFrame
-        viewControllers.forEach {
-            if let vc = $0 as? LoginViewController {
-                vc.layoutForKeyboardFrame(endFrame)
-            }
-        }
-    }
-
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         defer {
             updateBackButtonAlpha(animated: animated)
@@ -82,10 +65,6 @@ class LoginNavigationController: UINavigationController {
             updateBackButtonAlpha(animated: animated)
         }
         return super.popToRootViewController(animated: animated)
-    }
-    
-    static func instance() -> UIViewController {
-        return Storyboard.login.instantiateInitialViewController()!
     }
     
     private func updateBackButtonAlpha(animated: Bool) {

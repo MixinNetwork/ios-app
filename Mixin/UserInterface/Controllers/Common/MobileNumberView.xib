@@ -80,7 +80,7 @@
                                 <constraint firstAttribute="height" constant="54" id="J7F-nt-xp3" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                            <real key="value" value="41"/>
+                                            <real key="value" value="40"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </constraint>
@@ -100,7 +100,16 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="VjS-KQ-3YO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="64" id="EZC-Oe-Uyv"/>
+                <constraint firstItem="VjS-KQ-3YO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="64" id="EZC-Oe-Uyv" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                            <real key="value" value="52"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                            <real key="value" value="52"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstItem="VjS-KQ-3YO" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="SnP-ZB-jXZ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="VjS-KQ-3YO" secondAttribute="trailing" constant="20" id="lnS-vE-PYg"/>
             </constraints>

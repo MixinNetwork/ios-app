@@ -163,7 +163,7 @@ final class AccountAPI: BaseAPI {
 
                 MixinWebView.clearCookies()
                 let oldRootViewController = AppDelegate.current.window?.rootViewController
-                AppDelegate.current.window?.rootViewController = Storyboard.login.instantiateInitialViewController()!
+                AppDelegate.current.window?.rootViewController = LoginNavigationController.instance()
                 oldRootViewController?.navigationController?.removeFromParent()
             })
         }

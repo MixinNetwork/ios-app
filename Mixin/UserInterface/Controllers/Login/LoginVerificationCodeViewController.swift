@@ -97,7 +97,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         UserDAO.shared.updateAccount(account: account)
                         DispatchQueue.main.sync {
                             if account.full_name.isEmpty {
-                                let vc = UsernameViewController.instance()
+                                let vc = R.storyboard.login.username()!
                                 weakSelf.navigationController?.pushViewController(vc, animated: true)
                             } else {
                                 ContactAPI.shared.syncContacts()
@@ -113,8 +113,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                     }
                 case let .failure(error):
                     DispatchQueue.main.sync {
-                        weakSelf.continueButton.isHidden = false
-                        weakSelf.continueButton.isBusy = false
+                        weakSelf.isBusy = false
                         if error.code == 20113 {
                             weakSelf.verificationCodeField.clear()
                             weakSelf.verificationCodeField.showError()

@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VerificationCodeViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="contentStackView" destination="0Ou-QY-UFp" id="w0N-xk-MaH"/>
                 <outlet property="resendButton" destination="AER-Wc-IFg" id="qQf-Dw-xUz"/>
                 <outlet property="titleLabel" destination="ZCa-e9-oqN" id="POs-7n-iJW"/>
                 <outlet property="verificationCodeField" destination="CPX-EN-daX" id="2Tt-Lz-0UN"/>
@@ -50,7 +51,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="verificationCodeFieldEditingChanged:" destination="-1" eventType="valueChanged" id="7vb-28-bEF"/>
+                                <action selector="verificationCodeFieldEditingChanged:" destination="-1" eventType="editingChanged" id="X92-5W-t3a"/>
                             </connections>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AER-Wc-IFg" customClass="CountDownButton" customModule="Mixin" customModuleProvider="target">
@@ -74,7 +75,16 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="0Ou-QY-UFp" secondAttribute="trailing" constant="20" id="KfL-kP-Ohb"/>
-                <constraint firstItem="0Ou-QY-UFp" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="64" id="jMt-Si-dSq"/>
+                <constraint firstItem="0Ou-QY-UFp" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="64" id="jMt-Si-dSq" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                            <real key="value" value="52"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                            <real key="value" value="52"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstItem="0Ou-QY-UFp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="vN2-mQ-02h"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>

@@ -106,9 +106,6 @@ extension WebSocketService: SRWebSocketDelegate {
                 if blazeMessage.isReceiveMessageAction() {
                     ReceiveMessageService.shared.receiveMessage(blazeMessage: blazeMessage, rawData: unzipJson)
                 } else {
-                    guard blazeMessage.action != BlazeMessageAction.acknowledgeMessageReceipt.rawValue else {
-                        return
-                    }
                     guard let data = blazeMessage.toBlazeMessageData() else {
                         return
                     }

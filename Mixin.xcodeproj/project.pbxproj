@@ -602,6 +602,8 @@
 		DFF3B68A20E25CB500DC82D9 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3B68920E25CB500DC82D9 /* Album.swift */; };
 		DFF3B68C20E2690100DC82D9 /* AlbumDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3B68B20E2690000DC82D9 /* AlbumDAO.swift */; };
 		DFF3B68E20E3599E00DC82D9 /* PrintLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3B68D20E3599E00DC82D9 /* PrintLog.swift */; };
+		DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */; };
+		DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFF44174223A035000DDD5F8 /* GoogleService-Info.plist */; };
 		DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */; };
 		DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF70F612079FC4900A5FA8B /* AssetItem.swift */; };
 		DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */; };
@@ -1250,6 +1252,8 @@
 		DFF3B68920E25CB500DC82D9 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		DFF3B68B20E2690000DC82D9 /* AlbumDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumDAO.swift; sourceTree = "<group>"; };
 		DFF3B68D20E3599E00DC82D9 /* PrintLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintLog.swift; sourceTree = "<group>"; };
+		DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Mixin-Keys.plist"; sourceTree = "<group>"; };
+		DFF44174223A035000DDD5F8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferContactData.swift; sourceTree = "<group>"; };
 		DFF70F612079FC4900A5FA8B /* AssetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetItem.swift; sourceTree = "<group>"; };
 		DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSendViewController.swift; sourceTree = "<group>"; };
@@ -2080,6 +2084,8 @@
 			children = (
 				7B45A51B2189F28A0008F894 /* call.caf */,
 				274264A820011BB0000A8808 /* mixin.caf */,
+				DFF44174223A035000DDD5F8 /* GoogleService-Info.plist */,
+				DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */,
 				DF8EF6BB2034737F00E99CE8 /* payment_success.caf */,
 				7BBD8A3220C1D51C00DF2735 /* recaptcha.html */,
 				277FF7101F909A1200DBB2EB /* Info.plist */,
@@ -2590,6 +2596,7 @@
 				DF3EEF841FA9EF54007C6E03 /* PhoneContactGuideCell.xib in Resources */,
 				7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */,
 				DF8CECDB1FC3015D00E40064 /* TransferTypeView.xib in Resources */,
+				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
 				7BEC4DF121A7D054003336F2 /* WalletAssetCell.xib in Resources */,
 				7B95D52D21743EEF00C95281 /* TransactionsFilterConditionCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
@@ -2597,6 +2604,7 @@
 				DF8CECF41FC425F700E40064 /* BlockUserCell.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
+				DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */,
 				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
 				7B4D1128205B8D380074BF60 /* AddressCell.xib in Resources */,

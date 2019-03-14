@@ -78,9 +78,9 @@ extension MobileNumberViewController: UITextFieldDelegate {
 extension MobileNumberViewController: SelectCountryViewControllerDelegate {
     
     func selectCountryViewController(_ viewController: SelectCountryViewController, didSelectCountry country: Country) {
+        viewController.dismiss(animated: true, completion: nil)
         self.country = country
         updateContinueButtonIsHidden()
-        viewController.dismiss(animated: true, completion: nil)
     }
     
 }

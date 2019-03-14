@@ -1,7 +1,7 @@
 import UIKit
 import Bugsnag
 
-class VerificationCodeViewController: LoginViewController {
+class VerificationCodeViewController_Legacy: LoginViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var verificationCodeField: VerificationCodeField!
@@ -156,8 +156,8 @@ class VerificationCodeViewController: LoginViewController {
         }
     }
     
-    static func instance(loginInfo: LoginInfo) -> VerificationCodeViewController {
-        let vc = Storyboard.login.instantiateViewController(withIdentifier: "VerificationCode") as! VerificationCodeViewController
+    static func instance(loginInfo: LoginInfo) -> VerificationCodeViewController_Legacy {
+        let vc = Storyboard.login.instantiateViewController(withIdentifier: "VerificationCode") as! VerificationCodeViewController_Legacy
         vc.loginInfo = loginInfo
         return vc
     }

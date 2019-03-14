@@ -269,10 +269,10 @@
             </objects>
             <point key="canvasLocation" x="-809" y="-322"/>
         </scene>
-        <!--Verification Code View Controller-->
+        <!--Verification Code View Controller Legacy-->
         <scene sceneID="okH-oI-nfj">
             <objects>
-                <viewController storyboardIdentifier="VerificationCode" id="L3m-gh-9Mp" customClass="VerificationCodeViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VerificationCode" id="L3m-gh-9Mp" customClass="VerificationCodeViewController_Legacy" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uUV-MK-FTN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

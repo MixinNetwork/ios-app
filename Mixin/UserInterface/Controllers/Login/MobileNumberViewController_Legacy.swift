@@ -112,7 +112,7 @@ class MobileNumberViewController_Legacy: LoginViewController {
             switch result {
             case let .success(verification):
                 loginInfo.verificationId = verification.id
-                let vc = VerificationCodeViewController.instance(loginInfo: loginInfo)
+                let vc = VerificationCodeViewController_Legacy.instance(loginInfo: loginInfo)
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
                 weakSelf.continueButton.isBusy = false
             case let .failure(error):

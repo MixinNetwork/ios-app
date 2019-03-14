@@ -13,7 +13,7 @@ class ContactViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        updateTableViewContentInsetBottom()
         tableView.register(UINib(nibName: "PhoneContactHeaderFooter", bundle: nil), forHeaderFooterViewReuseIdentifier: PhoneContactHeaderFooter.cellIdentifier)
         tableView.register(UINib(nibName: "ContactMeCell", bundle: nil), forCellReuseIdentifier: ContactMeCell.cellIdentifier)
         tableView.register(UINib(nibName: "ContactQRCodeCell", bundle: nil), forCellReuseIdentifier: ContactQRCodeCell.cellIdentifier)
@@ -31,7 +31,13 @@ class ContactViewController: UITableViewController {
             self?.fetchContacts(refresh: false)
         }
     }
-
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateTableViewContentInsetBottom()
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -55,10 +61,22 @@ class ContactViewController: UITableViewController {
             }
         }
     }
-
-    class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: Storyboard.contact.instantiateInitialViewController()!, title: Localized.CONTACT_TITLE)
+    
+    private func updateTableViewContentInsetBottom() {
+        if view.compatibleSafeAreaInsets.bottom > 20 {
+            tableView.contentInset.bottom = 0
+        } else {
+            tableView.contentInset.bottom = 20
+        }
     }
+    
+    class func instance() -> UIViewController {
+        let vc = Storyboard.contact.instantiateInitialViewController()!
+        let container = ContainerViewController.instance(viewController: vc, title: Localized.CONTACT_TITLE)
+        container.automaticallyAdjustsScrollViewInsets = false
+        return container
+    }
+    
 }
 
 extension ContactViewController: ContainerViewControllerDelegate {

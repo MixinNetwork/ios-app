@@ -2,6 +2,7 @@ import Foundation
 import Bugsnag
 import UIKit
 import SDWebImage
+import UserNotifications
 
 class ReceiveMessageService: MixinService {
 
@@ -770,6 +771,7 @@ extension ReceiveMessageService {
                     }
                     if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: message.status) {
                         ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: .READ)
+                        UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
                     }
                 }
                 SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)

@@ -53,11 +53,11 @@ class ContinueButtonViewController: UIViewController {
             return
         }
         let work = {
-            let newOffset = self.view.frame.height
-                - endFrame.origin.y
-                + self.continueButtonMargin
-            if abs(currentOffset - newOffset) > 60 || newOffset > currentOffset {
-                self.continueButtonBottomConstraint.update(offset: -newOffset)
+            let newOffset = endFrame.origin.y
+                - self.view.frame.height
+                - self.continueButtonMargin
+            if abs(currentOffset - newOffset) > 60 || newOffset < currentOffset {
+                self.continueButtonBottomConstraint.update(offset: newOffset)
             }
             self.view.layoutIfNeeded()
         }

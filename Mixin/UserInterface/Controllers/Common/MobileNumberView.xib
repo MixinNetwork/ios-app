@@ -15,6 +15,7 @@
                 <outlet property="callingCodeButton" destination="feW-Xn-BjG" id="cVh-ep-3dy"/>
                 <outlet property="contentStackView" destination="VjS-KQ-3YO" id="6ca-fj-Sxf"/>
                 <outlet property="textField" destination="ldl-y9-A44" id="bgo-0O-ZMu"/>
+                <outlet property="titleWrapperStackView" destination="lf9-3G-bjO" id="Llv-7I-lzy"/>
                 <outlet property="view" destination="iN0-l3-epB" id="f2s-Z6-nBT"/>
             </connections>
         </placeholder>

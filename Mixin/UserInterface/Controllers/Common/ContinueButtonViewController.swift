@@ -49,11 +49,16 @@ class ContinueButtonViewController: UIViewController {
         guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
+        guard let currentOffset = continueButtonBottomConstraint.layoutConstraints.first?.constant else {
+            return
+        }
         let work = {
-            let offset = self.view.frame.height
+            let newOffset = self.view.frame.height
                 - endFrame.origin.y
                 + self.continueButtonMargin
-            self.continueButtonBottomConstraint.update(offset: -offset)
+            if abs(currentOffset - newOffset) > 60 || newOffset > currentOffset {
+                self.continueButtonBottomConstraint.update(offset: -newOffset)
+            }
             self.view.layoutIfNeeded()
         }
         if viewHasAppeared {

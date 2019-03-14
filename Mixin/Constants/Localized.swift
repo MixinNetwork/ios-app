@@ -210,7 +210,8 @@ public class Localized {
     public static let CHAT_QUOTE_TYPE_STICKER = LocalizedString("chat_quote_type_sticker", comment: "Sticker")
     public static let CHAT_QUOTE_TYPE_PHOTO = LocalizedString("chat_quote_type_photo", comment: "Photo")
     public static let CHAT_QUOTE_TYPE_VIDEO = LocalizedString("chat_quote_type_video", comment: "Video")
-
+    public static let CHAT_RESTORE_SUBTITLE = LocalizedString("chat_restore_subtitle", comment: "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.")
+    
     // Call
     public static let CALL_HINT_ON_ANOTHER_CALL = LocalizedString("call_hint_on_another_call", comment: "You are already on another call. Try after it was ended.")
     public static let CALL_STATUS_CALLING = LocalizedString("call_status_calling", comment: "Calling...")

@@ -620,6 +620,7 @@ chat history from icloud</string>
                         <outlet property="progressLabel" destination="TzW-ru-T74" id="aEe-1u-xrh"/>
                         <outlet property="restoreButton" destination="HAa-aR-8l8" id="Qd0-xg-ULA"/>
                         <outlet property="skipButton" destination="xRF-Rk-K9J" id="Kf4-EF-039"/>
+                        <outlet property="subtitleLabel" destination="UJs-OY-OCz" id="2iE-fA-k6q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pPq-Dm-YCs" sceneMemberID="firstResponder"/>

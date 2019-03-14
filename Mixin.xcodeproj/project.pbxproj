@@ -1509,6 +1509,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		7B51DDA7223A31E4008ACDBB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7B26D1CB219EEB4000AE113A /* Peer.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		7B61EB8A209787DD001C1985 /* Attachment */ = {
 			isa = PBXGroup;
 			children = (
@@ -1528,6 +1536,7 @@
 				7B5FEE3F2101AD790008321F /* ScreenSize.swift */,
 				7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */,
 				7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */,
+				7B06F9A12201CE1B0058DE94 /* BackupAvailabilityQuery.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1546,12 +1555,10 @@
 			isa = PBXGroup;
 			children = (
 				7B9F810A222EA30A0012BFDD /* Popup Presentation */,
+				7B51DDA7223A31E4008ACDBB /* Model */,
 				7B26D1CD219EEB5A00AE113A /* Cells */,
 				DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */,
-				7B26D1CB219EEB4000AE113A /* Peer.swift */,
 				7BA4E092219D99B300A2176D /* PeerSelectionViewController.swift */,
-				7B06F9A12201CE1B0058DE94 /* BackupAvailabilityQuery.swift */,
-				7BA1F8AA221ED35200DBFCE2 /* Hud.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1998,6 +2005,7 @@
 		DF5D9F1F1F9C78700036D5FD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7BA1F8AA221ED35200DBFCE2 /* Hud.swift */,
 				7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */,
 				DF06D922222FAE7100FE7FBC /* AvatarShadowImageView.swift */,
 				DF768562200647CC0055F3FF /* BouncingButton.swift */,

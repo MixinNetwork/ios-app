@@ -37,7 +37,7 @@ class LoginMobileNumberViewController: MobileNumberViewController {
         contentStackView.addArrangedSubview(introTextView)
     }
     
-    override func continueAction(sender: Any) {
+    override func continueAction(_ sender: Any) {
         let message = String(format: Localized.TEXT_CONFIRM_SEND_CODE, fullNumber(withSpacing: true))
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CHANGE, style: .cancel, handler: nil))

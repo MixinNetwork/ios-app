@@ -22,7 +22,7 @@ class ContinueButtonViewController: UIViewController {
         continueButton.backgroundColor = .theme
         continueButton.clipsToBounds = true
         continueButton.layer.cornerRadius = continueButtonLength / 2
-        continueButton.addTarget(self, action: #selector(continueAction(sender:)), for: .touchUpInside)
+        continueButton.addTarget(self, action: #selector(continueAction(_:)), for: .touchUpInside)
         view.addSubview(continueButton)
         continueButton.snp.makeConstraints { (make) in
             make.width.height.equalTo(continueButtonLength)
@@ -37,7 +37,7 @@ class ContinueButtonViewController: UIViewController {
         viewHasAppeared = true
     }
     
-    @objc func continueAction(sender: Any) {
+    @objc func continueAction(_ sender: Any) {
         
     }
     

@@ -282,7 +282,7 @@ class ReceiveMessageService: MixinService {
             }
             let message = Message.createMessage(textMessage: content, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendSessionMessage(message: message, representativeId: dataUserId)
+            SendMessageService.shared.sendSessionMessage(message: message, representativeId: dataUserId, data: content)
         } else if data.category.hasSuffix("_IMAGE") || data.category.hasSuffix("_VIDEO") {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return

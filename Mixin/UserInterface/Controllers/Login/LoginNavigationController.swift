@@ -69,7 +69,7 @@ class LoginNavigationController: UINavigationController {
     
     private func updateBackButtonAlpha(animated: Bool) {
         let alpha: CGFloat
-        if viewControllers.last is MobileNumberViewController || viewControllers.last is UsernameViewController {
+        if viewControllers.last is LoginMobileNumberViewController || viewControllers.last is UsernameViewController {
             alpha = 0
         } else {
             alpha = 1

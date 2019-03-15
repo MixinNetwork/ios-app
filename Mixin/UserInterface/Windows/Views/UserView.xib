@@ -201,9 +201,9 @@
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fEf-ht-1u9">
                             <rect key="frame" x="81.5" y="12" width="44" height="44"/>
                             <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
-                            <state key="normal" image="ic_share"/>
+                            <state key="normal" image="ic_transfer"/>
                             <connections>
-                                <action selector="shareAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="KZW-b9-zZh"/>
+                                <action selector="transferAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="KZW-b9-zZh"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mdx-JU-EIZ">
@@ -293,8 +293,8 @@
                 <outlet property="openAppButton" destination="aFr-aK-zbi" id="WKE-03-P1i"/>
                 <outlet property="relationWrapperView" destination="mMh-Qj-bOy" id="rtb-Of-yVX"/>
                 <outlet property="sendButton" destination="Mdx-JU-EIZ" id="Lh7-8Y-33Y"/>
-                <outlet property="shareContactButton" destination="fEf-ht-1u9" id="XVS-cc-KAO"/>
                 <outlet property="showRelationWrapperDescriptionTopConstraint" destination="QR6-tc-7Ms" id="I4K-vE-tdD"/>
+                <outlet property="transferButton" destination="fEf-ht-1u9" id="XVS-cc-KAO"/>
                 <outlet property="unblockButton" destination="v5r-q1-qfh" id="xvN-bh-ft6"/>
                 <outlet property="verifiedImageView" destination="t4Y-mk-GVy" id="fOx-eB-sZh"/>
             </connections>
@@ -311,7 +311,7 @@
         <image name="ic_profile_add" width="9" height="9"/>
         <image name="ic_profile_unblock" width="10" height="13"/>
         <image name="ic_send_msg" width="30" height="30"/>
-        <image name="ic_share" width="30" height="30"/>
+        <image name="ic_transfer" width="30" height="30"/>
         <image name="ic_user_verified" width="14" height="14"/>
     </resources>
 </document>

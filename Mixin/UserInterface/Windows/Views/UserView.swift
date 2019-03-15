@@ -17,7 +17,7 @@ class UserView: CornerView {
     @IBOutlet weak var editNameButton: UIButton!
     @IBOutlet weak var changeAvatarButton: UIButton!
     @IBOutlet weak var openAppButton: UIButton!
-    @IBOutlet weak var shareContactButton: UIButton!
+    @IBOutlet weak var transferButton: UIButton!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var moreButton: StateResponsiveButton!
@@ -122,7 +122,7 @@ class UserView: CornerView {
         if isMe {
             editNameButton.isHidden = false
             changeAvatarButton.isHidden = false
-            shareContactButton.isHidden = true
+            transferButton.isHidden = true
             addContactButton.isHidden = true
             openAppButton.isHidden = true
             sendButton.isHidden = true
@@ -160,7 +160,7 @@ class UserView: CornerView {
                 hideRelationWrapperDescriptionTopConstraint.priority = .defaultHigh
             }
             
-            shareContactButton.isHidden = user.isBot
+            transferButton.isHidden = user.isBot
             openAppButton.isHidden = !user.isBot
         }
     }
@@ -204,8 +204,8 @@ class UserView: CornerView {
                 self?.changeNumber()
             }))
         } else {
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
-                self?.shareAction(alc)
+            alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_TRANSFER, style: .default, handler: { [weak self](action) in
+                self?.transferAction(alc)
             }))
             alc.addAction(UIAlertAction(title: Localized.PROFILE_TRANSACTIONS, style: .default, handler: { [weak self](action) in
                 self?.transactionsAction()
@@ -261,8 +261,8 @@ class UserView: CornerView {
         })
     }
     
-    @IBAction func shareAction(_ sender: Any) {
-        let vc = SendMessagePeerSelectionViewController.instance(content: .contact(user.userId))
+    @IBAction func transferAction(_ sender: Any) {
+        let vc = SendViewController.instance(asset: nil, type: .contact(user))
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
     }
     

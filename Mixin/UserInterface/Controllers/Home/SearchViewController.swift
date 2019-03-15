@@ -78,6 +78,7 @@ class SearchViewController: UIViewController {
                     self.users = users
                     self.conversations = messages
                     self.tableView.reloadData()
+                    self.updateNoResultIndicator()
                 }
             }
             searchQueue.addOperation(op)
@@ -133,6 +134,7 @@ class SearchViewController: UIViewController {
                 self.allContacts = allContacts
                 if self.isPresenting && self.keyword.isEmpty {
                     self.tableView.reloadData()
+                    self.updateNoResultIndicator()
                 }
             }
         }
@@ -143,6 +145,7 @@ class SearchViewController: UIViewController {
             reloadContacts()
         } else {
             tableView.reloadData()
+            updateNoResultIndicator()
         }
     }
     
@@ -162,7 +165,19 @@ class SearchViewController: UIViewController {
         view.layoutIfNeeded()
         tableView.contentOffset.y = -tableView.contentInset.top
     }
-
+    
+    private func updateNoResultIndicator() {
+        let dataCount: Int
+        if keyword.isEmpty {
+            dataCount = allContacts.count
+        } else {
+            dataCount = assets.count + users.count + conversations.count
+        }
+        tableView.checkEmpty(dataCount: dataCount,
+                             text: Localized.NO_RESULT,
+                             photo: R.image.ic_no_result()!)
+    }
+    
 }
 
 extension SearchViewController: UITableViewDataSource {

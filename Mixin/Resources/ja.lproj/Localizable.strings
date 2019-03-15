@@ -473,6 +473,7 @@
 "setting_blocked_summary" = "ブロックされたユーザーはあなたにメッセージを送信したり、あなたをグループに追加することはできません。";
 "setting_conversation" = "会話";
 "setting_authorizations" = "承認";
+"setting_no_authorizations" = "承認はありません";
 "setting_deauthorize_confirmation" = " ％@ の認証を解除しますか？";
 "setting_storage_usage" = "ストレージ使用量";
 "setting_storage_usage_clear" = "％@ 件のメッセージを消去しますか（％@）。";

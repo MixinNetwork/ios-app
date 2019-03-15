@@ -19,7 +19,13 @@ class AllTransactionsViewController: UITableViewController {
         tableView.register(AssetHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         dataSource.onReload = { [weak self] in
-            self?.tableView.reloadData()
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.tableView.reloadData()
+            weakSelf.tableView.checkEmpty(dataCount: weakSelf.dataSource.snapshots.count,
+                                          text: Localized.WALLET_NO_TRANSACTION,
+                                          photo: R.image.wallet.ic_no_transaction()!)
         }
         dataSource.reloadFromLocal()
         dataSource.reloadFromRemote()

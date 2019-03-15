@@ -482,6 +482,7 @@
 "setting_desktop_desktop_on" = "You have your desktop logged in";
 "setting_desktop_log_out" = "Log out from desktop";
 "setting_authorizations" = "Authorizations";
+"setting_no_authorizations" = "NO AUTHORIZATIONS";
 "setting_deauthorize_confirmation" = "Deauthorize %@?";
 "setting_storage_usage" = "Storage Usage";
 "setting_storage_usage_clear" = "Clear %@ messages (%@)?";

@@ -28,6 +28,7 @@ public class Localized {
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
     public static let MENU_EDIT = LocalizedString("menu_edit", comment: "Edit")
     public static let ALL_PHOTOS = LocalizedString("all_photos", comment: "All Photos")
+    public static let NO_RESULT = LocalizedString("no_result", comment: "No result")
     
     public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
     public static let CONNECTION_HINT_WAITING = LocalizedString("connection_hint_waiting", comment: "Waiting to reconnect")
@@ -512,6 +513,7 @@ public class Localized {
     public static let SETTING_CONVERSATION = LocalizedString("setting_conversation", comment: "Conversation")
     public static let SETTING_BLOCKED = LocalizedString("setting_blocked", comment: "Blocked Users")
     public static let SETTING_BLOCKED_EMPTY = LocalizedString("setting_blocked_empty", comment: "No blocked users")
+    public static let SETTING_NO_AUTHORIZATIONS = LocalizedString("setting_no_authorizations", comment: "NO AUTHORIZATIONS")
     public static let SETTING_PRIVACY_AND_SECURITY = LocalizedString("setting_privacy_and_security", comment: "Privacy and Security")
 
     public static let SETTING_NOTIFICATION_MESSAGE = LocalizedString("setting_notification_message", comment: "MESSAGE NOTIFICATIONS")

@@ -483,6 +483,7 @@
 "setting_desktop_desktop_on" = "桌面版已登入";
 "setting_desktop_log_out" = "从桌面版退出";
 "setting_authorizations" = "授权";
+"setting_no_authorizations" = "没有授权";
 "setting_deauthorize_confirmation" = "取消 %@ 授权？";
 "setting_storage_usage" = "存储空间";
 "setting_storage_usage_clear" = "清除 %@ 个消息（%@）吗？";

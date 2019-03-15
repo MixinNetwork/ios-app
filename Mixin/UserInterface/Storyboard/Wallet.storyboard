@@ -628,7 +628,7 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="rt0-Mp-iwA">
                                         <rect key="frame" x="144.66666666666666" y="189.66666666666669" width="124.99999999999997" height="169"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_no_result" translatesAutoresizingMaskIntoConstraints="NO" id="xZC-cA-NDZ">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_no_result" translatesAutoresizingMaskIntoConstraints="NO" id="xZC-cA-NDZ">
                                                 <rect key="frame" x="0.0" y="0.0" width="125" height="125"/>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NO RESULT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6w-Mn-l1z">
@@ -636,6 +636,9 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" red="0.73725490196078436" green="0.75294117647058822" blue="0.7803921568627451" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="no_result"/>
+                                                </userDefinedRuntimeAttributes>
                                             </label>
                                         </subviews>
                                     </stackView>
@@ -1889,13 +1892,13 @@
     <resources>
         <image name="Wallet/ic_add" width="10" height="10"/>
         <image name="Wallet/ic_filter" width="14" height="14"/>
-        <image name="Wallet/ic_no_result" width="125" height="125"/>
         <image name="Wallet/ic_token_indicator_left" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
         <image name="ic_action_next" width="11" height="20"/>
         <image name="ic_input_menu" width="11" height="6"/>
+        <image name="ic_no_result" width="125" height="125"/>
         <image name="ic_scan_address" width="24" height="24"/>
         <image name="ic_title_close" width="15" height="15"/>
         <image name="ic_transfer_exchange" width="14" height="13"/>

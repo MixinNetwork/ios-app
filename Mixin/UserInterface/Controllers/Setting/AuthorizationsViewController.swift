@@ -81,6 +81,9 @@ extension AuthorizationsViewController {
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }
+        tableView.checkEmpty(dataCount: authorizations.count,
+                             text: Localized.SETTING_NO_AUTHORIZATIONS,
+                             photo: R.image.ic_no_authorization()!)
     }
     
     private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {

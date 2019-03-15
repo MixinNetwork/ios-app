@@ -43,7 +43,8 @@ class ChangeNumberVerifyPinViewController: ContinueButtonViewController {
             weakSelf.isBusy = false
             switch result {
             case .success:
-                let vc = ChangeNumberNewNumberViewController.instance(context: context)
+                let vc = ChangeNumberNewNumberViewController()
+                vc.context = context
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
             case let .failure(error):
                 weakSelf.pinField.clear()

@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.7.3)
+  - Alamofire (4.8.1)
   - AlignedCollectionViewFlowLayout (1.1.2)
   - Base64 (1.1.2)
   - Bugsnag (5.18.0)
@@ -92,7 +92,7 @@ PODS:
   - Zip (1.1.0)
 
 DEPENDENCIES:
-  - "Alamofire (from `git@github.com:over140/Alamofire.git`, branch `master`)"
+  - Alamofire
   - AlignedCollectionViewFlowLayout
   - Bugsnag
   - DeviceGuru
@@ -116,6 +116,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - Alamofire
     - AlignedCollectionViewFlowLayout
     - Base64
     - Bugsnag
@@ -145,9 +146,6 @@ SPEC REPOS:
     - Zip
 
 EXTERNAL SOURCES:
-  Alamofire:
-    :branch: master
-    :git: "git@github.com:over140/Alamofire.git"
   SignalProtocolC:
     :git: "git@github.com:MixinMessenger/SignalProtocolC.git"
     :submodules: true
@@ -159,9 +157,6 @@ EXTERNAL SOURCES:
     :git: "git@github.com:MixinNetwork/wcdb.git"
 
 CHECKOUT OPTIONS:
-  Alamofire:
-    :commit: 338f6550489e112804fbded795fd3e0151e32c53
-    :git: "git@github.com:over140/Alamofire.git"
   SignalProtocolC:
     :commit: 31f5f56a03b54ecba250040e1c5cd8acf44ed50e
     :git: "git@github.com:MixinMessenger/SignalProtocolC.git"
@@ -174,7 +169,7 @@ CHECKOUT OPTIONS:
     :git: "git@github.com:MixinNetwork/wcdb.git"
 
 SPEC CHECKSUMS:
-  Alamofire: 5f691e36644ab9a04e6df58bfa74b2d627a6919b
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   Bugsnag: 3e66f39e8bfbde46c0471b6ce97171ec1adb51db
@@ -206,6 +201,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 935b18f6574caebd9d13f31de00478c301ab1751
+PODFILE CHECKSUM: 3b5a9b0cf94dcf8725d917010c06dfe5e02def94
 
 COCOAPODS: 1.6.1

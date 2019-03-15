@@ -5,14 +5,13 @@ class EmptyView: UIStackView {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var tipsLabel: UILabel!
 
-    func render(text: String, photo: UIImage, superView: UIView) {
+    func render(text: String, photo: UIImage, container: UIView) {
         iconImageView.image = photo
         tipsLabel.text = text
-
-        superView.addSubview(self)
+        container.addSubview(self)
         self.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.centerY.equalToSuperview().offset(-superView.bounds.height / 5)
+            $0.centerY.equalToSuperview().offset(-container.frame.height / 5)
         }
     }
 
@@ -26,14 +25,11 @@ class EmptyView: UIStackView {
 extension UITableView {
 
     func checkEmpty(dataCount: Int, text: String, photo: UIImage) {
-        guard let superView = self.superview else {
-            return
-        }
         if dataCount == 0 {
             guard self.subviews.first(where: { $0 is EmptyView }) == nil else {
                 return
             }
-            EmptyView.instance().render(text: text, photo: photo, superView: superView)
+            EmptyView.instance().render(text: text, photo: photo, container: self)
         } else {
             self.subviews.first(where: { $0 is EmptyView })?.removeFromSuperview()
         }

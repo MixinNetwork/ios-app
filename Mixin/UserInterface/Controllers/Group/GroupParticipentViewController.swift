@@ -16,6 +16,13 @@ class GroupParticipentViewController: UIViewController {
     private var isSearching: Bool {
         return !(searchBoxView.textField.text ?? "").isEmpty
     }
+    private var hasAdminPrivileges: Bool {
+        return currentAccountRole == ParticipantRole.ADMIN.rawValue
+            || currentAccountRole == ParticipantRole.OWNER.rawValue
+    }
+    private var showAdminActions: Bool {
+        return participants.count < 256 && hasAdminPrivileges
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,6 +80,9 @@ class GroupParticipentViewController: UIViewController {
 extension GroupParticipentViewController: ContainerViewControllerDelegate {
 
     func barRightButtonTappedAction() {
+        guard showAdminActions else {
+            return
+        }
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.GROUP_NAVIGATION_TITLE_ADD_MEMBER, style: .default, handler: { [weak self](_) in
             guard let weakSelf = self else {
@@ -92,7 +102,7 @@ extension GroupParticipentViewController: ContainerViewControllerDelegate {
     }
 
     func imageBarRightButton() -> UIImage? {
-        return R.image.ic_title_add()
+        return showAdminActions ? R.image.ic_title_add() : nil
     }
 
 }
@@ -201,6 +211,7 @@ extension GroupParticipentViewController {
                     return user.userId == AccountAPI.shared.accountUserId
                 }) {
                     weakSelf.currentAccountRole = my.role
+                    weakSelf.container?.reloadRightButton()
                 }
                 weakSelf.searchAction(weakSelf.searchBoxView.textField)
                 if weakSelf.searchResult.count == 0 {

@@ -50,15 +50,11 @@ class NewAddressViewController: UIViewController {
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        labelTextField.becomeFirstResponder()
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        labelTextField.becomeFirstResponder()
     }
 
     @IBAction func checkLabelAndAddressAction(_ sender: Any) {
@@ -137,9 +133,9 @@ class NewAddressViewController: UIViewController {
         let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
         let windowHeight = AppDelegate.current.window!.bounds.height
         bottomConstraint.constant = windowHeight - endFrame.origin.y + 20
-        UIView.performWithoutAnimation {
+        UIView.animate(withDuration: 0.15, animations: {
             self.view.layoutIfNeeded()
-        }
+        })
     }
 
     class func instance(asset: AssetItem, address: Address? = nil, successCallback: ((Address) -> Void)? = nil) -> UIViewController {

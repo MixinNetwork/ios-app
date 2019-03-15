@@ -49,7 +49,7 @@ class WalletPasswordViewController: UIViewController {
         case .changePinStep2:
             titleLabel.text = Localized.WALLET_PIN_NEW_TITLE
             subtitleLabel.text = ""
-            backButton.setImage(R.image.ic_title_close(), for: .normal)
+            backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
@@ -179,9 +179,6 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         case .initPinStep3(let previous):
             if previous == pin {
-                guard !nextButton.isBusy else {
-                    return
-                }
                 nextButton.isHidden = false
                 nextButton.isBusy = true
                 AccountAPI.shared.updatePin(old: nil, new: pin, completion: { [weak self] (result) in
@@ -201,9 +198,6 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 })
             }
         case .changePinStep1:
-            guard !nextButton.isBusy else {
-                return
-            }
             nextButton.isHidden = false
             nextButton.isBusy = true
             AccountAPI.shared.verify(pin: pin, completion: { [weak self] (result) in
@@ -235,10 +229,8 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         case .changePinStep4(let old, let previous):
             if previous == pin {
-                guard !nextButton.isBusy else {
-                    return
-                }
                 nextButton.isHidden = false
+                nextButton.isBusy = true
                 AccountAPI.shared.updatePin(old: old, new: pin, completion: { [weak self] (result) in
                     self?.nextButton.isBusy = false
                     switch result {

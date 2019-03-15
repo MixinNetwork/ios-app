@@ -187,12 +187,6 @@ class UserView: CornerView {
     @IBAction func moreAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         let alc = UIAlertController(title: user.fullName, message: user.phone ?? user.identityNumber, preferredStyle: .actionSheet)
-        if user.isBot {
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_OPEN_BOT, style: .default, handler: { [weak self](action) in
-                self?.openApp()
-            }))
-        }
-
         if isMe {
             alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
                 self?.editName()
@@ -204,9 +198,16 @@ class UserView: CornerView {
                 self?.changeNumber()
             }))
         } else {
-            alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_TRANSFER, style: .default, handler: { [weak self](action) in
-                self?.transferAction(alc)
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
+                self?.shareAction()
             }))
+
+            if user.isSelfBot {
+                alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_TRANSFER, style: .default, handler: { [weak self](action) in
+                    self?.transferAction(alc)
+                }))
+            }
+
             alc.addAction(UIAlertAction(title: Localized.PROFILE_TRANSACTIONS, style: .default, handler: { [weak self](action) in
                 self?.transactionsAction()
             }))
@@ -259,6 +260,11 @@ class UserView: CornerView {
             superView.userViewPopupView = superView.popupView
             superView.popupView = avatarPreviewImageView
         })
+    }
+
+    func shareAction() {
+        let vc = SendMessagePeerSelectionViewController.instance(content: .contact(user.userId))
+        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
     }
     
     @IBAction func transferAction(_ sender: Any) {

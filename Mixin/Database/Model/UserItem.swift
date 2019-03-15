@@ -53,6 +53,13 @@ struct UserItem: BaseCodable {
         }
         return !appId.isEmpty
     }
+
+    var isSelfBot: Bool {
+        guard let appCreatorId = self.appCreatorId else {
+            return false
+        }
+        return appCreatorId == AccountAPI.shared.accountUserId
+    }
 }
 
 extension UserItem {

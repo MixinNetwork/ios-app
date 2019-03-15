@@ -101,6 +101,14 @@ class ContainerViewController: UIViewController {
         rightButton.saveNormalState()
     }
 
+    func reloadRightButton() {
+        guard let image = delegate?.imageBarRightButton() else {
+            return
+        }
+        rightButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        rightButton.setImage(image, for: .normal)
+    }
+
     func setSubtitle(subtitle: String?) {
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         subtitleLabel.text = subtitle

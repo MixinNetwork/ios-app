@@ -2,6 +2,7 @@ import Foundation
 import Bugsnag
 import UIKit
 import SDWebImage
+import UserNotifications
 
 class ReceiveMessageService: MixinService {
 
@@ -52,6 +53,8 @@ class ReceiveMessageService: MixinService {
                     }
                     ReceiveMessageService.shared.processReceiveMessages()
                 }
+            } else {
+                ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
             }
         }
     }
@@ -350,6 +353,7 @@ class ReceiveMessageService: MixinService {
         switch data.category {
         case MessageCategory.SIGNAL_TEXT.rawValue:
             MessageDAO.shared.updateMessageContentAndStatus(content: plainText, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId)
+            SendMessageService.shared.sendSessionMessage(message: Message.createMessage(textMessage: plainText, data: data), data: plainText)
         case MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.SIGNAL_DATA.rawValue, MessageCategory.SIGNAL_VIDEO.rawValue, MessageCategory.SIGNAL_AUDIO.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -362,11 +366,13 @@ class ReceiveMessageService: MixinService {
                 mediaStatus = MediaStatus.CANCELED
             }
             MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId, mediaStatus: mediaStatus)
+            SendMessageService.shared.sendSessionMessage(message: Message.createMessage(mediaData: transferMediaData, data: data), data: plainText)
         case MessageCategory.SIGNAL_STICKER.rawValue:
             guard let transferStickerData = parseSticker(plainText) else {
                 return
             }
             MessageDAO.shared.updateStickerMessage(stickerData: transferStickerData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId)
+            SendMessageService.shared.sendSessionMessage(message: Message.createMessage(stickerData: transferStickerData, data: data), data: plainText)
         case MessageCategory.SIGNAL_CONTACT.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferData = (try? jsonDecoder.decode(TransferContactData.self, from: base64Data)) else {
                 return
@@ -378,6 +384,7 @@ class ReceiveMessageService: MixinService {
                 return
             }
             MessageDAO.shared.updateContactMessage(transferData: transferData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId)
+            SendMessageService.shared.sendSessionMessage(message: Message.createMessage(contactData: transferData, data: data), data: plainText)
         default:
             break
         }
@@ -762,7 +769,10 @@ extension ReceiveMessageService {
                     guard message.status == MessageStatus.READ.rawValue else {
                         continue
                     }
-                    MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: message.status)
+                    if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: message.status) {
+                        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: .READ)
+                        UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
+                    }
                 }
                 SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
             }

@@ -21,10 +21,11 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
         label.textColor = .darkText
         label.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(label)
-        let constraints = [label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-                           label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)]
-        NSLayoutConstraint.activate(constraints)
-
+        label.snp.makeConstraints { (make) in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.top.equalToSuperview().offset(15)
+        }
         contentView.backgroundColor = .white
     }
     

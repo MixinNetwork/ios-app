@@ -19,7 +19,7 @@ class SearchViewController: UIViewController {
     @IBOutlet var afterPresentingConstraints: [NSLayoutConstraint]!
     
     private let searchImageView = UIImageView(image: #imageLiteral(resourceName: "ic_search"))
-    private let headerHeight: CGFloat = 28
+    private let headerHeight: CGFloat = 41
     
     private var allContacts = [UserItem]()
     private var users = [UserItem]()

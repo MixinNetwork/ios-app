@@ -24,7 +24,7 @@ class SelectCountryViewController: UIViewController {
     var selectedCountry: Country!
     weak var delegate: SelectCountryViewControllerDelegate?
 
-    private let sectionHeaderHeight: CGFloat = 28
+    private let sectionHeaderHeight: CGFloat = 46
     private var sections = [Section]()
     private var sectionIndexTitles = [String]()
     private var filteredCountries = [Country]()

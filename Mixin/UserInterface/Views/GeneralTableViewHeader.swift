@@ -22,7 +22,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
         label.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(label)
         let constraints = [label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-                           label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)]
+                           label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)]
         NSLayoutConstraint.activate(constraints)
 
         contentView.backgroundColor = .white

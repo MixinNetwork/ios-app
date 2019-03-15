@@ -25,12 +25,12 @@ class RestoreViewController: UIViewController {
         super.viewDidLoad()
         let subtitle = NSMutableAttributedString(string: Localized.CHAT_RESTORE_SUBTITLE)
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 10
+        paragraphStyle.lineSpacing = 8
         paragraphStyle.alignment = .center
         let attr: [NSAttributedString.Key: Any] = [
             .paragraphStyle: paragraphStyle,
             .font: UIFont.systemFont(ofSize: 14),
-            .foregroundColor: UIColor.darkText
+            .foregroundColor: UIColor.accessoryText
         ]
         let fullRange = NSRange(location: 0, length: subtitle.length)
         subtitle.setAttributes(attr, range: fullRange)

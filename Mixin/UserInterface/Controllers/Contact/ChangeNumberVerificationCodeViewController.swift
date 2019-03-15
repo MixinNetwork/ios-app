@@ -29,8 +29,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
     private func changePhoneNumber() {
         let code = verificationCodeField.text
         let context = self.context!
-        continueButton.isEnabled = true
-        continueButton.isBusy = true
+        isBusy = true
         let request = AccountRequest.createAccountRequest(verificationCode: code, registrationId: nil, pin: context.pin, sessionSecret: nil)
         AccountAPI.shared.changePhoneNumber(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
             guard let weakSelf = self else {
@@ -47,7 +46,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
                     weakSelf.navigationController?.dismiss(animated: true, completion: nil)
                 })
             case let .failure(error):
-                weakSelf.continueButton.isBusy = false
+                weakSelf.isBusy = false
                 weakSelf.verificationCodeField.clear()
                 weakSelf.alert(error.localizedDescription)
             }

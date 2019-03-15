@@ -25,6 +25,7 @@ class ChangeNumberNewNumberViewController: MobileNumberViewController {
                 weakSelf.context.verificationId = verification.id
                 let vc = ChangeNumberVerificationCodeViewController()
                 vc.context = weakSelf.context
+                vc.continueButtonBottomConstant = weakSelf.continueButtonBottomConstant
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
                 weakSelf.continueButton.isBusy = false
             case let .failure(error):

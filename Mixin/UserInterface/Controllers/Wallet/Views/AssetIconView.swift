@@ -3,7 +3,7 @@ import UIKit
 class AssetIconView: UIView {
     
     @IBInspectable var chainIconWidth: CGFloat = 10
-    @IBInspectable var chainIconOutlineWidth: CGFloat = 1
+    @IBInspectable var chainIconOutlineWidth: CGFloat = 2
     
     let iconImageView = UIImageView()
     let chainBackgroundView = UIView()

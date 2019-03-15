@@ -307,7 +307,7 @@
 		7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A62063951E008A166B /* GalleryItemViewController.swift */; };
 		7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */; };
 		7BF4047B2048F008004C54E4 /* ChangeNumberNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */; };
-		7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPINViewController.swift */; };
+		7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */; };
 		7BF49DD320C3DBAC00A8510E /* ReCaptchaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */; };
 		7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7BF49E0820C4449100A8510E /* ReCaptcha.storyboard */; };
 		7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */; };
@@ -952,7 +952,7 @@
 		7BF374A62063951E008A166B /* GalleryItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryItemViewController.swift; sourceTree = "<group>"; };
 		7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetHeaderView.swift; sourceTree = "<group>"; };
 		7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberNavigationController.swift; sourceTree = "<group>"; };
-		7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPINViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPINViewController.swift; sourceTree = "<group>"; };
+		7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPinViewController.swift; sourceTree = "<group>"; };
 		7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCaptchaManager.swift; sourceTree = "<group>"; };
 		7BF49E0820C4449100A8510E /* ReCaptcha.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ReCaptcha.storyboard; sourceTree = "<group>"; };
 		7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTransactionFooterView.xib; sourceTree = "<group>"; };
@@ -2366,7 +2366,7 @@
 				7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */,
 				7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */,
 				7BADC83D204BD01D0016B0FC /* ChangeNumberViewController.swift */,
-				7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPINViewController.swift */,
+				7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */,
 				7BADC83F204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift */,
 				7BADC841204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift */,
 			);
@@ -3282,7 +3282,7 @@
 				DF503D361FECF86D00C008E7 /* SessionDAO.swift in Sources */,
 				DF5D9F3D1F9CA3160036D5FD /* UserAPI.swift in Sources */,
 				7BFF3B011FAAE92F0039A1C5 /* SearchResultContactCell.swift in Sources */,
-				7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPINViewController.swift in Sources */,
+				7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift in Sources */,
 				DFB37D9F1FF94864000875BD /* RotateSignedPreKeyJob.swift in Sources */,
 				DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */,
 				DFCF3BEE20CF6ECD0030AD4A /* StickerManagerViewController.swift in Sources */,

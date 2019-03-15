@@ -1,8 +1,15 @@
 import UIKit
 
-class ChangeNumberVerifyPINViewController: ChangeNumberViewController {
-
+class ChangeNumberVerifyPinViewController: ContinueButtonViewController {
+    
     @IBOutlet weak var pinField: PinField!
+    
+    private var isBusy = false {
+        didSet {
+            continueButton.isBusy = isBusy
+            pinField.receivesInput = !isBusy
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,29 +22,28 @@ class ChangeNumberVerifyPINViewController: ChangeNumberViewController {
             pinField.becomeFirstResponder()
         }
     }
-
+    
     @IBAction func pinFieldChangedAction(_ sender: Any) {
         let canContinue = pinField.text.count == pinField.numberOfDigits
-        bottomWrapperView.continueButton.isEnabled = canContinue
+        continueButton.isHidden = !canContinue
         if canContinue {
             continueAction(sender)
         }
     }
-
+    
     override func continueAction(_ sender: Any) {
-        bottomWrapperView.continueButton.isBusy = true
-        pinField.receivesInput = false
+        isBusy = true
         let pin = pinField.text
+        var context = ChangeNumberContext()
         context.pin = pin
         AccountAPI.shared.verify(pin: pin) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
-            weakSelf.bottomWrapperView.continueButton.isBusy = false
-            weakSelf.pinField.receivesInput = true
+            weakSelf.isBusy = false
             switch result {
             case .success:
-                let vc = ChangeNumberNewNumberViewController.instance(context: weakSelf.context)
+                let vc = ChangeNumberNewNumberViewController.instance(context: context)
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
             case let .failure(error):
                 weakSelf.pinField.clear()
@@ -45,5 +51,5 @@ class ChangeNumberVerifyPINViewController: ChangeNumberViewController {
             }
         }
     }
-
+    
 }

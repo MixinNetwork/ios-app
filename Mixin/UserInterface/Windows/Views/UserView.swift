@@ -282,7 +282,9 @@ class UserView: CornerView {
     }
     
     private func changeNumber() {
-        UIApplication.rootNavigationController()?.present(ChangeNumberNavigationController.instance(), animated: true, completion: nil)
+        let vc = R.storyboard.contact.verifyPin()!
+        let navigation = ChangeNumberNavigationController(rootViewController: vc)
+        UIApplication.rootNavigationController()?.present(navigation, animated: true, completion: nil)
     }
     
     private func openApp() {

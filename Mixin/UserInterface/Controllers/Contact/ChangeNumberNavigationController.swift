@@ -4,10 +4,6 @@ class ChangeNumberNavigationController: LoneBackButtonNavigationController {
     
     let dismissButton = UIButton()
     
-    static func instance() -> UIViewController {
-        return Storyboard.contact.instantiateViewController(withIdentifier: "change_number_navigation")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         dismissButton.setImage(R.image.ic_title_close(), for: .normal)
@@ -25,7 +21,7 @@ class ChangeNumberNavigationController: LoneBackButtonNavigationController {
     
     override func updateBackButtonAlpha(animated: Bool) {
         let backButtonAlpha: CGFloat
-        if viewControllers.last is ChangeNumberVerifyPINViewController {
+        if viewControllers.last is ChangeNumberVerifyPinViewController {
             backButtonAlpha = 0
         } else {
             backButtonAlpha = 1

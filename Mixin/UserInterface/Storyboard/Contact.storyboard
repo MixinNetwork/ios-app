@@ -30,57 +30,55 @@
             </objects>
             <point key="canvasLocation" x="56" y="-136"/>
         </scene>
-        <!--Change Number Navigation Controller-->
-        <scene sceneID="dn0-a9-7Qy">
-            <objects>
-                <navigationController storyboardIdentifier="change_number_navigation" navigationBarHidden="YES" id="kSD-1X-dCJ" customClass="ChangeNumberNavigationController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Cft-3s-Fsa">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="g2g-WO-HwJ" kind="relationship" relationship="rootViewController" id="GUb-Zx-2hO"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WnY-0Z-wnN" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="55" y="573"/>
-        </scene>
-        <!--Change Number VerifyPIN View Controller-->
+        <!--Change Number Verify Pin View Controller-->
         <scene sceneID="kex-gf-77B">
             <objects>
-                <viewController id="g2g-WO-HwJ" customClass="ChangeNumberVerifyPINViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="verifyPin" id="g2g-WO-HwJ" customClass="ChangeNumberVerifyPinViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EM8-PJ-3X7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify PIN" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AHd-HP-Oci">
-                                <rect key="frame" x="145.5" y="64" width="84" height="21.5"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="profile_change_number_verify_pin"/>
-                                </userDefinedRuntimeAttributes>
-                            </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lKA-Za-3Xm" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="101.5" y="135.5" width="172" height="24"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="24" id="FYZ-w4-Fh6"/>
-                                    <constraint firstAttribute="width" constant="172" id="uyr-ww-GIF"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="pinFieldChangedAction:" destination="g2g-WO-HwJ" eventType="editingChanged" id="kNf-aX-LiY"/>
-                                </connections>
-                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="gH1-vz-5dh">
+                                <rect key="frame" x="0.0" y="84" width="375" height="95.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify PIN" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AHd-HP-Oci">
+                                        <rect key="frame" x="145.5" y="0.0" width="84" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="profile_change_number_verify_pin"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lKA-Za-3Xm" customClass="PinField" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="101.5" y="71.5" width="172" height="24"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="24" id="FYZ-w4-Fh6"/>
+                                            <constraint firstAttribute="width" constant="172" id="uyr-ww-GIF"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="pinFieldChangedAction:" destination="g2g-WO-HwJ" eventType="editingChanged" id="kNf-aX-LiY"/>
+                                        </connections>
+                                    </view>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="lKA-Za-3Xm" firstAttribute="centerX" secondItem="xMq-EV-1fr" secondAttribute="centerX" id="Mkg-Af-4Bu"/>
-                            <constraint firstItem="lKA-Za-3Xm" firstAttribute="top" secondItem="AHd-HP-Oci" secondAttribute="bottom" constant="50" id="dmw-3G-bU7"/>
-                            <constraint firstItem="AHd-HP-Oci" firstAttribute="centerX" secondItem="xMq-EV-1fr" secondAttribute="centerX" id="hZc-YK-xKf"/>
-                            <constraint firstItem="AHd-HP-Oci" firstAttribute="top" secondItem="xMq-EV-1fr" secondAttribute="top" constant="44" id="yCT-x0-WsC"/>
+                            <constraint firstItem="xMq-EV-1fr" firstAttribute="trailing" secondItem="gH1-vz-5dh" secondAttribute="trailing" id="6VH-Ko-pl3"/>
+                            <constraint firstItem="gH1-vz-5dh" firstAttribute="top" secondItem="xMq-EV-1fr" secondAttribute="top" constant="64" id="L8U-3E-bTZ" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                        <real key="value" value="52"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                                        <real key="value" value="52"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
+                            <constraint firstItem="gH1-vz-5dh" firstAttribute="leading" secondItem="xMq-EV-1fr" secondAttribute="leading" id="rS1-DI-2N7"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="xMq-EV-1fr"/>
                     </view>
@@ -91,7 +89,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ejL-tv-jEu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="734" y="573"/>
+            <point key="canvasLocation" x="55" y="573"/>
         </scene>
         <!--Change Number New Number View Controller-->
         <scene sceneID="95D-Rw-MCR">
@@ -175,7 +173,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AxT-3z-Y9p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1422" y="573"/>
+            <point key="canvasLocation" x="734" y="573"/>
         </scene>
         <!--Add People View Controller-->
         <scene sceneID="t1z-fs-h24">
@@ -337,7 +335,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qQR-gh-GOq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2070" y="573"/>
+            <point key="canvasLocation" x="1407" y="573"/>
         </scene>
     </scenes>
     <resources>

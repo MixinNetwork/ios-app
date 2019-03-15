@@ -6,7 +6,10 @@ class ClearStorageViewController: UITableViewController {
     @IBOutlet weak var videoCell: UITableViewCell!
     @IBOutlet weak var audioCell: UITableViewCell!
     @IBOutlet weak var fileCell: UITableViewCell!
-    
+    @IBOutlet weak var photoCheckmark: CheckmarkView!
+    @IBOutlet weak var videoCheckmark: CheckmarkView!
+    @IBOutlet weak var audioCheckmark: CheckmarkView!
+    @IBOutlet weak var fileCheckmark: CheckmarkView!
     @IBOutlet weak var photosLabel: UILabel!
     @IBOutlet weak var videosLabel: UILabel!
     @IBOutlet weak var audiosLabel: UILabel!
@@ -23,7 +26,9 @@ class ClearStorageViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.tableFooterView = UIView()
-
+        for cell in [photoCell, videoCell, audioCell, fileCell] {
+            cell?.selectedBackgroundView = UIView.createSelectedBackgroundView()
+        }
         let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in
             let categoryStorages = ConversationDAO.shared.getCategoryStorages(conversationId: conversationId)
@@ -145,16 +150,16 @@ extension ClearStorageViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
         case 0:
-            photoCell.accessoryType = isClearPhotos ? .checkmark : .none
+            photoCheckmark.status = isClearPhotos ? .selected : .unselected
             return photoCell
         case 1:
-            videoCell.accessoryType = isClearVideos ? .checkmark : .none
+            videoCheckmark.status = isClearVideos ? .selected : .unselected
             return videoCell
         case 2:
-            audioCell.accessoryType = isClearAudios ? .checkmark : .none
+            audioCheckmark.status = isClearAudios ? .selected : .unselected
             return audioCell
         case 3:
-            fileCell.accessoryType = isClearFiles ? .checkmark : .none
+            fileCheckmark.status = isClearFiles ? .selected : .unselected
             return fileCell
         default:
             return UITableViewCell()

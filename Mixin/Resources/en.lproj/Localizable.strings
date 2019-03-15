@@ -79,7 +79,8 @@
 "toast_error" = "ERROR %@: %@";
 "screen_captured_pin_leaking_hint" = "Screen recorder detected, PIN may be recorded.";
 "biometry_suggestion" = " %@ is suggested.";
-"clock_skew_tips" = "System time is unusual, please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically.";
+"clock_skew_title" = "System time is unusual";
+"clock_skew_tips" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically.";
 
 // Login
 "navigation_title_select_country" = "Select a Country";
@@ -101,6 +102,7 @@
 "placeholder_search_bar" = "Search for a country";
 "placeholder_mobile_number" = "Phone number";
 "init_signal" = "Initializing";
+"init_explain" = "Messages between users are protected with an end-to-end encryption";
 "toast_recaptcha_timed_out" = "Validation timed out";
 "toast_recaptcha_invalid" = "Recaptcha is invalid.";
 "toast_update_tips" = "Please update Mixin from App Store to continue use the service.";

@@ -78,7 +78,8 @@
 "toast_error" = "错误 %@：%@";
 "screen_captured_pin_leaking_hint" = "检测到正在进行屏幕录制，支付密码可能会录入视频！";
 "biometry_suggestion" = "建议使用%@支付";
-"clock_skew_tips" = "检测到系统时间异常，请校正后再继续使用。设置 > 通用 > 日期与时间 > 自动设置。";
+"clock_skew_title" = "系统时间异常";
+"clock_skew_tips" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
 
 // Login
 "navigation_title_select_country" = "选择一个国家";
@@ -100,6 +101,7 @@
 "placeholder_search_bar" = "搜索国家";
 "placeholder_mobile_number" = "手机号码";
 "init_signal" = "正在初始化";
+"init_explain" = "用户之间的消息将受到端对端加密保护";
 "toast_recaptcha_timed_out" = "验证超时";
 "toast_recaptcha_invalid" = "验证失败";
 "toast_update_tips" = "请从 App Store 更新 Mixin 至最新版";

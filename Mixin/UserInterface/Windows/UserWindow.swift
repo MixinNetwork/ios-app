@@ -39,8 +39,12 @@ class UserWindow: BottomSheetView {
             })
         } else {
             dismissView()
-            onDissmisCallback?()
         }
+    }
+
+    override func dismissView() {
+        super.dismissView()
+        onDissmisCallback?()
     }
 
     @discardableResult

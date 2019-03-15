@@ -74,7 +74,8 @@
 "toast_error" = "エラー %@: %@";
 "screen_captured_pin_leaking_hint" = "スクリーンレコーダーが検出され、PINが記録されている.";
 "biometry_suggestion" = " %@ が提案されています.";
-"clock_skew_tips" = "システム時間は異常です。修正後、もう一度使用してください。 設定>一般>日付と時刻>自動設定をオンにします。";
+"clock_skew_title" = "システム時間は異常です";
+"clock_skew_tips" = "修正後、もう一度使用してください。 設定>一般>日付と時刻>自動設定をオンにします。";
 
 // Login
 "navigation_title_select_country" = "国を選択";
@@ -96,6 +97,7 @@
 "placeholder_search_bar" = "国を検索します";
 "placeholder_mobile_number" = "電話番号";
 "init_signal" = "初期化中";
+"init_explain" = "ユーザー間のメッセージはエンドツーエンドの暗号化で保護されています";
 "toast_recaptcha_timed_out" = "検証がタイムアウトしました";
 "toast_recaptcha_invalid" = "確認コードが無効です。";
 "toast_update_tips" = "App Store から Mixin をアップデートしてサービスを継続してください。";

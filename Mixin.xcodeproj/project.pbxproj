@@ -609,6 +609,8 @@
 		DFF3B68E20E3599E00DC82D9 /* PrintLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3B68D20E3599E00DC82D9 /* PrintLog.swift */; };
 		DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */; };
 		DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFF44174223A035000DDD5F8 /* GoogleService-Info.plist */; };
+		DFF44178223BC5E700DDD5F8 /* ContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFF44177223BC5E700DDD5F8 /* ContactCell.xib */; };
+		DFF4417A223BC63100DDD5F8 /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF44179223BC63100DDD5F8 /* ContactCell.swift */; };
 		DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */; };
 		DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF70F612079FC4900A5FA8B /* AssetItem.swift */; };
 		DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */; };
@@ -1264,6 +1266,8 @@
 		DFF3B68D20E3599E00DC82D9 /* PrintLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintLog.swift; sourceTree = "<group>"; };
 		DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Mixin-Keys.plist"; sourceTree = "<group>"; };
 		DFF44174223A035000DDD5F8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DFF44177223BC5E700DDD5F8 /* ContactCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCell.xib; sourceTree = "<group>"; };
+		DFF44179223BC63100DDD5F8 /* ContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferContactData.swift; sourceTree = "<group>"; };
 		DFF70F612079FC4900A5FA8B /* AssetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetItem.swift; sourceTree = "<group>"; };
 		DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSendViewController.swift; sourceTree = "<group>"; };
@@ -2376,6 +2380,8 @@
 		DFD294391FA7066500FADAAD /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				DFF44177223BC5E700DDD5F8 /* ContactCell.xib */,
+				DFF44179223BC63100DDD5F8 /* ContactCell.swift */,
 				DFD2943C1FA706E100FADAAD /* ContactMeCell.swift */,
 				DFD294421FA7076600FADAAD /* ContactMeCell.xib */,
 				DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */,
@@ -2678,6 +2684,7 @@
 				7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */,
 				DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
+				DFF44178223BC5E700DDD5F8 /* ContactCell.xib in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
 				DF2F089520B688DB005786CB /* UserView.xib in Resources */,
@@ -3038,6 +3045,7 @@
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
+				DFF4417A223BC63100DDD5F8 /* ContactCell.swift in Sources */,
 				7BAB5D3E20C520F2009F4EE6 /* AudioUploadJob.swift in Sources */,
 				7BDB4725215A666B008B21F9 /* SignalLoadingViewController.swift in Sources */,
 				DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */,

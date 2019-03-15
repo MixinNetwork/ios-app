@@ -262,6 +262,7 @@ class UserView: CornerView {
     }
     
     @IBAction func transferAction(_ sender: Any) {
+        superView?.dismissPopupControllerAnimated()
         let vc = SendViewController.instance(asset: nil, type: .contact(user))
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
     }

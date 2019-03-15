@@ -36,7 +36,7 @@ class SendContactSelectionViewController: PeerSelectionViewController {
     class func instance(asset: AssetItem) -> UIViewController {
         let vc = SendContactSelectionViewController()
         vc.asset = asset
-        return ContainerViewController.instance(viewController: vc, title: Localized.TRANSFER_TITLE_TO)
+        return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SEND_TO)
     }
     
 }

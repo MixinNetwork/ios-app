@@ -30,7 +30,7 @@
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="kBP-4L-xjf">
-                            <rect key="frame" x="70" y="15" width="136.5" height="40.5"/>
+                            <rect key="frame" x="66" y="15" width="136.5" height="40.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Transfer to Jack" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cuL-5U-gf3">
                                     <rect key="frame" x="0.0" y="0.0" width="136.5" height="21.5"/>
@@ -61,7 +61,7 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="kBP-4L-xjf" firstAttribute="leading" secondItem="U7S-vg-56w" secondAttribute="trailing" constant="20" id="Hac-8w-Xwy"/>
+                        <constraint firstItem="kBP-4L-xjf" firstAttribute="leading" secondItem="U7S-vg-56w" secondAttribute="trailing" constant="16" id="Hac-8w-Xwy"/>
                         <constraint firstItem="rxd-aL-AVQ" firstAttribute="width" secondItem="rxd-aL-AVQ" secondAttribute="height" multiplier="1:1" id="NUg-vJ-6Pc"/>
                         <constraint firstItem="U7S-vg-56w" firstAttribute="leading" secondItem="v9c-Te-5SQ" secondAttribute="leading" constant="20" id="bLx-26-qgC"/>
                         <constraint firstAttribute="trailing" secondItem="rxd-aL-AVQ" secondAttribute="trailing" id="dVp-m4-EEL"/>
@@ -160,7 +160,7 @@
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TOW-aq-cCZ" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="101.5" y="18.5" width="172" height="24"/>
-                            <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="tintColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="24" id="Dqu-S0-QcM" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>

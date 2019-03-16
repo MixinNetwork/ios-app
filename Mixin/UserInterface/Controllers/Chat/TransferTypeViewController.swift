@@ -63,13 +63,7 @@ class TransferTypeViewController: UIViewController {
     }
     
     @IBAction func cancelAction(_ sender: Any) {
-        if keywordTextField.isFirstResponder {
-            keywordTextField.text = nil
-            searchAction(sender)
-            keywordTextField.resignFirstResponder()
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func searchAction(_ sender: Any) {

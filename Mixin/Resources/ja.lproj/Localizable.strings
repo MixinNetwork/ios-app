@@ -24,6 +24,7 @@
 "action_clear" = "クリア";
 "action_send" = "送る";
 "action_send_to" = "に送る";
+"action_share_to" = "に共有";
 "action_hide" = "隠す";
 "action_show" = "見せる";
 "action_apply" = "アプライ";

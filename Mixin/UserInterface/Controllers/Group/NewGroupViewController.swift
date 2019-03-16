@@ -41,9 +41,13 @@ class NewGroupViewController: UIViewController {
     }
 
     private func loadGroupIcon() {
-        let participants: [ParticipantUser] = members.map { (user) in
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        var participants: [ParticipantUser] = members.map { (user) in
             return ParticipantUser.createParticipantUser(conversationId: conversationId, user: user)
         }
+        participants.insert(ParticipantUser.createParticipantUser(conversationId: conversationId, account: account), at: 0)
         DispatchQueue.global().async { [weak self] in
             guard let groupImage = UIImage.createGroupImage(participants: participants) else {
                 return
@@ -89,13 +93,14 @@ class NewGroupViewController: UIViewController {
             return
         }
 
-        let participantIds: [String] = members.map { (member) in
+        var participantIds: [String] = members.map { (member) in
             if member.avatarUrl.isEmpty {
                 return String(member.fullName.prefix(1))
             } else {
                 return member.avatarUrl
             }
         }
+        participantIds.insert(AccountAPI.shared.accountUserId, at: 0)
         let imageFile = conversationId + "-" + participantIds.joined().md5() + ".png"
         let imageUrl = MixinFile.groupIconsUrl.appendingPathComponent(imageFile)
         

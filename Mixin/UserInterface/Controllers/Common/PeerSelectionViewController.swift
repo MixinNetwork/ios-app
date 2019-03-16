@@ -20,6 +20,10 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     var content: Content {
         return .chatsAndContacts
     }
+
+    var tableRowHeight: CGFloat {
+        return 60
+    }
     
     private var headerTitles = [String]()
     private var peers = [[Peer]]()
@@ -65,7 +69,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
                                           action: #selector(search(_:)),
                                           for: .editingChanged)
         tableView.allowsMultipleSelection = allowsMultipleSelection
-        tableView.rowHeight = 60
+        tableView.rowHeight = tableRowHeight
         tableView.separatorColor = UIColor.white
         tableView.separatorStyle = .none
         tableView.register(UINib(nibName: "PeerCell", bundle: .main),

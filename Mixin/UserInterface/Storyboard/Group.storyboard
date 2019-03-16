@@ -96,6 +96,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Ro2-vn-Osv"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="search_placeholder_participants"/>
+                                </userDefinedRuntimeAttributes>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="70" estimatedRowHeight="70" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="FAF-YS-JrH">
                                 <rect key="frame" x="0.0" y="162" width="414" height="700"/>
@@ -247,6 +250,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="IMS-6n-6jj"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="search_placeholder_participants"/>
+                                </userDefinedRuntimeAttributes>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" sectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="60w-nW-44r">
                                 <rect key="frame" x="0.0" y="119" width="414" height="743"/>

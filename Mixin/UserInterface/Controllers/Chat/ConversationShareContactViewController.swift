@@ -8,6 +8,10 @@ class ConversationShareContactViewController: SendMessagePeerSelectionViewContro
     override var content: PeerSelectionViewController.Content {
         return .contacts
     }
+
+    override var tableRowHeight: CGFloat {
+        return 70
+    }
     
     override func work(selections: [Peer]) {
         let ownerUser = self.ownerUser

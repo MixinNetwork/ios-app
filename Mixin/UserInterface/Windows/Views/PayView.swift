@@ -53,7 +53,7 @@ class PayView: UIStackView {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, superView: BottomSheetView) {
+    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, amountUsd: String? = nil, superView: BottomSheetView) {
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -81,8 +81,16 @@ class PayView: UIStackView {
         pinField.clear()
         memoLabel.isHidden = memo.isEmpty
         memoLabel.text = memo
-        amountLabel.text = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
-        amountExchangeLabel.text = CurrencyFormatter.localizedString(from: amount.doubleValue * asset.priceUsd.doubleValue, format: .legalTender, sign: .never, symbol: .usd)
+
+        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
+        if let amountUsd = amountUsd {
+            amountLabel.text = amountUsd
+            amountExchangeLabel.text = amountToken
+        } else {
+            amountLabel.text = amountToken
+            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: amount.doubleValue * asset.priceUsd.doubleValue, format: .legalTender, sign: .never, symbol: .usd)
+        }
+
         dismissButton.isEnabled = true
         pinField.becomeFirstResponder()
 
@@ -100,8 +108,10 @@ class PayView: UIStackView {
             statusView.isHidden = true
             transferLoadingView.stopAnimating()
         } else {
-            payView.isHidden = true
-            statusView.isHidden = false
+            UIView.animate(withDuration: 0.15) {
+                self.payView.isHidden = true
+                self.statusView.isHidden = false
+            }
             transferLoadingView.startAnimating()
         }
         paySuccessImageView.isHidden = true

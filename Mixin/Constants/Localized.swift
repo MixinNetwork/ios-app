@@ -22,6 +22,7 @@ public class Localized {
     public static let ACTION_CLEAR = LocalizedString("action_clear", comment: "Clear")
     public static let ACTION_SEND = LocalizedString("action_send", comment: "Send")
     public static let ACTION_SEND_TO = LocalizedString("action_send_to", comment: "Send To")
+    public static let ACTION_SHARE_TO = LocalizedString("action_share_to", comment: "Share To")
     public static let ACTION_HIDE = LocalizedString("action_hide", comment: "Hide")
     public static let ACTION_SHOW = LocalizedString("action_show", comment: "Show")
     public static let ACTION_DEAUTHORIZE = LocalizedString("action_deauthorize", comment: "Deauthorize")

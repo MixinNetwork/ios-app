@@ -21,7 +21,8 @@ class SendViewController: UIViewController {
     @IBOutlet weak var amountSymbolLabel: UILabel!
     @IBOutlet weak var transactionFeeHintLabel: UILabel!
     @IBOutlet weak var continueWrapperView: UIView!
-    
+    @IBOutlet weak var switchAmountButton: UIButton!
+
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var symbolLeadingConstraint: NSLayoutConstraint!
     
@@ -126,8 +127,9 @@ class SendViewController: UIViewController {
         
         let memo = memoTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         var amount = amountTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        
+        var amountUsd: String? = nil
         if !isInputAssetAmount {
+            amountUsd = amount + " USD"
             let formatter = NumberFormatter()
             formatter.numberStyle = .none
             formatter.usesGroupingSeparator = false
@@ -143,13 +145,13 @@ class SendViewController: UIViewController {
         }
         switch opponent! {
         case .contact(let user):
-            payWindow.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+            payWindow.presentPopupControllerAnimated(asset: asset, user: user, amount: amount, memo: memo, trackId: tranceId, amountUsd: amountUsd, textfield: amountTextField)
         case .address(let address):
             guard checkAmount(amount, isGreaterThanOrEqualToDust: address.dust) else {
                 UIApplication.showHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
                 return
             }
-            payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, textfield: amountTextField)
+            payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, amountUsd: amountUsd, textfield: amountTextField)
         }
     }
     
@@ -234,7 +236,8 @@ class SendViewController: UIViewController {
         guard let asset = self.asset else {
             return
         }
-        
+
+        switchAmountButton.isHidden = asset.priceBtc.doubleValue <= 0
         symbolLabel.text = asset.name
         balanceLabel.text = asset.localizedBalance + " " + Localized.TRANSFER_BALANCE
         assetIconView.setIcon(asset: asset)
@@ -362,6 +365,10 @@ extension SendViewController: TransferTypeViewControllerDelegate {
     
     func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem) {
         self.asset = asset
+        isInputAssetAmount = true
+        amountTextField.text = nil
+        amountEditingChanged(amountTextField)
+
         updateAssetUI()
     }
     

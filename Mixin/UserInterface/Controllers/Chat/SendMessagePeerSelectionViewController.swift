@@ -8,11 +8,15 @@ class SendMessagePeerSelectionViewController: PeerSelectionViewController {
     class func instance(content: MessageContent) -> UIViewController {
         let vc = SendMessagePeerSelectionViewController()
         vc.messageContent = content
-        return ContainerViewController.instance(viewController: vc, title: Localized.CAMERA_SEND_TO_TITLE)
+        return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SHARE_TO)
     }
     
     override func textBarRightButton() -> String? {
         return Localized.ACTION_SEND
+    }
+
+    override var tableRowHeight: CGFloat {
+        return 70
     }
     
     override func work(selections: [Peer]) {

@@ -1161,7 +1161,7 @@
                                                                 <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qOt-U1-LPb">
+                                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qOt-U1-LPb">
                                                                 <rect key="frame" x="334" y="13" width="30" height="30"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="I71-2n-dV6"/>
@@ -1227,7 +1227,7 @@
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </view>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t5g-rG-wY1">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t5g-rG-wY1">
                                                                 <rect key="frame" x="0.0" y="64" width="374" height="0.0"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                 <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
@@ -1308,6 +1308,7 @@
                         <outlet property="memoTextField" destination="Teg-Ls-XtU" id="O1M-H0-eEw"/>
                         <outlet property="opponentImageView" destination="0iq-4M-Kbs" id="m2F-PU-LyB"/>
                         <outlet property="scrollView" destination="jqX-Er-b77" id="Wj3-1z-xd6"/>
+                        <outlet property="switchAmountButton" destination="qOt-U1-LPb" id="xSj-LY-LaI"/>
                         <outlet property="switchAssetButton" destination="qRn-bb-fSw" id="jJQ-Yc-Sqd"/>
                         <outlet property="symbolLabel" destination="hWj-mt-cR6" id="Vzg-t0-jak"/>
                         <outlet property="symbolLeadingConstraint" destination="HlX-lu-rbz" id="3Ne-5X-5uv"/>
@@ -1349,7 +1350,7 @@
                                         <rect key="frame" x="16" y="18" width="358" height="24"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ymk-k8-pXT">
-                                                <rect key="frame" x="0.0" y="0.0" width="286" height="24"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="358" height="24"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -1360,8 +1361,8 @@
                                                     <action selector="checkLabelAndAddressAction:" destination="dIe-g5-2ks" eventType="editingChanged" id="WFj-BH-MF2"/>
                                                 </connections>
                                             </textField>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yyd-oq-Xax">
-                                                <rect key="frame" x="302" y="0.0" width="56" height="24"/>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yyd-oq-Xax">
+                                                <rect key="frame" x="0.0" y="0.0" width="56" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="56" id="hWP-rB-5cc"/>
                                                 </constraints>
@@ -1421,12 +1422,18 @@
                                 <constraints>
                                     <constraint firstItem="ueq-sY-VfI" firstAttribute="top" secondItem="YQt-Xa-3iJ" secondAttribute="top" constant="12" id="7m9-tU-Sge"/>
                                     <constraint firstItem="okS-Nk-zkw" firstAttribute="leading" secondItem="ueq-sY-VfI" secondAttribute="trailing" constant="16" id="A37-Ez-AON"/>
+                                    <constraint firstAttribute="height" constant="60" id="Arh-bb-eEd"/>
                                     <constraint firstAttribute="trailing" secondItem="okS-Nk-zkw" secondAttribute="trailing" id="Kpd-ki-qmQ"/>
                                     <constraint firstItem="ueq-sY-VfI" firstAttribute="leading" secondItem="YQt-Xa-3iJ" secondAttribute="leading" constant="16" id="VDU-YI-yv2"/>
                                     <constraint firstItem="okS-Nk-zkw" firstAttribute="height" secondItem="YQt-Xa-3iJ" secondAttribute="height" id="ZtY-S5-Fse"/>
                                     <constraint firstAttribute="bottom" secondItem="ueq-sY-VfI" secondAttribute="bottom" constant="12" id="iEa-aM-ncL"/>
                                     <constraint firstItem="okS-Nk-zkw" firstAttribute="centerY" secondItem="YQt-Xa-3iJ" secondAttribute="centerY" id="k1u-pJ-VPP"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TRT-sP-ikP" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="146" y="692" width="122" height="44"/>

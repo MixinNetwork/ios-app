@@ -184,6 +184,7 @@
 "chat_menu_photo" = "照片 & 视频";
 "chat_menu_file" = "文件";
 "chat_menu_transfer" = "转账";
+"chat_menu_developer" = "开发者";
 "chat_menu_contact" = "联系人";
 "chat_menu_call" = "通话";
 "chat_photo_save" = "保存到相册";

@@ -184,6 +184,7 @@
 "chat_menu_transfer" = "転送";
 "chat_menu_contact" = "連絡先";
 "chat_menu_call" = "呼び出し";
+"chat_menu_developer" = "開発者";
 "chat_photo_save" = "カメラロールに保存";
 "chat_file_expired" = "期限切れ";
 "chat_voice_record_cancel" = "キャンセルにはスワイプ";

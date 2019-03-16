@@ -61,7 +61,7 @@ final class ParticipantDAO {
     
     func userId(_ userId: String, isParticipantOfConversationId conversationId: String) -> Bool {
         let condition = Participant.Properties.conversationId == conversationId
-            && Participant.Properties.userId == AccountAPI.shared.accountUserId
+            && Participant.Properties.userId == userId
         return MixinDatabase.shared.isExist(type: Participant.self, condition: condition, inTransaction: false)
     }
     

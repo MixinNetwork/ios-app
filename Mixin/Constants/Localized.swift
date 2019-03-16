@@ -206,6 +206,7 @@ public class Localized {
     public static let CHAT_MENU_TRANSFER = LocalizedString("chat_menu_transfer", comment: "Transfer")
     public static let CHAT_MENU_CONTACT = LocalizedString("chat_menu_contact", comment: "Contact")
     public static let CHAT_MENU_CALL = LocalizedString("chat_menu_call", comment: "Call")
+    public static let CHAT_MENU_DEVELOPER = LocalizedString("chat_menu_developer", comment: "Developer")
     public static let CHAT_PHOTO_SAVE = LocalizedString("chat_photo_save", comment: "Save to Camera Roll")
     public static let CHAT_FILE_EXPIRED = LocalizedString("chat_file_expired", comment: "Expired")
     public static let CHAT_VOICE_RECORD_LONGPRESS_HINT = LocalizedString("chat_voice_record_longpress_hint", comment: "Hold to record, release to send.")
@@ -280,7 +281,7 @@ public class Localized {
     public static let GROUP_MENU_ANNOUNCEMENT = LocalizedString("group_menu_announcement", comment: "Edit Group Description")
     public static let GROUP_MENU_PARTICIPANTS = LocalizedString("group_menu_participants", comment: "Participants")
     public static func GROUP_TITLE_MEMBERS(count: String) -> String {
-        return String(format: LocalizedString("group_title_members", comment: "%@ Group members"), count)
+        return String(format: LocalizedString("group_title_members", comment: "%@ Participants"), count)
     }
     public static let GROUP_BUTTON_TITLE_RESET_LINK = LocalizedString("group_button_title_reset_link", comment: "Reset Link")
     

@@ -62,33 +62,6 @@
                             <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="64c-sh-04i" customClass="CornerButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="14.5" y="0.0" width="59" height="24"/>
-                            <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="24" id="FzG-XA-UCr"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                            <inset key="contentEdgeInsets" minX="8" minY="0.0" maxX="8" maxY="0.0"/>
-                            <state key="normal" title="Crossle">
-                                <color key="titleColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
-                            </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                    <real key="value" value="12"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="appCreatorAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="UEY-A3-76u"/>
-                            </connections>
-                        </button>
-                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VAa-OZ-kfU">
-                            <rect key="frame" x="-143.5" y="0.0" width="375" height="3"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="3" id="Gta-7H-A6X"/>
-                            </constraints>
-                        </view>
                     </subviews>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mMh-Qj-bOy">
@@ -277,14 +250,12 @@
             </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="addContactButton" destination="A39-6A-pfT" id="fI2-RY-2hh"/>
-                <outlet property="appPlaceView" destination="VAa-OZ-kfU" id="3dk-Yp-VBt"/>
                 <outlet property="avatarImageView" destination="Iu9-go-9Om" id="6Ay-vA-mAi"/>
                 <outlet property="changeAvatarButton" destination="Lrk-mU-vas" id="7ZO-aP-tjw"/>
                 <outlet property="descriptionLabel" destination="Rbl-cu-9jj" id="gAf-OX-FE4"/>
                 <outlet property="descriptionScrollView" destination="syg-ya-iZc" id="6QZ-Au-x12"/>
                 <outlet property="descriptionScrollViewBottomConstraint" destination="Za6-y9-4ZT" id="lj9-PO-yWm"/>
                 <outlet property="descriptionScrollViewHeightConstraint" destination="SkC-mi-RYS" id="vTb-l2-76z"/>
-                <outlet property="developButton" destination="64c-sh-04i" id="I1c-35-yBP"/>
                 <outlet property="editNameButton" destination="R1b-NZ-Ak0" id="VCy-kG-mH4"/>
                 <outlet property="fullnameLabel" destination="1Xo-ZO-T44" id="ArF-Jv-5ue"/>
                 <outlet property="hideRelationWrapperDescriptionTopConstraint" destination="Vdn-7g-YgG" id="9cQ-o4-ucZ"/>

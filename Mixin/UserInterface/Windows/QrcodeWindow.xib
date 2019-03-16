@@ -79,7 +79,7 @@
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </imageView>
-                                <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_wallet_xin" translatesAutoresizingMaskIntoConstraints="NO" id="DET-aa-vcw" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                                <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DET-aa-vcw" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="167.5" y="174" width="16" height="16"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="16" id="76g-WU-F0g"/>
@@ -174,6 +174,5 @@
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_receive_money" width="13" height="15"/>
         <image name="ic_save_qrcode" width="22" height="23"/>
-        <image name="ic_wallet_xin" width="40" height="40"/>
     </resources>
 </document>

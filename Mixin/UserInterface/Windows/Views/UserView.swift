@@ -21,8 +21,6 @@ class UserView: CornerView {
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var moreButton: StateResponsiveButton!
-    @IBOutlet weak var developButton: CornerButton!
-    @IBOutlet weak var appPlaceView: UIView!
     
     @IBOutlet weak var showRelationWrapperDescriptionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideRelationWrapperDescriptionTopConstraint: NSLayoutConstraint!
@@ -66,7 +64,6 @@ class UserView: CornerView {
         fullnameLabel.text = user.fullName
         idLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
         verifiedImageView.isHidden = !user.isVerified
-        developButton.isHidden = true
         isMe = user.userId == AccountAPI.shared.accountUserId
 
         if let creatorId = user.appCreatorId {
@@ -82,14 +79,6 @@ class UserView: CornerView {
                     }
                 }
                 self?.appCreator = creator
-                if let creatorFullname = creator?.fullName {
-                    DispatchQueue.main.async {
-                        UIView.performWithoutAnimation {
-                            self?.developButton.setTitle(creatorFullname, for: .normal)
-                            self?.developButton.isHidden = false
-                        }
-                    }
-                }
             }
         }
 
@@ -109,14 +98,10 @@ class UserView: CornerView {
             descriptionScrollViewBottomConstraint.constant = 14
             descriptionScrollViewHeightConstraint.constant = descriptionLabel.intrinsicContentSize.height
             descriptionLabel.isHidden = false
-            developButton.isHidden = false
-            appPlaceView.isHidden = false
         } else {
             descriptionScrollViewBottomConstraint.constant = 8
             descriptionScrollViewHeightConstraint.constant = 0
             descriptionLabel.isHidden = true
-            developButton.isHidden = true
-            appPlaceView.isHidden = true
         }
 
         if isMe {
@@ -165,21 +150,6 @@ class UserView: CornerView {
         }
     }
 
-    @IBAction func appCreatorAction(_ sender: Any) {
-        guard let creator = appCreator else {
-            return
-        }
-
-        if user.appCreatorId == AccountAPI.shared.accountUserId {
-            guard let account = AccountAPI.shared.account else {
-                return
-            }
-            updateUser(user: UserItem.createUser(from: account), animated: true, superView: superView)
-        } else {
-            updateUser(user: creator, animated: true, superView: superView)
-        }
-    }
-
     @IBAction func dismissAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
     }
@@ -187,6 +157,11 @@ class UserView: CornerView {
     @IBAction func moreAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         let alc = UIAlertController(title: user.fullName, message: user.phone ?? user.identityNumber, preferredStyle: .actionSheet)
+        if user.isBot {
+            alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_DEVELOPER, style: .default, handler: { [weak self](action) in
+                self?.developerAction()
+            }))
+        }
         if isMe {
             alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
                 self?.editName()
@@ -286,6 +261,22 @@ class UserView: CornerView {
     @IBAction func changeMyAvatarAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         changeProfilePhoto()
+    }
+
+    private func developerAction() {
+        guard let creator = appCreator else {
+            return
+        }
+
+        if user.appCreatorId == AccountAPI.shared.accountUserId {
+            guard let account = AccountAPI.shared.account else {
+                return
+            }
+            updateUser(user: UserItem.createUser(from: account), animated: true, superView: superView)
+        } else {
+            updateUser(user: creator, animated: true, superView: superView)
+        }
+        superView?.presentView()
     }
     
     private func changeNumber() {

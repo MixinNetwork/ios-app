@@ -401,6 +401,10 @@ class SendMessageService: MixinService {
 
                 return true
             } catch {
+                #if DEBUG
+                print("======SendMessageService...handlerJob...\(error)")
+                #endif
+                FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...\(error)")
                 checkNetworkAndWebSocket()
                 Bugsnag.notifyError(error)
             }
@@ -433,11 +437,12 @@ extension SendMessageService {
         guard let messageId = blazeMessage.params?.messageId, let category = blazeMessage.params?.category, let sessionId = AccountUserDefault.shared.extensionSession else {
             return
         }
+        let accountId = AccountAPI.shared.accountUserId
 
         var blazeMessage = blazeMessage
         blazeMessage.action = BlazeMessageAction.createSessionMessage.rawValue
         blazeMessage.params?.messageId = UUID().uuidString.lowercased()
-        blazeMessage.params?.recipientId = AccountAPI.shared.accountUserId
+        blazeMessage.params?.recipientId = accountId
         blazeMessage.params?.sessionId = sessionId
         blazeMessage.params?.primitiveMessageId = messageId
         if category.hasPrefix("SYSTEM_") {
@@ -457,10 +462,10 @@ extension SendMessageService {
                 return
             }
             blazeMessage.params?.primitiveId = message.userId
-            _ = try checkSignalSession(recipientId: AccountAPI.shared.accountUserId, sessionId: sessionId)
+            _ = try checkSignalSession(recipientId: accountId, sessionId: sessionId)
 
             let content = blazeMessage.params?.data ?? ""
-            blazeMessage.params?.data =  try SignalProtocol.shared.encryptTransferSessionMessageData(recipientId: AccountAPI.shared.accountUserId, content: content, sessionId: sessionId)
+            blazeMessage.params?.data = try SignalProtocol.shared.encryptTransferSessionMessageData(content: content, sessionId: sessionId, recipientId: accountId)
         }
         try deliverMessage(blazeMessage: blazeMessage)
     }

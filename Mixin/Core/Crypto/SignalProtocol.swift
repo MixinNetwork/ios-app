@@ -94,7 +94,7 @@ class SignalProtocol {
         return data
     }
 
-    func encryptTransferSessionMessageData(recipientId: String, content: String, sessionId: String) throws -> String {
+    func encryptTransferSessionMessageData(content: String, sessionId: String, recipientId: String) throws -> String {
         let deviceId = sessionId.hashCode()
         let cipher = try encryptSession(content: content.data(using: .utf8)!, destination: recipientId, deviceId: deviceId)
         let data = encodeMessageData(data: ComposeMessageData(keyType: cipher.type.rawValue, cipher: cipher.message, resendMessageId: nil))

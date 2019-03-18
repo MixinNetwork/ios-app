@@ -22,7 +22,7 @@ class NewGroupViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         nameTextField.addTarget(self, action: #selector(nameChangedAction(_:)), for: .editingChanged)
-        participentLabel.text = Localized.GROUP_TITLE_MEMBERS(count: "\(members.count)")
+        participentLabel.text = Localized.GROUP_TITLE_MEMBERS(count: "\(members.count + 1)")
         loadGroupIcon()
         nameTextField.becomeFirstResponder()
     }

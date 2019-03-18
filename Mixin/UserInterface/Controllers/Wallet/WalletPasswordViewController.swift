@@ -1,14 +1,11 @@
 import UIKit
 
-class WalletPasswordViewController: UIViewController {
+class WalletPasswordViewController: ContinueButtonViewController {
 
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var nextButton: StateResponsiveButton!
-    
-    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
     enum WalletPasswordType {
         case initPinStep1
@@ -22,13 +19,19 @@ class WalletPasswordViewController: UIViewController {
 
     private var transferData: PasswordTransferData?
     private var walletPasswordType = WalletPasswordType.initPinStep1
-
+    private var isBusy = false {
+        didSet {
+            continueButton.isBusy = isBusy
+            continueButton.isHidden = !isBusy
+            pinField.receivesInput = !isBusy
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         pinField.delegate = self
         pinField.becomeFirstResponder()
-        nextButton.activityIndicator.style = .white
-
+        
         switch walletPasswordType {
         case .initPinStep1:
             titleLabel.text = Localized.WALLET_PIN_CREATE_TITLE
@@ -51,7 +54,6 @@ class WalletPasswordViewController: UIViewController {
             subtitleLabel.text = ""
             backButton.setImage(R.image.ic_title_back(), for: .normal)
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,35 +64,18 @@ class WalletPasswordViewController: UIViewController {
         }
         pinField.clear()
     }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    @IBAction func pinChangedAction(_ sender: Any) {
-        nextButton.isEnabled = pinField.text.count == pinField.numberOfDigits
-    }
-
+    
     @IBAction func backAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
-
-    class func instance(walletPasswordType: WalletPasswordType, transferData: PasswordTransferData? = nil) -> UIViewController {
+    
+    class func instance(walletPasswordType: WalletPasswordType, transferData: PasswordTransferData? = nil) -> WalletPasswordViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "password") as! WalletPasswordViewController
         vc.walletPasswordType = walletPasswordType
         vc.transferData = transferData
         return vc
     }
-
-    @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        let windowHeight = AppDelegate.current.window!.bounds.height
-        self.bottomConstraint.constant = windowHeight - endFrame.origin.y + 20
-        UIView.animate(withDuration: 0.15) {
-            self.view.layoutIfNeeded()
-        }
-    }
-
+    
     class func instance(fromChat user: UserItem) -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "password") as! WalletPasswordViewController
         vc.walletPasswordType = .initPinStep1
@@ -148,7 +133,7 @@ extension WalletPasswordViewController: MixinNavigationAnimating {
 extension WalletPasswordViewController: PinFieldDelegate {
 
     func inputFinished(pin: String) {
-        guard !nextButton.isBusy else {
+        guard !isBusy else {
             return
         }
         let pin = pinField.text
@@ -163,15 +148,14 @@ extension WalletPasswordViewController: PinFieldDelegate {
         default:
             break
         }
-
+        
+        var viewControllerToPush: WalletPasswordViewController?
         switch walletPasswordType {
         case .initPinStep1:
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep2(previous: pin), transferData: transferData)
-            navigationController?.pushViewController(vc, animated: true)
+            viewControllerToPush = WalletPasswordViewController.instance(walletPasswordType: .initPinStep2(previous: pin), transferData: transferData)
         case .initPinStep2(let previous):
             if previous == pin {
-                let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep3(previous: pin), transferData: transferData)
-                navigationController?.pushViewController(vc, animated: true)
+                viewControllerToPush = WalletPasswordViewController.instance(walletPasswordType: .initPinStep3(previous: pin), transferData: transferData)
             } else {
                 alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
                     self?.popToFirstInitController()
@@ -179,10 +163,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         case .initPinStep3(let previous):
             if previous == pin {
-                nextButton.isHidden = false
-                nextButton.isBusy = true
+                isBusy = true
                 AccountAPI.shared.updatePin(old: nil, new: pin, completion: { [weak self] (result) in
-                    self?.nextButton.isBusy = false
+                    self?.isBusy = false
                     switch result {
                     case .success(let account):
                         WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
@@ -198,17 +181,17 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 })
             }
         case .changePinStep1:
-            nextButton.isHidden = false
-            nextButton.isBusy = true
+            isBusy = true
             AccountAPI.shared.verify(pin: pin, completion: { [weak self] (result) in
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.nextButton.isBusy = false
+                weakSelf.isBusy = false
                 switch result {
                 case .success:
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                     let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep2(old: pin), transferData: weakSelf.transferData)
+                    vc.continueButtonBottomConstant = weakSelf.continueButtonBottomConstant
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
                 case let .failure(error):
                     weakSelf.pinField.clear()
@@ -216,12 +199,10 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 }
             })
         case .changePinStep2(let old):
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep3(old: old, previous: pin), transferData: transferData)
-            navigationController?.pushViewController(vc, animated: true)
+            viewControllerToPush = WalletPasswordViewController.instance(walletPasswordType: .changePinStep3(old: old, previous: pin), transferData: transferData)
         case .changePinStep3(let old, let previous):
             if previous == pin {
-                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep4(old: old, previous: pin), transferData: transferData)
-                navigationController?.pushViewController(vc, animated: true)
+                viewControllerToPush = WalletPasswordViewController.instance(walletPasswordType: .changePinStep4(old: old, previous: pin), transferData: transferData)
             } else {
                 alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
                     self?.popToFirstInitController()
@@ -229,10 +210,9 @@ extension WalletPasswordViewController: PinFieldDelegate {
             }
         case .changePinStep4(let old, let previous):
             if previous == pin {
-                nextButton.isHidden = false
-                nextButton.isBusy = true
+                isBusy = true
                 AccountAPI.shared.updatePin(old: old, new: pin, completion: { [weak self] (result) in
-                    self?.nextButton.isBusy = false
+                    self?.isBusy = false
                     switch result {
                     case .success(let account):
                         if WalletUserDefault.shared.isBiometricPay {
@@ -251,6 +231,10 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     self?.navigationController?.popViewController(animated: true)
                 })
             }
+        }
+        if let vc = viewControllerToPush {
+            vc.continueButtonBottomConstant = self.continueButtonBottomConstant
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

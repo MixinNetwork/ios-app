@@ -1835,9 +1835,6 @@
                                     <constraint firstAttribute="width" constant="172" id="3AL-F2-Ozh"/>
                                     <constraint firstAttribute="height" constant="24" id="Yrp-Jd-KHF"/>
                                 </constraints>
-                                <connections>
-                                    <action selector="pinChangedAction:" destination="La6-HZ-0b5" eventType="editingChanged" id="Sbs-mp-EOB"/>
-                                </connections>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="The PIN is too simple and insecure." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssW-jL-Bg4">
                                 <rect key="frame" x="30" y="314" width="354" height="18"/>
@@ -1848,32 +1845,16 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_too_simple"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V7r-WU-zaP" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="350" y="692" width="44" height="44"/>
-                                <color key="backgroundColor" red="0.22352941179999999" green="0.4941176471" blue="0.89411764709999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="8tv-gB-RTb"/>
-                                    <constraint firstAttribute="width" constant="44" id="wfW-L3-ddp"/>
-                                </constraints>
-                                <state key="normal" image="ic_action_next"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="22"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ylq-8e-5gl" firstAttribute="leading" secondItem="SNe-y6-O1A" secondAttribute="leading" id="2tz-fO-AvR"/>
                             <constraint firstItem="ylq-8e-5gl" firstAttribute="top" secondItem="oAO-fR-PrC" secondAttribute="bottom" id="ESU-Y4-SMn"/>
-                            <constraint firstItem="SNe-y6-O1A" firstAttribute="bottom" secondItem="V7r-WU-zaP" secondAttribute="bottom" id="GiU-1q-myt"/>
                             <constraint firstItem="oAO-fR-PrC" firstAttribute="top" secondItem="SNe-y6-O1A" secondAttribute="top" id="JKT-0B-usx"/>
                             <constraint firstItem="ToH-VW-Iy6" firstAttribute="top" secondItem="oAO-fR-PrC" secondAttribute="bottom" constant="186" id="P6u-2k-WAo"/>
                             <constraint firstItem="ToH-VW-Iy6" firstAttribute="centerX" secondItem="SNe-y6-O1A" secondAttribute="centerX" id="aQN-or-0mi"/>
                             <constraint firstItem="SNe-y6-O1A" firstAttribute="trailing" secondItem="oAO-fR-PrC" secondAttribute="trailing" id="cNy-6T-75A"/>
                             <constraint firstItem="SNe-y6-O1A" firstAttribute="trailing" secondItem="ylq-8e-5gl" secondAttribute="trailing" id="gXv-U6-pPp"/>
-                            <constraint firstItem="SNe-y6-O1A" firstAttribute="trailing" secondItem="V7r-WU-zaP" secondAttribute="trailing" constant="20" id="kZg-D1-1zJ"/>
                             <constraint firstItem="SNe-y6-O1A" firstAttribute="trailing" secondItem="ssW-jL-Bg4" secondAttribute="trailing" constant="30" id="kpa-T5-iyZ"/>
                             <constraint firstItem="ToH-VW-Iy6" firstAttribute="top" secondItem="ylq-8e-5gl" secondAttribute="bottom" id="pOn-OK-uw3"/>
                             <constraint firstItem="oAO-fR-PrC" firstAttribute="leading" secondItem="SNe-y6-O1A" secondAttribute="leading" id="rnY-FD-Lcj"/>
@@ -1884,8 +1865,6 @@
                     </view>
                     <connections>
                         <outlet property="backButton" destination="IJi-Z4-Yxb" id="0o6-xM-427"/>
-                        <outlet property="bottomConstraint" destination="GiU-1q-myt" id="oZ6-MY-NVs"/>
-                        <outlet property="nextButton" destination="V7r-WU-zaP" id="wUt-0X-b61"/>
                         <outlet property="pinField" destination="ToH-VW-Iy6" id="7pB-na-S42"/>
                         <outlet property="subtitleLabel" destination="ssW-jL-Bg4" id="O5e-uB-OJF"/>
                         <outlet property="titleLabel" destination="xZL-nb-tSx" id="LFE-de-wB8"/>
@@ -1903,7 +1882,6 @@
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
-        <image name="ic_action_next" width="11" height="20"/>
         <image name="ic_input_menu" width="11" height="6"/>
         <image name="ic_no_result" width="125" height="125"/>
         <image name="ic_scan_address" width="24" height="24"/>

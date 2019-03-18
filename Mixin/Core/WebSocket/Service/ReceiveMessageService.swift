@@ -839,6 +839,7 @@ extension ReceiveMessageService {
         case SystemConversationAction.REMOVE_SESSION.rawValue:
             AccountUserDefault.shared.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: data.userId)
+            JobDAO.shared.clearSessionJob()
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         default:
             break

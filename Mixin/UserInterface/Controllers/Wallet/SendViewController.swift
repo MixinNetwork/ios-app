@@ -1,6 +1,6 @@
 import UIKit
 
-class SendViewController: UIViewController {
+class SendViewController: KeyboardBasedLayoutViewController {
     
     enum Opponent {
         case contact(UserItem)
@@ -36,7 +36,6 @@ class SendViewController: UIViewController {
     private var targetAddress: Address?
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
-    private var viewHasAppeared = false
     
     private lazy var tranceId = UUID().uuidString.lowercased()
     private lazy var transactionLabelAttribute: [NSAttributedString.Key: Any] = {
@@ -54,10 +53,6 @@ class SendViewController: UIViewController {
         return [.font: boldFont,
                 .foregroundColor: transactionFeeHintLabel.textColor]
     }()
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,14 +75,27 @@ class SendViewController: UIViewController {
             fetchAvailableAssets()
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         amountTextField.becomeFirstResponder()
         amountTextField.delegate = self
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        viewHasAppeared = true
+    override func keyboardWillChangeFrame(_ notification: Notification) {
+        guard adjustBottomConstraintWhenKeyboardFrameChanges else {
+            return
+        }
+        super.keyboardWillChangeFrame(notification)
+    }
+    
+    override func layout(for keyboardFrame: CGRect) {
+        let windowHeight = AppDelegate.current.window!.bounds.height
+        let keyboardHeight = windowHeight - keyboardFrame.origin.y
+        continueWrapperBottomConstraint.constant = keyboardHeight
+        scrollView.contentInset.bottom = keyboardHeight + continueWrapperView.frame.height
+        scrollView.scrollIndicatorInsets.bottom = keyboardHeight
+        view.layoutIfNeeded()
+        if !viewHasAppeared, ScreenSize.current == .inch3_5 || ScreenSize.current == .inch4 {
+            scrollView.contentOffset.y = opponentImageView.frame.maxY
+        }
     }
     
     @IBAction func amountEditingChanged(_ sender: Any) {
@@ -175,33 +183,6 @@ class SendViewController: UIViewController {
         isInputAssetAmount = !isInputAssetAmount
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"
         amountEditingChanged(amountTextField)
-    }
-    
-    @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        guard adjustBottomConstraintWhenKeyboardFrameChanges else {
-            return
-        }
-        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-            return
-        }
-        let work = {
-            let windowHeight = AppDelegate.current.window!.bounds.height
-            let keyboardHeight = windowHeight - endFrame.origin.y
-            self.continueWrapperBottomConstraint.constant = keyboardHeight
-            self.scrollView.contentInset.bottom = keyboardHeight + self.continueWrapperView.frame.height
-            self.scrollView.scrollIndicatorInsets.bottom = keyboardHeight
-            self.view.layoutIfNeeded()
-        }
-        if viewHasAppeared {
-            work()
-        } else {
-            UIView.performWithoutAnimation {
-                work()
-                if ScreenSize.current == .inch3_5 || ScreenSize.current == .inch4 {
-                    scrollView.contentOffset.y = opponentImageView.frame.maxY
-                }
-            }
-        }
     }
     
     private func fetchAvailableAssets() {

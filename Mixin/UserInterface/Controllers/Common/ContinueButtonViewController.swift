@@ -1,12 +1,11 @@
 import UIKit
 import SnapKit
 
-class ContinueButtonViewController: UIViewController {
+class ContinueButtonViewController: KeyboardBasedLayoutViewController {
     
     let continueButton = BusyButton()
     
     var continueButtonBottomConstraint: Constraint!
-    var viewHasAppeared = false
     
     var continueButtonBottomConstant: CGFloat {
         get {
@@ -20,10 +19,6 @@ class ContinueButtonViewController: UIViewController {
     
     private let continueButtonLength: CGFloat = 44
     private let continueButtonMargin: CGFloat = 20
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,37 +38,21 @@ class ContinueButtonViewController: UIViewController {
             make.trailing.equalToSuperview().offset(-continueButtonMargin)
             continueButtonBottomConstraint = make.bottom.equalToSuperview().constraint
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        viewHasAppeared = true
     }
     
     @objc func continueAction(_ sender: Any) {
         
     }
     
-    @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-            return
+    override func layout(for keyboardFrame: CGRect) {
+        let oldOffset = continueButtonBottomConstant
+        let newOffset = keyboardFrame.origin.y
+            - view.frame.height
+            - continueButtonMargin
+        if abs(oldOffset - newOffset) > 60 || newOffset < oldOffset {
+            continueButtonBottomConstant = newOffset
         }
-        let work = {
-            let oldOffset = self.continueButtonBottomConstant
-            let newOffset = endFrame.origin.y
-                - self.view.frame.height
-                - self.continueButtonMargin
-            if abs(oldOffset - newOffset) > 60 || newOffset < oldOffset {
-                self.continueButtonBottomConstant = newOffset
-            }
-            self.view.layoutIfNeeded()
-        }
-        if viewHasAppeared {
-            work()
-        } else {
-            UIView.performWithoutAnimation(work)
-        }
+        view.layoutIfNeeded()
     }
     
 }

@@ -147,6 +147,7 @@
 		7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */; };
 		7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63C49021A4334C0044C4BF /* DepositFieldView.swift */; };
 		7B68F78B2191741300B79978 /* BiometryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B68F78A2191741300B79978 /* BiometryType.swift */; };
+		7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */; };
 		7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */; };
 		7B6EC8FE20A91579009A7020 /* VideoDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FD20A91579009A7020 /* VideoDownloadJob.swift */; };
 		7B71F5262191CC1500F93B98 /* WalletHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B71F5252191CC1500F93B98 /* WalletHeaderCell.swift */; };
@@ -778,6 +779,7 @@
 		7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositFieldView.xib; sourceTree = "<group>"; };
 		7B63C49021A4334C0044C4BF /* DepositFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFieldView.swift; sourceTree = "<group>"; };
 		7B68F78A2191741300B79978 /* BiometryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometryType.swift; sourceTree = "<group>"; };
+		7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardBasedLayoutViewController.swift; sourceTree = "<group>"; };
 		7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoUploadJob.swift; sourceTree = "<group>"; };
 		7B6EC8FD20A91579009A7020 /* VideoDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloadJob.swift; sourceTree = "<group>"; };
 		7B71F5252191CC1500F93B98 /* WalletHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHeaderCell.swift; sourceTree = "<group>"; };
@@ -1587,6 +1589,7 @@
 				7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */,
 				7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */,
 				7B51DDB6223A50D5008ACDBB /* VerificationCodeViewController.swift */,
+				7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -3151,6 +3154,7 @@
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
 				DFEE215C200CAD8800D9B3F7 /* AuthorizationRequest.swift in Sources */,
 				DFD2943F1FA7071A00FADAAD /* ContactNavCell.swift in Sources */,
+				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
 				273FACAD205FB9A800513327 /* KeyPair.swift in Sources */,
 				7B287A3420EA5770007278A3 /* AssetExportSession.swift in Sources */,

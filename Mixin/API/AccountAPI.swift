@@ -70,6 +70,9 @@ final class AccountAPI: BaseAPI {
         if let token = reCaptchaToken {
             param["g_recaptcha_response"] = token
         }
+        if let bundleIdentifier = Bundle.main.bundleIdentifier {
+            param["package_name"] = bundleIdentifier
+        }
         return request(method: .post, url: url.verifications, parameters: param, checkLogin: false, completion: completion)
     }
     

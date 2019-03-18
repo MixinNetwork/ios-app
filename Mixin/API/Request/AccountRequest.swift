@@ -8,6 +8,7 @@ struct AccountRequest: Codable {
     let platform: String = "iOS"
     let platformVersion: String = UIDevice.current.systemVersion
     let appVersion: String
+    let packageName: String = Bundle.main.bundleIdentifier ?? ""
     let purpose: String
     var pin: String?
     let sessionSecret: String?
@@ -18,6 +19,7 @@ struct AccountRequest: Codable {
         case platform
         case platformVersion = "platform_version"
         case appVersion = "app_version"
+        case packageName = "package_name"
         case purpose
         case pin
         case sessionSecret = "session_secret"

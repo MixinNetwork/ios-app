@@ -477,12 +477,13 @@ extension ConversationInputViewController {
         case .changed:
             let resizableScrollView = (customInputViewController as? ConversationInputInteractiveResizableViewController)?.interactiveResizableScrollView
             if !recognizer.shouldAdjustContentHeight {
-                let isDraggingUp = inputBarView.frame.contains(location)
-                let canDragDown = view.frame.height > regularHeight
+                let locationInsideInputBar = inputBarView.frame.contains(location)
+                let downsizeByDraggingOnScrollView = view.frame.height > regularHeight
                     && verticalVelocity > 0
                     && (resizableScrollView != nil)
                     && (resizableScrollView!.contentOffset.y < 1)
-                if isDraggingUp || canDragDown {
+                    && resizableScrollView!.bounds.contains(recognizer.location(in: resizableScrollView))
+                if locationInsideInputBar || downsizeByDraggingOnScrollView {
                     recognizer.shouldAdjustContentHeight = true
                 }
             }
@@ -500,7 +501,7 @@ extension ConversationInputViewController {
             recognizer.setTranslation(.zero, in: view)
         case .ended:
             if recognizer.shouldAdjustContentHeight {
-                if verticalVelocity >= 0 {
+                if verticalVelocity > 50 {
                     if view.frame.height < regularHeight && recognizer.canSizeToMinimized {
                         dismissCustomInput(minimize: true)
                     } else {
@@ -546,7 +547,7 @@ extension ConversationInputViewController {
     
 }
 
-// MARK: - UITextViewDelegate
+// MARK: - UIGestureRecognizerDelegate
 extension ConversationInputViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {

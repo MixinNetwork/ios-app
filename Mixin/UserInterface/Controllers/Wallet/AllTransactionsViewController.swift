@@ -7,7 +7,7 @@ class AllTransactionsViewController: UITableViewController {
         static let header = "header"
     }
     
-    private let dataSource = SnapshotDataSource(category: .all)
+    internal var dataSource: SnapshotDataSource!
     private let loadNextPageThreshold = 20
     
     private lazy var filterWindow = AssetFilterWindow.instance()
@@ -39,7 +39,8 @@ class AllTransactionsViewController: UITableViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "snapshot")
+        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "snapshot") as! AllTransactionsViewController
+        vc.dataSource = SnapshotDataSource(category: .all)
         let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_ALL_TRANSACTIONS_TITLE)
         container.automaticallyAdjustsScrollViewInsets = false
         return container

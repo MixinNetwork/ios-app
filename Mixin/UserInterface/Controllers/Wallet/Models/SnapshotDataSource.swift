@@ -43,6 +43,8 @@ class SnapshotDataSource {
         op.addExecutionBlock { [unowned op, weak self] in
             let items: [SnapshotItem]
             switch category {
+            case .user(let id):
+                items = SnapshotDAO.shared.getSnapshots(opponentId: id, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .asset(let id):
                 items = SnapshotDAO.shared.getSnapshots(assetId: id, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .all:
@@ -75,6 +77,8 @@ class SnapshotDataSource {
     func reloadFromRemote() {
         let job: RefreshSnapshotsJob
         switch category {
+        case .user(let id):
+            job = RefreshSnapshotsJob(category: .opponent(id: id))
         case .asset(let id):
             job = RefreshSnapshotsJob(category: .asset(id: id))
         case .all:
@@ -101,6 +105,8 @@ class SnapshotDataSource {
         op.addExecutionBlock { [unowned op, weak self] in
             let newItems: [SnapshotItem]
             switch category {
+            case .user(let id):
+                newItems = SnapshotDAO.shared.getSnapshots(opponentId: id, below: lastSnapshot, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .asset(let id):
                 newItems = SnapshotDAO.shared.getSnapshots(assetId: id, below: lastSnapshot, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .all:
@@ -171,6 +177,8 @@ class SnapshotDataSource {
         }
         let job: LoadMoreSnapshotsJob
         switch category {
+        case .user(let id):
+            job = LoadMoreSnapshotsJob(category: .opponent(id: id))
         case .asset(let id):
             job = LoadMoreSnapshotsJob(category: .asset(id: id))
         case .all:
@@ -187,6 +195,7 @@ class SnapshotDataSource {
 extension SnapshotDataSource {
     
     enum Category {
+        case user(id: String)
         case asset(id: String)
         case all
     }

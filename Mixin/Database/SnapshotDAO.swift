@@ -40,10 +40,35 @@ final class SnapshotDAO {
         }
     }
     
-    func getSnapshots(opponentId: String) -> [SnapshotItem] {
-        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (stmt) -> (StatementSelect) in
-            stmt.where(Snapshot.Properties.opponentId.in(table: Snapshot.tableName) == opponentId)
-                .order(by: createdAt.asOrder(by: .descending))
+    func getSnapshots(opponentId: String, below location: SnapshotItem? = nil, sort: Snapshot.Sort, limit: Int) -> [SnapshotItem] {
+        let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
+        return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
+            var stmt = statement
+            var condition = Expression(booleanLiteral: true)
+            condition = condition && Snapshot.Properties.opponentId.in(table: Snapshot.tableName) == opponentId
+            switch sort {
+            case .createdAt:
+                if let location = location {
+                    condition = condition && createdAt < location.createdAt
+                }
+            case .amount:
+                if let location = location {
+                    let absAmount = amount.abs()
+                    let locationAbsAmount = Expression(stringLiteral: location.amount).abs()
+                    let isBelowLocation = absAmount < locationAbsAmount
+                        || (absAmount == locationAbsAmount && createdAt < location.createdAt)
+                    condition = condition && isBelowLocation
+                }
+            }
+            stmt.where(condition)
+            switch sort {
+            case .createdAt:
+                stmt = stmt.order(by: createdAt.asOrder(by: .descending))
+            case .amount:
+                stmt = stmt.order(by: [amount.abs().asOrder(by: .descending), createdAt.asOrder(by: .descending)])
+            }
+            stmt = stmt.limit(limit)
+            return stmt
         }
     }
     

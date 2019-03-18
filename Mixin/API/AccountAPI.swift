@@ -64,13 +64,13 @@ final class AccountAPI: BaseAPI {
         request(method: .get, url: url.me, completion: completion)
     }
 
-    func sendCode(to phoneNumber: String, reCaptchaToken: String?, purpose: VerificationPurpose, completion: @escaping (APIResult<VerificationResponse>) -> Void) {
+    func sendCode(to phoneNumber: String, reCaptchaToken: String?, purpose: VerificationPurpose, completion: @escaping (APIResult<VerificationResponse>) -> Void) -> Request? {
         var param = ["phone": phoneNumber,
                      "purpose": purpose.rawValue]
         if let token = reCaptchaToken {
             param["g_recaptcha_response"] = token
         }
-        request(method: .post, url: url.verifications, parameters: param, checkLogin: false, completion: completion)
+        return request(method: .post, url: url.verifications, parameters: param, checkLogin: false, completion: completion)
     }
     
     func login(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<Account>) -> Void) {

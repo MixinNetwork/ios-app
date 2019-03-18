@@ -1,4 +1,5 @@
 import UIKit
+import Bugsnag
 
 class LoginVerificationCodeViewController: VerificationCodeViewController {
     
@@ -50,6 +51,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         }
                     }
                 } else {
+                    Bugsnag.notifyError(error)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.resendButton.isBusy = false
                 }

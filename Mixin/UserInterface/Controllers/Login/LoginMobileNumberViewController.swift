@@ -1,8 +1,11 @@
 import UIKit
+import Bugsnag
+import Alamofire
 
 class LoginMobileNumberViewController: MobileNumberViewController {
     
     let introTextView = UITextView()
+    private var request: Request?
     
     private let intro: NSAttributedString = {
         let intro = String(format: Localized.TEXT_INTRO,
@@ -52,7 +55,7 @@ class LoginMobileNumberViewController: MobileNumberViewController {
         var ctx = LoginContext(callingCode: country.callingCode,
                                mobileNumber: mobileNumber,
                                fullNumber: fullNumber(withSpacing: false))
-        AccountAPI.shared.sendCode(to: fullNumber(withSpacing: false), reCaptchaToken: token, purpose: .session) { [weak self] (result) in
+        self.request = AccountAPI.shared.sendCode(to: fullNumber(withSpacing: false), reCaptchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
@@ -75,6 +78,17 @@ class LoginMobileNumberViewController: MobileNumberViewController {
                         }
                     })
                 } else {
+                    Bugsnag.notifyError(error, block: { (report) in
+                        if let requestId = weakSelf.request?.response?.allHeaderFields["x-request-id"]  {
+                            report.addMetadata(["requestId": requestId], toTabWithName: "Track")
+                        }
+                        if let statusCode = weakSelf.request?.response?.statusCode {
+                            report.addMetadata(["statusCode": "\(statusCode)"], toTabWithName: "Track")
+                        }
+                        report.addMetadata(["phone": ctx.mobileNumber], toTabWithName: "Track")
+                        report.addMetadata(["phoneCountryCode": ctx.callingCode], toTabWithName: "Track")
+                    })
+                    Bugsnag.notifyError(error)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.continueButton.isBusy = false
                 }

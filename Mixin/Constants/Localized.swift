@@ -87,6 +87,7 @@ public class Localized {
     public static let TOAST_SAVED = LocalizedString("toast_saved", comment: "Saved")
     public static let TOAST_LOGINED = LocalizedString("toast_logined", comment: "Logined")
     public static let TOAST_AUTHORIZED = LocalizedString("toast_authorized", comment: "Authorized")
+    public static let TOAST_CHANGED = LocalizedString("toast_changed", comment: "Changed")
     public static let SCREEN_CAPTURED_PIN_LEAKING_HINT = LocalizedString("screen_captured_pin_leaking_hint", comment: "Screen recorder detected, PIN may be recorded.")
     public static func BIOMETRY_SUGGESTION(biometricType: String) -> String {
         return String(format: LocalizedString("biometry_suggestion", comment: " %@ is suggested."), biometricType)

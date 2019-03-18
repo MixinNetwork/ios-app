@@ -364,7 +364,7 @@
                                 <rect key="frame" x="147.5" y="114" width="80" height="80"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wZL-Va-cvk">
-                                <rect key="frame" x="0.0" y="562" width="375" height="45"/>
+                                <rect key="frame" x="0.0" y="502" width="375" height="45"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9Se-cC-O8P">
                                         <rect key="frame" x="177.5" y="0.0" width="20" height="20"/>
@@ -395,7 +395,7 @@
                         <constraints>
                             <constraint firstItem="CZJ-hH-T5C" firstAttribute="centerX" secondItem="G5m-8U-XPN" secondAttribute="centerX" id="2nj-ak-Snw"/>
                             <constraint firstItem="YgL-nK-KrB" firstAttribute="top" secondItem="CZJ-hH-T5C" secondAttribute="bottom" constant="16" id="7LO-Vs-nAS"/>
-                            <constraint firstItem="G5m-8U-XPN" firstAttribute="bottom" secondItem="wZL-Va-cvk" secondAttribute="bottom" constant="60" id="Et8-dH-OpN" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
+                            <constraint firstItem="G5m-8U-XPN" firstAttribute="bottom" secondItem="wZL-Va-cvk" secondAttribute="bottom" constant="120" id="Et8-dH-OpN" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin">
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="inch4">
                                         <real key="value" value="60"/>

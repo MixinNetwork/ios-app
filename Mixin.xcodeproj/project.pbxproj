@@ -331,6 +331,7 @@
 		DF03C8631FF2C24300C1ED6B /* RatchetSenderKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C8621FF2C24300C1ED6B /* RatchetSenderKey.swift */; };
 		DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */; };
 		DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */; };
+		DF048CCE223FCA02005F1EF5 /* SelectedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */; };
 		DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0111FE5598300F98479 /* ExitConversationJob.swift */; };
 		DF05F0191FE90A1B00F98479 /* SignalKeyCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */; };
 		DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */; };
@@ -977,6 +978,7 @@
 		DF03C8621FF2C24300C1ED6B /* RatchetSenderKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatchetSenderKey.swift; sourceTree = "<group>"; };
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
 		DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshGroupIconJob.swift; sourceTree = "<group>"; };
+		DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedTableViewCell.swift; sourceTree = "<group>"; };
 		DF05F0111FE5598300F98479 /* ExitConversationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitConversationJob.swift; sourceTree = "<group>"; };
 		DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyCount.swift; sourceTree = "<group>"; };
 		DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingViewController.swift; sourceTree = "<group>"; };
@@ -1495,6 +1497,7 @@
 			children = (
 				DFD294401FA7075300FADAAD /* PeerCell.swift */,
 				DFD294461FA7092800FADAAD /* PeerCell.xib */,
+				DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3008,6 +3011,7 @@
 				27DA337F1FE8F92900A4D16F /* SignalProtocol.swift in Sources */,
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
+				DF048CCE223FCA02005F1EF5 /* SelectedTableViewCell.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
 				7B015D7F21A81C81000C9F1E /* ModernSearchBoxView.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,

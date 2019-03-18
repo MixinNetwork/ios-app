@@ -337,6 +337,7 @@ class UserView: CornerView {
                     DispatchQueue.global().async {
                         UserDAO.shared.updateAccount(account: account)
                     }
+                    showHud(style: .notification, text: Localized.TOAST_CHANGED)
                 case let .failure(error):
                     showHud(style: .error, text: error.localizedDescription)
                 }
@@ -525,6 +526,7 @@ extension UserView: ImagePickerControllerDelegate {
                 DispatchQueue.global().async {
                     UserDAO.shared.updateAccount(account: account)
                 }
+                showHud(style: .notification, text: Localized.TOAST_CHANGED)
             case let .failure(error):
                 showHud(style: .error, text: error.localizedDescription)
             }

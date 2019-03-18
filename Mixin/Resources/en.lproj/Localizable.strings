@@ -76,6 +76,7 @@
 "toast_saved" = "Saved";
 "toast_logined" = "Logined";
 "toast_authorized" = "Authorized";
+"toast_changed" = "Changed";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
 "screen_captured_pin_leaking_hint" = "Screen recorder detected, PIN may be recorded.";

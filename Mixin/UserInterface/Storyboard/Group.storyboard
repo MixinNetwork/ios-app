@@ -174,7 +174,7 @@
                                         <rect key="frame" x="0.0" y="115.66666666666666" width="374" height="54"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Group Name" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="bEz-0j-gMl">
-                                                <rect key="frame" x="20.000000000000007" y="0.0" width="95.666666666666686" height="54"/>
+                                                <rect key="frame" x="16" y="0.0" width="342" height="54"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="54" id="JOv-co-hsl"/>
@@ -188,7 +188,8 @@
                                         <constraints>
                                             <constraint firstItem="bEz-0j-gMl" firstAttribute="centerY" secondItem="eip-Pa-aoX" secondAttribute="centerY" id="5U5-dN-HAQ"/>
                                             <constraint firstAttribute="height" constant="54" id="J0N-Y0-VIM"/>
-                                            <constraint firstItem="bEz-0j-gMl" firstAttribute="leading" secondItem="eip-Pa-aoX" secondAttribute="leading" constant="20" id="z29-l4-ogK"/>
+                                            <constraint firstAttribute="trailing" secondItem="bEz-0j-gMl" secondAttribute="trailing" constant="16" id="Woy-zN-tS9"/>
+                                            <constraint firstItem="bEz-0j-gMl" firstAttribute="leading" secondItem="eip-Pa-aoX" secondAttribute="leading" constant="16" id="z29-l4-ogK"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">

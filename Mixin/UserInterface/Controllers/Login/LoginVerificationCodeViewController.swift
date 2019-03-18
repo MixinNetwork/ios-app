@@ -121,6 +121,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                             weakSelf.verificationCodeField.showError()
                             showHud(style: .error, text: Localized.TEXT_INVALID_VERIFICATION_CODE)
                         } else {
+                            Bugsnag.notifyError(error)
                             weakSelf.alert(error.localizedDescription)
                         }
                     }

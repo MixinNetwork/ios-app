@@ -1,6 +1,6 @@
 import UIKit
 
-class NewAddressViewController: UIViewController {
+class NewAddressViewController: KeyboardBasedLayoutViewController {
 
     @IBOutlet weak var labelTextField: UITextField!
     @IBOutlet weak var addressTextView: PlaceholderTextView!
@@ -48,15 +48,16 @@ class NewAddressViewController: UIViewController {
             addressTextView.placeholder = Localized.WALLET_ACCOUNT_MEMO
             accountNameButton.isHidden = false
         }
-
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        
         labelTextField.becomeFirstResponder()
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    override func layout(for keyboardFrame: CGRect) {
+        let windowHeight = AppDelegate.current.window!.bounds.height
+        bottomConstraint.constant = windowHeight - keyboardFrame.origin.y + 20
+        view.layoutIfNeeded()
     }
-
+    
     @IBAction func checkLabelAndAddressAction(_ sender: Any) {
         if let address = address {
             if asset.isAccount {
@@ -129,15 +130,6 @@ class NewAddressViewController: UIViewController {
         }
     }
     
-    @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        let windowHeight = AppDelegate.current.window!.bounds.height
-        bottomConstraint.constant = windowHeight - endFrame.origin.y + 20
-        UIView.animate(withDuration: 0.15, animations: {
-            self.view.layoutIfNeeded()
-        })
-    }
-
     class func instance(asset: AssetItem, address: Address? = nil, successCallback: ((Address) -> Void)? = nil) -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "new_address") as! NewAddressViewController
         vc.asset = asset

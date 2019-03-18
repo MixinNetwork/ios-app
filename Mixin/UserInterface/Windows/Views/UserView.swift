@@ -244,8 +244,14 @@ class UserView: CornerView {
     
     @IBAction func transferAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
-        let vc = SendViewController.instance(asset: nil, type: .contact(user))
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+
+        let viewController: UIViewController
+        if AccountAPI.shared.account?.has_pin ?? false {
+            viewController = SendViewController.instance(asset: nil, type: .contact(user))
+        } else {
+            viewController = WalletPasswordViewController.instance(fromChat:  user)
+        }
+        UIApplication.rootNavigationController()?.pushViewController(viewController, animated: true)
     }
     
     @IBAction func openApp(_ sender: Any) {

@@ -1,30 +1,21 @@
 import UIKit
 
 class TransferTypeCell: UITableViewCell {
-
-    static let cellIdentifier = "cell_identifier_transfer_type"
-    static let cellHeight: CGFloat = 96
-
-    @IBOutlet weak var assetIconImageView: CornerImageView!
+    
+    @IBOutlet weak var checkmarkView: CheckmarkView!
+    @IBOutlet weak var assetIconView: AssetIconView!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var balanceLabel: UILabel!
-    @IBOutlet weak var blockchainImageView: CornerImageView!
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        separatorInset.left = symbolLabel.convert(.zero, to: self).x
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        assetIconView.prepareForReuse()
     }
     
     func render(asset: AssetItem) {
-        assetIconImageView.sd_setImage(with: URL(string :asset.iconUrl), placeholderImage: #imageLiteral(resourceName: "ic_place_holder"))
+        assetIconView.setIcon(asset: asset)
         symbolLabel.text = asset.symbol
         balanceLabel.text = asset.localizedBalance
-        if let chainIconUrl = asset.chainIconUrl {
-            blockchainImageView.sd_setImage(with: URL(string: chainIconUrl))
-            blockchainImageView.isHidden = false
-        } else {
-            blockchainImageView.isHidden = true
-        }
     }
-
+    
 }

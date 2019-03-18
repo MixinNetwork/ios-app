@@ -832,12 +832,14 @@ extension ReceiveMessageService {
 
         switch sysMessage.action {
         case SystemConversationAction.ADD_SESSION.rawValue:
+            AccountUserDefault.shared.lastDesktopLogin = Date()
             AccountUserDefault.shared.extensionSession = sessionId
             SignalProtocol.shared.deleteSession(userId: data.userId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         case SystemConversationAction.REMOVE_SESSION.rawValue:
             AccountUserDefault.shared.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: data.userId)
+            JobDAO.shared.clearSessionJob()
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         default:
             break

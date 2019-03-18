@@ -2,37 +2,107 @@ import UIKit
 import LocalAuthentication
 
 class WalletSettingViewController: UITableViewController {
-
+    
     @IBOutlet weak var payTitleLabel: UILabel!
     @IBOutlet weak var biometricsPaySwitch: UISwitch!
     @IBOutlet weak var pinIntervalLabel: UILabel!
 
+    private let pinIntervals: [Double] = [ 60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24 ]
+    private let footerReuseId = "footer"
 
+    class func instance() -> UIViewController {
+        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "wallet_setting") as! WalletSettingViewController
+        let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_SETTING)
+        container.automaticallyAdjustsScrollViewInsets = false
+        return container
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(SeparatorShadowFooterView.self, forHeaderFooterViewReuseIdentifier: footerReuseId)
+        tableView.estimatedSectionFooterHeight = 10
+        tableView.sectionFooterHeight = UITableView.automaticDimension
         if biometryType != .none {
             biometricsPaySwitch.isOn = WalletUserDefault.shared.isBiometricPay
             payTitleLabel.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_TITLE(biometricType: biometryType.localizedName)
         }
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         refreshPinIntervalUI()
     }
-
-    private func refreshPinIntervalUI() {
-        let pinInterval = WalletUserDefault.shared.pinInterval
-        let hour: Double = 60 * 60
-        if pinInterval < hour {
-            pinIntervalLabel.text = Localized.WALLET_PIN_PAY_INTERVAL_MINUTES(pinInterval).lowercased()
-        } else if pinInterval == hour {
-            pinIntervalLabel.text = Localized.WALLET_PIN_PAY_INTERVAL_HOUR
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            if biometryType == .none {
+                return 0
+            } else {
+                return WalletUserDefault.shared.isBiometricPay ? 2 : 1
+            }
         } else {
-            pinIntervalLabel.text = Localized.WALLET_PIN_PAY_INTERVAL_HOURS(pinInterval).lowercased()
+            return super.tableView(tableView, numberOfRowsInSection: section)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
+        if biometryType == .none {
+            return section == 0 ? nil : view
+        } else {
+            if section == 0 {
+                view.text = Localized.WALLET_ENABLE_BIOMETRIC_PAY_PROMPT(biometricType: biometryType.localizedName)
+            }
+            return view
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == 0 && indexPath.row == 1 {
+            pinIntervalAction()
+        } else if indexPath.section == 1 {
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 
+    private func pinIntervalAction() {
+        let alc = UIAlertController(title: nil, message: Localized.WALLET_PIN_PAY_INTERVAL_TIPS, preferredStyle: .actionSheet)
+        for interval in pinIntervals {
+            alc.addAction(UIAlertAction(title: Localized.WALLET_PIN_PAY_INTERVAL(interval), style: .default, handler: { [weak self](_) in
+                self?.setNewPinInterval(interval: interval)
+            }))
+        }
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        present(alc, animated: true, completion: nil)
+    }
+
+    private func setNewPinInterval(interval: Double) {
+        PinTipsView.instance(tips: Localized.WALLET_PIN_PAY_INTERVAL_CONFIRM) { (pin) in
+            WalletUserDefault.shared.pinInterval = interval
+            }.presentPopupControllerAnimated { [weak self] in
+                self?.refreshPinIntervalUI()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 && biometryType == .none {
+            return 0
+        } else {
+            return super.tableView(tableView, heightForFooterInSection: section)
+        }
+    }
+    
+    @IBAction func changePINAction(_ sender: Any) {
+        let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     @IBAction func biometryPaySwitchAction(_ sender: Any) {
         if WalletUserDefault.shared.isBiometricPay {
             let title = Localized.WALLET_DISABLE_BIOMETRIC_PAY(biometricType: biometryType == .touchID ? Localized.WALLET_TOUCH_ID : Localized.WALLET_FACE_ID)
@@ -66,54 +136,17 @@ class WalletSettingViewController: UITableViewController {
                 }.presentPopupControllerAnimated()
         }
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            if biometryType == .none {
-                return 0
-            } else {
-                return WalletUserDefault.shared.isBiometricPay ? 2 : 1
-            }
-        } else {
-            return super.tableView(tableView, numberOfRowsInSection: section)
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        if section == 0, biometryType != .none {
-            return Localized.WALLET_ENABLE_BIOMETRIC_PAY_PROMPT(biometricType: biometryType.localizedName)
-        } else {
-            return nil
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 && indexPath.row == 1 {
-            let vc = PinIntervalViewController.instance()
-            navigationController?.pushViewController(vc, animated: true)
-        } else if indexPath.section == 1 {
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
-            navigationController?.pushViewController(vc, animated: true)
-        }
-    }
     
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0, biometryType == .none {
-            return .leastNormalMagnitude
+    private func refreshPinIntervalUI() {
+        let pinInterval = WalletUserDefault.shared.pinInterval
+        let hour: Double = 60 * 60
+        if pinInterval < hour {
+            pinIntervalLabel.text = Localized.WALLET_PIN_PAY_INTERVAL_MINUTES(pinInterval).lowercased()
+        } else if pinInterval == hour {
+            pinIntervalLabel.text = Localized.WALLET_PIN_PAY_INTERVAL_HOUR
         } else {
-            return super.tableView(tableView, heightForHeaderInSection: section)
+            pinIntervalLabel.text = Localized.WALLET_PIN_PAY_INTERVAL_HOURS(pinInterval).lowercased()
         }
-    }
-
-    @IBAction func changePINAction(_ sender: Any) {
-        let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
-        navigationController?.pushViewController(vc, animated: true)
-    }
-
-    class func instance() -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "wallet_setting") as! WalletSettingViewController
-        return ContainerViewController.instance(viewController: vc, title: Localized.WALLET_SETTING)
     }
     
 }

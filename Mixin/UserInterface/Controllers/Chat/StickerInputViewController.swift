@@ -6,11 +6,12 @@ class StickerInputViewController: UIViewController {
     
     private var pageViewController: UIPageViewController!
     private let modelController = StickerInputModelController()
-    private let albumCellReuseId = "AlbumCollectionViewCell"
+    private let albumCellReuseId = "album"
     private var officialAlbums = [Album]()
     private var currentIndex = NSNotFound
     private var pageScrollView: UIScrollView?
     private var isScrollingByAlbumSelection = false
+    private var currentPage: StickersCollectionViewController!
     
     var numberOfAllAlbums: Int {
         return officialAlbums.count + modelController.numberOfFixedControllers
@@ -37,6 +38,16 @@ class StickerInputViewController: UIViewController {
         pageScrollView?.delegate = self
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.animated = true
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.animated = false
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         if let page = segue.destination as? UIPageViewController {
@@ -57,6 +68,7 @@ class StickerInputViewController: UIViewController {
                     let index = initialViewController.index
                     self.currentIndex = index
                     self.selectAlbum(at: index)
+                    self.currentPage = initialViewController
                 } else {
                     initialViewControllers = []
                 }
@@ -66,8 +78,12 @@ class StickerInputViewController: UIViewController {
         }
     }
     
-    static func instance() -> StickerInputViewController {
-        return Storyboard.chat.instantiateViewController(withIdentifier: "sticker_input") as! StickerInputViewController
+}
+
+extension StickerInputViewController: ConversationInputInteractiveResizableViewController {
+    
+    var interactiveResizableScrollView: UIScrollView {
+        return currentPage.collectionView
     }
     
 }
@@ -163,6 +179,7 @@ extension StickerInputViewController: UIScrollViewDelegate {
             if width > maxWidth {
                 maxWidth = width
                 focusedIndex = vc.index
+                currentPage = vc
             }
         }
         selectAlbum(at: focusedIndex)

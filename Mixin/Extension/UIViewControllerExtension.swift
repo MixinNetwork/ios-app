@@ -50,14 +50,4 @@ extension UIViewController {
         return controller
     }
     
-    func showHud(style: Hud.Style, text: String) {
-        let container: UIView
-        if let navigationController = navigationController {
-            container = navigationController.view
-        } else {
-            container = view
-        }
-        Hud.show(style: style, text: text, on: container)
-    }
-    
 }

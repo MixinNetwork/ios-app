@@ -1,29 +1,26 @@
 import UIKit
 
+protocol ContactNavCellDelegate: class {
+
+    func newGroupAction()
+
+    func addContactAction()
+
+}
+
 class ContactNavCell: UITableViewCell {
 
     static let cellIdentifier = "cell_identifier_contact_nav"
-    static let cellHeight: CGFloat = 64
+    static let cellHeight: CGFloat = 72
     
-    @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var summaryLabel: UILabel!
+    weak var delegate: ContactNavCellDelegate?
 
-    func render(row: Int) {
-        switch row {
-        case 0:
-            iconImageView.image = #imageLiteral(resourceName: "ic_contact_new_group")
-            titleLabel.text = Localized.CONTACT_NEW_GROUP_TITLE
-            summaryLabel.text = Localized.CONTACT_NEW_GROUP_SUMMARY
-        case 1:
-            iconImageView.image = #imageLiteral(resourceName: "ic_contact_search")
-            titleLabel.text = Localized.CONTACT_ADD_TITLE
-            summaryLabel.text = Localized.CONTACT_ADD_SUMMARY
-        default:
-            iconImageView.image = #imageLiteral(resourceName: "ic_contact_qrcode")
-            titleLabel.text = Localized.CONTACT_QR_CODE_TITLE
-            summaryLabel.text = Localized.CONTACT_QR_CODE_SUMMARY
-        }
+    @IBAction func newGroupAction(_ sender: Any) {
+        delegate?.newGroupAction()
+    }
+
+    @IBAction func addContactAction(_ sender: Any) {
+        delegate?.addContactAction()
     }
 }
 

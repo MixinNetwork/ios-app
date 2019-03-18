@@ -25,15 +25,21 @@
 "action_select" = "选择";
 "action_clear" = "清理";
 "action_send" = "发送";
+"action_send_to" = "转给";
+"action_share_to" = "分享给";
 "action_hide" = "隐藏";
 "action_show" = "显示";
 "action_apply" = "应用";
 "action_filter" = "筛选";
 "action_skip" = "跳过";
+"action_copy" = "复制";
+"action_authorize" = "授权";
 "action_deauthorize" = "取消授权";
 "menu_delete" = "删除";
+"menu_edit" = "编辑";
 "no_result" = "未找到相关内容";
 "title_loading" = "正在加载...";
+"all_photos" = "所有照片";
 
 "connection_hint_connecting" = "正在连接";
 "connection_hint_waiting" = "等待重连";
@@ -43,6 +49,12 @@
 "date_format_date" = "yyyy/MM/dd";
 "date_format_month" = "MM月d日 E";
 "date_format_transation" = "MM月d日 HH:mm";
+
+"search_placeholder_address" = "标签名";
+"search_placeholder_user" = "Mixin ID, 手机号码";
+"search_placeholder_asset" = "名称, 符号";
+"search_placeholder_home" = "联系人, 资产, 聊天";
+"search_placeholder_participants" = "名称";
 
 // Toast
 "toast_server_error" = "服务器正在维护中";
@@ -62,11 +74,14 @@
 "toast_added" = "已添加";
 "toast_saved" = "已保存";
 "toast_logined" = "已登录";
+"toast_authorized" = "已授权";
+"toast_changed" = "已修改";
 "permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
 "toast_error" = "错误 %@：%@";
 "screen_captured_pin_leaking_hint" = "检测到正在进行屏幕录制，支付密码可能会录入视频！";
 "biometry_suggestion" = "建议使用%@支付";
-"clock_skew_tips" = "检测到系统时间异常，请校正后再继续使用。设置 > 通用 > 日期与时间 > 自动设置。";
+"clock_skew_title" = "系统时间异常";
+"clock_skew_tips" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
 
 // Login
 "navigation_title_select_country" = "选择一个国家";
@@ -74,7 +89,7 @@
 "navigation_title_enter_verification_code" = "请输入发送至以下号码的 4 位验证码： %@";
 "navigation_title_enter_name" = "名字";
 "landing_welcome_title" = "欢迎使用 Mixin";
-"text_intro" = "点击 \"%@\" 接受 Mixin %@和%@";
+"text_intro" = "继续使用即表示你同意 %@ 和 %@";
 "text_mobile_number_privacy" = "我们不会公开你的手机号码";
 "text_confirm_send_code" = "确认你的手机号码 %@";
 "text_invalid_verification_code" = "验证码不正确。";
@@ -88,6 +103,7 @@
 "placeholder_search_bar" = "搜索国家";
 "placeholder_mobile_number" = "手机号码";
 "init_signal" = "正在初始化";
+"init_explain" = "用户之间的消息将受到端对端加密保护";
 "toast_recaptcha_timed_out" = "验证超时";
 "toast_recaptcha_invalid" = "验证失败";
 "toast_update_tips" = "请从 App Store 更新 Mixin 至最新版";
@@ -104,13 +120,13 @@
 "contact_qr_code_summary" = "扫描好友的二维码";
 "contact_invite_title" = "邀请好友";
 "contact_invite_summary" = "我的邀请码 %@";
-"contact_invite" = "我正在使用 Mixin 聊天。下载：https://mixin.one .";
+"contact_invite" = "我正在使用 Mixin 聊天。下载：https://mixin.one/messenger";
 "contact_profile_title" = "我的";
 "contact_phone_contact" = "上传通讯录找好友";
 "contact_phone_contact_summary" = "上传你的手机通讯录，如果你的通讯录中有朋友已经注册了 Mixin，系统会帮你自动添加为好友";
 "contact_my_identity_number" = "我的 Mixin ID: %@";
 "contact_error_compose_avatar" = "头像解析失败，请尝试使用其他图片。";
-"contact_phone_contact_invite" = "邀请至 Mixin";
+"contact_phone_contact_invite" = "邀请";
 "contact_identity_number" = "Mixin ID: %@";
 "contact_mobile" = "手机号: %@";
 "contact_search_not_found" = "找不到这个用户";
@@ -128,6 +144,7 @@
 // Home
 "home_start_messaging_guide" = "你可以与你的 Mixin 好友一起聊天。";
 "home_start_messaging" = "开始聊天";
+"home_title" = "聊天";
 
 // Chat
 "chat_message_menu_reply" = "回复";
@@ -168,6 +185,7 @@
 "chat_menu_photo" = "照片 & 视频";
 "chat_menu_file" = "文件";
 "chat_menu_transfer" = "转账";
+"chat_menu_developer" = "开发者";
 "chat_menu_contact" = "联系人";
 "chat_menu_call" = "通话";
 "chat_photo_save" = "保存到相册";
@@ -178,8 +196,9 @@
 "chat_quote_type_photo" = "图片";
 "chat_quote_type_video" = "视频";
 "chat_search_giphy" = "在 GIPHY 上搜索";
-"chat_restore_tips" = "从 iCloud 云端恢复你的聊天记录。如果跳过后续无法恢复！";
-"chat_restore" = "恢复聊天记录";
+"chat_restore" = "恢复";
+"chat_restore_title" = "从 iCloud 恢复\n您的聊天记录";
+"chat_restore_subtitle" = "如果现在不恢复，未来将无法恢复这些记录。媒体文件将在信息恢复完成后在后台继续运行。";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";
@@ -274,8 +293,8 @@
 "wallet_set_password_success" = "设置支付密码成功";
 "wallet_snapshot_from" = "转账来自%@";
 "wallet_snapshot_to" = "转账给%@";
-"wallet_caption_deposit" = "充值";
-"wallet_caption_transfer" = "转账";
+"wallet_caption_send" = "转出";
+"wallet_caption_receive" = "转入";
 "wallet_deposit" = "充值";
 "wallet_deposit_confirmations" = "充值到账至少需要 %@ 个区块确认";
 "wallet_no_transaction" = "暂无转账记录";
@@ -298,19 +317,16 @@
 "wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";
 "wallet_blockchian_not_in_sync" = "区块链同步异常";
 "wallet_no_price" = "暂无价格";
-"wallet_pin_init_title" = "设置支付密码";
-"wallet_pin_confirm_title" = "确认支付密码";
-"wallet_pin_new_title" = "设置新的支付密码";
-"wallet_pin_init_tips1" = "设置 6 位数字支付密码";
-"wallet_pin_init_tips2" = "确认 6 位数字支付密码并牢记它。如果忘记，你的钱包将无法找回。";
-"wallet_pin_init_tips3" = "请再次确认您的 6 位数字密码。 很少看到第三次确认吧！所以请牢记，支付密码丢失是无法找回的。";
-"wallet_pin_init_tips4" = "这是最后一次确认支付密码，记住：支付密码丢失将永远无法找回！";
-"wallet_pin_change_tips" = "设置新的 6 位数字支付密码";
-"wallet_pin_verify_tips" = "输入钱包当前 6 位数字支付密码";
+"wallet_pin_create_title" = "设置 6 位数字支付密码创建你的第一个数字钱包";
+"wallet_pin_confirm_title" = "确认 6 位数字支付密码并牢记它";
+"wallet_pin_confirm_subtitle" = "如果忘记，你的钱包将无法找回。";
+"wallet_pin_confirm_again_title" = "请再次确认您的 6 位数字支付密码";
+"wallet_pin_confirm_again_subtitle" = "很少看到第三次确认吧！所以请牢记，支付密码丢失是无法找回的。";
+"wallet_pin_new_title" = "设置新的 6 位数字支付密码";
 "wallet_pin_inconsistency" = "密码不一致，请重新设置";
 "wallet_pin_too_simple" = "支付密码过于简单不安全";
-"wallet_pin_tips_title" = "输入你的钱包密码";
-"wallet_pin_tips_description" = "定期输入钱包密码有助于记住该密码";
+"wallet_pin_verify_title" = "输入你的钱包密码";
+"wallet_pin_remember_description" = "定期输入钱包密码有助于记住该密码";
 "wallet_all_transactions_title" = "所有交易记录";
 "wallet_pin_touch_id_prompt" = "确认钱包密码启用指纹支付";
 "wallet_pin_face_id_prompt" = "确认钱包密码启用面容支付";
@@ -421,6 +437,7 @@
 "profile_my_qrcode" = "我的二维码";
 "profile_my_invitation_code" = "我的邀请码";
 "profile_change_number" = "更换手机号";
+"profile_change_avatar" = "更改头像";
 "profile_change_number_confirmation" = "是否更换手机号？";
 "profile_change_number_succeeded" = "更换手机号成功";
 "profile_change_number_verify_pin" = "验证钱包密码";
@@ -471,6 +488,7 @@
 "setting_desktop_desktop_on" = "桌面版已登入";
 "setting_desktop_log_out" = "从桌面版退出";
 "setting_authorizations" = "授权";
+"setting_no_authorizations" = "没有授权";
 "setting_deauthorize_confirmation" = "取消 %@ 授权？";
 "setting_storage_usage" = "存储空间";
 "setting_storage_usage_clear" = "清除 %@ 个消息（%@）吗？";

@@ -7,7 +7,7 @@ protocol SelectCountryViewControllerDelegate: class {
 class SelectCountryViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchTextField: UITextField!
+    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
     
     typealias Section = [Country]
     
@@ -16,12 +16,15 @@ class SelectCountryViewController: UIViewController {
         static let currentLocation = 1
     }
     
+    enum ReuseId {
+        static let cell = "country_cell"
+        static let header = "country_header"
+    }
+    
     var selectedCountry: Country!
     weak var delegate: SelectCountryViewControllerDelegate?
-    
-    private let searchImageView = UIImageView(image: #imageLiteral(resourceName: "ic_search"))
-    private let headerReuseId = "CountryHeader"
-    private let sectionHeaderHeight: CGFloat = 28
+
+    private let sectionHeaderHeight: CGFloat = 46
     private var sections = [Section]()
     private var sectionIndexTitles = [String]()
     private var filteredCountries = [Country]()
@@ -35,23 +38,19 @@ class SelectCountryViewController: UIViewController {
         let countries = CountryCodeLibrary.shared.countries
         let selector = #selector(getter: Country.localizedName)
         (sectionIndexTitles, sections) = UILocalizedIndexedCollation.current().catalogue(countries, usingSelector: selector)
-        tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
+        tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.delegate = self
         tableView.dataSource = self
-        searchImageView.bounds = CGRect(x: 0, y: 0, width: 36, height: 28)
-        searchImageView.contentMode = .center
-        searchTextField.delegate = self
-        searchTextField.leftView = searchImageView
-        searchTextField.leftViewMode = .always
         tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
+        searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
     }
 
     @IBAction func dismissAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func searchAction(_ sender: Any) {
-        let searchText = (searchTextField.text ?? "").uppercased()
+    @objc func searchAction(_ sender: Any) {
+        let searchText = (searchBoxView.textField.text ?? "").uppercased()
         if searchText.isEmpty {
             filteredCountries = []
         } else {
@@ -74,8 +73,8 @@ class SelectCountryViewController: UIViewController {
     }
     
     private var shouldShowFilteredResults: Bool {
-        let searchTextFieldIsEmpty = (searchTextField.text ?? "").isEmpty
-        return searchTextField.isFirstResponder && !searchTextFieldIsEmpty
+        let searchTextFieldIsEmpty = (searchBoxView.textField.text ?? "").isEmpty
+        return searchBoxView.textField.isFirstResponder && !searchTextFieldIsEmpty
     }
     
 }
@@ -95,7 +94,7 @@ extension SelectCountryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CountryCell.ReuseIdentifier)! as! CountryCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell)! as! CountryCell
         let country: Country
         if shouldShowFilteredResults {
             country = filteredCountries[indexPath.row]
@@ -133,7 +132,7 @@ extension SelectCountryViewController: UITableViewDelegate {
         guard !shouldShowFilteredResults else {
             return nil
         }
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseId)! as! GeneralTableViewHeader
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header)! as! GeneralTableViewHeader
         if section == SectionIndex.currentSelected {
             header.label.text = Localized.HEADER_TITLE_CURRENT_SELECTED
         } else if section == SectionIndex.currentLocation {

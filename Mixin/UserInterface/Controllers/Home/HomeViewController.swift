@@ -13,6 +13,8 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var bottomNavView: UIView!
     @IBOutlet weak var cameraButton: BouncingButton!
     @IBOutlet weak var qrcodeImageView: UIImageView!
+    @IBOutlet weak var connectingView: UIActivityIndicatorView!
+    @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var bottomNavConstraint: NSLayoutConstraint!
 
@@ -39,6 +41,7 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        connectingView.isHidden = true
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "ConversationCell", bundle: nil), forCellReuseIdentifier: ConversationCell.cellIdentifier)
@@ -46,6 +49,8 @@ class HomeViewController: UIViewController {
         tableView.tableFooterView = UIView()
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(socketStatusChange), name: .SocketStatusChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: .SyncMessageDidAppear, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
             self?.searchViewController?.prepare()
         }
@@ -82,7 +87,6 @@ class HomeViewController: UIViewController {
         needRefresh = false
         DispatchQueue.global().async { [weak self] in
             let conversations = ConversationDAO.shared.conversationList()
-            CommonUserDefault.shared.hasConversation = !conversations.isEmpty
             let groupIcons = conversations.filter({ $0.isNeedCachedGroupIcon() })
             for conversation in groupIcons {
                 ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))
@@ -143,6 +147,45 @@ class HomeViewController: UIViewController {
         searchViewController?.dismiss()
         UIView.animate(withDuration: 0.3) {
             self.searchContainerView.alpha = 0
+        }
+    }
+
+    @objc func socketStatusChange(_ sender: Any) {
+        if WebSocketService.shared.connected {
+            guard !connectingView.isHidden else {
+                return
+            }
+            connectingView.stopAnimating()
+            connectingView.isHidden = true
+            titleLabel.text = Localized.HOME_TITLE
+        } else {
+            guard connectingView.isHidden else {
+                return
+            }
+            connectingView.startAnimating()
+            connectingView.isHidden = false
+            titleLabel.text = R.string.localizable.dialog_progress_connect()
+        }
+    }
+
+    @objc func syncStatusChange(_ notification: Notification) {
+        guard WebSocketService.shared.connected, view?.isVisibleInScreen ?? false else {
+            return
+        }
+        guard let progress = notification.object as? Int else {
+            return
+        }
+        if progress >= 100 {
+            titleLabel.text = Localized.HOME_TITLE
+            connectingView.stopAnimating()
+            connectingView.isHidden = true
+        } else {
+            titleLabel.text = Localized.CONNECTION_HINT_PROGRESS(progress)
+            guard connectingView.isHidden else {
+                return
+            }
+            connectingView.startAnimating()
+            connectingView.isHidden = false
         }
     }
 

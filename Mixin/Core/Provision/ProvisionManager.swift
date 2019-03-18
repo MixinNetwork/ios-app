@@ -34,7 +34,8 @@ class ProvisionManager {
                         completion(false)
                     }
                 })
-            case .failure:
+            case .failure(let error):
+                alert(error.localizedDescription)
                 completion(false)
             }
         }

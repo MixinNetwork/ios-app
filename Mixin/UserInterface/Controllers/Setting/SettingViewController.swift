@@ -1,41 +1,94 @@
 import UIKit
 
-class SettingViewController: UITableViewController {
-
-    @IBOutlet weak var blockedUsersDetailLabel: UILabel!
-
+class SettingViewController: UIViewController {
+    
+    enum ReuseId {
+        static let cell = "setting"
+        static let footer = "footer"
+    }
+    
+    @IBOutlet weak var tableView: UITableView!
+    
+    private let blockedUsersIndexPath = IndexPath(row: 0, section: 0)
+    private let titles = [
+        [Localized.SETTING_BLOCKED,
+         Localized.SETTING_CONVERSATION],
+        [Localized.SETTING_NOTIFICATION,
+         Localized.SETTING_BACKUP_TITLE,
+         Localized.SETTING_STORAGE_USAGE],
+        [Localized.SETTING_DESKTOP],
+        [Localized.SETTING_AUTHORIZATIONS],
+        [Localized.SETTING_ABOUT]
+    ]
+    
+    private var numberOfBlockedUsers = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.register(UINib(nibName: "SettingCell", bundle: .main),
+                           forCellReuseIdentifier: ReuseId.cell)
+        tableView.register(SeparatorShadowFooterView.self,
+                           forHeaderFooterViewReuseIdentifier: ReuseId.footer)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.estimatedSectionFooterHeight = 10
+        tableView.sectionFooterHeight = UITableView.automaticDimension
         updateBlockedUserCell()
         NotificationCenter.default.addObserver(self, selector: #selector(updateBlockedUserCell), name: .UserDidChange, object: nil)
     }
-
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
+    
     @objc func updateBlockedUserCell() {
         DispatchQueue.global().async {
             let blocked = UserDAO.shared.getBlockUsers()
             DispatchQueue.main.async {
-                if blocked.count > 0 {
-                    self.blockedUsersDetailLabel.text = String(blocked.count) + Localized.SETTING_BLOCKED_USER_COUNT_SUFFIX
-                } else {
-                    self.blockedUsersDetailLabel.text = Localized.SETTING_BLOCKED_USER_COUNT_NONE
-                }
+                self.numberOfBlockedUsers = blocked.count
+                self.tableView.reloadRows(at: [self.blockedUsersIndexPath], with: .none)
             }
         }
     }
-
+    
     class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: Storyboard.setting.instantiateInitialViewController()!, title: Localized.SETTING_TITLE)
+        let vc = Storyboard.setting.instantiateInitialViewController()!
+        return ContainerViewController.instance(viewController: vc, title: Localized.SETTING_TITLE)
     }
+    
 }
 
-extension SettingViewController {
+extension SettingViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return titles[section].count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SettingCell
+        cell.titleLabel.text = titles[indexPath.section][indexPath.row]
+        if indexPath == blockedUsersIndexPath {
+            if numberOfBlockedUsers > 0 {
+                cell.subtitleLabel.text = String(numberOfBlockedUsers) + Localized.SETTING_BLOCKED_USER_COUNT_SUFFIX
+            } else {
+                cell.subtitleLabel.text = Localized.SETTING_BLOCKED_USER_COUNT_NONE
+            }
+            cell.subtitleLabel.isHidden = false
+        } else {
+            cell.subtitleLabel.isHidden = true
+        }
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return titles.count
+    }
+    
+}
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+extension SettingViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let vc: UIViewController
         switch indexPath.section {
@@ -64,16 +117,21 @@ extension SettingViewController {
         case 3:
             vc = AuthorizationsViewController.instance()
         default:
-            vc = AboutContainerViewController.instance()
+            vc = AboutViewController.instance()
         }
         navigationController?.pushViewController(vc, animated: true)
     }
-
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section == 0 ? Localized.SETTING_PRIVACY_AND_SECURITY_TITLE : nil
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
+        if section == 0 {
+            view.text = Localized.SETTING_PRIVACY_AND_SECURITY_SUMMARY
+        }
+        return view
     }
-
-    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return section == 0 ? Localized.SETTING_PRIVACY_AND_SECURITY_SUMMARY : nil
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
     }
+    
 }

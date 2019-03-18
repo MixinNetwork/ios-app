@@ -66,13 +66,13 @@ final class AssetAPI: BaseAPI {
     func transfer(assetId: String, opponentId: String, amount: String, memo: String, pin: String, traceId: String, completion: @escaping (APIResult<Snapshot>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "memo": memo, "pin": encryptedPin, "trace_id": traceId]
-            self?.request(method: .post, url: url.transfers, parameters: param, toastError: false, completion: completion)
+            self?.request(method: .post, url: url.transfers, parameters: param, completion: completion)
         }
     }
 
     func payments(assetId: String, opponentId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
         let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "trace_id": traceId]
-        request(method: .post, url: url.payments, parameters: param, toastError: false, completion: completion)
+        request(method: .post, url: url.payments, parameters: param, completion: completion)
     }
     
     func snapshots(opponentId: String) -> APIResult<[Snapshot]> {

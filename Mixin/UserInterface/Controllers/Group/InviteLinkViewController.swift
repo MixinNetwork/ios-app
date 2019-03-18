@@ -38,7 +38,7 @@ class InviteLinkViewController: UIViewController {
     
     @IBAction func copyLinkAction(_ sender: Any) {
         UIPasteboard.general.string = conversation.codeUrl
-        NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.TOAST_COPIED)
+        showHud(style: .notification, text: Localized.TOAST_COPIED)
     }
     
     @IBAction func qrCodeAction(_ sender: Any) {
@@ -66,7 +66,7 @@ extension InviteLinkViewController: ContainerViewControllerDelegate {
     }
 
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_titlebar_more")
+        return #imageLiteral(resourceName: "ic_more")
     }
 
     private func revokeLink() {
@@ -90,8 +90,8 @@ extension InviteLinkViewController: ContainerViewControllerDelegate {
                         weakSelf.updateUI()
                     }
                 }
-            case .failure:
-                break
+            case let .failure(error):
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }

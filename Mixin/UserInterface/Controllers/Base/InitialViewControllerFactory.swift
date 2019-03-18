@@ -17,16 +17,8 @@ func makeInitialViewController() -> UIViewController {
                 }
                 viewControllers = [ClockSkewViewController.instance()]
             }
-        } else if CommonUserDefault.shared.hasConversation {
-            viewControllers = [HomeViewController.instance()]
         } else {
-            if AccountAPI.shared.account?.has_pin ?? false {
-                viewControllers = [HomeViewController.instance(),
-                                   WalletViewController.instance()]
-            } else {
-                viewControllers = [HomeViewController.instance(),
-                                   WalletPasswordViewController.instance(walletPasswordType: .initPinStep1)]
-            }
+            viewControllers = [HomeViewController.instance()]
         }
         let navigationController = MixinNavigationController.instance()
         navigationController.setViewControllers(viewControllers, animated: false)

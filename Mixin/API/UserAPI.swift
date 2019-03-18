@@ -20,7 +20,7 @@ final class UserAPI: BaseAPI {
     }
 
     func codes(codeId: String, completion: @escaping (APIResult<QRCodeResponse>) -> Void) {
-        request(method: .get, url: url.codes(codeId: codeId), toastError: false, completion: completion)
+        request(method: .get, url: url.codes(codeId: codeId), completion: completion)
     }
 
     @discardableResult
@@ -42,7 +42,7 @@ final class UserAPI: BaseAPI {
     }
 
     func search(keyword: String, completion: @escaping (APIResult<UserResponse>) -> Void) {
-        request(method: .get, url: url.search(keyword: keyword), toastError: false, completion: completion)
+        request(method: .get, url: url.search(keyword: keyword), completion: completion)
     }
 
     func search(keyword: String) -> APIResult<UserResponse> {

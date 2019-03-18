@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -38,7 +38,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_tips_title"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_verify_title"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6WW-2l-hyM" userLabel="Line">
@@ -63,7 +63,7 @@
                                     <rect key="frame" x="0.0" y="60" width="375" height="70"/>
                                     <subviews>
                                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TpR-vA-U91" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="101" y="23" width="172" height="24"/>
+                                            <rect key="frame" x="101.5" y="23" width="172" height="24"/>
                                             <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="172" id="3E0-PH-B8p"/>
@@ -71,7 +71,7 @@
                                             </constraints>
                                         </view>
                                         <activityIndicatorView hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="MDX-Sf-jor">
-                                            <rect key="frame" x="171.5" y="19.5" width="32" height="32"/>
+                                            <rect key="frame" x="171.5" y="19" width="32" height="32"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="32" id="8Cf-4Q-OkS"/>
                                                 <constraint firstAttribute="width" constant="32" id="lPf-oN-GV9"/>
@@ -125,11 +125,11 @@
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_tips_description"/>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_remember_description"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZmO-65-Wbj">
-                                            <rect key="frame" x="168.5" y="22.5" width="38" height="30"/>
+                                            <rect key="frame" x="168.5" y="23" width="38" height="30"/>
                                             <state key="normal" title="Got It"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_got_it"/>

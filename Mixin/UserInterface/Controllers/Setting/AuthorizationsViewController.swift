@@ -65,7 +65,7 @@ extension AuthorizationsViewController {
             switch result {
             case .success(let response):
                 self?.load(authorizations: response)
-            case .failure(_):
+            case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     self?.reload()
                 })
@@ -81,6 +81,9 @@ extension AuthorizationsViewController {
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }
+        tableView.checkEmpty(dataCount: authorizations.count,
+                             text: Localized.SETTING_NO_AUTHORIZATIONS,
+                             photo: R.image.ic_no_authorization()!)
     }
     
     private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {

@@ -16,8 +16,7 @@ class DepositViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        container?.subtitleLabel.text = asset.symbol
-        container?.subtitleLabel.isHidden = false
+        container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
         let iconUrl = URL(string: asset.iconUrl)
         let chainIconUrl = URL(string: asset.chainIconUrl ?? "")
@@ -106,7 +105,7 @@ extension DepositViewController: ContainerViewControllerDelegate {
 extension DepositViewController: DepositFieldViewDelegate {
     
     func depositFieldViewDidCopyContent(_ view: DepositFieldView) {
-        navigationController?.showHud(style: .notification, text: Localized.TOAST_COPIED)
+        showHud(style: .notification, text: Localized.TOAST_COPIED)
     }
     
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView) {

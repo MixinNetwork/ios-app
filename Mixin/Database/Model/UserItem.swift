@@ -53,6 +53,13 @@ struct UserItem: BaseCodable {
         }
         return !appId.isEmpty
     }
+
+    var isSelfBot: Bool {
+        guard let appCreatorId = self.appCreatorId else {
+            return false
+        }
+        return appCreatorId == AccountAPI.shared.accountUserId
+    }
 }
 
 extension UserItem {
@@ -63,6 +70,10 @@ extension UserItem {
 
     static func createUser(from user: UserResponse) -> UserItem {
         return UserItem(userId: user.userId, fullName: user.fullName, identityNumber: user.identityNumber, avatarUrl: user.avatarUrl, phone: user.phone, isVerified: user.isVerified, muteUntil: user.muteUntil, appId: user.app?.appId, createdAt: user.createdAt, relationship: user.relationship.rawValue, role: "", appDescription: user.app?.description, appCreatorId: user.app?.creatorId)
+    }
+
+    static func createUser(from account: Account) -> UserItem {
+        return UserItem(userId: account.user_id, fullName: account.full_name, identityNumber: account.identity_number, avatarUrl: account.avatar_url, phone: account.phone, isVerified: false, muteUntil: nil, appId: nil, createdAt: account.created_at, relationship: "", role: "", appDescription: nil, appCreatorId: nil)
     }
 
 }

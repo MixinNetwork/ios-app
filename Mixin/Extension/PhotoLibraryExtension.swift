@@ -1,5 +1,4 @@
 import Photos
-import SwiftMessages
 
 extension PHPhotoLibrary {
 
@@ -36,9 +35,9 @@ extension PHPhotoLibrary {
         }, completionHandler: { (success, error) in
             DispatchQueue.main.async {
                 if success {
-                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_SUCCESS, backgroundColor: .hintGreen)
+                    showHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
                 } else {
-                    SwiftMessages.showToast(message: Localized.CAMERA_SAVE_PHOTO_FAILED, backgroundColor: .hintRed)
+                    showHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
                 }
             }
         })

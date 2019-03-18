@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,15 +18,20 @@
                 <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" image="ic_member_selected" translatesAutoresizingMaskIntoConstraints="NO" id="gRb-Al-S1d">
-                        <rect key="frame" x="15" y="11" width="20" height="20"/>
-                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zeM-fe-8RW" customClass="CheckmarkView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="8" y="14" width="16" height="16"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="16" id="9vU-Ju-fSM"/>
+                            <constraint firstAttribute="width" constant="16" id="s9A-Et-K8d"/>
+                        </constraints>
+                    </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Q1f-CZ-nJG">
-                        <rect key="frame" x="50" y="0.5" width="112" height="41.5"/>
+                        <rect key="frame" x="40" y="1.5" width="112" height="40.5"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cw4-vf-0RO">
-                                <rect key="frame" x="0.0" y="0.0" width="112" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <rect key="frame" x="0.0" y="0.0" width="112" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
@@ -34,8 +39,8 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+8613811821337" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ke7-iE-QeS">
-                                <rect key="frame" x="0.0" y="24.5" width="112" height="17"/>
-                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                <rect key="frame" x="0.0" y="23.5" width="112" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -43,21 +48,18 @@
                     </stackView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="gRb-Al-S1d" firstAttribute="centerY" secondItem="4sW-gF-15f" secondAttribute="centerY" id="Avm-EI-6QU"/>
-                    <constraint firstItem="gRb-Al-S1d" firstAttribute="leading" secondItem="4sW-gF-15f" secondAttribute="leading" constant="15" id="Znj-rG-HI1"/>
-                    <constraint firstItem="Q1f-CZ-nJG" firstAttribute="centerY" secondItem="gRb-Al-S1d" secondAttribute="centerY" id="n1q-yZ-Jjy"/>
-                    <constraint firstItem="Q1f-CZ-nJG" firstAttribute="leading" secondItem="gRb-Al-S1d" secondAttribute="trailing" constant="15" id="soB-2Y-QYu"/>
+                    <constraint firstItem="Q1f-CZ-nJG" firstAttribute="leading" secondItem="zeM-fe-8RW" secondAttribute="trailing" constant="16" id="8dX-dy-7WX"/>
+                    <constraint firstItem="zeM-fe-8RW" firstAttribute="centerY" secondItem="4sW-gF-15f" secondAttribute="centerY" id="F62-Tw-PFv"/>
+                    <constraint firstItem="Q1f-CZ-nJG" firstAttribute="centerY" secondItem="4sW-gF-15f" secondAttribute="centerY" id="kEp-v6-vei"/>
+                    <constraint firstItem="zeM-fe-8RW" firstAttribute="leading" secondItem="4sW-gF-15f" secondAttribute="leading" constant="8" id="sDH-1n-ZyN"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="checkmarkView" destination="zeM-fe-8RW" id="Uk5-ax-jIs"/>
                 <outlet property="descLabel" destination="Ke7-iE-QeS" id="6nm-ur-Cfr"/>
                 <outlet property="nameLabel" destination="Cw4-vf-0RO" id="aKN-zz-qAe"/>
-                <outlet property="selectionImageView" destination="gRb-Al-S1d" id="rHv-4d-8Il"/>
             </connections>
             <point key="canvasLocation" x="-50" y="89"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="ic_member_selected" width="20" height="20"/>
-    </resources>
 </document>

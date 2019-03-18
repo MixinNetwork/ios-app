@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MobileNumberViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="callingCodeButton" destination="feW-Xn-BjG" id="cVh-ep-3dy"/>
+                <outlet property="contentStackView" destination="VjS-KQ-3YO" id="6ca-fj-Sxf"/>
+                <outlet property="textField" destination="ldl-y9-A44" id="bgo-0O-ZMu"/>
+                <outlet property="titleWrapperStackView" destination="lf9-3G-bjO" id="Llv-7I-lzy"/>
+                <outlet property="view" destination="iN0-l3-epB" id="f2s-Z6-nBT"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="VjS-KQ-3YO">
+                    <rect key="frame" x="20" y="84" width="335" height="115.5"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lf9-3G-bjO">
+                            <rect key="frame" x="0.0" y="0.0" width="335" height="49.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your mobile number" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LNP-mw-tOn">
+                                    <rect key="frame" x="0.0" y="0.0" width="335" height="21.5"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="navigation_title_enter_mobile_number"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                            <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="28" right="0.0"/>
+                        </stackView>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kee-4C-667">
+                            <rect key="frame" x="0.0" y="61.5" width="335" height="54"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="nhz-3G-1O2">
+                                    <rect key="frame" x="18" y="0.0" width="299" height="54"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="feW-Xn-BjG">
+                                            <rect key="frame" x="0.0" y="0.0" width="56" height="54"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                            <inset key="imageEdgeInsets" minX="-12" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                            <state key="normal" title="+86" image="cn">
+                                                <color key="titleColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="selectCountryAction:" destination="-1" eventType="touchUpInside" id="XiB-00-64f"/>
+                                            </connections>
+                                        </button>
+                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="mobile number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ldl-y9-A44">
+                                            <rect key="frame" x="76" y="0.0" width="223" height="54"/>
+                                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <textInputTraits key="textInputTraits" keyboardType="phonePad" returnKeyType="send" textContentType="tel"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="placeholder_mobile_number"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="textFieldEditingChangedAction:" destination="-1" eventType="editingChanged" id="OQb-dM-DF0"/>
+                                            </connections>
+                                        </textField>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstItem="jG4-yd-Q6i" firstAttribute="bottom" secondItem="nhz-3G-1O2" secondAttribute="bottom" id="8O0-UJ-iXP"/>
+                                <constraint firstAttribute="height" constant="54" id="J7F-nt-xp3" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                            <real key="value" value="40"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
+                                <constraint firstItem="nhz-3G-1O2" firstAttribute="leading" secondItem="jG4-yd-Q6i" secondAttribute="leading" constant="18" id="lGA-hD-OFs"/>
+                                <constraint firstItem="jG4-yd-Q6i" firstAttribute="trailing" secondItem="nhz-3G-1O2" secondAttribute="trailing" constant="18" id="seL-Ea-doN"/>
+                                <constraint firstItem="nhz-3G-1O2" firstAttribute="top" secondItem="jG4-yd-Q6i" secondAttribute="top" id="wAg-w1-U4u"/>
+                            </constraints>
+                            <viewLayoutGuide key="safeArea" id="jG4-yd-Q6i"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="4"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="VjS-KQ-3YO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="64" id="EZC-Oe-Uyv" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                            <real key="value" value="52"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                            <real key="value" value="52"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="VjS-KQ-3YO" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="SnP-ZB-jXZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="VjS-KQ-3YO" secondAttribute="trailing" constant="20" id="lnS-vE-PYg"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="cn" width="20" height="15"/>
+    </resources>
+</document>

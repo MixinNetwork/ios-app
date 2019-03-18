@@ -1,28 +1,35 @@
 import Foundation
 import SDWebImage
-import SwiftMessages
+import MobileCoreServices
+import RSKImageCropper
+import Photos
 
 class UserView: CornerView {
 
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
+    @IBOutlet weak var relationWrapperView: UIView!
+    @IBOutlet weak var unblockButton: BusyButton!
+    @IBOutlet weak var addContactButton: BusyButton!
     @IBOutlet weak var descriptionScrollView: UIScrollView!
     @IBOutlet weak var descriptionLabel: CollapsingLabel!
-    @IBOutlet weak var addContactButton: BusyButton!
+    @IBOutlet weak var editNameButton: UIButton!
+    @IBOutlet weak var changeAvatarButton: UIButton!
     @IBOutlet weak var openAppButton: UIButton!
-    @IBOutlet weak var shareContactButton: UIButton!
+    @IBOutlet weak var transferButton: UIButton!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var moreButton: StateResponsiveButton!
-    @IBOutlet weak var developButton: CornerButton!
-    @IBOutlet weak var appPlaceView: UIView!
-
+    
+    @IBOutlet weak var showRelationWrapperDescriptionTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideRelationWrapperDescriptionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var descriptionScrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var descriptionScrollViewHeightConstraint: NSLayoutConstraint!
     
     private weak var superView: BottomSheetView?
     private var user: UserItem!
+    private var isMe = false
     private var appCreator: UserItem?
     private var relationship = ""
     private var conversationId: String {
@@ -36,6 +43,7 @@ class UserView: CornerView {
         vc.textFields?.first?.addTarget(self, action: #selector(alertInputChangedAction(_:)), for: .editingChanged)
         return vc
     }()
+    private lazy var avatarPicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: UIApplication.currentActivity()!, delegate: self)
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -56,7 +64,7 @@ class UserView: CornerView {
         fullnameLabel.text = user.fullName
         idLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
         verifiedImageView.isHidden = !user.isVerified
-        developButton.isHidden = true
+        isMe = user.userId == AccountAPI.shared.accountUserId
 
         if let creatorId = user.appCreatorId {
             DispatchQueue.global().async { [weak self] in
@@ -66,19 +74,11 @@ class UserView: CornerView {
                     case let .success(user):
                         UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                         creator = UserItem.createUser(from: user)
-                    case .failure:
-                        return
+                    case let .failure(error):
+                        showHud(style: .error, text: error.localizedDescription)
                     }
                 }
                 self?.appCreator = creator
-                if let creatorFullname = creator?.fullName {
-                    DispatchQueue.main.async {
-                        UIView.performWithoutAnimation {
-                            self?.developButton.setTitle(creatorFullname, for: .normal)
-                            self?.developButton.isHidden = false
-                        }
-                    }
-                }
             }
         }
 
@@ -98,49 +98,56 @@ class UserView: CornerView {
             descriptionScrollViewBottomConstraint.constant = 14
             descriptionScrollViewHeightConstraint.constant = descriptionLabel.intrinsicContentSize.height
             descriptionLabel.isHidden = false
-            developButton.isHidden = false
-            appPlaceView.isHidden = false
         } else {
             descriptionScrollViewBottomConstraint.constant = 8
             descriptionScrollViewHeightConstraint.constant = 0
             descriptionLabel.isHidden = true
-            developButton.isHidden = true
-            appPlaceView.isHidden = true
         }
 
-        if refreshUser {
-            UserAPI.shared.showUser(userId: user.userId) { [weak self](result) in
-                self?.handlerUpdateUser(result)
+        if isMe {
+            editNameButton.isHidden = false
+            changeAvatarButton.isHidden = false
+            transferButton.isHidden = true
+            addContactButton.isHidden = true
+            openAppButton.isHidden = true
+            sendButton.isHidden = true
+        } else {
+            editNameButton.isHidden = true
+            changeAvatarButton.isHidden = true
+            
+            if refreshUser {
+                UserAPI.shared.showUser(userId: user.userId) { [weak self](result) in
+                    self?.handlerUpdateUser(result)
+                }
             }
+
+            guard user.relationship != relationship else {
+                return
+            }
+            relationship = user.relationship
+            let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
+            let isStranger = user.relationship == Relationship.STRANGER.rawValue
+            
+            if isBlocked {
+                unblockButton.isHidden = false
+                addContactButton.isHidden = true
+                showRelationWrapperDescriptionTopConstraint.priority = .defaultHigh
+                hideRelationWrapperDescriptionTopConstraint.priority = .defaultLow
+            } else if isStranger {
+                unblockButton.isHidden = true
+                addContactButton.isHidden = false
+                showRelationWrapperDescriptionTopConstraint.priority = .defaultHigh
+                hideRelationWrapperDescriptionTopConstraint.priority = .defaultLow
+            } else {
+                unblockButton.isHidden = true
+                addContactButton.isHidden = true
+                showRelationWrapperDescriptionTopConstraint.priority = .defaultLow
+                hideRelationWrapperDescriptionTopConstraint.priority = .defaultHigh
+            }
+            
+            transferButton.isHidden = user.isBot
+            openAppButton.isHidden = !user.isBot
         }
-
-        guard user.relationship != relationship else {
-            return
-        }
-
-        relationship = user.relationship
-        let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
-        let isStranger = user.relationship == Relationship.STRANGER.rawValue
-        let canAddContact = !isStranger || isBlocked
-
-        addContactButton.isHidden = canAddContact
-        sendButton.isHidden = isBlocked
-        shareContactButton.isHidden = !canAddContact || user.isBot
-        openAppButton.isHidden = !canAddContact || !user.isBot
-    }
-
-    @IBAction func appCreatorAction(_ sender: Any) {
-        guard let creator = appCreator else {
-            return
-        }
-
-        guard user.appCreatorId != AccountAPI.shared.accountUserId else {
-            superView?.dismissPopupControllerAnimated()
-            UIApplication.rootNavigationController()?.pushViewController(MyProfileViewController.instance(), animated: true)
-            return
-        }
-
-        updateUser(user: creator, animated: true, superView: superView)
     }
 
     @IBAction func dismissAction(_ sender: Any) {
@@ -149,22 +156,41 @@ class UserView: CornerView {
 
     @IBAction func moreAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
-        let alc = UIAlertController(title: user.fullName, message: user.identityNumber, preferredStyle: .actionSheet)
+        let alc = UIAlertController(title: user.fullName, message: user.phone ?? user.identityNumber, preferredStyle: .actionSheet)
         if user.isBot {
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_OPEN_BOT, style: .default, handler: { [weak self](action) in
-                self?.openApp()
+            alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_DEVELOPER, style: .default, handler: { [weak self](action) in
+                self?.developerAction()
             }))
         }
-        alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
-            self?.shareAction(alc)
-        }))
-        alc.addAction(UIAlertAction(title: Localized.PROFILE_TRANSACTIONS, style: .default, handler: { [weak self](action) in
-            self?.transactionsAction()
-        }))
+        if isMe {
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
+                self?.editName()
+            }))
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_CHANGE_AVATAR, style: .default, handler: { [weak self](action) in
+                self?.changeProfilePhoto()
+            }))
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_CHANGE_NUMBER, style: .default, handler: { [weak self](action) in
+                self?.changeNumber()
+            }))
+        } else {
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
+                self?.shareAction()
+            }))
+
+            if user.isSelfBot {
+                alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_TRANSFER, style: .default, handler: { [weak self](action) in
+                    self?.transferAction(alc)
+                }))
+            }
+
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_TRANSACTIONS, style: .default, handler: { [weak self](action) in
+                self?.transactionsAction()
+            }))
+        }
         switch user.relationship {
         case Relationship.FRIEND.rawValue:
             alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
-                self?.editNameAction()
+                self?.editName()
             }))
             addMuteAlertAction(alc: alc)
             alc.addAction(UIAlertAction(title: Localized.PROFILE_REMOVE, style: .destructive, handler: { [weak self](action) in
@@ -210,15 +236,59 @@ class UserView: CornerView {
             superView.popupView = avatarPreviewImageView
         })
     }
-    
-    @IBAction func shareAction(_ sender: Any) {
+
+    func shareAction() {
         let vc = SendMessagePeerSelectionViewController.instance(content: .contact(user.userId))
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+    }
+    
+    @IBAction func transferAction(_ sender: Any) {
+        superView?.dismissPopupControllerAnimated()
+
+        let viewController: UIViewController
+        if AccountAPI.shared.account?.has_pin ?? false {
+            viewController = SendViewController.instance(asset: nil, type: .contact(user))
+        } else {
+            viewController = WalletPasswordViewController.instance(fromChat:  user)
+        }
+        UIApplication.rootNavigationController()?.pushViewController(viewController, animated: true)
     }
     
     @IBAction func openApp(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         openApp()
+    }
+
+    @IBAction func editMyNameAction(_ sender: Any) {
+        superView?.dismissPopupControllerAnimated()
+        editName()
+    }
+    
+    @IBAction func changeMyAvatarAction(_ sender: Any) {
+        superView?.dismissPopupControllerAnimated()
+        changeProfilePhoto()
+    }
+
+    private func developerAction() {
+        guard let creator = appCreator else {
+            return
+        }
+
+        if user.appCreatorId == AccountAPI.shared.accountUserId {
+            guard let account = AccountAPI.shared.account else {
+                return
+            }
+            updateUser(user: UserItem.createUser(from: account), animated: true, superView: superView)
+        } else {
+            updateUser(user: creator, animated: true, superView: superView)
+        }
+        superView?.presentView()
+    }
+    
+    private func changeNumber() {
+        let vc = R.storyboard.contact.verifyPin()!
+        let navigation = ChangeNumberNavigationController(rootViewController: vc)
+        UIApplication.rootNavigationController()?.present(navigation, animated: true, completion: nil)
     }
     
     private func openApp() {
@@ -252,12 +322,30 @@ class UserView: CornerView {
     }
 
     private func saveAliasNameAction() {
-        guard let aliasName = editAliasNameController.textFields?.first?.text, !aliasName.isEmpty else {
+        guard let newName = editAliasNameController.textFields?.first?.text, !newName.isEmpty else {
             return
         }
         showLoading()
-        UserAPI.shared.remarkFriend(userId: user.userId, full_name: aliasName) { [weak self](result) in
-            self?.handlerUpdateUser(result)
+        if isMe {
+            AccountAPI.shared.update(fullName: newName) { [weak self] (result) in
+                switch result {
+                case let .success(account):
+                    if let weakSelf = self {
+                        weakSelf.updateUser(user: UserItem.createUser(from: account), animated: true, refreshUser: false, superView: weakSelf.superView)
+                    }
+                    AccountAPI.shared.account = account
+                    DispatchQueue.global().async {
+                        UserDAO.shared.updateAccount(account: account)
+                    }
+                    showHud(style: .notification, text: Localized.TOAST_CHANGED)
+                case let .failure(error):
+                    showHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        } else {
+            UserAPI.shared.remarkFriend(userId: user.userId, full_name: newName) { [weak self](result) in
+                self?.handlerUpdateUser(result)
+            }
         }
     }
     
@@ -312,14 +400,14 @@ class UserView: CornerView {
                 } else {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
-                NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: toastMessage)
-            case .failure:
-                break
+                showHud(style: .notification, text: toastMessage)
+            case let .failure(error):
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }
 
-    private func editNameAction() {
+    private func editName() {
         editAliasNameController.textFields?.first?.text = user.fullName
         UIApplication.currentActivity()?.present(editAliasNameController, animated: true, completion: nil)
     }
@@ -331,15 +419,15 @@ class UserView: CornerView {
         })
     }
 
-    private func handlerUpdateUser(_ result: APIResult<UserResponse>, notifyContact: Bool = false, successBlock: (() -> Void)? = nil) {
+    private func handlerUpdateUser(_ result: APIResult<UserResponse>, notifyContact: Bool = false, completion: (() -> Void)? = nil) {
         switch result {
         case let .success(user):
             UserDAO.shared.updateUsers(users: [user], notifyContact: notifyContact)
             updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false, superView: superView)
-            successBlock?()
-        case .failure:
-            break
+        case let .failure(error):
+            showHud(style: .error, text: error.localizedDescription)
         }
+        completion?()
     }
     
     @IBAction func sendAction(_ sender: Any) {
@@ -356,12 +444,25 @@ class UserView: CornerView {
             return
         }
         addContactButton.isBusy = true
-        UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName, completion: { [weak self](result) in
-            self?.addContactButton.isBusy = false
-            self?.handlerUpdateUser(result, notifyContact: true)
+        UserAPI.shared.addFriend(userId: user.userId, full_name: user.fullName, completion: { [weak self] (result) in
+            self?.handlerUpdateUser(result, notifyContact: true, completion: {
+                self?.addContactButton.isBusy = false
+            })
         })
     }
-
+    
+    @IBAction func unblockAction(_ sender: Any) {
+        guard !unblockButton.isBusy else {
+            return
+        }
+        unblockButton.isBusy = true
+        UserAPI.shared.unblockUser(userId: user.userId) { [weak self] (result) in
+            self?.handlerUpdateUser(result, notifyContact: true, completion: {
+                self?.unblockButton.isBusy = false
+            })
+        }
+    }
+    
     private func showLoading() {
         NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
     }
@@ -399,4 +500,37 @@ extension UserView {
         
     }
     
+}
+
+extension UserView: ImagePickerControllerDelegate {
+
+    private func changeProfilePhoto() {
+        guard let viewController = UIApplication.currentActivity() else {
+            return
+        }
+        avatarPicker.viewController = viewController
+        avatarPicker.delegate = self
+        avatarPicker.present()
+    }
+
+    func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
+        guard let avatarBase64 = image.scaledToSize(newSize: CGSize(width: 1024, height: 1024)).base64 else {
+            UIApplication.currentActivity()?.alert(Localized.CONTACT_ERROR_COMPOSE_AVATAR)
+            return
+        }
+
+        AccountAPI.shared.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
+            switch result {
+            case let .success(account):
+                AccountAPI.shared.account = account
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateAccount(account: account)
+                }
+                showHud(style: .notification, text: Localized.TOAST_CHANGED)
+            case let .failure(error):
+                showHud(style: .error, text: error.localizedDescription)
+            }
+        })
+    }
+
 }

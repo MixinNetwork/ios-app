@@ -2,7 +2,7 @@ import UIKit
 
 class AddMemberViewController: UIViewController {
 
-    @IBOutlet weak var searchBoxView: LegacySearchBoxView!
+    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var participantsLabel: UILabel!
     @IBOutlet weak var nextButton: StateResponsiveButton!
@@ -77,8 +77,8 @@ class AddMemberViewController: UIViewController {
                 switch result {
                 case .success:
                     weakSelf.navigationController?.popViewController(animated: true)
-                case .failure:
-                    break
+                case let .failure(error):
+                    showHud(style: .error, text: error.localizedDescription)
                 }
             })
         } else {

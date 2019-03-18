@@ -1,6 +1,5 @@
 import UIKit
 import WebKit
-import SwiftMessages
 
 class ReCaptchaManager: NSObject {
     
@@ -37,7 +36,7 @@ class ReCaptchaManager: NSObject {
         self.requestingViewController = viewController
         self.completion = completion
         timer = Timer.scheduledTimer(withTimeInterval: timeoutInterval, repeats: false, block: { [weak self](_) in
-            SwiftMessages.showToast(message: Localized.TOAST_RECAPTCHA_TIMED_OUT, backgroundColor: .hintRed)
+            showHud(style: .error, text: Localized.TOAST_RECAPTCHA_TIMED_OUT)
             guard let weakSelf = self else {
                 return
             }

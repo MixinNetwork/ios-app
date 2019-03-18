@@ -4,8 +4,9 @@ import SDWebImage
 class ConversationCell: UITableViewCell {
 
     static let cellIdentifier = "cell_identifier_conversation"
+    static let height: CGFloat = 80
 
-    @IBOutlet weak var iconImageView: AvatarImageView!
+    @IBOutlet weak var avatarView: AvatarShadowIconView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var muteImageView: UIImageView!
@@ -16,16 +17,22 @@ class ConversationCell: UITableViewCell {
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var pinImageView: UIImageView!
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        selectedBackgroundView = UIView.createSelectedBackgroundView()
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
-        iconImageView?.sd_cancelCurrentImageLoad()
+        avatarView.prepareForReuse()
     }
 
     func render(item: ConversationItem) {
         if item.category == ConversationCategory.CONTACT.rawValue {
-            iconImageView.setImage(with: item.ownerAvatarUrl, identityNumber: item.ownerIdentityNumber, name: item.ownerFullName)
+            avatarView.setImage(with: item.ownerAvatarUrl, identityNumber: item.ownerIdentityNumber, name: item.ownerFullName)
         } else {
-            iconImageView.setGroupImage(with: item.iconUrl, conversationId: item.conversationId)
+            avatarView.setGroupImage(with: item.iconUrl, conversationId: item.conversationId)
         }
         nameLabel.text = item.getConversationName()
         timeLabel.text = item.createdAt.toUTCDate().timeAgo()
@@ -114,17 +121,17 @@ class ConversationCell: UITableViewCell {
                 }
             }
         }
-        
+
         if item.unseenMessageCount > 0 {
             unreadLabel.isHidden = false
             unreadLabel.text = "\(item.unseenMessageCount)"
             pinImageView.isHidden = true
+            muteImageView.isHidden = true
         } else {
             unreadLabel.isHidden = true
             pinImageView.isHidden = item.pinTime == nil
+            muteImageView.isHidden = !item.isMuted
         }
-
-        muteImageView.isHidden = !item.isMuted
     }
 
     private func showMessageIndicate(conversation: ConversationItem) {

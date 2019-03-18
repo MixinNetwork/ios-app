@@ -3,7 +3,7 @@ import Bugsnag
 
 class ClockSkewViewController: UIViewController {
 
-    @IBOutlet weak var continueAction: StateResponsiveButton!
+    @IBOutlet weak var continueButton: RoundedButton!
     @IBOutlet weak var tipsLabel: UILabel!
     
 
@@ -18,10 +18,10 @@ class ClockSkewViewController: UIViewController {
 
 
     @IBAction func continueAction(_ sender: Any) {
-        guard !continueAction.isBusy else {
+        guard !continueButton.isBusy else {
             return
         }
-        continueAction.isBusy = true
+        continueButton.isBusy = true
 
         AccountAPI.shared.me { [weak self](result) in
 
@@ -29,14 +29,18 @@ class ClockSkewViewController: UIViewController {
             case .success:
                 AccountUserDefault.shared.hasClockSkew = false
                 AppDelegate.current.window?.rootViewController = makeInitialViewController()
-            case .failure:
-                self?.continueAction.isBusy = false
+            case let .failure(error):
+                showHud(style: .error, text: error.localizedDescription)
+                self?.continueButton.isBusy = false
             }
         }
     }
 
     func checkFailed() {
-        continueAction.isBusy = false
+        guard continueButton != nil else {
+            return
+        }
+        continueButton.isBusy = false
         tipsLabel.shake()
     }
 

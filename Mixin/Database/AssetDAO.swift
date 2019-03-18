@@ -50,18 +50,14 @@ final class AssetDAO {
         return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQuery, inTransaction: false)
     }
 
-    func getAvailableAssetId(assetId: String?) -> AssetItem? {
-        var asset: AssetItem?
-        if let assetId = assetId {
-            asset = getAsset(assetId: assetId)
+    func getDefaultTransferAsset() -> AssetItem? {
+        if let assetId = WalletUserDefault.shared.defalutTransferAssetId, let asset = getAsset(assetId: assetId), asset.balance.doubleValue > 0 {
+            return asset
         }
-        if asset == nil || asset?.balance.doubleValue == 0 {
-            let availableAsset: AssetItem? = MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailable, inTransaction: false).first
-            if availableAsset != nil {
-                return availableAsset
-            }
+        if let availableAsset: AssetItem = MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailable, inTransaction: false).first {
+            return availableAsset
         }
-        return asset
+        return nil
     }
 
     func getAvailableAssets() -> [AssetItem] {

@@ -4,12 +4,14 @@ import SDWebImage
 class PeerCell: UITableViewCell {
     
     static let cellIdentifier = "cell_identifier_contact"
-    static let cellHeight: CGFloat = 60
+    static let cellHeight: CGFloat = 70
     
-    @IBOutlet weak var selectionImageView: UIImageView!
+    @IBOutlet weak var checkmarkView: CheckmarkView!
+    
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var identityImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var selectionView: UIStackView!
     
     @IBOutlet weak var contentStackViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentStackViewTrailingConstraint: NSLayoutConstraint!
@@ -32,30 +34,31 @@ class PeerCell: UITableViewCell {
     
     var supportsMultipleSelection = false {
         didSet {
-            selectionImageView.isHidden = !supportsMultipleSelection
+            selectionView.isHidden = !supportsMultipleSelection
             selectionStyle = supportsMultipleSelection ? .none : .blue
         }
     }
     
     private var forceSelected = false
-    
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        selectedBackgroundView = UIView.createSelectedBackgroundView()
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
         forceSelected = false
         iconImageView.sd_cancelCurrentImageLoad()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        separatorInset.left = nameLabel.convert(.zero, to: self).x
-    }
-    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if forceSelected {
-            selectionImageView.image = #imageLiteral(resourceName: "ic_member_disabled")
+            checkmarkView.status = .forceSelected
         } else {
-            selectionImageView.image = selected ? #imageLiteral(resourceName: "ic_member_selected") : #imageLiteral(resourceName: "ic_member_not_selected")
+            checkmarkView.status = selected ? .selected : .unselected
         }
     }
     

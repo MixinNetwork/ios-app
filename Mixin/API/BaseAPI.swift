@@ -120,7 +120,7 @@ class BaseAPI {
     }
 
     @discardableResult
-    func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, toastError: Bool = true, retry: Bool = false, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
+    func request<ResultType>(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding, checkLogin: Bool = true, retry: Bool = false, completion: @escaping (APIResult<ResultType>) -> Void) -> Request? {
         if checkLogin && !AccountAPI.shared.didLogin {
             return nil
         }
@@ -138,7 +138,7 @@ class BaseAPI {
                             FileManager.default.writeLog(log: "BaseAPI...async request...clock skew...serverTime:\(serverTime / 1000000000)...clientTime:\(clientTime)...requestTime:\(requestTime)...retry:\(retry)")
 
                             if clientTime - requestTime.timeIntervalSince1970 > 60 {
-                                self.request(method: method, url: url, parameters: parameters, encoding: encoding, checkLogin: checkLogin, toastError: toastError, retry: true, completion: completion)
+                                self.request(method: method, url: url, parameters: parameters, encoding: encoding, checkLogin: checkLogin, retry: true, completion: completion)
                                 return
                             } else {
                                 if abs(serverTime / 1000000000 - clientTime) > 300 {
@@ -159,9 +159,7 @@ class BaseAPI {
                             return
                         }
                     default:
-                        if toastError {
-                            NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: error.localizedDescription)
-                        }
+                        break
                     }
                     completion(.failure(error))
                 }

@@ -54,12 +54,15 @@ class WalletViewController: UIViewController {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
     }
-    
-    @IBAction func backAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
 
-    @IBAction func moreAction(_ sender: Any) {
+    class func instance() -> UIViewController {
+        return ContainerViewController.instance(viewController: Storyboard.wallet.instantiateInitialViewController()!, title: Localized.WALLET_TITLE)
+    }
+}
+
+extension WalletViewController: ContainerViewControllerDelegate {
+
+    func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.WALLET_TITLE_ADD_ASSET, style: .default, handler: { [weak self](_) in
             self?.navigationController?.pushViewController(AddAssetViewController.instance(), animated: true)
@@ -77,19 +80,8 @@ class WalletViewController: UIViewController {
         self.present(alc, animated: true, completion: nil)
     }
 
-    class func instance() -> UIViewController {
-        return Storyboard.wallet.instantiateInitialViewController()!
-    }
-}
-
-extension WalletViewController: MixinNavigationAnimating {
-    
-    var pushAnimation: MixinNavigationPushAnimation {
-        return .reversedPush
-    }
-    
-    var popAnimation: MixinNavigationPopAnimation {
-        return .reversedPop
+    func imageBarRightButton() -> UIImage? {
+        return R.image.ic_title_more()
     }
 
 }

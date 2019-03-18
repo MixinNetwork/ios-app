@@ -1,22 +1,23 @@
 import UIKit
+import Bugsnag
 
-class UsernameViewController: LoginViewController {
-
-    @IBOutlet weak var usernameTextField: UITextField!
-
+class UsernameViewController: ContinueButtonViewController {
+    
+    @IBOutlet weak var contentStackView: UIStackView!
+    @IBOutlet weak var textField: UITextField!
+    
     private var username: String {
-        return usernameTextField.text ?? ""
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        usernameTextField.text = defaultUsername()
-        usernameTextField.becomeFirstResponder()
-        updateContinueButtonStatusAction(self)
+        return textField.text ?? ""
     }
     
-    @IBAction func updateContinueButtonStatusAction(_ sender: Any) {
-        continueButton.isEnabled = !username.isEmpty
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if ScreenSize.current == .inch3_5 {
+            contentStackView.spacing = 30
+        }
+        textField.text = defaultUsername()
+        textField.becomeFirstResponder()
+        updateContinueButtonStatusAction(self)
     }
     
     override func continueAction(_ sender: Any) {
@@ -33,12 +34,17 @@ class UsernameViewController: LoginViewController {
                     UserDAO.shared.updateAccount(account: account)
                 }
                 AppDelegate.current.window?.rootViewController = makeInitialViewController()
-            case .failure:
-                break
+            case let .failure(error):
+                Bugsnag.notifyError(error)
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }
-
+    
+    @IBAction func updateContinueButtonStatusAction(_ sender: Any) {
+        continueButton.isHidden = username.isEmpty
+    }
+    
     private func defaultUsername() -> String? {
         let name = UIDevice.current.name
         let deviceName: String
@@ -70,10 +76,6 @@ class UsernameViewController: LoginViewController {
             }
         }
         return nil
-    }
-    
-    static func instance() -> UsernameViewController {
-        return Storyboard.login.instantiateViewController(withIdentifier: "Username") as! UsernameViewController
     }
     
 }

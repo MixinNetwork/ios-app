@@ -27,10 +27,10 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="i2P-VJ-bue">
-                        <rect key="frame" x="80" y="20" width="304" height="39.5"/>
+                        <rect key="frame" x="80" y="20" width="314" height="39.5"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="2w0-tw-QvV">
-                                <rect key="frame" x="0.0" y="0.0" width="304" height="21"/>
+                                <rect key="frame" x="0.0" y="0.0" width="314" height="21"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="1.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYd-p5-0iv" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="2" width="18" height="19"/>
@@ -40,14 +40,14 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ks7-rU-07m" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="19" y="4.5" width="237" height="14.5"/>
+                                        <rect key="frame" x="19" y="4.5" width="247" height="14.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="12.06%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="esD-bh-haj" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="257" y="3" width="47" height="17"/>
+                                        <rect key="frame" x="267" y="3" width="47" height="17"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="0.16078431369999999" green="0.74509803919999995" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -58,17 +58,17 @@
                                 <edgeInsets key="layoutMargins" top="2" left="0.0" bottom="0.0" right="0.0"/>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="56" translatesAutoresizingMaskIntoConstraints="NO" id="5U6-IY-Kfr">
-                                <rect key="frame" x="0.0" y="25" width="304" height="14.5"/>
+                                <rect key="frame" x="0.0" y="25" width="314" height="14.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="$717.89" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gzb-Zt-1Oo">
-                                        <rect key="frame" x="0.0" y="0.0" width="192.5" height="14.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="202.5" height="14.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="≈ $717.89" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XoA-aw-3R3">
-                                        <rect key="frame" x="248.5" y="0.0" width="55.5" height="14.5"/>
+                                        <rect key="frame" x="258.5" y="0.0" width="55.5" height="14.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
@@ -81,7 +81,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </stackView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N/A" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g77-7K-eGQ">
-                        <rect key="frame" x="360" y="20" width="24" height="39.5"/>
+                        <rect key="frame" x="370" y="20" width="24" height="39.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -94,7 +94,7 @@
                 <constraints>
                     <constraint firstItem="LEC-GX-KUU" firstAttribute="leading" secondItem="Dru-hH-vAR" secondAttribute="leading" constant="20" id="BmF-lD-5rv"/>
                     <constraint firstItem="g77-7K-eGQ" firstAttribute="bottom" secondItem="i2P-VJ-bue" secondAttribute="bottom" id="UAI-4r-Gj3"/>
-                    <constraint firstAttribute="trailing" secondItem="i2P-VJ-bue" secondAttribute="trailing" constant="30" id="YtI-HT-vm4"/>
+                    <constraint firstAttribute="trailing" secondItem="i2P-VJ-bue" secondAttribute="trailing" constant="20" id="YtI-HT-vm4"/>
                     <constraint firstItem="i2P-VJ-bue" firstAttribute="leading" secondItem="LEC-GX-KUU" secondAttribute="trailing" constant="16" id="eCS-K0-dee"/>
                     <constraint firstItem="g77-7K-eGQ" firstAttribute="top" secondItem="i2P-VJ-bue" secondAttribute="top" id="ebp-bc-v1i"/>
                     <constraint firstItem="g77-7K-eGQ" firstAttribute="trailing" secondItem="i2P-VJ-bue" secondAttribute="trailing" id="pCD-Rd-oSO"/>

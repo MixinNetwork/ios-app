@@ -27,7 +27,7 @@ class PinField: UIControl, UITextInputTraits {
     }
     
     @IBInspectable
-    var cellLength: CGFloat = 12 {
+    var cellLength: CGFloat = 10 {
         didSet {
             setupSubviews()
             setNeedsLayout()
@@ -149,7 +149,7 @@ class PinField: UIControl, UITextInputTraits {
             ring.path = CGPath(ellipseIn: rect, transform: nil)
             ring.strokeColor = tintColor.cgColor
             ring.fillColor = UIColor.clear.cgColor
-            ring.lineWidth = 2
+            ring.lineWidth = 1
             empty.append(ring)
             let dot = CALayer()
             dot.cornerRadius = cellLength / 2

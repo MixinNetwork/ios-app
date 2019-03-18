@@ -1,47 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BottomWrapperView" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="continueButton" destination="AI2-5B-vjP" id="yOv-uc-tGV"/>
-                <outlet property="leftButton" destination="ZBh-L6-hxR" id="rrY-yA-f8w"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZBh-L6-hxR" customClass="CountDownButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="30" height="60"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="color" keyPath="enabledColor">
-                            <color key="value" red="0.098039215690000001" green="0.76078431369999999" blue="0.99215686270000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="color" keyPath="disabledColor">
-                            <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </button>
-                <button opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="60" placeholderIntrinsicHeight="60" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI2-5B-vjP" customClass="LoginContinueButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="315" y="0.0" width="60" height="60"/>
-                    <color key="backgroundColor" red="0.098039215690000001" green="0.76078431369999999" blue="0.99215686270000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                <button opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="44" placeholderIntrinsicHeight="44" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI2-5B-vjP" customClass="LoginContinueButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="331" y="0.0" width="44" height="44"/>
+                    <color key="backgroundColor" red="0.22352941176470587" green="0.49411764705882355" blue="0.89411764705882346" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <inset key="contentEdgeInsets" minX="2" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" image="ic_next"/>
+                    <state key="normal" image="ic_login_continue"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="color" keyPath="disabledColor">
                             <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="30"/>
+                            <integer key="value" value="22"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </button>
@@ -50,10 +38,6 @@
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="AI2-5B-vjP" secondAttribute="bottom" id="A26-di-MCO"/>
                 <constraint firstItem="AI2-5B-vjP" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="EwP-vS-cjZ"/>
-                <constraint firstItem="ZBh-L6-hxR" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Iij-kS-6f2"/>
-                <constraint firstAttribute="bottom" secondItem="ZBh-L6-hxR" secondAttribute="bottom" id="JJQ-UG-BJU"/>
-                <constraint firstItem="ZBh-L6-hxR" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="cJJ-Ps-uvG"/>
-                <constraint firstItem="AI2-5B-vjP" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ZBh-L6-hxR" secondAttribute="trailing" constant="8" id="gZt-0J-CRX"/>
                 <constraint firstAttribute="trailing" secondItem="AI2-5B-vjP" secondAttribute="trailing" id="vff-jl-qJg"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -61,6 +45,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_next" width="13" height="24"/>
+        <image name="ic_login_continue" width="11" height="20"/>
     </resources>
 </document>

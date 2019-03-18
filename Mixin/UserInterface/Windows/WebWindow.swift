@@ -2,7 +2,6 @@ import Foundation
 import WebKit
 import Photos
 import UIKit.UIGestureRecognizerSubclass
-import SwiftMessages
 
 class WebWindow: BottomSheetView {
 
@@ -280,7 +279,7 @@ extension WebWindow {
                 if qrcodeUrl != nil {
                     alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
                         if !UrlWindow.checkUrl(url: qrcodeUrl, clearNavigationStack: false) {
-                            SwiftMessages.showToast(message: Localized.NOT_MIXIN_QR_CODE, backgroundColor: .hintRed)
+                            showHud(style: .error, text: Localized.NOT_MIXIN_QR_CODE)
                         }
                     }))
                 }

@@ -13,7 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="8ZX-DU-9oC" customClass="GroupView" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="385" height="414"/>
+            <rect key="frame" x="0.0" y="0.0" width="385" height="417"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5N-nU-0Nd">
@@ -40,25 +40,48 @@
                     </userDefinedRuntimeAttributes>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="eCR-rs-Cgf">
-                    <rect key="frame" x="30" y="170" width="325" height="77"/>
+                    <rect key="frame" x="30" y="170" width="325" height="43"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Mixin Team" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYa-yc-XuN">
                             <rect key="frame" x="0.0" y="0.0" width="325" height="24"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                            <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 Group memebers" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wV3-wM-YUi">
-                            <rect key="frame" x="0.0" y="26" width="325" height="51"/>
+                            <rect key="frame" x="0.0" y="26" width="325" height="17"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                 </stackView>
+                <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1G1-dY-80a" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="136.5" y="225" width="112" height="28"/>
+                    <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="106" id="Qr4-C5-yhg"/>
+                        <constraint firstAttribute="height" constant="28" id="f73-y1-V8C"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <inset key="contentEdgeInsets" minX="23" minY="0.0" maxX="19" maxY="0.0"/>
+                    <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    <state key="normal" title="Join group" image="ic_profile_add">
+                        <color key="titleColor" red="0.22352941179999999" green="0.4941176471" blue="0.89411764709999997" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="14"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="group_button_title_join"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="joinAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="oBg-AI-nx3"/>
+                    </connections>
+                </button>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z1B-ee-Nrm">
-                    <rect key="frame" x="30" y="262" width="325" height="60"/>
+                    <rect key="frame" x="30" y="265" width="325" height="60"/>
                     <subviews>
                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="f3U-ow-eCY" customClass="CollapsingLabel" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="6" y="0.0" width="313" height="128"/>
@@ -76,7 +99,7 @@
                     </constraints>
                 </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gUD-L0-6L5">
-                    <rect key="frame" x="67" y="330" width="251" height="68"/>
+                    <rect key="frame" x="67" y="333" width="251" height="68"/>
                     <subviews>
                         <stackView contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vaq-c9-RoT">
                             <rect key="frame" x="0.0" y="0.0" width="251" height="68"/>
@@ -111,22 +134,9 @@
                                 <constraint firstAttribute="height" constant="68" id="LuA-I8-3Ev"/>
                             </constraints>
                         </stackView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QMv-Y9-3eD" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="103.5" y="12" width="44" height="44"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="44" id="Zln-Ck-htt"/>
-                                <constraint firstAttribute="width" secondItem="QMv-Y9-3eD" secondAttribute="height" id="chD-vY-y8f"/>
-                            </constraints>
-                            <state key="normal" image="ic_join_group"/>
-                            <connections>
-                                <action selector="joinAction:" destination="8ZX-DU-9oC" eventType="touchUpInside" id="g7B-qj-rRF"/>
-                            </connections>
-                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="QMv-Y9-3eD" firstAttribute="centerX" secondItem="gUD-L0-6L5" secondAttribute="centerX" id="6EO-rS-3w1"/>
-                        <constraint firstItem="QMv-Y9-3eD" firstAttribute="centerY" secondItem="gUD-L0-6L5" secondAttribute="centerY" id="UWQ-XV-bgk"/>
                         <constraint firstItem="vaq-c9-RoT" firstAttribute="leading" secondItem="gUD-L0-6L5" secondAttribute="leading" id="aif-Yn-ypa"/>
                         <constraint firstAttribute="trailing" secondItem="vaq-c9-RoT" secondAttribute="trailing" id="hT0-gk-Zhp"/>
                         <constraint firstItem="vaq-c9-RoT" firstAttribute="top" secondItem="gUD-L0-6L5" secondAttribute="top" id="jiI-9c-1WW"/>
@@ -140,13 +150,17 @@
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="gUD-L0-6L5" secondAttribute="trailing" constant="67" id="0Xm-PQ-CSo"/>
                 <constraint firstItem="gUD-L0-6L5" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="67" id="Bqq-ET-04g"/>
                 <constraint firstAttribute="trailing" secondItem="X5N-nU-0Nd" secondAttribute="trailing" id="BwR-XZ-F0G"/>
-                <constraint firstItem="gUD-L0-6L5" firstAttribute="top" secondItem="Z1B-ee-Nrm" secondAttribute="bottom" constant="8" id="CiF-fe-qst"/>
+                <constraint firstItem="gUD-L0-6L5" firstAttribute="top" secondItem="Z1B-ee-Nrm" secondAttribute="bottom" priority="750" constant="8" id="CiF-fe-qst"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="eCR-rs-Cgf" secondAttribute="trailing" constant="30" id="GkJ-hx-6BK"/>
                 <constraint firstItem="Z1B-ee-Nrm" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="30" id="Oe1-nc-g2q"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="centerX" secondItem="8ZX-DU-9oC" secondAttribute="centerX" id="Qke-oC-sSP"/>
                 <constraint firstItem="9f1-By-myT" firstAttribute="top" secondItem="8ZX-DU-9oC" secondAttribute="top" constant="70" id="URV-eq-6C8"/>
+                <constraint firstItem="Z1B-ee-Nrm" firstAttribute="top" secondItem="1G1-dY-80a" secondAttribute="bottom" priority="750" constant="12" id="Ve6-42-JVa"/>
+                <constraint firstItem="1G1-dY-80a" firstAttribute="centerX" secondItem="Zlp-75-Ixx" secondAttribute="centerX" id="Yr9-EJ-v8b"/>
+                <constraint firstItem="Zlp-75-Ixx" firstAttribute="bottom" secondItem="Z1B-ee-Nrm" secondAttribute="bottom" priority="250" constant="36" id="ZaA-5V-gWC"/>
                 <constraint firstItem="X5N-nU-0Nd" firstAttribute="top" secondItem="Zlp-75-Ixx" secondAttribute="top" id="aLU-C3-Lwg"/>
-                <constraint firstItem="Z1B-ee-Nrm" firstAttribute="top" secondItem="eCR-rs-Cgf" secondAttribute="bottom" constant="15" id="gLc-Kc-O4n"/>
+                <constraint firstItem="1G1-dY-80a" firstAttribute="top" secondItem="eCR-rs-Cgf" secondAttribute="bottom" constant="12" id="fjU-xq-N84"/>
+                <constraint firstItem="Z1B-ee-Nrm" firstAttribute="top" secondItem="eCR-rs-Cgf" secondAttribute="bottom" priority="250" constant="15" id="gLc-Kc-O4n"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="trailing" secondItem="Z1B-ee-Nrm" secondAttribute="trailing" constant="30" id="h7K-uj-Wua"/>
                 <constraint firstItem="Zlp-75-Ixx" firstAttribute="bottom" secondItem="gUD-L0-6L5" secondAttribute="bottom" constant="16" id="krg-ed-TxZ"/>
                 <constraint firstItem="eCR-rs-Cgf" firstAttribute="leading" secondItem="Zlp-75-Ixx" secondAttribute="leading" constant="30" id="lYa-z0-7lf"/>
@@ -168,21 +182,25 @@
                 <outlet property="announcementScrollViewTopConstraint" destination="gLc-Kc-O4n" id="Fl8-QU-eIO"/>
                 <outlet property="avatarImageView" destination="9f1-By-myT" id="sUK-Xm-k0M"/>
                 <outlet property="groupMembersLabel" destination="wV3-wM-YUi" id="EUO-TT-N7E"/>
-                <outlet property="inGroupActionsStackView" destination="vaq-c9-RoT" id="AMc-tl-75e"/>
-                <outlet property="joinButton" destination="QMv-Y9-3eD" id="nj8-xC-bod"/>
+                <outlet property="hideInGroupActionsConstraint" destination="ZaA-5V-gWC" id="Ieg-x9-CU8"/>
+                <outlet property="hideJoinGroupConstraint" destination="gLc-Kc-O4n" id="Kru-Rt-rEb"/>
+                <outlet property="inGroupActionsView" destination="gUD-L0-6L5" id="Ueh-rG-nh3"/>
+                <outlet property="joinButton" destination="1G1-dY-80a" id="L9X-mf-1z0"/>
                 <outlet property="moreButton" destination="UMD-Uz-cTl" id="QaD-8K-AjD"/>
                 <outlet property="nameLabel" destination="yYa-yc-XuN" id="dX8-YV-ciM"/>
+                <outlet property="showInGroupActionsConstraint" destination="CiF-fe-qst" id="oi4-UU-D4z"/>
+                <outlet property="showJoinGroupConstraint" destination="Ve6-42-JVa" id="9m3-qi-rt2"/>
                 <outlet property="viewButton" destination="gqf-oP-J5h" id="qm9-f6-JI7"/>
             </connections>
-            <point key="canvasLocation" x="37.600000000000001" y="-190.70464767616193"/>
+            <point key="canvasLocation" x="37.600000000000001" y="-189.3553223388306"/>
         </view>
     </objects>
     <resources>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_group_member" width="30" height="24"/>
-        <image name="ic_join_group" width="30" height="30"/>
         <image name="ic_more" width="30" height="30"/>
         <image name="ic_place_holder" width="38" height="38"/>
+        <image name="ic_profile_add" width="9" height="9"/>
         <image name="ic_send_msg" width="30" height="30"/>
     </resources>
 </document>

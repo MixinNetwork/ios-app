@@ -35,7 +35,6 @@ class AddAssetViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        container?.separatorLineView.backgroundColor = UIColor(rgbValue: 0xF3F3F3)
         textField.delegate = self
         textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
         textField.returnKeyType = .search
@@ -178,7 +177,7 @@ extension AddAssetViewController: ContainerViewControllerDelegate {
             AssetDAO.shared.insertOrUpdateAssets(assets: assets)
             DispatchQueue.main.async {
                 navigationController?.popViewController(animated: true)
-                navigationController?.showHud(style: .notification, text: Localized.TOAST_SAVED)
+                showHud(style: .notification, text: Localized.TOAST_SAVED)
             }
         }
     }
@@ -186,7 +185,7 @@ extension AddAssetViewController: ContainerViewControllerDelegate {
     func prepareBar(rightButton: StateResponsiveButton) {
         rightButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         rightButton.setTitleColor(.theme, for: .normal)
-        rightButton.setTitleColor(UIColor(rgbValue: 0xBBBEC3), for: .disabled)
+        rightButton.setTitleColor(.accessoryText, for: .disabled)
     }
     
     func textBarRightButton() -> String? {

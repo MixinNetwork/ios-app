@@ -1,6 +1,6 @@
 import UIKit
 
-class StickersCollectionViewController: UIViewController {
+class StickersCollectionViewController: UIViewController, ConversationAccessible {
     
     let cellReuseId = "StickerCell"
     
@@ -22,10 +22,6 @@ class StickersCollectionViewController: UIViewController {
         return true
     }
     
-    var conversationViewController: ConversationViewController? {
-        return parent?.parent?.parent as? ConversationViewController
-    }
-    
     var animated: Bool = false {
         didSet {
             for case let cell as AnimatedImageCollectionViewCell in collectionView.visibleCells {
@@ -43,14 +39,15 @@ class StickersCollectionViewController: UIViewController {
         let frame = CGRect(x: 0, y: 0, width: 375, height: 200)
         let layout = layoutClass.init(numberOfItemsPerRow: StickerInputModelController.numberOfItemsPerRow, spacing: 8)
         let view = UICollectionView(frame: frame, collectionViewLayout: layout)
-        view.showsHorizontalScrollIndicator = false
-        view.showsVerticalScrollIndicator = false
-        view.backgroundColor = .white
         self.view = view
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = .white
+        collectionView.alwaysBounceVertical = true
         collectionView.register(AnimatedImageCollectionViewCell.self, forCellWithReuseIdentifier: cellReuseId)
         collectionView.dataSource = self
         collectionView.delegate = self

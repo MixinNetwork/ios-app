@@ -68,8 +68,20 @@ class AssetViewController: UIViewController {
     }
     
     @IBAction func transfer(_ sender: Any) {
-        let vc = TransferPeerSelectionViewController.instance(asset: asset)
-        navigationController?.pushViewController(vc, animated: true)
+        guard let asset = self.asset else {
+            return
+        }
+        let alc = UIAlertController(title: Localized.ACTION_SEND_TO, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_CONTACT, style: .default, handler: { [weak self] (_) in
+            let vc = SendContactSelectionViewController.instance(asset: asset)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }))
+        alc.addAction(UIAlertAction(title: Localized.WALLET_ADDRESS, style: .default, handler: { [weak self](_) in
+            let vc = AddressViewController.instance(asset: asset)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        self.present(alc, animated: true, completion: nil)
     }
     
     @IBAction func deposit(_ sender: Any) {
@@ -100,10 +112,6 @@ extension AssetViewController: ContainerViewControllerDelegate {
     func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let asset = self.asset!
-        alc.addAction(UIAlertAction(title: Localized.WALLET_MENU_WITHDRAW, style: .default, handler: { [weak self] (_) in
-            let vc = WithdrawalViewController.instance(asset: asset)
-            self?.navigationController?.pushViewController(vc, animated: true)
-        }))
         let toggleAssetHiddenTitle = WalletUserDefault.shared.hiddenAssets[asset.assetId] == nil ? Localized.WALLET_MENU_HIDE_ASSET : Localized.WALLET_MENU_SHOW_ASSET
         alc.addAction(UIAlertAction(title: toggleAssetHiddenTitle, style: .default, handler: { [weak self](_) in
             guard let weakSelf = self else {
@@ -122,7 +130,7 @@ extension AssetViewController: ContainerViewControllerDelegate {
     }
     
     func imageBarRightButton() -> UIImage? {
-        return #imageLiteral(resourceName: "ic_titlebar_more")
+        return #imageLiteral(resourceName: "ic_more")
     }
     
 }

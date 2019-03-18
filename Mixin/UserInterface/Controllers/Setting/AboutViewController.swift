@@ -1,21 +1,20 @@
 import UIKit
 
 class AboutViewController: UITableViewController {
-
+    
+    class func instance() -> UIViewController {
+        let vc = R.storyboard.setting.about()!
+        return ContainerViewController.instance(viewController: vc, title: "")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         tableView.tableFooterView = UIView()
     }
-
-}
-
-extension AboutViewController {
-
-
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: indexPath.row > 0)
-
+        
         switch indexPath.row {
         case 1:
             UIApplication.shared.openURL(url: "https://twitter.com/MixinMessenger")
@@ -32,7 +31,7 @@ extension AboutViewController {
         default:
             break
         }
-
+        
     }
-
+    
 }

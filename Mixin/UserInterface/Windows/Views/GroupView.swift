@@ -1,6 +1,5 @@
 import UIKit
 import Alamofire
-import SwiftMessages
 
 class GroupView: CornerView {
     
@@ -11,9 +10,13 @@ class GroupView: CornerView {
     @IBOutlet weak var announcementLabel: CollapsingLabel!
     @IBOutlet weak var viewButton: StateResponsiveButton!
     @IBOutlet weak var moreButton: StateResponsiveButton!
-    @IBOutlet weak var inGroupActionsStackView: UIStackView!
+    @IBOutlet weak var inGroupActionsView: UIView!
     @IBOutlet weak var joinButton: BusyButton!
     
+    @IBOutlet weak var showJoinGroupConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideJoinGroupConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showInGroupActionsConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideInGroupActionsConstraint: NSLayoutConstraint!
     @IBOutlet weak var announcementScrollViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var announcementScrollViewHeightConstraint: NSLayoutConstraint!
     
@@ -69,8 +72,19 @@ class GroupView: CornerView {
     }
 
     private func renderConversation(alreadyInTheGroup: Bool) {
-        inGroupActionsStackView.isHidden = !alreadyInTheGroup
+        inGroupActionsView.isHidden = !alreadyInTheGroup
         joinButton.isHidden = alreadyInTheGroup
+        if alreadyInTheGroup {
+            showJoinGroupConstraint.priority = .defaultLow
+            hideJoinGroupConstraint.priority = .defaultHigh
+            showInGroupActionsConstraint.priority = .defaultHigh
+            hideInGroupActionsConstraint.priority = .defaultLow
+        } else {
+            showJoinGroupConstraint.priority = .defaultHigh
+            hideJoinGroupConstraint.priority = .defaultLow
+            showInGroupActionsConstraint.priority = .defaultLow
+            hideInGroupActionsConstraint.priority = .defaultHigh
+        }
         moreButton.isHidden = !alreadyInTheGroup
         viewButton.isHidden = !alreadyInTheGroup
         
@@ -153,7 +167,7 @@ class GroupView: CornerView {
                 weakSelf.saveConversation(conversation: response)
             case let .failure(error):
                 weakSelf.joinButton.isBusy = false
-                SwiftMessages.showToast(message: error.localizedDescription, backgroundColor: .hintRed)
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -212,7 +226,9 @@ extension GroupView {
         let conversationId = conversation.conversationId
         DispatchQueue.global().async {
             MessageDAO.shared.clearChat(conversationId: conversationId)
-            NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: Localized.GROUP_CLEAR_SUCCESS)
+            DispatchQueue.main.async {
+                showHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
+            }
         }
     }
 
@@ -260,9 +276,9 @@ extension GroupView {
                 } else {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
-                NotificationCenter.default.postOnMain(name: .ToastMessageDidAppear, object: toastMessage)
-            case .failure:
-                break
+                showHud(style: .notification, text: toastMessage)
+            case let .failure(error):
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -276,8 +292,8 @@ extension GroupView {
             switch result {
             case .success:
                 weakSelf.conversation.name = weakSelf.newName
-            case .failure:
-                break
+            case let .failure(error):
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }

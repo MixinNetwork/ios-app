@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="70" id="lbQ-G1-RzY" customClass="ContactCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lbQ-G1-RzY" id="y2C-SY-qPs">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="69.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="cMG-90-Vxo">
+                        <rect key="frame" x="20" y="0.0" width="134.5" height="69.5"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="juz-uM-cxY" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="10" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="hkF-WL-YJH"/>
+                                    <constraint firstAttribute="width" constant="50" id="wey-Dh-XzR"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5zT-bL-OW8">
+                                <rect key="frame" x="58" y="0.0" width="0.0" height="69.5"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" id="Gs3-st-ce8"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OVER140" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iPK-Qa-Vil">
+                                <rect key="frame" x="66" y="25" width="68.5" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_verified" translatesAutoresizingMaskIntoConstraints="NO" id="RjV-fh-3OL">
+                                <rect key="frame" x="134.5" y="28" width="0.0" height="14"/>
+                            </imageView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="cMG-90-Vxo" firstAttribute="top" secondItem="y2C-SY-qPs" secondAttribute="top" id="Gcg-jz-6ZF"/>
+                    <constraint firstAttribute="bottom" secondItem="cMG-90-Vxo" secondAttribute="bottom" id="f7d-Hi-WwB"/>
+                    <constraint firstItem="cMG-90-Vxo" firstAttribute="leading" secondItem="y2C-SY-qPs" secondAttribute="leading" constant="20" id="kJK-hm-tzC"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cMG-90-Vxo" secondAttribute="trailing" constant="15" id="lBl-l0-OEl"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="iconImageView" destination="juz-uM-cxY" id="xp6-76-BVW"/>
+                <outlet property="identityImageView" destination="RjV-fh-3OL" id="Bkm-L5-eVk"/>
+                <outlet property="nameLabel" destination="iPK-Qa-Vil" id="wYt-01-Sif"/>
+            </connections>
+            <point key="canvasLocation" x="-127.5" y="-98"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="ic_user_verified" width="14" height="14"/>
+    </resources>
+</document>

@@ -32,7 +32,7 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     lazy var internalTokenizer = UITextInputStringTokenizer()
     
     @IBInspectable
-    var spacing: CGFloat = 12 {
+    var spacing: CGFloat = 25 {
         didSet {
             setNeedsLayout()
         }
@@ -55,21 +55,21 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     }
     
     @IBInspectable
-    var digitWidth: CGFloat = 32 {
+    var digitWidth: CGFloat = 15 {
         didSet {
             setNeedsLayout()
         }
     }
     
     @IBInspectable
-    var indicatorUnhighlightedColor: UIColor = .lightGray {
+    var indicatorUnhighlightedColor: UIColor = UIColor(rgbValue: 0xE5E7EC) {
         didSet {
             updateCursor()
         }
     }
     
     @IBInspectable
-    var indicatorHighlightedColor: UIColor = .black {
+    var indicatorHighlightedColor: UIColor = UIColor(rgbValue: 0x397EE4) {
         didSet {
             updateCursor()
         }
@@ -91,6 +91,8 @@ class VerificationCodeField: UIControl, UITextInputTraits {
             updateCursor()
         }
     }
+    
+    var receivesInput = true
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var digits: [String] = [] {
@@ -121,8 +123,10 @@ class VerificationCodeField: UIControl, UITextInputTraits {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        let contentWidth = digitWidth * CGFloat(numberOfDigits) + spacing * CGFloat(numberOfDigits - 1)
+        let leftMargin = (bounds.width - contentWidth) / 2
         for i in 0..<numberOfDigits {
-            let x = (digitWidth + spacing) * CGFloat(i)
+            let x = (digitWidth + spacing) * CGFloat(i) + leftMargin
             labels[i].frame = CGRect(x: x, y: 0, width: digitWidth, height: bounds.height - 1)
             indicators[i].frame = CGRect(x: x, y: bounds.height - 1, width: digitWidth, height: 1)
         }
@@ -152,6 +156,9 @@ extension VerificationCodeField: UIKeyInput {
     }
     
     func insertText(_ text: String) {
+        guard receivesInput else {
+            return
+        }
         let numberOfUnfilleds = numberOfDigits - digits.count
         let newDigits = text.digits()
         let endIndexOfNewDigits = min(numberOfUnfilleds, newDigits.count)
@@ -163,6 +170,9 @@ extension VerificationCodeField: UIKeyInput {
     }
     
     func deleteBackward() {
+        guard receivesInput else {
+            return
+        }
         guard digits.count > 0 else {
             return
         }
@@ -182,6 +192,9 @@ extension VerificationCodeField: UITextInput {
     }
     
     func replace(_ range: UITextRange, withText text: String) {
+        guard receivesInput else {
+            return
+        }
         guard let range = range as? TextRange else {
             return
         }

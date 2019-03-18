@@ -8,6 +8,7 @@ class UserWindow: BottomSheetView {
     var userViewPopupView: UIView?
 
     private let userView = UserView.instance()
+    private var onDissmisCallback: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -15,6 +16,10 @@ class UserWindow: BottomSheetView {
         userView.snp.makeConstraints({ (make) in
             make.edges.equalToSuperview()
         })
+    }
+
+    func setDismissCallback(callback: @escaping () -> Void) {
+        onDissmisCallback = callback
     }
 
     override func dismissPopupControllerAnimated() {
@@ -35,6 +40,11 @@ class UserWindow: BottomSheetView {
         } else {
             dismissView()
         }
+    }
+
+    override func dismissView() {
+        super.dismissView()
+        onDissmisCallback?()
     }
 
     @discardableResult

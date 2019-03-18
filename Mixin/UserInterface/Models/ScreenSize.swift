@@ -7,6 +7,8 @@ enum ScreenSize {
     case inch4_7
     case inch5_5
     case inch5_8
+    case inch6_1
+    case inch6_5
     case unknown
     
     static let current: ScreenSize = {
@@ -22,6 +24,8 @@ enum ScreenSize {
             return .inch5_5
         case 812:
             return .inch5_8
+        case 896:
+            return UIScreen.main.scale == 3 ? .inch6_5 : .inch6_1
         default:
             return .unknown
         }

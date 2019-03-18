@@ -82,3 +82,22 @@ extension UINavigationItem {
     }
     
 }
+
+extension ModernSearchBoxView {
+
+    @IBInspectable
+    var local_placeholder: String? {
+        get {
+            return ""
+        }
+        set {
+            guard let text = newValue, !text.isEmpty else {
+                return
+            }
+            let localText = LocalizedString(text, comment: text)
+            if localText != text {
+                self.textField.placeholder = localText
+            }
+        }
+    }
+}

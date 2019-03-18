@@ -27,4 +27,11 @@ extension ParticipantUser {
         return ParticipantUser(conversationId: conversationId, role: "", userId: user.userId, userFullName: user.fullName, userAvatarUrl: user.avatarUrl, userIdentityNumber: user.identityNumber)
     }
 
+    static func createParticipantUser(conversationId: String, user: GroupUser) -> ParticipantUser {
+        return ParticipantUser(conversationId: conversationId, role: "", userId: user.userId, userFullName: user.fullName, userAvatarUrl: user.avatarUrl, userIdentityNumber: user.identityNumber)
+    }
+
+    static func createParticipantUser(conversationId: String, account: Account) -> ParticipantUser {
+        return ParticipantUser(conversationId: conversationId, role: "", userId: account.user_id, userFullName: account.full_name, userAvatarUrl: account.avatar_url, userIdentityNumber: account.identity_number)
+    }
 }

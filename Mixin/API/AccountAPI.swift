@@ -64,17 +64,21 @@ final class AccountAPI: BaseAPI {
         request(method: .get, url: url.me, completion: completion)
     }
 
-    func sendCode(to phoneNumber: String, reCaptchaToken: String?, purpose: VerificationPurpose, completion: @escaping (APIResult<VerificationResponse>) -> Void) {
+    @discardableResult
+    func sendCode(to phoneNumber: String, reCaptchaToken: String?, purpose: VerificationPurpose, completion: @escaping (APIResult<VerificationResponse>) -> Void) -> Request? {
         var param = ["phone": phoneNumber,
                      "purpose": purpose.rawValue]
         if let token = reCaptchaToken {
             param["g_recaptcha_response"] = token
         }
-        request(method: .post, url: url.verifications, parameters: param, checkLogin: false, toastError: false, completion: completion)
+        if let bundleIdentifier = Bundle.main.bundleIdentifier {
+            param["package_name"] = bundleIdentifier
+        }
+        return request(method: .post, url: url.verifications, parameters: param, checkLogin: false, completion: completion)
     }
     
     func login(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<Account>) -> Void) {
-        request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), checkLogin: false, toastError: false, completion: completion)
+        request(method: .post, url: url.verifications(id: verificationId), parameters: accountRequest.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), checkLogin: false, completion: completion)
     }
     
     func changePhoneNumber(verificationId: String, accountRequest: AccountRequest, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
@@ -82,7 +86,7 @@ final class AccountAPI: BaseAPI {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
             var parameters = accountRequest
             parameters.pin = encryptedPin
-            self?.request(method: .post, url: url.verifications(id: verificationId), parameters: parameters.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), toastError: false, completion: completion)
+            self?.request(method: .post, url: url.verifications(id: verificationId), parameters: parameters.toParameters(), encoding: EncodableParameterEncoding<AccountRequest>(), completion: completion)
         }
     }
     
@@ -118,7 +122,7 @@ final class AccountAPI: BaseAPI {
 
     func verify(pin: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { [weak self](encryptedPin) in
-            self?.request(method: .post, url: url.verifyPin, parameters: ["pin": encryptedPin], toastError: false, completion: completion)
+            self?.request(method: .post, url: url.verifyPin, parameters: ["pin": encryptedPin], completion: completion)
         }
     }
     
@@ -140,7 +144,7 @@ final class AccountAPI: BaseAPI {
             return
         }
         param["pin"] = encryptedNewPin
-        request(method: .post, url: url.updatePin, parameters: param, toastError: false, completion: completion)
+        request(method: .post, url: url.updatePin, parameters: param, completion: completion)
     }
     
     func logoutSession(completion: @escaping (APIResult<EmptyResponse>) -> Void) {
@@ -163,7 +167,7 @@ final class AccountAPI: BaseAPI {
 
                 MixinWebView.clearCookies()
                 let oldRootViewController = AppDelegate.current.window?.rootViewController
-                AppDelegate.current.window?.rootViewController = Storyboard.login.instantiateInitialViewController()!
+                AppDelegate.current.window?.rootViewController = LoginNavigationController.instance()
                 oldRootViewController?.navigationController?.removeFromParent()
             })
         }

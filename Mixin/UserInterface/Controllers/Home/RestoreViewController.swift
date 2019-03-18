@@ -6,10 +6,11 @@ import Zip
 
 class RestoreViewController: UIViewController {
 
-    @IBOutlet weak var restoreButton: StateResponsiveButton!
-    @IBOutlet weak var progressLabel: UILabel!
     @IBOutlet weak var skipButton: UIButton!
-
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var restoreButton: RoundedButton!
+    @IBOutlet weak var progressLabel: UILabel!
+    
     private var stopDownload = false
 
     class func instance() -> UIViewController {
@@ -20,6 +21,22 @@ class RestoreViewController: UIViewController {
         stopDownload = true
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let subtitle = NSMutableAttributedString(string: Localized.CHAT_RESTORE_SUBTITLE)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 8
+        paragraphStyle.alignment = .center
+        let attr: [NSAttributedString.Key: Any] = [
+            .paragraphStyle: paragraphStyle,
+            .font: UIFont.systemFont(ofSize: 14),
+            .foregroundColor: UIColor.accessoryText
+        ]
+        let fullRange = NSRange(location: 0, length: subtitle.length)
+        subtitle.setAttributes(attr, range: fullRange)
+        subtitleLabel.attributedText = subtitle
+    }
+    
     @IBAction func restoreAction(_ sender: Any) {
         guard !restoreButton.isBusy else {
             return

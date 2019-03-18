@@ -2,6 +2,13 @@ import UIKit
 
 class SearchViewController: UIViewController {
 
+    enum ReuseId {
+        static let header = "header"
+        static let contact = "contact"
+        static let conversation = "conversation"
+        static let asset = "asset"
+    }
+    
     @IBOutlet weak var keywordTextField: UITextField!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
@@ -12,10 +19,7 @@ class SearchViewController: UIViewController {
     @IBOutlet var afterPresentingConstraints: [NSLayoutConstraint]!
     
     private let searchImageView = UIImageView(image: #imageLiteral(resourceName: "ic_search"))
-    private let headerReuseId = "SearchSectionHeader"
-    private let contactCellReuseId = "ContactCell"
-    private let conversationCellReuseId = "ConversationCell"
-    private let headerHeight: CGFloat = 28
+    private let headerHeight: CGFloat = 41
     
     private var allContacts = [UserItem]()
     private var users = [UserItem]()
@@ -29,10 +33,14 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
         searchQueue.maxConcurrentOperationCount = 1
         contactsLoadingQueue.maxConcurrentOperationCount = 1
-        tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
-        tableView.register(UINib(nibName: "SearchResultContactCell", bundle: .main), forCellReuseIdentifier: contactCellReuseId)
-        tableView.register(UINib(nibName: "ConversationCell", bundle: .main), forCellReuseIdentifier: conversationCellReuseId)
-        tableView.register(UINib(nibName: "SearchResultAssetCell", bundle: .main), forCellReuseIdentifier: SearchResultAssetCell.cellIdentifier)
+        tableView.register(GeneralTableViewHeader.self,
+                           forHeaderFooterViewReuseIdentifier: ReuseId.header)
+        tableView.register(UINib(nibName: "SearchResultContactCell", bundle: .main),
+                           forCellReuseIdentifier: ReuseId.contact)
+        tableView.register(UINib(nibName: "ConversationCell", bundle: .main),
+                           forCellReuseIdentifier: ReuseId.conversation)
+        tableView.register(UINib(nibName: "WalletAssetCell", bundle: .main),
+                           forCellReuseIdentifier: ReuseId.asset)
         tableView.tableFooterView = UIView()
         tableView.contentInset.top = navigationBarContentHeightConstraint.constant
         tableView.dataSource = self
@@ -70,6 +78,7 @@ class SearchViewController: UIViewController {
                     self.users = users
                     self.conversations = messages
                     self.tableView.reloadData()
+                    self.updateNoResultIndicator()
                 }
             }
             searchQueue.addOperation(op)
@@ -125,6 +134,7 @@ class SearchViewController: UIViewController {
                 self.allContacts = allContacts
                 if self.isPresenting && self.keyword.isEmpty {
                     self.tableView.reloadData()
+                    self.updateNoResultIndicator()
                 }
             }
         }
@@ -135,6 +145,7 @@ class SearchViewController: UIViewController {
             reloadContacts()
         } else {
             tableView.reloadData()
+            updateNoResultIndicator()
         }
     }
     
@@ -154,7 +165,19 @@ class SearchViewController: UIViewController {
         view.layoutIfNeeded()
         tableView.contentOffset.y = -tableView.contentInset.top
     }
-
+    
+    private func updateNoResultIndicator() {
+        let dataCount: Int
+        if keyword.isEmpty {
+            dataCount = allContacts.count
+        } else {
+            dataCount = assets.count + users.count + conversations.count
+        }
+        tableView.checkEmpty(dataCount: dataCount,
+                             text: Localized.NO_RESULT,
+                             photo: R.image.ic_no_result()!)
+    }
+    
 }
 
 extension SearchViewController: UITableViewDataSource {
@@ -182,22 +205,21 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if keyword.isEmpty {
-            let cell = tableView.dequeueReusableCell(withIdentifier: contactCellReuseId, for: indexPath) as! SearchResultContactCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.contact, for: indexPath) as! SearchResultContactCell
             cell.render(user: allContacts[indexPath.row])
             return cell
         } else {
             let section = indexPath.section
             if section == 0 && assets.count > 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultAssetCell.cellIdentifier, for: indexPath) as! SearchResultAssetCell
-                cell.accessoryType = .none
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.asset, for: indexPath) as! WalletAssetCell
                 cell.render(asset: assets[indexPath.row])
                 return cell
             } else if users.count > 0 && (section == 0 || (assets.count > 0 && section == 1)) {
-                let cell = tableView.dequeueReusableCell(withIdentifier: contactCellReuseId, for: indexPath) as! SearchResultContactCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.contact, for: indexPath) as! SearchResultContactCell
                 cell.render(user: users[indexPath.row])
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: conversationCellReuseId, for: indexPath) as! ConversationCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.conversation, for: indexPath) as! ConversationCell
                 cell.render(item: conversations[indexPath.row])
                 return cell
             }
@@ -206,6 +228,21 @@ extension SearchViewController: UITableViewDataSource {
 }
 
 extension SearchViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if keyword.isEmpty {
+            return SearchResultContactCell.height
+        } else {
+            let section = indexPath.section
+            if section == 0 && assets.count > 0 {
+                return WalletAssetCell.height
+            } else if users.count > 0 && (section == 0 || (assets.count > 0 && section == 1)) {
+                return SearchResultContactCell.height
+            } else {
+                return ConversationCell.height
+            }
+        }
+    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if keyword.isEmpty {
@@ -216,7 +253,7 @@ extension SearchViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseId) as! GeneralTableViewHeader
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! GeneralTableViewHeader
         if keyword.isEmpty {
             header.label.text = Localized.SECTION_TITLE_CONTACTS
         } else {

@@ -89,8 +89,8 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                             weakSelf.fetchStickers()
                         }
                     }
-                case .failure:
-                    NotificationCenter.default.postOnMain(name: .ErrorMessageDidAppear, object: Localized.STICKER_REMOVE_FAILED)
+                case let .failure(error):
+                    showHud(style: .error, text: error.localizedDescription)
                 }
             })
         } else {

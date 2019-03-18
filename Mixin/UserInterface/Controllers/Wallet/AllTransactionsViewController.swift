@@ -7,7 +7,7 @@ class AllTransactionsViewController: UITableViewController {
         static let header = "header"
     }
     
-    private let dataSource = SnapshotDataSource(category: .all)
+    internal var dataSource: SnapshotDataSource!
     private let loadNextPageThreshold = 20
     
     private lazy var filterWindow = AssetFilterWindow.instance()
@@ -19,7 +19,13 @@ class AllTransactionsViewController: UITableViewController {
         tableView.register(AssetHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         dataSource.onReload = { [weak self] in
-            self?.tableView.reloadData()
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.tableView.reloadData()
+            weakSelf.tableView.checkEmpty(dataCount: weakSelf.dataSource.snapshots.count,
+                                          text: Localized.WALLET_NO_TRANSACTION,
+                                          photo: R.image.wallet.ic_no_transaction()!)
         }
         dataSource.reloadFromLocal()
         dataSource.reloadFromRemote()
@@ -33,7 +39,8 @@ class AllTransactionsViewController: UITableViewController {
     }
     
     class func instance() -> UIViewController {
-        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "snapshot")
+        let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "snapshot") as! AllTransactionsViewController
+        vc.dataSource = SnapshotDataSource(category: .all)
         let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_ALL_TRANSACTIONS_TITLE)
         container.automaticallyAdjustsScrollViewInsets = false
         return container

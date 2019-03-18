@@ -7,6 +7,7 @@ class UrlWindow: BottomSheetView {
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var assistView: UIView!
 
     @IBOutlet weak var contentHeightConstraint: NSLayoutConstraint!
 
@@ -136,7 +137,7 @@ extension UrlWindow {
                     UserDAO.shared.updateUsers(users: [user])
                     weakSelf.presentUser(user: UserItem.createUser(from: user), clearNavigationStack: clearNavigationStack, refreshUser: false)
                 } else if let authorization = code.authorization {
-                    weakSelf.load(authorization: authorization)
+                    weakSelf.load(authorization: authorization, fromWeb: fromWeb)
                 } else if let conversation = code.conversation {
                     weakSelf.load(conversation: conversation, codeId: codeId)
                 }
@@ -154,10 +155,6 @@ extension UrlWindow {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
         DispatchQueue.global().async { [weak self] in
-            var asset: AssetItem?
-            if transfer {
-                asset = AssetDAO.shared.getAvailableAssetId(assetId: WalletUserDefault.shared.defalutTransferAssetId)
-            }
             var user = UserDAO.shared.getUser(userId: userId)
             var refreshUser = true
             if user == nil {
@@ -183,8 +180,7 @@ extension UrlWindow {
                 }
                 if transfer {
                     weakSelf.dismissPopupControllerAnimated()
-                    let conversationId = ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: AccountAPI.shared.accountUserId)
-                    let vc = TransferViewController.instance(user: user, conversationId: conversationId, asset: asset)
+                    let vc = SendViewController.instance(asset: nil, type: .contact(user))
                     if clearNavigationStack {
                         UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
                     } else {
@@ -198,26 +194,16 @@ extension UrlWindow {
     }
 
     private func presentUser(user: UserItem, clearNavigationStack: Bool, refreshUser: Bool = true) {
-        if user.userId == AccountAPI.shared.accountUserId {
-            dismissPopupControllerAnimated()
-            let vc = MyProfileViewController.instance()
-            if clearNavigationStack {
-                UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
-            } else {
-                UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
-            }
-        } else {
-            containerView.addSubview(userView)
-            userView.snp.makeConstraints({ (make) in
-                make.edges.equalToSuperview()
-            })
-            userView.updateUser(user: user, refreshUser: refreshUser, superView: self)
-            successHandler()
-            contentHeightConstraint.constant = 0
-            UIView.animate(withDuration: 0.15, animations: {
-                self.layoutIfNeeded()
-            })
-        }
+        containerView.addSubview(userView)
+        userView.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+        userView.updateUser(user: user, refreshUser: refreshUser, superView: self)
+        successHandler()
+        contentHeightConstraint.constant = 0
+        UIView.animate(withDuration: 0.15, animations: {
+            self.layoutIfNeeded()
+        })
     }
     
     private func autoDismissWindow() {
@@ -229,7 +215,7 @@ extension UrlWindow {
         }
     }
 
-    private func load(authorization: AuthorizationResponse) {
+    private func load(authorization: AuthorizationResponse, fromWeb: Bool = false) {
         DispatchQueue.global().async { [weak self] in
             let assets = AssetDAO.shared.getAvailableAssets()
             DispatchQueue.main.async {
@@ -239,6 +225,11 @@ extension UrlWindow {
 
                 weakSelf.showLoginView = true
                 weakSelf.containerView.addSubview(weakSelf.loginView)
+                if fromWeb {
+                    weakSelf.contentHeightConstraint.constant = weakSelf.assistView.frame.height
+                } else {
+                    weakSelf.contentHeightConstraint.constant = weakSelf.assistView.frame.height - 56
+                }
                 weakSelf.loginView.snp.makeConstraints({ (make) in
                     make.edges.equalToSuperview()
                 })
@@ -344,7 +335,7 @@ extension UrlWindow {
                     make.edges.equalToSuperview()
                 })
                 let chainIconUrl = AssetDAO.shared.getChainIconUrl(chainId: payment.asset.chainId)
-                weakSelf.payView.render(isTransfer: true, asset: AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainIconUrl), user: UserItem.createUser(from: payment.recipient), amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
+                weakSelf.payView.render(asset: AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainIconUrl), user: UserItem.createUser(from: payment.recipient), amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
                 weakSelf.successHandler()
             case let .failure(error):
                 weakSelf.failedHandler(error.localizedDescription)

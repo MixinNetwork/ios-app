@@ -19,7 +19,7 @@ class LoginConfirmWindow: BottomSheetView {
 
         loginButton.isBusy = false
         dismissView()
-        UIApplication.rootNavigationController()?.showHud(style: .notification, text: Localized.TOAST_LOGINED)
+        showHud(style: .notification, text: Localized.TOAST_LOGINED)
         UIApplication.rootNavigationController()?.popViewController(animated: true)
     }
 
@@ -28,8 +28,11 @@ class LoginConfirmWindow: BottomSheetView {
             return
         }
         loginButton.isBusy = true
-        ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { _ in
-
+        ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { [weak self](success) in
+            guard !success else {
+                return
+            }
+            self?.loginButton.isBusy = false
         })
     }
 

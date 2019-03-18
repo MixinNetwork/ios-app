@@ -1,12 +1,13 @@
 import UIKit
 import LocalAuthentication
-import SwiftMessages
 import Alamofire
 
 class PayWindow: BottomSheetView {
 
     @IBOutlet weak var containerView: UIView!
-        
+    
+    var onDismiss: (() -> Void)?
+    
     private weak var textfield: UITextField?
 
     private let payView = PayView.instance()
@@ -21,13 +22,13 @@ class PayWindow: BottomSheetView {
 
     static let shared = Bundle.main.loadNibNamed("PayWindow", owner: nil, options: nil)?.first as! PayWindow
 
-    func presentPopupControllerAnimated(isTransfer: Bool, asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, textfield: UITextField?) {
+    func presentPopupControllerAnimated(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, amountUsd: String? = nil, textfield: UITextField?) {
         guard !isShowing else {
             return
         }
         self.textfield = textfield
         super.presentPopupControllerAnimated()
-        payView.render(isTransfer: isTransfer, asset: asset, user: user, address: address, amount: amount, memo: memo, trackId: trackId, superView: self)
+        payView.render(asset: asset, user: user, address: address, amount: amount, memo: memo, trackId: trackId, amountUsd: amountUsd, superView: self)
     }
 
     override func dismissPopupControllerAnimated() {
@@ -36,6 +37,7 @@ class PayWindow: BottomSheetView {
         }
         super.dismissPopupControllerAnimated()
         textfield?.becomeFirstResponder()
+        onDismiss?()
     }
 
 }

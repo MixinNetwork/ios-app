@@ -1,34 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="56" id="QH8-4I-NXU" customClass="ContactQRCodeCell" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="66" id="QH8-4I-NXU" customClass="ContactQRCodeCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="66"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QH8-4I-NXU" id="mVF-Jf-di1">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="55.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="65.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Axr-xA-GaW">
-                        <rect key="frame" x="24" y="16" width="140" height="24"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Axr-xA-GaW">
+                        <rect key="frame" x="27" y="4" width="134" height="32"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_money" translatesAutoresizingMaskIntoConstraints="NO" id="yAU-u9-Ibk">
-                                <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_money" translatesAutoresizingMaskIntoConstraints="NO" id="yAU-u9-Ibk" customClass="ShadowImageView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowY">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowBlur">
+                                        <real key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                        <color key="value" red="0.14117647058823529" green="0.41960784313725491" blue="1" alpha="0.20999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive Money" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dOX-aa-7eT">
-                                <rect key="frame" x="30" y="2.5" width="110" height="19.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <nil key="textColor"/>
+                                <rect key="frame" x="42" y="8" width="92" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_receive_money"/>
@@ -36,16 +46,27 @@
                             </label>
                         </subviews>
                     </stackView>
-                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="g4m-Vh-aGg">
-                        <rect key="frame" x="221" y="16" width="121.5" height="24"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="g4m-Vh-aGg">
+                        <rect key="frame" x="214.5" y="4" width="118" height="32"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_my_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="8O1-qA-hR1">
-                                <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_contact_my_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="8O1-qA-hR1" customClass="ShadowImageView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowY">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                        <color key="value" red="0.3411764705882353" green="0.14117647058823529" blue="1" alpha="0.20882572852760733" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowBlur">
+                                        <real key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My QR Code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kHo-Vz-smr">
-                                <rect key="frame" x="30" y="2.5" width="91.5" height="19.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <nil key="textColor"/>
+                                <rect key="frame" x="42" y="8" width="76" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="contact_my_qr_code"/>
@@ -73,40 +94,37 @@
                             <action selector="myQRCodeAction:" destination="QH8-4I-NXU" eventType="touchUpInside" id="yZ3-LK-T9N"/>
                         </connections>
                     </button>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Aa3-xp-1Hu">
-                        <rect key="frame" x="187" y="0.0" width="1" height="55.5"/>
-                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iop-x7-1ZV" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="55.5" width="375" height="10"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="1" id="xOn-WJ-MZP" customClass="HairlineLayoutConstraint" customModule="Mixin" customModuleProvider="target"/>
+                            <constraint firstAttribute="height" constant="10" id="u3N-vL-6XA"/>
                         </constraints>
                     </view>
                 </subviews>
                 <constraints>
                     <constraint firstItem="ubY-dZ-f1i" firstAttribute="top" secondItem="mVF-Jf-di1" secondAttribute="top" id="7sH-kd-V8B"/>
-                    <constraint firstItem="ubY-dZ-f1i" firstAttribute="height" secondItem="mVF-Jf-di1" secondAttribute="height" id="F57-dB-lYl"/>
-                    <constraint firstItem="Axr-xA-GaW" firstAttribute="centerY" secondItem="Uy9-Xs-81N" secondAttribute="centerY" id="OEn-IJ-ZmU"/>
-                    <constraint firstItem="Aa3-xp-1Hu" firstAttribute="centerX" secondItem="mVF-Jf-di1" secondAttribute="centerX" id="SAI-VD-2Ut"/>
-                    <constraint firstItem="g4m-Vh-aGg" firstAttribute="centerY" secondItem="ubY-dZ-f1i" secondAttribute="centerY" id="SsX-Il-dfa"/>
+                    <constraint firstItem="ubY-dZ-f1i" firstAttribute="height" secondItem="mVF-Jf-di1" secondAttribute="height" constant="-10" id="F57-dB-lYl"/>
                     <constraint firstItem="Uy9-Xs-81N" firstAttribute="width" secondItem="mVF-Jf-di1" secondAttribute="width" multiplier="0.5" id="TvE-vQ-L82"/>
                     <constraint firstItem="Uy9-Xs-81N" firstAttribute="top" secondItem="mVF-Jf-di1" secondAttribute="top" id="WZu-Je-VtI"/>
-                    <constraint firstAttribute="bottom" secondItem="Aa3-xp-1Hu" secondAttribute="bottom" id="XdD-3m-XoG"/>
+                    <constraint firstAttribute="trailing" secondItem="iop-x7-1ZV" secondAttribute="trailing" id="Wf5-FI-UdZ"/>
                     <constraint firstItem="ubY-dZ-f1i" firstAttribute="width" secondItem="mVF-Jf-di1" secondAttribute="width" multiplier="0.5" id="a7O-Vp-7lw"/>
                     <constraint firstAttribute="trailing" secondItem="ubY-dZ-f1i" secondAttribute="trailing" id="eAM-0v-bS8"/>
                     <constraint firstItem="Uy9-Xs-81N" firstAttribute="leading" secondItem="mVF-Jf-di1" secondAttribute="leading" id="eEX-DH-l2V"/>
-                    <constraint firstItem="Aa3-xp-1Hu" firstAttribute="top" secondItem="mVF-Jf-di1" secondAttribute="top" id="fXs-FE-1hq"/>
-                    <constraint firstItem="Uy9-Xs-81N" firstAttribute="height" secondItem="mVF-Jf-di1" secondAttribute="height" id="lcK-64-w4z"/>
-                    <constraint firstItem="g4m-Vh-aGg" firstAttribute="centerX" secondItem="ubY-dZ-f1i" secondAttribute="centerX" id="o0T-3h-FUc"/>
-                    <constraint firstItem="Axr-xA-GaW" firstAttribute="centerX" secondItem="Uy9-Xs-81N" secondAttribute="centerX" id="uyU-sx-Uhx"/>
+                    <constraint firstItem="Axr-xA-GaW" firstAttribute="top" secondItem="Uy9-Xs-81N" secondAttribute="top" constant="4" id="ggK-x8-aiG"/>
+                    <constraint firstItem="Uy9-Xs-81N" firstAttribute="height" secondItem="mVF-Jf-di1" secondAttribute="height" constant="-10" id="lcK-64-w4z"/>
+                    <constraint firstItem="g4m-Vh-aGg" firstAttribute="top" secondItem="ubY-dZ-f1i" secondAttribute="top" constant="4" id="m7a-6h-vXw"/>
+                    <constraint firstAttribute="bottom" secondItem="iop-x7-1ZV" secondAttribute="bottom" id="sRj-Ze-vwb"/>
+                    <constraint firstItem="g4m-Vh-aGg" firstAttribute="leading" secondItem="ubY-dZ-f1i" secondAttribute="leading" constant="27" id="wTv-C9-2lW"/>
+                    <constraint firstItem="iop-x7-1ZV" firstAttribute="leading" secondItem="mVF-Jf-di1" secondAttribute="leading" id="xnY-0V-xee"/>
+                    <constraint firstItem="Axr-xA-GaW" firstAttribute="leading" secondItem="Uy9-Xs-81N" secondAttribute="leading" constant="27" id="zKp-HF-1Gg"/>
                 </constraints>
             </tableViewCellContentView>
-            <connections>
-                <outlet property="separatorView" destination="Aa3-xp-1Hu" id="84X-wa-OWS"/>
-            </connections>
             <point key="canvasLocation" x="25.5" y="72"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="ic_contact_money" width="24" height="24"/>
-        <image name="ic_contact_my_qrcode" width="24" height="24"/>
+        <image name="ic_contact_money" width="32" height="32"/>
+        <image name="ic_contact_my_qrcode" width="32" height="32"/>
     </resources>
 </document>

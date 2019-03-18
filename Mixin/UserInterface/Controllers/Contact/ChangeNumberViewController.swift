@@ -1,13 +1,6 @@
 import UIKit
 import SnapKit
 
-struct ChangeNumberContext {
-    var pin = ""
-    var verificationId = ""
-    var newNumber = ""
-    var newNumberRepresentation = ""
-}
-
 class ChangeNumberViewController: UIViewController {
 
     static var lastKeyboardFrame = CGRect.zero

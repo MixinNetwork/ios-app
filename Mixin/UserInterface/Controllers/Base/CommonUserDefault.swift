@@ -27,9 +27,6 @@ class CommonUserDefault {
     private var keyMessageNotificationShowPreview: String {
         return "msg_notification_preview_\(AccountAPI.shared.accountIdentityNumber)"
     }
-    private var keyHasConversation: String {
-        return "has_conversation_\(AccountAPI.shared.accountIdentityNumber)"
-    }
     private var keyBackupVideos: String {
         return "backup_videos_\(AccountAPI.shared.accountIdentityNumber)"
     }
@@ -155,21 +152,6 @@ class CommonUserDefault {
         }
         set {
             session.set(newValue, forKey: keyMessageNotificationShowPreview)
-        }
-    }
-    
-    var hasConversation: Bool {
-        get {
-            if session.object(forKey: keyHasConversation) == nil {
-                let hasValidConversation = ConversationDAO.shared.hasValidConversation()
-                session.set(hasValidConversation, forKey: keyHasConversation)
-                return hasValidConversation
-            } else {
-                return session.bool(forKey: keyHasConversation)
-            }
-        }
-        set {
-            session.set(newValue, forKey: keyHasConversation)
         }
     }
     

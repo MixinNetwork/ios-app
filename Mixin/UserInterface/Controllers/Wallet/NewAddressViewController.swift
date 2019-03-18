@@ -159,6 +159,8 @@ extension NewAddressViewController: CameraViewControllerDelegate {
         if qrCodeScanningDestination == labelTextField {
             labelTextField.text = string
             textViewDidChange(addressTextView)
+            labelTextField.resignFirstResponder()
+            addressTextView.becomeFirstResponder()
         } else if qrCodeScanningDestination == addressTextView {
             addressTextView.text = standarizedAddress(from: string) ?? string
             textViewDidChange(addressTextView)

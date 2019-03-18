@@ -477,13 +477,14 @@ extension ConversationInputViewController {
         case .changed:
             let resizableScrollView = (customInputViewController as? ConversationInputInteractiveResizableViewController)?.interactiveResizableScrollView
             if !recognizer.shouldAdjustContentHeight {
-                let locationInsideInputBar = inputBarView.frame.contains(location)
+                let canUpsize = preferredContentHeight < maximizedHeight
+                    && inputBarView.frame.contains(location)
                 let downsizeByDraggingOnScrollView = view.frame.height > regularHeight
                     && verticalVelocity > 0
                     && (resizableScrollView != nil)
                     && (resizableScrollView!.contentOffset.y < 1)
                     && resizableScrollView!.bounds.contains(recognizer.location(in: resizableScrollView))
-                if locationInsideInputBar || downsizeByDraggingOnScrollView {
+                if canUpsize || downsizeByDraggingOnScrollView {
                     recognizer.shouldAdjustContentHeight = true
                 }
             }

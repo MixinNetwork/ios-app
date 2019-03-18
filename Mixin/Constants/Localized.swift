@@ -438,12 +438,21 @@ public class Localized {
         return String(format: LocalizedString("wallet_disable_biometric_pay", comment: "Disable %@ Pay"), biometricType)
     }
     public static let WALLET_PIN_PAY_INTERVAL = LocalizedString("wallet_pin_pay_interval", comment: "Pay with PIN interval")
-    public static func WALLET_PIN_PAY_INTERVAL_MINUTES(_ minutes: Double) -> String {
-        return String(format: LocalizedString("wallet_pin_pay_interval_minutes", comment: "%@ Minutes"), "\(Int(minutes / 60))")
+    public static func WALLET_PIN_PAY_INTERVAL_MINUTES(_ seconds: Double) -> String {
+        return String(format: LocalizedString("wallet_pin_pay_interval_minutes", comment: "%@ Minutes"), "\(Int(seconds / 60))")
     }
     public static let WALLET_PIN_PAY_INTERVAL_HOUR = LocalizedString("wallet_pin_pay_interval_hour", comment: "1 Hour")
-    public static func WALLET_PIN_PAY_INTERVAL_HOURS(_ minutes: Double) -> String {
-        return String(format: LocalizedString("wallet_pin_pay_interval_hours", comment: "%@ Hours"), "\(Int(minutes / 3600))")
+    public static func WALLET_PIN_PAY_INTERVAL_HOURS(_ seconds: Double) -> String {
+        return String(format: LocalizedString("wallet_pin_pay_interval_hours", comment: "%@ Hours"), "\(Int(seconds / 3600))")
+    }
+    public static func WALLET_PIN_PAY_INTERVAL(_ seconds: Double) -> String {
+        if seconds < 60 * 60 {
+            return WALLET_PIN_PAY_INTERVAL_MINUTES(seconds)
+        } else if seconds == 60 * 60 {
+            return WALLET_PIN_PAY_INTERVAL_HOUR
+        } else {
+            return WALLET_PIN_PAY_INTERVAL_HOURS(seconds)
+        }
     }
     public static let WALLET_PIN_PAY_INTERVAL_CONFIRM = LocalizedString("wallet_pin_pay_interval_confirm", comment: "Confirm PIN to protect your settings security.")
     public static let WALLET_PIN_PAY_INTERVAL_TIPS = LocalizedString("wallet_pin_pay_interval_tips", comment: "For the security of your assets, you will still need to pay the PIN when you transfer again when you have entered the payment PIN for more than the specified time")

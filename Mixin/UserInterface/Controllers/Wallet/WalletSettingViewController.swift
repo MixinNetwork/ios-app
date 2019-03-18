@@ -6,9 +6,10 @@ class WalletSettingViewController: UITableViewController {
     @IBOutlet weak var payTitleLabel: UILabel!
     @IBOutlet weak var biometricsPaySwitch: UISwitch!
     @IBOutlet weak var pinIntervalLabel: UILabel!
-    
+
+    private let pinIntervals: [Double] = [ 60 * 15, 60 * 30, 60 * 60, 60 * 60 * 2, 60 * 60 * 6, 60 * 60 * 12, 60 * 60 * 24 ]
     private let footerReuseId = "footer"
-    
+
     class func instance() -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "wallet_setting") as! WalletSettingViewController
         let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_SETTING)
@@ -59,11 +60,29 @@ class WalletSettingViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 && indexPath.row == 1 {
-            let vc = PinIntervalViewController.instance()
-            navigationController?.pushViewController(vc, animated: true)
+            pinIntervalAction()
         } else if indexPath.section == 1 {
             let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
             navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+
+    private func pinIntervalAction() {
+        let alc = UIAlertController(title: nil, message: Localized.WALLET_PIN_PAY_INTERVAL_TIPS, preferredStyle: .actionSheet)
+        for interval in pinIntervals {
+            alc.addAction(UIAlertAction(title: Localized.WALLET_PIN_PAY_INTERVAL(interval), style: .default, handler: { [weak self](_) in
+                self?.setNewPinInterval(interval: interval)
+            }))
+        }
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        present(alc, animated: true, completion: nil)
+    }
+
+    private func setNewPinInterval(interval: Double) {
+        PinTipsView.instance(tips: Localized.WALLET_PIN_PAY_INTERVAL_CONFIRM) { (pin) in
+            WalletUserDefault.shared.pinInterval = interval
+            }.presentPopupControllerAnimated { [weak self] in
+                self?.refreshPinIntervalUI()
         }
     }
     

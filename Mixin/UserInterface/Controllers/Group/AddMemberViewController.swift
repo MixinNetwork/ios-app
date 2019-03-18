@@ -78,7 +78,7 @@ class AddMemberViewController: UIViewController {
                 case .success:
                     weakSelf.navigationController?.popViewController(animated: true)
                 case let .failure(error):
-                    UIApplication.showHud(style: .error, text: error.localizedDescription)
+                    showHud(style: .error, text: error.localizedDescription)
                 }
             })
         } else {

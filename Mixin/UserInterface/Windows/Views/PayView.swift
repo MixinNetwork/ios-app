@@ -227,7 +227,7 @@ extension PayView: PinFieldDelegate {
                     return
                 }
                 if (weakSelf.superView as? UrlWindow)?.fromWeb ?? false {
-                    UIApplication.showHud(style: .error, text: error.localizedDescription)
+                    showHud(style: .error, text: error.localizedDescription)
                 } else {
                     UIApplication.currentActivity()?.alert(error.localizedDescription, message: nil)
                 }

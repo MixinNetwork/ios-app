@@ -82,9 +82,9 @@ class QrcodeWindow: BottomSheetView {
             DispatchQueue.main.async {
                 self?.dismissPopupControllerAnimated()
                 if success {
-                    UIApplication.showHud(style: .notification, text: Localized.TOAST_SAVED)
+                    showHud(style: .notification, text: Localized.TOAST_SAVED)
                 } else {
-                    UIApplication.showHud(style: .notification, text: Localized.TOAST_OPERATION_FAILED)
+                    showHud(style: .notification, text: Localized.TOAST_OPERATION_FAILED)
                 }
             }
         })

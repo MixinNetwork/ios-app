@@ -14,7 +14,7 @@ extension CoreTextLabelDelegate {
         }))
         alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
             UIPasteboard.general.string = url.absoluteString
-            UIApplication.showHud(style: .notification, text: Localized.TOAST_COPIED)
+            showHud(style: .notification, text: Localized.TOAST_COPIED)
         }))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         UIApplication.currentActivity()?.present(alert, animated: true, completion: nil)

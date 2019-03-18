@@ -450,9 +450,9 @@ extension GalleryItemViewController {
             }, completionHandler: { (success, error) in
                 DispatchQueue.main.async {
                     if success {
-                        UIApplication.showHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
+                        showHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
                     } else {
-                        UIApplication.showHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
+                        showHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
                     }
                 }
             })
@@ -462,9 +462,9 @@ extension GalleryItemViewController {
             }, completionHandler: { (success, error) in
                 DispatchQueue.main.async {
                     if success {
-                        UIApplication.showHud(style: .notification, text: Localized.CAMERA_SAVE_VIDEO_SUCCESS)
+                        showHud(style: .notification, text: Localized.CAMERA_SAVE_VIDEO_SUCCESS)
                     } else {
-                        UIApplication.showHud(style: .error, text: Localized.CAMERA_SAVE_VIDEO_FAILED)
+                        showHud(style: .error, text: Localized.CAMERA_SAVE_VIDEO_FAILED)
                     }
                 }
             })

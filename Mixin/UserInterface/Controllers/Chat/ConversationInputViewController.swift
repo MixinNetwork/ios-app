@@ -232,7 +232,7 @@ class ConversationInputViewController: UIViewController {
             case .success(let userResponse):
                 UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: true)
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }

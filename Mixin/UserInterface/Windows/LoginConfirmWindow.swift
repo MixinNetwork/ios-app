@@ -19,7 +19,7 @@ class LoginConfirmWindow: BottomSheetView {
 
         loginButton.isBusy = false
         dismissView()
-        UIApplication.showHud(style: .notification, text: Localized.TOAST_LOGINED)
+        showHud(style: .notification, text: Localized.TOAST_LOGINED)
         UIApplication.rootNavigationController()?.popViewController(animated: true)
     }
 

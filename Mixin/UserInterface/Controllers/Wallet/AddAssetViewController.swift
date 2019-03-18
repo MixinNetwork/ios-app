@@ -177,7 +177,7 @@ extension AddAssetViewController: ContainerViewControllerDelegate {
             AssetDAO.shared.insertOrUpdateAssets(assets: assets)
             DispatchQueue.main.async {
                 navigationController?.popViewController(animated: true)
-                UIApplication.showHud(style: .notification, text: Localized.TOAST_SAVED)
+                showHud(style: .notification, text: Localized.TOAST_SAVED)
             }
         }
     }

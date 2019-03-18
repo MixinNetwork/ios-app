@@ -75,7 +75,7 @@ class UserView: CornerView {
                         UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                         creator = UserItem.createUser(from: user)
                     case let .failure(error):
-                        UIApplication.showHud(style: .error, text: error.localizedDescription)
+                        showHud(style: .error, text: error.localizedDescription)
                     }
                 }
                 self?.appCreator = creator
@@ -332,7 +332,7 @@ class UserView: CornerView {
                         UserDAO.shared.updateAccount(account: account)
                     }
                 case let .failure(error):
-                    UIApplication.showHud(style: .error, text: error.localizedDescription)
+                    showHud(style: .error, text: error.localizedDescription)
                 }
             }
         } else {
@@ -393,9 +393,9 @@ class UserView: CornerView {
                 } else {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
-                UIApplication.showHud(style: .notification, text: toastMessage)
+                showHud(style: .notification, text: toastMessage)
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -418,7 +418,7 @@ class UserView: CornerView {
             UserDAO.shared.updateUsers(users: [user], notifyContact: notifyContact)
             updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false, superView: superView)
         case let .failure(error):
-            UIApplication.showHud(style: .error, text: error.localizedDescription)
+            showHud(style: .error, text: error.localizedDescription)
         }
         completion?()
     }
@@ -520,7 +520,7 @@ extension UserView: ImagePickerControllerDelegate {
                     UserDAO.shared.updateAccount(account: account)
                 }
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
             }
         })
     }

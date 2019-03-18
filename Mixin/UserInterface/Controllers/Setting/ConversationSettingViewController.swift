@@ -115,7 +115,7 @@ extension ConversationSettingViewController {
                     AccountAPI.shared.account = newAccount
                 }
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
                 self?.messageSourceContactsCheckmarkView.status = .selected
             }
         })
@@ -142,7 +142,7 @@ extension ConversationSettingViewController {
                     AccountAPI.shared.account = newAccount
                 }
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
                 self?.messageSourceEverybodyCheckmarkView.status = .selected
             }
         })
@@ -169,7 +169,7 @@ extension ConversationSettingViewController {
                     AccountAPI.shared.account = newAccount
                 }
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
                 self?.conversationSourceContactsCheckmarkView.status = .selected
             }
         })
@@ -196,7 +196,7 @@ extension ConversationSettingViewController {
                     AccountAPI.shared.account = newAccount
                 }
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
                 self?.conversationSourceEverybodyCheckmarkView.status = .selected
             }
         })

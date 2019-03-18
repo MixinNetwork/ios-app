@@ -85,16 +85,3 @@ extension UIApplication {
     }
     
 }
-
-extension UIApplication {
-
-    static func showHud(style: Hud.Style, text: String) {
-        if Thread.isMainThread {
-            UIApplication.rootNavigationController()?.showHud(style: style, text: text)
-        } else {
-            DispatchQueue.main.async {
-                UIApplication.rootNavigationController()?.showHud(style: style, text: text)
-            }
-        }
-    }
-}

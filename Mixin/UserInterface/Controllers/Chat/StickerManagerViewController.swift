@@ -90,7 +90,7 @@ extension StickerManagerViewController: ContainerViewControllerDelegate {
                         }
                     }
                 case let .failure(error):
-                    UIApplication.showHud(style: .error, text: error.localizedDescription)
+                    showHud(style: .error, text: error.localizedDescription)
                 }
             })
         } else {

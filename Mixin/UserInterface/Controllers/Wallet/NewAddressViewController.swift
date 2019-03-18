@@ -116,11 +116,11 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
                         WalletUserDefault.shared.lastWithdrawalAddress[assetId] = address.addressId
                     }
                     weakSelf.successCallback?(address)
-                    UIApplication.showHud(style: .notification, text: Localized.TOAST_SAVED)
+                    showHud(style: .notification, text: Localized.TOAST_SAVED)
                     weakSelf.navigationController?.popViewController(animated: true)
                 }
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
                 self?.pinTipsView?.removeFromSuperview()
                 self?.saveButton.isBusy = false
                 self?.addressTextView.isUserInteractionEnabled = true

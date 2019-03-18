@@ -105,7 +105,7 @@ extension DepositViewController: ContainerViewControllerDelegate {
 extension DepositViewController: DepositFieldViewDelegate {
     
     func depositFieldViewDidCopyContent(_ view: DepositFieldView) {
-        UIApplication.showHud(style: .notification, text: Localized.TOAST_COPIED)
+        showHud(style: .notification, text: Localized.TOAST_COPIED)
     }
     
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView) {

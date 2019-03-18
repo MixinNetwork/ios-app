@@ -119,7 +119,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         if error.code == 20113 {
                             weakSelf.verificationCodeField.clear()
                             weakSelf.verificationCodeField.showError()
-                            UIApplication.showHud(style: .error, text: Localized.TEXT_INVALID_VERIFICATION_CODE)
+                            showHud(style: .error, text: Localized.TEXT_INVALID_VERIFICATION_CODE)
                         } else {
                             weakSelf.alert(error.localizedDescription)
                         }

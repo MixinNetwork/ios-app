@@ -30,7 +30,7 @@ class ClockSkewViewController: UIViewController {
                 AccountUserDefault.shared.hasClockSkew = false
                 AppDelegate.current.window?.rootViewController = makeInitialViewController()
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
                 self?.continueButton.isBusy = false
             }
         }

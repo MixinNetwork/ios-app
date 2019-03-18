@@ -117,7 +117,7 @@ extension AddressViewController {
             case .success:
                 AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }

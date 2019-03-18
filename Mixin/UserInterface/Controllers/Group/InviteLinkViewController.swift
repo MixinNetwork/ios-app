@@ -38,7 +38,7 @@ class InviteLinkViewController: UIViewController {
     
     @IBAction func copyLinkAction(_ sender: Any) {
         UIPasteboard.general.string = conversation.codeUrl
-        UIApplication.showHud(style: .notification, text: Localized.TOAST_COPIED)
+        showHud(style: .notification, text: Localized.TOAST_COPIED)
     }
     
     @IBAction func qrCodeAction(_ sender: Any) {
@@ -91,7 +91,7 @@ extension InviteLinkViewController: ContainerViewControllerDelegate {
                     }
                 }
             case let .failure(error):
-                UIApplication.showHud(style: .error, text: error.localizedDescription)
+                showHud(style: .error, text: error.localizedDescription)
             }
         }
     }

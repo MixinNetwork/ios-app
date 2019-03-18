@@ -129,9 +129,9 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
                 if success {
                     weakSelf.displaySnapshotView(show: false)
                     weakSelf.didTakePhoto = false
-                    UIApplication.showHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
+                    showHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
                 } else {
-                    UIApplication.showHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
+                    showHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
                 }
                 weakSelf.saveButton.isEnabled = true
                 weakSelf.sendButton.isEnabled = true

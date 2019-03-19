@@ -227,6 +227,13 @@ final class ConversationDAO {
             if conversation.participants.count > 0 {
                 let participants = conversation.participants.map { Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt) }
                 try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
+
+                if conversation.category == ConversationCategory.GROUP.rawValue {
+                    let creatorId = conversation.creatorId
+                    if !conversation.participants.contains(where: { $0.userId == creatorId }) {
+                        ConcurrentJobQueue.shared.addJob(job: RefreshUserJob(userIds: [creatorId]))
+                    }
+                }
             }
             
             let statment = try db.prepareUpdateSQL(sql: ParticipantDAO.sqlUpdateStatus)

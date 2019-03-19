@@ -723,23 +723,12 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="mve-ky-yYM">
                                                     <rect key="frame" x="61" y="0.0" width="281" height="51"/>
                                                     <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="firstBaseline" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="H2I-Dz-BKu">
+                                                        <textView opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" scrollEnabled="NO" editable="NO" text="655366553" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aaK-2a-XZi">
                                                             <rect key="frame" x="0.0" y="0.0" width="281" height="34"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="6553665536655366553665536655366553665536655366553665536655366553665536" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aaK-2a-XZi">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="253" height="34"/>
-                                                                    <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="34"/>
-                                                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="XIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uSM-4b-0QI">
-                                                                    <rect key="frame" x="259" y="13" width="22" height="14.333333333333336"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                            </subviews>
-                                                        </stackView>
+                                                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="34"/>
+                                                            <textInputTraits key="textInputTraits"/>
+                                                        </textView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="≈ $4080" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t3B-IR-dY1">
                                                             <rect key="frame" x="0.0" y="34" width="281" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
@@ -843,14 +832,13 @@
                                     </constraints>
                                     <viewLayoutGuide key="safeArea" id="mhU-mx-dK5"/>
                                     <connections>
-                                        <outlet property="amountLabel" destination="aaK-2a-XZi" id="BiS-zU-eH8"/>
+                                        <outlet property="amountTextView" destination="aaK-2a-XZi" id="BiS-zU-eH8"/>
                                         <outlet property="assetIconView" destination="OIb-Ux-chy" id="qqe-Ve-o95"/>
                                         <outlet property="assetIconViewWidthConstraint" destination="QDW-FL-FgG" id="k4i-3R-pZe"/>
                                         <outlet property="depositButton" destination="lD1-P5-OTx" id="KGh-DF-fCr"/>
                                         <outlet property="infoStackView" destination="FZF-Lv-pQL" id="Det-OR-vmR"/>
                                         <outlet property="infoStackViewLeadingConstraint" destination="HKY-eI-b6H" id="M4L-Ac-lWO"/>
                                         <outlet property="infoStackViewTrailingConstraint" destination="bWE-T6-5jd" id="2jG-T5-YhH"/>
-                                        <outlet property="symbolLabel" destination="uSM-4b-0QI" id="yA4-jl-wgK"/>
                                         <outlet property="transactionsHeaderView" destination="GD6-mT-59f" id="7IN-NZ-6OK"/>
                                         <outlet property="usdValueLabel" destination="t3B-IR-dY1" id="U8E-GO-JUy"/>
                                     </connections>

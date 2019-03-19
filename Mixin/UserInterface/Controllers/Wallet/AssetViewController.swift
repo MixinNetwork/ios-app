@@ -247,6 +247,7 @@ extension AssetViewController {
                 }
                 UIView.performWithoutAnimation {
                     weakSelf.tableHeaderView.render(asset: asset)
+                    weakSelf.tableHeaderView.sizeToFit()
                     weakSelf.updateTableHeaderFooterView()
                 }
             }

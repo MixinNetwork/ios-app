@@ -413,13 +413,13 @@ extension ConversationInputViewController {
     }
     
     @objc private func keyboardWillChangeFrame(_ notification: Notification) {
-        guard textView.isFirstResponder else {
-            return
-        }
         guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
         let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
+        guard textView.isFirstResponder || keyboardWillBeInvisible else {
+            return
+        }
         if !keyboardWillBeInvisible {
             KeyboardHeight.last = endFrame.height - interactiveDismissResponder.height
             customInputContainerMinHeightConstraint.constant = customInputHeight

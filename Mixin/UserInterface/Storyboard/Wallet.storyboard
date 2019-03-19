@@ -879,7 +879,7 @@
         <scene sceneID="Wmp-9a-ZV7">
             <objects>
                 <tableViewController storyboardIdentifier="snapshot" automaticallyAdjustsScrollViewInsets="NO" id="p7I-cR-tJj" customClass="AllTransactionsViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" id="D0f-r1-DN4">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="50" estimatedRowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" id="D0f-r1-DN4">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1502,9 +1502,9 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Pay with Touch ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WO-Ce-5F7">
-                                                    <rect key="frame" x="20" y="22" width="136" height="20.333333333333329"/>
+                                                    <rect key="frame" x="20" y="22" width="128.66666666666666" height="20.333333333333329"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -1535,9 +1535,9 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalCompressionResistancePriority="250" insetsLayoutMarginsFromSafeArea="NO" text="Pay with PIN interval" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2NX-lf-dDR">
-                                                    <rect key="frame" x="20" y="0.0" width="292.33333333333331" height="64"/>
+                                                    <rect key="frame" x="20" y="0.0" width="295.33333333333331" height="64"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                     <userDefinedRuntimeAttributes>
@@ -1545,9 +1545,9 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="750" insetsLayoutMarginsFromSafeArea="NO" text="2 hours" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eVq-Uz-Lcp">
-                                                    <rect key="frame" x="320.33333333333331" y="0.0" width="51.666666666666686" height="64"/>
+                                                    <rect key="frame" x="323.33333333333331" y="0.0" width="48.666666666666686" height="64"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -1586,9 +1586,9 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="89U-kf-ZWh">
-                                                    <rect key="frame" x="20" y="15.666666666666664" width="374" height="33"/>
+                                                    <rect key="frame" x="20" y="16" width="374" height="32"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <state key="normal" title="Change PIN">
                                                         <color key="titleColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
@@ -1599,12 +1599,21 @@
                                                         <action selector="changePINAction:" destination="fti-OC-ybj" eventType="touchUpInside" id="i4U-zu-fjd"/>
                                                     </connections>
                                                 </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="lTi-lT-c7I">
+                                                    <rect key="frame" x="372" y="0.0" width="42" height="64"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="42" id="MIL-MT-OIs"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="89U-kf-ZWh" firstAttribute="centerY" secondItem="tCM-CH-sUr" secondAttribute="centerY" id="5w6-sB-4jI"/>
                                                 <constraint firstItem="89U-kf-ZWh" firstAttribute="leading" secondItem="tCM-CH-sUr" secondAttribute="leading" constant="20" id="LIc-Hd-1wf"/>
+                                                <constraint firstAttribute="bottom" secondItem="lTi-lT-c7I" secondAttribute="bottom" id="OjH-9j-R3o"/>
                                                 <constraint firstAttribute="trailing" secondItem="89U-kf-ZWh" secondAttribute="trailing" constant="20" id="iY0-U2-Gt5"/>
+                                                <constraint firstItem="lTi-lT-c7I" firstAttribute="top" secondItem="tCM-CH-sUr" secondAttribute="top" id="k7x-6l-VKX"/>
+                                                <constraint firstAttribute="trailing" secondItem="lTi-lT-c7I" secondAttribute="trailing" id="mOp-2l-Mea"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

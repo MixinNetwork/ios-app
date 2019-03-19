@@ -6,7 +6,7 @@ protocol SnapshotCellDelegate: class {
 
 class SnapshotCell: UITableViewCell {
     
-    static let height: CGFloat = 50
+    static let cellHeight: CGFloat = 50
     
     @IBOutlet weak var pendingDepositProgressView: UIView!
     @IBOutlet weak var iconImageView: AvatarImageView!

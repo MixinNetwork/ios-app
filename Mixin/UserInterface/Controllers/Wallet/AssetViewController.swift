@@ -172,12 +172,12 @@ extension AssetViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return PeerTransactionSnapshotCell.cellHeight
+        return SnapshotCell.cellHeight
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let title = snapshotDataSource.titles[section]
-        return title.isEmpty ? .leastNormalMagnitude : 32
+        return title.isEmpty ? .leastNormalMagnitude : 44
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

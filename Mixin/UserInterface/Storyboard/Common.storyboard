@@ -36,16 +36,16 @@
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="icw-0n-iSf">
-                                        <rect key="frame" x="54" y="11.5" width="261" height="21.5"/>
+                                        <rect key="frame" x="54" y="11.5" width="267" height="21.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Crossle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ABp-yv-qRY">
-                                                <rect key="frame" x="98.5" y="0.0" width="64" height="21.5"/>
+                                                <rect key="frame" x="101.5" y="0.0" width="64" height="21.5"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWA-GK-Nf0">
-                                                <rect key="frame" x="109.5" y="0.0" width="42.5" height="0.0"/>
+                                                <rect key="frame" x="112.5" y="0.0" width="42.5" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -76,7 +76,7 @@
                                     <constraint firstAttribute="height" constant="44" id="cTa-pB-Lph"/>
                                     <constraint firstItem="icw-0n-iSf" firstAttribute="centerY" secondItem="y4k-Xv-8tX" secondAttribute="centerY" id="gBB-NB-evU"/>
                                     <constraint firstItem="icw-0n-iSf" firstAttribute="leading" secondItem="7gt-Vj-HE4" secondAttribute="trailing" id="jyn-8w-y2A"/>
-                                    <constraint firstAttribute="trailing" secondItem="icw-0n-iSf" secondAttribute="trailing" constant="60" id="ocg-2D-FJ0"/>
+                                    <constraint firstAttribute="trailing" secondItem="icw-0n-iSf" secondAttribute="trailing" constant="54" id="ocg-2D-FJ0"/>
                                     <constraint firstItem="gcg-t3-GeH" firstAttribute="centerY" secondItem="y4k-Xv-8tX" secondAttribute="centerY" id="qlY-MA-hpu"/>
                                     <constraint firstAttribute="trailing" secondItem="gcg-t3-GeH" secondAttribute="trailing" id="uCO-kR-ANg"/>
                                     <constraint firstItem="gcg-t3-GeH" firstAttribute="height" secondItem="y4k-Xv-8tX" secondAttribute="height" id="yI9-Y9-fbV"/>

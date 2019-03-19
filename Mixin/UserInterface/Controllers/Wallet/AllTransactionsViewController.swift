@@ -93,7 +93,7 @@ extension AllTransactionsViewController {
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let title = dataSource.titles[section]
-        return title.isEmpty ? .leastNormalMagnitude : 32
+        return title.isEmpty ? .leastNormalMagnitude : 44
     }
     
     private func updateTableViewContentInset() {

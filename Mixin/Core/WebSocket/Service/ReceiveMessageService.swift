@@ -860,7 +860,7 @@ extension ReceiveMessageService {
             var message = Message.createMessage(textMessage: content, data: data)
             message.status = MessageStatus.SENDING.rawValue
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendMessage(message: message)
+            SendMessageService.shared.sendMessage(message: message, data: plainText)
         } else if data.category.hasSuffix("_STICKER") {
             guard let transferStickerData = parseSticker(plainText) else {
                 return
@@ -868,7 +868,7 @@ extension ReceiveMessageService {
             var message = Message.createMessage(stickerData: transferStickerData, data: data)
             message.status = MessageStatus.SENDING.rawValue
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendMessage(message: message)
+            SendMessageService.shared.sendMessage(message: message, data: plainText)
         } else if data.category.hasSuffix("_IMAGE") {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -879,7 +879,7 @@ extension ReceiveMessageService {
             var message = Message.createMessage(mediaData: transferMediaData, data: data)
             message.status = MessageStatus.SENDING.rawValue
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendMessage(message: message)
+            SendMessageService.shared.sendMessage(message: message, data: plainText)
         } else if data.category.hasSuffix("_DATA") {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -889,7 +889,7 @@ extension ReceiveMessageService {
             }
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendMessage(message: message)
+            SendMessageService.shared.sendMessage(message: message, data: plainText)
         }
     }
 

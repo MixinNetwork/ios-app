@@ -104,6 +104,7 @@ struct MixinFile {
         case files = "Files"
         case videos = "Videos"
         case audios = "Audios"
+        case camera = "Camera"
         
         var messageCategorySuffix: String {
             switch self {
@@ -115,6 +116,8 @@ struct MixinFile {
                 return "_VIDEO"
             case .audios:
                 return "_AUDIO"
+            case .camera:
+                return "_TEMP"
             }
         }
     }

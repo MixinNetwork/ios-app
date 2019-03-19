@@ -1,19 +1,35 @@
 import Foundation
 import UIKit
+import Photos
 import Bugsnag
 
 class AttachmentUploadJob: UploadOrDownloadJob {
 
-    internal var attachResponse: AttachmentResponse?
-    
-    private var stream: InputStream?
+    private static let videoSettings: [String: Any] = [
+        AVVideoCodecKey: AVVideoCodecH264,
+        AVVideoWidthKey: 1280,
+        AVVideoHeightKey: 720,
+        AVVideoCompressionPropertiesKey: [
+            AVVideoAverageBitRateKey: 1500000,
+            AVVideoProfileLevelKey: AVVideoProfileLevelH264MainAutoLevel
+        ]
+    ]
+    private static let audioSettings: [String: Any] = [
+        AVFormatIDKey: kAudioFormatMPEG4AAC,
+        AVNumberOfChannelsKey: 2,
+        AVSampleRateKey: 44100,
+        AVEncoderBitRateKey: 128000
+    ]
 
+    internal var attachResponse: AttachmentResponse?
     internal var fileUrl: URL? {
         guard let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty else {
             return nil
         }
         return MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
     }
+
+    private var stream: InputStream?
     
     init(message: Message) {
         super.init(messageId: message.messageId)
@@ -32,7 +48,15 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         guard !self.message.messageId.isEmpty else {
             return false
         }
-        
+        guard !processAttachment() else {
+            return true
+        }
+
+        return  uploadAction()
+    }
+
+    @discardableResult
+    private func uploadAction() -> Bool {
         repeat {
             switch MessageAPI.shared.requestAttachment() {
             case let .success(attachResponse):
@@ -50,6 +74,116 @@ class AttachmentUploadJob: UploadOrDownloadJob {
             }
         } while AccountAPI.shared.didLogin && !isCancelled
         return false
+    }
+
+    private func processAttachment() -> Bool {
+        guard let identifier = message.mediaIdentifier, !identifier.isEmpty else {
+            return false
+        }
+        guard !message.hasProcessedAsset() else {
+            return false
+        }
+        guard let asset = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil).firstObject else {
+            processAssetFailed()
+            return true
+        }
+
+        let messageId = message.messageId
+        if message.category.hasSuffix("_VIDEO") {
+            let requestOptions = PHVideoRequestOptions()
+            requestOptions.version = .current
+            requestOptions.deliveryMode = .highQualityFormat
+            requestOptions.isNetworkAccessAllowed = true
+            PHImageManager.default().requestAVAsset(forVideo: asset, options: requestOptions) { [weak self](avasset, _, _) in
+                guard let avasset = avasset else {
+                    self?.processAssetFailed()
+                    return
+                }
+                let thumbImage = UIImage(withFirstFrameOfVideoAtAsset: avasset)?.base64Thumbnail()
+                let mediaUrl = messageId + ExtensionName.mp4.withDot
+                let outputURL = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl)
+                let exportSession = AssetExportSession(asset: avasset, videoSettings: AttachmentUploadJob.videoSettings, audioSettings: AttachmentUploadJob.audioSettings, outputURL: outputURL)
+                exportSession.exportAsynchronously {
+                    if exportSession.status == .completed {
+                        self?.updateMessage(thumbImage: thumbImage, mediaUrl: mediaUrl, mediaSize: FileManager.default.fileSize(outputURL.path))
+                        self?.uploadAction()
+                    } else {
+                        self?.processAssetFailed()
+                    }
+                }
+            }
+        } else {
+            if let fileExtension = animateFileExtension(asset: asset) {
+                PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { [weak self](data, _, _, _) in
+                    guard let data = data else {
+                        self?.processAssetFailed()
+                        return
+                    }
+                    let thumbImage = UIImage(data: data)?.base64Thumbnail()
+                    let mediaUrl = messageId + fileExtension
+                    let outputURL = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+                    do {
+                        try data.write(to: outputURL)
+                    } catch {
+                        self?.processAssetFailed()
+                        return
+                    }
+                    guard FileManager.default.fileSize(outputURL.path) > 0 else {
+                        self?.processAssetFailed()
+                        return
+                    }
+                    self?.updateMessage(thumbImage: thumbImage, mediaUrl: mediaUrl, mediaSize: FileManager.default.fileSize(outputURL.path))
+                    self?.uploadAction()
+                })
+            } else {
+                let requestOptions = PHImageRequestOptions()
+                requestOptions.version = .current
+                requestOptions.isSynchronous = true
+                requestOptions.deliveryMode = .highQualityFormat
+                requestOptions.isNetworkAccessAllowed = true
+                PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self](image, _) in
+                    guard let image = image else {
+                        self?.finishJob()
+                        return
+                    }
+                    let thumbImage = image.base64Thumbnail()
+                    let mediaUrl = messageId + ExtensionName.jpeg.withDot
+                    let outputURL = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+                    let targetPhoto = image.scaleForUpload()
+                    guard targetPhoto.saveToFile(path: outputURL), FileManager.default.fileSize(outputURL.path) > 0 else {
+                        self?.processAssetFailed()
+                        return
+                    }
+                    
+                    self?.updateMessage(thumbImage: thumbImage, mediaUrl: mediaUrl, mediaSize: FileManager.default.fileSize(outputURL.path))
+                    self?.uploadAction()
+                })
+            }
+        }
+        return true
+    }
+
+    private func updateMessage(thumbImage: String?, mediaUrl: String, mediaSize: Int64) {
+        message.thumbImage = thumbImage
+        message.mediaUrl = mediaUrl
+        message.mediaSize = mediaSize
+        MessageDAO.shared.updateMessageUpload(mediaUrl: mediaUrl, thumbImage: thumbImage, mediaSize: mediaSize, messageId: message.messageId)
+    }
+
+    private func processAssetFailed() {
+        finishJob()
+        showHud(style: .error, text: Localized.CHAT_SEND_VIDEO_FAILED)
+    }
+
+    private func animateFileExtension(asset: PHAsset) -> String? {
+        guard let filename = PHAssetResource.assetResources(for: asset).first?.originalFilename.lowercased(), let startIndex = filename.index(of: "."), startIndex < filename.endIndex else {
+            return nil
+        }
+        let fileExtension = String(filename[startIndex..<filename.endIndex])
+        guard fileExtension.hasSuffix(".webp") || fileExtension.hasSuffix(".gif") else {
+            return nil
+        }
+        return fileExtension
     }
 
     private func uploadAttachment(attachResponse: AttachmentResponse) -> Bool {
@@ -126,6 +260,28 @@ extension AttachmentUploadJob: URLSessionTaskDelegate {
         let change = ConversationChange(conversationId: message.conversationId,
                                         action: .updateUploadProgress(messageId: message.messageId, progress: progress))
         NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
+    }
+
+}
+
+private extension Message {
+
+    func hasProcessedAsset() -> Bool {
+        guard let mediaUrl = self.mediaUrl, !mediaUrl.isEmpty else {
+            return false
+        }
+
+        let directory: MixinFile.ChatDirectory!
+        if category.hasSuffix("_VIDEO") {
+            directory = .videos
+        } else if category.hasSuffix("_IMAGE") {
+            directory = .photos
+        } else {
+            return true
+        }
+
+        let mediaPath = MixinFile.url(ofChatDirectory: directory, filename: mediaUrl).path
+        return FileManager.default.fileExists(atPath: mediaPath) && FileManager.default.fileSize(mediaPath) > 0
     }
 
 }

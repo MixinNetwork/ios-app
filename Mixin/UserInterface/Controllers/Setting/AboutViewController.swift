@@ -1,7 +1,9 @@
 import UIKit
 
 class AboutViewController: UITableViewController {
-    
+
+    @IBOutlet weak var versionLabel: UILabel!
+
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.about()!
         return ContainerViewController.instance(viewController: vc, title: "")
@@ -10,6 +12,7 @@ class AboutViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
+        versionLabel.text = Bundle.main.shortVersion + "(\(Bundle.main.bundleVersion))"
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

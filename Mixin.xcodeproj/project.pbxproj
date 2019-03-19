@@ -199,6 +199,7 @@
 		7B9916D421945A6800C11401 /* WalletAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9916D321945A6800C11401 /* WalletAssetCell.swift */; };
 		7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */; };
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
+		7B9C642F2240B62600465A6A /* WhiteBackgroundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */; };
 		7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */; };
 		7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */; };
 		7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */; };
@@ -831,6 +832,7 @@
 		7B9916D321945A6800C11401 /* WalletAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAssetCell.swift; sourceTree = "<group>"; };
 		7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
+		7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteBackgroundedView.swift; sourceTree = "<group>"; };
 		7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopViewController.swift; sourceTree = "<group>"; };
 		7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1774,7 +1776,6 @@
 				7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */,
 				7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */,
 				7B63C49021A4334C0044C4BF /* DepositFieldView.swift */,
-				7BF0E07B221ABE050053040D /* AssetIconView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2071,6 +2072,8 @@
 				7BDBDE6B223636B8006220DF /* ShadowImageView.swift */,
 				7B1AEB5B221D25F000256A18 /* SeparatorShadowView.swift */,
 				7BDBDE6422361D85006220DF /* SeparatorShadowFooterView.swift */,
+				7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */,
+				7BF0E07B221ABE050053040D /* AssetIconView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3043,6 +3046,7 @@
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
 				DF10709B2049BC3F00E20047 /* MixinDatabase.swift in Sources */,
 				7B61EB8E20978856001C1985 /* AttachmentCryptography.swift in Sources */,
+				7B9C642F2240B62600465A6A /* WhiteBackgroundedView.swift in Sources */,
 				7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				DF114B0A20206D3300EA8F9C /* App.swift in Sources */,

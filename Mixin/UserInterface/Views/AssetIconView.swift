@@ -6,9 +6,16 @@ class AssetIconView: UIView {
     @IBInspectable var chainIconOutlineWidth: CGFloat = 2
     
     let iconImageView = UIImageView()
-    let chainBackgroundView = UIView()
+    let chainBackgroundView = WhiteBackgroundedView()
     let chainImageView = UIImageView()
     let shadowOffset: CGFloat = 5
+    
+    private var chainIconIsHidden = false {
+        didSet {
+            chainBackgroundView.isHidden = chainIconIsHidden
+            chainImageView.isHidden = chainIconIsHidden
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -18,16 +25,6 @@ class AssetIconView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         prepare()
-    }
-    
-    private var chainIconIsHidden: Bool {
-        get {
-            return chainImageView.isHidden
-        }
-        set {
-            chainBackgroundView.isHidden = newValue
-            chainImageView.isHidden = newValue
-        }
     }
     
     override func layoutSubviews() {
@@ -71,7 +68,6 @@ class AssetIconView: UIView {
     private func prepare() {
         backgroundColor = .clear
         iconImageView.clipsToBounds = true
-        chainBackgroundView.backgroundColor = .white
         chainBackgroundView.clipsToBounds = true
         chainImageView.clipsToBounds = true
         addSubview(iconImageView)

@@ -116,7 +116,12 @@ class SendMessageService: MixinService {
         guard AccountUserDefault.shared.isDesktopLoggedIn else {
             return
         }
-        guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_IMAGE") || message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
+        guard message.category.hasSuffix("_TEXT") ||
+            message.category.hasSuffix("_STICKER") ||
+            message.category.hasSuffix("_CONTACT") ||
+            message.category.hasSuffix("_IMAGE") ||
+            message.category.hasSuffix("_DATA") ||
+            message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
             return
         }
         let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data

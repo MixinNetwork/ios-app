@@ -60,6 +60,7 @@ class ConversationViewController: UIViewController {
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
+    private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
     private var conversationInputViewController: ConversationInputViewController!
     private var previewDocumentController: UIDocumentInteractionController?
     
@@ -611,8 +612,13 @@ class ConversationViewController: UIViewController {
 // MARK: - UIGestureRecognizerDelegate
 extension ConversationViewController: UIGestureRecognizerDelegate {
     
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer != resizeInputRecognizer
+            || inputWrapperHeightConstraint.constant > conversationInputViewController.minimizedHeight
+    }
+    
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if isShowingMenu {
+        if gestureRecognizer != tapRecognizer || isShowingMenu {
             return true
         }
         if let view = touch.view as? TextMessageLabel {
@@ -1184,9 +1190,9 @@ extension ConversationViewController {
 extension ConversationViewController {
     
     private func finishInitialLoading() {
-        let recognizer = ResizeInputWrapperGestureRecognizer(target: self, action: #selector(resizeInputWrapperAction(_:)))
-        recognizer.delegate = self
-        tableView.addGestureRecognizer(recognizer)
+        resizeInputRecognizer = ResizeInputWrapperGestureRecognizer(target: self, action: #selector(resizeInputWrapperAction(_:)))
+        resizeInputRecognizer.delegate = self
+        tableView.addGestureRecognizer(resizeInputRecognizer)
         
         updateAccessoryButtons(animated: false)
         conversationInputViewController.finishLoading()

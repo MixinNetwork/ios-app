@@ -128,9 +128,33 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        if let asset = fetchResult?.object(at: indexPath.row) {
-            let vc = AssetSendViewController.instance(asset: asset, dataSource: dataSource)
-            navigationController?.pushViewController(vc, animated: true)
+        if let asset = fetchResult?.object(at: indexPath.row), let dataSource = dataSource {
+            let isGroupMessage = dataSource.category == .group
+            let ownerUser = dataSource.ownerUser
+            let category = asset.mediaType == .video ? MessageCategory.SIGNAL_VIDEO : MessageCategory.SIGNAL_IMAGE
+            var message = Message.createMessage(category: category.rawValue, conversationId: dataSource.conversationId, userId: AccountAPI.shared.accountUserId)
+            message.mediaIdentifier = asset.localIdentifier
+            if asset.mediaType == .video {
+                PHImageManager.default().requestAVAsset(forVideo: asset, options: nil) { (asset, _, _) in
+                    guard let asset = asset, asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first, let url = (asset as? AVURLAsset)?.url, let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) else {
+                        showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                        return
+                    }
+                    message.thumbImage = thumbnail.base64Thumbnail()
+                    let size = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
+                    message.mediaWidth = Int(abs(size.width))
+                    message.mediaHeight = Int(abs(size.height))
+                    message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
+                    message.mediaSize = FileManager.default.fileSize(url.path)
+                    message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)
+                    message.mediaStatus = MediaStatus.PENDING.rawValue
+                    SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
+                }
+            } else {
+
+            }
+//            let vc = AssetSendViewController.instance(asset: asset, dataSource: dataSource)
+//            navigationController?.pushViewController(vc, animated: true)
         }
         conversationInputViewController?.downsizeToRegularIfMaximized()
         return true

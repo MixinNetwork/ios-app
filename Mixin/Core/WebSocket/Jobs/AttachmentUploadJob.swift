@@ -105,7 +105,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                 let exportSession = AssetExportSession(asset: avasset, videoSettings: AttachmentUploadJob.videoSettings, audioSettings: AttachmentUploadJob.audioSettings, outputURL: outputURL)
                 exportSession.exportAsynchronously {
                     if exportSession.status == .completed {
-                        self?.updateMessage(thumbImage: thumbImage, mediaUrl: mediaUrl, mediaSize: FileManager.default.fileSize(outputURL.path))
+                        self?.updateMessage(mediaUrl: mediaUrl, mediaSize: FileManager.default.fileSize(outputURL.path))
                         self?.uploadAction()
                     } else {
                         self?.processAssetFailed()
@@ -119,7 +119,6 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                         self?.processAssetFailed()
                         return
                     }
-                    let thumbImage = UIImage(data: data)?.base64Thumbnail()
                     let mediaUrl = messageId + fileExtension
                     let outputURL = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
                     do {
@@ -132,7 +131,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                         self?.processAssetFailed()
                         return
                     }
-                    self?.updateMessage(thumbImage: thumbImage, mediaUrl: mediaUrl, mediaSize: FileManager.default.fileSize(outputURL.path))
+                    self?.updateMessage(mediaUrl: mediaUrl, mediaSize: FileManager.default.fileSize(outputURL.path))
                     self?.uploadAction()
                 })
             } else {
@@ -146,7 +145,6 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                         self?.finishJob()
                         return
                     }
-                    let thumbImage = image.base64Thumbnail()
                     let mediaUrl = messageId + ExtensionName.jpeg.withDot
                     let outputURL = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
                     let targetPhoto = image.scaleForUpload()
@@ -155,7 +153,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                         return
                     }
                     
-                    self?.updateMessage(thumbImage: thumbImage, mediaUrl: mediaUrl, mediaSize: FileManager.default.fileSize(outputURL.path))
+                    self?.updateMessage(mediaUrl: mediaUrl, mediaSize: FileManager.default.fileSize(outputURL.path))
                     self?.uploadAction()
                 })
             }
@@ -163,11 +161,10 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         return true
     }
 
-    private func updateMessage(thumbImage: String?, mediaUrl: String, mediaSize: Int64) {
-        message.thumbImage = thumbImage
+    private func updateMessage(mediaUrl: String, mediaSize: Int64) {
         message.mediaUrl = mediaUrl
         message.mediaSize = mediaSize
-        MessageDAO.shared.updateMessageUpload(mediaUrl: mediaUrl, thumbImage: thumbImage, mediaSize: mediaSize, messageId: message.messageId)
+        MessageDAO.shared.updateMessageUpload(mediaUrl: mediaUrl, mediaSize: mediaSize, messageId: message.messageId)
     }
 
     private func processAssetFailed() {

@@ -149,8 +149,8 @@ final class MessageDAO {
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
 
-    func updateMessageUpload(mediaUrl: String, thumbImage: String?, mediaSize: Int64, messageId: String) {
-        MixinDatabase.shared.update(maps: [(Message.Properties.mediaUrl, mediaUrl), (Message.Properties.thumbImage, thumbImage), (Message.Properties.mediaSize, mediaSize)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+    func updateMessageUpload(mediaUrl: String, mediaSize: Int64, messageId: String) {
+        MixinDatabase.shared.update(maps: [(Message.Properties.mediaUrl, mediaUrl), (Message.Properties.mediaSize, mediaSize)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
     }
 
     func updateMessageQuoteContent(quoteMessageId: String, quoteContent: Data) {

@@ -462,7 +462,6 @@
 		DF6175BF2223985C00624609 /* MXNProvisionCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */; };
 		DF6175C02223985C00624609 /* ProvisionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BD2223985C00624609 /* ProvisionManager.swift */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
-		DF6175C5222398E200624609 /* ProfileKeyUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C4222398E100624609 /* ProfileKeyUtil.swift */; };
 		DF6175C72223E5D000624609 /* BlazeSessionMessageParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C62223E5D000624609 /* BlazeSessionMessageParam.swift */; };
 		DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */; };
 		DF63E1D920B84B5300A833A7 /* ContactQRCodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */; };
@@ -1114,7 +1113,6 @@
 		DF6175BC2223985B00624609 /* MXNProvisionCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNProvisionCryptor.m; sourceTree = "<group>"; };
 		DF6175BD2223985C00624609 /* ProvisionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisionManager.swift; sourceTree = "<group>"; };
 		DF6175C2222398BB00624609 /* MixinURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinURL.swift; sourceTree = "<group>"; };
-		DF6175C4222398E100624609 /* ProfileKeyUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileKeyUtil.swift; sourceTree = "<group>"; };
 		DF6175C62223E5D000624609 /* BlazeSessionMessageParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeSessionMessageParam.swift; sourceTree = "<group>"; };
 		DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactQRCodeCell.xib; sourceTree = "<group>"; };
 		DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactQRCodeCell.swift; sourceTree = "<group>"; };
@@ -1393,7 +1391,6 @@
 				27DA337E1FE8F92900A4D16F /* SignalProtocol.swift */,
 				27382EC51FECDF0D00437A1B /* PreKeyUtil.swift */,
 				DFCC433F206B60CE006F50BE /* KeyUtil.swift */,
-				DF6175C4222398E100624609 /* ProfileKeyUtil.swift */,
 				DFF353031FEE657000058453 /* CryptoUserDefault.swift */,
 				DF0E2D2320FDEB2500BB2658 /* Keychain.swift */,
 			);
@@ -3208,7 +3205,6 @@
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
 				27ACB9E72084944C0088B593 /* DecryptionCallback.swift in Sources */,
 				DF6ED3EB1FE36F3E00E958A3 /* JobQueue.swift in Sources */,
-				DF6175C5222398E200624609 /* ProfileKeyUtil.swift in Sources */,
 				7B869C70202D7DA8009930BA /* NumberPadView.swift in Sources */,
 				DF8DA1A01FD64B7900425CEC /* BlazeMessage.swift in Sources */,
 				7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */,

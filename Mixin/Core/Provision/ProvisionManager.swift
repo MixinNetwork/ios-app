@@ -6,10 +6,6 @@ class ProvisionManager {
         let cryptor = MXNProvisionCryptor(signalContext: Signal.context,
                                           base64EncodedPublicKey: base64EncodedPublicKey)
         let identityKeyPair = PreKeyUtil.getIdentityKeyPair()
-        guard let profileKey = ProfileKeyUtil.profileKey else {
-            completion(false)
-            return
-        }
         ProvisioningAPI.shared.code { (response) in
             switch response {
             case .success(let response):
@@ -18,8 +14,7 @@ class ProvisionManager {
                                                identityKeyPrivate: identityKeyPair.privateKey,
                                                userId: account.user_id,
                                                sessionId: account.session_id,
-                                               provisioningCode: response.code,
-                                               profileKey: profileKey)
+                                               provisioningCode: response.code)
                 guard let secretData = cryptor.encryptedData(from: message) else {
                     completion(false)
                     return

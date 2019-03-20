@@ -8,20 +8,18 @@ import SignalProtocolC
     let userId: String
     let sessionId: String
     let provisioningCode: String
-    let profileKey: Data
     let platform = "iOS"
     
     @objc private(set) lazy var jsonData: Data? = {
         return try? JSONEncoder.snakeCase.encode(self)
     }()
     
-    init(identityKeyPublic: Data, identityKeyPrivate: Data, userId: String, sessionId: String, provisioningCode: String, profileKey: Data) {
+    init(identityKeyPublic: Data, identityKeyPrivate: Data, userId: String, sessionId: String, provisioningCode: String) {
         self.identityKeyPublic = identityKeyPublic
         self.identityKeyPrivate = identityKeyPrivate
         self.userId = userId
         self.sessionId = sessionId
         self.provisioningCode = provisioningCode
-        self.profileKey = profileKey
     }
     
 }

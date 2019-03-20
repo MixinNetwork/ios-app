@@ -23,8 +23,6 @@ extension UIColor {
     static let hintBlue = UIColor(rgbValue: 0x1FB4FC)
     static let hintRed = UIColor(rgbValue: 0xFF7070)
     static let hintGreen = UIColor(rgbValue: 0x48CF94)
-
-    static let actionBackground = UIColor(rgbValue: 0x29BE73)
     
     static let modernCellSelection = UIColor(rgbValue: 0xF6F8FC)
     

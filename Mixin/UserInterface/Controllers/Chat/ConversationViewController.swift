@@ -60,6 +60,7 @@ class ConversationViewController: UIViewController {
     
     private var tapRecognizer: UITapGestureRecognizer!
     private var reportRecognizer: UILongPressGestureRecognizer!
+    private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
     private var conversationInputViewController: ConversationInputViewController!
     private var previewDocumentController: UIDocumentInteractionController?
     
@@ -278,6 +279,8 @@ class ConversationViewController: UIViewController {
             }
         }
         switch recognizer.state {
+        case .began:
+            recognizer.inputWrapperHeightWhenBegan = inputWrapperHeight
         case .changed:
             let shouldMoveDown = verticalVelocity > 0 && location.y > 0
             let canMoveUp = !conversationInputViewController.textView.isFirstResponder
@@ -289,13 +292,17 @@ class ConversationViewController: UIViewController {
                 recognizer.hasMovedInputWrapperDuringChangedState = true
                 var newHeight = inputWrapperHeight - recognizer.translation(in: view).y
                 newHeight = max(newHeight, conversationInputViewController.minimizedHeight)
-                newHeight = min(newHeight, maxInputWrapperHeight)
+                if conversationInputViewController.isMaximizable {
+                    newHeight = min(newHeight, maxInputWrapperHeight)
+                } else {
+                    newHeight = min(newHeight, regularInputWrapperHeight)
+                }
                 inputWrapperHeight = newHeight
                 view.layoutIfNeeded()
             }
             recognizer.setTranslation(.zero, in: view)
         case .ended:
-            let shouldResize = recognizer.hasMovedInputWrapperDuringChangedState
+            let shouldResize = abs(inputWrapperHeight - recognizer.inputWrapperHeightWhenBegan) > 1
                 && !conversationInputViewController.textView.isFirstResponder
             if shouldResize {
                 if verticalVelocity >= 0 {
@@ -611,8 +618,13 @@ class ConversationViewController: UIViewController {
 // MARK: - UIGestureRecognizerDelegate
 extension ConversationViewController: UIGestureRecognizerDelegate {
     
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer != resizeInputRecognizer
+            || inputWrapperHeightConstraint.constant > conversationInputViewController.minimizedHeight
+    }
+    
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if isShowingMenu {
+        if gestureRecognizer != tapRecognizer || isShowingMenu {
             return true
         }
         if let view = touch.view as? TextMessageLabel {
@@ -1184,9 +1196,9 @@ extension ConversationViewController {
 extension ConversationViewController {
     
     private func finishInitialLoading() {
-        let recognizer = ResizeInputWrapperGestureRecognizer(target: self, action: #selector(resizeInputWrapperAction(_:)))
-        recognizer.delegate = self
-        tableView.addGestureRecognizer(recognizer)
+        resizeInputRecognizer = ResizeInputWrapperGestureRecognizer(target: self, action: #selector(resizeInputWrapperAction(_:)))
+        resizeInputRecognizer.delegate = self
+        tableView.addGestureRecognizer(resizeInputRecognizer)
         
         updateAccessoryButtons(animated: false)
         conversationInputViewController.finishLoading()
@@ -1328,6 +1340,7 @@ extension ConversationViewController {
     class ResizeInputWrapperGestureRecognizer: UIPanGestureRecognizer {
         
         var hasMovedInputWrapperDuringChangedState = false
+        var inputWrapperHeightWhenBegan: CGFloat = 0
         
         override func reset() {
             super.reset()

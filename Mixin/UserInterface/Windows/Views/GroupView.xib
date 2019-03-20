@@ -172,7 +172,7 @@
             <viewLayoutGuide key="safeArea" id="Zlp-75-Ixx"/>
             <userDefinedRuntimeAttributes>
                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                    <real key="value" value="12"/>
+                    <real key="value" value="13"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
             <connections>

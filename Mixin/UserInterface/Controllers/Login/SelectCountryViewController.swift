@@ -7,7 +7,7 @@ protocol SelectCountryViewControllerDelegate: class {
 class SelectCountryViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
+    @IBOutlet weak var searchBoxView: SearchBoxView!
     
     typealias Section = [Country]
     

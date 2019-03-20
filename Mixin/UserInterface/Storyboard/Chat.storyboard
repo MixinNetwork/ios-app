@@ -1220,7 +1220,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eBh-Bb-TYw">
                                 <rect key="frame" x="0.0" y="20" width="375" height="70"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F2o-eI-VkI" customClass="ModernSearchBoxView" customModule="Mixin" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F2o-eI-VkI" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="20" y="15" width="270" height="40"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <userDefinedRuntimeAttributes>
@@ -2253,7 +2253,7 @@
                                 </cells>
                             </collectionView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XEL-TZ-DTw">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="226"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="210"/>
                                 <connections>
                                     <segue destination="KuF-el-ZRe" kind="embed" id="w5b-0A-1cX"/>
                                 </connections>
@@ -2262,7 +2262,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="0ZS-Ao-ejZ" firstAttribute="bottom" secondItem="ayN-NN-5gU" secondAttribute="bottom" id="0ri-G5-7vK"/>
-                            <constraint firstItem="ayN-NN-5gU" firstAttribute="top" secondItem="XEL-TZ-DTw" secondAttribute="bottom" id="3dW-HI-VGf"/>
+                            <constraint firstItem="ayN-NN-5gU" firstAttribute="top" secondItem="XEL-TZ-DTw" secondAttribute="bottom" constant="16" id="3dW-HI-VGf"/>
                             <constraint firstAttribute="trailing" secondItem="XEL-TZ-DTw" secondAttribute="trailing" id="Ggd-ei-sg3"/>
                             <constraint firstItem="XEL-TZ-DTw" firstAttribute="leading" secondItem="4tP-FW-X3A" secondAttribute="leading" id="KZh-pq-I3d"/>
                             <constraint firstItem="ayN-NN-5gU" firstAttribute="leading" secondItem="4tP-FW-X3A" secondAttribute="leading" id="dtg-aN-dkG"/>

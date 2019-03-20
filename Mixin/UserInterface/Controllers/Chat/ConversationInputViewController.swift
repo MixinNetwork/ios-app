@@ -5,31 +5,6 @@ protocol ConversationInputInteractiveResizableViewController {
     var interactiveResizableScrollView: UIScrollView { get }
 }
 
-protocol ConversationInputAccessible {
-    var conversationInputViewController: ConversationInputViewController? { get }
-}
-
-extension ConversationInputAccessible where Self: UIViewController {
-    
-    var conversationInputViewController: ConversationInputViewController? {
-        func findConversationInput(_ vc: UIViewController) -> ConversationInputViewController? {
-            if let vc = vc as? ConversationInputViewController {
-                return vc
-            } else if let parent = vc.parent {
-                return findConversationInput(parent)
-            } else {
-                return nil
-            }
-        }
-        if let parent = parent {
-            return findConversationInput(parent)
-        } else {
-            return nil
-        }
-    }
-    
-}
-
 class ConversationInputViewController: UIViewController {
     
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
@@ -84,6 +59,10 @@ class ConversationInputViewController: UIViewController {
         didSet {
             updateQuotePreview()
         }
+    }
+    
+    var isMaximizable: Bool {
+        return customInputViewController is ConversationInputInteractiveResizableViewController
     }
     
     private let maxInputRow = 5
@@ -552,7 +531,7 @@ extension ConversationInputViewController {
 extension ConversationInputViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return customInputViewController is ConversationInputInteractiveResizableViewController
+        return isMaximizable
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {

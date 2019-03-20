@@ -2,7 +2,7 @@ import UIKit
 
 class GroupParticipentViewController: UIViewController {
 
-    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
+    @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
 
     private let memberCellReuseId = "GroupMember"

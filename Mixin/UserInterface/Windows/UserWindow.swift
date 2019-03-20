@@ -43,7 +43,22 @@ class UserWindow: BottomSheetView {
     }
 
     override func dismissView() {
-        super.dismissView()
+        self.alpha = 1.0
+        isShowing = false
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
+            self.alpha = 0
+            self.popupView.center = self.getAnimationStartPoint()
+        }, completion: { _ in
+            if let popupView = self.userViewPopupView {
+                self.popupView.removeFromSuperview()
+                self.popupView = popupView
+                self.userViewPopupView = nil
+                self.userView.avatarImageView.isHidden = false
+            }
+            self.contentBottomConstraint.constant = 0
+            self.layoutIfNeeded()
+        })
         onDissmisCallback?()
     }
 

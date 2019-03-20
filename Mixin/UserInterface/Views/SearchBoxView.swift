@@ -22,7 +22,7 @@ class SearchTextField: UITextField {
     
 }
 
-class ModernSearchBoxView: UIView, XibDesignable, SearchBox {
+class SearchBoxView: UIView, XibDesignable {
     
     @IBOutlet weak var textField: UITextField!
     

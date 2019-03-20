@@ -18,7 +18,7 @@ class HiddenAssetViewController: UIViewController {
             weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
             WalletUserDefault.shared.hiddenAssets[assetId] = nil
         })
-        action.backgroundColor = .actionBackground
+        action.backgroundColor = .theme
         return action
     }()
     

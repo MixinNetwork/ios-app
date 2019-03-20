@@ -90,8 +90,8 @@
                                     <constraint firstItem="lIA-GA-sP9" firstAttribute="centerY" secondItem="Bz8-ZX-oZR" secondAttribute="centerY" id="nsJ-1x-aB7"/>
                                 </constraints>
                             </view>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ln2-a3-Of9" customClass="ModernSearchBoxView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="20" y="108" width="374" height="40"/>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ln2-a3-Of9" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="20" y="84" width="560" height="40"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Ro2-vn-Osv"/>
@@ -202,8 +202,15 @@
                                     <constraint firstItem="eip-Pa-aoX" firstAttribute="width" secondItem="8MU-NU-e3a" secondAttribute="width" id="Ho6-eq-tEJ"/>
                                 </constraints>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9TK-h6-NEJ" userLabel="Keyboard Placeholder">
+                                <rect key="frame" x="0.0" y="768" width="414" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="VBJ-C7-Unv"/>
+                                </constraints>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mBN-xX-Rgs" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="154" y="814" width="106" height="48"/>
+                                <rect key="frame" x="154" y="700" width="106" height="48"/>
                                 <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
                                 <state key="normal" title="Create">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -218,18 +225,21 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="9TK-h6-NEJ" firstAttribute="top" secondItem="mBN-xX-Rgs" secondAttribute="bottom" constant="20" id="0lG-V7-wPa"/>
                             <constraint firstItem="8MU-NU-e3a" firstAttribute="leading" secondItem="42F-ig-MCg" secondAttribute="leading" constant="20" id="6GN-NN-8hp"/>
                             <constraint firstItem="8MU-NU-e3a" firstAttribute="top" secondItem="42F-ig-MCg" secondAttribute="top" constant="30" id="Om3-Qk-hEh"/>
-                            <constraint firstItem="42F-ig-MCg" firstAttribute="bottom" secondItem="mBN-xX-Rgs" secondAttribute="bottom" id="U1l-BK-K8a"/>
+                            <constraint firstAttribute="bottom" secondItem="9TK-h6-NEJ" secondAttribute="bottom" id="OuS-qf-XaI"/>
                             <constraint firstItem="mBN-xX-Rgs" firstAttribute="centerX" secondItem="42F-ig-MCg" secondAttribute="centerX" id="VaW-gd-tTD"/>
                             <constraint firstItem="42F-ig-MCg" firstAttribute="trailing" secondItem="8MU-NU-e3a" secondAttribute="trailing" constant="20" id="avM-rI-KdL"/>
+                            <constraint firstItem="9TK-h6-NEJ" firstAttribute="leading" secondItem="42F-ig-MCg" secondAttribute="leading" id="cdk-2I-wRR"/>
+                            <constraint firstItem="42F-ig-MCg" firstAttribute="trailing" secondItem="9TK-h6-NEJ" secondAttribute="trailing" id="oFH-1U-vAD"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="42F-ig-MCg"/>
                     </view>
                     <connections>
-                        <outlet property="bottomConstraint" destination="U1l-BK-K8a" id="OCk-jM-rj5"/>
                         <outlet property="createButton" destination="mBN-xX-Rgs" id="uhZ-nO-lBI"/>
                         <outlet property="groupImageView" destination="ez8-fZ-P55" id="toh-Uk-u0y"/>
+                        <outlet property="keyboardPlaceholderHeightConstraint" destination="VBJ-C7-Unv" id="2PD-Hd-t1Q"/>
                         <outlet property="nameTextField" destination="bEz-0j-gMl" id="oEV-AT-ZCz"/>
                         <outlet property="participentLabel" destination="A2L-Ns-C8A" id="h4F-JW-jHz"/>
                     </connections>
@@ -246,8 +256,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SYh-qG-wv8" customClass="ModernSearchBoxView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="20" y="64" width="374" height="40"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SYh-qG-wv8" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="20" y="40" width="560" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="IMS-6n-6jj"/>
                                 </constraints>

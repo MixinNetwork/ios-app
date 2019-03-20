@@ -51,8 +51,8 @@
                                     <constraint firstItem="qNz-bf-YgU" firstAttribute="leading" secondItem="ueE-x1-I7h" secondAttribute="leading" id="ujk-Nw-LGq"/>
                                 </constraints>
                             </view>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zQE-qM-lTe" customClass="ModernSearchBoxView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="20" y="84" width="335" height="40"/>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zQE-qM-lTe" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="20" y="84" width="560" height="40"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="12C-hG-SCW"/>

@@ -18,10 +18,15 @@ class ConversationSettingViewController: UITableViewController {
     @IBOutlet var cells: [UITableViewCell]!
     @IBOutlet var checkmarkViews: [CheckmarkView]!
     
+    private let footerReuseId = "footer"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(SeparatorShadowFooterView.self,
+                           forHeaderFooterViewReuseIdentifier: footerReuseId)
         checkmarkViews.forEach {
-            $0.status = .unselected
+            $0.status = .selected
+            $0.alpha = 0
         }
         cells.forEach {
             $0.selectedBackgroundView = UIView.createSelectedBackgroundView()
@@ -29,17 +34,17 @@ class ConversationSettingViewController: UITableViewController {
         if let account = AccountAPI.shared.account {
             switch account.receive_message_source {
             case ReceiveMessageSource.everybody.rawValue:
-                messageSourceEverybodyCheckmarkView.status = .selected
+                messageSourceEverybodyCheckmarkView.alpha = 1
             case ReceiveMessageSource.contacts.rawValue:
-                messageSourceContactsCheckmarkView.status = .selected
+                messageSourceContactsCheckmarkView.alpha = 1
             default:
                 break
             }
             switch account.accept_conversation_source {
             case AcceptConversationSource.everybody.rawValue:
-                conversationSourceEverybodyCheckmarkView.status = .selected
+                conversationSourceEverybodyCheckmarkView.alpha = 1
             case AcceptConversationSource.contacts.rawValue:
-                conversationSourceContactsCheckmarkView.status = .selected
+                conversationSourceContactsCheckmarkView.alpha = 1
             default:
                 break
             }
@@ -90,12 +95,16 @@ extension ConversationSettingViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId)
+    }
+    
 }
 
 extension ConversationSettingViewController {
     
     private func setMessageSourceEverybody() {
-        messageSourceContactsCheckmarkView.status = .unselected
+        messageSourceContactsCheckmarkView.alpha = 0
         messageSourceEverybodyCheckmarkView.alpha = 0
         messageSourceEverybodyIndicator.startAnimating()
         let userRequest = UserRequest(full_name: nil,
@@ -109,20 +118,20 @@ extension ConversationSettingViewController {
             self?.messageSourceEverybodyCheckmarkView.alpha = 1
             switch result {
             case .success:
-                self?.messageSourceEverybodyCheckmarkView.status = .selected
+                self?.messageSourceEverybodyCheckmarkView.alpha = 1
                 if let old = AccountAPI.shared.account {
                     let newAccount = Account(withAccount: old, receiveMessageSource: .everybody)
                     AccountAPI.shared.account = newAccount
                 }
             case let .failure(error):
                 showHud(style: .error, text: error.localizedDescription)
-                self?.messageSourceContactsCheckmarkView.status = .selected
+                self?.messageSourceContactsCheckmarkView.alpha = 1
             }
         })
     }
     
     private func setMessageSourceContacts() {
-        messageSourceEverybodyCheckmarkView.status = .unselected
+        messageSourceEverybodyCheckmarkView.alpha = 0
         messageSourceContactsCheckmarkView.alpha = 0
         messageSourceContactsIndicator.startAnimating()
         let userRequest = UserRequest(full_name: nil,
@@ -136,20 +145,20 @@ extension ConversationSettingViewController {
             self?.tableView.isUserInteractionEnabled = true
             switch result {
             case .success:
-                self?.messageSourceContactsCheckmarkView.status = .selected
+                self?.messageSourceContactsCheckmarkView.alpha = 1
                 if let old = AccountAPI.shared.account {
                     let newAccount = Account(withAccount: old, receiveMessageSource: .contacts)
                     AccountAPI.shared.account = newAccount
                 }
             case let .failure(error):
                 showHud(style: .error, text: error.localizedDescription)
-                self?.messageSourceEverybodyCheckmarkView.status = .selected
+                self?.messageSourceEverybodyCheckmarkView.alpha = 1
             }
         })
     }
     
     private func setConversationSourceEverybody() {
-        conversationSourceContactsCheckmarkView.status = .unselected
+        conversationSourceContactsCheckmarkView.alpha = 0
         conversationSourceEverybodyCheckmarkView.alpha = 0
         conversationSourceEverybodyIndicator.startAnimating()
         let userRequest = UserRequest(full_name: nil,
@@ -163,21 +172,21 @@ extension ConversationSettingViewController {
             self?.tableView.isUserInteractionEnabled = true
             switch result {
             case .success:
-                self?.conversationSourceEverybodyCheckmarkView.status = .selected
+                self?.conversationSourceEverybodyCheckmarkView.alpha = 1
                 if let old = AccountAPI.shared.account {
                     let newAccount = Account(withAccount: old, acceptConversationSource: .everybody)
                     AccountAPI.shared.account = newAccount
                 }
             case let .failure(error):
                 showHud(style: .error, text: error.localizedDescription)
-                self?.conversationSourceContactsCheckmarkView.status = .selected
+                self?.conversationSourceContactsCheckmarkView.alpha = 1
             }
         })
     }
     
     private func setConversationSourceContacts() {
         conversationSourceContactsIndicator.startAnimating()
-        conversationSourceEverybodyCheckmarkView.status = .unselected
+        conversationSourceEverybodyCheckmarkView.alpha = 0
         conversationSourceContactsCheckmarkView.alpha = 0
         let userRequest = UserRequest(full_name: nil,
                                       avatar_base64: nil,
@@ -190,14 +199,14 @@ extension ConversationSettingViewController {
             self?.conversationSourceContactsCheckmarkView.alpha = 1
             switch result {
             case .success:
-                self?.conversationSourceContactsCheckmarkView.status = .selected
+                self?.conversationSourceContactsCheckmarkView.alpha = 1
                 if let old = AccountAPI.shared.account {
                     let newAccount = Account(withAccount: old, acceptConversationSource: .contacts)
                     AccountAPI.shared.account = newAccount
                 }
             case let .failure(error):
                 showHud(style: .error, text: error.localizedDescription)
-                self?.conversationSourceEverybodyCheckmarkView.status = .selected
+                self?.conversationSourceEverybodyCheckmarkView.alpha = 1
             }
         })
     }

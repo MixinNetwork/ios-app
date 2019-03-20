@@ -4,8 +4,7 @@ class RoundedButton: UIButton {
     
     override var isEnabled: Bool {
         didSet {
-            let color = isEnabled ? UIColor.theme : UIColor(rgbValue: 0xE5E7EC)
-            backgroundLayer.fillColor = color.cgColor
+            updateAppearanceWithIsEnabled()
         }
     }
     
@@ -13,18 +12,13 @@ class RoundedButton: UIButton {
         didSet {
             if isBusy {
                 backgroundLayer.removeFromSuperlayer()
-                if !activityIndicator.isDescendant(of: self) {
-                    addSubview(activityIndicator)
-                    activityIndicator.snp.makeConstraints { (make) in
-                        make.center.equalToSuperview()
-                    }
-                }
+                addActivityIndicatorIfNeeded()
                 activityIndicator.startAnimating()
                 layer.insertSublayer(backgroundLayer, below: activityIndicator.layer)
             } else {
                 backgroundLayer.removeFromSuperlayer()
                 activityIndicator.stopAnimating()
-                layer.insertSublayer(backgroundLayer, at: 0)
+                layer.insertSublayer(backgroundLayer, above: shadowLayer)
             }
         }
     }
@@ -32,6 +26,8 @@ class RoundedButton: UIButton {
     @IBInspectable var cornerRadius: CGFloat = 20
     
     private let backgroundLayer = CAShapeLayer()
+    private let shadowLayer = CALayer()
+    
     private lazy var activityIndicator = UIActivityIndicatorView(style: .white)
     
     required init?(coder aDecoder: NSCoder) {
@@ -46,24 +42,43 @@ class RoundedButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        backgroundLayer.frame = bounds
+        shadowLayer.frame = bounds
         updatePaths()
     }
     
     private func prepare() {
         setTitleColor(.white, for: .normal)
         updatePaths()
-        backgroundLayer.fillColor = (isEnabled ? UIColor.theme : UIColor(rgbValue: 0xE5E7EC)).cgColor
-        backgroundLayer.shadowColor = UIColor.theme.cgColor
-        backgroundLayer.shadowOpacity = 0.15
-        backgroundLayer.shadowRadius = 5
-        layer.insertSublayer(backgroundLayer, at: 0)
+        updateAppearanceWithIsEnabled()
+        shadowLayer.shadowColor = UIColor.theme.cgColor
+        shadowLayer.shadowOpacity = 0.15
+        shadowLayer.shadowRadius = 5
+        layer.insertSublayer(shadowLayer, at: 0)
+        layer.insertSublayer(backgroundLayer, above: shadowLayer)
     }
     
     private func updatePaths() {
         let cornerRadius = bounds.height / 2
         backgroundLayer.path = CGPath(roundedRect: bounds, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)
         let rect = CGRect(x: 0, y: 6, width: bounds.width, height: bounds.height)
-        backgroundLayer.shadowPath = CGPath(roundedRect: rect, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)
+        shadowLayer.shadowPath = CGPath(roundedRect: rect, cornerWidth: cornerRadius, cornerHeight: cornerRadius, transform: nil)
+    }
+    
+    private func updateAppearanceWithIsEnabled() {
+        let color = isEnabled ? UIColor.theme : UIColor(rgbValue: 0xE5E7EC)
+        backgroundLayer.fillColor = color.cgColor
+        shadowLayer.isHidden = !isEnabled
+    }
+    
+    private func addActivityIndicatorIfNeeded() {
+        guard !activityIndicator.isDescendant(of: self) else {
+            return
+        }
+        addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
     }
     
 }

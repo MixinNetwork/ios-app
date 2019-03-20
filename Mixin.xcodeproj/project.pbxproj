@@ -115,7 +115,6 @@
 		7B481A022020712000843B1D /* HorizontalSingleLineFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B481A012020712000843B1D /* HorizontalSingleLineFlowLayout.swift */; };
 		7B4A430620AC9ABA007D6936 /* GalleryVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */; };
 		7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1125205B8D380074BF60 /* AddressCell.swift */; };
-		7B4D1128205B8D380074BF60 /* AddressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B4D1126205B8D380074BF60 /* AddressCell.xib */; };
 		7B4D112A205BA64B0074BF60 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1129205BA64B0074BF60 /* Address.swift */; };
 		7B4D112C205BC9160074BF60 /* AddressDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112B205BC9160074BF60 /* AddressDAO.swift */; };
 		7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */; };
@@ -747,7 +746,6 @@
 		7B481A012020712000843B1D /* HorizontalSingleLineFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalSingleLineFlowLayout.swift; sourceTree = "<group>"; };
 		7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryVideoView.swift; sourceTree = "<group>"; };
 		7B4D1125205B8D380074BF60 /* AddressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressCell.swift; sourceTree = "<group>"; };
-		7B4D1126205B8D380074BF60 /* AddressCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressCell.xib; sourceTree = "<group>"; };
 		7B4D1129205BA64B0074BF60 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
 		7B4D112B205BC9160074BF60 /* AddressDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDAO.swift; sourceTree = "<group>"; };
 		7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalAPI.swift; sourceTree = "<group>"; };
@@ -2165,7 +2163,6 @@
 				DFF353151FEEBC4700058453 /* PeerTransactionSnapshotCell.swift */,
 				DFF353131FEEBC3A00058453 /* PeerTransactionSnapshotCell.xib */,
 				7B4D1125205B8D380074BF60 /* AddressCell.swift */,
-				7B4D1126205B8D380074BF60 /* AddressCell.xib */,
 				DF87949B207505F4004A1E55 /* TransactionCell.swift */,
 				7B4375C22170CA6900846DC5 /* TransactionsFilterConditionCell.swift */,
 				7B95D52B21743EEF00C95281 /* TransactionsFilterConditionCell.xib */,
@@ -2650,7 +2647,6 @@
 				DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */,
 				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,
 				DF1ED8E220BC0794003E10E8 /* Photo.storyboard in Resources */,
-				7B4D1128205B8D380074BF60 /* AddressCell.xib in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */,
 				7B2E3E531FA07F9F00DDDDEB /* CountryCode.xcassets in Resources */,

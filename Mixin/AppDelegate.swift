@@ -157,6 +157,7 @@ extension AppDelegate: PKPushRegistryDelegate {
 
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         checkServerData()
+        FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didReceiveIncomingPushWith...")
     }
 
 }

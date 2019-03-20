@@ -279,6 +279,8 @@ class ConversationViewController: UIViewController {
             }
         }
         switch recognizer.state {
+        case .began:
+            recognizer.inputWrapperHeightWhenBegan = inputWrapperHeight
         case .changed:
             let shouldMoveDown = verticalVelocity > 0 && location.y > 0
             let canMoveUp = !conversationInputViewController.textView.isFirstResponder
@@ -290,13 +292,17 @@ class ConversationViewController: UIViewController {
                 recognizer.hasMovedInputWrapperDuringChangedState = true
                 var newHeight = inputWrapperHeight - recognizer.translation(in: view).y
                 newHeight = max(newHeight, conversationInputViewController.minimizedHeight)
-                newHeight = min(newHeight, maxInputWrapperHeight)
+                if conversationInputViewController.isMaximizable {
+                    newHeight = min(newHeight, maxInputWrapperHeight)
+                } else {
+                    newHeight = min(newHeight, regularInputWrapperHeight)
+                }
                 inputWrapperHeight = newHeight
                 view.layoutIfNeeded()
             }
             recognizer.setTranslation(.zero, in: view)
         case .ended:
-            let shouldResize = recognizer.hasMovedInputWrapperDuringChangedState
+            let shouldResize = abs(inputWrapperHeight - recognizer.inputWrapperHeightWhenBegan) > 1
                 && !conversationInputViewController.textView.isFirstResponder
             if shouldResize {
                 if verticalVelocity >= 0 {
@@ -1334,6 +1340,7 @@ extension ConversationViewController {
     class ResizeInputWrapperGestureRecognizer: UIPanGestureRecognizer {
         
         var hasMovedInputWrapperDuringChangedState = false
+        var inputWrapperHeightWhenBegan: CGFloat = 0
         
         override func reset() {
             super.reset()

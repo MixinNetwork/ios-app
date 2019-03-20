@@ -61,6 +61,10 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
+    var isMaximizable: Bool {
+        return customInputViewController is ConversationInputInteractiveResizableViewController
+    }
+    
     private let maxInputRow = 5
     private let interactiveDismissResponder = InteractiveDismissResponder(height: 50)
     
@@ -527,7 +531,7 @@ extension ConversationInputViewController {
 extension ConversationInputViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return customInputViewController is ConversationInputInteractiveResizableViewController
+        return isMaximizable
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bst-np-9j8" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="349" width="375" height="326"/>
+                    <rect key="frame" x="0.0" y="349" width="375" height="331"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q9R-fA-z23">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="318"/>
@@ -35,14 +35,14 @@
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <real key="value" value="8"/>
+                            <real key="value" value="13"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="Bst-np-9j8" secondAttribute="bottom" constant="-8" id="B7p-8n-yPj"/>
+                <constraint firstAttribute="bottom" secondItem="Bst-np-9j8" secondAttribute="bottom" constant="-13" id="B7p-8n-yPj"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Q9R-fA-z23" secondAttribute="bottom" id="Dt7-j4-fvH"/>
                 <constraint firstItem="Bst-np-9j8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="HSK-Ux-Xby"/>
                 <constraint firstAttribute="trailing" secondItem="Bst-np-9j8" secondAttribute="trailing" id="LhC-bb-fCQ"/>

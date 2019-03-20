@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TQ9-9O-96j" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="413.5" width="375" height="261.5"/>
+                    <rect key="frame" x="0.0" y="413.5" width="375" height="266.5"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xqB-K4-ipL">
                             <rect key="frame" x="309" y="0.0" width="66" height="66"/>
@@ -62,7 +62,7 @@
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <real key="value" value="8"/>
+                            <real key="value" value="13"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
@@ -72,7 +72,7 @@
                 <constraint firstAttribute="trailing" secondItem="TQ9-9O-96j" secondAttribute="trailing" id="0GY-qh-rHq"/>
                 <constraint firstItem="TQ9-9O-96j" firstAttribute="leading" secondItem="UYR-5Z-1kS" secondAttribute="leading" id="AUv-Pb-zGK"/>
                 <constraint firstItem="lRr-3C-PSy" firstAttribute="bottom" secondItem="uOW-zj-ZNt" secondAttribute="bottom" constant="20" id="EyB-dZ-DhZ"/>
-                <constraint firstAttribute="bottom" secondItem="TQ9-9O-96j" secondAttribute="bottom" constant="-8" id="ZWl-62-ZeD"/>
+                <constraint firstAttribute="bottom" secondItem="TQ9-9O-96j" secondAttribute="bottom" constant="-13" id="ZWl-62-ZeD"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="lRr-3C-PSy"/>
             <connections>

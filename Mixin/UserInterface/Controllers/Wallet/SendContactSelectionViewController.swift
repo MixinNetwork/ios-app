@@ -4,8 +4,6 @@ class SendContactSelectionViewController: PeerSelectionViewController {
     
     var asset: AssetItem!
     
-    private let separatorColor = UIColor(rgbValue: 0xF3F3F3)
-    
     override var content: PeerSelectionViewController.Content {
         return .transferReceivers
     }
@@ -13,11 +11,14 @@ class SendContactSelectionViewController: PeerSelectionViewController {
     override var allowsMultipleSelection: Bool {
         return false
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.separatorColor = separatorColor
-        tableView.rowHeight = 70
+
+    override var tableRowHeight: CGFloat {
+        return 80
+    }
+
+    override func loadView() {
+        super.loadView()
+        searchBoxView.textField.placeholder = Localized.SEARCH_PLACEHOLDER_PARTICIPANTS
     }
     
     override func work(selections: [Peer]) {

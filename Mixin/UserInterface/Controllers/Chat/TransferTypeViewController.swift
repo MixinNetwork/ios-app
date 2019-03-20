@@ -103,7 +103,7 @@ extension TransferTypeViewController: UITableViewDataSource {
         if asset.assetId == self.asset?.assetId {
             cell.checkmarkView.status = .selected
         } else {
-            cell.checkmarkView.status = .unselected
+            cell.checkmarkView.status = .hidden
         }
         cell.render(asset: asset)
         return cell

@@ -43,7 +43,6 @@
 "all_photos" = "All Photos";
 
 "connection_hint_connecting" = "Connecting";
-"connection_hint_waiting" = "Waiting to reconnect";
 "connection_hint_progress" = "Syncing messages %@%%";
 
 "date_format_day" = "hh:mm a";
@@ -56,6 +55,7 @@
 "search_placeholder_asset" = "Name, Symbol";
 "search_placeholder_home" = "Contacts, Assets, Chats";
 "search_placeholder_participants" = "Name";
+"search_placeholder_contact" = "Mixin ID, Name";
 
 // Toast
 "toast_server_error" = "Server is under maintenance";

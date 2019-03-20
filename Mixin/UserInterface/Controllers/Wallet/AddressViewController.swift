@@ -19,7 +19,8 @@ class AddressViewController: UIViewController {
         super.viewDidLoad()
 
         searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-        tableView.rowHeight = 60
+        tableView.estimatedRowHeight = 88
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.register(UINib(nibName: "AddressCell", bundle: .main), forCellReuseIdentifier: AddressCell.cellReuseId)
         tableView.dataSource = self
         tableView.delegate = self

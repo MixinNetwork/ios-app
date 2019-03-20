@@ -42,7 +42,6 @@
 "all_photos" = "所有照片";
 
 "connection_hint_connecting" = "正在连接";
-"connection_hint_waiting" = "等待重连";
 "connection_hint_progress" = "正在同步消息 %@%%";
 
 "date_format_day" = "ahh:mm";
@@ -55,6 +54,7 @@
 "search_placeholder_asset" = "名称, 符号";
 "search_placeholder_home" = "联系人, 资产, 聊天";
 "search_placeholder_participants" = "名称";
+"search_placeholder_contact" = "Mixin ID, 名称";
 
 // Toast
 "toast_server_error" = "服务器正在维护中";

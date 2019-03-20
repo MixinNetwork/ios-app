@@ -11,7 +11,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     
     let tableView = UITableView()
     
-    var searchBoxView: (UIView & SearchBox)!
+    var searchBoxView: ModernSearchBoxView!
     
     var allowsMultipleSelection: Bool {
         return true
@@ -43,13 +43,9 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         }
     }
     
-    private var searchBoxViewClass: (UIView & SearchBox).Type {
-        return ModernSearchBoxView.self
-    }
-    
     override func loadView() {
         view = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-        searchBoxView = searchBoxViewClass.init(frame: CGRect(x: 0, y: 0, width: 375, height: 40))
+        searchBoxView = ModernSearchBoxView(frame: CGRect(x: 0, y: 0, width: 375, height: 40))
         view.addSubview(searchBoxView)
         view.addSubview(tableView)
         searchBoxView.snp.makeConstraints { (make) in

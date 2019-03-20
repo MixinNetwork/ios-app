@@ -32,10 +32,12 @@ public class Localized {
     public static let NO_RESULT = LocalizedString("no_result", comment: "No result")
     
     public static let CONNECTION_HINT_CONNECTING = LocalizedString("connection_hint_connecting", comment: "Connecting")
-    public static let CONNECTION_HINT_WAITING = LocalizedString("connection_hint_waiting", comment: "Waiting to reconnect")
     public static func CONNECTION_HINT_PROGRESS(_ progress: Int) -> String {
         return String(format: LocalizedString("connection_hint_progress", comment: "Syncing messages %@%%"), "\(progress)")
     }
+
+    public static let SEARCH_PLACEHOLDER_CONTACT = LocalizedString("search_placeholder_contact", comment: "Mixin ID, Name")
+    public static let SEARCH_PLACEHOLDER_PARTICIPANTS = LocalizedString("search_placeholder_participants", comment: "Name")
 
     public static let DATE_FORMAT_DAY = LocalizedString("date_format_day", comment: "hh:mm a")
     public static let DATE_FORMAT_DATE = LocalizedString("date_format_date", comment: "dd/MM/yyyy")

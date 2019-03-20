@@ -38,7 +38,6 @@
 "all_photos" = "すべての写真";
 
 "connection_hint_connecting" = "接続中";
-"connection_hint_waiting" = "再接続を待っています";
 "connection_hint_progress" = "同期メッセージ %@%%";
 
 "date_format_day" = "hh:mm a";
@@ -51,6 +50,7 @@
 "search_placeholder_asset" = "名前、シンボル";
 "search_placeholder_home" = "連絡先、資産、チャット";
 "search_placeholder_participants" = "名前";
+"search_placeholder_contact" = "MIXIN ID、名前";
 
 // Toast
 "toast_server_error" = "サーバーはメンテナンス中です";

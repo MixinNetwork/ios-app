@@ -1483,7 +1483,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="R3u-pr-XSM" firstAttribute="bottom" secondItem="TRT-sP-ikP" secondAttribute="bottom" id="7sh-nR-sD9"/>
+                            <constraint firstAttribute="bottom" secondItem="TRT-sP-ikP" secondAttribute="bottom" id="7sh-nR-sD9"/>
                             <constraint firstItem="R3u-pr-XSM" firstAttribute="trailing" secondItem="YQt-Xa-3iJ" secondAttribute="trailing" constant="20" id="DvS-Ok-qCh"/>
                             <constraint firstItem="GDb-9S-roL" firstAttribute="centerX" secondItem="R3u-pr-XSM" secondAttribute="centerX" id="IuT-3f-Hqd"/>
                             <constraint firstItem="eqP-lO-xVp" firstAttribute="top" secondItem="GDb-9S-roL" secondAttribute="bottom" constant="12" id="LSS-os-1vm"/>

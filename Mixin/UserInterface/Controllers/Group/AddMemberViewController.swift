@@ -51,7 +51,12 @@ class AddMemberViewController: UIViewController {
         searchBoxView.textField.delegate = self
         reloadData()
     }
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
+    }
+    
     class func instance(appendMembersToExistedGroupOfConversationId conversationId: String? = nil) -> UIViewController {
         let vc = Storyboard.group.instantiateInitialViewController() as! AddMemberViewController
         vc.conversationId = conversationId

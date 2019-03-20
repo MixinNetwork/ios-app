@@ -860,7 +860,7 @@ extension ReceiveMessageService {
             var message = Message.createMessage(textMessage: content, data: data)
             message.status = MessageStatus.SENDING.rawValue
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-            SendMessageService.shared.sendMessage(message: message, data: plainText)
+            SendMessageService.shared.sendMessage(message: message, data: content)
         } else if data.category.hasSuffix("_STICKER") {
             guard let transferStickerData = parseSticker(plainText) else {
                 return

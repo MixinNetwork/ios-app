@@ -7,7 +7,7 @@ protocol TransferTypeViewControllerDelegate: class {
 class TransferTypeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
+    @IBOutlet weak var searchBoxView: SearchBoxView!
     
     weak var delegate: TransferTypeViewControllerDelegate?
     
@@ -103,7 +103,7 @@ extension TransferTypeViewController: UITableViewDataSource {
         if asset.assetId == self.asset?.assetId {
             cell.checkmarkView.status = .selected
         } else {
-            cell.checkmarkView.status = .unselected
+            cell.checkmarkView.status = .hidden
         }
         cell.render(asset: asset)
         return cell

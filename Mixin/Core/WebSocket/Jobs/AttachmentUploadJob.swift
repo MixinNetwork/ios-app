@@ -243,7 +243,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         message.content = content
         MessageDAO.shared.updateMessageContentAndMediaStatus(content: content, mediaStatus: .DONE, messageId: message.messageId, conversationId: message.conversationId)
 
-        SendMessageService.shared.sendMessage(message: message)
+        SendMessageService.shared.sendMessage(message: message, data: content)
         SendMessageService.shared.sendSessionMessage(message: message, data: content)
     }
 

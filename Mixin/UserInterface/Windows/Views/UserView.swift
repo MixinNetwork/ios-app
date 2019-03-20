@@ -120,10 +120,7 @@ class UserView: CornerView {
                     self?.handlerUpdateUser(result)
                 }
             }
-
-            guard user.relationship != relationship else {
-                return
-            }
+            
             relationship = user.relationship
             let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
             let isStranger = user.relationship == Relationship.STRANGER.rawValue
@@ -141,6 +138,9 @@ class UserView: CornerView {
             } else {
                 unblockButton.isHidden = true
                 addContactButton.isHidden = true
+                if !user.isBot {
+                    descriptionScrollViewBottomConstraint.constant = 0
+                }
                 showRelationWrapperDescriptionTopConstraint.priority = .defaultLow
                 hideRelationWrapperDescriptionTopConstraint.priority = .defaultHigh
             }

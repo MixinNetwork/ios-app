@@ -4,8 +4,7 @@ class AssetTableHeaderView: UIView {
     
     @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!
-    @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var amountTextView: UITextView!
     @IBOutlet weak var usdValueLabel: UILabel!
     @IBOutlet weak var depositButton: BusyButton!
     @IBOutlet weak var transactionsHeaderView: UIView!
@@ -14,8 +13,12 @@ class AssetTableHeaderView: UIView {
     @IBOutlet weak var infoStackViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var infoStackViewTrailingConstraint: NSLayoutConstraint!
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        amountTextView.textContainerInset = .zero
+    }
+    
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        amountLabel.preferredMaxLayoutWidth = amountLabelPreferredMaxLayoutWidthThatFits(size.width)
         let sizeToFit = CGSize(width: size.width, height: UIView.layoutFittingExpandedSize.height)
         let layoutSize = systemLayoutSizeFitting(sizeToFit)
         return CGSize(width: size.width, height: layoutSize.height)
@@ -23,11 +26,12 @@ class AssetTableHeaderView: UIView {
     
     func render(asset: AssetItem) {
         assetIconView.setIcon(asset: asset)
+        let amount: String
         if asset.balance == "0" {
-            amountLabel.text = "0\(currentDecimalSeparator)00"
+            amount = "0\(currentDecimalSeparator)00"
             usdValueLabel.text = "≈ $0\(currentDecimalSeparator)00"
         } else {
-            amountLabel.text = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
+            amount = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never) ?? ""
             let usdBalance = asset.priceUsd.doubleValue * asset.balance.doubleValue
             if let localizedUSDBalance = CurrencyFormatter.localizedString(from: usdBalance, format: .legalTender, sign: .never) {
                 usdValueLabel.text = "≈ $" + localizedUSDBalance
@@ -35,17 +39,64 @@ class AssetTableHeaderView: UIView {
                 usdValueLabel.text = nil
             }
         }
-        symbolLabel.text = asset.symbol
-        depositButton.isBusy = !(asset.isAccount || asset.isAddress)
+        let attributedAmount = attributedString(amount: amount, symbol: asset.symbol)
+        amountTextView.attributedText = attributedAmount
+        
+        let range = NSRange(location: 0, length: attributedAmount.length)
+        var lineCount = 0
+        var lastLineGlyphCount = 0
+        amountTextView.layoutManager.enumerateLineFragments(forGlyphRange: range) { (rect, usedRect, textContainer, glyphRange, stop) in
+            lastLineGlyphCount = glyphRange.length
+            lineCount += 1
+        }
+        let minGlyphCountOfLastLine = 4 // 3 digits and 1 asset symbol
+        if lineCount > 1 && lastLineGlyphCount < minGlyphCountOfLastLine {
+            let linebreak = NSAttributedString(string: "\n")
+            attributedAmount.insert(linebreak, at: attributedAmount.length - minGlyphCountOfLastLine)
+            amountTextView.attributedText = attributedAmount
+        }
     }
     
-    private func amountLabelPreferredMaxLayoutWidthThatFits(_ containerWidth: CGFloat) -> CGFloat {
-        let fixedWidth = infoStackViewLeadingConstraint.constant
-            + assetIconViewWidthConstraint.constant
-            + infoStackView.spacing
-            + symbolLabel.intrinsicContentSize.width
-            + infoStackViewTrailingConstraint.constant
-        return containerWidth - fixedWidth
+    private func attributedString(amount: String, symbol: String) -> NSMutableAttributedString {
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: UIFont(name: "DINCondensed-Bold", size: 34)!,
+            .foregroundColor: UIColor.darkText
+        ]
+        let str = NSMutableAttributedString(string: amount, attributes: attrs)
+        let attachment = SymbolTextAttachment(text: symbol)
+        str.append(NSAttributedString(attachment: attachment))
+        return str
+    }
+    
+    class SymbolTextAttachment: NSTextAttachment {
+        
+        let leadingMargin: CGFloat = 6
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        init(text: String) {
+            super.init(data: nil, ofType: nil)
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 12),
+                .foregroundColor: UIColor.darkText
+            ]
+            let str = NSAttributedString(string: text, attributes: attributes)
+            let textSize = str.size()
+            let canvasSize = CGSize(width: leadingMargin + textSize.width, height: textSize.height)
+            UIGraphicsBeginImageContextWithOptions(canvasSize, false, UIScreen.main.scale)
+            str.draw(at: CGPoint(x: leadingMargin, y: 0))
+            self.image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+        }
+        
+        override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+            var bounds = super.attachmentBounds(for: textContainer, proposedLineFragment: lineFrag, glyphPosition: position, characterIndex: charIndex)
+            bounds.origin.y = -2
+            return bounds
+        }
+        
     }
     
 }

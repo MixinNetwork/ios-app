@@ -38,22 +38,22 @@
                     </connections>
                 </button>
                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="JE3-86-sR8">
-                    <rect key="frame" x="175" y="170" width="64" height="64.5"/>
+                    <rect key="frame" x="175" y="170" width="64" height="60.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Crossle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Xo-ZO-T44">
-                            <rect key="frame" x="0.0" y="21.5" width="64" height="21.5"/>
+                            <rect key="frame" x="0.0" y="19.5" width="64" height="21.5"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                             <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" image="ic_user_verified" translatesAutoresizingMaskIntoConstraints="NO" id="t4Y-mk-GVy">
-                            <rect key="frame" x="0.0" y="25.5" width="0.0" height="14"/>
+                            <rect key="frame" x="0.0" y="23.5" width="0.0" height="14"/>
                         </imageView>
                     </subviews>
                 </stackView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="8fu-LT-QCJ">
-                    <rect key="frame" x="163" y="238.5" width="88.5" height="14.5"/>
+                    <rect key="frame" x="163" y="234.5" width="88.5" height="14.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Mixin Id: 32543" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CTg-iC-2aR">
                             <rect key="frame" x="0.0" y="0.0" width="88.5" height="14.5"/>
@@ -65,7 +65,7 @@
                     </subviews>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mMh-Qj-bOy">
-                    <rect key="frame" x="0.0" y="265" width="414" height="28"/>
+                    <rect key="frame" x="0.0" y="261" width="414" height="28"/>
                     <subviews>
                         <button hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A39-6A-pfT" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="150" y="0.0" width="114" height="28"/>
@@ -226,8 +226,8 @@
                 <constraint firstItem="Iu9-go-9Om" firstAttribute="top" secondItem="VIH-5N-txF" secondAttribute="top" constant="70" id="K9X-eC-Inv"/>
                 <constraint firstItem="JE3-86-sR8" firstAttribute="top" secondItem="Iu9-go-9Om" secondAttribute="bottom" constant="10" id="MhN-Pu-7bn"/>
                 <constraint firstItem="h4w-MA-ie4" firstAttribute="leading" secondItem="Iu9-go-9Om" secondAttribute="leading" id="NxY-Zt-dRj"/>
-                <constraint firstItem="syg-ya-iZc" firstAttribute="top" secondItem="mMh-Qj-bOy" secondAttribute="bottom" priority="250" constant="12" id="QR6-tc-7Ms"/>
-                <constraint firstItem="syg-ya-iZc" firstAttribute="top" secondItem="8fu-LT-QCJ" secondAttribute="bottom" priority="750" constant="8" id="Vdn-7g-YgG"/>
+                <constraint firstItem="syg-ya-iZc" firstAttribute="top" secondItem="mMh-Qj-bOy" secondAttribute="bottom" priority="250" constant="6" id="QR6-tc-7Ms"/>
+                <constraint firstItem="syg-ya-iZc" firstAttribute="top" secondItem="8fu-LT-QCJ" secondAttribute="bottom" priority="750" constant="12" id="Vdn-7g-YgG"/>
                 <constraint firstItem="Tvr-3M-1aD" firstAttribute="top" secondItem="syg-ya-iZc" secondAttribute="bottom" constant="8" id="Za6-y9-4ZT"/>
                 <constraint firstItem="h4w-MA-ie4" firstAttribute="trailing" secondItem="Iu9-go-9Om" secondAttribute="trailing" id="iTf-3J-aZA"/>
                 <constraint firstItem="8fu-LT-QCJ" firstAttribute="top" secondItem="JE3-86-sR8" secondAttribute="bottom" constant="4" id="ith-2G-67Y"/>
@@ -245,7 +245,7 @@
             <viewLayoutGuide key="safeArea" id="xy6-Gm-00q"/>
             <userDefinedRuntimeAttributes>
                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                    <real key="value" value="12"/>
+                    <real key="value" value="13"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
             <connections>

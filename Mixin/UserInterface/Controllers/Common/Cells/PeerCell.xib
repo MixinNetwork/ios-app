@@ -19,20 +19,20 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="quT-F3-GTi">
-                        <rect key="frame" x="20" y="0.0" width="134.5" height="69.5"/>
+                        <rect key="frame" x="20" y="0.0" width="158.5" height="69.5"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l45-3U-LQQ">
+                                <rect key="frame" x="0.0" y="0.0" width="16" height="69.5"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="16" id="gfA-7u-Zgj"/>
+                                </constraints>
+                            </view>
                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1gI-O1-4ow">
-                                <rect key="frame" x="-52" y="0.0" width="52" height="69.5"/>
+                                <rect key="frame" x="20" y="0.0" width="28" height="69.5"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l45-3U-LQQ">
-                                        <rect key="frame" x="0.0" y="0.0" width="16" height="69.5"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="16" id="gfA-7u-Zgj"/>
-                                        </constraints>
-                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="brw-IY-lXs" customClass="CheckmarkView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="24" y="27" width="16" height="16"/>
+                                        <rect key="frame" x="0.0" y="27" width="16" height="16"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="16" id="KTQ-VN-SUw"/>
@@ -40,7 +40,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pDu-I0-3LC">
-                                        <rect key="frame" x="48" y="0.0" width="4" height="69.5"/>
+                                        <rect key="frame" x="24" y="0.0" width="4" height="69.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="4" id="rfJ-Be-0wa"/>
@@ -49,7 +49,7 @@
                                 </subviews>
                             </stackView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iFO-O2-lo4" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="10" width="50" height="50"/>
+                                <rect key="frame" x="24" y="10" width="50" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="mHI-Aw-Z0a"/>
                                     <constraint firstAttribute="width" constant="50" id="qwD-rz-13T"/>
@@ -61,27 +61,27 @@
                                 </userDefinedRuntimeAttributes>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T4K-bh-XOk">
-                                <rect key="frame" x="58" y="0.0" width="0.0" height="69.5"/>
+                                <rect key="frame" x="82" y="0.0" width="0.0" height="69.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="6eN-Wj-wlH"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OVER140" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRI-4Q-epo">
-                                <rect key="frame" x="66" y="25" width="68.5" height="19.5"/>
+                                <rect key="frame" x="90" y="25" width="68.5" height="19.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_verified" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-cl-1PO">
-                                <rect key="frame" x="134.5" y="28" width="0.0" height="14"/>
+                                <rect key="frame" x="158.5" y="28" width="0.0" height="14"/>
                             </imageView>
                         </subviews>
                     </stackView>
                 </subviews>
                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="quT-F3-GTi" secondAttribute="trailing" constant="15" id="30h-Eo-R6l"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="quT-F3-GTi" secondAttribute="trailing" constant="20" id="30h-Eo-R6l"/>
                     <constraint firstAttribute="bottom" secondItem="quT-F3-GTi" secondAttribute="bottom" id="Ni8-Gv-vcO"/>
                     <constraint firstItem="quT-F3-GTi" firstAttribute="leading" secondItem="f2H-bx-gMq" secondAttribute="leading" constant="20" id="me3-4D-vUq"/>
                     <constraint firstItem="quT-F3-GTi" firstAttribute="top" secondItem="f2H-bx-gMq" secondAttribute="top" id="sZN-3L-qEg"/>

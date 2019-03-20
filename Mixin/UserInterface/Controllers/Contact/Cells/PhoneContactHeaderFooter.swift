@@ -9,9 +9,9 @@ class PhoneContactHeaderFooter: UITableViewHeaderFooterView {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        contentView.backgroundColor = UIColor.clear
+        contentView.backgroundColor = UIColor.white
         backgroundView = UIView()
-        backgroundView?.backgroundColor = UIColor.clear
+        backgroundView?.backgroundColor = UIColor.white
     }
 }
 

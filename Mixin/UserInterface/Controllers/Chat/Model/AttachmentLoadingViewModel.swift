@@ -34,7 +34,7 @@ enum ProgressUnit {
 extension AttachmentLoadingViewModel where Self: MessageViewModel {
     
     var messageIsSentByMe: Bool {
-        return message.userId == AccountAPI.shared.accountUserId
+        return message.userId == AccountAPI.shared.accountUserId && !(message.mediaUrl?.isEmpty ?? true)
     }
     
     var mediaStatus: String? {
@@ -62,13 +62,12 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
     }
     
     internal func updateOperationButtonStyle() {
-        let sentByMe = message.userId == AccountAPI.shared.accountUserId
         if let mediaStatus = mediaStatus {
             switch mediaStatus {
             case MediaStatus.PENDING.rawValue:
                 operationButtonStyle = .busy(progress: 0)
             case MediaStatus.CANCELED.rawValue:
-                if sentByMe {
+                if messageIsSentByMe {
                     operationButtonStyle = .upload
                 } else {
                     operationButtonStyle = .download

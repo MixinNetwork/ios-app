@@ -2,7 +2,7 @@ import UIKit
 
 class AddMemberViewController: UIViewController {
 
-    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
+    @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var participantsLabel: UILabel!
     @IBOutlet weak var nextButton: StateResponsiveButton!
@@ -51,7 +51,12 @@ class AddMemberViewController: UIViewController {
         searchBoxView.textField.delegate = self
         reloadData()
     }
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
+    }
+    
     class func instance(appendMembersToExistedGroupOfConversationId conversationId: String? = nil) -> UIViewController {
         let vc = Storyboard.group.instantiateInitialViewController() as! AddMemberViewController
         vc.conversationId = conversationId

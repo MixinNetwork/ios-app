@@ -83,7 +83,7 @@ extension UINavigationItem {
     
 }
 
-extension ModernSearchBoxView {
+extension SearchBoxView {
 
     @IBInspectable
     var local_placeholder: String? {

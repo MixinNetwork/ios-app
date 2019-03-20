@@ -23,7 +23,7 @@ class AssetHeaderView: UITableViewHeaderFooterView {
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         label.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
         }

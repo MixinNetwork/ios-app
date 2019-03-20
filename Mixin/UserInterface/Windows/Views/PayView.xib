@@ -121,17 +121,17 @@
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="≈ 0 CNY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tKa-d7-Jox">
-                    <rect key="frame" x="0.0" y="201.5" width="375" height="17"/>
+                    <rect key="frame" x="0.0" y="201.5" width="375" height="14.5"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="yfc-sw-leV">
-                    <rect key="frame" x="0.0" y="218.5" width="375" height="24.5"/>
+                    <rect key="frame" x="0.0" y="216" width="375" height="27"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="749" text="Happy Birthday!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C02-xQ-2hI">
-                            <rect key="frame" x="30" y="12" width="315" height="12.5"/>
+                            <rect key="frame" x="30" y="12" width="315" height="15"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -159,10 +159,10 @@
                     <rect key="frame" x="0.0" y="243" width="375" height="130"/>
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TOW-aq-cCZ" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="101.5" y="18.5" width="172" height="24"/>
+                            <rect key="frame" x="101.5" y="25.5" width="172" height="10"/>
                             <color key="tintColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="24" id="Dqu-S0-QcM" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                <constraint firstAttribute="height" constant="10" id="Dqu-S0-QcM" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
                                             <real key="value" value="12"/>
@@ -200,7 +200,7 @@
                             </userDefinedRuntimeAttributes>
                         </constraint>
                         <constraint firstItem="TOW-aq-cCZ" firstAttribute="centerX" secondItem="XYl-I4-Vjb" secondAttribute="centerX" id="rZz-Ii-ayQ"/>
-                        <constraint firstItem="i3y-3k-wek" firstAttribute="top" secondItem="TOW-aq-cCZ" secondAttribute="bottom" constant="9" id="uqS-qj-7y4" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                        <constraint firstItem="i3y-3k-wek" firstAttribute="top" secondItem="TOW-aq-cCZ" secondAttribute="bottom" constant="16" id="uqS-qj-7y4" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
                                     <real key="value" value="8"/>

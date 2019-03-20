@@ -90,7 +90,7 @@ class SendMessageService: MixinService {
             MessageDAO.shared.insertMessage(message: msg, messageSource: "")
         }
         if msg.category.hasSuffix("_TEXT") || msg.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") {
-            SendMessageService.shared.sendMessage(message: msg)
+            SendMessageService.shared.sendMessage(message: msg, data: message.content)
             SendMessageService.shared.sendSessionMessage(message: msg, data: message.content)
         } else if msg.category.hasSuffix("_IMAGE") {
             ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: msg))
@@ -105,9 +105,10 @@ class SendMessageService: MixinService {
         }
     }
 
-    func sendMessage(message: Message) {
+    func sendMessage(message: Message, data: String?) {
+        let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data
         saveDispatchQueue.async {
-            MixinDatabase.shared.insertOrReplace(objects: [Job(message: message)])
+            MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, data: content)])
             SendMessageService.shared.processMessages()
         }
     }
@@ -116,7 +117,12 @@ class SendMessageService: MixinService {
         guard AccountUserDefault.shared.isDesktopLoggedIn else {
             return
         }
-        guard message.category.hasSuffix("_TEXT") || message.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_IMAGE") || message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
+        guard message.category.hasSuffix("_TEXT") ||
+            message.category.hasSuffix("_STICKER") ||
+            message.category.hasSuffix("_CONTACT") ||
+            message.category.hasSuffix("_IMAGE") ||
+            message.category.hasSuffix("_DATA") ||
+            message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
             return
         }
         let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data
@@ -363,7 +369,7 @@ class SendMessageService: MixinService {
                             if job.isSessionMessage {
                                 try SendMessageService.shared.sendSessionMessage(blazeMessage: blazeMessage)
                             } else {
-                                try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage, jobOrderId: job.orderId)
+                                try SendMessageService.shared.sendMessage(blazeMessage: blazeMessage)
                             }
                         }
                     }
@@ -470,7 +476,7 @@ extension SendMessageService {
         try deliverMessage(blazeMessage: blazeMessage)
     }
 
-    private func sendMessage(blazeMessage: BlazeMessage, jobOrderId: Int?) throws {
+    private func sendMessage(blazeMessage: BlazeMessage) throws {
         var blazeMessage = blazeMessage
         guard let messageId = blazeMessage.params?.messageId, let message = MessageDAO.shared.getMessage(messageId: messageId) else {
             return
@@ -484,12 +490,13 @@ extension SendMessageService {
 
         if message.category.hasPrefix("PLAIN_") {
             try requestCreateConversation(conversation: conversation)
-            if message.category == MessageCategory.PLAIN_TEXT.rawValue {
-                blazeMessage.params?.data = message.content?.base64Encoded()
-            } else {
-                blazeMessage.params?.data = message.content
+            if blazeMessage.params?.data == nil {
+                if message.category == MessageCategory.PLAIN_TEXT.rawValue {
+                    blazeMessage.params?.data = message.content?.base64Encoded()
+                } else {
+                    blazeMessage.params?.data = message.content
+                }
             }
-            try deliverMessage(blazeMessage: blazeMessage)
         } else {
             let isExistSenderKey = SignalProtocol.shared.isExistSenderKey(groupId: message.conversationId, senderId: message.userId)
             if (isExistSenderKey) {
@@ -517,11 +524,11 @@ extension SendMessageService {
                 }
             }
 
-            blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: message.content ?? "")
-            try deliverMessage(blazeMessage: blazeMessage)
-
-            FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...isExistSenderKey:\(isExistSenderKey)...messageId:\(messageId)...messageStatus:\(message.status)...orderId:\(jobOrderId ?? 0)")
+            let content = blazeMessage.params?.data ?? message.content ?? ""
+            blazeMessage.params?.data = try SignalProtocol.shared.encryptGroupMessageData(conversationId: message.conversationId, senderId: message.userId, content: content)
         }
+        try deliverMessage(blazeMessage: blazeMessage)
+        FileManager.default.writeLog(conversationId: message.conversationId, log: "[SendMessageService][SendMessage][\(message.category)]...messageId:\(messageId)...messageStatus:\(message.status)")
     }
     
     private func sendCallMessage(blazeMessage: BlazeMessage) throws {

@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4af-Sc-29x">
-                    <rect key="frame" x="0.0" y="14" width="375" height="661"/>
+                    <rect key="frame" x="0.0" y="14" width="375" height="666"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EXJ-y2-8uH">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -120,7 +120,7 @@ Mixin Messenger Desktop</string>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="8"/>
+                            <integer key="value" value="13"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
@@ -141,7 +141,7 @@ Mixin Messenger Desktop</string>
                     </userDefinedRuntimeAttributes>
                 </constraint>
                 <constraint firstItem="4af-Sc-29x" firstAttribute="leading" secondItem="1N0-u4-BA5" secondAttribute="leading" id="NXL-wA-NYz"/>
-                <constraint firstAttribute="bottom" secondItem="4af-Sc-29x" secondAttribute="bottom" constant="-8" id="Tb2-fv-LUk"/>
+                <constraint firstAttribute="bottom" secondItem="4af-Sc-29x" secondAttribute="bottom" constant="-13" id="Tb2-fv-LUk"/>
                 <constraint firstItem="1N0-u4-BA5" firstAttribute="trailing" secondItem="4af-Sc-29x" secondAttribute="trailing" id="yOM-sR-ldf"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="1N0-u4-BA5"/>

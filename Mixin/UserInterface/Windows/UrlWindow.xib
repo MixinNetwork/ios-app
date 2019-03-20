@@ -24,7 +24,7 @@
                     </constraints>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WPj-BW-uRz" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="367" width="414" height="377"/>
+                    <rect key="frame" x="0.0" y="367" width="414" height="382"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4DQ-lF-Ng9">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="369"/>
@@ -57,7 +57,7 @@
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <real key="value" value="8"/>
+                            <real key="value" value="13"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
@@ -70,7 +70,7 @@
                 <constraint firstItem="wtn-Ce-xWp" firstAttribute="bottom" secondItem="4DQ-lF-Ng9" secondAttribute="bottom" id="NDL-SH-vkV"/>
                 <constraint firstItem="5ch-cl-zpE" firstAttribute="top" secondItem="wtn-Ce-xWp" secondAttribute="top" id="Oxd-qa-lPu"/>
                 <constraint firstItem="5ch-cl-zpE" firstAttribute="leading" secondItem="wtn-Ce-xWp" secondAttribute="leading" id="f6P-dc-9Zp"/>
-                <constraint firstAttribute="bottom" secondItem="WPj-BW-uRz" secondAttribute="bottom" constant="-8" id="hKI-AR-1GD"/>
+                <constraint firstAttribute="bottom" secondItem="WPj-BW-uRz" secondAttribute="bottom" constant="-13" id="hKI-AR-1GD"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="wtn-Ce-xWp"/>
             <connections>

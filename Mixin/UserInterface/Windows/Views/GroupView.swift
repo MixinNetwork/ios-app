@@ -94,9 +94,11 @@ class GroupView: CornerView {
         announcementLabel.mode = initialAnnouncementMode
         announcementLabel.isHidden = conversation.announcement.isEmpty
         if conversation.announcement.isEmpty {
+            showJoinGroupConstraint.constant = 0
             announcementScrollViewHeightConstraint.constant = 0
             announcementScrollViewTopConstraint.constant = 7
         } else {
+            showJoinGroupConstraint.constant = 12
             announcementScrollViewHeightConstraint.constant = announcementLabel.intrinsicContentSize.height
             announcementScrollViewTopConstraint.constant = 14
         }

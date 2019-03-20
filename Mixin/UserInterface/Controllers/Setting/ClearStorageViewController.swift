@@ -182,6 +182,7 @@ extension ClearStorageViewController {
             break
         }
         tableView.reloadRows(at: [indexPath], with: .none)
+        container?.rightButton.isEnabled = isClearPhotos || isClearVideos || isClearAudios || isClearFiles
     }
 
 }

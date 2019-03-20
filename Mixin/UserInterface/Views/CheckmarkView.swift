@@ -6,6 +6,7 @@ class CheckmarkView: UIView {
         case selected
         case unselected
         case forceSelected
+        case hidden
     }
     
     let imageView = UIImageView()
@@ -19,6 +20,8 @@ class CheckmarkView: UIView {
                 imageView.image = UIImage(named: "ic_unselected")
             case .forceSelected:
                 imageView.image = UIImage(named: "ic_force_selected")
+            case .hidden:
+                imageView.image = nil
             }
         }
     }

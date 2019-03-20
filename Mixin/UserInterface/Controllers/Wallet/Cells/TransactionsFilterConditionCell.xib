@@ -20,8 +20,8 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fs4-OL-kBa">
-                        <rect key="frame" x="20" y="12" width="56" height="18"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <rect key="frame" x="18" y="12" width="60" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -30,9 +30,9 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="fs4-OL-kBa" firstAttribute="top" secondItem="9L6-lq-BzH" secondAttribute="top" constant="12" id="FCH-6Q-eRx"/>
-                <constraint firstAttribute="trailing" secondItem="fs4-OL-kBa" secondAttribute="trailing" constant="20" id="TNT-GW-05m"/>
+                <constraint firstAttribute="trailing" secondItem="fs4-OL-kBa" secondAttribute="trailing" constant="18" id="TNT-GW-05m"/>
                 <constraint firstAttribute="bottom" secondItem="fs4-OL-kBa" secondAttribute="bottom" constant="12" id="ewR-FH-Cp0"/>
-                <constraint firstItem="fs4-OL-kBa" firstAttribute="leading" secondItem="9L6-lq-BzH" secondAttribute="leading" constant="20" id="jLM-2w-Pj5"/>
+                <constraint firstItem="fs4-OL-kBa" firstAttribute="leading" secondItem="9L6-lq-BzH" secondAttribute="leading" constant="18" id="jLM-2w-Pj5"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="IHA-S1-i9U"/>
             <size key="customSize" width="122" height="48"/>

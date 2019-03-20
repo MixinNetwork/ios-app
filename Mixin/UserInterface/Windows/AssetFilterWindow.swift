@@ -100,7 +100,7 @@ extension AssetFilterWindow: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseId, for: indexPath) as! AssetFilterHeaderView
-        view.label.text = headers[indexPath.section]
+        view.label.text = headers[indexPath.section].uppercased()
         return view
     }
     

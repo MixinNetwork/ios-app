@@ -9,6 +9,7 @@ import SignalProtocolC
     let sessionId: String
     let provisioningCode: String
     let profileKey: Data
+    let platform = "iOS"
     
     @objc private(set) lazy var jsonData: Data? = {
         return try? JSONEncoder.snakeCase.encode(self)

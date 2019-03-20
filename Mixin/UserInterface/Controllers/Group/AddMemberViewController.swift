@@ -2,7 +2,7 @@ import UIKit
 
 class AddMemberViewController: UIViewController {
 
-    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
+    @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var participantsLabel: UILabel!
     @IBOutlet weak var nextButton: StateResponsiveButton!

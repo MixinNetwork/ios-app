@@ -3,7 +3,7 @@ import UIKit
 class AddressViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchBoxView: ModernSearchBoxView!
+    @IBOutlet weak var searchBoxView: SearchBoxView!
 
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
     private lazy var editAction = UITableViewRowAction(style: .normal, title: Localized.MENU_EDIT, handler: tableViewCommitEditAction)

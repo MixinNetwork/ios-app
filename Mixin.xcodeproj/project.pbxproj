@@ -200,6 +200,7 @@
 		7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */; };
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
 		7B9C642F2240B62600465A6A /* WhiteBackgroundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */; };
+		7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */; };
 		7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */; };
 		7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */; };
 		7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */; };
@@ -832,6 +833,7 @@
 		7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
 		7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteBackgroundedView.swift; sourceTree = "<group>"; };
+		7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputAccessible.swift; sourceTree = "<group>"; };
 		7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopViewController.swift; sourceTree = "<group>"; };
 		7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1691,6 +1693,7 @@
 				DFD2943A1FA7067500FADAAD /* Cells */,
 				7BB8417B2230C63000FB88B9 /* ConversationAccessible.swift */,
 				7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */,
+				7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */,
 				7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */,
 				7B17F06E22267FE100D617A2 /* ConversationExtensionViewController.swift */,
 				7B7CBBAF20BBCD7E005DF80A /* AudioInputViewController.swift */,
@@ -3240,6 +3243,7 @@
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,
 				DFF353191FEEC83100058453 /* WalletUserDefault.swift in Sources */,
+				7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */,
 				DF6DB83D2024EAD10060CF31 /* PaymentResponse.swift in Sources */,
 				7BF0E07C221ABE050053040D /* AssetIconView.swift in Sources */,
 				7B4D112A205BA64B0074BF60 /* Address.swift in Sources */,

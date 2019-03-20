@@ -19,7 +19,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="cMG-90-Vxo">
-                        <rect key="frame" x="20" y="0.0" width="134.5" height="69.5"/>
+                        <rect key="frame" x="36" y="0.0" width="134.5" height="69.5"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="juz-uM-cxY" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="10" width="50" height="50"/>
@@ -56,8 +56,8 @@
                 <constraints>
                     <constraint firstItem="cMG-90-Vxo" firstAttribute="top" secondItem="y2C-SY-qPs" secondAttribute="top" id="Gcg-jz-6ZF"/>
                     <constraint firstAttribute="bottom" secondItem="cMG-90-Vxo" secondAttribute="bottom" id="f7d-Hi-WwB"/>
-                    <constraint firstItem="cMG-90-Vxo" firstAttribute="leading" secondItem="y2C-SY-qPs" secondAttribute="leading" constant="20" id="kJK-hm-tzC"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cMG-90-Vxo" secondAttribute="trailing" constant="15" id="lBl-l0-OEl"/>
+                    <constraint firstItem="cMG-90-Vxo" firstAttribute="leading" secondItem="y2C-SY-qPs" secondAttribute="leading" constant="36" id="kJK-hm-tzC"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cMG-90-Vxo" secondAttribute="trailing" constant="20" id="lBl-l0-OEl"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

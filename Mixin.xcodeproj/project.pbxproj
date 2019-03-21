@@ -332,6 +332,8 @@
 		DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */; };
 		DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */; };
 		DF048CCE223FCA02005F1EF5 /* SelectedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */; };
+		DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCF22433C6E005F1EF5 /* UILabelExtension.swift */; };
+		DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */; };
 		DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0111FE5598300F98479 /* ExitConversationJob.swift */; };
 		DF05F0191FE90A1B00F98479 /* SignalKeyCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */; };
 		DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */; };
@@ -978,6 +980,8 @@
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
 		DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshGroupIconJob.swift; sourceTree = "<group>"; };
 		DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedTableViewCell.swift; sourceTree = "<group>"; };
+		DF048CCF22433C6E005F1EF5 /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
+		DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineHeightLabel.swift; sourceTree = "<group>"; };
 		DF05F0111FE5598300F98479 /* ExitConversationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitConversationJob.swift; sourceTree = "<group>"; };
 		DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyCount.swift; sourceTree = "<group>"; };
 		DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingViewController.swift; sourceTree = "<group>"; };
@@ -1950,6 +1954,7 @@
 				DF5D9F151F9C5BBB0036D5FD /* UIApplicationExtension.swift */,
 				DF5D9F161F9C5E6A0036D5FD /* UIColorExtension.swift */,
 				DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */,
+				DF048CCF22433C6E005F1EF5 /* UILabelExtension.swift */,
 				DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */,
 				DF7A4B491FCE6EE200F21BCB /* UIViewExtension.swift */,
 				7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */,
@@ -2035,6 +2040,7 @@
 			children = (
 				7BA1F8AA221ED35200DBFCE2 /* Hud.swift */,
 				7B7B2BC41FB15B6A0002BED5 /* AvatarImageView.swift */,
+				DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */,
 				DF06D922222FAE7100FE7FBC /* AvatarShadowImageView.swift */,
 				DF768562200647CC0055F3FF /* BouncingButton.swift */,
 				7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */,
@@ -2943,6 +2949,7 @@
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */,
 				DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */,
+				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
 				7BB3855A21E77C380070FF8F /* ProvisioningAPI.swift in Sources */,
 				DFD995A0207C9D6100621FFA /* AccountUserDefault.swift in Sources */,
 				7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */,
@@ -3164,6 +3171,7 @@
 				7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */,
 				7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
+				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
 				7BB3856021E77F1D0070FF8F /* ProvisioningResponse.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,

@@ -310,7 +310,9 @@ class ReceiveMessageService: MixinService {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
             }
-            MessageDAO.shared.insertMessage(message: Message.createMessage(mediaData: transferMediaData, data: data), messageSource: data.source)
+            let message = Message.createMessage(mediaData: transferMediaData, data: data)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+            SendMessageService.shared.sendSessionMessage(message: message, representativeId: dataUserId, data: plainText)
         } else if data.category.hasSuffix("_STICKER") {
             guard let transferStickerData = parseSticker(plainText) else {
                 return

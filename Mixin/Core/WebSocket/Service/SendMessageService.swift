@@ -122,6 +122,8 @@ class SendMessageService: MixinService {
             message.category.hasSuffix("_CONTACT") ||
             message.category.hasSuffix("_IMAGE") ||
             message.category.hasSuffix("_DATA") ||
+            message.category.hasSuffix("_AUDIO") ||
+            message.category.hasSuffix("_VIDEO") ||
             message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
             return
         }

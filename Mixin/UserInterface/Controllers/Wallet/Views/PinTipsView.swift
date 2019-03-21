@@ -7,12 +7,12 @@ class PinTipsView: BottomSheetView {
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var errorView: UIView!
-    @IBOutlet weak var errorButton: UIButton!
     @IBOutlet weak var passwordView: UIView!
 
     private var tips: String!
     private var successCallback: ((String) -> Void)?
     private var dismissCallback: (() -> Void)?
+    private var canDismiss = false
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,6 +31,7 @@ class PinTipsView: BottomSheetView {
         guard !isShowing, let window = UIApplication.shared.keyWindow else {
             return
         }
+        canDismiss = false
         descriptionLabel.text = tips
         isShowing = true
         self.frame = window.bounds
@@ -39,6 +40,7 @@ class PinTipsView: BottomSheetView {
     }
 
     @IBAction func closeAction(_ sender: Any) {
+        canDismiss = true
         UIApplication.rootNavigationController()?.popViewController(animated: true)
         dismissPopupControllerAnimated()
     }
@@ -65,6 +67,9 @@ class PinTipsView: BottomSheetView {
             targetConstraint = 0
             targetAlpha = 0
             self.alpha = 1
+            if !canDismiss && self.errorView.isHidden {
+                return
+            }
         } else {
             targetConstraint = endKeyboardRect.height
             targetAlpha = 1
@@ -118,6 +123,7 @@ extension PinTipsView: PinFieldDelegate {
                 }
                 WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                 weakSelf.successCallback?(pin)
+                weakSelf.canDismiss = true
                 weakSelf.pinField.resignFirstResponder()
             case let .failure(error):
                 if error.code == 429 {
@@ -125,7 +131,6 @@ extension PinTipsView: PinFieldDelegate {
                     weakSelf.passwordView.isHidden = true
                     weakSelf.descriptionLabel.isHidden = true
                     weakSelf.errorView.isHidden = false
-                    weakSelf.errorButton.isHidden = false
                     weakSelf.pinField.resignFirstResponder()
                 } else {
                     weakSelf.pinField.clear()

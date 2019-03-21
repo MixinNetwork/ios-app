@@ -20,6 +20,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     private var successCallback: ((Address) -> Void)?
     private var address: Address?
     private var qrCodeScanningDestination: UIView?
+    private var shouldLayoutWithKeyboard = true
     
     private weak var pinTipsView: PinTipsView?
     
@@ -52,6 +53,9 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
+        guard shouldLayoutWithKeyboard else {
+            return
+        }
         let windowHeight = AppDelegate.current.window!.bounds.height
         bottomConstraint.constant = windowHeight - keyboardFrame.origin.y + 20
         view.layoutIfNeeded()
@@ -90,6 +94,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         guard !addressValue.isEmpty && !labelValue.isEmpty else {
             return
         }
+        shouldLayoutWithKeyboard = false
         addressTextView.isUserInteractionEnabled = false
         labelTextField.isEnabled = false
         actionButton.isBusy = true
@@ -100,6 +105,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     }
 
     private func saveAddressAction(pin: String) {
+        shouldLayoutWithKeyboard = true
         let assetId = asset.assetId
         let publicKey: String? = asset.isAccount ? nil : addressValue
         let label: String? = asset.isAccount ? nil : self.labelValue

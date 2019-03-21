@@ -22,8 +22,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     private var qrCodeScanningDestination: UIView?
     private var shouldLayoutWithKeyboard = true
     
-    private weak var pinTipsView: PinTipsView?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         addressTextView.delegate = self
@@ -48,7 +46,11 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             addressTextView.placeholder = Localized.WALLET_ACCOUNT_MEMO
             accountNameButton.isHidden = false
         }
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        shouldLayoutWithKeyboard = true
         labelTextField.becomeFirstResponder()
     }
     
@@ -88,24 +90,20 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func saveAction(_ sender: Any) {
-        guard let actionButton = saveButton, !actionButton.isBusy else {
-            return
-        }
         guard !addressValue.isEmpty && !labelValue.isEmpty else {
             return
         }
         shouldLayoutWithKeyboard = false
-        addressTextView.isUserInteractionEnabled = false
-        labelTextField.isEnabled = false
-        actionButton.isBusy = true
-        pinTipsView = PinTipsView.instance(tips: Localized.WALLET_PASSWORD_ADDRESS_TIPS) { [weak self] (pin) in
-            self?.saveAddressAction(pin: pin)
-        }
-        pinTipsView?.presentPopupControllerAnimated()
+        let validator = PinValidationViewController.instance(onSuccess: { (pin) in
+            self.saveAddressAction(pin: pin)
+        })
+        present(validator, animated: true, completion: nil)
     }
 
     private func saveAddressAction(pin: String) {
-        shouldLayoutWithKeyboard = true
+        addressTextView.isUserInteractionEnabled = false
+        labelTextField.isEnabled = false
+        saveButton.isBusy = true
         let assetId = asset.assetId
         let publicKey: String? = asset.isAccount ? nil : addressValue
         let label: String? = asset.isAccount ? nil : self.labelValue
@@ -126,7 +124,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
                 }
             case let .failure(error):
                 showHud(style: .error, text: error.localizedDescription)
-                self?.pinTipsView?.removeFromSuperview()
                 self?.saveButton.isBusy = false
                 self?.addressTextView.isUserInteractionEnabled = true
                 self?.labelTextField.isEnabled = true

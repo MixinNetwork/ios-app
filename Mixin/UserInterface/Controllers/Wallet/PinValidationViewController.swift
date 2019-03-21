@@ -71,7 +71,10 @@ class PinValidationViewController: UIViewController {
     
     @IBAction func dismissAction(_ sender: Any) {
         onFailed?()
-        dismiss(animated: true, completion: nil)
+        let navigationController = (presentingViewController as? UINavigationController) ?? presentingViewController?.navigationController
+        dismiss(animated: true) {
+            navigationController?.backToHome()
+        }
     }
     
     private func hideNumberPadView() {

@@ -1,14 +1,11 @@
 import UIKit
 
 func showHud(style: Hud.Style, text: String) {
-    guard let window = AppDelegate.current.window else {
-        return
-    }
     if Thread.isMainThread {
-        Hud.show(style: style, text: text, on: window)
+        Hud.show(style: style, text: text, on: AppDelegate.current.window!)
     } else {
         DispatchQueue.main.async {
-            Hud.show(style: style, text: text, on: window)
+            Hud.show(style: style, text: text, on: AppDelegate.current.window!)
         }
     }
 }

@@ -6,8 +6,7 @@ class WalletViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     private var assets = [AssetItem]()
-    private var pinView: PinTipsView?
-
+    
     private lazy var assetAction: UITableViewRowAction = {
         let action = UITableViewRowAction(style: .destructive, title: Localized.ACTION_HIDE, handler: { [weak self] (_, indexPath) in
             guard let weakSelf = self else {
@@ -45,7 +44,8 @@ class WalletViewController: UIViewController {
         super.viewDidAppear(animated)
 
         if Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime > WalletUserDefault.shared.checkPinInterval {
-            PinTipsView.instance().presentPopupControllerAnimated()
+            let validator = PinValidationViewController.instance()
+            present(validator, animated: true, completion: nil)
         }
     }
     

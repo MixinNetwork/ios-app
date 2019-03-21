@@ -146,18 +146,18 @@ extension AddressViewController {
     }
     
     private func deleteAction(indexPath: IndexPath) {
+        let validator = PinValidationViewController.instance(tips: Localized.WALLET_PASSWORD_ADDRESS_TIPS, onSuccess: { (pin) in
+            self.deleteAddress(at: indexPath, pin: pin)
+        })
+        present(validator, animated: true, completion: nil)
+    }
+    
+    private func deleteAddress(at indexPath: IndexPath, pin: String) {
         let addressId = addresses[indexPath.row].addressId
         tableView.beginUpdates()
         addresses.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
         tableView.endUpdates()
-        
-        PinTipsView.instance(tips: Localized.WALLET_PASSWORD_ADDRESS_TIPS) { [weak self](pin) in
-            self?.saveAddressAction(pin: pin, addressId: addressId)
-            }.presentPopupControllerAnimated()
-    }
-    
-    private func saveAddressAction(pin: String, addressId: String) {
         let assetId = asset.assetId
         WithdrawalAPI.shared.delete(addressId: addressId, pin: pin) { (result) in
             switch result {

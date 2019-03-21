@@ -534,8 +534,6 @@
 		DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA5B5921FB051BB00549728 /* WalletViewController.swift */; };
 		DFA606312013AA4F0006EEE4 /* FileJobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA606302013AA4F0006EEE4 /* FileJobQueue.swift */; };
 		DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA4B36200F627500C696D3 /* SafariServices.framework */; };
-		DFAA4B392010ADF800C696D3 /* PinTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFAA4B382010ADF800C696D3 /* PinTipsView.swift */; };
-		DFAA4B3B2010AE0300C696D3 /* PinTipsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFAA4B3A2010AE0300C696D3 /* PinTipsView.xib */; };
 		DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062721ABC088006E4341 /* RestoreViewController.swift */; };
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
 		DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D941FF7C2B6000875BD /* ResendData.swift */; };
@@ -1195,8 +1193,6 @@
 		DFA5B5921FB051BB00549728 /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
 		DFA606302013AA4F0006EEE4 /* FileJobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileJobQueue.swift; sourceTree = "<group>"; };
 		DFAA4B36200F627500C696D3 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
-		DFAA4B382010ADF800C696D3 /* PinTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinTipsView.swift; sourceTree = "<group>"; };
-		DFAA4B3A2010AE0300C696D3 /* PinTipsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinTipsView.xib; sourceTree = "<group>"; };
 		DFB2062721ABC088006E4341 /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
 		DFB37D941FF7C2B6000875BD /* ResendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendData.swift; sourceTree = "<group>"; };
@@ -1794,8 +1790,6 @@
 		DF05F0131FE6757600F98479 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				DFAA4B382010ADF800C696D3 /* PinTipsView.swift */,
-				DFAA4B3A2010AE0300C696D3 /* PinTipsView.xib */,
 				7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */,
 				7BB1DD0C2195BE5200E98CEF /* ShadowedCardView.swift */,
 				7BB12FA62192C8DB009BEECF /* BarChartView.swift */,
@@ -2696,7 +2690,6 @@
 				DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
-				DFAA4B3B2010AE0300C696D3 /* PinTipsView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
@@ -2955,7 +2948,6 @@
 				DF503D2A1FECEACB00C008E7 /* Identity.swift in Sources */,
 				DF1A9A7C1FF2245800A95188 /* NumberExtension.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
-				DFAA4B392010ADF800C696D3 /* PinTipsView.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				DF191194208F104800BD415D /* Job.swift in Sources */,

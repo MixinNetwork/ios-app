@@ -252,10 +252,6 @@ final class MessageDAO {
         return MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId)
     }
 
-    func getMessageStatus(messageId: String) -> String? {
-        return MixinDatabase.shared.scalar(on: Message.Properties.status, fromTable: Message.tableName, condition: Message.Properties.messageId == messageId)?.stringValue
-    }
-
     func getSyncMessages() -> [Message] {
         return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryMessageSync, inTransaction: false)
     }
@@ -325,13 +321,13 @@ final class MessageDAO {
     }
     
     func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
-        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeCreatedAt, values: [conversationId, location.createdAt, count])
+        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeCreatedAt, values: [conversationId, location.createdAt, count], inTransaction: false)
         return messages.reversed()
     }
     
     func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
         return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterCreatedAt,
-                                                values: [conversationId, location.createdAt, count])
+                                                values: [conversationId, location.createdAt, count], inTransaction: false)
     }
 
     func getFirstNMessages(conversationId: String, count: Int) -> [MessageItem] {
@@ -349,7 +345,7 @@ final class MessageDAO {
         }
         return MixinDatabase.shared.getCount(on: Message.Properties.messageId.count(),
                                              fromTable: Message.tableName,
-                                             condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
+                                             condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt, inTransaction: false)
     }
     
     func getGalleryItems(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
@@ -439,7 +435,7 @@ final class MessageDAO {
     }
     
     func hasMessage(id: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id)
+        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id, inTransaction: false)
     }
 
     func getQuoteMessage(messageId: String?) -> Data? {

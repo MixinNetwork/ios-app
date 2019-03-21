@@ -7,6 +7,7 @@ class SearchViewController: UIViewController {
         static let contact = "contact"
         static let conversation = "conversation"
         static let asset = "asset"
+        static let footer = "footer"
     }
     
     @IBOutlet weak var keywordTextField: UITextField!
@@ -41,8 +42,12 @@ class SearchViewController: UIViewController {
                            forCellReuseIdentifier: ReuseId.conversation)
         tableView.register(UINib(nibName: "WalletAssetCell", bundle: .main),
                            forCellReuseIdentifier: ReuseId.asset)
+        tableView.register(SearchFooterView.self,
+                           forHeaderFooterViewReuseIdentifier: ReuseId.footer)
+        let tableHeaderView = UIView()
+        tableHeaderView.frame = CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude)
+        tableView.tableHeaderView = tableHeaderView
         tableView.tableFooterView = UIView()
-        tableView.contentInset.top = navigationBarContentHeightConstraint.constant
         tableView.dataSource = self
         tableView.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: .ContactsDidChange, object: nil)
@@ -266,6 +271,10 @@ extension SearchViewController: UITableViewDelegate {
             }
         }
         return header
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

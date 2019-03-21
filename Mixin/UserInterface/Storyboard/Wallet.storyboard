@@ -1419,15 +1419,11 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YQt-Xa-3iJ" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="20" y="180" width="374" height="54"/>
+                                <rect key="frame" x="20" y="180" width="374" height="67.333333333333314"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ueq-sY-VfI" customClass="PlaceholderTextView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="12" width="288" height="30"/>
+                                        <rect key="frame" x="16" y="16.000000000000004" width="288" height="35.333333333333343"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" priority="750" constant="20" id="Su8-UF-Cny"/>
-                                            <constraint firstAttribute="height" constant="30" placeholder="YES" id="fYF-1v-hvW"/>
-                                        </constraints>
                                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1436,7 +1432,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </textView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="okS-Nk-zkw">
-                                        <rect key="frame" x="320" y="0.0" width="54" height="54"/>
+                                        <rect key="frame" x="320" y="0.0" width="54" height="67.333333333333329"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="54" id="mbh-Dq-Cbn"/>
                                         </constraints>
@@ -1448,13 +1444,13 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="ueq-sY-VfI" firstAttribute="top" secondItem="YQt-Xa-3iJ" secondAttribute="top" constant="12" id="7m9-tU-Sge"/>
+                                    <constraint firstItem="ueq-sY-VfI" firstAttribute="top" secondItem="YQt-Xa-3iJ" secondAttribute="top" constant="16" id="7m9-tU-Sge"/>
                                     <constraint firstItem="okS-Nk-zkw" firstAttribute="leading" secondItem="ueq-sY-VfI" secondAttribute="trailing" constant="16" id="A37-Ez-AON"/>
-                                    <constraint firstAttribute="height" constant="54" id="Arh-bb-eEd"/>
                                     <constraint firstAttribute="trailing" secondItem="okS-Nk-zkw" secondAttribute="trailing" id="Kpd-ki-qmQ"/>
                                     <constraint firstItem="ueq-sY-VfI" firstAttribute="leading" secondItem="YQt-Xa-3iJ" secondAttribute="leading" constant="16" id="VDU-YI-yv2"/>
                                     <constraint firstItem="okS-Nk-zkw" firstAttribute="height" secondItem="YQt-Xa-3iJ" secondAttribute="height" id="ZtY-S5-Fse"/>
-                                    <constraint firstAttribute="bottom" secondItem="ueq-sY-VfI" secondAttribute="bottom" constant="12" id="iEa-aM-ncL"/>
+                                    <constraint firstAttribute="bottom" secondItem="ueq-sY-VfI" secondAttribute="bottom" constant="16" id="iEa-aM-ncL"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="54" id="jA6-gv-Oeb"/>
                                     <constraint firstItem="okS-Nk-zkw" firstAttribute="centerY" secondItem="YQt-Xa-3iJ" secondAttribute="centerY" id="k1u-pJ-VPP"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -1487,6 +1483,7 @@
                             <constraint firstItem="R3u-pr-XSM" firstAttribute="trailing" secondItem="YQt-Xa-3iJ" secondAttribute="trailing" constant="20" id="DvS-Ok-qCh"/>
                             <constraint firstItem="GDb-9S-roL" firstAttribute="centerX" secondItem="R3u-pr-XSM" secondAttribute="centerX" id="IuT-3f-Hqd"/>
                             <constraint firstItem="eqP-lO-xVp" firstAttribute="top" secondItem="GDb-9S-roL" secondAttribute="bottom" constant="12" id="LSS-os-1vm"/>
+                            <constraint firstItem="TRT-sP-ikP" firstAttribute="top" relation="greaterThanOrEqual" secondItem="YQt-Xa-3iJ" secondAttribute="bottom" constant="20" id="SKy-QE-uSf"/>
                             <constraint firstItem="GDb-9S-roL" firstAttribute="top" secondItem="R3u-pr-XSM" secondAttribute="top" constant="14" id="YmD-nT-8Kg"/>
                             <constraint firstItem="eqP-lO-xVp" firstAttribute="leading" secondItem="R3u-pr-XSM" secondAttribute="leading" constant="20" id="aVm-uD-bHX"/>
                             <constraint firstItem="TRT-sP-ikP" firstAttribute="centerX" secondItem="R3u-pr-XSM" secondAttribute="centerX" id="fy2-WJ-7pN"/>
@@ -1499,7 +1496,6 @@
                     <connections>
                         <outlet property="accountNameButton" destination="Yyd-oq-Xax" id="dbF-Br-W2p"/>
                         <outlet property="addressTextView" destination="ueq-sY-VfI" id="AU1-JZ-nlr"/>
-                        <outlet property="addressTextViewHeightConstraint" destination="Su8-UF-Cny" id="L7I-PJ-XH3"/>
                         <outlet property="assetView" destination="GDb-9S-roL" id="q4F-B9-EQO"/>
                         <outlet property="bottomConstraint" destination="7sh-nR-sD9" id="ewS-7V-Nyv"/>
                         <outlet property="labelTextField" destination="Ymk-k8-pXT" id="gom-ZV-An3"/>

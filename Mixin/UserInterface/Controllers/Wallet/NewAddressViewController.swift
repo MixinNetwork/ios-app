@@ -9,7 +9,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var assetView: AssetIconView!
 
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var addressTextViewHeightConstraint: NSLayoutConstraint!
     
     private var asset: AssetItem!
     private var addressValue: String {
@@ -142,15 +141,19 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
 
 extension NewAddressViewController: UITextViewDelegate {
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return text != "\n"
+    }
+    
     func textViewDidChange(_ textView: UITextView) {
         checkLabelAndAddressAction(textView)
-        let sizeToFit = CGSize(width: addressTextView.bounds.width, height: UIView.layoutFittingExpandedSize.height)
-        let height = addressTextView.sizeThatFits(sizeToFit).height
-        addressTextViewHeightConstraint.constant = height
         view.layoutIfNeeded()
-        addressTextView.isScrollEnabled = addressTextView.bounds.height < height
+        let sizeToFit = CGSize(width: addressTextView.bounds.width,
+                               height: UIView.layoutFittingExpandedSize.height)
+        let contentSize = addressTextView.sizeThatFits(sizeToFit)
+        addressTextView.isScrollEnabled = contentSize.height > addressTextView.frame.height
     }
-
+    
 }
 
 extension NewAddressViewController: CameraViewControllerDelegate {

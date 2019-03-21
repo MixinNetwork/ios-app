@@ -155,7 +155,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VyB-7K-Dd4" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="133.5" y="599" width="108" height="48"/>
+                                <rect key="frame" x="133.5" y="459" width="108" height="48"/>
                                 <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
                                 <state key="normal" title="Search">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -167,29 +167,39 @@
                                     <action selector="searchAction:" destination="hC0-pr-SRS" eventType="touchUpInside" id="bQS-95-L1H"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JU3-i5-j7Y" userLabel="Keyboard Placeholder">
+                                <rect key="frame" x="0.0" y="527" width="375" height="140"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="140" id="RNx-p3-zjT"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="VyB-7K-Dd4" firstAttribute="centerX" secondItem="4Nu-Sa-oGf" secondAttribute="centerX" id="CLU-wv-Yz0"/>
-                            <constraint firstItem="4Nu-Sa-oGf" firstAttribute="bottom" secondItem="VyB-7K-Dd4" secondAttribute="bottom" constant="20" id="Dsi-S9-faN"/>
+                            <constraint firstAttribute="trailing" secondItem="JU3-i5-j7Y" secondAttribute="trailing" id="FHO-Pv-5YV"/>
                             <constraint firstItem="f7c-5c-m2p" firstAttribute="top" secondItem="ihp-OG-KgB" secondAttribute="bottom" constant="8" id="MvG-xV-1sp"/>
                             <constraint firstItem="ihp-OG-KgB" firstAttribute="leading" secondItem="4Nu-Sa-oGf" secondAttribute="leading" constant="20" id="QgS-jR-NW1"/>
+                            <constraint firstAttribute="bottom" secondItem="JU3-i5-j7Y" secondAttribute="bottom" id="Rb2-pA-Ou0"/>
+                            <constraint firstItem="JU3-i5-j7Y" firstAttribute="leading" secondItem="ezg-zz-dVJ" secondAttribute="leading" id="XnE-hd-PFc"/>
                             <constraint firstItem="f7c-5c-m2p" firstAttribute="leading" secondItem="4Nu-Sa-oGf" secondAttribute="leading" constant="36" id="cCv-z0-QlR"/>
                             <constraint firstItem="4Nu-Sa-oGf" firstAttribute="trailing" secondItem="ihp-OG-KgB" secondAttribute="trailing" constant="20" id="p9g-oM-rde"/>
+                            <constraint firstItem="JU3-i5-j7Y" firstAttribute="top" secondItem="VyB-7K-Dd4" secondAttribute="bottom" constant="20" id="xzh-Zi-22H"/>
                             <constraint firstItem="ihp-OG-KgB" firstAttribute="top" secondItem="4Nu-Sa-oGf" secondAttribute="top" constant="20" id="yiP-NY-Yf3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="4Nu-Sa-oGf"/>
                     </view>
                     <connections>
+                        <outlet property="keyboardPlaceholderHeightConstraint" destination="RNx-p3-zjT" id="LXO-CE-XOR"/>
                         <outlet property="keywordTextField" destination="qzx-Hk-cda" id="aya-Nr-8qr"/>
                         <outlet property="myIdLabel" destination="f7c-5c-m2p" id="abJ-Cq-Ife"/>
                         <outlet property="searchButton" destination="VyB-7K-Dd4" id="nPq-Gl-5FH"/>
-                        <outlet property="searchButtonBottomConstraint" destination="Dsi-S9-faN" id="9vi-ie-aH1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6ct-zh-OPh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="734" y="-136"/>
+            <point key="canvasLocation" x="733.60000000000002" y="-136.28185907046478"/>
         </scene>
     </scenes>
     <resources>

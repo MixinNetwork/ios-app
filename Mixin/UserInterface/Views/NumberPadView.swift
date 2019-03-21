@@ -30,6 +30,10 @@ class NumberPadView: UIView, XibDesignable {
         }
     }
     
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: bounds.width, height: contentHeight + bottomSafeAreaInset)
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         prepare()

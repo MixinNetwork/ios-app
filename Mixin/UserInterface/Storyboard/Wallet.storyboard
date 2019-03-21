@@ -1004,7 +1004,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Aes-9o-Rom">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="170"/>
                                                 <subviews>
-                                                    <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WMe-pz-ypw" customClass="PinField" customModule="Mixin" customModuleProvider="target">
+                                                    <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WMe-pz-ypw" customClass="PinField" customModule="Mixin" customModuleProvider="target">
                                                         <rect key="frame" x="121" y="50" width="172" height="10"/>
                                                         <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
                                                         <constraints>
@@ -1106,23 +1106,32 @@
                                     <constraint firstItem="Rzt-8f-q21" firstAttribute="leading" secondItem="LhD-W9-UhD" secondAttribute="leading" id="FE4-Qk-47q"/>
                                     <constraint firstAttribute="trailing" secondItem="WMW-FR-F41" secondAttribute="trailing" id="Ja6-Gh-LH5"/>
                                     <constraint firstItem="WMW-FR-F41" firstAttribute="leading" secondItem="LhD-W9-UhD" secondAttribute="leading" id="vGQ-o0-f14"/>
-                                    <constraint firstAttribute="bottom" secondItem="WMW-FR-F41" secondAttribute="bottom" id="y95-2w-Rft"/>
                                 </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="hFb-90-uAJ" customClass="NumberPadView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="608" width="414" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="LhD-W9-UhD" secondAttribute="bottom" id="eVL-zA-MeS"/>
+                            <constraint firstAttribute="bottom" secondItem="LhD-W9-UhD" secondAttribute="bottom" id="ECx-gl-N6w"/>
+                            <constraint firstAttribute="trailing" secondItem="hFb-90-uAJ" secondAttribute="trailing" id="LuN-Gk-qxC"/>
+                            <constraint firstItem="hFb-90-uAJ" firstAttribute="top" secondItem="WMW-FR-F41" secondAttribute="bottom" priority="250" id="Olr-3r-wQb"/>
+                            <constraint firstItem="dH3-JG-vw9" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="WMW-FR-F41" secondAttribute="bottom" id="ay3-04-M7a"/>
                             <constraint firstItem="LhD-W9-UhD" firstAttribute="leading" secondItem="bFq-Rw-h03" secondAttribute="leading" id="gXv-ww-gbI"/>
+                            <constraint firstItem="hFb-90-uAJ" firstAttribute="bottom" secondItem="bFq-Rw-h03" secondAttribute="bottom" id="q9K-R8-JaJ"/>
+                            <constraint firstItem="hFb-90-uAJ" firstAttribute="leading" secondItem="bFq-Rw-h03" secondAttribute="leading" id="qbf-1j-qzo"/>
                             <constraint firstAttribute="trailing" secondItem="LhD-W9-UhD" secondAttribute="trailing" id="thO-Wp-SNV"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="dH3-JG-vw9"/>
                     </view>
                     <connections>
-                        <outlet property="contentViewBottomConstraint" destination="eVL-zA-MeS" id="UOX-Ch-SLU"/>
                         <outlet property="descriptionLabel" destination="AC3-tR-Gzi" id="Dlk-pm-W7a"/>
                         <outlet property="limitationHintView" destination="hpR-78-T6k" id="DRY-LY-ucp"/>
                         <outlet property="loadingIndicator" destination="LW7-8N-8a1" id="ved-Vs-vfU"/>
+                        <outlet property="numberPadView" destination="hFb-90-uAJ" id="V87-UW-9lU"/>
+                        <outlet property="numberPadViewBottomConstraint" destination="q9K-R8-JaJ" id="evm-Yj-gSF"/>
                         <outlet property="pinField" destination="WMe-pz-ypw" id="Uic-jV-2ds"/>
                     </connections>
                 </viewController>

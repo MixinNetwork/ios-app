@@ -1,6 +1,6 @@
 import UIKit
 
-class PinValidationViewController: KeyboardBasedLayoutViewController {
+class PinValidationViewController: UIViewController {
     
     typealias SuccessCallback = ((String) -> Void) // param is verified PIN
     typealias FailedCallback = (() -> Void)
@@ -9,8 +9,9 @@ class PinValidationViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var limitationHintView: UIView!
+    @IBOutlet weak var numberPadView: NumberPadView!
     
-    @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var numberPadViewBottomConstraint: NSLayoutConstraint!
     
     private let presentationManager = PinValidationPresentationManager()
     
@@ -30,15 +31,9 @@ class PinValidationViewController: KeyboardBasedLayoutViewController {
         return vc
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        pinField.becomeFirstResponder()
-    }
-    
-    override func layout(for keyboardFrame: CGRect) {
-        let windowHeight = AppDelegate.current.window!.bounds.height
-        contentViewBottomConstraint.constant = windowHeight - keyboardFrame.origin.y
-        view.layoutIfNeeded()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        numberPadView.target = pinField
     }
     
     @IBAction func pinEditingChangedAction(_ sender: Any) {
@@ -58,14 +53,13 @@ class PinValidationViewController: KeyboardBasedLayoutViewController {
                 }
                 WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                 self.onSuccess?(pin)
-                self.pinField.resignFirstResponder()
                 self.dismiss(animated: true, completion: nil)
             case let .failure(error):
                 self.pinField.clear()
                 self.pinField.receivesInput = true
                 if error.code == 429 {
                     self.limitationHintView.isHidden = false
-                    self.pinField.resignFirstResponder()
+                    self.hideNumberPadView()
                 } else {
                     self.pinField.isHidden = false
                     self.descriptionLabel.textColor = UIColor.red
@@ -78,6 +72,14 @@ class PinValidationViewController: KeyboardBasedLayoutViewController {
     @IBAction func dismissAction(_ sender: Any) {
         onFailed?()
         dismiss(animated: true, completion: nil)
+    }
+    
+    private func hideNumberPadView() {
+        numberPadViewBottomConstraint.constant = numberPadView.frame.height
+        UIView.animate(withDuration: 0.5, animations: {
+            UIView.setAnimationCurve(.overdamped)
+            self.view.layoutIfNeeded()
+        })
     }
     
 }

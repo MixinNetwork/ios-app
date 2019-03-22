@@ -419,9 +419,19 @@ class SendMessageService: MixinService {
                 #if DEBUG
                 print("======SendMessageService...handlerJob...\(error)")
                 #endif
-                FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...\(error)")
                 checkNetworkAndWebSocket()
-                Bugsnag.notifyError(error)
+
+                var blazeMessage = ""
+                if let bm = job.blazeMessage {
+                    blazeMessage = String(data: bm, encoding: .utf8) ?? ""
+                }
+                FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...isSessionMessage:\(job.isSessionMessage)...blazeMessage:\(blazeMessage)...\(error)")
+                Bugsnag.notifyError(error, block: { (report) in
+                    report.addMetadata(["JobAction": job.action], toTabWithName: "Track")
+                    report.addMetadata(["conversationId": job.conversationId ?? ""], toTabWithName: "Track")
+                    report.addMetadata(["blazeMessage": blazeMessage], toTabWithName: "Track")
+                    report.addMetadata(["isSessionMessage": "\(job.isSessionMessage)"], toTabWithName: "Track")
+                })
             }
         } while true
     }

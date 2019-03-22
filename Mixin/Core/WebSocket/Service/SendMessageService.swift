@@ -196,27 +196,37 @@ class SendMessageService: MixinService {
     }
 
     func sendReadMessages(conversationId: String) {
-        saveDispatchQueue.async {
+        DispatchQueue.global().async {
             let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)
-            guard messageIds.count > 0, let lastMessageId = messageIds.last, let lastCreatedAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt.asColumnResult(), fromTable: Message.tableName, condition: Message.Properties.messageId == lastMessageId, inTransaction: false)?.stringValue else {
-                return
-            }
+            var position = 0
+            let pageCount = AccountUserDefault.shared.isDesktopLoggedIn ? 30 : 60
+            while messageIds.count > 0 && position < messageIds.count {
+                let nextPosition = position + pageCount > messageIds.count ? messageIds.count : position + pageCount
+                let ids = Array(messageIds[position..<nextPosition])
+                guard ids.count > 0, let lastMessageId = ids.last, let lastCreatedAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt.asColumnResult(), fromTable: Message.tableName, condition: Message.Properties.messageId == lastMessageId, inTransaction: false)?.stringValue else {
+                    return
+                }
 
-            var jobs = messageIds.map { (messageId) -> Job in
-                let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
-                return Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage)
-            }
-            if AccountUserDefault.shared.isDesktopLoggedIn {
-                jobs += messageIds.map { (messageId) -> Job in
-                    return Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true)
+                var jobs = ids.map { (messageId) -> Job in
+                    let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
+                    return Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage)
+                }
+                if AccountUserDefault.shared.isDesktopLoggedIn {
+                    jobs += ids.map { (messageId) -> Job in
+                        return Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true)
+                    }
+                }
+
+                MixinDatabase.shared.transaction { (database) in
+                    try database.insert(objects: jobs, intoTable: Job.tableName)
+                    try database.update(table: Message.tableName, on: [Message.Properties.status], with: [MessageStatus.READ.rawValue], where: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.createdAt <= lastCreatedAt && Message.Properties.userId != AccountAPI.shared.accountUserId)
+                }
+                position = nextPosition
+                if nextPosition < messageIds.count {
+                    Thread.sleep(forTimeInterval: 0.2)
                 }
             }
-
-            MixinDatabase.shared.transaction { (database) in
-                try database.insert(objects: jobs, intoTable: Job.tableName)
-                try database.update(table: Message.tableName, on: [Message.Properties.status], with: [MessageStatus.READ.rawValue], where: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.createdAt <= lastCreatedAt && Message.Properties.userId != AccountAPI.shared.accountUserId)
-                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
-            }
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
             SendMessageService.shared.processMessages()
         }
     }

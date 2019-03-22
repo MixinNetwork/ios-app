@@ -9,7 +9,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var assetView: AssetIconView!
 
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var addressTextViewHeightConstraint: NSLayoutConstraint!
     
     private var asset: AssetItem!
     private var addressValue: String {
@@ -21,8 +20,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     private var successCallback: ((Address) -> Void)?
     private var address: Address?
     private var qrCodeScanningDestination: UIView?
-    
-    private weak var pinTipsView: PinTipsView?
+    private var shouldLayoutWithKeyboard = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,11 +46,18 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             addressTextView.placeholder = Localized.WALLET_ACCOUNT_MEMO
             accountNameButton.isHidden = false
         }
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        shouldLayoutWithKeyboard = true
         labelTextField.becomeFirstResponder()
     }
     
     override func layout(for keyboardFrame: CGRect) {
+        guard shouldLayoutWithKeyboard else {
+            return
+        }
         let windowHeight = AppDelegate.current.window!.bounds.height
         bottomConstraint.constant = windowHeight - keyboardFrame.origin.y + 20
         view.layoutIfNeeded()
@@ -85,22 +90,20 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func saveAction(_ sender: Any) {
-        guard let actionButton = saveButton, !actionButton.isBusy else {
-            return
-        }
         guard !addressValue.isEmpty && !labelValue.isEmpty else {
             return
         }
-        addressTextView.isUserInteractionEnabled = false
-        labelTextField.isEnabled = false
-        actionButton.isBusy = true
-        pinTipsView = PinTipsView.instance(tips: Localized.WALLET_PASSWORD_ADDRESS_TIPS) { [weak self] (pin) in
-            self?.saveAddressAction(pin: pin)
-        }
-        pinTipsView?.presentPopupControllerAnimated()
+        shouldLayoutWithKeyboard = false
+        let validator = PinValidationViewController.instance(onSuccess: { (pin) in
+            self.saveAddressAction(pin: pin)
+        })
+        present(validator, animated: true, completion: nil)
     }
 
     private func saveAddressAction(pin: String) {
+        addressTextView.isUserInteractionEnabled = false
+        labelTextField.isEnabled = false
+        saveButton.isBusy = true
         let assetId = asset.assetId
         let publicKey: String? = asset.isAccount ? nil : addressValue
         let label: String? = asset.isAccount ? nil : self.labelValue
@@ -121,7 +124,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
                 }
             case let .failure(error):
                 showHud(style: .error, text: error.localizedDescription)
-                self?.pinTipsView?.removeFromSuperview()
                 self?.saveButton.isBusy = false
                 self?.addressTextView.isUserInteractionEnabled = true
                 self?.labelTextField.isEnabled = true
@@ -142,15 +144,19 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
 
 extension NewAddressViewController: UITextViewDelegate {
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return text != "\n"
+    }
+    
     func textViewDidChange(_ textView: UITextView) {
         checkLabelAndAddressAction(textView)
-        let sizeToFit = CGSize(width: addressTextView.bounds.width, height: UIView.layoutFittingExpandedSize.height)
-        let height = addressTextView.sizeThatFits(sizeToFit).height
-        addressTextViewHeightConstraint.constant = height
         view.layoutIfNeeded()
-        addressTextView.isScrollEnabled = addressTextView.bounds.height < height
+        let sizeToFit = CGSize(width: addressTextView.bounds.width,
+                               height: UIView.layoutFittingExpandedSize.height)
+        let contentSize = addressTextView.sizeThatFits(sizeToFit)
+        addressTextView.isScrollEnabled = contentSize.height > addressTextView.frame.height
     }
-
+    
 }
 
 extension NewAddressViewController: CameraViewControllerDelegate {

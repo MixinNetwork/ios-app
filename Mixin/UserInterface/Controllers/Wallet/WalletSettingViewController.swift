@@ -79,11 +79,10 @@ class WalletSettingViewController: UITableViewController {
     }
 
     private func setNewPinInterval(interval: Double) {
-        PinTipsView.instance(tips: Localized.WALLET_PIN_PAY_INTERVAL_CONFIRM) { (pin) in
+        let validator = PinValidationViewController.instance(tips: Localized.WALLET_PIN_PAY_INTERVAL_CONFIRM, onSuccess: { (_) in
             WalletUserDefault.shared.pinInterval = interval
-            }.presentPopupControllerAnimated { [weak self] in
-                self?.refreshPinIntervalUI()
-        }
+        })
+        present(validator, animated: true, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -125,15 +124,17 @@ class WalletSettingViewController: UITableViewController {
                 tips = Localized.WALLET_PIN_FACE_ID_PROMPT
                 prompt = Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_FACE_ID)
             }
-            
-            PinTipsView.instance(tips: tips) { [weak self](pin) in
+            let validator = PinValidationViewController.instance(tips: tips, onSuccess: { (pin) in
                 guard Keychain.shared.storePIN(pin: pin, prompt: prompt) else {
-                    self?.biometricsPaySwitch.isOn = false
+                    self.biometricsPaySwitch.isOn = false
                     return
                 }
                 WalletUserDefault.shared.isBiometricPay = true
-                self?.tableView.reloadData()
-                }.presentPopupControllerAnimated()
+                self.tableView.reloadData()
+            }, onFailed: {
+                self.biometricsPaySwitch.isOn = false
+            })
+            present(validator, animated: true, completion: nil)
         }
     }
     

@@ -127,7 +127,6 @@ class ConversationViewController: UIViewController {
         } else if let ownerUser = ownerUser {
             titleLabel.text = ownerUser.fullName
         }
-        FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Enter conversation of name: \(titleLabel.text ?? "nil")")
         
         reportRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(showReportMenuAction))
         reportRecognizer.minimumPressDuration = 2
@@ -196,7 +195,6 @@ class ConversationViewController: UIViewController {
         AudioManager.shared.stop(deactivateAudioSession: true)
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath), tableView.rectForRow(at: lastIndexPath).origin.y < tableView.contentOffset.y + tableView.frame.height - tableView.contentInset.bottom {
-                FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Remove position, reason: last cell is visible")
                 ConversationViewController.positions[conversationId] = nil
             } else {
                 for indexPath in visibleIndexPaths {
@@ -206,14 +204,12 @@ class ConversationViewController: UIViewController {
                     let rect = tableView.rectForRow(at: indexPath)
                     let offset = tableView.contentInset.top + tableView.contentOffset.y - rect.origin.y
                     let position = Position(messageId: message.messageId, offset: offset)
-                    FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Save position: \(position.debugDescription)")
                     ConversationViewController.positions[conversationId] = position
                     break
                 }
             }
         }
         if parent == nil {
-            FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Leave conversation", newSection: true)
             dataSource?.cancelMessageProcessing()
         }
     }
@@ -250,12 +246,10 @@ class ConversationViewController: UIViewController {
         unreadBadgeValue = 0
         if let quotingMessageId = quotingMessageId, let indexPath = dataSource?.indexPath(where: { $0.messageId == quotingMessageId }) {
             self.quotingMessageId = nil
-            FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Scroll to indexPath: \(indexPath), reason: Scroll to loaded quoting message")
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
             blinkCellBackground(at: indexPath)
         } else if let quotingMessageId = quotingMessageId, MessageDAO.shared.hasMessage(id: quotingMessageId) {
             self.quotingMessageId = nil
-            FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Reload to msg_id: \(quotingMessageId), reason: Scroll to not loaded quoting message")
             dataSource?.scrollToBottomAndReload(initialMessageId: quotingMessageId, completion: {
                 if let indexPath = self.dataSource?.indexPath(where: { $0.messageId == quotingMessageId }) {
                     self.blinkCellBackground(at: indexPath)
@@ -375,12 +369,10 @@ class ConversationViewController: UIViewController {
             if message.category.hasSuffix("_TEXT"), let cell = cell as? QuoteTextMessageCell, cell.quoteBackgroundImageView.frame.contains(recognizer.location(in: cell)), let quoteMessageId = viewModel.message.quoteMessageId {
                 if let indexPath = dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
                     quotingMessageId = message.messageId
-                    FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Scroll to indexPath: \(indexPath), reason: Scroll to quoted message")
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
                     blinkCellBackground(at: indexPath)
                 } else if MessageDAO.shared.hasMessage(id: quoteMessageId) {
                     quotingMessageId = message.messageId
-                    FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Scroll to top and reload with msg id: \(quoteMessageId), reason: Scroll to quoted message")
                     dataSource?.scrollToTopAndReload(initialMessageId: quoteMessageId, completion: {
                         if let indexPath = self.dataSource?.indexPath(where: { $0.messageId == quoteMessageId }) {
                             self.blinkCellBackground(at: indexPath)
@@ -776,7 +768,6 @@ extension ConversationViewController: UITableViewDelegate {
     }
     
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Scroll to top")
         tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         return false
     }

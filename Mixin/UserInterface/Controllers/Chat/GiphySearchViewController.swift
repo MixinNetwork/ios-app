@@ -12,7 +12,6 @@ class GiphySearchViewController: UIViewController {
     var onDisappear: (() -> Void)?
     
     private let limit = 24
-    private let topRoundedMaskLayer = CAShapeLayer()
     
     private var status = Status.loading
     private var urls = [GiphyImageURL]()
@@ -98,15 +97,6 @@ class GiphySearchViewController: UIViewController {
         lastGiphyOperation?.cancel()
         self.animated = false
         onDisappear?()
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        let path = UIBezierPath(roundedRect: view.bounds,
-                                byRoundingCorners: [.topLeft, .topRight],
-                                cornerRadii: CGSize(width: 8, height: 8))
-        topRoundedMaskLayer.path = path.cgPath
-        view.layer.mask = topRoundedMaskLayer
     }
     
     @IBAction func dismissAction(_ sender: Any) {

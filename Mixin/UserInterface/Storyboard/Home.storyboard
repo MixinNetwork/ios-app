@@ -224,11 +224,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="70" estimatedRowHeight="70" sectionHeaderHeight="41" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fJ7-r4-Szs">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="separatorInset" minX="78" minY="0.0" maxX="0.0" maxY="0.0"/>
-                            </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TXy-2f-OW6">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
                                 <subviews>
@@ -317,15 +312,20 @@
                                     <constraint firstAttribute="bottom" secondItem="Lel-4I-ATS" secondAttribute="bottom" id="hPp-D5-EZh"/>
                                 </constraints>
                             </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="70" estimatedRowHeight="70" sectionHeaderHeight="41" estimatedSectionHeaderHeight="-1" sectionFooterHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="fJ7-r4-Szs">
+                                <rect key="frame" x="0.0" y="76" width="375" height="591"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="separatorInset" minX="78" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="3KR-9K-hdW" firstAttribute="top" secondItem="Lel-4I-ATS" secondAttribute="top" id="1LQ-Ns-dVK"/>
-                            <constraint firstItem="fJ7-r4-Szs" firstAttribute="leading" secondItem="3KR-9K-hdW" secondAttribute="leading" id="1So-m6-uS8"/>
-                            <constraint firstItem="3KR-9K-hdW" firstAttribute="trailing" secondItem="fJ7-r4-Szs" secondAttribute="trailing" id="6JV-3D-AiN"/>
                             <constraint firstItem="TXy-2f-OW6" firstAttribute="top" secondItem="VMk-AN-tc7" secondAttribute="top" id="GJx-KK-6NY"/>
                             <constraint firstItem="TXy-2f-OW6" firstAttribute="bottom" secondItem="3KR-9K-hdW" secondAttribute="top" constant="56" id="IJw-eM-eAL"/>
-                            <constraint firstItem="3KR-9K-hdW" firstAttribute="top" secondItem="fJ7-r4-Szs" secondAttribute="top" id="XUw-zP-9v0"/>
+                            <constraint firstAttribute="trailing" secondItem="fJ7-r4-Szs" secondAttribute="trailing" id="Mb0-3g-lrT"/>
+                            <constraint firstItem="fJ7-r4-Szs" firstAttribute="leading" secondItem="VMk-AN-tc7" secondAttribute="leading" id="aUI-B7-Al3"/>
+                            <constraint firstItem="fJ7-r4-Szs" firstAttribute="top" secondItem="TXy-2f-OW6" secondAttribute="bottom" id="ein-eu-CvY"/>
                             <constraint firstAttribute="bottom" secondItem="fJ7-r4-Szs" secondAttribute="bottom" id="fdW-sL-a5Y"/>
                             <constraint firstAttribute="trailing" secondItem="TXy-2f-OW6" secondAttribute="trailing" id="m0z-4b-WJD"/>
                             <constraint firstItem="TXy-2f-OW6" firstAttribute="leading" secondItem="VMk-AN-tc7" secondAttribute="leading" id="zLr-Rc-A2K"/>
@@ -350,7 +350,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FYX-l7-xTH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="529" y="-277"/>
+            <point key="canvasLocation" x="528.79999999999995" y="-277.51124437781112"/>
         </scene>
         <!--Signal Loading View Controller-->
         <scene sceneID="Df6-Sj-4cc">

@@ -1,12 +1,12 @@
 import UIKit
 
-class GroupAnnouncementViewController: UIViewController {
+class GroupAnnouncementViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var saveButton: RoundedButton!
-
-    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-
+    
+    @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
+    
     private var newAnnouncement: String {
         return textView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
@@ -23,13 +23,13 @@ class GroupAnnouncementViewController: UIViewController {
         if let conversation = self.conversation {
             textView.text = conversation.announcement
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    override func layout(for keyboardFrame: CGRect) {
+        let windowHeight = AppDelegate.current.window!.bounds.height
+        keyboardPlaceholderHeightConstraint.constant = windowHeight - keyboardFrame.origin.y
+        view.layoutIfNeeded()
     }
-
     
     @IBAction func saveAction(_ sender: Any) {
         guard !saveButton.isBusy else {
@@ -49,15 +49,6 @@ class GroupAnnouncementViewController: UIViewController {
                 self?.textView.isUserInteractionEnabled = true
                 self?.textView.becomeFirstResponder()
             }
-        }
-    }
-    
-    @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        let windowHeight = AppDelegate.current.window!.bounds.height
-        self.bottomConstraint.constant = windowHeight - endFrame.origin.y + 20
-        CATransaction.performWithoutAnimation {
-            view.layoutIfNeeded()
         }
     }
     

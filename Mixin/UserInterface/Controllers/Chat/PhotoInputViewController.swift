@@ -102,11 +102,14 @@ extension PhotoInputViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
         case .allPhotos:
+            gridViewController.firstCellIsCamera = true
             gridViewController.fetchResult = allPhotos
         case .smartAlbums:
+            gridViewController.firstCellIsCamera = false
             let assetCollection = sortedSmartAlbums[indexPath.row]
             gridViewController.fetchResult = PHAsset.fetchAssets(in: assetCollection, options: PhotoInputViewController.creationDateDescendingFetchOptions)
         case .userCollections:
+            gridViewController.firstCellIsCamera = false
             if let assetCollection = userCollections[indexPath.row] as? PHAssetCollection {
                 gridViewController.fetchResult = PHAsset.fetchAssets(in: assetCollection, options: PhotoInputViewController.creationDateDescendingFetchOptions)
             } else {

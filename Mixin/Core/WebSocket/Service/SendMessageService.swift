@@ -432,6 +432,10 @@ class SendMessageService: MixinService {
                     report.addMetadata(["blazeMessage": blazeMessage], toTabWithName: "Track")
                     report.addMetadata(["isSessionMessage": "\(job.isSessionMessage)"], toTabWithName: "Track")
                 })
+
+                if let err = error as? APIError, err.code == 10002 {
+                    return true
+                }
             }
         } while true
     }

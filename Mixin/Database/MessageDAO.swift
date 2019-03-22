@@ -41,7 +41,7 @@ final class MessageDAO {
         WHERE conversation_id = ? AND status == 'DELIVERED' AND user_id != ? AND created_at <= ?
     """
     static let sqlQueryFullMessage = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
+    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_identifier, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.sticker_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
@@ -81,7 +81,7 @@ final class MessageDAO {
     """
     static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
     private static let sqlQueryMessageSync = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
+    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_identifier, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.sticker_id, m.quote_message_id, m.quote_content, m.created_at FROM messages m
@@ -90,7 +90,7 @@ final class MessageDAO {
     ORDER BY m.created_at ASC
     """
     private static let sqlQueryPendingMessages = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
+    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_identifier, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.sticker_id, m.created_at FROM messages m

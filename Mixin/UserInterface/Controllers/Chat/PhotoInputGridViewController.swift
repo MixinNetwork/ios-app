@@ -17,6 +17,8 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
         }
     }
     
+    var firstCellIsCamera = true
+    
     private let cellReuseId = "grid"
     private let interitemSpacing: CGFloat = 0
     private let columnCount: CGFloat = 3
@@ -76,35 +78,42 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return fetchResult?.count ?? 0
+        return (fetchResult?.count ?? 0) + (firstCellIsCamera ? 1 : 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! PhotoInputGridCell
-        guard let asset = fetchResult?.object(at: indexPath.item) else {
-            return cell
-        }
-        cell.identifier = asset.localIdentifier
-        imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil) { [weak cell] (image, _) in
-            guard let cell = cell, cell.identifier == asset.localIdentifier else {
-                return
+        if firstCellIsCamera && indexPath.item == 0 {
+            cell.identifier = nil
+            cell.imageView.contentMode = .center
+            cell.imageView.image = R.image.conversation.ic_camera()
+            cell.imageView.backgroundColor = UIColor(rgbValue: 0x333333)
+            cell.fileTypeWrapperView.isHidden = true
+        } else if let asset = asset(at: indexPath) {
+            cell.identifier = asset.localIdentifier
+            cell.imageView.contentMode = .scaleAspectFill
+            cell.imageView.backgroundColor = .white
+            imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil) { [weak cell] (image, _) in
+                guard let cell = cell, cell.identifier == asset.localIdentifier else {
+                    return
+                }
+                cell.imageView.image = image
             }
-            cell.imageView.image = image
-        }
-        if asset.mediaType == .video {
-            cell.fileTypeWrapperView.isHidden = false
-            cell.gifFileTypeView.isHidden = true
-            cell.videoTypeView.isHidden = false
-            cell.videoDurationLabel.text = mediaDurationFormatter.string(from: asset.duration)
-        } else {
-            if let uti = asset.value(forKey: "uniformTypeIdentifier") as? String, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
+            if asset.mediaType == .video {
                 cell.fileTypeWrapperView.isHidden = false
-                cell.gifFileTypeView.isHidden = false
-                cell.videoTypeView.isHidden = true
-            } else {
-                cell.fileTypeWrapperView.isHidden = true
                 cell.gifFileTypeView.isHidden = true
-                cell.videoTypeView.isHidden = true
+                cell.videoTypeView.isHidden = false
+                cell.videoDurationLabel.text = mediaDurationFormatter.string(from: asset.duration)
+            } else {
+                if let uti = asset.value(forKey: "uniformTypeIdentifier") as? String, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
+                    cell.fileTypeWrapperView.isHidden = false
+                    cell.gifFileTypeView.isHidden = false
+                    cell.videoTypeView.isHidden = true
+                } else {
+                    cell.fileTypeWrapperView.isHidden = true
+                    cell.gifFileTypeView.isHidden = true
+                    cell.videoTypeView.isHidden = true
+                }
             }
         }
         return cell
@@ -123,12 +132,17 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        removeAllSelections()
-        return true
+        if firstCellIsCamera && indexPath.item == 0 {
+            conversationViewController?.imagePickerController.presentCamera()
+            return false
+        } else {
+            removeAllSelections()
+            return true
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        if let asset = fetchResult?.object(at: indexPath.row) {
+        if let asset = asset(at: indexPath) {
             let vc = AssetSendViewController.instance(asset: asset, dataSource: dataSource)
             navigationController?.pushViewController(vc, animated: true)
         }
@@ -147,21 +161,23 @@ extension PhotoInputGridViewController: PHPhotoLibraryChangeObserver {
         DispatchQueue.main.sync {
             if changes.hasIncrementalChanges {
                 collectionView.performBatchUpdates({
+                    let cameraCellFactor = self.firstCellIsCamera ? 1 : 0
+                    
                     self.fetchResult = changes.fetchResultAfterChanges
                     if let removed = changes.removedIndexes, !removed.isEmpty {
-                        let indexPaths = removed.map({ IndexPath(item: $0, section: 0) })
+                        let indexPaths = removed.map({ IndexPath(item: $0 + cameraCellFactor, section: 0) })
                         collectionView.deleteItems(at: indexPaths)
                     }
                     if let inserted = changes.insertedIndexes, !inserted.isEmpty {
-                        let indexPaths = inserted.map({ IndexPath(item: $0, section: 0) })
+                        let indexPaths = inserted.map({ IndexPath(item: $0 + cameraCellFactor, section: 0) })
                         collectionView.insertItems(at: indexPaths)
                     }
                     changes.enumerateMoves({ (from, to) in
-                        self.collectionView.moveItem(at: IndexPath(item: from, section: 0),
-                                                     to: IndexPath(item: to, section: 0))
+                        self.collectionView.moveItem(at: IndexPath(item: from + cameraCellFactor, section: 0),
+                                                     to: IndexPath(item: to + cameraCellFactor, section: 0))
                     })
                     if let changed = changes.changedIndexes, !changed.isEmpty {
-                        let indexPaths = changed.map({ IndexPath(item: $0, section: 0) })
+                        let indexPaths = changed.map({ IndexPath(item: $0 + cameraCellFactor, section: 0) })
                         collectionView.reloadItems(at: indexPaths)
                     }
                 })
@@ -183,7 +199,7 @@ extension PhotoInputGridViewController {
     }
     
     private func updateCachedAssets() {
-        guard isViewLoaded, view.window != nil, let fetchResult = fetchResult else {
+        guard isViewLoaded, view.window != nil, fetchResult != nil else {
             return
         }
         let visibleRect = collectionView.bounds
@@ -195,10 +211,10 @@ extension PhotoInputGridViewController {
         let (addedRects, removedRects) = differencesBetweenRects(previousPreheatRect, preheatRect)
         let addedAssets = addedRects
             .flatMap(indexPathsForElements)
-            .map { fetchResult.object(at: $0.item) }
+            .compactMap(asset)
         let removedAssets = removedRects
             .flatMap(indexPathsForElements)
-            .map { fetchResult.object(at: $0.item) }
+            .compactMap(asset)
         imageManager.startCachingImages(for: addedAssets,
                                         targetSize: thumbnailSize,
                                         contentMode: .aspectFill,
@@ -257,6 +273,18 @@ extension PhotoInputGridViewController {
         collectionView.indexPathsForSelectedItems?.forEach({ (indexPath) in
             collectionView.deselectItem(at: indexPath, animated: false)
         })
+    }
+    
+    private func asset(at indexPath: IndexPath) -> PHAsset? {
+        if firstCellIsCamera {
+            if indexPath.row == 0 && indexPath.item == 0 {
+                return nil
+            } else {
+                return fetchResult?.object(at: indexPath.item - 1)
+            }
+        } else {
+            return fetchResult?.object(at: indexPath.item)
+        }
     }
     
 }

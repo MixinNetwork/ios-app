@@ -24,8 +24,16 @@ class HomeViewController: UIViewController {
     private var currentOffset: CGFloat = 0
     
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
-    private lazy var pinAction = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_PIN, handler: tableViewCommitPinAction)
-    private lazy var unpinAction = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_UNPIN, handler: tableViewCommitPinAction)
+    private lazy var pinAction: UITableViewRowAction = {
+        let action = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_PIN, handler: tableViewCommitPinAction)
+        action.backgroundColor = .theme
+        return action
+    }()
+    private lazy var unpinAction: UITableViewRowAction = {
+        let action = UITableViewRowAction(style: .normal, title: Localized.HOME_CELL_ACTION_UNPIN, handler: tableViewCommitPinAction)
+        action.backgroundColor = .theme
+        return action
+    }()
     private lazy var searchViewController: SearchViewController? = {
         let vc = SearchViewController.instance()
         addChild(vc)

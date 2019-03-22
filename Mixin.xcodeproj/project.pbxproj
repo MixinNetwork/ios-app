@@ -306,6 +306,7 @@
 		7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */; };
 		7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */; };
 		7BEFDC211FB08E9B00F66885 /* GroupUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEFDC201FB08E9B00F66885 /* GroupUser.swift */; };
+		7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF071BF2244E6A1007240AD /* UploadContactCell.swift */; };
 		7BF0E07C221ABE050053040D /* AssetIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF0E07B221ABE050053040D /* AssetIconView.swift */; };
 		7BF374A72063951F008A166B /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A52063951E008A166B /* GalleryViewController.swift */; };
 		7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A62063951E008A166B /* GalleryItemViewController.swift */; };
@@ -410,8 +411,6 @@
 		DF3C474E1FA1849500A07C71 /* MessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C474D1FA1849500A07C71 /* MessageDAO.swift */; };
 		DF3C47501FA18EE900A07C71 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C474F1FA18EE900A07C71 /* Message.swift */; };
 		DF3C47521FA191A600A07C71 /* UserDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47511FA191A600A07C71 /* UserDAO.swift */; };
-		DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3EEF811FA9EF49007C6E03 /* PhoneContactGuideCell.swift */; };
-		DF3EEF841FA9EF54007C6E03 /* PhoneContactGuideCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3EEF831FA9EF54007C6E03 /* PhoneContactGuideCell.xib */; };
 		DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */; };
 		DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */; };
 		DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */; };
@@ -422,7 +421,6 @@
 		DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF44B0CD20C6897D00A099B6 /* EmptyView.xib */; };
 		DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4041FA9B48500243A8B /* ContactsManager.swift */; };
 		DF46B4071FA9E78A00243A8B /* PhoneContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */; };
-		DF46B4091FA9E79700243A8B /* PhoneContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF46B4081FA9E79700243A8B /* PhoneContactCell.xib */; };
 		DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B40A1FA9E7CF00243A8B /* CornerView.swift */; };
 		DF4D15CC217EE93200CA602F /* MixinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF4D15CB217EE93200CA602F /* MixinRequest.swift */; };
 		DF503D251FECE54100C008E7 /* IdentityDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF503D241FECE54100C008E7 /* IdentityDAO.swift */; };
@@ -444,7 +442,7 @@
 		DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB6720233657002BF028 /* MixinWebView.swift */; };
 		DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */; };
 		DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */; };
-		DF56966F1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift */; };
+		DF56966F1FAAB11D00226D42 /* PhoneContactHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* PhoneContactHeaderView.swift */; };
 		DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */; };
 		DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */; };
 		DF5CDA74204FEBA1004A52BA /* BaseCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */; };
@@ -469,8 +467,6 @@
 		DF6175C02223985C00624609 /* ProvisionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175BD2223985C00624609 /* ProvisionManager.swift */; };
 		DF6175C3222398BB00624609 /* MixinURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C2222398BB00624609 /* MixinURL.swift */; };
 		DF6175C72223E5D000624609 /* BlazeSessionMessageParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6175C62223E5D000624609 /* BlazeSessionMessageParam.swift */; };
-		DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */; };
-		DF63E1D920B84B5300A833A7 /* ContactQRCodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */; };
 		DF65AAF3205122A3004E3459 /* MessageBlaze.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF2205122A3004E3459 /* MessageBlaze.swift */; };
 		DF65AAF520514B3B004E3459 /* ParticipantUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF65AAF420514B3B004E3459 /* ParticipantUser.swift */; };
 		DF68F1842014CEAB001C4225 /* RefreshStickerJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */; };
@@ -539,7 +535,6 @@
 		DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D941FF7C2B6000875BD /* ResendData.swift */; };
 		DFB37D9F1FF94864000875BD /* RotateSignedPreKeyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */; };
 		DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6C69320E4BF0A008345AF /* StickerResponse.swift */; };
-		DFB9B3981FAAB8B9009503CE /* PhoneContactHeaderFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB9B3971FAAB8B9009503CE /* PhoneContactHeaderFooter.xib */; };
 		DFB9B39A1FAB01E6009503CE /* MixinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3991FAB01E6009503CE /* MixinNavigationController.swift */; };
 		DFB9B3A11FAB2B3E009503CE /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB9B3A01FAB2B3E009503CE /* BaseViewController.swift */; };
 		DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBADC111FD1211E00722929 /* AboutViewController.swift */; };
@@ -555,11 +550,7 @@
 		DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */; };
 		DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */; };
 		DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD294361FA6EF4500FADAAD /* DateExtension.swift */; };
-		DFD2943D1FA706E100FADAAD /* ContactMeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD2943C1FA706E100FADAAD /* ContactMeCell.swift */; };
-		DFD2943F1FA7071A00FADAAD /* ContactNavCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD2943E1FA7071A00FADAAD /* ContactNavCell.swift */; };
 		DFD294411FA7075300FADAAD /* PeerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD294401FA7075300FADAAD /* PeerCell.swift */; };
-		DFD294431FA7076600FADAAD /* ContactMeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFD294421FA7076600FADAAD /* ContactMeCell.xib */; };
-		DFD294451FA7087800FADAAD /* ContactNavCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFD294441FA7087800FADAAD /* ContactNavCell.xib */; };
 		DFD294471FA7092800FADAAD /* PeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFD294461FA7092800FADAAD /* PeerCell.xib */; };
 		DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFD294481FA7145F00FADAAD /* Contact.storyboard */; };
 		DFD5F6F720722C8F0017AAF1 /* PinTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD5F6F620722C8F0017AAF1 /* PinTokenResponse.swift */; };
@@ -613,7 +604,6 @@
 		DFF3B68E20E3599E00DC82D9 /* PrintLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF3B68D20E3599E00DC82D9 /* PrintLog.swift */; };
 		DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */; };
 		DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFF44174223A035000DDD5F8 /* GoogleService-Info.plist */; };
-		DFF44178223BC5E700DDD5F8 /* ContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFF44177223BC5E700DDD5F8 /* ContactCell.xib */; };
 		DFF4417A223BC63100DDD5F8 /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF44179223BC63100DDD5F8 /* ContactCell.swift */; };
 		DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */; };
 		DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF70F612079FC4900A5FA8B /* AssetItem.swift */; };
@@ -956,6 +946,7 @@
 		7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		7BEFDC1C1FB07F1600F66885 /* GroupNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameCell.swift; sourceTree = "<group>"; };
 		7BEFDC201FB08E9B00F66885 /* GroupUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupUser.swift; sourceTree = "<group>"; };
+		7BF071BF2244E6A1007240AD /* UploadContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadContactCell.swift; sourceTree = "<group>"; };
 		7BF0E07B221ABE050053040D /* AssetIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetIconView.swift; sourceTree = "<group>"; };
 		7BF374A52063951E008A166B /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		7BF374A62063951E008A166B /* GalleryItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryItemViewController.swift; sourceTree = "<group>"; };
@@ -1061,8 +1052,6 @@
 		DF3C474D1FA1849500A07C71 /* MessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDAO.swift; sourceTree = "<group>"; };
 		DF3C474F1FA18EE900A07C71 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		DF3C47511FA191A600A07C71 /* UserDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDAO.swift; sourceTree = "<group>"; };
-		DF3EEF811FA9EF49007C6E03 /* PhoneContactGuideCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactGuideCell.swift; sourceTree = "<group>"; };
-		DF3EEF831FA9EF54007C6E03 /* PhoneContactGuideCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactGuideCell.xib; sourceTree = "<group>"; };
 		DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QrcodeWindow.xib; sourceTree = "<group>"; };
 		DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUploadJob.swift; sourceTree = "<group>"; };
 		DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadOrDownloadJob.swift; sourceTree = "<group>"; };
@@ -1073,7 +1062,6 @@
 		DF44B0CD20C6897D00A099B6 /* EmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyView.xib; sourceTree = "<group>"; };
 		DF46B4041FA9B48500243A8B /* ContactsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsManager.swift; sourceTree = "<group>"; };
 		DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactCell.swift; sourceTree = "<group>"; };
-		DF46B4081FA9E79700243A8B /* PhoneContactCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactCell.xib; sourceTree = "<group>"; };
 		DF46B40A1FA9E7CF00243A8B /* CornerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerView.swift; sourceTree = "<group>"; };
 		DF4D15CB217EE93200CA602F /* MixinRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinRequest.swift; sourceTree = "<group>"; };
 		DF503D241FECE54100C008E7 /* IdentityDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityDAO.swift; sourceTree = "<group>"; };
@@ -1095,7 +1083,7 @@
 		DF53BB6720233657002BF028 /* MixinWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinWebView.swift; sourceTree = "<group>"; };
 		DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeCell.xib; sourceTree = "<group>"; };
 		DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeCell.swift; sourceTree = "<group>"; };
-		DF56966E1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactHeaderFooter.swift; sourceTree = "<group>"; };
+		DF56966E1FAAB11D00226D42 /* PhoneContactHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactHeaderView.swift; sourceTree = "<group>"; };
 		DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewController.swift; sourceTree = "<group>"; };
 		DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCodable.swift; sourceTree = "<group>"; };
@@ -1124,8 +1112,6 @@
 		DF6175BD2223985C00624609 /* ProvisionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisionManager.swift; sourceTree = "<group>"; };
 		DF6175C2222398BB00624609 /* MixinURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixinURL.swift; sourceTree = "<group>"; };
 		DF6175C62223E5D000624609 /* BlazeSessionMessageParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlazeSessionMessageParam.swift; sourceTree = "<group>"; };
-		DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactQRCodeCell.xib; sourceTree = "<group>"; };
-		DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactQRCodeCell.swift; sourceTree = "<group>"; };
 		DF65AAF2205122A3004E3459 /* MessageBlaze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBlaze.swift; sourceTree = "<group>"; };
 		DF65AAF420514B3B004E3459 /* ParticipantUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantUser.swift; sourceTree = "<group>"; };
 		DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshStickerJob.swift; sourceTree = "<group>"; };
@@ -1198,7 +1184,6 @@
 		DFB37D941FF7C2B6000875BD /* ResendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendData.swift; sourceTree = "<group>"; };
 		DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateSignedPreKeyJob.swift; sourceTree = "<group>"; };
 		DFB6C69320E4BF0A008345AF /* StickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerResponse.swift; sourceTree = "<group>"; };
-		DFB9B3971FAAB8B9009503CE /* PhoneContactHeaderFooter.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhoneContactHeaderFooter.xib; sourceTree = "<group>"; };
 		DFB9B3991FAB01E6009503CE /* MixinNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinNavigationController.swift; sourceTree = "<group>"; };
 		DFB9B3A01FAB2B3E009503CE /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		DFBADC111FD1211E00722929 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
@@ -1214,11 +1199,7 @@
 		DFD15C6F1FB5ACE7004B45CE /* UICollationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollationExtension.swift; sourceTree = "<group>"; };
 		DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		DFD294361FA6EF4500FADAAD /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
-		DFD2943C1FA706E100FADAAD /* ContactMeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMeCell.swift; sourceTree = "<group>"; };
-		DFD2943E1FA7071A00FADAAD /* ContactNavCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactNavCell.swift; sourceTree = "<group>"; };
 		DFD294401FA7075300FADAAD /* PeerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerCell.swift; sourceTree = "<group>"; };
-		DFD294421FA7076600FADAAD /* ContactMeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactMeCell.xib; sourceTree = "<group>"; };
-		DFD294441FA7087800FADAAD /* ContactNavCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactNavCell.xib; sourceTree = "<group>"; };
 		DFD294461FA7092800FADAAD /* PeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerCell.xib; sourceTree = "<group>"; };
 		DFD294481FA7145F00FADAAD /* Contact.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Contact.storyboard; sourceTree = "<group>"; };
 		DFD5F6F620722C8F0017AAF1 /* PinTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinTokenResponse.swift; sourceTree = "<group>"; };
@@ -1273,7 +1254,6 @@
 		DFF3B68D20E3599E00DC82D9 /* PrintLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintLog.swift; sourceTree = "<group>"; };
 		DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Mixin-Keys.plist"; sourceTree = "<group>"; };
 		DFF44174223A035000DDD5F8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		DFF44177223BC5E700DDD5F8 /* ContactCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCell.xib; sourceTree = "<group>"; };
 		DFF44179223BC63100DDD5F8 /* ContactCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferContactData.swift; sourceTree = "<group>"; };
 		DFF70F612079FC4900A5FA8B /* AssetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetItem.swift; sourceTree = "<group>"; };
@@ -2398,20 +2378,10 @@
 		DFD294391FA7066500FADAAD /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				DFF44177223BC5E700DDD5F8 /* ContactCell.xib */,
 				DFF44179223BC63100DDD5F8 /* ContactCell.swift */,
-				DFD2943C1FA706E100FADAAD /* ContactMeCell.swift */,
-				DFD294421FA7076600FADAAD /* ContactMeCell.xib */,
-				DF63E1D820B84B5300A833A7 /* ContactQRCodeCell.swift */,
-				DF63E1D620B848C400A833A7 /* ContactQRCodeCell.xib */,
-				DFD2943E1FA7071A00FADAAD /* ContactNavCell.swift */,
-				DFD294441FA7087800FADAAD /* ContactNavCell.xib */,
 				DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */,
-				DF46B4081FA9E79700243A8B /* PhoneContactCell.xib */,
-				DF3EEF811FA9EF49007C6E03 /* PhoneContactGuideCell.swift */,
-				DF3EEF831FA9EF54007C6E03 /* PhoneContactGuideCell.xib */,
-				DF56966E1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift */,
-				DFB9B3971FAAB8B9009503CE /* PhoneContactHeaderFooter.xib */,
+				7BF071BF2244E6A1007240AD /* UploadContactCell.swift */,
+				DF56966E1FAAB11D00226D42 /* PhoneContactHeaderView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2648,7 +2618,6 @@
 				DF8EF6AD203055DD00E99CE8 /* UrlWindow.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
-				DFB9B3981FAAB8B9009503CE /* PhoneContactHeaderFooter.xib in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
 				7BB1EDC71FB1B43B000DF9E7 /* GroupMemberCell.xib in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
@@ -2656,18 +2625,15 @@
 				DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
-				DF46B4091FA9E79700243A8B /* PhoneContactCell.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */,
 				7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */,
 				7BDBDE7022365017006220DF /* SettingCell.xib in Resources */,
-				DFD294431FA7076600FADAAD /* ContactMeCell.xib in Resources */,
 				7BA4A1CF1FF347130086CD56 /* GroupParticipantCell.xib in Resources */,
 				7B45A51C2189F28E0008F894 /* call.caf in Resources */,
 				DFF2145B209ABBB400612234 /* GroupWindow.xib in Resources */,
 				7BFF3B021FAAE92F0039A1C5 /* SearchResultContactCell.xib in Resources */,
-				DF3EEF841FA9EF54007C6E03 /* PhoneContactGuideCell.xib in Resources */,
 				7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
 				7BEC4DF121A7D054003336F2 /* WalletAssetCell.xib in Resources */,
@@ -2686,8 +2652,6 @@
 				7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */,
 				DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
-				DFD294451FA7087800FADAAD /* ContactNavCell.xib in Resources */,
-				DF63E1D720B848C400A833A7 /* ContactQRCodeCell.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
@@ -2698,7 +2662,6 @@
 				7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */,
 				DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
-				DFF44178223BC5E700DDD5F8 /* ContactCell.xib in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				7B84358B20D8F88200237242 /* QuotePreviewView.xib in Resources */,
 				DF2F089520B688DB005786CB /* UserView.xib in Resources */,
@@ -2863,6 +2826,7 @@
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
+				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */,
 				7B5EA41420B2791F00940D1A /* GalleryScrollView.swift in Sources */,
 				DF191196208F186100BD415D /* SendMessageService.swift in Sources */,
@@ -3022,12 +2986,10 @@
 				DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */,
 				DFD87C8B1FDBF10100BBCFFC /* RefreshOffsetJob.swift in Sources */,
 				DF1A2C60219BCACC004EFD68 /* ClockSkewViewController.swift in Sources */,
-				DF3EEF821FA9EF49007C6E03 /* PhoneContactGuideCell.swift in Sources */,
 				DF8EF6B72032D3D700E99CE8 /* PayView.swift in Sources */,
 				DFE48ADA20E69B31003E0BF8 /* StorageUsageViewController.swift in Sources */,
 				DFE63C9C1FC6B18900D6E028 /* SignalKeyResponse.swift in Sources */,
 				DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */,
-				DF63E1D920B84B5300A833A7 /* ContactQRCodeCell.swift in Sources */,
 				DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */,
 				7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */,
 				7BD7055F215BAEDE00639FA8 /* PeerTransactionsViewController.swift in Sources */,
@@ -3151,7 +3113,6 @@
 				DFE48ADC20EB8165003E0BF8 /* ConversationStorageUsage.swift in Sources */,
 				DF114B062020551900EA8F9C /* AppDAO.swift in Sources */,
 				DFD659C620501858000696B0 /* BaseDatabase.swift in Sources */,
-				DFD2943D1FA706E100FADAAD /* ContactMeCell.swift in Sources */,
 				7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */,
 				7B9F06C820A985E70095A51B /* VideoMessageCell.swift in Sources */,
 				DF84777820DA5A1200DE5163 /* RecordButton.swift in Sources */,
@@ -3185,7 +3146,6 @@
 				DFA5B5871FADBE7D00549728 /* AddMemberViewController.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
 				DFEE215C200CAD8800D9B3F7 /* AuthorizationRequest.swift in Sources */,
-				DFD2943F1FA7071A00FADAAD /* ContactNavCell.swift in Sources */,
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
 				273FACAD205FB9A800513327 /* KeyPair.swift in Sources */,
@@ -3290,7 +3250,7 @@
 				DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */,
 				DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
-				DF56966F1FAAB11D00226D42 /* PhoneContactHeaderFooter.swift in Sources */,
+				DF56966F1FAAB11D00226D42 /* PhoneContactHeaderView.swift in Sources */,
 				7B4375C32170CA6900846DC5 /* TransactionsFilterConditionCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				DF2A244E1FC84E3F003A8C1E /* Conversation.swift in Sources */,

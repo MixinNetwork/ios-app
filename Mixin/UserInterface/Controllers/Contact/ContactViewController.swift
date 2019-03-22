@@ -1,35 +1,51 @@
 import UIKit
-import AVFoundation
+import MessageUI
 
 class ContactViewController: UITableViewController {
-
+    
+    enum ReuseId {
+        static let header = "header"
+        static let contact = "contact"
+        static let phoneContact = "phone_contact"
+        static let upload = "upload"
+        static let footer = "footer"
+    }
+    
+    @IBOutlet weak var accountAvatarView: AvatarShadowIconView!
+    @IBOutlet weak var accountNameLabel: UILabel!
+    @IBOutlet weak var accountIdLabel: UILabel!
+    
     private var contacts = [UserItem]()
-    private var showPhoneContactTips = false
-    private var phoneContactSections = [[PhoneContact]]()
-    private var sectionIndexTitles = [String]()
+    private var phoneContacts = [[PhoneContact]]()
+    private var phoneContactSectionTitles = [String]()
+    
     private lazy var myQRCodeWindow = QrcodeWindow.instance()
     private lazy var receiveMoneyWindow = QrcodeWindow.instance()
     private lazy var userWindow = UserWindow.instance()
     
+    private var isPhoneContactAuthorized: Bool {
+        return ContactsManager.shared.authorization == .authorized
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(PhoneContactHeaderView.self,
+                           forHeaderFooterViewReuseIdentifier: ReuseId.header)
+        tableView.register(SeparatorShadowFooterView.self,
+                           forHeaderFooterViewReuseIdentifier: ReuseId.footer)
+        tableView.sectionFooterHeight = UITableView.automaticDimension
+        tableView.estimatedSectionFooterHeight = 10
         updateTableViewContentInsetBottom()
-        tableView.register(UINib(nibName: "PhoneContactHeaderFooter", bundle: nil), forHeaderFooterViewReuseIdentifier: PhoneContactHeaderFooter.cellIdentifier)
-        tableView.register(UINib(nibName: "ContactMeCell", bundle: nil), forCellReuseIdentifier: ContactMeCell.cellIdentifier)
-        tableView.register(UINib(nibName: "ContactQRCodeCell", bundle: nil), forCellReuseIdentifier: ContactQRCodeCell.cellIdentifier)
-        tableView.register(UINib(nibName: "ContactNavCell", bundle: nil), forCellReuseIdentifier: ContactNavCell.cellIdentifier)
-        tableView.register(UINib(nibName: "ContactCell", bundle: nil), forCellReuseIdentifier: ContactCell.cellIdentifier)
-        tableView.register(UINib(nibName: "PhoneContactCell", bundle: nil), forCellReuseIdentifier: PhoneContactCell.cellIdentifier)
-        tableView.register(UINib(nibName: "PhoneContactGuideCell", bundle: nil), forCellReuseIdentifier: PhoneContactGuideCell.cellIdentifier)
-        tableView.tableFooterView = UIView()
-        tableView.reloadData()
-        fetchContacts(refresh: true)
-        NotificationCenter.default.addObserver(forName: .AccountDidChange, object: nil, queue: .main) { [weak self] (_) in
-            self?.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
-        }
-        NotificationCenter.default.addObserver(forName: .ContactsDidChange, object: nil, queue: .main) { [weak self] (_) in
-            self?.fetchContacts(refresh: false)
-        }
+        reloadAccount()
+        reloadContacts()
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadAccount), name: .AccountDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadContacts), name: .ContactsDidChange, object: nil)
+        ContactAPI.shared.syncContacts()
+        
     }
     
     @available(iOS 11.0, *)
@@ -38,35 +54,72 @@ class ContactViewController: UITableViewController {
         updateTableViewContentInsetBottom()
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    @IBAction func showAccountAction(_ sender: Any) {
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        userWindow.updateUser(user: UserItem.createUser(from: account))
+        userWindow.presentView()
     }
-
-    private func settingAction() {
-        navigationController?.pushViewController(SettingViewController.instance(), animated: true)
+    
+    @IBAction func receiveMoneyAction(_ sender: Any) {
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        receiveMoneyWindow.render(title: Localized.CONTACT_RECEIVE_MONEY,
+                                  account: account,
+                                  description: Localized.TRANSFER_QRCODE_PROMPT,
+                                  qrcode: "mixin://transfer/\(account.user_id)",
+            rightMark: R.image.ic_receive_money())
+        receiveMoneyWindow.presentView()
     }
-
-    private func fetchContacts(refresh: Bool = false) {
-        DispatchQueue.global().async { [weak self] in
-            let contacts = UserDAO.shared.contacts()
-            self?.contacts = contacts
-            DispatchQueue.main.async {
-                UIView.performWithoutAnimation {
-                    self?.tableView.reloadSections(IndexSet(integer: 2), with: .none)
-                }
-                if refresh {
-                    ContactAPI.shared.syncContacts()
-                    self?.checkPhoneContact(contacts)
-                }
-            }
+    
+    @IBAction func myQrCodeAction(_ sender: Any) {
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        myQRCodeWindow.render(title: Localized.CONTACT_MY_QR_CODE,
+                              account: account,
+                              description: Localized.MYQRCODE_PROMPT,
+                              qrcode: account.code_url,
+                              qrcodeForegroundColor: UIColor.systemTint)
+        myQRCodeWindow.presentView()
+    }
+    
+    @IBAction func newGroupAction(_ sender: Any) {
+        let vc = AddMemberViewController.instance()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @IBAction func addContactAction(_ sender: Any) {
+        let vc = AddPeopleViewController.instance()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func reloadAccount() {
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.accountAvatarView.setImage(with: account.avatar_url, identityNumber: account.identity_number, name: account.full_name)
+            self.accountNameLabel.text = account.full_name
+            self.accountIdLabel.text = Localized.CONTACT_IDENTITY_NUMBER(identityNumber: account.identity_number)
         }
     }
     
-    private func updateTableViewContentInsetBottom() {
-        if view.compatibleSafeAreaInsets.bottom > 20 {
-            tableView.contentInset.bottom = 0
-        } else {
-            tableView.contentInset.bottom = 20
+    @objc func reloadContacts() {
+        DispatchQueue.global().async { [weak self] in
+            let contacts = UserDAO.shared.contacts()
+            DispatchQueue.main.sync {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.contacts = contacts
+                UIView.performWithoutAnimation {
+                    weakSelf.tableView.reloadSections(IndexSet(integer: 0), with: .none)
+                }
+                weakSelf.reloadPhoneContacts()
+            }
         }
     }
     
@@ -80,23 +133,193 @@ class ContactViewController: UITableViewController {
 }
 
 extension ContactViewController: ContainerViewControllerDelegate {
-
+    
     func barRightButtonTappedAction() {
-        settingAction()
+        let vc = SettingViewController.instance()
+        navigationController?.pushViewController(vc, animated: true)
     }
-
+    
     func imageBarRightButton() -> UIImage? {
         return #imageLiteral(resourceName: "ic_title_settings")
     }
-
+    
 }
 
-extension ContactViewController: PhoneContactGuideCellDelegate {
+extension ContactViewController {
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return contacts.count
+        } else {
+            if isPhoneContactAuthorized {
+                if phoneContacts.isEmpty {
+                    return 0
+                } else {
+                    return phoneContacts[section - 1].count
+                }
+            } else {
+                return 1
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.contact, for: indexPath) as! ContactCell
+            let user = contacts[indexPath.row]
+            cell.render(user: user)
+            return cell
+        } else {
+            if isPhoneContactAuthorized {
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.phoneContact, for: indexPath) as! PhoneContactCell
+                let contact = phoneContacts[indexPath.section - 1][indexPath.row]
+                cell.render(contact: contact)
+                cell.delegate = self
+                return cell
+            } else {
+                return tableView.dequeueReusableCell(withIdentifier: ReuseId.upload, for: indexPath)
+            }
+        }
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        if isPhoneContactAuthorized {
+            return 1 + phoneContactSectionTitles.count
+        } else {
+            return 2
+        }
+    }
+    
+}
 
-    func requestAccessPhoneContactAction() {
+extension ContactViewController {
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let lastCellBottomMargin: CGFloat = 15
+        if indexPath.section == 0 {
+            if indexPath.row == contacts.count - 1 {
+                return ContactCell.height + lastCellBottomMargin
+            } else {
+                return ContactCell.height
+            }
+        } else {
+            if isPhoneContactAuthorized {
+                if indexPath.row == phoneContacts[indexPath.section - 1].count - 1 {
+                    return PhoneContactCell.height + lastCellBottomMargin
+                } else {
+                    return PhoneContactCell.height
+                }
+            } else {
+                return UploadContactCell.height
+            }
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 || isPhoneContactAuthorized {
+            return 41
+        } else {
+            return .leastNormalMagnitude
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! PhoneContactHeaderView
+        if section == 0 {
+            view.label.text = Localized.CONTACT_TITLE.uppercased()
+            return view
+        } else if isPhoneContactAuthorized {
+            view.label.text = phoneContactSectionTitles[section - 1]
+            return view
+        } else {
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
+        if !isPhoneContactAuthorized && section == 1 {
+            view.text = Localized.CONTACT_PHONE_CONTACT_SUMMARY
+        }
+        return view
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == 0 {
+            let contact = contacts[indexPath.row]
+            let vc = ConversationViewController.instance(ownerUser: contact)
+            navigationController?.pushViewController(vc, animated: true)
+        } else if !isPhoneContactAuthorized {
+            requestPhoneContactAuthorization()
+        }
+    }
+    
+}
+
+extension ContactViewController: PhoneContactCellDelegate {
+    
+    func phoneContactCellDidSelectInvite(_ cell: PhoneContactCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
+        let phoneContact = phoneContacts[indexPath.section - 1][indexPath.row]
+        if MFMessageComposeViewController.canSendText() {
+            let vc = MFMessageComposeViewController()
+            vc.body = Localized.CONTACT_INVITE
+            vc.recipients = [phoneContact.phoneNumber]
+            vc.messageComposeDelegate = self
+            present(vc, animated: true, completion: nil)
+        } else {
+            let inviteController = UIActivityViewController(activityItems: [Localized.CONTACT_INVITE],
+                                                            applicationActivities: nil)
+            present(inviteController, animated: true, completion: nil)
+        }
+    }
+    
+}
+
+extension ContactViewController: MFMessageComposeViewControllerDelegate {
+    
+    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+}
+
+extension ContactViewController {
+    
+    private func updateTableViewContentInsetBottom() {
+        if view.compatibleSafeAreaInsets.bottom > 20 {
+            tableView.contentInset.bottom = 0
+        } else {
+            tableView.contentInset.bottom = 20
+        }
+    }
+    
+    private func reloadPhoneContacts() {
+        let contacts = self.contacts
+        DispatchQueue.global().async { [weak self] in
+            let contactPhoneNumbers = Set(contacts.compactMap({ $0.phone }))
+            let phoneContacts = ContactsManager.shared.contacts
+                .filter({ !contactPhoneNumbers.contains($0.phoneNumber) })
+            let (titles, catalogedContacts) = UILocalizedIndexedCollation.current()
+                .catalogue(phoneContacts, usingSelector: #selector(getter: PhoneContact.fullName))
+            DispatchQueue.main.sync {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.phoneContacts = catalogedContacts
+                weakSelf.phoneContactSectionTitles = titles
+                weakSelf.tableView.reloadData()
+            }
+        }
+    }
+    
+    private func requestPhoneContactAuthorization() {
         if ContactsManager.shared.authorization == .notDetermined {
-            ContactsManager.shared.store.requestAccess(for: .contacts, completionHandler: { [weak self] (granted, error) in
-                guard let weakSelf = self, granted else {
+            ContactsManager.shared.store.requestAccess(for: .contacts, completionHandler: { (granted, error) in
+                guard granted else {
                     return
                 }
                 PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts, completion: { (result) in
@@ -107,215 +330,11 @@ extension ContactViewController: PhoneContactGuideCellDelegate {
                         break
                     }
                 })
-                weakSelf.fetchPhoneContact(weakSelf.contacts)
+                self.reloadPhoneContacts()
             })
         } else {
             UIApplication.openAppSettings()
         }
     }
-
-    private func checkPhoneContact(_ contacts: [UserItem]) {
-        if ContactsManager.shared.authorization == .authorized {
-            fetchPhoneContact(contacts)
-        } else {
-            showPhoneContactTips = true
-            tableView.reloadSections(IndexSet(integer: 3), with: .none)
-        }
-    }
-
-    private func fetchPhoneContact(_ contacts: [UserItem]) {
-        DispatchQueue.global().async { [weak self] in
-            var contactMap = [String: UserItem]()
-            for contact in contacts {
-                guard let phone = contact.phone, !phone.isEmpty else {
-                    continue
-                }
-                contactMap[phone] = contact
-            }
-
-            let phoneContacts = ContactsManager.shared.contacts.filter({ (phoneContact: PhoneContact) -> Bool in
-                return contactMap[phoneContact.phoneNumber] == nil
-            })
-
-            if let weakSelf = self {
-                (weakSelf.sectionIndexTitles, weakSelf.phoneContactSections) = UILocalizedIndexedCollation.current().catalogue(phoneContacts, usingSelector: #selector(getter: PhoneContact.fullName))
-            }
-
-            DispatchQueue.main.async {
-                self?.showPhoneContactTips = false
-                self?.tableView.reloadData()
-            }
-        }
-    }
-
-}
-
-extension ContactViewController {
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        if !showPhoneContactTips && sectionIndexTitles.count > 0 {
-            return 3 + sectionIndexTitles.count
-        }
-        return 4
-    }
-
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 2 {
-            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: PhoneContactHeaderFooter.cellIdentifier)! as! PhoneContactHeaderFooter
-            header.sectionTitleLabel.text = Localized.CONTACT_TITLE.uppercased()
-            return header
-        } else if section >= 3 && !showPhoneContactTips && sectionIndexTitles.count > 0 {
-            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: PhoneContactHeaderFooter.cellIdentifier)! as! PhoneContactHeaderFooter
-            header.sectionTitleLabel.text = sectionIndexTitles[section - 3]
-            return header
-        }
-        return nil
-    }
-
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 3 && showPhoneContactTips {
-            let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: PhoneContactHeaderFooter.cellIdentifier)! as! PhoneContactHeaderFooter
-            footer.sectionTitleLabel.text = Localized.CONTACT_PHONE_CONTACT_SUMMARY
-            return footer
-        }
-        return nil
-    }
-
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch section {
-        case 0, 1:
-            return CGFloat.leastNormalMagnitude
-        case 2:
-            return 40
-        default:
-            return showPhoneContactTips ? CGFloat.leastNormalMagnitude : (sectionIndexTitles.count > 0 ? 40 : CGFloat.leastNormalMagnitude)
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 3 && showPhoneContactTips {
-            return 50
-        }
-        return CGFloat.leastNormalMagnitude
-    }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 2
-        case 1:
-            return 1
-        case 2:
-            return contacts.count
-        default:
-            return showPhoneContactTips ? 1 : (phoneContactSections.count > 0 ? phoneContactSections[section - 3].count : 0)
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0:
-            return indexPath.row == 0 ? ContactMeCell.cellHeight : ContactQRCodeCell.cellHeight
-        case 1:
-            return ContactNavCell.cellHeight
-        case 2:
-            return PeerCell.cellHeight
-        default:
-            return showPhoneContactTips ? PhoneContactGuideCell.cellHeight : PeerCell.cellHeight
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
-            if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: ContactMeCell.cellIdentifier) as! ContactMeCell
-                if let account = AccountAPI.shared.account {
-                    cell.render(account: account)
-                }
-                return cell
-            } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: ContactQRCodeCell.cellIdentifier) as! ContactQRCodeCell
-                if cell.delegate == nil {
-                    cell.delegate = self
-                }
-                return cell
-            }
-        case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ContactNavCell.cellIdentifier) as! ContactNavCell
-            if cell.delegate == nil {
-                cell.delegate = self
-            }
-            return cell
-        case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ContactCell.cellIdentifier) as! ContactCell
-            cell.render(user: contacts[indexPath.row])
-            return cell
-        default:
-            if showPhoneContactTips {
-                let cell = tableView.dequeueReusableCell(withIdentifier: PhoneContactGuideCell.cellIdentifier) as! PhoneContactGuideCell
-                if cell.delegate == nil {
-                    cell.delegate = self
-                }
-                return cell
-            } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: PhoneContactCell.cellIdentifier) as! PhoneContactCell
-                let section = indexPath.section - 3
-                cell.render(contact: phoneContactSections[section][indexPath.row])
-                return cell
-            }
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        switch indexPath.section {
-        case 0:
-            guard let account = AccountAPI.shared.account else {
-                return
-            }
-            userWindow.updateUser(user: UserItem.createUser(from: account))
-            userWindow.presentView()
-        case 1:
-            break
-        case 2:
-            navigationController?.pushViewController(ConversationViewController.instance(ownerUser: contacts[indexPath.row]), animated: true)
-        default:
-            if showPhoneContactTips {
-                requestAccessPhoneContactAction()
-            }
-            break
-        }
-    }
-}
-
-extension ContactViewController: ContactQRCodeCellDelegate {
-
-    func receiveMoneyAction() {
-        if let account = AccountAPI.shared.account {
-            receiveMoneyWindow.render(title: Localized.CONTACT_RECEIVE_MONEY, account: account, description: Localized.TRANSFER_QRCODE_PROMPT, qrcode: "mixin://transfer/\(account.user_id)", rightMark: #imageLiteral(resourceName: "ic_receive_money"))
-            receiveMoneyWindow.presentView()
-        }
-    }
-
-    func myQRCodeAction() {
-        if let account = AccountAPI.shared.account {
-            myQRCodeWindow.render(title: Localized.CONTACT_MY_QR_CODE, account: account, description: Localized.MYQRCODE_PROMPT, qrcode: account.code_url, qrcodeForegroundColor: UIColor.systemTint)
-            myQRCodeWindow.presentView()
-        }
-    }
-
-}
-
-extension ContactViewController: ContactNavCellDelegate {
-
-    func newGroupAction() {
-        navigationController?.pushViewController(AddMemberViewController.instance(), animated: true)
-    }
-
-    func addContactAction() {
-        navigationController?.pushViewController(AddPeopleViewController.instance(), animated: true)
-    }
-
 }

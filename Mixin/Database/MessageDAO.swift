@@ -380,26 +380,16 @@ final class MessageDAO {
     }
 
     func insertMessage(message: Message, messageSource: String) {
-        let shouldSendNotification = messageSource != BlazeMessageAction.listPendingMessages.rawValue
-        insertMessage(message: message, shouldSendNotification: shouldSendNotification)
-    }
-    
-    func insertMessage(message: Message, shouldSendNotification: Bool) {
         var message = message
         if let quoteMessageId = message.quoteMessageId, let quoteContent = getQuoteMessage(messageId: quoteMessageId) {
             message.quoteContent = quoteContent
         }
         MixinDatabase.shared.transaction { (db) in
-            try insertMessage(database: db, message: message, shouldSendNotification: shouldSendNotification)
+            try insertMessage(database: db, message: message, messageSource: messageSource)
         }
     }
-    
+
     func insertMessage(database: Database, message: Message, messageSource: String) throws {
-        let shouldSendNotification = messageSource != BlazeMessageAction.listPendingMessages.rawValue
-        try insertMessage(database: database, message: message, shouldSendNotification: shouldSendNotification)
-    }
-    
-    func insertMessage(database: Database, message: Message, shouldSendNotification: Bool) throws {
         if message.category.hasPrefix("SIGNAL_") {
             try database.insert(objects: message, intoTable: Message.tableName)
         } else {
@@ -411,7 +401,8 @@ final class MessageDAO {
         }
         let change = ConversationChange(conversationId: newMessage.conversationId, action: .addMessage(message: newMessage))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        if shouldSendNotification {
+
+        if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(message.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 10 {
             ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
         }
     }

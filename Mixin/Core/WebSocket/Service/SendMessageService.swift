@@ -135,6 +135,9 @@ class SendMessageService: MixinService {
     }
 
     func sendSessionMessage(action: JobAction, messageId: String, status: String) {
+        guard AccountUserDefault.shared.isDesktopLoggedIn else {
+            return
+        }
         saveDispatchQueue.async {
             let job = Job(action: action, messageId: messageId, status: status, isSessionMessage: true)
             MixinDatabase.shared.insertOrReplace(objects: [job])
@@ -195,21 +198,22 @@ class SendMessageService: MixinService {
     func sendReadMessages(conversationId: String) {
         saveDispatchQueue.async {
             let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)
-            guard messageIds.count > 0, let lastMessageId = messageIds.last, let lastCreatedAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt.asColumnResult(), fromTable: Message.tableName, condition: Message.Properties.messageId == lastMessageId)?.stringValue else {
+            guard messageIds.count > 0, let lastMessageId = messageIds.last, let lastCreatedAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt.asColumnResult(), fromTable: Message.tableName, condition: Message.Properties.messageId == lastMessageId, inTransaction: false)?.stringValue else {
                 return
             }
 
-            let jobs = messageIds.map { (messageId) -> Job in
+            var jobs = messageIds.map { (messageId) -> Job in
                 let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
                 return Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage)
             }
-            let sessionJobs = messageIds.map { (messageId) -> Job in
-                return Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true)
+            if AccountUserDefault.shared.isDesktopLoggedIn {
+                jobs += messageIds.map { (messageId) -> Job in
+                    return Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true)
+                }
             }
 
             MixinDatabase.shared.transaction { (database) in
                 try database.insert(objects: jobs, intoTable: Job.tableName)
-                try database.insert(objects: sessionJobs, intoTable: Job.tableName)
                 try database.update(table: Message.tableName, on: [Message.Properties.status], with: [MessageStatus.READ.rawValue], where: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.createdAt <= lastCreatedAt && Message.Properties.userId != AccountAPI.shared.accountUserId)
                 NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
             }
@@ -220,8 +224,11 @@ class SendMessageService: MixinService {
     func sendReadMessage(messageId: String) {
         saveDispatchQueue.async {
             let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
-            let job = Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage)
-            let sessionJob = Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true)
+            var jobs = [Job]()
+            jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage))
+            if AccountUserDefault.shared.isDesktopLoggedIn {
+                jobs.append(Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true))
+            }
 
             MixinDatabase.shared.transaction(callback: { (database) in
                 let updateStatment = try database.prepareUpdate(table: Message.tableName, on: Message.Properties.status).where(Message.Properties.messageId == messageId && Message.Properties.status == MessageStatus.DELIVERED.rawValue)
@@ -229,7 +236,7 @@ class SendMessageService: MixinService {
                 guard updateStatment.changes ?? 0 > 0 else {
                     return
                 }
-                try database.insert(objects: [job, sessionJob], intoTable: Job.tableName)
+                try database.insert(objects: jobs, intoTable: Job.tableName)
                 NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
             })
             SendMessageService.shared.processMessages()

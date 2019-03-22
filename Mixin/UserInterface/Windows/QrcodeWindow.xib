@@ -151,6 +151,7 @@
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="15C-zD-brT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="CYD-Y9-3EM" secondAttribute="top" id="9t5-VJ-oTt"/>
                 <constraint firstItem="CYD-Y9-3EM" firstAttribute="trailing" secondItem="15C-zD-brT" secondAttribute="trailing" id="C73-sJ-V5F"/>
                 <constraint firstAttribute="bottom" secondItem="15C-zD-brT" secondAttribute="bottom" constant="-13" id="EbB-e8-DHg"/>
                 <constraint firstItem="Vr1-0I-Tfb" firstAttribute="bottom" secondItem="CYD-Y9-3EM" secondAttribute="bottom" constant="-16" id="iN7-wh-Y7z"/>

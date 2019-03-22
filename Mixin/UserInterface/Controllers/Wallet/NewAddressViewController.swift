@@ -8,7 +8,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var saveButton: RoundedButton!
     @IBOutlet weak var assetView: AssetIconView!
 
-    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private var asset: AssetItem!
     private var addressValue: String {
@@ -59,7 +59,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             return
         }
         let windowHeight = AppDelegate.current.window!.bounds.height
-        bottomConstraint.constant = windowHeight - keyboardFrame.origin.y + 20
+        keyboardPlaceholderHeightConstraint.constant = windowHeight - keyboardFrame.origin.y
         view.layoutIfNeeded()
     }
     

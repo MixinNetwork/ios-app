@@ -95,15 +95,12 @@ class ConversationDataSource {
         }
         if didLoadLatestMessage {
             if let firstUnreadMessageId = firstUnreadMessageId, let indexPath = indexPath(where: { $0.messageId == firstUnreadMessageId }) {
-                FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Scroll to indexPath: \(indexPath), reason: scroll to first unread message")
                 tableView.scrollToRow(at: indexPath, at: .top, animated: true)
                 self.firstUnreadMessageId = nil
             } else {
-                FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Scroll to bottom, reason: user triggered")
                 tableView.scrollToBottom(animated: true)
             }
         } else {
-            FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Scroll to bottom and reload, reason: user triggered")
             scrollToBottomAndReload(initialMessageId: firstUnreadMessageId)
         }
     }
@@ -116,7 +113,6 @@ class ConversationDataSource {
         didLoadLatestMessage = true
         tableView?.setContentOffset(.zero, animated: true)
         ConversationViewController.positions[conversationId] = nil
-        FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Remove position, reason: scroll to top")
         queue.async {
             guard !self.messageProcessingIsCancelled else {
                 return
@@ -133,7 +129,6 @@ class ConversationDataSource {
         didLoadLatestMessage = true
         highlight = nil
         ConversationViewController.positions[conversationId] = nil
-        FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Remove position, reason: scroll to bottom")
         queue.async {
             guard !self.messageProcessingIsCancelled else {
                 return
@@ -214,7 +209,6 @@ class ConversationDataSource {
                 tableView.reloadData()
                 let y = tableView.contentSize.height - bottomDistance
                 tableView.setContentOffsetYSafely(y)
-                FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Set contentOffset: \(tableView.contentOffset), reason: Load msg above")
                 self.isLoadingAbove = false
             }
         }
@@ -618,7 +612,6 @@ extension ConversationDataSource {
             ConversationViewController.positions[conversationId] = nil
         }
         var initialMessageId = initialMessageId ?? highlight?.messageId
-        FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Initial message id: \(initialMessageId ?? "(nil)")")
         if let initialMessageId = initialMessageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: initialMessageId, count: numberOfMessagesOnReloading) {
             (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
             if highlight == nil, initialMessageId != firstUnreadMessageId {
@@ -674,10 +667,8 @@ extension ConversationDataSource {
             initialIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.messageId == initialMessageId })
             if let position = ConversationViewController.positions[conversationId], initialMessageId == position.messageId, highlight == nil {
                 offset = position.offset
-                FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Load position: \(position.debugDescription)")
             } else {
                 offset -= ConversationDateHeaderView.height
-                FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Using indexPath: \(initialIndexPath!) from msg id")
             }
         } else if let unreadHintIndexPath = indexPath(ofDates: dates, viewModels: viewModels, where: { $0.category == MessageCategory.EXT_UNREAD.rawValue }) {
             if unreadHintIndexPath == IndexPath(row: 1, section: 0), viewModels[dates[0]]?.first?.message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
@@ -685,7 +676,6 @@ extension ConversationDataSource {
             } else {
                 initialIndexPath = unreadHintIndexPath
             }
-            FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Using indexPath: \(initialIndexPath!) from unread msg")
             offset -= ConversationDateHeaderView.height
         }
         performSynchronouslyOnMainThread {
@@ -704,11 +694,9 @@ extension ConversationDataSource {
                         let rect = tableView.rectForRow(at: initialIndexPath)
                         let y = rect.origin.y + offset - tableView.contentInset.top
                         tableView.setContentOffsetYSafely(y)
-                        FileManager.default.writeLog(conversationId: self.conversationId, log: "[POS]Set contentOffset: \(tableView.contentOffset), reason: reload with initial indexPath")
                     }
                 } else {
                     tableView.scrollToBottom(animated: false)
-                    FileManager.default.writeLog(conversationId: self.conversationId, log: "[POS]Scroll to bottom, reason: reload")
                 }
             }
             if animatedReloading {
@@ -979,7 +967,6 @@ extension ConversationDataSource {
                 && isLastCell
                 && (lastMessageIsVisibleBeforeInsertion || messageIsSentByMe)
             if shouldScrollToNewMessage {
-                FileManager.default.writeLog(conversationId: conversationId, log: "[POS]Scroll to indexPath: \(indexPath), reason: add new message")
                 tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             } else {
                 NotificationCenter.default.postOnMain(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: 1)

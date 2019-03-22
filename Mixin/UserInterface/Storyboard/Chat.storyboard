@@ -1021,7 +1021,7 @@
         <scene sceneID="Ld9-hz-oe6">
             <objects>
                 <viewController storyboardIdentifier="giphy_search" id="3oD-dr-wXk" customClass="GiphySearchViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="3HB-MQ-3dx">
+                    <view key="view" contentMode="scaleToFill" id="3HB-MQ-3dx" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1213,7 +1213,7 @@
         <scene sceneID="DI8-2V-dPK">
             <objects>
                 <viewController storyboardIdentifier="transferType" id="cjT-9O-Erz" customClass="TransferTypeViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="vv4-YX-chc">
+                    <view key="view" contentMode="scaleToFill" id="vv4-YX-chc" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>

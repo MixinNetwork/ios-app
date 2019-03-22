@@ -104,7 +104,7 @@ extension MixinNavigationController: UIGestureRecognizerDelegate {
             return false
         }
         if let vc = viewControllers.last as? MixinNavigationAnimating {
-            return vc.popAnimation != .reversedPop
+            return vc.popAnimation != .reversedPop && !(vc is CameraViewController)
         } else {
             return true
         }

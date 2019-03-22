@@ -256,10 +256,6 @@ final class MessageDAO {
         return MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId)
     }
 
-    func getMessageStatus(messageId: String) -> String? {
-        return MixinDatabase.shared.scalar(on: Message.Properties.status, fromTable: Message.tableName, condition: Message.Properties.messageId == messageId)?.stringValue
-    }
-
     func getSyncMessages() -> [Message] {
         return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryMessageSync, inTransaction: false)
     }
@@ -329,13 +325,13 @@ final class MessageDAO {
     }
     
     func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
-        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeCreatedAt, values: [conversationId, location.createdAt, count])
+        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeCreatedAt, values: [conversationId, location.createdAt, count], inTransaction: false)
         return messages.reversed()
     }
     
     func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
         return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterCreatedAt,
-                                                values: [conversationId, location.createdAt, count])
+                                                values: [conversationId, location.createdAt, count], inTransaction: false)
     }
 
     func getFirstNMessages(conversationId: String, count: Int) -> [MessageItem] {
@@ -353,7 +349,7 @@ final class MessageDAO {
         }
         return MixinDatabase.shared.getCount(on: Message.Properties.messageId.count(),
                                              fromTable: Message.tableName,
-                                             condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
+                                             condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt, inTransaction: false)
     }
     
     func getGalleryItems(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
@@ -388,26 +384,16 @@ final class MessageDAO {
     }
 
     func insertMessage(message: Message, messageSource: String) {
-        let shouldSendNotification = messageSource != BlazeMessageAction.listPendingMessages.rawValue
-        insertMessage(message: message, shouldSendNotification: shouldSendNotification)
-    }
-    
-    func insertMessage(message: Message, shouldSendNotification: Bool) {
         var message = message
         if let quoteMessageId = message.quoteMessageId, let quoteContent = getQuoteMessage(messageId: quoteMessageId) {
             message.quoteContent = quoteContent
         }
         MixinDatabase.shared.transaction { (db) in
-            try insertMessage(database: db, message: message, shouldSendNotification: shouldSendNotification)
+            try insertMessage(database: db, message: message, messageSource: messageSource)
         }
     }
-    
+
     func insertMessage(database: Database, message: Message, messageSource: String) throws {
-        let shouldSendNotification = messageSource != BlazeMessageAction.listPendingMessages.rawValue
-        try insertMessage(database: database, message: message, shouldSendNotification: shouldSendNotification)
-    }
-    
-    func insertMessage(database: Database, message: Message, shouldSendNotification: Bool) throws {
         if message.category.hasPrefix("SIGNAL_") {
             try database.insert(objects: message, intoTable: Message.tableName)
         } else {
@@ -419,7 +405,8 @@ final class MessageDAO {
         }
         let change = ConversationChange(conversationId: newMessage.conversationId, action: .addMessage(message: newMessage))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        if shouldSendNotification {
+
+        if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(message.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 10 {
             ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
         }
     }
@@ -443,7 +430,7 @@ final class MessageDAO {
     }
     
     func hasMessage(id: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id)
+        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id, inTransaction: false)
     }
 
     func getQuoteMessage(messageId: String?) -> Data? {

@@ -1,13 +1,13 @@
 import UIKit
 import PhoneNumberKit
 
-class AddPeopleViewController: UIViewController {
+class AddPeopleViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var keywordTextField: UITextField!
     @IBOutlet weak var myIdLabel: UILabel!
     @IBOutlet weak var searchButton: RoundedButton!
     
-    @IBOutlet weak var searchButtonBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let legalKeywordCharactersSet = Set("+0123456789")
     private let phoneNumberKit = PhoneNumberKit()
@@ -23,11 +23,12 @@ class AddPeopleViewController: UIViewController {
         }
         searchButton.isEnabled = false
         keywordTextField.becomeFirstResponder()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    
+    override func layout(for keyboardFrame: CGRect) {
+        let windowHeight = AppDelegate.current.window!.bounds.height
+        keyboardPlaceholderHeightConstraint.constant = windowHeight - keyboardFrame.origin.y
+        view.layoutIfNeeded()
     }
     
     @IBAction func checkKeywordAction(_ sender: Any) {
@@ -50,15 +51,6 @@ class AddPeopleViewController: UIViewController {
             case let .failure(error):
                 showHud(style: .error, text: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
             }
-        }
-    }
-    
-    @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame: CGRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue ?? .zero
-        let windowHeight = AppDelegate.current.window!.bounds.height
-        self.searchButtonBottomConstraint.constant = windowHeight - endFrame.origin.y + 20
-        UIView.animate(withDuration: 0.15) {
-            self.view.layoutIfNeeded()
         }
     }
     

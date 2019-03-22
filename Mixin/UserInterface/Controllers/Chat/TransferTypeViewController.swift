@@ -15,7 +15,6 @@ class TransferTypeViewController: UIViewController {
     var asset: AssetItem?
     
     private let cellReuseId = "asset"
-    private let topRoundedMaskLayer = CAShapeLayer()
     
     private var searchResults = [AssetItem]()
     private var lastKeyword = ""
@@ -51,15 +50,6 @@ class TransferTypeViewController: UIViewController {
         tableView.delegate = self
         tableView.reloadData()
         keywordTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        let path = UIBezierPath(roundedRect: view.bounds,
-                                byRoundingCorners: [.topLeft, .topRight],
-                                cornerRadii: CGSize(width: 8, height: 8))
-        topRoundedMaskLayer.path = path.cgPath
-        view.layer.mask = topRoundedMaskLayer
     }
     
     @IBAction func cancelAction(_ sender: Any) {

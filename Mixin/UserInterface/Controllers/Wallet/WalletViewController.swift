@@ -39,15 +39,6 @@ class WalletViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        if Date().timeIntervalSince1970 - WalletUserDefault.shared.lastInputPinTime > WalletUserDefault.shared.checkPinInterval {
-            let validator = PinValidationViewController.instance()
-            present(validator, animated: true, completion: nil)
-        }
-    }
     
     @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {

@@ -442,12 +442,22 @@
                                     <constraint firstItem="ao5-4a-lxR" firstAttribute="top" secondItem="ydE-1Y-cEF" secondAttribute="top" constant="48" id="jQS-rg-oIw"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ovh-AR-cnC" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="352" width="414" height="10"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="10" id="cvk-5R-XEx"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="pJv-DY-WDu" firstAttribute="trailing" secondItem="Ovh-AR-cnC" secondAttribute="trailing" id="1Ef-ML-JQQ"/>
                             <constraint firstItem="pJv-DY-WDu" firstAttribute="trailing" secondItem="ydE-1Y-cEF" secondAttribute="trailing" id="GhJ-UH-0hR"/>
                             <constraint firstItem="ydE-1Y-cEF" firstAttribute="leading" secondItem="pJv-DY-WDu" secondAttribute="leading" id="dMp-IO-voa"/>
                             <constraint firstItem="ydE-1Y-cEF" firstAttribute="top" secondItem="vHW-ia-OQy" secondAttribute="top" id="fD8-4a-eOY"/>
+                            <constraint firstItem="Ovh-AR-cnC" firstAttribute="top" secondItem="ydE-1Y-cEF" secondAttribute="bottom" id="liZ-7w-Rwo"/>
+                            <constraint firstItem="Ovh-AR-cnC" firstAttribute="leading" secondItem="pJv-DY-WDu" secondAttribute="leading" id="zb0-lg-iFb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="pJv-DY-WDu"/>
                     </view>

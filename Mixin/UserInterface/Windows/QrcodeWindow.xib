@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15C-zD-brT">
-                    <rect key="frame" x="0.0" y="76" width="375" height="599"/>
+                    <rect key="frame" x="0.0" y="76" width="375" height="604"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HTr-3g-n2V">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -144,7 +144,7 @@
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="8"/>
+                            <integer key="value" value="13"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
@@ -152,7 +152,7 @@
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="CYD-Y9-3EM" firstAttribute="trailing" secondItem="15C-zD-brT" secondAttribute="trailing" id="C73-sJ-V5F"/>
-                <constraint firstAttribute="bottom" secondItem="15C-zD-brT" secondAttribute="bottom" constant="-8" id="EbB-e8-DHg"/>
+                <constraint firstAttribute="bottom" secondItem="15C-zD-brT" secondAttribute="bottom" constant="-13" id="EbB-e8-DHg"/>
                 <constraint firstItem="Vr1-0I-Tfb" firstAttribute="bottom" secondItem="CYD-Y9-3EM" secondAttribute="bottom" constant="-16" id="iN7-wh-Y7z"/>
                 <constraint firstItem="15C-zD-brT" firstAttribute="leading" secondItem="CYD-Y9-3EM" secondAttribute="leading" id="u5U-Ey-c7a"/>
             </constraints>
@@ -167,7 +167,7 @@
                 <outlet property="rightImageView" destination="Q4m-qI-JfJ" id="bj8-CT-EKN"/>
                 <outlet property="titleLabel" destination="xxq-LQ-MPB" id="qAn-1H-lOt"/>
             </connections>
-            <point key="canvasLocation" x="25.5" y="52.5"/>
+            <point key="canvasLocation" x="24.800000000000001" y="51.724137931034484"/>
         </view>
     </objects>
     <resources>

@@ -773,7 +773,7 @@ extension ReceiveMessageService {
                     guard message.status == MessageStatus.READ.rawValue else {
                         continue
                     }
-                    if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: message.status) {
+                    if MessageDAO.shared.updateMessageStatus(messageId: message.messageId, status: message.status, updateUnseen: true) {
                         ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: message.messageId, status: .READ)
                         UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
                     }

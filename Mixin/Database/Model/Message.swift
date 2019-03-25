@@ -71,7 +71,7 @@ struct Message: BaseCodable {
         }
         static var indexBindings: [IndexBinding.Subfix: IndexBinding]? {
             return [
-                "_status_index": IndexBinding(indexesBy: [status]),
+                "_pending_indexs": IndexBinding(indexesBy: [userId, status, createdAt]),
                 "_page_indexs": IndexBinding(indexesBy: [conversationId, createdAt]),
                 "_user_indexs": IndexBinding(indexesBy: [conversationId, userId, createdAt]),
                 "_unread_indexs": IndexBinding(indexesBy: [conversationId, status, createdAt])

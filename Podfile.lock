@@ -160,7 +160,7 @@ CHECKOUT OPTIONS:
     :commit: ad8bd27edf6ef32ecf9f4a675588e6f628362969
     :git: "git@github.com:over140/SocketRocket.git"
   WCDB.swift:
-    :commit: 4ec63ef2ed17edf48b8addead9839fa2e3c13cce
+    :commit: 4037e3478d159413522f19fc0ec91505a8f774b2
     :git: "git@github.com:MixinNetwork/wcdb.git"
 
 SPEC CHECKSUMS:

@@ -194,6 +194,10 @@ class BaseDatabase {
         return value.type == .null ? nil : value
     }
 
+    func scalar(sql: String, values: [ColumnEncodable] = []) -> FundamentalValue {
+        return try! database.prepareSelectSQL(sql: sql, values: values).getValue()
+    }
+
     func getCount(on: ColumnResultConvertible, fromTable: String, condition: Condition? = nil, inTransaction: Bool = true) -> Int {
         if inTransaction {
             var result = 0

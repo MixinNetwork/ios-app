@@ -52,6 +52,18 @@ final class ConversationDAO {
     SELECT category, sum(media_size) as mediaSize, count(id) as messageCount  FROM messages
     WHERE conversation_id = ? AND ifnull(media_size,'') != '' GROUP BY category
     """
+    private static let sqlBadgeNumber = """
+    SELECT ifnull(SUM(unseen_message_count),0) FROM (
+        SELECT c.unseen_message_count, CASE WHEN c.category = 'CONTACT' THEN u.mute_until ELSE c.mute_until END as muteUntil
+        FROM conversations c
+        INNER JOIN users u ON u.user_id = c.owner_id
+        WHERE muteUntil < ?
+    )
+    """
+
+    func getBadgeNumber() -> Int {
+        return Int(MixinDatabase.shared.scalar(sql: ConversationDAO.sqlBadgeNumber, values: [Date().toUTCString()]).int32Value)
+    }
 
     func getCategoryStorages(conversationId: String) -> [ConversationCategoryStorage] {
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationStorageUsage, values: [conversationId])

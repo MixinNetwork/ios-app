@@ -24,12 +24,6 @@ final class MessageDAO {
         UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = new.conversation_id) where conversation_id = new.conversation_id;
     END
     """
-    static let sqlTriggerUnseenMessageUpdate = """
-    CREATE TRIGGER IF NOT EXISTS conversation_unseen_message_count_update AFTER UPDATE ON messages
-    BEGIN
-        UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = old.conversation_id) where conversation_id = old.conversation_id;
-    END
-    """
     static let sqlQueryLastUnreadMessageTime = """
         SELECT created_at FROM messages
         WHERE conversation_id = ? AND status = 'DELIVERED' AND user_id != ?
@@ -80,22 +74,13 @@ final class MessageDAO {
     LIMIT ?
     """
     static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
-    private static let sqlQueryMessageSync = """
-    SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
-        m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
-        m.sticker_id, m.quote_message_id, m.quote_content, m.created_at FROM messages m
-    INNER JOIN conversations c ON c.conversation_id = m.conversation_id AND c.status = 1
-    WHERE m.status = 'SENDING'
-    ORDER BY m.created_at ASC
-    """
     private static let sqlQueryPendingMessages = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
         m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.sticker_id, m.created_at FROM messages m
     INNER JOIN conversations c ON c.conversation_id = m.conversation_id AND c.status = 1
-    WHERE m.status = 'SENDING' AND m.media_status = 'PENDING'
+    WHERE m.user_id = ? AND m.status = 'SENDING' AND m.media_status = 'PENDING'
     ORDER BY m.created_at ASC
     """
     static let sqlQueryQuoteMessageById = """
@@ -109,6 +94,9 @@ final class MessageDAO {
         INNER JOIN albums a ON a.album_id = sa.album_id
         WHERE a.album_id = messages.album_id AND s.name = messages.name
     ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''
+    """
+    private static let sqlUpdateUnseenCount = """
+    UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = ?) where conversation_id = ?
     """
     
     func getMediaUrls(likeCategory category: String) -> [String] {
@@ -204,17 +192,30 @@ final class MessageDAO {
     }
 
     @discardableResult
-    func updateMessageStatus(messageId: String, status: String) -> Bool {
+    func updateMessageStatus(messageId: String, status: String, updateUnseen: Bool = false) -> Bool {
         guard let oldMessage: Message = MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId) else {
             return false
         }
         guard MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: oldMessage.status) else {
             return false
         }
-        MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
-        let change = ConversationChange(conversationId: oldMessage.conversationId, action: .updateMessageStatus(messageId: messageId, newStatus: MessageStatus(rawValue: status) ?? .UNKNOWN))
+
+        let conversationId = oldMessage.conversationId
+        if updateUnseen {
+            MixinDatabase.shared.transaction { (database) in
+                try database.update(table: Message.tableName, on: [Message.Properties.status], with: [status], where: Message.Properties.messageId == messageId)
+                try updateUnseenMessageCount(database: database, conversationId: conversationId)
+            }
+        } else {
+            MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+        }
+        let change = ConversationChange(conversationId: conversationId, action: .updateMessageStatus(messageId: messageId, newStatus: MessageStatus(rawValue: status) ?? .UNKNOWN))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
         return true
+    }
+
+    func updateUnseenMessageCount(database: Database, conversationId: String) throws {
+        try database.prepareUpdateSQL(sql: "UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = '\(conversationId)') where conversation_id = '\(conversationId)'").execute()
     }
 
     func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String) {
@@ -252,12 +253,8 @@ final class MessageDAO {
         return MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId)
     }
 
-    func getSyncMessages() -> [Message] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryMessageSync, inTransaction: false)
-    }
-
     func getPendingMessages() -> [Message] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryPendingMessages, inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryPendingMessages, values: [AccountAPI.shared.accountUserId], inTransaction: false)
     }
     
     func firstUnreadMessage(conversationId: String) -> Message? {

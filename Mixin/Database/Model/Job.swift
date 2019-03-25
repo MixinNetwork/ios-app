@@ -71,7 +71,7 @@ struct Job: BaseCodable {
             self.priority = JobPriority.RESEND_MESSAGE.rawValue
         case .SEND_DELIVERED_ACK_MESSAGE:
             self.priority = JobPriority.SEND_DELIVERED_ACK_MESSAGE.rawValue
-        case .SEND_ACK_MESSAGE, .SEND_SESSION_ACK_MESSAGE:
+        case .SEND_ACK_MESSAGE, .SEND_SESSION_ACK_MESSAGE, .SEND_ACK_MESSAGES, .SEND_SESSION_ACK_MESSAGES:
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         default:
             self.priority = JobPriority.SEND_MESSAGE.rawValue
@@ -146,10 +146,12 @@ enum JobAction: String {
     case SEND_KEY
     case SEND_MESSAGE
     case SEND_ACK_MESSAGE
+    case SEND_ACK_MESSAGES
     case SEND_DELIVERED_ACK_MESSAGE
 
     case SEND_SESSION_MESSAGE
     case SEND_SESSION_ACK_MESSAGE
+    case SEND_SESSION_ACK_MESSAGES
 }
 
 

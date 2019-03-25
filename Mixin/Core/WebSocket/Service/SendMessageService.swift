@@ -9,32 +9,34 @@ class SendMessageService: MixinService {
     private let saveDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.send")
 
     func restoreJobs() {
-        let messages = MessageDAO.shared.getPendingMessages()
-        for message in messages {
-            if message.category.hasSuffix("_IMAGE") {
-                ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: message))
-            } else if message.category.hasSuffix("_DATA") {
-                if message.userId == AccountAPI.shared.accountUserId {
-                    FileJobQueue.shared.addJob(job: FileUploadJob(message: message))
-                } else {
-                    FileJobQueue.shared.addJob(job: FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
-                }
-            } else if message.category.hasSuffix("_VIDEO") {
-                if message.userId == AccountAPI.shared.accountUserId {
-                    FileJobQueue.shared.addJob(job: VideoUploadJob(message: message))
-                } else {
-                    FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
-                }
-            } else if message.category.hasSuffix("_AUDIO") {
-                if message.userId == AccountAPI.shared.accountUserId {
-                    FileJobQueue.shared.addJob(job: AudioUploadJob(message: message))
-                } else {
-                    FileJobQueue.shared.addJob(job: AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+        DispatchQueue.global().async {
+            let messages = MessageDAO.shared.getPendingMessages()
+            for message in messages {
+                if message.category.hasSuffix("_IMAGE") {
+                    ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: message))
+                } else if message.category.hasSuffix("_DATA") {
+                    if message.userId == AccountAPI.shared.accountUserId {
+                        FileJobQueue.shared.addJob(job: FileUploadJob(message: message))
+                    } else {
+                        FileJobQueue.shared.addJob(job: FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+                    }
+                } else if message.category.hasSuffix("_VIDEO") {
+                    if message.userId == AccountAPI.shared.accountUserId {
+                        FileJobQueue.shared.addJob(job: VideoUploadJob(message: message))
+                    } else {
+                        FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+                    }
+                } else if message.category.hasSuffix("_AUDIO") {
+                    if message.userId == AccountAPI.shared.accountUserId {
+                        FileJobQueue.shared.addJob(job: AudioUploadJob(message: message))
+                    } else {
+                        FileJobQueue.shared.addJob(job: AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+                    }
                 }
             }
-        }
 
-        processMessages()
+            SendMessageService.shared.processMessages()
+        }
     }
 
     func sendMessage(message: Message, ownerUser: UserItem?, isGroupMessage: Bool) {
@@ -199,31 +201,45 @@ class SendMessageService: MixinService {
         DispatchQueue.global().async {
             let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)
             var position = 0
-            let pageCount = AccountUserDefault.shared.isDesktopLoggedIn ? 30 : 60
+            let pageCount = AccountUserDefault.shared.isDesktopLoggedIn ? 1000 : 2000
             while messageIds.count > 0 && position < messageIds.count {
                 let nextPosition = position + pageCount > messageIds.count ? messageIds.count : position + pageCount
                 let ids = Array(messageIds[position..<nextPosition])
-                guard ids.count > 0, let lastMessageId = ids.last, let lastCreatedAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt.asColumnResult(), fromTable: Message.tableName, condition: Message.Properties.messageId == lastMessageId, inTransaction: false)?.stringValue else {
-                    return
+                var jobs = [Job]()
+                guard let lastMessageId = ids.last, let lastCreatedAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt.asColumnResult(), fromTable: Message.tableName, condition: Message.Properties.messageId == lastMessageId, inTransaction: false)?.stringValue
+                    else {
+                        return
                 }
-
-                var jobs = ids.map { (messageId) -> Job in
+                if ids.count == 1 {
+                    let messageId = ids[0]
                     let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
-                    return Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage)
-                }
-                if AccountUserDefault.shared.isDesktopLoggedIn {
-                    jobs += ids.map { (messageId) -> Job in
-                        return Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true)
+                    jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGE, blazeMessage: blazeMessage))
+                    if AccountUserDefault.shared.isDesktopLoggedIn {
+                        jobs.append(Job(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: MessageStatus.READ.rawValue, isSessionMessage: true))
+                    }
+                } else {
+                    for i in stride(from: 0, to: ids.count, by: 100) {
+                        let by = i + 100 > ids.count ? ids.count : i + 100
+                        let messages: [TransferMessage] = ids[i..<by].map { TransferMessage(messageId: $0, status: MessageStatus.READ.rawValue) }
+                        let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
+                        jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
+
+                        if AccountUserDefault.shared.isDesktopLoggedIn {
+                            let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeSessionMessageReceipts.rawValue)
+                            jobs.append(Job(jobId: blazeMessage.id, action: .SEND_SESSION_ACK_MESSAGES, blazeMessage: blazeMessage, isSessionMessage: true))
+                        }
                     }
                 }
 
                 MixinDatabase.shared.transaction { (database) in
                     try database.insert(objects: jobs, intoTable: Job.tableName)
                     try database.update(table: Message.tableName, on: [Message.Properties.status], with: [MessageStatus.READ.rawValue], where: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.createdAt <= lastCreatedAt && Message.Properties.userId != AccountAPI.shared.accountUserId)
+                    try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
                 }
+
                 position = nextPosition
                 if nextPosition < messageIds.count {
-                    Thread.sleep(forTimeInterval: 0.2)
+                    Thread.sleep(forTimeInterval: 0.1)
                 }
             }
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
@@ -231,7 +247,7 @@ class SendMessageService: MixinService {
         }
     }
 
-    func sendReadMessage(messageId: String) {
+    func sendReadMessage(conversationId: String, messageId: String) {
         saveDispatchQueue.async {
             let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
             var jobs = [Job]()
@@ -246,6 +262,7 @@ class SendMessageService: MixinService {
                 guard updateStatment.changes ?? 0 > 0 else {
                     return
                 }
+                try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
                 try database.insert(objects: jobs, intoTable: Job.tableName)
                 NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
             })
@@ -397,6 +414,8 @@ class SendMessageService: MixinService {
                         try SendMessageService.shared.resendMessage(job: job)
                     }
                 case JobAction.SEND_ACK_MESSAGE.rawValue, JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue:
+                    try deliver(blazeMessage: job.toBlazeMessage())
+                case JobAction.SEND_ACK_MESSAGES.rawValue, JobAction.SEND_SESSION_ACK_MESSAGES.rawValue:
                     try deliver(blazeMessage: job.toBlazeMessage())
                 case JobAction.SEND_KEY.rawValue:
                     _ = try ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in

@@ -89,7 +89,7 @@ final class ParticipantDAO {
     }
 
     func getSyncParticipantIds() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Participant.Properties.userId.asColumnResult(), tableName: Participant.tableName, isDistinct: true, condition: Participant.Properties.status == ParticipantStatus.START.rawValue, inTransaction: false)
+        return Array(Set<String>(MixinDatabase.shared.getStringValues(column: Participant.Properties.userId.asColumnResult(), tableName: Participant.tableName, condition: Participant.Properties.status == ParticipantStatus.START.rawValue, inTransaction: false)))
     }
 
     func getNotSentKeyParticipants(conversationId: String, accountId: String) -> [Participant] {

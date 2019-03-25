@@ -362,7 +362,7 @@ extension ConversationDataSource {
         }
         let messageIsSentByMe = message.userId == me.user_id
         if !messageIsSentByMe, message.status == MessageStatus.DELIVERED.rawValue {
-            SendMessageService.shared.sendReadMessage(messageId: message.messageId)
+            SendMessageService.shared.sendReadMessage(conversationId: message.conversationId, messageId: message.messageId)
         }
         if !didLoadLatestMessage {
             if messageIsSentByMe {
@@ -435,7 +435,7 @@ extension ConversationDataSource {
             }
             
             if message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId {
-                SendMessageService.shared.sendReadMessage(messageId: message.messageId)
+                SendMessageService.shared.sendReadMessage(conversationId: message.conversationId, messageId: message.messageId)
             }
             
             DispatchQueue.main.sync {

@@ -95,9 +95,6 @@ final class MessageDAO {
         WHERE a.album_id = messages.album_id AND s.name = messages.name
     ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''
     """
-    private static let sqlUpdateUnseenCount = """
-    UPDATE conversations SET unseen_message_count = (SELECT count(m.id) FROM messages m, users u WHERE m.user_id = u.user_id AND u.relationship != 'ME' AND m.status = 'DELIVERED' AND conversation_id = ?) where conversation_id = ?
-    """
     
     func getMediaUrls(likeCategory category: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.mediaUrl.asColumnResult(),

@@ -58,6 +58,7 @@ class AttachmentUploadJob: UploadOrDownloadJob {
             return false
         }
         guard let fileUrl = fileUrl else {
+            MessageDAO.shared.deleteMessage(id: messageId)
             return false
         }
 

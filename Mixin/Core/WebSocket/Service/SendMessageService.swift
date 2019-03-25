@@ -442,15 +442,15 @@ class SendMessageService: MixinService {
 
                 return true
             } catch {
-                #if DEBUG
-                print("======SendMessageService...handlerJob...\(error)")
-                #endif
                 checkNetworkAndWebSocket()
 
                 var blazeMessage = ""
                 if let bm = job.blazeMessage {
                     blazeMessage = String(data: bm, encoding: .utf8) ?? ""
                 }
+                #if DEBUG
+                print("======SendMessageService...handlerJob...\(error)...blazeMessage:\(blazeMessage)")
+                #endif
                 FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...isSessionMessage:\(job.isSessionMessage)...blazeMessage:\(blazeMessage)...\(error)")
                 Bugsnag.notifyError(error, block: { (report) in
                     report.addMetadata(["JobAction": job.action], toTabWithName: "Track")

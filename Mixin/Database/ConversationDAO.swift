@@ -61,8 +61,19 @@ final class ConversationDAO {
     )
     """
 
-    func getBadgeNumber() -> Int {
-        return Int(MixinDatabase.shared.scalar(sql: ConversationDAO.sqlBadgeNumber, values: [Date().toUTCString()]).int32Value)
+    func showBadgeNumber() {
+        DispatchQueue.global().async {
+            var badgeNumber = Int(MixinDatabase.shared.scalar(sql: ConversationDAO.sqlBadgeNumber, values: [Date().toUTCString()]).int32Value)
+            if badgeNumber > 99 {
+                badgeNumber = 99
+            }
+
+            DispatchQueue.main.async {
+                if badgeNumber != UIApplication.shared.applicationIconBadgeNumber {
+                    UIApplication.shared.applicationIconBadgeNumber = badgeNumber
+                }
+            }
+        }
     }
 
     func getCategoryStorages(conversationId: String) -> [ConversationCategoryStorage] {

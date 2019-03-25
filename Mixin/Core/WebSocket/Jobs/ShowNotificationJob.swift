@@ -39,20 +39,7 @@ class ShowNotificationJob: BaseJob {
                 return
             }
 
-            DispatchQueue.global().async {
-                var badgeNumber = ConversationDAO.shared.getBadgeNumber()
-                if badgeNumber > 99 {
-                    badgeNumber = 99
-                }
-
-                DispatchQueue.main.async {
-                    if badgeNumber != UIApplication.shared.applicationIconBadgeNumber {
-                        UIApplication.shared.applicationIconBadgeNumber = badgeNumber
-                    }
-                }
-            }
-
-            ConversationDAO.shared.getBadgeNumber()
+            ConversationDAO.shared.showBadgeNumber()
             UNUserNotificationCenter.current().sendMessageNotification(message: message, ownerUser: ownerUser, conversation: conversation)
         }
     }

@@ -778,6 +778,7 @@ extension ReceiveMessageService {
                         UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
                     }
                 }
+                ConversationDAO.shared.showBadgeNumber()
                 SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
             }
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
@@ -841,6 +842,7 @@ extension ReceiveMessageService {
             SignalProtocol.shared.deleteSession(userId: data.userId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         case SystemConversationAction.REMOVE_SESSION.rawValue:
+            FileManager.default.writeLog(log: "[ReceiveMessageService][\(sysMessage.action)]...sessionId:\(sessionId)", newSection: true)
             AccountUserDefault.shared.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: data.userId)
             JobDAO.shared.clearSessionJob()

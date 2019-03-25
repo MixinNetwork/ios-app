@@ -445,25 +445,25 @@ extension ConversationInputViewController {
     @objc private func interactiveResizeAction(_ recognizer: InteractiveResizeGestureRecognizer) {
         let location = recognizer.location(in: view)
         let verticalVelocity = recognizer.velocity(in: view).y
+        let resizableScrollView = (customInputViewController as? ConversationInputInteractiveResizableViewController)?.interactiveResizableScrollView
         switch recognizer.state {
         case .began:
             recognizer.beganInInputBar = inputBarView.frame.contains(location)
-            if recognizer.beganInInputBar {
+            let downsizeByDraggingOnScrollView = view.frame.height > regularHeight
+                && verticalVelocity > 0
+                && (resizableScrollView != nil)
+                && (resizableScrollView!.contentOffset.y < 1)
+                && resizableScrollView!.bounds.contains(recognizer.location(in: resizableScrollView))
+            if recognizer.beganInInputBar || downsizeByDraggingOnScrollView {
                 recognizer.shouldAdjustContentHeight = true
             }
             recognizer.canSizeToMinimized = view.frame.height <= regularHeight
             recognizer.setTranslation(.zero, in: view)
         case .changed:
-            let resizableScrollView = (customInputViewController as? ConversationInputInteractiveResizableViewController)?.interactiveResizableScrollView
             if !recognizer.shouldAdjustContentHeight {
                 let canUpsize = preferredContentHeight < maximizedHeight
                     && inputBarView.frame.contains(location)
-                let downsizeByDraggingOnScrollView = view.frame.height > regularHeight
-                    && verticalVelocity > 0
-                    && (resizableScrollView != nil)
-                    && (resizableScrollView!.contentOffset.y < 1)
-                    && resizableScrollView!.bounds.contains(recognizer.location(in: resizableScrollView))
-                if canUpsize || downsizeByDraggingOnScrollView {
+                if canUpsize {
                     recognizer.shouldAdjustContentHeight = true
                 }
             }

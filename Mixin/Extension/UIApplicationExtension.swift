@@ -19,6 +19,9 @@ extension UIApplication {
     }
 
     static func currentConversationId() -> String? {
+        guard UIApplication.shared.applicationState == .active else {
+            return nil
+        }
         guard let lastVC = rootNavigationController()?.viewControllers.last, let chatVC = lastVC as? ConversationViewController else {
             return nil
         }

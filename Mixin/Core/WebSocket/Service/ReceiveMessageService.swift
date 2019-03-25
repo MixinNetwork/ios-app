@@ -842,7 +842,9 @@ extension ReceiveMessageService {
             SignalProtocol.shared.deleteSession(userId: data.userId)
             NotificationCenter.default.postOnMain(name: .UserSessionDidChange)
         case SystemConversationAction.REMOVE_SESSION.rawValue:
-            FileManager.default.writeLog(log: "[ReceiveMessageService][\(sysMessage.action)]...sessionId:\(sessionId)", newSection: true)
+            guard let extensionSession = AccountUserDefault.shared.extensionSession, extensionSession == sessionId else {
+                return
+            }
             AccountUserDefault.shared.extensionSession = nil
             SignalProtocol.shared.deleteSession(userId: data.userId)
             JobDAO.shared.clearSessionJob()

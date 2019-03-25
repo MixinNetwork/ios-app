@@ -137,9 +137,6 @@ class SendMessageService: MixinService {
     }
 
     func sendSessionMessage(action: JobAction, messageId: String, status: String) {
-        guard AccountUserDefault.shared.isDesktopLoggedIn else {
-            return
-        }
         saveDispatchQueue.async {
             let job = Job(action: action, messageId: messageId, status: status, isSessionMessage: true)
             MixinDatabase.shared.insertOrReplace(objects: [job])
@@ -291,7 +288,7 @@ class SendMessageService: MixinService {
                 SendMessageService.shared.processing = false
             }
             repeat {
-                guard let job = AccountUserDefault.shared.isDesktopLoggedIn ? JobDAO.shared.nextJob() : JobDAO.shared.nextNotSessionJob() else {
+                guard let job = JobDAO.shared.nextJob() else {
                     return
                 }
 

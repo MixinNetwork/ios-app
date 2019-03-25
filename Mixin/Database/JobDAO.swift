@@ -9,12 +9,8 @@ final class JobDAO {
         return MixinDatabase.shared.getCodables(orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
     }
 
-    func nextNotSessionJob() -> Job? {
-        return MixinDatabase.shared.getCodables(condition: Job.Properties.isSessionMessage == false, orderBy: [Job.Properties.priority.asOrder(by: .descending), Job.Properties.orderId.asOrder(by: .ascending)], limit: 1).first
-    }
-
     func clearSessionJob() {
-        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.isSessionMessage == true)
+        MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.action == JobAction.SEND_SESSION_MESSAGE.rawValue)
     }
 
     func nextBatchAckJobs(limit: Limit) -> [Job] {

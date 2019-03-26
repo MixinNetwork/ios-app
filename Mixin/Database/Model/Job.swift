@@ -67,11 +67,11 @@ struct Job: BaseCodable {
     init(jobId: String, action: JobAction, userId: String? = nil, conversationId: String? = nil, resendMessageId: String? = nil, blazeMessage: BlazeMessage? = nil, isSessionMessage: Bool = false) {
         self.jobId = jobId
         switch action {
-        case .RESEND_MESSAGE, .SEND_SESSION_MESSAGE:
+        case .RESEND_MESSAGE, .SEND_SESSION_MESSAGE, .SEND_SESSION_MESSAGES:
             self.priority = JobPriority.RESEND_MESSAGE.rawValue
         case .SEND_DELIVERED_ACK_MESSAGE:
             self.priority = JobPriority.SEND_DELIVERED_ACK_MESSAGE.rawValue
-        case .SEND_ACK_MESSAGE, .SEND_SESSION_ACK_MESSAGE, .SEND_ACK_MESSAGES, .SEND_SESSION_ACK_MESSAGES:
+        case .SEND_ACK_MESSAGE, .SEND_SESSION_ACK_MESSAGE, .SEND_ACK_MESSAGES:
             self.priority = JobPriority.SEND_ACK_MESSAGE.rawValue
         default:
             self.priority = JobPriority.SEND_MESSAGE.rawValue
@@ -150,8 +150,8 @@ enum JobAction: String {
     case SEND_DELIVERED_ACK_MESSAGE
 
     case SEND_SESSION_MESSAGE
+    case SEND_SESSION_MESSAGES
     case SEND_SESSION_ACK_MESSAGE
-    case SEND_SESSION_ACK_MESSAGES
 }
 
 

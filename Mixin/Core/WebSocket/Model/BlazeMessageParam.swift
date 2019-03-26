@@ -72,6 +72,19 @@ extension BlazeMessageParam {
         self.messages = messages
     }
 
+    init(sessionId: String, messages: [TransferMessage]) {
+        let accountId = AccountAPI.shared.accountUserId
+        let transferPlainData = TransferPlainAckData(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messages: messages)
+        self.messageId = UUID().uuidString.lowercased()
+        self.conversationId = accountId
+        self.recipientId = accountId
+        self.category = MessageCategory.PLAIN_JSON.rawValue
+        self.data = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
+        self.status = MessageStatus.SENDING.rawValue
+        self.sessionId = sessionId
+        self.primitiveId = accountId
+    }
+
     init(conversationId: String, recipientId: String? = nil, category: String? = nil, data: String? = nil, offset: String? = nil, status: String? = nil, messageId: String? = nil, quoteMessageId: String? = nil, keys: SignalKeyRequest? = nil, recipients: [BlazeSessionMessageParam]? = nil, messages: [TransferMessage]? = nil, sessionId: String? = nil, primitiveId: String? = nil, primitiveMessageId: String? = nil, representativeId: String? = nil) {
         self.conversationId = conversationId
         self.recipientId = recipientId

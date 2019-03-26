@@ -225,9 +225,9 @@ class SendMessageService: MixinService {
                             let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
                             jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
 
-                            if AccountUserDefault.shared.isDesktopLoggedIn {
-                                let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeSessionMessageReceipts.rawValue)
-                                jobs.append(Job(jobId: blazeMessage.id, action: .SEND_SESSION_ACK_MESSAGES, blazeMessage: blazeMessage, isSessionMessage: true))
+                            if let sessionId = AccountUserDefault.shared.extensionSession {
+                                let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, messages: messages), action: BlazeMessageAction.createSessionMessage.rawValue)
+                                jobs.append(Job(jobId: blazeMessage.id, action: .SEND_SESSION_MESSAGES, blazeMessage: blazeMessage, isSessionMessage: true))
                             }
                         }
                     }
@@ -326,23 +326,18 @@ class SendMessageService: MixinService {
                     }
 
                     let jobs = JobDAO.shared.nextBatchJobs(action: .SEND_SESSION_MESSAGE, limit: 100)
-                    let messages: [BlazeAckMessage] = jobs.compactMap {
+                    let messages: [TransferMessage] = jobs.compactMap {
                         guard let messageId = $0.messageId, let status = $0.status else {
                             return nil
                         }
-                        return BlazeAckMessage(messageId: messageId, status: status)
+                        return TransferMessage(messageId: messageId, status: status)
                     }
 
                     guard messages.count > 0 else {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
                         return
                     }
-
-                    let transferPlainData = TransferPlainAckData(action: PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue, messages: messages)
-                    let encoded = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
-                    let accountId = AccountAPI.shared.accountUserId
-                    let params = BlazeMessageParam(conversationId: accountId, recipientId: accountId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: UUID().uuidString.lowercased(), sessionId: sessionId, primitiveId: accountId)
-                    let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createSessionMessage.rawValue)
+                    let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, messages: messages), action: BlazeMessageAction.createSessionMessage.rawValue)
                     if SendMessageService.shared.deliverMessages(blazeMessage: blazeMessage) {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
                     }
@@ -422,7 +417,7 @@ class SendMessageService: MixinService {
                     }
                 case JobAction.SEND_ACK_MESSAGE.rawValue, JobAction.SEND_DELIVERED_ACK_MESSAGE.rawValue:
                     try deliver(blazeMessage: job.toBlazeMessage())
-                case JobAction.SEND_ACK_MESSAGES.rawValue, JobAction.SEND_SESSION_ACK_MESSAGES.rawValue:
+                case JobAction.SEND_ACK_MESSAGES.rawValue, JobAction.SEND_SESSION_MESSAGES.rawValue:
                     try deliver(blazeMessage: job.toBlazeMessage())
                 case JobAction.SEND_KEY.rawValue:
                     _ = try ReceiveMessageService.shared.messageDispatchQueue.sync { () -> Bool in
@@ -459,7 +454,7 @@ class SendMessageService: MixinService {
                     blazeMessage = String(data: bm, encoding: .utf8) ?? ""
                 }
                 #if DEBUG
-                print("======SendMessageService...handlerJob...\(error)...blazeMessage:\(blazeMessage)")
+                print("======SendMessageService...handlerJob...\(error)...currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
                 #endif
                 FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...isSessionMessage:\(job.isSessionMessage)...blazeMessage:\(blazeMessage)...\(error)")
                 Bugsnag.notifyError(error, block: { (report) in

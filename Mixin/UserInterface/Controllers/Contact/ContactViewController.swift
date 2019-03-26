@@ -216,7 +216,7 @@ extension ContactViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 || isPhoneContactAuthorized {
+        if (section == 0 && !contacts.isEmpty) || (section >= 1 && isPhoneContactAuthorized) {
             return 41
         } else {
             return .leastNormalMagnitude
@@ -224,11 +224,16 @@ extension ContactViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! PhoneContactHeaderView
         if section == 0 {
-            view.label.text = Localized.CONTACT_TITLE.uppercased()
-            return view
+            if contacts.isEmpty {
+                return nil
+            } else {
+                let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! PhoneContactHeaderView
+                view.label.text = Localized.CONTACT_TITLE.uppercased()
+                return view
+            }
         } else if isPhoneContactAuthorized {
+            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! PhoneContactHeaderView
             view.label.text = phoneContactSectionTitles[section - 1]
             return view
         } else {
@@ -237,11 +242,27 @@ extension ContactViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
-        if !isPhoneContactAuthorized && section == 1 {
-            view.text = Localized.CONTACT_PHONE_CONTACT_SUMMARY
+        if section == 0 {
+            if contacts.isEmpty {
+                return nil
+            } else {
+                return tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
+            }
+        } else {
+            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
+            if !isPhoneContactAuthorized {
+                view.text = Localized.CONTACT_PHONE_CONTACT_SUMMARY
+            }
+            return view
         }
-        return view
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 && contacts.isEmpty {
+            return .leastNormalMagnitude
+        } else {
+            return UITableView.automaticDimension
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -298,6 +319,9 @@ extension ContactViewController {
     }
     
     private func reloadPhoneContacts() {
+        guard isPhoneContactAuthorized else {
+            return
+        }
         let contacts = self.contacts
         DispatchQueue.global().async { [weak self] in
             let contactPhoneNumbers = Set(contacts.compactMap({ $0.phone }))

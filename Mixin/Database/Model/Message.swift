@@ -102,7 +102,7 @@ extension Message {
     }
 
     static func createMessage(systemMessage action: String?, participantId: String?, userId: String, data: BlazeMessageData) -> Message {
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, status: MessageStatus.READ.rawValue, action: action, participantId: participantId, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: userId, category: data.category, status: MessageStatus.DELIVERED.rawValue, action: action, participantId: participantId, createdAt: data.createdAt)
     }
 
     static func createMessage(appMessage data: BlazeMessageData) -> Message {

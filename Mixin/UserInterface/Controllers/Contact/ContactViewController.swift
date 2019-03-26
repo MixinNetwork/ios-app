@@ -216,7 +216,7 @@ extension ContactViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if (section == 0 && !contacts.isEmpty) || (section == 1 && isPhoneContactAuthorized) {
+        if (section == 0 && !contacts.isEmpty) || (section >= 1 && isPhoneContactAuthorized) {
             return 41
         } else {
             return .leastNormalMagnitude

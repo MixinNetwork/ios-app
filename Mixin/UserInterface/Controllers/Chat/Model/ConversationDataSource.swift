@@ -3,16 +3,18 @@ import AVKit
 import Photos
 import SDWebImage
 import YYImage
+import CoreServices
 
 class ConversationDataSource {
     
     static let didAddMessageOutOfBoundsNotification = Notification.Name("one.mixin.ios.conversation.datasource.add.message.outside.visible.bounds")
     
-    private static let videoRequestOptions: PHVideoRequestOptions = {
-        let options = PHVideoRequestOptions()
-        options.isNetworkAccessAllowed = false
-        options.version = .current
+    private static let thumbnailRequestOptions: PHImageRequestOptions = {
+        let options = PHImageRequestOptions()
         options.deliveryMode = .fastFormat
+        options.resizeMode = .fast
+        options.isNetworkAccessAllowed = false
+        options.isSynchronous = true
         return options
     }()
     
@@ -583,6 +585,49 @@ extension ConversationDataSource {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: categoryIsGroup)
             }
         }
+    }
+    
+    func send(asset: PHAsset) {
+        
+        func size(for asset: PHAsset) -> (width: Int, height: Int) {
+            let maxShortSideLength = 1440
+            guard min(asset.pixelWidth, asset.pixelHeight) >= maxShortSideLength else {
+                return (asset.pixelWidth, asset.pixelHeight)
+            }
+            let maxLongSideLength: Double = 1920
+            let scale = Double(asset.pixelWidth) / Double(asset.pixelHeight)
+            let targetWidth = Int(scale > 1 ? maxLongSideLength : maxLongSideLength * scale)
+            let targetHeight = Int(scale > 1 ? maxLongSideLength / scale : maxLongSideLength)
+            return (targetWidth, targetHeight)
+        }
+        
+        assert(asset.mediaType == .image || asset.mediaType == .video)
+        let assetMediaTypeIsImage = asset.mediaType == .image
+        let category: MessageCategory = assetMediaTypeIsImage ? .SIGNAL_IMAGE : .SIGNAL_VIDEO
+        var message = Message.createMessage(category: category.rawValue,
+                                            conversationId: conversationId,
+                                            userId: AccountAPI.shared.accountUserId)
+        message.mediaStatus = MediaStatus.PENDING.rawValue
+        message.mediaLocalIdentifier = asset.localIdentifier
+        let mediaSize = size(for: asset)
+        message.mediaWidth = mediaSize.width
+        message.mediaHeight = mediaSize.height
+        let thumbnailSize = CGSize(width: 64, height: 64)
+        PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: ConversationDataSource.thumbnailRequestOptions) { (image, info) in
+            if let image = image {
+                message.thumbImage = image.base64Thumbnail()
+                if assetMediaTypeIsImage {
+                    if let uti = info?["PHImageFileUTIKey"] as? String, let mime = UTTypeCopyPreferredTagWithClass(uti as CFString, kUTTagClassMIMEType)?.takeRetainedValue() {
+                        message.mediaMimeType = mime as String
+                    } else {
+                        // TODO: Can mime type be empty?
+                    }
+                } else {
+                    message.mediaMimeType = FileManager.default.mimeType(ext: "mp4")
+                }
+            }
+        }
+        SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: self.category == .group)
     }
     
 }

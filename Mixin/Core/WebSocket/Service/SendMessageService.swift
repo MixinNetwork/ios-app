@@ -95,11 +95,11 @@ class SendMessageService: MixinService {
             SendMessageService.shared.sendMessage(message: msg, data: message.content)
             SendMessageService.shared.sendSessionMessage(message: msg, data: message.content)
         } else if msg.category.hasSuffix("_IMAGE") {
-            ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: msg))
+//            ConcurrentJobQueue.shared.addJob(job: AttachmentUploadJob(message: msg))
         } else if msg.category.hasSuffix("_DATA") {
             FileJobQueue.shared.addJob(job: FileUploadJob(message: msg))
         } else if msg.category.hasSuffix("_VIDEO") {
-            FileJobQueue.shared.addJob(job: VideoUploadJob(message: msg))
+//            FileJobQueue.shared.addJob(job: VideoUploadJob(message: msg))
         } else if msg.category.hasSuffix("_AUDIO") {
             FileJobQueue.shared.addJob(job: AudioUploadJob(message: msg))
         } else if message.category.hasPrefix("WEBRTC_"), let recipient = ownerUser {

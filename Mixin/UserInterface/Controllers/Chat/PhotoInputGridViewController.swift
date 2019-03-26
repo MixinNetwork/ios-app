@@ -143,8 +143,7 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         if let asset = asset(at: indexPath) {
-            let vc = AssetSendViewController.instance(asset: asset, dataSource: dataSource)
-            navigationController?.pushViewController(vc, animated: true)
+            dataSource?.send(asset: asset)
         }
         return true
     }

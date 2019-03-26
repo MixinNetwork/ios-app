@@ -37,7 +37,7 @@ final class MessageDAO {
     static let sqlQueryFullMessage = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
+        m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.sticker_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
                u1.full_name as participantFullName, u1.user_id as participantUserId,
                s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
@@ -77,7 +77,7 @@ final class MessageDAO {
     private static let sqlQueryPendingMessages = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
+        m.media_digest, m.media_status, m.media_waveform, m.media_local_id,  m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
         m.sticker_id, m.created_at FROM messages m
     INNER JOIN conversations c ON c.conversation_id = m.conversation_id AND c.status = 1
     WHERE m.user_id = ? AND m.status = 'SENDING' AND m.media_status = 'PENDING'

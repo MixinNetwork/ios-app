@@ -3,11 +3,11 @@ import Bugsnag
 
 class UploadOrDownloadJob: AsynchronousJob {
 
-    internal let messageId: String
-    internal var message: Message!
-    internal var task: URLSessionTask?
+    let messageId: String
+    var message: Message!
+    var task: URLSessionTask?
 
-    internal lazy var completionHandler = { [weak self] (data: Any?, response: URLResponse?, error: Error?) in
+    lazy var completionHandler = { [weak self] (data: Any?, response: URLResponse?, error: Error?) in
         guard let weakSelf = self else {
             return
         }
@@ -56,7 +56,7 @@ class UploadOrDownloadJob: AsynchronousJob {
         super.cancel()
     }
 
-    internal func downloadExpired() {
+    func downloadExpired() {
 
     }
 

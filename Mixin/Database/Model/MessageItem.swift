@@ -20,6 +20,7 @@ class MessageItem: TableCodable {
     var mediaDigest: Data? = nil
     var mediaStatus: String? = nil
     var mediaWaveform: Data? = nil
+    var mediaLocalIdentifier: String? = nil
     var thumbImage: String? = nil
     var status: String = ""
     var participantId: String? = nil
@@ -136,6 +137,7 @@ class MessageItem: TableCodable {
         case mediaDigest = "media_digest"
         case mediaStatus = "media_status"
         case mediaWaveform = "media_waveform"
+        case mediaLocalIdentifier = "media_local_id"
         case thumbImage = "thumb_image"
         case status
         case participantId = "participant_id"

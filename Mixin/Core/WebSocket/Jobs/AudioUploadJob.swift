@@ -13,8 +13,4 @@ class AudioUploadJob: AttachmentUploadJob {
         return "audio-upload-\(messageId)"
     }
     
-    override func getJobId() -> String {
-        return AudioUploadJob.jobId(messageId: messageId)
-    }
-    
 }

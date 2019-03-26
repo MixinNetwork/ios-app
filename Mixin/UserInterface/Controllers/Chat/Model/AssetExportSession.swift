@@ -4,6 +4,15 @@ class AssetExportSession {
     
     typealias CompletionHandler = () -> Void
     
+    enum Status {
+        case unknown
+        case waiting
+        case exporting
+        case completed
+        case failed
+        case cancelled
+    }
+    
     let asset: AVAsset
     let outputURL: URL
     let videoSettings: [String: Any]
@@ -12,7 +21,7 @@ class AssetExportSession {
     let timeRange = CMTimeRange(start: .zero, end: .positiveInfinity)
     let shouldOptimizeForNetworkUse = true
     
-    private(set) var status = AVAssetExportSession.Status.unknown
+    private(set) var status = Status.unknown
     private(set) var error: Error?
     private(set) var progress: Double = 0
     

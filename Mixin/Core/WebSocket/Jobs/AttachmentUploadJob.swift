@@ -25,14 +25,13 @@ class AttachmentUploadJob: UploadOrDownloadJob {
     }
     
     override func getJobId() -> String {
-        return AttachmentUploadJob.jobId(messageId: message.messageId)
+        return type(of: self).jobId(messageId: message.messageId)
     }
-
+    
     override func execute() -> Bool {
-        guard !self.message.messageId.isEmpty else {
+        guard !self.message.messageId.isEmpty, !isCancelled else {
             return false
         }
-        
         repeat {
             switch MessageAPI.shared.requestAttachment() {
             case let .success(attachResponse):

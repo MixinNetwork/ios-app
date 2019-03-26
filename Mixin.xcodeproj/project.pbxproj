@@ -348,6 +348,7 @@
 		7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A62063951E008A166B /* GalleryItemViewController.swift */; };
 		7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */; };
 		7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */; };
+		7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */; };
 		7BF4047B2048F008004C54E4 /* ChangeNumberNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */; };
 		7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */; };
 		7BF49DD320C3DBAC00A8510E /* ReCaptchaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */; };
@@ -1028,6 +1029,7 @@
 		7BF374A62063951E008A166B /* GalleryItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryItemViewController.swift; sourceTree = "<group>"; };
 		7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetHeaderView.swift; sourceTree = "<group>"; };
 		7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityNumberLabel.swift; sourceTree = "<group>"; };
+		7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadJob.swift; sourceTree = "<group>"; };
 		7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberNavigationController.swift; sourceTree = "<group>"; };
 		7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPinViewController.swift; sourceTree = "<group>"; };
 		7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCaptchaManager.swift; sourceTree = "<group>"; };
@@ -2395,6 +2397,7 @@
 				DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */,
 				DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */,
 				DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */,
+				7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */,
 				DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */,
 				DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */,
 				7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */,
@@ -3231,6 +3234,7 @@
 				DF5D9F271F9C79E10036D5FD /* BundleExtension.swift in Sources */,
 				DF8DA1891FD4F5D700425CEC /* DictionaryExtension.swift in Sources */,
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
+				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				273FACB6205FB9A800513327 /* Signal.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,

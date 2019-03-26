@@ -243,6 +243,7 @@ class SendMessageService: MixinService {
                         Thread.sleep(forTimeInterval: 0.1)
                     }
                 }
+                ConversationDAO.shared.showBadgeNumber()
                 NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
                 SendMessageService.shared.processMessages()
             }
@@ -272,6 +273,7 @@ class SendMessageService: MixinService {
                     try database.insert(objects: jobs, intoTable: Job.tableName)
                     NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
                 })
+                ConversationDAO.shared.showBadgeNumber()
                 SendMessageService.shared.processMessages()
             }
         }

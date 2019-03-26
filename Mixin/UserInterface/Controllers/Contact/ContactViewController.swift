@@ -298,6 +298,9 @@ extension ContactViewController {
     }
     
     private func reloadPhoneContacts() {
+        guard isPhoneContactAuthorized else {
+            return
+        }
         let contacts = self.contacts
         DispatchQueue.global().async { [weak self] in
             let contactPhoneNumbers = Set(contacts.compactMap({ $0.phone }))

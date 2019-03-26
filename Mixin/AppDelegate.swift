@@ -107,6 +107,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         WebSocketService.shared.checkConnectStatus()
         cancelBackgroundTask()
+
+        if let conversationId = UIApplication.currentConversationId() {
+            SendMessageService.shared.sendReadMessages(conversationId: conversationId)
+        }
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {

@@ -123,7 +123,8 @@
 "contact_invite_summary" = "My invitation code %@";
 "contact_invite" = "Hey, I'm using Mixin Messenger to chat. Download it here: https://mixin.one/messenger";
 "contact_profile_title" = "My Profile";
-"contact_phone_contact" = "Upload Contacts";
+"contact_phone_contacts" = "Mobile Contacts";
+"contact_upload_phone_contact" = "Upload Contacts";
 "contact_phone_contact_summary" = "Upload mobile contacts to find other Mixin friends.";
 "contact_my_identity_number" = "My Mixin ID: %@";
 "contact_error_compose_avatar" = "Failed to compose avatar. Try another picture instead.";

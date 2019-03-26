@@ -128,6 +128,7 @@ public class Localized {
     public static let CONTACT_INVITE = LocalizedString("contact_invite", comment: "Hey, I'm using Mixin Messenger to chat. Download it here: https://mixin.one/messenger")
     public static let CONTACT_PROFILE_TITLE = LocalizedString("contact_profile_title", comment: "My Profile")
     public static let CONTACT_TITLE = LocalizedString("contact_title", comment: "Contacts")
+    public static let CONTACT_PHONE_CONTACTS = LocalizedString("contact_phone_contacts", comment: "Mobile Contacts")
     public static let CONTACT_PHONE_CONTACT_SUMMARY = LocalizedString("contact_phone_contact_summary", comment: "Mixin needs access to your contacts to help you connect with other people on Mixin.")
     public static func CONTACT_MY_IDENTITY_NUMBER(id: String) -> String {
         return String(format: LocalizedString("contact_my_identity_number", comment: "My Mixin ID: %@"), id)

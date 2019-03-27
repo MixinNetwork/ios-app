@@ -356,6 +356,9 @@ extension ContactViewController {
                 guard granted else {
                     return
                 }
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
                 PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts, completion: { (result) in
                     switch result {
                     case .success:

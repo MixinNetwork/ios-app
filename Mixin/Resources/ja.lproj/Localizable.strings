@@ -119,7 +119,7 @@
 "contact_invite" = "こんにちは、Mixin Messenger を使用してチャットします。 こちらからダウンロードしてください: https://mixin.one/messenger";
 "contact_profile_title" = "私のプロフィール";
 "contact_phone_contacts" = "電話帳";
-"contact_upload_phone_contact" = "連絡先をアップロード";
+"contact_upload_mobile_contacts" = "連絡先をアップロード";
 "contact_phone_contact_summary" = "他のMixinの友達を見つけるために携帯の連絡先をアップロードする.";
 "contact_my_identity_number" = "私のMixin ID: %@";
 "contact_error_compose_avatar" = "アバターを作成できませんでした。 代わりに別の写真を試してください。";

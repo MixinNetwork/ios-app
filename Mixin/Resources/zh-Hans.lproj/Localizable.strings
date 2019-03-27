@@ -122,8 +122,8 @@
 "contact_invite_summary" = "我的邀请码 %@";
 "contact_invite" = "我正在使用 Mixin 聊天。下载：https://mixin.one/messenger";
 "contact_profile_title" = "我的";
-"contact_phone_contacts" = "通讯录联系人";
-"contact_upload_phone_contact" = "上传通讯录找好友";
+"contact_phone_contacts" = "通讯录";
+"contact_upload_mobile_contacts" = "上传通讯录找好友";
 "contact_phone_contact_summary" = "上传你的手机通讯录，如果你的通讯录中有朋友已经注册了 Mixin，系统会帮你自动添加为好友";
 "contact_my_identity_number" = "我的 Mixin ID: %@";
 "contact_error_compose_avatar" = "头像解析失败，请尝试使用其他图片。";

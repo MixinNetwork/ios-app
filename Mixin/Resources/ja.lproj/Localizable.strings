@@ -118,7 +118,8 @@
 "contact_invite_summary" = "私の招待コードは %@";
 "contact_invite" = "こんにちは、Mixin Messenger を使用してチャットします。 こちらからダウンロードしてください: https://mixin.one/messenger";
 "contact_profile_title" = "私のプロフィール";
-"contact_phone_contact" = "連絡先をアップロード";
+"contact_phone_contacts" = "電話帳";
+"contact_upload_mobile_contacts" = "連絡先をアップロード";
 "contact_phone_contact_summary" = "他のMixinの友達を見つけるために携帯の連絡先をアップロードする.";
 "contact_my_identity_number" = "私のMixin ID: %@";
 "contact_error_compose_avatar" = "アバターを作成できませんでした。 代わりに別の写真を試してください。";
@@ -252,7 +253,7 @@
 "group_placeholder_group_name" = "新しいグループ名";
 "group_create_group_fail" = "グループを作成できませんでした。しばらくしてからもう一度お試しください。";
 "group_clear_success" = "クリアしました";
-"group_remove_confirm" = "'％@'グループから ％@ を削除しますか？";
+"group_remove_confirm" = "'%@'グループから %@ を削除しますか？";
 "group_remove_button" = "グループから削除";
 "group_role_admin" = "管理者";
 "group_participant_menu_info" = "情報";
@@ -291,12 +292,12 @@
 "wallet_caption_send" = "振込をする";
 "wallet_caption_receive" = "預金";
 "wallet_deposit" = "預金";
-"wallet_deposit_confirmations" = "入金は少なくとも ％@ ブロックの確認後に到着します。";
+"wallet_deposit_confirmations" = "入金は少なくとも %@ ブロックの確認後に到着します。";
 "wallet_no_transaction" = "取引なし";
 "wallet_address" = "住所";
 "wallet_account_name" = "アカウント名";
 "wallet_account_memo" = "アカウントメモ";
-"wallet_deposit_account_notice" = " 注意：アカウントメモとアカウント名の両方が、あなたの ％@ をMixinに正常に入金するために必要とされ、入金は少なくとも ％@ ブロックの確認の後に到着します。";
+"wallet_deposit_account_notice" = " 注意：アカウントメモとアカウント名の両方が、あなたの %@ をMixinに正常に入金するために必要とされ、入金は少なくとも %@ ブロックの確認の後に到着します。";
 "wallet_menu_show_hidden_assets" = "隠し資産";
 "wallet_menu_show_asset" = "資産を表示";
 "wallet_menu_hide_asset" = "資産を隠す";
@@ -305,11 +306,11 @@
 "wallet_withdraw_amount" = "金額";
 "wallet_withdraw_memo" = "メモ（オプション）";
 "wallet_button_add_address" = "タップして住所を追加";
-"wallet_hint_transaction_fee" = "％@ を引き出すには、％@ の取引手数料が必要です。";
+"wallet_hint_transaction_fee" = "%@ を引き出すには、%@ の取引手数料が必要です。";
 "wallet_password_address_tips" = "あなたのアドレスを保護するためにPINを確認してください。";
 "wallet_withdrawal_asset" = "出金 %@ ";
 "wallet_withdrawal_pay_password" = "PINによる引き落とし";
-"wallet_withdrawal_reserve" = "％@ には最低 ％@ の予約要件があります。";
+"wallet_withdrawal_reserve" = "%@ には最低 %@ の予約要件があります。";
 "wallet_blockchian_not_in_sync" = "ブロックチェーンが同期していません。";
 "wallet_no_price" = "N/A";
 "wallet_pin_create_title" = "あなたの最初のデジタルウォレットを作成するために6桁のウォレットPINを設定してください";
@@ -329,10 +330,10 @@
 "wallet_touch_id" = "Touch ID";
 "wallet_face_id" = "Face ID";
 "wallet_enable_biometric_pay_title" = " %@ で支払う";
-"wallet_enable_biometric_pay_prompt" = "有効にすると、％@を使って簡単に振込できます";
-"wallet_store_encrypted_pin" = " ％@ Payを有効にする";
-"wallet_biometric_pay_prompt" = " ％@で支払いを承認する";
-"wallet_disable_biometric_pay" = " ％@ Payを無効に?";
+"wallet_enable_biometric_pay_prompt" = "有効にすると、%@を使って簡単に振込できます";
+"wallet_store_encrypted_pin" = " %@ Payを有効にする";
+"wallet_biometric_pay_prompt" = " %@で支払いを承認する";
+"wallet_disable_biometric_pay" = " %@ Payを無効に?";
 "wallet_pin_pay_interval_minutes" = "%@ 分";
 "wallet_pin_pay_interval_hour" = "1 時";
 "wallet_pin_pay_interval_hours" = "%@ 時間";
@@ -340,7 +341,7 @@
 "wallet_pin_pay_interval_confirm" = "設定のセキュリティを保護するためにPINを確認してください。";
 "wallet_pin_pay_interval_tips" = "資産のセキュリティを確保するために、指定した期間内にWallet PINを確認する必要があります。";
 "withdrawal_amount_too_small" = "引き出し金額が少なすぎる";
-"withdrawal_minimum_amount" = "最低出金額は ％@ ％@ です";
+"withdrawal_minimum_amount" = "最低出金額は %@ %@ です";
 "transactions_filter_sort_by" = "並び替え";
 "transactions_filter_sort_by_time" = "時間";
 "transactions_filter_sort_by_amount" = "金額";
@@ -391,8 +392,8 @@
 "transfer_error_pin_incorrect" = "PINが正しくありません";
 "transfer_paid" = "お振込み";
 "transfer_pay_password" = "PINで支払う";
-"pay_transfer_title" = " ％@ に振込";
-"pay_withdrawal_title" = " ％@ に送金";
+"pay_transfer_title" = " %@ に振込";
+"pay_withdrawal_title" = " %@ に送金";
 
 // QRCode
 "myqrcode_title" = "私のQRコード";
@@ -412,7 +413,7 @@
 "auth_permission_contacts_read_description" = "連絡先リストにアクセスする";
 "auth_assets_more" = "もっと";
 "auth_profile_description" = "%@, %@, プロフィール写真";
-"auth_success" = "％@にログインしました";
+"auth_success" = "%@にログインしました";
 "auth_description" = "へのアクセスをリクエストします";
 "scan_qr_code" = "QRコードをスキャン";
 
@@ -439,7 +440,7 @@
 "profile_change_number_new_number" = "新しい電話番号を入力してください";
 "profile_mixin_id" = "Mixin ID: %@";
 "profile_reputation_score" = "評判スコア: %@";
-"profile_invitation_code_consumed_count" = "あなたは合計 ％@ 人を招待しました。";
+"profile_invitation_code_consumed_count" = "あなたは合計 %@ 人を招待しました。";
 "profile_edit_name" = "名前を編集";
 "profile_add_contact_fail" = "連絡先を追加できませんでした";
 "profile_remove_contact_fail" = "連絡先を削除できませんでした";
@@ -449,7 +450,7 @@
 "profile_unmute" = "消音を解除";
 "profile_mute" = "消音";
 "profile_toast_unmuted" = "消音解除しました";
-"profile_toast_muted" = " ％@ まで消音しました";
+"profile_toast_muted" = " %@ まで消音しました";
 
 // Home
 "button_title_contacts_and_chats" = "連絡先とチャット";
@@ -479,9 +480,9 @@
 "setting_conversation" = "会話";
 "setting_authorizations" = "承認";
 "setting_no_authorizations" = "承認はありません";
-"setting_deauthorize_confirmation" = " ％@ の認証を解除しますか？";
+"setting_deauthorize_confirmation" = " %@ の認証を解除しますか？";
 "setting_storage_usage" = "ストレージ使用量";
-"setting_storage_usage_clear" = "％@ 件のメッセージを消去しますか（％@）。";
+"setting_storage_usage_clear" = "%@ 件のメッセージを消去しますか（%@）。";
 "setting_header_message_source" = "私にメッセージを送ることができる人";
 "setting_header_conversation_source" = "グループチャットに私を追加できるのは誰ですか";
 "setting_source_everybody" = "みんな";
@@ -506,7 +507,7 @@
 "setting_backup_disable_tips" = "履歴をバックアップするには、iCloudにサインインしてください。 設定> iCloud> iCloud Drive をオンにします。";
 "setting_backup_tips" = "チャット履歴をiCloudにバックアップします。 iPhoneを紛失した場合や新しいiPhoneに切り替えた場合は、Mixin Messengerをインストールしたときにチャット履歴を復元できます。 バックアップしたメッセージは、iCloudにいる間はMixin Messengerのエンドツーエンドの暗号化によって保護されません。";
 "setting_backup_auto_tips" = "Wi-Fi経由でのみiCloudに自動的にバックアップします。";
-"setting_backup_last" = "最後のバックアップは ％@ 、合計サイズは ％@ です。";
+"setting_backup_last" = "最後のバックアップは %@ 、合計サイズは %@ です。";
 
 // Notifications
 "notification_reply" = "返信";

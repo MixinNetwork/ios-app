@@ -234,7 +234,11 @@ extension ContactViewController {
             }
         } else if isPhoneContactAuthorized {
             let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! PhoneContactHeaderView
-            view.label.text = phoneContactSectionTitles[section - 1]
+            if section == 1 {
+                view.label.text = Localized.CONTACT_PHONE_CONTACTS
+            } else {
+                view.label.text = phoneContactSectionTitles[section - 1]
+            }
             return view
         } else {
             return nil
@@ -249,16 +253,22 @@ extension ContactViewController {
                 return tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
             }
         } else {
-            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
-            if !isPhoneContactAuthorized {
+            if isPhoneContactAuthorized {
+                if section == phoneContacts.count {
+                    return tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
+                } else {
+                    return nil
+                }
+            } else {
+                let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
                 view.text = Localized.CONTACT_PHONE_CONTACT_SUMMARY
+                return view
             }
-            return view
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 && contacts.isEmpty {
+        if (section == 0 && contacts.isEmpty) || (section != 0 && isPhoneContactAuthorized && section != phoneContacts.count) {
             return .leastNormalMagnitude
         } else {
             return UITableView.automaticDimension
@@ -345,6 +355,9 @@ extension ContactViewController {
             ContactsManager.shared.store.requestAccess(for: .contacts, completionHandler: { (granted, error) in
                 guard granted else {
                     return
+                }
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
                 }
                 PhoneContactAPI.shared.upload(contacts: ContactsManager.shared.contacts, completion: { (result) in
                     switch result {

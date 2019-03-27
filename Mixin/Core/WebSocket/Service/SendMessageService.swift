@@ -315,7 +315,7 @@ class SendMessageService: MixinService {
 
                     guard messages.count > 0 else {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
-                        return
+                        continue
                     }
 
                     let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
@@ -324,7 +324,8 @@ class SendMessageService: MixinService {
                     }
                 } else if job.action == JobAction.SEND_SESSION_MESSAGE.rawValue {
                     guard let sessionId = AccountUserDefault.shared.extensionSession else {
-                        return
+                        JobDAO.shared.removeJob(jobId: job.jobId)
+                        continue
                     }
 
                     let jobs = JobDAO.shared.nextBatchJobs(action: .SEND_SESSION_MESSAGE, limit: 100)
@@ -337,7 +338,7 @@ class SendMessageService: MixinService {
 
                     guard messages.count > 0 else {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
-                        return
+                        continue
                     }
                     let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, messages: messages), action: BlazeMessageAction.createSessionMessage.rawValue)
                     if SendMessageService.shared.deliverMessages(blazeMessage: blazeMessage) {
@@ -354,7 +355,7 @@ class SendMessageService: MixinService {
 
                     guard messages.count > 0 else {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
-                        return
+                        continue
                     }
 
                     let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeSessionMessageReceipts.rawValue)

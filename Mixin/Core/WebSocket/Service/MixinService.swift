@@ -188,6 +188,10 @@ class MixinService {
             do {
                 return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
             } catch {
+                #if DEBUG
+                print("======SendMessaegService...deliver...error:\(error)")
+                #endif
+
                 guard let err = error as? APIError else {
                     Thread.sleep(forTimeInterval: 2)
                     return false

@@ -16,11 +16,7 @@ class AssetViewController: UIViewController {
     private var snapshotDataSource: SnapshotDataSource!
     
     private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
-    private lazy var filterWindow: AssetFilterWindow = {
-        let window = AssetFilterWindow.instance()
-        window.delegate = self
-        return window
-    }()
+    private lazy var filterController = AssetFilterViewController.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,7 +60,8 @@ class AssetViewController: UIViewController {
     }
     
     @IBAction func presentFilterWindow(_ sender: Any) {
-        filterWindow.presentPopupControllerAnimated()
+        filterController.delegate = self
+        present(filterController, animated: true, completion: nil)
     }
     
     @IBAction func transfer(_ sender: Any) {
@@ -191,9 +188,9 @@ extension AssetViewController: UITableViewDelegate {
     
 }
 
-extension AssetViewController: AssetFilterWindowDelegate {
+extension AssetViewController: AssetFilterViewControllerDelegate {
     
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
+    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
         tableView.setContentOffset(.zero, animated: false)
         tableView.layoutIfNeeded()
         snapshotDataSource.setSort(sort, filter: filter)

@@ -1512,6 +1512,95 @@
             </objects>
             <point key="canvasLocation" x="302.89855072463769" y="2847.554347826087"/>
         </scene>
+        <!--Asset Filter View Controller-->
+        <scene sceneID="rpk-qv-d5w">
+            <objects>
+                <viewController storyboardIdentifier="asset_filter" id="AAO-QI-ceU" customClass="AssetFilterViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Qey-oD-4rP" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="rkM-ST-mvC">
+                                <rect key="frame" x="20" y="20" width="394" height="70"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Filter" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QoH-jn-kmz">
+                                        <rect key="frame" x="0.0" y="0.0" width="43.333333333333336" height="70"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_filter"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEF-em-hr2">
+                                        <rect key="frame" x="324" y="0.0" width="70" height="70"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="HEF-em-hr2" secondAttribute="height" id="ckN-Uj-ynM"/>
+                                        </constraints>
+                                        <state key="normal" image="ic_dialog_close"/>
+                                        <connections>
+                                            <action selector="dismissAction:" destination="AAO-QI-ceU" eventType="touchUpInside" id="rfe-rm-Rt1"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="7Wh-A7-ric"/>
+                                </constraints>
+                            </stackView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PcA-9U-1HE">
+                                <rect key="frame" x="20" y="90" width="374" height="544"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="20" minimumInteritemSpacing="20" id="e6n-mk-Xpq" customClass="AlignedCollectionViewFlowLayout" customModule="AlignedCollectionViewFlowLayout">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="35"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                            </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a0V-xJ-EfJ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="149" y="672" width="116" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="j3J-2a-Tm4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                                <state key="normal" title="Apply"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_apply"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="applyAction:" destination="AAO-QI-ceU" eventType="touchUpInside" id="jg0-4V-lea"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="rkM-ST-mvC" firstAttribute="top" secondItem="gMM-JX-Zzz" secondAttribute="top" id="7g6-c9-pjW"/>
+                            <constraint firstItem="gMM-JX-Zzz" firstAttribute="trailing" secondItem="PcA-9U-1HE" secondAttribute="trailing" constant="20" id="81N-l6-5v0"/>
+                            <constraint firstItem="PcA-9U-1HE" firstAttribute="leading" secondItem="gMM-JX-Zzz" secondAttribute="leading" constant="20" id="Jtn-SM-APO"/>
+                            <constraint firstItem="a0V-xJ-EfJ" firstAttribute="top" secondItem="PcA-9U-1HE" secondAttribute="bottom" constant="38" id="Lcy-Lj-Nvx"/>
+                            <constraint firstItem="gMM-JX-Zzz" firstAttribute="trailing" secondItem="rkM-ST-mvC" secondAttribute="trailing" id="Mz4-Mn-1g2"/>
+                            <constraint firstItem="gMM-JX-Zzz" firstAttribute="bottom" secondItem="a0V-xJ-EfJ" secondAttribute="bottom" constant="20" id="Nmd-Tl-cmg"/>
+                            <constraint firstItem="PcA-9U-1HE" firstAttribute="top" secondItem="rkM-ST-mvC" secondAttribute="bottom" id="eUb-0b-TyN"/>
+                            <constraint firstItem="rkM-ST-mvC" firstAttribute="leading" secondItem="gMM-JX-Zzz" secondAttribute="leading" constant="20" id="m8T-gv-ET7"/>
+                            <constraint firstItem="a0V-xJ-EfJ" firstAttribute="centerX" secondItem="gMM-JX-Zzz" secondAttribute="centerX" id="pZ4-K5-4GA"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="gMM-JX-Zzz"/>
+                    </view>
+                    <connections>
+                        <outlet property="applyButton" destination="a0V-xJ-EfJ" id="cYt-f9-1K7"/>
+                        <outlet property="applyButtonBottomConstraint" destination="Nmd-Tl-cmg" id="tZJ-kB-bOo"/>
+                        <outlet property="applyButtonTopConstraint" destination="Lcy-Lj-Nvx" id="TpI-E7-6uf"/>
+                        <outlet property="collectionView" destination="PcA-9U-1HE" id="6TR-Nj-vxc"/>
+                        <outlet property="dismissButton" destination="HEF-em-hr2" id="7fp-Lp-BEs"/>
+                        <outlet property="titleHeightConstraint" destination="7Wh-A7-ric" id="luz-9F-2gG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ucD-sl-Rhk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1074" y="2848"/>
+        </scene>
         <!--New Address View Controller-->
         <scene sceneID="gpe-l0-tIj">
             <objects>
@@ -1971,6 +2060,7 @@
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
+        <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_input_menu" width="11" height="6"/>
         <image name="ic_no_result" width="125" height="125"/>
         <image name="ic_scan_address" width="24" height="24"/>

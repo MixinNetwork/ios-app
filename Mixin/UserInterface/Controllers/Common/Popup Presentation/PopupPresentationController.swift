@@ -13,14 +13,21 @@ class PopupPresentationController: UIPresentationController {
     let topMargin: CGFloat = 56
     
     override var frameOfPresentedViewInContainerView: CGRect {
-        guard let containerView = containerView else {
-            return presentedViewController.view.bounds
+        let presentingBounds = presentingViewController.view.bounds
+        if presentedViewController.preferredContentSize != .zero {
+            let height = min(presentingBounds.height, presentedViewController.preferredContentSize.height)
+            return CGRect(x: 0,
+                          y: presentingBounds.height - height,
+                          width: presentingBounds.width,
+                          height: height)
+        } else {
+            return presentingBounds
         }
-        let height = containerView.bounds.height
-            - containerView.compatibleSafeAreaInsets.top
-            - topMargin
-        let y = containerView.bounds.height - height
-        return CGRect(x: 0, y: y, width: containerView.bounds.width, height: height)
+    }
+    
+    override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        super.preferredContentSizeDidChange(forChildContentContainer: container)
+        presentedView?.frame = frameOfPresentedViewInContainerView
     }
     
     override func containerViewWillLayoutSubviews() {

@@ -69,6 +69,7 @@ class GiphySearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updatePreferredContentSizeHeight()
         keywordTextField.delegate = self
         collectionView.keyboardDismissMode = .onDrag
         collectionView.register(AnimatedImageCollectionViewCell.self,
@@ -97,6 +98,12 @@ class GiphySearchViewController: UIViewController {
         lastGiphyOperation?.cancel()
         self.animated = false
         onDisappear?()
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updatePreferredContentSizeHeight()
     }
     
     @IBAction func dismissAction(_ sender: Any) {
@@ -208,6 +215,13 @@ extension GiphySearchViewController {
         case .noMoreResult:
             return ReuseId.Footer.giphyPowered
         }
+    }
+    
+    private func updatePreferredContentSizeHeight() {
+        guard let window = AppDelegate.current.window else {
+            return
+        }
+        preferredContentSize.height = window.bounds.height - window.compatibleSafeAreaInsets.top - 56
     }
     
     private func prepareCollectionViewForReuse() {

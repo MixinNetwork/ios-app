@@ -4,6 +4,8 @@ import CoreText
 
 extension String {
 
+    private static var hashCodeMaps = [String: Int]()
+
     var isNumeric: Bool {
         let number = NumberFormatter.decimal.number(from: self)
         return number != nil
@@ -70,6 +72,15 @@ extension String {
         digestData[8] |= 0x80       // set to IETF variant
         var error: NSError?
         return GoutilsUuidFromBytes(digestData, &error)
+    }
+
+    func positiveHashCode() -> Int {
+        if let code = String.hashCodeMaps[self] {
+            return code
+        }
+        let code = Int(abs(hashCode()))
+        String.hashCodeMaps[self] = code
+        return code
     }
 
     func hashCode() -> Int32 {

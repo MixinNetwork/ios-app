@@ -6,7 +6,7 @@ struct Quote {
 
     enum Image {
         case url(URL)
-        case user(urlString: String, identityNumber: String, name: String)
+        case user(urlString: String, userId: String, name: String)
         case thumbnail(UIImage)
     }
     
@@ -21,11 +21,7 @@ struct Quote {
             return nil
         }
         title = message.userFullName
-        if let identityNumber = Int(message.userIdentityNumber) {
-            tintColor = UIColor.usernameColors[identityNumber % UIColor.usernameColors.count]
-        } else {
-            tintColor = .black
-        }
+        tintColor = UIColor.usernameColors[message.userId.positiveHashCode() % UIColor.usernameColors.count]
         icon = MessageCategory.iconImage(forMessageCategoryString: message.category)
         subtitle = message.quoteSubtitle
         
@@ -42,7 +38,7 @@ struct Quote {
         } else if message.category.hasSuffix("_STICKER"), let assetUrl = message.assetUrl, let url = URL(string: assetUrl) {
             image = .url(url)
         } else if message.category.hasSuffix("_CONTACT") {
-            image = .user(urlString: message.sharedUserAvatarUrl, identityNumber: message.sharedUserIdentityNumber, name: message.sharedUserFullName)
+            image = .user(urlString: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
         }
         if image == nil, let thumbnail = Quote.image(from: message.thumbImage) {
             image = .thumbnail(thumbnail)

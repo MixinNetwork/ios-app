@@ -47,20 +47,15 @@ class AvatarShadowIconView: UIView {
         }
     }
 
-    func setImage(with url: String, identityNumber: String, name: String, placeholder: Bool = true) {
+    func setImage(with url: String, userId: String, name: String, placeholder: Bool = true) {
         if let url = URL(string: url) {
             titleLabel.text = nil
             iconImageView.backgroundColor = .clear
             let placeholder = placeholder ? #imageLiteral(resourceName: "ic_place_holder") : nil
             iconImageView.sd_setImage(with: url, placeholderImage: placeholder, options: .lowPriority)
         } else {
-            if let number = Int64(identityNumber) {
-                iconImageView.image = UIImage(named: "color\(number % 24 + 1)")
-                iconImageView.backgroundColor = .clear
-            } else {
-                iconImageView.image = nil
-                iconImageView.backgroundColor = UIColor(rgbValue: 0xaaaaaa)
-            }
+            iconImageView.image = UIImage(named: "color\(userId.positiveHashCode() % 24 + 1)")
+            iconImageView.backgroundColor = .clear
             if let firstLetter = name.first {
                 titleLabel.text = String([firstLetter]).uppercased()
             } else {

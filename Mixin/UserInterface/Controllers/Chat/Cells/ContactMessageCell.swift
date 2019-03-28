@@ -17,7 +17,7 @@ class ContactMessageCell: CardMessageCell {
         if let viewModel = viewModel as? ContactMessageViewModel {
             fullnameLabel.text = viewModel.message.sharedUserFullName
             idLabel.text = viewModel.message.sharedUserIdentityNumber
-            avatarImageView.setImage(with: viewModel.message.sharedUserAvatarUrl, identityNumber: viewModel.message.sharedUserIdentityNumber, name: viewModel.message.sharedUserFullName)
+            avatarImageView.setImage(with: viewModel.message.sharedUserAvatarUrl, userId: viewModel.message.sharedUserId ?? "", name: viewModel.message.sharedUserFullName)
 
             if viewModel.message.sharedUserIsVerified {
                 verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")

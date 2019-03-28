@@ -18,8 +18,8 @@ class TransactionViewController: UIViewController {
         super.viewDidLoad()
         view.layoutIfNeeded()
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
-        if snapshot.type == SnapshotType.transfer.rawValue, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
-            avatarImageView.setImage(with: snapshot.opponentUserAvatarUrl ?? "", identityNumber: identityNumber, name: name)
+        if snapshot.type == SnapshotType.transfer.rawValue, let userId = snapshot.opponentUserId, let name = snapshot.opponentUserFullName {
+            avatarImageView.setImage(with: snapshot.opponentUserAvatarUrl ?? "", userId: userId, name: name)
         } else {
             avatarImageView.image = UIImage(named: "Wallet/ic_transaction_external_large")
         }

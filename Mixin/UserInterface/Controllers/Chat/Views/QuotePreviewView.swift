@@ -25,12 +25,7 @@ class QuotePreviewView: UIView, XibDesignable {
             loadXib()
             dismissButton.imageView?.contentMode = .center
         }
-        let tintColor: UIColor
-        if let identityNumber = Int(message.userIdentityNumber) {
-            tintColor = UIColor.usernameColors[identityNumber % UIColor.usernameColors.count]
-        } else {
-            tintColor = .black
-        }
+        let tintColor = UIColor.usernameColors[message.userId.positiveHashCode() % UIColor.usernameColors.count]
         indicatorView.backgroundColor = tintColor
         contentImageView.sd_cancelCurrentImageLoad()
         contentImageView.image = nil
@@ -54,7 +49,7 @@ class QuotePreviewView: UIView, XibDesignable {
         } else if message.category.hasSuffix("_VIDEO") {
             contentImageView.image = contentImageThumbnail
         } else if message.category.hasSuffix("_CONTACT") {
-            contentImageView.setImage(with: message.sharedUserAvatarUrl, identityNumber: message.sharedUserIdentityNumber, name: message.sharedUserFullName)
+            contentImageView.setImage(with: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
         }
         UIView.performWithoutAnimation {
             contentImageWrapperView.isHidden = (contentImageView.image == nil && contentImageView.sd_imageURL == nil)

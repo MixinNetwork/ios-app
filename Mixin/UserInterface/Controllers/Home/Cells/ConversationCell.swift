@@ -30,7 +30,7 @@ class ConversationCell: UITableViewCell {
 
     func render(item: ConversationItem) {
         if item.category == ConversationCategory.CONTACT.rawValue {
-            avatarView.setImage(with: item.ownerAvatarUrl, identityNumber: item.ownerIdentityNumber, name: item.ownerFullName)
+            avatarView.setImage(with: item.ownerAvatarUrl, userId: item.ownerId, name: item.ownerFullName)
         } else {
             avatarView.setGroupImage(with: item.iconUrl, conversationId: item.conversationId)
         }

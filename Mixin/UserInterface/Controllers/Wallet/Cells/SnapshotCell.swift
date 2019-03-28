@@ -36,8 +36,8 @@ class SnapshotCell: UITableViewCell {
     }
     
     func render(snapshot: SnapshotItem, asset: AssetItem? = nil, showSymbol: Bool = false) {
-        if snapshot.type == SnapshotType.transfer.rawValue, let iconUrl = snapshot.opponentUserAvatarUrl, let identityNumber = snapshot.opponentUserIdentityNumber, let name = snapshot.opponentUserFullName {
-            iconImageView.setImage(with: iconUrl, identityNumber: identityNumber, name: name)
+        if snapshot.type == SnapshotType.transfer.rawValue, let iconUrl = snapshot.opponentUserAvatarUrl, let userId = snapshot.opponentUserId, let name = snapshot.opponentUserFullName {
+            iconImageView.setImage(with: iconUrl, userId: userId, name: name)
         } else {
             iconImageView.image = UIImage(named: "Wallet/ic_transaction_external")
         }

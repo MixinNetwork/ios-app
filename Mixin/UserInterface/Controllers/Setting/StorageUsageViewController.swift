@@ -56,7 +56,7 @@ extension StorageUsageViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "storage_usage", for: indexPath) as! StorageUsageCell
         let conversation = conversations[indexPath.row]
         if conversation.category == ConversationCategory.CONTACT.rawValue {
-            cell.avatarImageView.setImage(with: conversation.ownerAvatarUrl, identityNumber: conversation.ownerIdentityNumber, name: conversation.ownerFullName)
+            cell.avatarImageView.setImage(with: conversation.ownerAvatarUrl, userId: conversation.ownerId, name: conversation.ownerFullName)
         } else {
             cell.avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
         }

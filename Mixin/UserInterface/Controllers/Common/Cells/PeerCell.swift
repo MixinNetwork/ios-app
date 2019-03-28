@@ -64,7 +64,7 @@ class PeerCell: UITableViewCell {
     
     func render(user: UserItem) {
         iconImageView.setImage(with: user.avatarUrl,
-                               identityNumber: user.identityNumber,
+                               userId: user.userId,
                                name: user.fullName)
         render(fullName: user.fullName,
                isVerified: user.isVerified,
@@ -73,7 +73,7 @@ class PeerCell: UITableViewCell {
     
     func render(user: GroupUser, forceSelected: Bool) {
         iconImageView.setImage(with: user.avatarUrl,
-                               identityNumber: user.identityNumber,
+                               userId: user.userId,
                                name: user.fullName)
         render(fullName: user.fullName,
                isVerified: user.isVerified,

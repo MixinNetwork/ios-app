@@ -35,7 +35,7 @@ extension AuthorizationsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! AuthorizationTableViewCell
         let app = authorizations[indexPath.row].app
-        cell.iconImageView.setImage(with: app.iconUrl, identityNumber: app.appNumber, name: app.name, placeholder: false)
+        cell.iconImageView.setImage(with: app.iconUrl, userId: app.appId, name: app.name, placeholder: false)
         cell.titleLabel.text = app.name
         cell.subtitleLabel.text = app.appNumber
         return cell

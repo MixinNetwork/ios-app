@@ -36,35 +36,30 @@ class AvatarImageView: CornerImageView {
     }
 
     func setImage(user: ParticipantUser) {
-        setImage(with: user.userAvatarUrl, identityNumber: user.userIdentityNumber, name: user.userFullName)
+        setImage(with: user.userAvatarUrl, userId: user.userId, name: user.userFullName)
     }
 
     func setImage(with user: Account) {
-        setImage(with: user.avatar_url, identityNumber: user.identity_number, name: user.full_name)
+        setImage(with: user.avatar_url, userId: user.user_id, name: user.full_name)
     }
 
     func setImage(with user: UserItem) {
-        setImage(with: user.avatarUrl, identityNumber: user.identityNumber, name: user.fullName)
+        setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
     }
     
     func setImage(user: UserResponse) {
-        setImage(with: user.avatarUrl, identityNumber: user.identityNumber, name: user.fullName)
+        setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
     }
     
-    func setImage(with url: String, identityNumber: String, name: String, placeholder: Bool = true) {
+    func setImage(with url: String, userId: String, name: String, placeholder: Bool = true) {
         if let url = URL(string: url) {
             titleLabel.text = nil
             backgroundColor = .clear
             let placeholder = placeholder ? #imageLiteral(resourceName: "ic_place_holder") : nil
             sd_setImage(with: url, placeholderImage: placeholder, options: .lowPriority)
         } else {
-            if let number = Int64(identityNumber) {
-                image = UIImage(named: "color\(number % 24 + 1)")
-                backgroundColor = .clear
-            } else {
-                image = nil
-                backgroundColor = UIColor(rgbValue: 0xaaaaaa)
-            }
+            image = UIImage(named: "color\(userId.positiveHashCode() % 24 + 1)")
+            backgroundColor = .clear
             if let firstLetter = name.first {
                 titleLabel.text = String([firstLetter]).uppercased()
             } else {

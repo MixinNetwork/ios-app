@@ -19,13 +19,13 @@ class GroupMemberCell: UITableViewCell {
     }
     
     func render(user: GroupUser) {
-        avatarImageView.setImage(with: user.avatarUrl, identityNumber: user.identityNumber, name: user.fullName)
+        avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
         nameLabel.text = user.fullName
         roleLabel.text = ""
     }
 
     func render(user: UserItem) {
-        avatarImageView.setImage(with: user.avatarUrl, identityNumber: user.identityNumber, name: user.fullName)
+        avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
         nameLabel.text = user.fullName
         roleLabel.isHidden = false
 

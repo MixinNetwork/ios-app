@@ -108,9 +108,9 @@ class DetailInfoMessageViewModel: MessageViewModel {
         } else {
             timeFrame.origin.x -= (margin.leading + DetailInfoMessageViewModel.statusLeftMargin + statusFrame.width)
         }
-        if style.contains(.fullname), let identityNumber = Int64(message.userIdentityNumber) {
-            let index = identityNumber % Int64(UIColor.usernameColors.count)
-            fullnameColor = UIColor.usernameColors[Int(index)]
+        if style.contains(.fullname) {
+            let index = message.userId.positiveHashCode() % UIColor.usernameColors.count
+            fullnameColor = UIColor.usernameColors[index]
         }
         statusFrame.origin = CGPoint(x: timeFrame.maxX + DetailInfoMessageViewModel.statusLeftMargin,
                                      y: timeFrame.origin.y + (timeFrame.height - statusFrame.height) / 2)

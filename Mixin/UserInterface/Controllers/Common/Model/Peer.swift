@@ -90,7 +90,7 @@ class Peer {
         switch item {
         case .user(let user):
             imageView.setImage(with: user.avatarUrl,
-                               identityNumber: user.identityNumber,
+                               userId: user.userId,
                                name: user.fullName)
         case .group(let conversation):
             imageView.setGroupImage(with: conversation.iconUrl,

@@ -26,7 +26,7 @@ class SearchResultContactCell: UITableViewCell {
     }
     
     func render(user: UserItem) {
-        avatarImageView.setImage(with: user.avatarUrl, identityNumber: user.identityNumber, name: user.fullName)
+        avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
         nameLabel.text = user.fullName
         if user.isVerified {
             verifiedImageView.image = #imageLiteral(resourceName: "ic_user_verified")

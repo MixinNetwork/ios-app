@@ -101,7 +101,7 @@ class ContactViewController: UITableViewController {
             return
         }
         DispatchQueue.main.async {
-            self.accountAvatarView.setImage(with: account.avatar_url, identityNumber: account.identity_number, name: account.full_name)
+            self.accountAvatarView.setImage(with: account.avatar_url, userId: account.user_id, name: account.full_name)
             self.accountNameLabel.text = account.full_name
             self.accountIdLabel.text = Localized.CONTACT_IDENTITY_NUMBER(identityNumber: account.identity_number)
         }

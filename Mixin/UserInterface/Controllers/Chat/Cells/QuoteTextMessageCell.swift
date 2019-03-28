@@ -33,8 +33,8 @@ class QuoteTextMessageCell: TextMessageCell {
                     case let .url(url):
                         quoteImageView.sd_setImage(with: url, completed: nil)
                         quoteImageView.cornerRadius = QuoteTextMessageViewModel.Quote.imageCornerRadius
-                    case let .user(url, identityNumber, name):
-                        quoteImageView.setImage(with: url, identityNumber: identityNumber, name: name)
+                    case let .user(url, userId, name):
+                        quoteImageView.setImage(with: url, userId: userId, name: name)
                         quoteImageView.cornerRadius = viewModel.quoteImageFrame.width / 2
                     case let .thumbnail(thumbnail):
                         quoteImageView.image = thumbnail

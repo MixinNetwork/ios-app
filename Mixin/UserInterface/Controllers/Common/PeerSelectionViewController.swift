@@ -76,6 +76,11 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         reloadData()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        searchBoxView.textField.resignFirstResponder()
+    }
+    
     @objc func search(_ sender: Any) {
         let keyword = (searchBoxView.textField.text ?? "").uppercased()
         if keyword.isEmpty {

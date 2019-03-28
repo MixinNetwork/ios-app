@@ -10,7 +10,7 @@ class AllTransactionsViewController: UITableViewController {
     internal var dataSource: SnapshotDataSource!
     private let loadNextPageThreshold = 20
     
-    private lazy var filterWindow = AssetFilterWindow.instance()
+    private lazy var filterController = AssetFilterViewController.instance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,8 +113,8 @@ extension AllTransactionsViewController: ContainerViewControllerDelegate {
     }
     
     func barRightButtonTappedAction() {
-        filterWindow.delegate = self
-        filterWindow.presentPopupControllerAnimated()
+        filterController.delegate = self
+        present(filterController, animated: true, completion: nil)
     }
     
     func imageBarRightButton() -> UIImage? {
@@ -123,9 +123,9 @@ extension AllTransactionsViewController: ContainerViewControllerDelegate {
     
 }
 
-extension AllTransactionsViewController: AssetFilterWindowDelegate {
+extension AllTransactionsViewController: AssetFilterViewControllerDelegate {
     
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
+    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
         tableView.setContentOffset(.zero, animated: false)
         dataSource.setSort(sort, filter: filter)
     }

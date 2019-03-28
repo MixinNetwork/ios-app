@@ -118,6 +118,7 @@
 		7B4D112A205BA64B0074BF60 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1129205BA64B0074BF60 /* Address.swift */; };
 		7B4D112C205BC9160074BF60 /* AddressDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112B205BC9160074BF60 /* AddressDAO.swift */; };
 		7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */; };
+		7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */; };
 		7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */; };
 		7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */; };
 		7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */; };
@@ -317,8 +318,6 @@
 		7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7BF49E0820C4449100A8510E /* ReCaptcha.storyboard */; };
 		7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */; };
 		7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5374820076BB500257D6C /* ShutterAnimationView.swift */; };
-		7BF5D02B2170B8EA0062EF14 /* AssetFilterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5D02A2170B8EA0062EF14 /* AssetFilterWindow.swift */; };
-		7BF5D02D2170B8FB0062EF14 /* AssetFilterWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF5D02C2170B8FB0062EF14 /* AssetFilterWindow.xib */; };
 		7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7837A2179D1AF00BECB4B /* Call.swift */; };
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
@@ -743,6 +742,7 @@
 		7B4D1129205BA64B0074BF60 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
 		7B4D112B205BC9160074BF60 /* AddressDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressDAO.swift; sourceTree = "<group>"; };
 		7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalAPI.swift; sourceTree = "<group>"; };
+		7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterViewController.swift; sourceTree = "<group>"; };
 		7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueButtonViewController.swift; sourceTree = "<group>"; };
 		7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MobileNumberView.xib; sourceTree = "<group>"; };
 		7B51DDAF223A3A6F008ACDBB /* MobileNumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileNumberViewController.swift; sourceTree = "<group>"; };
@@ -956,8 +956,6 @@
 		7BF49E0820C4449100A8510E /* ReCaptcha.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ReCaptcha.storyboard; sourceTree = "<group>"; };
 		7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTransactionFooterView.xib; sourceTree = "<group>"; };
 		7BF5374820076BB500257D6C /* ShutterAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShutterAnimationView.swift; sourceTree = "<group>"; };
-		7BF5D02A2170B8EA0062EF14 /* AssetFilterWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterWindow.swift; sourceTree = "<group>"; };
-		7BF5D02C2170B8FB0062EF14 /* AssetFilterWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssetFilterWindow.xib; sourceTree = "<group>"; };
 		7BF7837A2179D1AF00BECB4B /* Call.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
 		7BF9969420CA6F3800FD948F /* Waveform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
@@ -1759,8 +1757,6 @@
 				DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */,
 				DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */,
 				DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */,
-				7BF5D02A2170B8EA0062EF14 /* AssetFilterWindow.swift */,
-				7BF5D02C2170B8FB0062EF14 /* AssetFilterWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -2338,6 +2334,7 @@
 				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
 				7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */,
 				7B955339224380B200CE95E6 /* PinValidationViewController.swift */,
+				7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -2655,7 +2652,6 @@
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				DF016B2B2096BDB100B8FFDE /* UserWindow.xib in Resources */,
-				7BF5D02D2170B8FB0062EF14 /* AssetFilterWindow.xib in Resources */,
 				7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */,
 				DF8EF6B52032D1D700E99CE8 /* PayView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
@@ -3138,7 +3134,6 @@
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
-				7BF5D02B2170B8EA0062EF14 /* AssetFilterWindow.swift in Sources */,
 				DFA5B5871FADBE7D00549728 /* AddMemberViewController.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
 				DFEE215C200CAD8800D9B3F7 /* AuthorizationRequest.swift in Sources */,
@@ -3247,6 +3242,7 @@
 				DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* PhoneContactHeaderView.swift in Sources */,
+				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				7B4375C32170CA6900846DC5 /* TransactionsFilterConditionCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				DF2A244E1FC84E3F003A8C1E /* Conversation.swift in Sources */,

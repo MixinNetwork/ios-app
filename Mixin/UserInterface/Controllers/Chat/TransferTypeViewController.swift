@@ -35,6 +35,7 @@ class TransferTypeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updatePreferredContentSizeHeight()
         if let assetId = asset?.assetId, let index = assets.firstIndex(where: { $0.assetId == assetId }) {
             var reordered = assets
             let selected = reordered.remove(at: index)
@@ -50,6 +51,12 @@ class TransferTypeViewController: UIViewController {
         tableView.delegate = self
         tableView.reloadData()
         keywordTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updatePreferredContentSizeHeight()
     }
     
     @IBAction func cancelAction(_ sender: Any) {
@@ -77,6 +84,13 @@ class TransferTypeViewController: UIViewController {
             asset.symbol.lowercased().contains(keyword)
         })
         tableView.reloadData()
+    }
+    
+    private func updatePreferredContentSizeHeight() {
+        guard let window = AppDelegate.current.window else {
+            return
+        }
+        preferredContentSize.height = window.bounds.height - window.compatibleSafeAreaInsets.top - 56
     }
     
 }

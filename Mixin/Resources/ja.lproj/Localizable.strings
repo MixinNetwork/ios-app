@@ -339,7 +339,7 @@
 "wallet_pin_pay_interval_hours" = "%@ 時間";
 "wallet_pin_pay_interval" = "PIN間隔で支払う";
 "wallet_pin_pay_interval_confirm" = "設定のセキュリティを保護するためにPINを確認してください。";
-"wallet_pin_pay_interval_tips" = "資産のセキュリティを確保するために、指定した期間内にWallet PINを確認する必要があります。";
+"wallet_pin_pay_interval_tips" = "資産のセキュリティを確保するために、指定した期間内にPINを確認する必要があります。";
 "withdrawal_amount_too_small" = "引き出し金額が少なすぎる";
 "withdrawal_minimum_amount" = "最低出金額は %@ %@ です";
 "transactions_filter_sort_by" = "並び替え";

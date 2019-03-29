@@ -93,7 +93,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
         scrollView.contentInset.bottom = keyboardHeight + continueWrapperView.frame.height
         scrollView.scrollIndicatorInsets.bottom = keyboardHeight
         view.layoutIfNeeded()
-        if !viewHasAppeared, ScreenSize.current == .inch3_5 || ScreenSize.current == .inch4 {
+        if !viewHasAppeared, ScreenSize.current <= .inch4 {
             scrollView.contentOffset.y = opponentImageView.frame.maxY
         }
     }

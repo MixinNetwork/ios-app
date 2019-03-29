@@ -1,6 +1,6 @@
 import UIKit
 
-class WalletHeaderView: UIView {
+class WalletHeaderView: InfiniteTopView {
     
     @IBOutlet weak var usdValueLabel: InsetLabel!
     @IBOutlet weak var btcValueLabel: UILabel!

@@ -1,6 +1,6 @@
 import UIKit
 
-class AssetTableHeaderView: UIView {
+class AssetTableHeaderView: InfiniteTopView {
     
     @IBOutlet weak var infoStackView: UIStackView!
     @IBOutlet weak var assetIconView: AssetIconView!

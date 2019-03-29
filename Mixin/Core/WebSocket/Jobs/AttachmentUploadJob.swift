@@ -32,12 +32,14 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         guard !self.message.messageId.isEmpty else {
             return false
         }
-        
+        guard let fileUrl = fileUrl else {
+            return false
+        }
         repeat {
             switch MessageAPI.shared.requestAttachment() {
             case let .success(attachResponse):
                 self.attachResponse = attachResponse
-                guard uploadAttachment(attachResponse: attachResponse) else {
+                guard uploadAttachment(attachResponse: attachResponse, fileUrl: fileUrl) else {
                     return false
                 }
                 return true
@@ -52,13 +54,9 @@ class AttachmentUploadJob: UploadOrDownloadJob {
         return false
     }
 
-    private func uploadAttachment(attachResponse: AttachmentResponse) -> Bool {
+    private func uploadAttachment(attachResponse: AttachmentResponse, fileUrl: URL) -> Bool {
         guard let uploadUrl = attachResponse.uploadUrl, !uploadUrl.isEmpty, var request = try? URLRequest(url: uploadUrl, method: .put) else {
             UIApplication.trackError("AttachmentUploadJob", action: "uploadAttachment upload_url is nil", userInfo: ["uploadUrl": "\(attachResponse.uploadUrl ?? "")"])
-            return false
-        }
-        guard let fileUrl = fileUrl else {
-            MessageDAO.shared.deleteMessage(id: messageId)
             return false
         }
 

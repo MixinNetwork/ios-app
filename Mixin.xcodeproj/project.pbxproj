@@ -276,6 +276,11 @@
 		7BB3855A21E77C380070FF8F /* ProvisioningAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855921E77C380070FF8F /* ProvisioningAPI.swift */; };
 		7BB3855C21E77D0D0070FF8F /* ProvisioningCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855B21E77D0D0070FF8F /* ProvisioningCodeResponse.swift */; };
 		7BB3856021E77F1D0070FF8F /* ProvisioningResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855F21E77F1D0070FF8F /* ProvisioningResponse.swift */; };
+		7BB44050224BAFE200A8FE92 /* ImageAssetRequestJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB4404F224BAFE200A8FE92 /* ImageAssetRequestJob.swift */; };
+		7BB44052224C86E400A8FE92 /* VideoTranscodeJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB44051224C86E400A8FE92 /* VideoTranscodeJob.swift */; };
+		7BB44054224C885600A8FE92 /* VideoAssetRequestJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB44053224C885600A8FE92 /* VideoAssetRequestJob.swift */; };
+		7BB44056224C88F700A8FE92 /* AssetRequestJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB44055224C88F700A8FE92 /* AssetRequestJob.swift */; };
+		7BB44058224C8CD600A8FE92 /* AssetUploadJobGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB44057224C8CD600A8FE92 /* AssetUploadJobGroup.swift */; };
 		7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
 		7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */; };
@@ -940,6 +945,11 @@
 		7BB3855921E77C380070FF8F /* ProvisioningAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningAPI.swift; sourceTree = "<group>"; };
 		7BB3855B21E77D0D0070FF8F /* ProvisioningCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningCodeResponse.swift; sourceTree = "<group>"; };
 		7BB3855F21E77F1D0070FF8F /* ProvisioningResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningResponse.swift; sourceTree = "<group>"; };
+		7BB4404F224BAFE200A8FE92 /* ImageAssetRequestJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetRequestJob.swift; sourceTree = "<group>"; };
+		7BB44051224C86E400A8FE92 /* VideoTranscodeJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTranscodeJob.swift; sourceTree = "<group>"; };
+		7BB44053224C885600A8FE92 /* VideoAssetRequestJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAssetRequestJob.swift; sourceTree = "<group>"; };
+		7BB44055224C88F700A8FE92 /* AssetRequestJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetRequestJob.swift; sourceTree = "<group>"; };
+		7BB44057224C8CD600A8FE92 /* AssetUploadJobGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetUploadJobGroup.swift; sourceTree = "<group>"; };
 		7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCancelButton.swift; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorFooterView.xib; sourceTree = "<group>"; };
@@ -2386,6 +2396,11 @@
 				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
 				DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */,
 				DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */,
+				7BB44055224C88F700A8FE92 /* AssetRequestJob.swift */,
+				7BB4404F224BAFE200A8FE92 /* ImageAssetRequestJob.swift */,
+				7BB44053224C885600A8FE92 /* VideoAssetRequestJob.swift */,
+				7BB44051224C86E400A8FE92 /* VideoTranscodeJob.swift */,
+				7BB44057224C8CD600A8FE92 /* AssetUploadJobGroup.swift */,
 				DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */,
 				DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */,
 				DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */,
@@ -2978,6 +2993,7 @@
 				7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */,
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
 				DFDC7E431FAC8D50003233EE /* ContactAPI.swift in Sources */,
+				7BB44058224C8CD600A8FE92 /* AssetUploadJobGroup.swift in Sources */,
 				7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */,
 				273FACBB205FB9A800513327 /* SignedPreKeyStore.swift in Sources */,
 				7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */,
@@ -3108,6 +3124,7 @@
 				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
 				7BB3855A21E77C380070FF8F /* ProvisioningAPI.swift in Sources */,
 				DFD995A0207C9D6100621FFA /* AccountUserDefault.swift in Sources */,
+				7BB44054224C885600A8FE92 /* VideoAssetRequestJob.swift in Sources */,
 				7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */,
 				273FACC4205FB9A800513327 /* IdentityKeyStoreWrapper.swift in Sources */,
 				DF503D341FECF82200C008E7 /* Session.swift in Sources */,
@@ -3141,6 +3158,7 @@
 				7B5FEE402101AD790008321F /* ScreenSize.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* MixinNavigationController.swift in Sources */,
 				273FACB3205FB9A800513327 /* CiphertextMessage.swift in Sources */,
+				7BB44052224C86E400A8FE92 /* VideoTranscodeJob.swift in Sources */,
 				DF0E2D2420FDEB2500BB2658 /* Keychain.swift in Sources */,
 				7B7FBF8D2282D51100644693 /* IconPrefixedTextMessageViewModel.swift in Sources */,
 				DF503D431FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift in Sources */,
@@ -3257,6 +3275,7 @@
 				7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */,
 				7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */,
 				7B075CCF1FC0A98B005315A2 /* ConversationTableView.swift in Sources */,
+				7BB44050224BAFE200A8FE92 /* ImageAssetRequestJob.swift in Sources */,
 				DF503D2E1FECF18800C008E7 /* PreKey.swift in Sources */,
 				7B5E5D971FCE9CAA00F6048D /* ConversationInputTextView.swift in Sources */,
 				7B836C7E1FD17D6100529754 /* DetailInfoMessageViewModel.swift in Sources */,
@@ -3265,6 +3284,7 @@
 				273FACB4205FB9A800513327 /* setup.c in Sources */,
 				7BC80A62221D1C07008586AD /* AssetTableHeaderView.swift in Sources */,
 				273FACAE205FB9A800513327 /* SignalSenderKeyName.swift in Sources */,
+				7BB44056224C88F700A8FE92 /* AssetRequestJob.swift in Sources */,
 				7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */,
 				7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */,
 				DF5D9F291F9C79E10036D5FD /* UIColorExtension.swift in Sources */,

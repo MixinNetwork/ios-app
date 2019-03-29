@@ -25,7 +25,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
         let job: UploadOrDownloadJob
-        if messageIsSentByMe {
+        if shouldUpload {
             job = FileUploadJob(message: Message.createMessage(message: message))
         } else {
             job = FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
@@ -35,7 +35,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
         let jobId: String
-        if messageIsSentByMe {
+        if shouldUpload {
             jobId = FileUploadJob.jobId(messageId: message.messageId)
         } else {
             jobId = FileDownloadJob.jobId(messageId: message.messageId)

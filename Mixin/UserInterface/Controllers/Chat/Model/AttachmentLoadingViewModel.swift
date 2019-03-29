@@ -4,7 +4,7 @@ protocol AttachmentLoadingViewModel: class {
     var progress: Double? { get set }
     var showPlayIconAfterFinished: Bool { get }
     var operationButtonStyle: NetworkOperationButton.Style { get set }
-    var messageIsSentByMe: Bool { get }
+    var shouldUpload: Bool { get } // false if should download
     var automaticallyLoadsAttachment: Bool { get }
     var mediaStatus: String? { get set }
     var sizeRepresentation: String { get }
@@ -33,8 +33,11 @@ enum ProgressUnit {
 
 extension AttachmentLoadingViewModel where Self: MessageViewModel {
     
-    var messageIsSentByMe: Bool {
-        return message.userId == AccountAPI.shared.accountUserId && !(message.mediaUrl?.isEmpty ?? true)
+    var shouldUpload: Bool {
+        let hasMediaUrl = message.mediaUrl != nil
+        let hasLocalIdentifier = message.mediaLocalIdentifier != nil
+        return (message.userId == AccountAPI.shared.accountUserId)
+            && (hasMediaUrl || hasLocalIdentifier)
     }
     
     var mediaStatus: String? {
@@ -67,7 +70,7 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
             case MediaStatus.PENDING.rawValue:
                 operationButtonStyle = .busy(progress: 0)
             case MediaStatus.CANCELED.rawValue:
-                if messageIsSentByMe {
+                if shouldUpload {
                     operationButtonStyle = .upload
                 } else {
                     operationButtonStyle = .download

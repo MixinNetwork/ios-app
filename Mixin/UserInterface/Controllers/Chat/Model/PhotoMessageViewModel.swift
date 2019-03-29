@@ -5,7 +5,7 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     var progress: Double?
 
     var automaticallyLoadsAttachment: Bool {
-        return mediaStatus == MediaStatus.PENDING.rawValue && !messageIsSentByMe
+        return mediaStatus == MediaStatus.PENDING.rawValue && !shouldUpload
     }
     
     var showPlayIconAfterFinished: Bool {
@@ -23,23 +23,24 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             return
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-        let job: UploadOrDownloadJob
-        if messageIsSentByMe {
-            job = AttachmentUploadJob(message: Message.createMessage(message: message))
+        if shouldUpload {
+            let msg = Message.createMessage(message: message)
+            AssetUploadJobGroup.jobs(message: msg)?.forEach({ (job) in
+                ConcurrentJobQueue.shared.addJob(job: job)
+            })
         } else {
-            job = AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
+            let job = AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
-        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
-        let jobId: String
-        if messageIsSentByMe {
-            jobId = AttachmentUploadJob.jobId(messageId: message.messageId)
+        if shouldUpload {
+            AssetUploadJobGroup.cancelJobs(on: ConcurrentJobQueue.shared, for: message)
         } else {
-            jobId = AttachmentDownloadJob.jobId(messageId: message.messageId)
+            let jobId = AttachmentDownloadJob.jobId(messageId: message.messageId)
+            ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
         }
-        ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
         if markMediaStatusCancelled {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
         }

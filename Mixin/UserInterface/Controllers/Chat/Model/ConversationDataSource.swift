@@ -612,18 +612,17 @@ extension ConversationDataSource {
         let mediaSize = size(for: asset)
         message.mediaWidth = mediaSize.width
         message.mediaHeight = mediaSize.height
+        if asset.mediaType == .video {
+            message.mediaDuration = Int64(asset.duration * 1000)
+        }
         let thumbnailSize = CGSize(width: 64, height: 64)
         PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: ConversationDataSource.thumbnailRequestOptions) { (image, info) in
             if let image = image {
                 message.thumbImage = image.base64Thumbnail()
                 if assetMediaTypeIsImage {
-                    if let uti = info?["PHImageFileUTIKey"] as? String, let mime = UTTypeCopyPreferredTagWithClass(uti as CFString, kUTTagClassMIMEType)?.takeRetainedValue() {
-                        message.mediaMimeType = mime as String
-                    } else {
-                        // TODO: Can mime type be empty?
-                    }
+                    message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.jpeg.rawValue)
                 } else {
-                    message.mediaMimeType = FileManager.default.mimeType(ext: "mp4")
+                    message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.mp4.rawValue)
                 }
             }
         }

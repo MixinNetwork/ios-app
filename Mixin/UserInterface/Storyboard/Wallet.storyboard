@@ -1594,6 +1594,36 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="condition" id="OPQ-oZ-ZgT" customClass="AssetFilterConditionCell" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="35" width="122" height="48"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="122" height="48"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kFz-NV-4vC">
+                                                    <rect key="frame" x="18" y="12" width="86" height="24"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="kFz-NV-4vC" secondAttribute="trailing" constant="18" id="PlJ-xR-cTp"/>
+                                            <constraint firstItem="kFz-NV-4vC" firstAttribute="top" secondItem="OPQ-oZ-ZgT" secondAttribute="top" constant="12" id="U32-VX-FV1"/>
+                                            <constraint firstAttribute="bottom" secondItem="kFz-NV-4vC" secondAttribute="bottom" constant="12" id="emq-RQ-WHV"/>
+                                            <constraint firstItem="kFz-NV-4vC" firstAttribute="leading" secondItem="OPQ-oZ-ZgT" secondAttribute="leading" constant="18" id="yuP-pd-5Jw"/>
+                                        </constraints>
+                                        <viewLayoutGuide key="safeArea" id="8Ci-JG-bZd"/>
+                                        <size key="customSize" width="122" height="48"/>
+                                        <connections>
+                                            <outlet property="titleLabel" destination="kFz-NV-4vC" id="fzH-cU-1OU"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a0V-xJ-EfJ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="149" y="672" width="116" height="44"/>

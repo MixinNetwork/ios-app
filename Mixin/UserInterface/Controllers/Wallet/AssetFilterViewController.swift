@@ -23,7 +23,7 @@ class AssetFilterViewController: UIViewController {
     private lazy var sortDraft = sort
     private lazy var filterDraft = filter
     
-    private let cellReuseId = "cell"
+    private let cellReuseId = "condition"
     private let headerReuseId = "header"
     private let headers = [
         Localized.TRANSACTIONS_FILTER_SORT_BY,
@@ -49,8 +49,6 @@ class AssetFilterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.register(UINib(nibName: "TransactionsFilterConditionCell", bundle: .main),
-                                forCellWithReuseIdentifier: cellReuseId)
         collectionView.register(AssetFilterHeaderView.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: headerReuseId)
@@ -94,7 +92,7 @@ extension AssetFilterViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! TransactionsFilterConditionCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AssetFilterConditionCell
         cell.titleLabel.text = titles[indexPath.section][indexPath.row]
         return cell
     }

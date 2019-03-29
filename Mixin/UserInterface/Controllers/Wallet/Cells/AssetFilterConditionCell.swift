@@ -1,6 +1,6 @@
 import UIKit
 
-class TransactionsFilterConditionCell: UICollectionViewCell {
+class AssetFilterConditionCell: UICollectionViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     

@@ -23,16 +23,15 @@
                                 <rect key="frame" x="0.0" y="20" width="414" height="716"/>
                                 <color key="backgroundColor" red="0.98823529409999999" green="0.99215686270000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="wallet_header" rowHeight="169" id="ZSx-rD-maP" customClass="WalletHeaderCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="169"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZSx-rD-maP" id="F36-LN-Rge">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="169"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                <view key="tableHeaderView" contentMode="scaleToFill" id="73n-R1-UJs" customClass="WalletHeaderView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="159"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="4E6-iF-HlL">
+                                            <rect key="frame" x="0.0" y="11" width="414" height="148"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tQz-6B-PFb">
-                                                    <rect key="frame" x="0.0" y="11" width="414" height="143"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="133"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IHE-HM-Hdw">
                                                             <rect key="frame" x="143.66666666666666" y="0.0" width="126.99999999999997" height="40"/>
@@ -274,43 +273,41 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSv-5R-vXh" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="159" width="414" height="10"/>
+                                                    <rect key="frame" x="0.0" y="138" width="414" height="10"/>
                                                     <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="10" id="Y9V-rf-adB"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstItem="TSv-5R-vXh" firstAttribute="top" secondItem="tQz-6B-PFb" secondAttribute="bottom" constant="5" id="0OW-fP-8sx"/>
-                                                <constraint firstAttribute="trailing" secondItem="TSv-5R-vXh" secondAttribute="trailing" id="7wd-Z2-NRo"/>
-                                                <constraint firstItem="TSv-5R-vXh" firstAttribute="leading" secondItem="F36-LN-Rge" secondAttribute="leading" id="AjF-QQ-jp5"/>
-                                                <constraint firstItem="tQz-6B-PFb" firstAttribute="leading" secondItem="F36-LN-Rge" secondAttribute="leading" id="CVe-BX-ghs"/>
-                                                <constraint firstItem="tQz-6B-PFb" firstAttribute="top" secondItem="F36-LN-Rge" secondAttribute="top" constant="11" id="Pb5-PP-FTT"/>
-                                                <constraint firstAttribute="bottom" secondItem="TSv-5R-vXh" secondAttribute="bottom" id="eBh-wR-5wO"/>
-                                                <constraint firstAttribute="trailing" secondItem="tQz-6B-PFb" secondAttribute="trailing" id="juQ-ht-PHw"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <connections>
-                                            <outlet property="assetChartView" destination="VuY-Uo-TGR" id="jB0-dC-PuR"/>
-                                            <outlet property="assetChartWrapperView" destination="Y25-bj-M31" id="gN5-ra-tjG"/>
-                                            <outlet property="btcValueLabel" destination="7s3-8d-IEj" id="lfJ-dP-kiY"/>
-                                            <outlet property="leftAssetPercentLabel" destination="Tnh-04-JMO" id="3t6-sJ-d6F"/>
-                                            <outlet property="leftAssetSymbolLabel" destination="77V-eY-DVx" id="xo7-FG-tPe"/>
-                                            <outlet property="leftAssetWrapperView" destination="chb-gd-S2I" id="5cm-cZ-fF0"/>
-                                            <outlet property="middleAssetPercentLabel" destination="gbE-kR-GOQ" id="wga-Nn-6NC"/>
-                                            <outlet property="middleAssetSymbolLabel" destination="39J-2W-ONo" id="pLi-k7-fr3"/>
-                                            <outlet property="middleAssetWrapperView" destination="aaj-k5-qhL" id="Cml-4z-D93"/>
-                                            <outlet property="rightAssetPercentLabel" destination="Bdz-eK-Rbu" id="U53-Km-3xs"/>
-                                            <outlet property="rightAssetSymbolLabel" destination="laD-AH-fHv" id="qbK-4J-G4x"/>
-                                            <outlet property="rightAssetWrapperView" destination="ZVj-xN-Q6p" id="Kk7-TM-8NY"/>
-                                            <outlet property="usdValueLabel" destination="eGd-qQ-SHD" id="gNH-Ga-gLl"/>
-                                        </connections>
-                                    </tableViewCell>
+                                        </stackView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstItem="4E6-iF-HlL" firstAttribute="leading" secondItem="73n-R1-UJs" secondAttribute="leading" id="8mo-yl-neT"/>
+                                        <constraint firstAttribute="trailing" secondItem="4E6-iF-HlL" secondAttribute="trailing" id="PLr-x7-zX7"/>
+                                        <constraint firstAttribute="bottom" secondItem="4E6-iF-HlL" secondAttribute="bottom" id="VBf-Lg-6Sv"/>
+                                        <constraint firstItem="4E6-iF-HlL" firstAttribute="top" secondItem="73n-R1-UJs" secondAttribute="top" constant="11" id="rbK-9T-QMv"/>
+                                    </constraints>
+                                    <connections>
+                                        <outlet property="assetChartView" destination="VuY-Uo-TGR" id="0sY-mx-MT0"/>
+                                        <outlet property="assetChartWrapperView" destination="Y25-bj-M31" id="Qav-Si-efh"/>
+                                        <outlet property="btcValueLabel" destination="7s3-8d-IEj" id="h9n-hD-GLH"/>
+                                        <outlet property="leftAssetPercentLabel" destination="Tnh-04-JMO" id="yXX-OA-Y1S"/>
+                                        <outlet property="leftAssetSymbolLabel" destination="77V-eY-DVx" id="810-BD-aOn"/>
+                                        <outlet property="leftAssetWrapperView" destination="chb-gd-S2I" id="tGx-Wn-BSk"/>
+                                        <outlet property="middleAssetPercentLabel" destination="gbE-kR-GOQ" id="tSV-zM-AUI"/>
+                                        <outlet property="middleAssetSymbolLabel" destination="39J-2W-ONo" id="nn1-z0-a6B"/>
+                                        <outlet property="middleAssetWrapperView" destination="aaj-k5-qhL" id="jsW-a0-Bpf"/>
+                                        <outlet property="rightAssetPercentLabel" destination="Bdz-eK-Rbu" id="QUF-md-uQw"/>
+                                        <outlet property="rightAssetSymbolLabel" destination="laD-AH-fHv" id="xiL-Na-eLL"/>
+                                        <outlet property="rightAssetWrapperView" destination="ZVj-xN-Q6p" id="1RB-Sd-da7"/>
+                                        <outlet property="usdValueLabel" destination="eGd-qQ-SHD" id="jiK-m0-S7P"/>
+                                    </connections>
+                                </view>
+                                <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="wallet_add_asset" rowHeight="74" id="wP8-IX-wyz">
-                                        <rect key="frame" x="0.0" y="197" width="414" height="74"/>
+                                        <rect key="frame" x="0.0" y="187" width="414" height="74"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wP8-IX-wyz" id="qHV-Uw-RMg">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
@@ -355,6 +352,7 @@
                         <viewLayoutGuide key="safeArea" id="Vuf-zQ-qkL"/>
                     </view>
                     <connections>
+                        <outlet property="tableHeaderView" destination="73n-R1-UJs" id="G38-hc-1IL"/>
                         <outlet property="tableView" destination="1Bd-So-GRm" id="BUc-PE-YEc"/>
                     </connections>
                 </viewController>

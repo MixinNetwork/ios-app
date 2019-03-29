@@ -1,6 +1,6 @@
 import UIKit
 
-class WalletHeaderCell: UITableViewCell {
+class WalletHeaderView: UIView {
     
     @IBOutlet weak var usdValueLabel: InsetLabel!
     @IBOutlet weak var btcValueLabel: UILabel!
@@ -28,13 +28,15 @@ class WalletHeaderCell: UITableViewCell {
         .kern: 0.7
     ]
     
-    static func height(usdBalanceIsMoreThanZero: Bool) -> CGFloat {
-        return usdBalanceIsMoreThanZero ? 159 : 107
-    }
+    private var contentHeight: CGFloat = 159
     
     override func awakeFromNib() {
         super.awakeFromNib()
         usdValueLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return CGSize(width: size.width, height: contentHeight)
     }
     
     func render(assets: [AssetItem]) {
@@ -57,12 +59,13 @@ class WalletHeaderCell: UITableViewCell {
                 }
             }
         }
-        
+        let usdBalanceIsMoreThanZero = usdTotalBalance > 0
+        contentHeight = usdBalanceIsMoreThanZero ? 159 : 107
         usdValueLabel.attributedText = attributedString(usdBalance: usdTotalBalance)
         let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
         let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)
         btcValueLabel.attributedText = attributedBTCValue
-        assetChartWrapperView.isHidden = usdTotalBalance <= 0
+        assetChartWrapperView.isHidden = !usdBalanceIsMoreThanZero
         switch assetPortions.count {
         case 0:
             break
@@ -103,7 +106,7 @@ class WalletHeaderCell: UITableViewCell {
     
 }
 
-extension WalletHeaderCell {
+extension WalletHeaderView {
     
     struct AssetPortion {
         var symbol: String

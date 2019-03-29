@@ -12,14 +12,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="9ff-tm-kfn" customClass="AuthorizationScopeCell" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="62"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9ff-tm-kfn" id="4sW-gF-15f">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="61.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zeM-fe-8RW" customClass="CheckmarkView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="8" y="14" width="16" height="16"/>
+                        <rect key="frame" x="8" y="23" width="16" height="16"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="9vU-Ju-fSM"/>
@@ -27,10 +27,10 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Q1f-CZ-nJG">
-                        <rect key="frame" x="40" y="1.5" width="112" height="40.5"/>
+                        <rect key="frame" x="40" y="10" width="319" height="41.5"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cw4-vf-0RO">
-                                <rect key="frame" x="0.0" y="0.0" width="112" height="19.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Phone number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cw4-vf-0RO">
+                                <rect key="frame" x="0.0" y="0.0" width="319" height="19.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -38,8 +38,8 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="auth_permission_phone"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+8613811821337" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ke7-iE-QeS">
-                                <rect key="frame" x="0.0" y="23.5" width="112" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+8613811821337" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ke7-iE-QeS">
+                                <rect key="frame" x="0.0" y="23.5" width="319" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -48,9 +48,11 @@
                     </stackView>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="Q1f-CZ-nJG" secondAttribute="bottom" constant="10" id="3qI-vv-C0E"/>
                     <constraint firstItem="Q1f-CZ-nJG" firstAttribute="leading" secondItem="zeM-fe-8RW" secondAttribute="trailing" constant="16" id="8dX-dy-7WX"/>
+                    <constraint firstItem="Q1f-CZ-nJG" firstAttribute="top" secondItem="4sW-gF-15f" secondAttribute="top" constant="10" id="ElU-hK-Dvd"/>
                     <constraint firstItem="zeM-fe-8RW" firstAttribute="centerY" secondItem="4sW-gF-15f" secondAttribute="centerY" id="F62-Tw-PFv"/>
-                    <constraint firstItem="Q1f-CZ-nJG" firstAttribute="centerY" secondItem="4sW-gF-15f" secondAttribute="centerY" id="kEp-v6-vei"/>
+                    <constraint firstAttribute="trailing" secondItem="Q1f-CZ-nJG" secondAttribute="trailing" constant="16" id="npR-oR-bbM"/>
                     <constraint firstItem="zeM-fe-8RW" firstAttribute="leading" secondItem="4sW-gF-15f" secondAttribute="leading" constant="8" id="sDH-1n-ZyN"/>
                 </constraints>
             </tableViewCellContentView>

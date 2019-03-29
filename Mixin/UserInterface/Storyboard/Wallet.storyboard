@@ -21,7 +21,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1Bd-So-GRm">
                                 <rect key="frame" x="0.0" y="20" width="414" height="716"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.98823529409999999" green="0.99215686270000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="wallet_header" rowHeight="169" id="ZSx-rD-maP" customClass="WalletHeaderCell" customModule="Mixin" customModuleProvider="target">
@@ -404,7 +404,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="67" estimatedRowHeight="67" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="n3U-Zp-vXX">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="f6H-FD-FE2">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="190"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1873,7 +1873,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="none" rowHeight="64" estimatedRowHeight="64" sectionHeaderHeight="18" sectionFooterHeight="-1" id="tFp-9C-nzK">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.98823529409999999" green="0.99215686270000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
                             <tableViewSection id="ekt-s0-3Oh">
                                 <cells>

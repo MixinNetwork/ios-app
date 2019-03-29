@@ -27,6 +27,10 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
         addressTextView.delegate = self
         addressTextView.textContainerInset = .zero
         addressTextView.textContainer.lineFragmentPadding = 0
+        if ScreenSize.current >= .inch6_1 {
+            assetView.chainIconWidth = 28
+            assetView.chainIconOutlineWidth = 4
+        }
         assetView.setIcon(asset: asset)
         if let address = address {
             if asset.isAccount {

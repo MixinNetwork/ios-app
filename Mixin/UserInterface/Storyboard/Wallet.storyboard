@@ -415,7 +415,16 @@
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0iU-Qh-8sq" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="152" y="0.0" width="70" height="70"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="70" id="2CV-rN-gIY"/>
+                                                        <constraint firstAttribute="width" constant="70" id="2CV-rN-gIY" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="inch6_1">
+                                                                    <real key="value" value="90"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="inch6_5">
+                                                                    <real key="value" value="90"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </constraint>
                                                         <constraint firstAttribute="width" secondItem="0iU-Qh-8sq" secondAttribute="height" id="IOf-7I-OaN"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
@@ -528,6 +537,8 @@
                     <connections>
                         <outlet property="amountLabel" destination="hy0-UM-G0M" id="sDe-VT-obR"/>
                         <outlet property="avatarImageView" destination="0iU-Qh-8sq" id="JYV-ll-5cc"/>
+                        <outlet property="avatarImageViewWidthConstraint" destination="2CV-rN-gIY" id="bv8-HB-pRw"/>
+                        <outlet property="headerContentStackView" destination="X9m-wq-bBJ" id="Sud-Ho-ph3"/>
                         <outlet property="symbolLabel" destination="Ptc-MK-Zp1" id="wTk-bs-OjE"/>
                         <outlet property="tableView" destination="n3U-Zp-vXX" id="9Zs-Ac-nU6"/>
                         <outlet property="usdValueLabel" destination="35Q-tB-pB9" id="I8E-Pt-pfZ"/>
@@ -1260,8 +1271,17 @@
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0iq-4M-Kbs" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="172" y="16" width="70" height="70"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="70" id="U0O-MM-GZ9"/>
-                                                    <constraint firstAttribute="height" constant="70" id="oT8-iv-x1f"/>
+                                                    <constraint firstAttribute="width" constant="70" id="U0O-MM-GZ9" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="inch6_1">
+                                                                <real key="value" value="90"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="inch6_5">
+                                                                <real key="value" value="90"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </constraint>
+                                                    <constraint firstAttribute="width" secondItem="0iq-4M-Kbs" secondAttribute="height" multiplier="1:1" id="Vv2-Qw-s86"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1434,9 +1454,27 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="aDo-Kz-cwh" secondAttribute="trailing" constant="20" id="27j-uz-qeN"/>
-                                            <constraint firstItem="aDo-Kz-cwh" firstAttribute="top" secondItem="0iq-4M-Kbs" secondAttribute="bottom" constant="12" id="G7t-AH-zfa"/>
+                                            <constraint firstItem="aDo-Kz-cwh" firstAttribute="top" secondItem="0iq-4M-Kbs" secondAttribute="bottom" constant="12" id="G7t-AH-zfa" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="inch6_1">
+                                                        <real key="value" value="24"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="inch6_5">
+                                                        <real key="value" value="24"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </constraint>
                                             <constraint firstItem="0iq-4M-Kbs" firstAttribute="centerX" secondItem="FaS-Hc-TI7" secondAttribute="centerX" id="bWc-TW-ynW"/>
-                                            <constraint firstItem="0iq-4M-Kbs" firstAttribute="top" secondItem="FaS-Hc-TI7" secondAttribute="top" constant="16" id="cIW-Gt-daN"/>
+                                            <constraint firstItem="0iq-4M-Kbs" firstAttribute="top" secondItem="FaS-Hc-TI7" secondAttribute="top" constant="16" id="cIW-Gt-daN" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="inch6_1">
+                                                        <real key="value" value="28"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="inch6_5">
+                                                        <real key="value" value="28"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </constraint>
                                             <constraint firstItem="aDo-Kz-cwh" firstAttribute="leading" secondItem="FaS-Hc-TI7" secondAttribute="leading" constant="20" id="ftX-4Q-v10"/>
                                             <constraint firstAttribute="bottom" secondItem="aDo-Kz-cwh" secondAttribute="bottom" id="v6q-wh-X84"/>
                                         </constraints>
@@ -1500,6 +1538,7 @@
                         <outlet property="continueWrapperView" destination="DnA-iJ-ZZt" id="Afl-Hl-smf"/>
                         <outlet property="memoTextField" destination="Teg-Ls-XtU" id="O1M-H0-eEw"/>
                         <outlet property="opponentImageView" destination="0iq-4M-Kbs" id="m2F-PU-LyB"/>
+                        <outlet property="opponentImageViewWidthConstraint" destination="U0O-MM-GZ9" id="g8e-Tj-gdR"/>
                         <outlet property="scrollView" destination="jqX-Er-b77" id="Wj3-1z-xd6"/>
                         <outlet property="switchAmountButton" destination="qOt-U1-LPb" id="xSj-LY-LaI"/>
                         <outlet property="switchAssetButton" destination="qRn-bb-fSw" id="jJQ-Yc-Sqd"/>
@@ -1621,6 +1660,12 @@
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="inch4">
                                                 <real key="value" value="44"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="inch6_1">
+                                                <real key="value" value="90"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="inch6_5">
+                                                <real key="value" value="90"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </constraint>
@@ -1751,7 +1796,16 @@
                         <constraints>
                             <constraint firstItem="R3u-pr-XSM" firstAttribute="trailing" secondItem="YQt-Xa-3iJ" secondAttribute="trailing" constant="20" id="DvS-Ok-qCh"/>
                             <constraint firstItem="GDb-9S-roL" firstAttribute="centerX" secondItem="R3u-pr-XSM" secondAttribute="centerX" id="IuT-3f-Hqd"/>
-                            <constraint firstItem="eqP-lO-xVp" firstAttribute="top" secondItem="GDb-9S-roL" secondAttribute="bottom" constant="12" id="LSS-os-1vm"/>
+                            <constraint firstItem="eqP-lO-xVp" firstAttribute="top" secondItem="GDb-9S-roL" secondAttribute="bottom" constant="12" id="LSS-os-1vm" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch6_1">
+                                        <real key="value" value="24"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch6_5">
+                                        <real key="value" value="24"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </constraint>
                             <constraint firstItem="TRT-sP-ikP" firstAttribute="top" relation="greaterThanOrEqual" secondItem="YQt-Xa-3iJ" secondAttribute="bottom" constant="20" id="SKy-QE-uSf" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
@@ -1770,6 +1824,12 @@
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="inch4">
                                         <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch6_1">
+                                        <real key="value" value="28"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="inch6_5">
+                                        <real key="value" value="28"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </constraint>

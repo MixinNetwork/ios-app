@@ -3,10 +3,13 @@ import UIKit
 class TransactionViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var headerContentStackView: UIStackView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var usdValueLabel: UILabel!
+    
+    @IBOutlet weak var avatarImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     
     private let cellReuseId = "cell"
     
@@ -16,6 +19,11 @@ class TransactionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        avatarImageView.cornerRadius = avatarImageViewWidthConstraint.constant / 2
+        if ScreenSize.current >= .inch6_1 {
+            tableView.tableHeaderView?.frame.size.height = 210
+            headerContentStackView.spacing = 5
+        }
         view.layoutIfNeeded()
         symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
         if snapshot.type == SnapshotType.transfer.rawValue, let userId = snapshot.opponentUserId, let name = snapshot.opponentUserFullName {

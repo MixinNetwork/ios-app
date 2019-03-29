@@ -3,6 +3,7 @@ import UIKit
 class KeyboardBasedLayoutViewController: UIViewController {
     
     private(set) var viewHasAppeared = false
+    private(set) var viewIsDisappearing = false
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -13,13 +14,26 @@ class KeyboardBasedLayoutViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewIsDisappearing = false
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         viewHasAppeared = true
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewIsDisappearing = true
+    }
+    
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+            return
+        }
+        guard !viewIsDisappearing else {
             return
         }
         if viewHasAppeared {

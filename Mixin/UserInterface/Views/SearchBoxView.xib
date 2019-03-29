@@ -19,7 +19,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
             <subviews>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="tjo-zD-yNg" customClass="SearchTextField" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="18" y="0.0" width="345" height="40"/>
+                    <rect key="frame" x="20" y="0.0" width="343" height="40"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -31,7 +31,7 @@
                 <constraint firstItem="tjo-zD-yNg" firstAttribute="top" secondItem="PuW-kr-XkV" secondAttribute="top" id="8hL-8n-2a1"/>
                 <constraint firstAttribute="trailing" secondItem="tjo-zD-yNg" secondAttribute="trailing" constant="12" id="FxQ-oU-xJH"/>
                 <constraint firstAttribute="bottom" secondItem="tjo-zD-yNg" secondAttribute="bottom" id="J9k-9H-Br8"/>
-                <constraint firstItem="tjo-zD-yNg" firstAttribute="leading" secondItem="PuW-kr-XkV" secondAttribute="leading" constant="18" id="QTh-d0-t2d"/>
+                <constraint firstItem="tjo-zD-yNg" firstAttribute="leading" secondItem="PuW-kr-XkV" secondAttribute="leading" constant="20" id="QTh-d0-t2d"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <userDefinedRuntimeAttributes>

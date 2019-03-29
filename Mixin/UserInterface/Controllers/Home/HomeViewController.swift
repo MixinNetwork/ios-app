@@ -283,7 +283,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             conversation.pinTime = nil
             ConversationDAO.shared.updateConversationPinTime(conversationId: conversation.conversationId, pinTime: nil)
             conversations.remove(at: indexPath.row)
-            destinationIndex = conversations.index(where: { $0.createdAt < conversation.createdAt }) ?? conversations.count
+            destinationIndex = conversations.index(where: { $0.pinTime == nil && $0.createdAt < conversation.createdAt }) ?? conversations.count
         }
         conversations.insert(conversation, at: destinationIndex)
         let destinationIndexPath = IndexPath(row: destinationIndex, section: 0)

@@ -1210,6 +1210,19 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ep-Xb-7bV">
+                                <rect key="frame" x="142.66666666666666" y="358.66666666666669" width="128.99999999999997" height="39"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <inset key="contentEdgeInsets" minX="20" minY="11" maxX="14" maxY="11"/>
+                                <inset key="imageEdgeInsets" minX="-6" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="Add Address" image="Wallet/ic_add"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="address_book_add_address"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="newAddressAction" destination="BzP-HA-vT0" eventType="touchUpInside" id="2Ck-Dr-uaP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -1217,6 +1230,8 @@
                             <constraint firstItem="2gW-rd-zVj" firstAttribute="leading" secondItem="NyR-P2-fTG" secondAttribute="leading" id="1Ka-aG-M1E"/>
                             <constraint firstItem="2gW-rd-zVj" firstAttribute="top" secondItem="99P-Xn-eow" secondAttribute="bottom" constant="25" id="9WT-h1-pqr"/>
                             <constraint firstItem="99P-Xn-eow" firstAttribute="leading" secondItem="NyR-P2-fTG" secondAttribute="leading" constant="20" id="BXD-f6-b3E"/>
+                            <constraint firstItem="6ep-Xb-7bV" firstAttribute="centerY" secondItem="NyR-P2-fTG" secondAttribute="centerY" id="LPw-VI-tCX"/>
+                            <constraint firstItem="6ep-Xb-7bV" firstAttribute="centerX" secondItem="NyR-P2-fTG" secondAttribute="centerX" id="agW-On-Va1"/>
                             <constraint firstItem="NyR-P2-fTG" firstAttribute="trailing" secondItem="99P-Xn-eow" secondAttribute="trailing" constant="20" id="h94-Te-bPb"/>
                             <constraint firstItem="99P-Xn-eow" firstAttribute="top" secondItem="NyR-P2-fTG" secondAttribute="top" constant="20" id="iRW-Fx-HUV"/>
                             <constraint firstItem="2gW-rd-zVj" firstAttribute="trailing" secondItem="NyR-P2-fTG" secondAttribute="trailing" id="z93-GC-GYR"/>
@@ -1225,6 +1240,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="tTZ-Rf-5w9"/>
                     <connections>
+                        <outlet property="newAddressButton" destination="6ep-Xb-7bV" id="F1L-T1-8DA"/>
                         <outlet property="searchBoxView" destination="99P-Xn-eow" id="TZ2-4j-b2l"/>
                         <outlet property="tableView" destination="2gW-rd-zVj" id="3b4-6b-4aZ"/>
                     </connections>

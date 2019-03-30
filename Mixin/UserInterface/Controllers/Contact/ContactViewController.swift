@@ -19,8 +19,6 @@ class ContactViewController: UITableViewController {
     private var phoneContacts = [[PhoneContact]]()
     private var phoneContactSectionTitles = [String]()
     
-    private lazy var myQRCodeWindow = QrcodeWindow.instance()
-    private lazy var receiveMoneyWindow = QrcodeWindow.instance()
     private lazy var userWindow = UserWindow.instance()
     
     private var isPhoneContactAuthorized: Bool {
@@ -60,30 +58,6 @@ class ContactViewController: UITableViewController {
         }
         userWindow.updateUser(user: UserItem.createUser(from: account))
         userWindow.presentView()
-    }
-    
-    @IBAction func receiveMoneyAction(_ sender: Any) {
-        guard let account = AccountAPI.shared.account else {
-            return
-        }
-        receiveMoneyWindow.render(title: Localized.CONTACT_RECEIVE_MONEY,
-                                  account: account,
-                                  description: Localized.TRANSFER_QRCODE_PROMPT,
-                                  qrcode: "mixin://transfer/\(account.user_id)",
-            rightMark: R.image.ic_receive_money())
-        receiveMoneyWindow.presentView()
-    }
-    
-    @IBAction func myQrCodeAction(_ sender: Any) {
-        guard let account = AccountAPI.shared.account else {
-            return
-        }
-        myQRCodeWindow.render(title: Localized.CONTACT_MY_QR_CODE,
-                              account: account,
-                              description: Localized.MYQRCODE_PROMPT,
-                              qrcode: account.code_url,
-                              qrcodeForegroundColor: UIColor.systemTint)
-        myQRCodeWindow.presentView()
     }
     
     @IBAction func newGroupAction(_ sender: Any) {

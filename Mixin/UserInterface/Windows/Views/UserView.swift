@@ -15,7 +15,7 @@ class UserView: CornerView {
     @IBOutlet weak var descriptionScrollView: UIScrollView!
     @IBOutlet weak var descriptionLabel: CollapsingLabel!
     @IBOutlet weak var editNameButton: UIButton!
-    @IBOutlet weak var changeAvatarButton: UIButton!
+    @IBOutlet weak var qrcodeButton: UIButton!
     @IBOutlet weak var openAppButton: UIButton!
     @IBOutlet weak var transferButton: UIButton!
     @IBOutlet weak var sendButton: UIButton!
@@ -44,6 +44,7 @@ class UserView: CornerView {
         return vc
     }()
     private lazy var avatarPicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: UIApplication.currentActivity()!, delegate: self)
+    private lazy var qrcodeWindow = QrcodeWindow.instance()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -106,14 +107,14 @@ class UserView: CornerView {
 
         if isMe {
             editNameButton.isHidden = false
-            changeAvatarButton.isHidden = false
+            qrcodeButton.isHidden = false
             transferButton.isHidden = true
             addContactButton.isHidden = true
             openAppButton.isHidden = true
             sendButton.isHidden = true
         } else {
             editNameButton.isHidden = true
-            changeAvatarButton.isHidden = true
+            qrcodeButton.isHidden = true
             
             if refreshUser {
                 UserAPI.shared.showUser(userId: user.userId) { [weak self](result) in
@@ -267,6 +268,20 @@ class UserView: CornerView {
     @IBAction func changeMyAvatarAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         changeProfilePhoto()
+    }
+
+    @IBAction func qrcodeAction(_ sender: Any) {
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        superView?.dismissPopupControllerAnimated()
+
+        qrcodeWindow.render(title: Localized.CONTACT_MY_QR_CODE,
+                      account: account,
+                      description: Localized.MYQRCODE_PROMPT,
+                      qrcode: account.code_url,
+                      qrcodeForegroundColor: UIColor.systemTint)
+        qrcodeWindow.presentView()
     }
 
     private func developerAction() {

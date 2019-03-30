@@ -147,20 +147,20 @@
                 <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Tvr-3M-1aD">
                     <rect key="frame" x="63" y="285" width="288" height="68"/>
                     <subviews>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lrk-mU-vas">
+                            <rect key="frame" x="0.0" y="16" width="0.0" height="36"/>
+                            <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                            <state key="normal" image="ic_group_link_code"/>
+                            <connections>
+                                <action selector="qrcodeAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="DqD-Qp-VpZ"/>
+                            </connections>
+                        </button>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R1b-NZ-Ak0">
                             <rect key="frame" x="0.0" y="12" width="0.0" height="44"/>
                             <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                             <state key="normal" image="ic_edit_name"/>
                             <connections>
                                 <action selector="editMyNameAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="Hmd-JF-jzM"/>
-                            </connections>
-                        </button>
-                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lrk-mU-vas">
-                            <rect key="frame" x="0.0" y="12" width="0.0" height="44"/>
-                            <inset key="contentEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
-                            <state key="normal" image="ic_change_avatar"/>
-                            <connections>
-                                <action selector="changeMyAvatarAction:" destination="VIH-5N-txF" eventType="touchUpInside" id="2Mf-RQ-Ni9"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aFr-aK-zbi">
@@ -251,7 +251,6 @@
             <connections>
                 <outlet property="addContactButton" destination="A39-6A-pfT" id="fI2-RY-2hh"/>
                 <outlet property="avatarImageView" destination="Iu9-go-9Om" id="6Ay-vA-mAi"/>
-                <outlet property="changeAvatarButton" destination="Lrk-mU-vas" id="7ZO-aP-tjw"/>
                 <outlet property="descriptionLabel" destination="Rbl-cu-9jj" id="gAf-OX-FE4"/>
                 <outlet property="descriptionScrollView" destination="syg-ya-iZc" id="6QZ-Au-x12"/>
                 <outlet property="descriptionScrollViewBottomConstraint" destination="Za6-y9-4ZT" id="lj9-PO-yWm"/>
@@ -262,6 +261,7 @@
                 <outlet property="idLabel" destination="CTg-iC-2aR" id="joZ-a6-ogY"/>
                 <outlet property="moreButton" destination="i6u-Sj-8sl" id="AWS-rm-Jak"/>
                 <outlet property="openAppButton" destination="aFr-aK-zbi" id="WKE-03-P1i"/>
+                <outlet property="qrcodeButton" destination="Lrk-mU-vas" id="OWV-Zj-bkU"/>
                 <outlet property="relationWrapperView" destination="mMh-Qj-bOy" id="rtb-Of-yVX"/>
                 <outlet property="sendButton" destination="Mdx-JU-EIZ" id="Lh7-8Y-33Y"/>
                 <outlet property="showRelationWrapperDescriptionTopConstraint" destination="QR6-tc-7Ms" id="I4K-vE-tdD"/>
@@ -273,9 +273,9 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_change_avatar" width="30" height="30"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_edit_name" width="30" height="30"/>
+        <image name="ic_group_link_code" width="22" height="21"/>
         <image name="ic_more" width="30" height="30"/>
         <image name="ic_open_app" width="26" height="22"/>
         <image name="ic_place_holder" width="38" height="38"/>

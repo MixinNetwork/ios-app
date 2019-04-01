@@ -165,7 +165,7 @@ class HomeViewController: UIViewController {
             }
             connectingView.stopAnimating()
             connectingView.isHidden = true
-            titleLabel.text = Localized.HOME_TITLE
+            titleLabel.text = "Mixin"
         } else {
             guard connectingView.isHidden else {
                 return
@@ -184,7 +184,7 @@ class HomeViewController: UIViewController {
             return
         }
         if progress >= 100 {
-            titleLabel.text = Localized.HOME_TITLE
+            titleLabel.text = "Mixin"
             connectingView.stopAnimating()
             connectingView.isHidden = true
         } else {

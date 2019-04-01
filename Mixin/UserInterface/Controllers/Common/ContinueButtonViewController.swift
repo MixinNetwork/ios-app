@@ -13,7 +13,7 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         continueButton.isHidden = true
-        continueButton.busyIndicator.style = .white
+        continueButton.busyIndicator.tintColor = .white
         continueButton.busyIndicator.backgroundColor = .theme
         continueButton.busyIndicator.clipsToBounds = true
         continueButton.busyIndicator.layer.cornerRadius = continueButtonLength / 2

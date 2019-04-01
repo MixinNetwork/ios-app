@@ -3,7 +3,7 @@ import UIKit
 class DesktopViewController: UITableViewController {
     
     @IBOutlet weak var actionCell: UITableViewCell!
-    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var indicatorView: ActivityIndicatorView!
     @IBOutlet weak var actionLabel: UILabel!
     @IBOutlet weak var footerLabel: UILabel!
     
@@ -44,8 +44,7 @@ class DesktopViewController: UITableViewController {
     private func layoutForIsLoading(_ isLoading: Bool) {
         actionCell.isUserInteractionEnabled = !isLoading
         actionLabel.isHidden = isLoading
-        isLoading ? indicatorView.startAnimating() : indicatorView.stopAnimating()
-        indicatorView.isHidden = !isLoading
+        indicatorView.isAnimating = isLoading
     }
     
     private func updateLabels() {

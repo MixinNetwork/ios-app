@@ -6,7 +6,7 @@ class PinValidationViewController: UIViewController {
     typealias FailedCallback = (() -> Void)
     
     @IBOutlet weak var pinField: PinField!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var loadingIndicator: ActivityIndicatorView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var limitationHintView: UIView!
     @IBOutlet weak var numberPadView: NumberPadView!

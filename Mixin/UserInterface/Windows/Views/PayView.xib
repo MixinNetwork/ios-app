@@ -232,14 +232,20 @@
                                 </constraint>
                             </constraints>
                         </imageView>
-                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="4Uy-ZM-9QU">
+                        <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Uy-ZM-9QU" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="171.5" y="30" width="32" height="32"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="0KQ-si-YoN"/>
                                 <constraint firstAttribute="width" constant="32" id="Ong-nQ-lTe"/>
                             </constraints>
-                            <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        </activityIndicatorView>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="NO"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
+                            </userDefinedRuntimeAttributes>
+                        </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Done" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JaH-Vt-pAi">
                             <rect key="frame" x="172.5" y="78" width="30" height="14.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>

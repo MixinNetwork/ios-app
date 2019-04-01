@@ -627,11 +627,16 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="B6s-SV-OHw">
+                            <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="B6s-SV-OHw" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="94" width="414" height="514"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="color" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </activityIndicatorView>
+                                <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uNc-M9-sRf">
                                 <rect key="frame" x="0.0" y="94" width="414" height="514"/>
                                 <subviews>
@@ -1025,14 +1030,14 @@
                                                             <action selector="pinEditingChangedAction:" destination="iRq-ax-N20" eventType="editingChanged" id="NEP-yq-vNs"/>
                                                         </connections>
                                                     </view>
-                                                    <activityIndicatorView hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="LW7-8N-8a1">
+                                                    <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LW7-8N-8a1" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                                                         <rect key="frame" x="195" y="43" width="24" height="24"/>
+                                                        <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="24" id="zee-O4-Bru"/>
                                                             <constraint firstAttribute="width" constant="24" id="zse-64-zAB"/>
                                                         </constraints>
-                                                        <color key="color" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </activityIndicatorView>
+                                                    </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="You'll be asked for it periodically to help you remember it." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AC3-tR-Gzi" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
                                                         <rect key="frame" x="30" y="90" width="354" height="33.666666666666657"/>
                                                         <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>

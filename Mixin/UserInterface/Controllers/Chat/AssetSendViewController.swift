@@ -106,7 +106,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
 
     private func loadAsset(asset: AVAsset, thumbnail: UIImage?) {
-        self.sendButton.activityIndicator.style = .white
+        self.sendButton.activityIndicator.tintColor = .white
         self.videoAsset = asset
         self.playButton.isHidden = false
         self.videoView.isHidden = false

@@ -6,12 +6,12 @@ class LoginContinueButton: StateResponsiveButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        activityIndicator.style = .white
+        activityIndicator.tintColor = .white
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        activityIndicator.style = .white
+        activityIndicator.tintColor = .white
     }
     
     override var intrinsicContentSize: CGSize {

@@ -114,6 +114,7 @@
 		7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */; };
 		7B45A51C2189F28E0008F894 /* call.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* call.caf */; };
 		7B481A022020712000843B1D /* HorizontalSingleLineFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B481A012020712000843B1D /* HorizontalSingleLineFlowLayout.swift */; };
+		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
 		7B4A430620AC9ABA007D6936 /* GalleryVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */; };
 		7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1125205B8D380074BF60 /* AddressCell.swift */; };
 		7B4D112A205BA64B0074BF60 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1129205BA64B0074BF60 /* Address.swift */; };
@@ -737,6 +738,7 @@
 		7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterConditionCell.swift; sourceTree = "<group>"; };
 		7B45A51B2189F28A0008F894 /* call.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = call.caf; sourceTree = "<group>"; };
 		7B481A012020712000843B1D /* HorizontalSingleLineFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalSingleLineFlowLayout.swift; sourceTree = "<group>"; };
+		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7B4A430520AC9ABA007D6936 /* GalleryVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryVideoView.swift; sourceTree = "<group>"; };
 		7B4D1125205B8D380074BF60 /* AddressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressCell.swift; sourceTree = "<group>"; };
 		7B4D1129205BA64B0074BF60 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
@@ -2070,6 +2072,7 @@
 				7BF0E07B221ABE050053040D /* AssetIconView.swift */,
 				7B95534222438ECD00CE95E6 /* TopRoundedView.swift */,
 				7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */,
+				7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3119,6 +3122,7 @@
 				DF68F1862014CF5E001C4225 /* StickerAPI.swift in Sources */,
 				DF68F1842014CEAB001C4225 /* RefreshStickerJob.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
+				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
 				DF03C8611FF2C1EF00C1ED6B /* RatchetSenderKeyDAO.swift in Sources */,
 				7B4D112C205BC9160074BF60 /* AddressDAO.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,

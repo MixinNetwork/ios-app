@@ -13,7 +13,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var bottomNavView: UIView!
     @IBOutlet weak var cameraButton: BouncingButton!
     @IBOutlet weak var qrcodeImageView: UIImageView!
-    @IBOutlet weak var connectingView: UIActivityIndicatorView!
+    @IBOutlet weak var connectingView: ActivityIndicatorView!
     @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var bottomNavConstraint: NSLayoutConstraint!
@@ -49,7 +49,6 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        connectingView.isHidden = true
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "ConversationCell", bundle: nil), forCellReuseIdentifier: ConversationCell.cellIdentifier)
@@ -160,18 +159,10 @@ class HomeViewController: UIViewController {
 
     @objc func socketStatusChange(_ sender: Any) {
         if WebSocketService.shared.connected {
-            guard !connectingView.isHidden else {
-                return
-            }
             connectingView.stopAnimating()
-            connectingView.isHidden = true
             titleLabel.text = "Mixin"
         } else {
-            guard connectingView.isHidden else {
-                return
-            }
             connectingView.startAnimating()
-            connectingView.isHidden = false
             titleLabel.text = R.string.localizable.dialog_progress_connect()
         }
     }
@@ -186,14 +177,9 @@ class HomeViewController: UIViewController {
         if progress >= 100 {
             titleLabel.text = "Mixin"
             connectingView.stopAnimating()
-            connectingView.isHidden = true
         } else {
             titleLabel.text = Localized.CONNECTION_HINT_PROGRESS(progress)
-            guard connectingView.isHidden else {
-                return
-            }
             connectingView.startAnimating()
-            connectingView.isHidden = false
         }
     }
 

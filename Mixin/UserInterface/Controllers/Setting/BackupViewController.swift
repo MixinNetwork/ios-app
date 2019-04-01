@@ -6,7 +6,7 @@ class BackupViewController: UITableViewController {
     @IBOutlet weak var switchIncludeFiles: UISwitch!
     @IBOutlet weak var switchIncludeVideos: UISwitch!
     @IBOutlet weak var categoryLabel: UILabel!
-    @IBOutlet weak var backupIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var backupIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var backupLabel: UILabel!
     
     private let footerReuseId = "footer"
@@ -84,7 +84,6 @@ class BackupViewController: UITableViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.reloadActionSectionFooterLabel()
             self.backupIndicatorView.stopAnimating()
-            self.backupIndicatorView.isHidden = true
             self.backupLabel.text = Localized.SETTING_BACKUP_NOW
             self.switchIncludeFiles.isEnabled = true
             self.switchIncludeVideos.isEnabled = true
@@ -102,7 +101,6 @@ class BackupViewController: UITableViewController {
 
     private func backingUI() {
         backupIndicatorView.startAnimating()
-        backupIndicatorView.isHidden = false
         backupLabel.text = Localized.SETTING_BACKING
         switchIncludeFiles.isEnabled = false
         switchIncludeVideos.isEnabled = false

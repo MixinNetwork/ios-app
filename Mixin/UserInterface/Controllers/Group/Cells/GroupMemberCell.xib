@@ -45,9 +45,10 @@
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="D3Z-B8-ax1">
+                    <view hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="D3Z-B8-ax1" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="339" y="30" width="20" height="20"/>
-                    </activityIndicatorView>
+                        <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    </view>
                 </subviews>
                 <constraints>
                     <constraint firstItem="bBJ-5M-lYO" firstAttribute="centerY" secondItem="mcL-Fq-OF5" secondAttribute="centerY" id="1OZ-sp-kLY"/>

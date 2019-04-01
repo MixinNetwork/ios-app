@@ -12,6 +12,7 @@ class DepositFieldView: UIView, XibDesignable {
     @IBOutlet weak var qrCodeImageView: UIImageView!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var chainImageView: UIImageView!
+    @IBOutlet weak var shadowView: SeparatorShadowView!
     
     weak var delegate: DepositFieldViewDelegate?
     

@@ -127,6 +127,7 @@ extension SettingViewController: UITableViewDelegate {
         if section == 0 {
             view.text = Localized.SETTING_PRIVACY_AND_SECURITY_SUMMARY
         }
+        view.shadowView.hasLowerShadow = section != numberOfSections(in: tableView) - 1
         return view
     }
     

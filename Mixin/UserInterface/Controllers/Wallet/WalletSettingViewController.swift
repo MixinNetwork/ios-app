@@ -47,6 +47,7 @@ class WalletSettingViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
+        view.shadowView.hasLowerShadow = section != numberOfSections(in: tableView) - 1
         if biometryType == .none {
             return section == 0 ? nil : view
         } else {
@@ -91,7 +92,9 @@ class WalletSettingViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 0 && biometryType == .none {
-            return 0
+            return .leastNormalMagnitude
+        } else if section == 1 {
+            return 15 // Avoid shadow from being clipped
         } else {
             return super.tableView(tableView, heightForFooterInSection: section)
         }

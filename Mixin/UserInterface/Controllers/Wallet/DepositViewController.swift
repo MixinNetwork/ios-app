@@ -27,6 +27,7 @@ class DepositViewController: UIViewController {
             upperDepositFieldView.qrCodeImageView.image = nameImage
             upperDepositFieldView.iconImageView.sd_setImage(with: iconUrl, completed: nil)
             upperDepositFieldView.chainImageView.sd_setImage(with: chainIconUrl, completed: nil)
+            upperDepositFieldView.shadowView.hasLowerShadow = true
             upperDepositFieldView.delegate = self
             
             lowerDepositFieldView.titleLabel.text = Localized.WALLET_ACCOUNT_MEMO
@@ -35,6 +36,7 @@ class DepositViewController: UIViewController {
             lowerDepositFieldView.qrCodeImageView.image = memoImage
             lowerDepositFieldView.iconImageView.sd_setImage(with: iconUrl, completed: nil)
             lowerDepositFieldView.chainImageView.sd_setImage(with: chainIconUrl, completed: nil)
+            lowerDepositFieldView.shadowView.hasLowerShadow = false
             lowerDepositFieldView.delegate = self
 
             let notice = Localized.WALLET_DEPOSIT_ACCOUNT_NOTICE(symbol: asset.symbol, confirmations: asset.confirmations)
@@ -65,6 +67,7 @@ class DepositViewController: UIViewController {
             upperDepositFieldView.qrCodeImageView.image = image
             upperDepositFieldView.iconImageView.sd_setImage(with: iconUrl, completed: nil)
             upperDepositFieldView.chainImageView.sd_setImage(with: chainIconUrl, completed: nil)
+            upperDepositFieldView.shadowView.hasLowerShadow = false
             upperDepositFieldView.delegate = self
             
             lowerDepositFieldView.isHidden = true

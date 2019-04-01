@@ -96,7 +96,17 @@ extension ConversationSettingViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId)
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
+        view.shadowView.hasLowerShadow = section != numberOfSections(in: tableView) - 1
+        return view
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 10
+        } else {
+            return 15 // Avoid shadow from being clipped
+        }
     }
     
 }

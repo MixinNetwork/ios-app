@@ -15,6 +15,7 @@
                 <outlet property="contentLabel" destination="L6b-gv-92p" id="i8j-Lh-2D8"/>
                 <outlet property="iconImageView" destination="fDX-yb-Z6V" id="8rY-MA-Ut8"/>
                 <outlet property="qrCodeImageView" destination="R7z-eB-YMg" id="7xw-FT-8Y3"/>
+                <outlet property="shadowView" destination="fqu-jH-FEz" id="XuW-rX-Bhb"/>
                 <outlet property="titleLabel" destination="ocV-R6-UEn" id="doi-aS-77M"/>
             </connections>
         </placeholder>
@@ -84,7 +85,7 @@
                         <constraint firstItem="Bdb-u6-u7g" firstAttribute="top" secondItem="zIa-ex-QbW" secondAttribute="top" constant="20" id="gfy-XC-8w2"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fqu-jH-FEz" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fqu-jH-FEz" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="228" width="375" height="10"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>

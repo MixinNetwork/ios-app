@@ -272,50 +272,65 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.98823529409999999" green="0.99215686270000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="9pS-Ap-NcE" customClass="InfiniteTopView" customModule="Mixin" customModuleProvider="target">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="9pS-Ap-NcE">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="94E-ZB-Qpe" userLabel="Background View" customClass="InfiniteTopView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="190"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_desktop" translatesAutoresizingMaskIntoConstraints="NO" id="nns-ir-fSW">
                                     <rect key="frame" x="142.5" y="50" width="90" height="94"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </imageView>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KFF-bi-Ovb" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KFF-bi-Ovb" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="190" width="375" height="10"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="10" id="3Ks-cu-1E2"/>
                                     </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
+                                <constraint firstItem="94E-ZB-Qpe" firstAttribute="top" secondItem="9pS-Ap-NcE" secondAttribute="top" id="5Kc-iB-cbX"/>
                                 <constraint firstItem="KFF-bi-Ovb" firstAttribute="leading" secondItem="9pS-Ap-NcE" secondAttribute="leading" id="751-Rh-ZqO"/>
                                 <constraint firstItem="nns-ir-fSW" firstAttribute="centerX" secondItem="9pS-Ap-NcE" secondAttribute="centerX" id="IBr-cV-aQj"/>
                                 <constraint firstAttribute="bottom" secondItem="KFF-bi-Ovb" secondAttribute="bottom" id="RiY-jg-eIc"/>
+                                <constraint firstItem="KFF-bi-Ovb" firstAttribute="top" secondItem="94E-ZB-Qpe" secondAttribute="bottom" id="WmC-hF-7o1"/>
+                                <constraint firstAttribute="trailing" secondItem="94E-ZB-Qpe" secondAttribute="trailing" id="biX-of-siR"/>
                                 <constraint firstAttribute="trailing" secondItem="KFF-bi-Ovb" secondAttribute="trailing" id="hMV-Vm-1li"/>
                                 <constraint firstItem="nns-ir-fSW" firstAttribute="top" secondItem="9pS-Ap-NcE" secondAttribute="top" constant="50" id="ru8-HW-HGF"/>
+                                <constraint firstItem="94E-ZB-Qpe" firstAttribute="leading" secondItem="9pS-Ap-NcE" secondAttribute="leading" id="zpl-Fg-NkY"/>
                             </constraints>
                         </view>
-                        <view key="tableFooterView" contentMode="scaleToFill" id="LoV-Nv-Tgb">
+                        <view key="tableFooterView" clipsSubviews="YES" contentMode="scaleToFill" id="LoV-Nv-Tgb">
                             <rect key="frame" x="0.0" y="264" width="375" height="28"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7ps-h0-Bmi" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="10"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="10" id="AKb-g8-2Jo"/>
                                     </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="NO"/>
+                                    </userDefinedRuntimeAttributes>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last active: Thursday, 3:06 PM." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O4z-7b-DoM">
                                     <rect key="frame" x="20" y="13.5" width="335" height="14.5"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="7ps-h0-Bmi" secondAttribute="trailing" id="3CL-xL-1wA"/>
                                 <constraint firstItem="7ps-h0-Bmi" firstAttribute="leading" secondItem="LoV-Nv-Tgb" secondAttribute="leading" id="LPM-pX-ktQ"/>
@@ -997,7 +1012,7 @@
                                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_backup_tips"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eha-2i-Jfl" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eha-2i-Jfl" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="320" width="375" height="10"/>
                                     <color key="backgroundColor" red="0.98823529409999999" green="0.99215686270000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>

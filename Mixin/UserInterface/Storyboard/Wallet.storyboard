@@ -272,7 +272,7 @@
                                                         <constraint firstAttribute="trailing" secondItem="Y25-bj-M31" secondAttribute="trailing" id="kE9-C5-7qK"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSv-5R-vXh" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSv-5R-vXh" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="138" width="414" height="10"/>
                                                     <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
@@ -460,7 +460,7 @@
                                                 </label>
                                             </subviews>
                                         </stackView>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7aO-v0-YsR" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7aO-v0-YsR" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="180" width="414" height="10"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
@@ -782,7 +782,7 @@
                                                 <constraint firstAttribute="height" constant="60" id="hry-hH-Ls6"/>
                                             </constraints>
                                         </stackView>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CsL-pa-tlx" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CsL-pa-tlx" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="148" width="414" height="10"/>
                                             <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
@@ -1921,13 +1921,20 @@
                         <sections>
                             <tableViewSection id="ekt-s0-3Oh">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Ath-bW-gEz">
+                                    <tableViewCell contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Ath-bW-gEz">
                                         <rect key="frame" x="0.0" y="35" width="414" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ath-bW-gEz" id="OFr-qw-Tuu">
+                                        <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ath-bW-gEz" id="OFr-qw-Tuu">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b0i-nc-8S9" customClass="InfiniteTopView" customModule="Mixin" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="0.0"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" id="9Md-nH-cwN"/>
+                                                    </constraints>
+                                                </view>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Pay with Touch ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5WO-Ce-5F7">
                                                     <rect key="frame" x="20" y="22" width="128.66666666666666" height="20.333333333333329"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1949,7 +1956,10 @@
                                                 <constraint firstAttribute="trailingMargin" secondItem="Slg-de-TB8" secondAttribute="trailing" id="7uK-2R-Ftd"/>
                                                 <constraint firstItem="Slg-de-TB8" firstAttribute="centerY" secondItem="OFr-qw-Tuu" secondAttribute="centerY" id="Oj1-CJ-UKW"/>
                                                 <constraint firstItem="5WO-Ce-5F7" firstAttribute="centerY" secondItem="OFr-qw-Tuu" secondAttribute="centerY" id="Qm4-Az-grt"/>
+                                                <constraint firstAttribute="trailing" secondItem="b0i-nc-8S9" secondAttribute="trailing" id="SWk-DW-wRJ"/>
                                                 <constraint firstItem="5WO-Ce-5F7" firstAttribute="leading" secondItem="OFr-qw-Tuu" secondAttribute="leadingMargin" id="mrU-Ms-gAr"/>
+                                                <constraint firstItem="b0i-nc-8S9" firstAttribute="leading" secondItem="OFr-qw-Tuu" secondAttribute="leading" id="vIr-FT-E1k"/>
+                                                <constraint firstItem="b0i-nc-8S9" firstAttribute="top" secondItem="OFr-qw-Tuu" secondAttribute="top" id="zH5-Tf-fhZ"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

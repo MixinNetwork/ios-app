@@ -313,16 +313,17 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="UMD-vv-2fj">
-                                                    <rect key="frame" x="166" y="28.666666666666671" width="82.333333333333314" height="17"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="UMD-vv-2fj">
+                                                    <rect key="frame" x="163" y="28.666666666666671" width="88" height="17"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/ic_add" translatesAutoresizingMaskIntoConstraints="NO" id="L46-g3-KvM">
                                                             <rect key="frame" x="0.0" y="3.3333333333333321" width="10" height="10"/>
+                                                            <color key="tintColor" red="0.22352941179999999" green="0.4941176471" blue="0.89411764709999997" alpha="1" colorSpace="calibratedRGB"/>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add asset" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XGc-3R-RCZ">
-                                                            <rect key="frame" x="18" y="0.0" width="64.333333333333329" height="17"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <color key="textColor" red="0.22352941176470587" green="0.49411764705882355" blue="0.89411764705882346" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <rect key="frame" x="22" y="0.0" width="66" height="17"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                                            <color key="textColor" red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                             <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_title_add_asset"/>
@@ -1156,7 +1157,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="99P-Xn-eow" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="99P-Xn-eow" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="20" y="40" width="374" height="40"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -1211,11 +1212,14 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ep-Xb-7bV">
-                                <rect key="frame" x="142.66666666666666" y="358.66666666666669" width="128.99999999999997" height="39"/>
+                                <rect key="frame" x="133.66666666666666" y="358.66666666666669" width="146.99999999999997" height="39"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
-                                <inset key="contentEdgeInsets" minX="20" minY="11" maxX="14" maxY="11"/>
-                                <inset key="imageEdgeInsets" minX="-6" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <state key="normal" title="Add Address" image="Wallet/ic_add"/>
+                                <color key="tintColor" red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <inset key="contentEdgeInsets" minX="32" minY="11" maxX="20" maxY="11"/>
+                                <inset key="imageEdgeInsets" minX="-24" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="Add Address" image="Wallet/ic_add">
+                                    <color key="titleColor" red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="address_book_add_address"/>
                                 </userDefinedRuntimeAttributes>

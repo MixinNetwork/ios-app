@@ -5,17 +5,7 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
     
     let continueButton = BusyButton()
     
-    var continueButtonBottomConstraint: Constraint!
-    
-    var continueButtonBottomConstant: CGFloat {
-        get {
-            return continueButtonBottomConstraint.layoutConstraints.first?.constant ?? 0
-        }
-        set {
-            loadViewIfNeeded()
-            continueButtonBottomConstraint.update(offset: newValue)
-        }
-    }
+    var continueButtonBottomConstraint: NSLayoutConstraint!
     
     private let continueButtonLength: CGFloat = 44
     private let continueButtonMargin: CGFloat = 20
@@ -36,8 +26,9 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
         continueButton.snp.makeConstraints { (make) in
             make.width.height.equalTo(continueButtonLength)
             make.trailing.equalToSuperview().offset(-continueButtonMargin)
-            continueButtonBottomConstraint = make.bottom.equalToSuperview().constraint
         }
+        continueButtonBottomConstraint = continueButton.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        continueButtonBottomConstraint.isActive = true
     }
     
     @objc func continueAction(_ sender: Any) {
@@ -45,14 +36,13 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
     }
     
     override func layout(for keyboardFrame: CGRect) {
-        let oldOffset = continueButtonBottomConstant
         let newOffset = keyboardFrame.origin.y
             - view.frame.height
             - continueButtonMargin
-        if abs(oldOffset - newOffset) > 60 || newOffset < oldOffset {
-            continueButtonBottomConstant = newOffset
+        if newOffset < continueButtonBottomConstraint.constant {
+            continueButtonBottomConstraint.constant = newOffset
+            view.layoutIfNeeded()
         }
-        view.layoutIfNeeded()
     }
     
 }

@@ -11,6 +11,7 @@ class KeyboardBasedLayoutViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        AppDelegate.current.window?.endEditing(true)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     

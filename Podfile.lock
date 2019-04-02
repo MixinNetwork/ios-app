@@ -77,9 +77,9 @@ PODS:
   - SignalProtocolC (2.3.1)
   - SnapKit (4.2.0)
   - SocketRocket (0.5.1)
-  - SQLiteRepairKit (1.2.1):
+  - SQLiteRepairKit (1.2.2):
     - WCDBOptimizedSQLCipher (~> 1.2.0)
-  - WCDB.swift (1.0.7.5):
+  - WCDB.swift (1.0.8.2):
     - SQLiteRepairKit (~> 1.2.0)
     - WCDBOptimizedSQLCipher (~> 1.2.0)
   - WCDBOptimizedSQLCipher (1.2.1)
@@ -106,7 +106,7 @@ DEPENDENCIES:
   - "SignalProtocolC (from `git@github.com:MixinMessenger/SignalProtocolC.git`)"
   - SnapKit
   - "SocketRocket (from `git@github.com:over140/SocketRocket.git`, branch `feature/request`)"
-  - "WCDB.swift (from `git@github.com:MixinNetwork/wcdb.git`, branch `swift4.2`)"
+  - "WCDB.swift (from `git@github.com:MixinNetwork/wcdb.git`, branch `xcode10.2+swift4.2`)"
   - YYImage/WebP
   - Zip (~> 1.1)
 
@@ -148,7 +148,7 @@ EXTERNAL SOURCES:
     :branch: feature/request
     :git: "git@github.com:over140/SocketRocket.git"
   WCDB.swift:
-    :branch: swift4.2
+    :branch: "xcode10.2+swift4.2"
     :git: "git@github.com:MixinNetwork/wcdb.git"
 
 CHECKOUT OPTIONS:
@@ -160,7 +160,7 @@ CHECKOUT OPTIONS:
     :commit: ad8bd27edf6ef32ecf9f4a675588e6f628362969
     :git: "git@github.com:over140/SocketRocket.git"
   WCDB.swift:
-    :commit: 4037e3478d159413522f19fc0ec91505a8f774b2
+    :commit: 5f56961f48bc9c70ce828336f14915e63fa4e81d
     :git: "git@github.com:MixinNetwork/wcdb.git"
 
 SPEC CHECKSUMS:
@@ -189,12 +189,12 @@ SPEC CHECKSUMS:
   SignalProtocolC: d46237ab35954a8d1213faabf4baa783591c49ab
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
-  SQLiteRepairKit: 4d21bab9eff6a273f63da6815a0d1659e53f5bde
-  WCDB.swift: 87aee41f5ca3aded9c6f9b68b0ef3e88918a5ee2
+  SQLiteRepairKit: 35aaae5a8838adb85f5b1eb4d796055be6060a4b
+  WCDB.swift: 05d509d7a0e60fb6e11c34eb7e4027c0fab5849f
   WCDBOptimizedSQLCipher: baf44493b0c7a3d49e97bc5b64a3856f6428ddd1
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: c9a161cbdf27ddfce18fc25fcef5370ffe701c18
+PODFILE CHECKSUM: a98782deaef81b23ae0fa88ecd1968501b1e742c
 
 COCOAPODS: 1.6.1

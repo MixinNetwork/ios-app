@@ -11,11 +11,11 @@ class KeyboardBasedLayoutViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        AppDelegate.current.window?.endEditing(true)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        AppDelegate.current.window?.endEditing(true)
         super.viewWillAppear(animated)
         viewIsDisappearing = false
     }

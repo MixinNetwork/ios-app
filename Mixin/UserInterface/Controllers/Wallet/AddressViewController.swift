@@ -139,6 +139,9 @@ extension AddressViewController {
     }
     
     private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        if searchBoxView.textField.isFirstResponder {
+            searchBoxView.textField.resignFirstResponder()
+        }
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.MENU_DELETE, style: .destructive, handler: { [weak self](action) in
             self?.deleteAction(indexPath: indexPath)
@@ -149,6 +152,9 @@ extension AddressViewController {
     }
     
     private func tableViewCommitEditAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        if searchBoxView.textField.isFirstResponder {
+            searchBoxView.textField.resignFirstResponder()
+        }
         tableView.setEditing(false, animated: true)
         let vc = NewAddressViewController.instance(asset: asset, address: addresses[indexPath.row])
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)

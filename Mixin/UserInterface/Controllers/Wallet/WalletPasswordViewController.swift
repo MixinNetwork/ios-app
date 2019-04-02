@@ -19,7 +19,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
 
     enum DismissTarget {
         case wallet
-        case conversation(user: UserItem)
+        case transfer(user: UserItem)
         case changePhone
     }
 
@@ -113,7 +113,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
                 switch target {
                 case .wallet:
                     self?.navigationController?.pushViewController(withBackRoot: WalletViewController.instance())
-                case let .conversation(user):
+                case let .transfer(user):
                     self?.navigationController?.pushViewController(withBackChat: SendViewController.instance(asset: nil, type: .contact(user)))
                 case .changePhone:
                     guard let navigation = weakSelf.navigationController else {

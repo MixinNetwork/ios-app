@@ -1,33 +1,34 @@
 PODS:
-  - Alamofire (4.8.1)
+  - Alamofire (4.8.2)
   - AlignedCollectionViewFlowLayout (1.1.2)
   - Base64 (1.1.2)
-  - Bugsnag (5.19.0)
-  - DeviceGuru (5.0.1)
-  - Firebase/Analytics (5.18.0):
+  - Bugsnag (5.19.1)
+  - DeviceGuru (5.1.2)
+  - Firebase/Analytics (5.20.1):
     - Firebase/Core
-  - Firebase/Core (5.18.0):
+  - Firebase/Core (5.20.1):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.7.0)
-  - Firebase/CoreOnly (5.18.0):
-    - FirebaseCore (= 5.3.1)
-  - FirebaseAnalytics (5.7.0):
-    - FirebaseCore (~> 5.3)
-    - FirebaseInstanceID (~> 3.6)
-    - GoogleAppMeasurement (= 5.7.0)
+    - FirebaseAnalytics (= 5.8.0)
+  - Firebase/CoreOnly (5.20.1):
+    - FirebaseCore (= 5.4.1)
+  - FirebaseAnalytics (5.8.0):
+    - FirebaseCore (~> 5.4)
+    - FirebaseInstanceID (~> 3.8)
+    - GoogleAppMeasurement (= 5.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
     - GoogleUtilities/MethodSwizzler (~> 5.2)
     - GoogleUtilities/Network (~> 5.2)
     - "GoogleUtilities/NSData+zlib (~> 5.2)"
     - nanopb (~> 0.3)
-  - FirebaseCore (5.3.1):
+  - FirebaseCore (5.4.1):
+    - GoogleUtilities/Environment (~> 5.2)
     - GoogleUtilities/Logger (~> 5.2)
-  - FirebaseInstanceID (3.7.0):
+  - FirebaseInstanceID (3.8.1):
     - FirebaseCore (~> 5.2)
     - GoogleUtilities/Environment (~> 5.2)
     - GoogleUtilities/UserDefaults (~> 5.2)
   - GiphyCoreSDK (1.4.1)
-  - GoogleAppMeasurement (5.7.0):
+  - GoogleAppMeasurement (5.8.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
     - GoogleUtilities/MethodSwizzler (~> 5.2)
     - GoogleUtilities/Network (~> 5.2)
@@ -51,8 +52,8 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (5.5.0):
     - GoogleUtilities/Logger
-  - GoogleWebRTC (1.1.27121)
-  - GzipSwift (4.1.0)
+  - GoogleWebRTC (1.1.27299)
+  - GzipSwift (5.0.0)
   - JWT (3.0.0-beta.11):
     - Base64 (~> 1.1.2)
   - nanopb (0.3.901):
@@ -66,9 +67,9 @@ PODS:
   - PhoneNumberKit/PhoneNumberKitCore (2.6.0)
   - PhoneNumberKit/UIKit (2.6.0):
     - PhoneNumberKit/PhoneNumberKitCore
-  - R.swift (5.0.2):
+  - R.swift (5.0.3):
     - R.swift.Library (~> 5.0.0)
-  - R.swift.Library (5.0.0)
+  - R.swift.Library (5.0.1)
   - RSKImageCropper (2.2.1)
   - SDWebImage/Core (5.0.0-beta6)
   - SDWebImageYYPlugin/YYImage (0.1.2):
@@ -164,25 +165,25 @@ CHECKOUT OPTIONS:
     :git: "git@github.com:MixinNetwork/wcdb.git"
 
 SPEC CHECKSUMS:
-  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
-  Bugsnag: 7c6c52621f066420f782192e9fcb9c6b70cc91f9
-  DeviceGuru: a8cd34840e9fb2478a1ab54c55c636c63e9918f1
-  Firebase: 02f3281965c075426141a0ce1277e9de6649cab9
-  FirebaseAnalytics: 23851fe602c872130a2c5c55040b302120346cc2
-  FirebaseCore: 52f851b30e11360f1e67cf04b1edfebf0a47a2d3
-  FirebaseInstanceID: bd6fc5a258884e206fd5c474ebe4f5b00e21770e
+  Bugsnag: 96c6dff50bd5ca461603a7aaf22b8406c4fb32ca
+  DeviceGuru: 65a794c0c5b4f600453bcfaf94c78fea66ba577e
+  Firebase: 2f5235e62f141cb86181c3af0dfe4509706351ac
+  FirebaseAnalytics: fd72a26bf8dac84cefba2f0864366f718555a5b0
+  FirebaseCore: f1a9a8be1aee4bf71a2fc0f4096df6788bdfda61
+  FirebaseInstanceID: a122b0c258720cf250551bb2bedf48c699f80d90
   GiphyCoreSDK: 147a492c2477e9ddb20f8dd3a4489e3ea3c05e38
-  GoogleAppMeasurement: 6cf307834da065863f9faf4c0de0a936d81dd832
+  GoogleAppMeasurement: 1624046ab1bcc5e170061a56ef5679000b079c8e
   GoogleUtilities: 6481e6318c5fcabaaa8513ef8120f329055d7c10
-  GoogleWebRTC: 888ae9f8e90d46734134f3e74ba15afdf72ff622
-  GzipSwift: df1636fa095bd8f21d98db14e7393ecc9e230fed
+  GoogleWebRTC: 893a5f2f3635437ec3b05ef240993d5713307804
+  GzipSwift: 5592f4d62b641e04d06443ba471f8ed76b1363e4
   JWT: 05028b9624591bba9681bb57df2c5f95fa258bad
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   PhoneNumberKit: 167ee1f0bbb6efce7c62559e620eae745595532f
-  R.swift: 81455d81467763cbd3f4d79d938d05f4ac4c0228
-  R.swift.Library: 0bf390e729bc10bb2c9e4fb78bd043164a7be4ff
+  R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
+  R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
   RSKImageCropper: 98296ad26b41753f796b6898d015509598f13d97
   SDWebImage: 2840a50a41156efccf460df67218b32029177897
   SDWebImageYYPlugin: fe39bcaa2ed2cbdd0181c096069be5561166158b

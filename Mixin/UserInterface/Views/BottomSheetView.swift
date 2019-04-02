@@ -6,8 +6,8 @@ class BottomSheetView: UIView {
 
     @IBOutlet weak var contentBottomConstraint: NSLayoutConstraint!
 
-    internal(set) var isShowing = false
-    internal(set) var windowBackgroundColor = UIColor(white: 0.0, alpha: 0.5)
+    var isShowing = false
+    var windowBackgroundColor = UIColor(white: 0.0, alpha: 0.5)
     
     private var animationOriginPoint: CGPoint {
         return CGPoint(x: self.center.x, y: self.bounds.size.height + self.popupView.bounds.size.height)

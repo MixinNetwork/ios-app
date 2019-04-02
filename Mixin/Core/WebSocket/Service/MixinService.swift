@@ -2,9 +2,9 @@ import Foundation
 
 class MixinService {
 
-    internal(set) var processing = false
-    internal let jsonDecoder = JSONDecoder()
-    internal let jsonEncoder = JSONEncoder()
+    var processing = false
+    let jsonDecoder = JSONDecoder()
+    let jsonEncoder = JSONEncoder()
 
     internal var currentAccountId: String {
         return AccountAPI.shared.accountUserId

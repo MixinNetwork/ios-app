@@ -4,7 +4,7 @@ class MessageCell: UITableViewCell {
 
     let backgroundImageView = UIImageView()
 
-    internal(set) var viewModel: MessageViewModel?
+    var viewModel: MessageViewModel?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

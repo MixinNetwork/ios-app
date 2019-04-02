@@ -10,9 +10,9 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return .black
     }
     
-    internal(set) var content: CoreTextLabel.Content?
-    internal(set) var contentLabelFrame = CGRect.zero
-    internal(set) var highlightPaths = [UIBezierPath]()
+    var content: CoreTextLabel.Content?
+    var contentLabelFrame = CGRect.zero
+    var highlightPaths = [UIBezierPath]()
     
     private let timeLeftMargin: CGFloat = 20
     private let minimumTextSize = CGSize(width: 5, height: 18)

@@ -6,7 +6,7 @@ class CallMessageViewModel: TextMessageViewModel {
     static let prefixSize = prefixImage.size
     static let prefixInset = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 6)
     
-    internal(set) var prefixFrame = CGRect.zero
+    var prefixFrame = CGRect.zero
     
     override var rawContent: String {
         let isRemote = message.userId != AccountAPI.shared.accountUserId

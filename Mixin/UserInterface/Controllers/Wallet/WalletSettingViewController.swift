@@ -62,7 +62,7 @@ class WalletSettingViewController: UITableViewController {
         if indexPath.section == 0 && indexPath.row == 1 {
             pinIntervalAction()
         } else if indexPath.section == 1 {
-            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
             navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -98,7 +98,7 @@ class WalletSettingViewController: UITableViewController {
     }
     
     @IBAction func changePINAction(_ sender: Any) {
-        let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1)
+        let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
         navigationController?.pushViewController(vc, animated: true)
     }
     

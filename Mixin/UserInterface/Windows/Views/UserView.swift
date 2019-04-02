@@ -250,7 +250,7 @@ class UserView: CornerView {
         if AccountAPI.shared.account?.has_pin ?? false {
             viewController = SendViewController.instance(asset: nil, type: .contact(user))
         } else {
-            viewController = WalletPasswordViewController.instance(fromChat:  user)
+            viewController = WalletPasswordViewController.instance(dismissTarget: .conversation(user: user))
         }
         UIApplication.rootNavigationController()?.pushViewController(viewController, animated: true)
     }
@@ -301,9 +301,13 @@ class UserView: CornerView {
     }
     
     private func changeNumber() {
-        let vc = R.storyboard.contact.verifyPin()!
-        let navigation = ChangeNumberNavigationController(rootViewController: vc)
-        UIApplication.rootNavigationController()?.present(navigation, animated: true, completion: nil)
+        let viewController: UIViewController
+        if AccountAPI.shared.account?.has_pin ?? false {
+            viewController = ChangeNumberNavigationController(rootViewController: R.storyboard.contact.verifyPin()!)
+        } else {
+            viewController = WalletPasswordViewController.instance(dismissTarget: .changePhone)
+        }
+        UIApplication.rootNavigationController()?.present(viewController, animated: true, completion: nil)
     }
     
     private func openApp() {

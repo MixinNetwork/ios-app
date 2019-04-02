@@ -212,7 +212,7 @@ class HomeViewController: UIViewController {
                 navigationController?.pushViewController(WalletViewController.instance(), animated: true)
             }
         } else {
-            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1), animated: true)
+            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet), animated: true)
         }
     }
 

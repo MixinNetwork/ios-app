@@ -49,10 +49,10 @@ class ContinueButtonViewController: KeyboardBasedLayoutViewController {
         let newOffset = keyboardFrame.origin.y
             - view.frame.height
             - continueButtonMargin
-        if abs(oldOffset - newOffset) > 60 || newOffset < oldOffset {
+        if newOffset < oldOffset {
             continueButtonBottomConstant = newOffset
+            view.layoutIfNeeded()
         }
-        view.layoutIfNeeded()
     }
     
 }

@@ -20,7 +20,7 @@
                         <color key="backgroundColor" red="0.9882352941176471" green="0.99215686274509807" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="FVg-3f-Kcm">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="FVg-3f-Kcm" customClass="InfiniteTopView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="156"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
@@ -174,7 +174,7 @@
                                         <constraint firstAttribute="height" constant="32" id="f3l-Lj-SRk"/>
                                     </constraints>
                                 </stackView>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AY6-Uv-ok8" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AY6-Uv-ok8" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="146" width="375" height="10"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>

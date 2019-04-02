@@ -175,6 +175,7 @@ extension BackupViewController {
             return actionSectionFooterView
         } else {
             let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
+            view.shadowView.hasLowerShadow = false
             view.text = Localized.SETTING_BACKUP_AUTO_TIPS
             return view
         }

@@ -175,25 +175,29 @@ class SearchViewController: UIViewController {
         let dataCount: Int
         if keyword.isEmpty {
             dataCount = allContacts.count
+            tableView.subviews.forEach {
+                ($0 as? EmptyView)?.removeFromSuperview()
+            }
         } else {
             dataCount = assets.count + users.count + conversations.count
+            tableView.checkEmpty(dataCount: dataCount,
+                                 text: Localized.NO_RESULT,
+                                 photo: R.image.ic_no_result()!)
         }
-        tableView.checkEmpty(dataCount: dataCount,
-                             text: Localized.NO_RESULT,
-                             photo: R.image.ic_no_result()!)
     }
     
 }
 
 extension SearchViewController: UITableViewDataSource {
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        guard !keyword.isEmpty else {
+        if keyword.isEmpty {
             return 1
+        } else {
+            return (assets.isEmpty ? 0 : 1) + (users.isEmpty ? 0 : 1) + (conversations.isEmpty ? 0 : 1)
         }
-        return (assets.count > 0 ? 1 : 0) + (users.count > 0 ? 1 : 0) + (conversations.count > 0 ? 1 : 0)
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if keyword.isEmpty {
             return allContacts.count
@@ -251,7 +255,11 @@ extension SearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if keyword.isEmpty {
-            return headerHeight
+            if allContacts.isEmpty {
+                return .leastNormalMagnitude
+            } else {
+                return headerHeight
+            }
         } else {
             return assets.count > 0 || users.count > 0 || conversations.count > 0 ? headerHeight : .leastNormalMagnitude
         }
@@ -260,7 +268,11 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! GeneralTableViewHeader
         if keyword.isEmpty {
-            header.label.text = Localized.SECTION_TITLE_CONTACTS
+            if allContacts.isEmpty {
+                return nil
+            } else {
+                header.label.text = Localized.SECTION_TITLE_CONTACTS
+            }
         } else {
             if assets.count > 0 && section == 0 {
                 header.label.text = Localized.SECTION_TITLE_ASSETS
@@ -274,7 +286,20 @@ extension SearchViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer)
+        var shouldShowFooter = false
+        for section in 0..<numberOfSections(in: tableView) {
+            if self.tableView(tableView, numberOfRowsInSection: section) > 0 {
+                shouldShowFooter = true
+                break
+            }
+        }
+        if shouldShowFooter {
+            let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SearchFooterView
+            footer.shadowView.hasLowerShadow = section != numberOfSections(in: tableView) - 1
+            return footer
+        } else {
+            return nil
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

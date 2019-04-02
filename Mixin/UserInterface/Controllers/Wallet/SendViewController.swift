@@ -23,6 +23,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var continueWrapperView: UIView!
     @IBOutlet weak var switchAmountButton: UIButton!
 
+    @IBOutlet weak var opponentImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var symbolLeadingConstraint: NSLayoutConstraint!
     
@@ -56,7 +57,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        opponentImageView.cornerRadius = opponentImageViewWidthConstraint.constant / 2
         switch opponent! {
         case .contact(let user):
             targetUser = user
@@ -93,7 +94,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
         scrollView.contentInset.bottom = keyboardHeight + continueWrapperView.frame.height
         scrollView.scrollIndicatorInsets.bottom = keyboardHeight
         view.layoutIfNeeded()
-        if !viewHasAppeared, ScreenSize.current == .inch3_5 || ScreenSize.current == .inch4 {
+        if !viewHasAppeared, ScreenSize.current <= .inch4 {
             scrollView.contentOffset.y = opponentImageView.frame.maxY
         }
     }

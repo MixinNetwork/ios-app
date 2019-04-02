@@ -180,13 +180,14 @@ extension WalletPasswordViewController: PinFieldDelegate {
             break
         }
         
-        var viewControllerToPush: WalletPasswordViewController?
         switch walletPasswordType {
         case .initPinStep1:
-            viewControllerToPush = WalletPasswordViewController.instance(walletPasswordType: .initPinStep2(previous: pin), dismissTarget: dismissTarget)
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep2(previous: pin), dismissTarget: dismissTarget)
+            navigationController?.pushViewController(vc, animated: true)
         case .initPinStep2(let previous):
             if previous == pin {
-                viewControllerToPush = WalletPasswordViewController.instance(walletPasswordType: .initPinStep3(previous: pin), dismissTarget: dismissTarget)
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep3(previous: pin), dismissTarget: dismissTarget)
+                navigationController?.pushViewController(vc, animated: true)
             } else {
                 alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
                     self?.popToFirstInitController()
@@ -222,7 +223,6 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 case .success:
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                     let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep2(old: pin), dismissTarget: weakSelf.dismissTarget)
-                    vc.continueButtonBottomConstant = weakSelf.continueButtonBottomConstant
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
                 case let .failure(error):
                     weakSelf.pinField.clear()
@@ -230,10 +230,12 @@ extension WalletPasswordViewController: PinFieldDelegate {
                 }
             })
         case .changePinStep2(let old):
-            viewControllerToPush = WalletPasswordViewController.instance(walletPasswordType: .changePinStep3(old: old, previous: pin), dismissTarget: dismissTarget)
+            let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep3(old: old, previous: pin), dismissTarget: dismissTarget)
+            navigationController?.pushViewController(vc, animated: true)
         case .changePinStep3(let old, let previous):
             if previous == pin {
-                viewControllerToPush = WalletPasswordViewController.instance(walletPasswordType: .changePinStep4(old: old, previous: pin), dismissTarget: dismissTarget)
+                let vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep4(old: old, previous: pin), dismissTarget: dismissTarget)
+                navigationController?.pushViewController(vc, animated: true)
             } else {
                 alert(Localized.WALLET_PIN_INCONSISTENCY, cancelHandler: { [weak self](_) in
                     self?.popToFirstInitController()
@@ -262,10 +264,6 @@ extension WalletPasswordViewController: PinFieldDelegate {
                     self?.navigationController?.popViewController(animated: true)
                 })
             }
-        }
-        if let vc = viewControllerToPush {
-            vc.continueButtonBottomConstant = self.continueButtonBottomConstant
-            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

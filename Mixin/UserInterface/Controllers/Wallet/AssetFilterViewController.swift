@@ -1,18 +1,21 @@
 import UIKit
 import AlignedCollectionViewFlowLayout
 
-protocol AssetFilterWindowDelegate: class {
-    func assetFilterWindow(_ window: AssetFilterWindow, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter)
+protocol AssetFilterViewControllerDelegate: class {
+    func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter)
 }
 
-class AssetFilterWindow: BottomSheetView {
+class AssetFilterViewController: UIViewController {
     
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var applyButton: RoundedButton!
     
-    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var applyButtonTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var applyButtonBottomConstraint: NSLayoutConstraint!
     
-    weak var delegate: AssetFilterWindowDelegate?
+    weak var delegate: AssetFilterViewControllerDelegate?
     
     private(set) var sort = Snapshot.Sort.createdAt
     private(set) var filter = Snapshot.Filter.all
@@ -20,7 +23,7 @@ class AssetFilterWindow: BottomSheetView {
     private lazy var sortDraft = sort
     private lazy var filterDraft = filter
     
-    private let cellReuseId = "cell"
+    private let cellReuseId = "condition"
     private let headerReuseId = "header"
     private let headers = [
         Localized.TRANSACTIONS_FILTER_SORT_BY,
@@ -37,19 +40,15 @@ class AssetFilterWindow: BottomSheetView {
          Localized.TRANSACTION_TYPE_REBATE]
     ]
     
-    class func instance() -> AssetFilterWindow {
-        let window = Bundle.main.loadNibNamed("AssetFilterWindow", owner: nil, options: nil)?.first as! AssetFilterWindow
-        if let windowFrame = UIApplication.shared.keyWindow?.bounds {
-            window.frame = windowFrame
-        }
-        return window
+    class func instance() -> AssetFilterViewController {
+        let vc = R.storyboard.wallet.asset_filter()!
+        vc.transitioningDelegate = PopupPresentationManager.shared
+        vc.modalPresentationStyle = .custom
+        return vc
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        dismissButton.addTarget(self, action: #selector(dismissPopupControllerAnimated), for: .touchUpInside)
-        collectionView.register(UINib(nibName: "TransactionsFilterConditionCell", bundle: .main),
-                                forCellWithReuseIdentifier: cellReuseId)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         collectionView.register(AssetFilterHeaderView.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: headerReuseId)
@@ -62,34 +61,38 @@ class AssetFilterWindow: BottomSheetView {
         }
         collectionView.reloadData()
         reloadSelection()
-        layoutIfNeeded()
-        updatecollectionViewHeightAndScrollingEnabledIfNeeded()
+        view.layoutIfNeeded()
+        updateCollectionViewHeightAndScrollingEnabledIfNeeded()
     }
     
-    override func presentPopupControllerAnimated() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         sortDraft = sort
         filterDraft = filter
         reloadSelection()
-        super.presentPopupControllerAnimated()
+    }
+    
+    @IBAction func dismissAction(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func applyAction(_ sender: Any) {
         sort = sortDraft
         filter = filterDraft
-        delegate?.assetFilterWindow(self, didApplySort: sort, filter: filter)
-        dismissPopupControllerAnimated()
+        delegate?.assetFilterViewController(self, didApplySort: sort, filter: filter)
+        dismiss(animated: true, completion: nil)
     }
     
 }
 
-extension AssetFilterWindow: UICollectionViewDataSource {
+extension AssetFilterViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return titles[section].count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! TransactionsFilterConditionCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AssetFilterConditionCell
         cell.titleLabel.text = titles[indexPath.section][indexPath.row]
         return cell
     }
@@ -106,7 +109,7 @@ extension AssetFilterWindow: UICollectionViewDataSource {
     
 }
 
-extension AssetFilterWindow: UICollectionViewDelegate {
+extension AssetFilterViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0 {
@@ -130,7 +133,7 @@ extension AssetFilterWindow: UICollectionViewDelegate {
     
 }
 
-extension AssetFilterWindow: UICollectionViewDelegateFlowLayout {
+extension AssetFilterViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         if section == 0 {
@@ -142,7 +145,7 @@ extension AssetFilterWindow: UICollectionViewDelegateFlowLayout {
     
 }
 
-extension AssetFilterWindow {
+extension AssetFilterViewController {
     
     private func reloadSelection() {
         for indexPath in collectionView.indexPathsForSelectedItems ?? [] {
@@ -170,8 +173,14 @@ extension AssetFilterWindow {
         }
     }
     
-    private func updatecollectionViewHeightAndScrollingEnabledIfNeeded() {
-        collectionViewHeightConstraint.constant = ceil(collectionView.contentSize.height)
+    private func updateCollectionViewHeightAndScrollingEnabledIfNeeded() {
+        preferredContentSize.height = titleHeightConstraint.constant
+            + collectionView.contentSize.height
+            + applyButtonTopConstraint.constant
+            + applyButton.frame.height
+            + applyButtonBottomConstraint.constant
+            + AppDelegate.current.window!.compatibleSafeAreaInsets.bottom
+        view.layoutIfNeeded()
         collectionView.isScrollEnabled = collectionView.contentSize.height >= collectionView.frame.height
     }
     

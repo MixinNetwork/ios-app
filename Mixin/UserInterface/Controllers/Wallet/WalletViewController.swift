@@ -2,8 +2,9 @@ import UIKit
 import LocalAuthentication
 
 class WalletViewController: UIViewController {
-
+    
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableHeaderView: WalletHeaderView!
     
     private var assets = [AssetItem]()
     
@@ -21,6 +22,14 @@ class WalletViewController: UIViewController {
         return action
     }()
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    class func instance() -> UIViewController {
+        return ContainerViewController.instance(viewController: Storyboard.wallet.instantiateInitialViewController()!, title: Localized.WALLET_TITLE)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateTableViewContentInset()
@@ -36,23 +45,16 @@ class WalletViewController: UIViewController {
         fetchRemoteAssets()
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
     }
-
-    class func instance() -> UIViewController {
-        return ContainerViewController.instance(viewController: Storyboard.wallet.instantiateInitialViewController()!, title: Localized.WALLET_TITLE)
-    }
+    
 }
 
 extension WalletViewController: ContainerViewControllerDelegate {
-
+    
     func barRightButtonTappedAction() {
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.WALLET_TITLE_ADD_ASSET, style: .default, handler: { [weak self](_) in
@@ -70,45 +72,30 @@ extension WalletViewController: ContainerViewControllerDelegate {
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }
-
+    
     func imageBarRightButton() -> UIImage? {
         return R.image.ic_title_more()
     }
-
+    
 }
 
 extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 1 ? assets.count : 1
+        return section == 0 ? assets.count : 1
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0:
-            let firstUSDBalance: Double
-            if let asset = assets.first {
-                firstUSDBalance = asset.balance.doubleValue * asset.priceUsd.doubleValue
-            } else {
-                firstUSDBalance = 0
-            }
-            return WalletHeaderCell.height(usdBalanceIsMoreThanZero: firstUSDBalance > 0)
-        default:
-            return WalletAssetCell.height
-        }
+        return WalletAssetCell.height
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.header) as! WalletHeaderCell
-            cell.render(assets: assets)
-            return cell
-        case 1:
             let asset = assets[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.asset) as! WalletAssetCell
             cell.render(asset: asset)
@@ -121,34 +108,32 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
-        case 1:
+        case 0:
             let vc = AssetViewController.instance(asset: assets[indexPath.row])
             navigationController?.pushViewController(vc, animated: true)
-        case 2:
+        default:
             let vc = AddAssetViewController.instance()
             navigationController?.pushViewController(vc, animated: true)
-        default:
-            break
         }
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        guard indexPath.section == 1 else {
+        if indexPath.section == 0 {
+            return [assetAction]
+        } else {
             return []
         }
-        return [assetAction]
     }
-
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return indexPath.section == 1
+        return indexPath.section == 0
     }
-
+    
 }
 
 extension WalletViewController {
     
     private enum ReuseId {
-        static let header = "wallet_header"
         static let asset = "wallet_asset"
         static let addAsset = "wallet_add_asset"
     }
@@ -172,6 +157,8 @@ extension WalletViewController {
                     return
                 }
                 weakSelf.assets = assets
+                weakSelf.tableHeaderView.render(assets: assets)
+                weakSelf.tableHeaderView.sizeToFit()
                 weakSelf.tableView.reloadData()
             }
         }

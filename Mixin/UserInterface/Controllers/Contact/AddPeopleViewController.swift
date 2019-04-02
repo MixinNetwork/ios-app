@@ -25,6 +25,13 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
         keywordTextField.becomeFirstResponder()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !keywordTextField.isFirstResponder {
+            keywordTextField.becomeFirstResponder()
+        }
+    }
+    
     override func layout(for keyboardFrame: CGRect) {
         let windowHeight = AppDelegate.current.window!.bounds.height
         keyboardPlaceholderHeightConstraint.constant = windowHeight - keyboardFrame.origin.y

@@ -220,21 +220,24 @@ extension ContactViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
         if section == 0 {
             if contacts.isEmpty {
                 return nil
             } else {
-                return tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
+                let nextSectionHasNoCell = isPhoneContactAuthorized && phoneContacts.isEmpty
+                view.shadowView.hasLowerShadow = !nextSectionHasNoCell
+                return view
             }
         } else {
+            view.shadowView.hasLowerShadow = false
             if isPhoneContactAuthorized {
                 if section == phoneContacts.count {
-                    return tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
+                    return view
                 } else {
                     return nil
                 }
             } else {
-                let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
                 view.text = Localized.CONTACT_PHONE_CONTACT_SUMMARY
                 return view
             }

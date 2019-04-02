@@ -4,6 +4,7 @@ class AddressViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBoxView: SearchBoxView!
+    @IBOutlet weak var newAddressButton: UIButton!
     
     private let cellReuseId = "address"
     
@@ -23,6 +24,10 @@ class AddressViewController: UIViewController {
         return !(searchBoxView.textField.text ?? "").isEmpty
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
@@ -30,9 +35,7 @@ class AddressViewController: UIViewController {
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         loadAddresses()
-        NotificationCenter.default.addObserver(forName: .AddressDidChange, object: nil, queue: .main) { [weak self] (_) in
-            self?.loadAddresses()
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(loadAddresses), name: .AddressDidChange, object: nil)
     }
     
     @IBAction func searchAction(_ sender: Any) {
@@ -48,6 +51,11 @@ class AddressViewController: UIViewController {
         tableView.reloadData()
     }
     
+    @IBAction func newAddressAction() {
+        let vc = NewAddressViewController.instance(asset: asset)
+        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+    }
+    
     class func instance(asset: AssetItem) -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "address_list") as! AddressViewController
         vc.asset = asset
@@ -61,8 +69,7 @@ class AddressViewController: UIViewController {
 extension AddressViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
-        let vc = NewAddressViewController.instance(asset: asset)
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+        newAddressAction()
     }
     
     func imageBarRightButton() -> UIImage? {
@@ -115,7 +122,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension AddressViewController {
     
-    private func loadAddresses() {
+    @objc private func loadAddresses() {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
             let addresses = AddressDAO.shared.getAddresses(assetId: assetId)
@@ -124,12 +131,17 @@ extension AddressViewController {
                     return
                 }
                 weakSelf.addresses = addresses
+                weakSelf.searchBoxView.isHidden = addresses.isEmpty
+                weakSelf.newAddressButton.isHidden = !addresses.isEmpty
                 weakSelf.tableView.reloadData()
             }
         }
     }
     
     private func tableViewCommitDeleteAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        if searchBoxView.textField.isFirstResponder {
+            searchBoxView.textField.resignFirstResponder()
+        }
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.MENU_DELETE, style: .destructive, handler: { [weak self](action) in
             self?.deleteAction(indexPath: indexPath)
@@ -140,6 +152,9 @@ extension AddressViewController {
     }
     
     private func tableViewCommitEditAction(action: UITableViewRowAction, indexPath: IndexPath) {
+        if searchBoxView.textField.isFirstResponder {
+            searchBoxView.textField.resignFirstResponder()
+        }
         tableView.setEditing(false, animated: true)
         let vc = NewAddressViewController.instance(asset: asset, address: addresses[indexPath.row])
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)

@@ -27,7 +27,7 @@ class PhotoInputGridCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         updateShadowPathIfNeeded()
-        contentView.layer.shadowColor = UIColor(rgbValue: 0xC3C3C3).cgColor
+        contentView.layer.shadowColor = UIColor.shadow.cgColor
         contentView.layer.shadowOpacity = 0.29
         contentView.layer.shadowRadius = 5
         visualEffectView.frame = imageWrapperView.bounds

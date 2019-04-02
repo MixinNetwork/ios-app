@@ -1,15 +1,15 @@
 import UIKit
 
-enum ScreenSize {
+enum ScreenSize: Int {
     
-    case inch3_5
-    case inch4
-    case inch4_7
-    case inch5_5
-    case inch5_8
-    case inch6_1
-    case inch6_5
-    case unknown
+    case inch3_5 = 35
+    case inch4 = 40
+    case inch4_7 = 47
+    case inch5_5 = 55
+    case inch5_8 = 58
+    case inch6_1 = 61
+    case inch6_5 = 65
+    case unknown = 0
     
     static let current: ScreenSize = {
         let screenHeight = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
@@ -30,5 +30,13 @@ enum ScreenSize {
             return .unknown
         }
     }()
+    
+    static func <=(lhs: ScreenSize, rhs: ScreenSize) -> Bool {
+        return lhs.rawValue <= rhs.rawValue
+    }
+    
+    static func >=(lhs: ScreenSize, rhs: ScreenSize) -> Bool {
+        return lhs.rawValue >= rhs.rawValue
+    }
     
 }

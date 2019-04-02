@@ -42,7 +42,7 @@
 "all_photos" = "所有照片";
 
 "connection_hint_connecting" = "正在连接";
-"connection_hint_progress" = "正在同步消息 %@%%";
+"connection_hint_progress" = "正在同步 %@%%";
 
 "date_format_day" = "ahh:mm";
 "date_format_date" = "yyyy/MM/dd";

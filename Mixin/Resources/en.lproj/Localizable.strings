@@ -43,7 +43,7 @@
 "all_photos" = "All Photos";
 
 "connection_hint_connecting" = "Connecting";
-"connection_hint_progress" = "Syncing messages %@%%";
+"connection_hint_progress" = "Syncing %@%%";
 
 "date_format_day" = "hh:mm a";
 "date_format_date" = "dd/MM/yyyy";

@@ -2,9 +2,8 @@ import UIKit
 
 class SeparatorShadowFooterView: UITableViewHeaderFooterView {
     
-    private let shadowHeight: CGFloat = 10
-    private let labelInset = UIEdgeInsets(top: 2, left: 20, bottom: 16, right: 20)
-    private let shadowView = SeparatorShadowView()
+    let shadowView = SeparatorShadowView()
+    let labelInset = UIEdgeInsets(top: 12, left: 20, bottom: 16, right: 20)
     
     private lazy var label: UILabel = {
         let label = UILabel()
@@ -32,11 +31,13 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         contentView.addSubview(shadowView)
+        clipsToBounds = true
     }
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         contentView.addSubview(shadowView)
+        clipsToBounds = true
     }
     
     override func prepareForReuse() {
@@ -46,18 +47,18 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        shadowView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: shadowHeight)
+        shadowView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
         if text != nil {
             label.frame = CGRect(x: labelInset.left,
-                                 y: shadowHeight + labelInset.top,
+                                 y: labelInset.top,
                                  width: bounds.width - labelInset.horizontal,
-                                 height: bounds.height - shadowHeight - labelInset.vertical)
+                                 height: bounds.height - labelInset.vertical)
         }
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
         if text == nil {
-            return CGSize(width: targetSize.width, height: shadowHeight)
+            return CGSize(width: targetSize.width, height: 10)
         } else {
             let layoutWidth = targetSize.width > 0 ? targetSize.width : 375
             let labelLayoutSize = CGSize(width: layoutWidth - labelInset.horizontal,
@@ -65,10 +66,7 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
             if let cachedSize = cachedSize, cachedSize.width == targetSize.width {
                 return cachedSize
             } else {
-                let height = shadowHeight
-                    + labelInset.top
-                    + label.sizeThatFits(labelLayoutSize).height
-                    + labelInset.bottom
+                let height = labelInset.vertical + label.sizeThatFits(labelLayoutSize).height
                 let size = CGSize(width: targetSize.width, height: ceil(height))
                 cachedSize = size
                 return size

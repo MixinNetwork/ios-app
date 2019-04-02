@@ -144,8 +144,16 @@ class SignalProtocol {
     }
 
     private func encryptSession(content: Data, destination: String, deviceId: Int32 = SignalProtocol.shared.DEFAULT_DEVICE_ID) throws -> CiphertextMessage {
-        let sessionCipher = SessionCipher(for: SignalAddress(name: destination, deviceId: deviceId), in: store)
-        return try sessionCipher.encrypt(content)
+        let address = SignalAddress(name: destination, deviceId: deviceId)
+        let sessionCipher = SessionCipher(for: address, in: store)
+        do {
+            return try sessionCipher.encrypt(content)
+        } catch {
+            if let err = error as? SignalError, err == SignalError.unknownError {
+                store.sessionStore.deleteSession(for: address)
+            }
+            throw error
+        }
     }
 
     func processGroupSession(groupId: String, sender: SignalAddress, data: Data) {

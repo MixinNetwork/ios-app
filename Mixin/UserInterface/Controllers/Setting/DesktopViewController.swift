@@ -32,9 +32,9 @@ class DesktopViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if isDesktopLoggedIn {
+        if let sessionId = AccountUserDefault.shared.extensionSession {
             layoutForIsLoading(true)
-            AccountAPI.shared.logoutSession { (_) in }
+            AccountAPI.shared.logoutSession(sessionId: sessionId, completion: { _ in })
         } else {
             let vc = CameraViewController.instance()
             navigationController?.pushViewController(vc, animated: true)

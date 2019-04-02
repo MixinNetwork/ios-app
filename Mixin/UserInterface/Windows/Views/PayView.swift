@@ -291,17 +291,22 @@ extension PayView: PinFieldDelegate {
             }
             weakSelf.processing = false
             weakSelf.superView?.dismissPopupControllerAnimated()
-            guard let lastViewController = UIApplication.rootNavigationController()?.viewControllers.last else {
+            guard let navigation = UIApplication.rootNavigationController(), let ownerUser = weakSelf.user else {
                 return
             }
-            if lastViewController is CameraViewController {
-                UIApplication.rootNavigationController()?.popViewController(animated: true)
-            } else if lastViewController is ContainerViewController {
-                guard (lastViewController as? ContainerViewController)?.viewController is SendViewController else {
-                    return
+            var viewControllers = navigation.viewControllers
+
+            if (viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController)?.dataSource.ownerUser?.userId == ownerUser.userId {
+                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
+                    viewControllers.removeLast()
                 }
-                UIApplication.rootNavigationController()?.popViewController(animated: true)
+            } else {
+                while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
+                    viewControllers.removeLast()
+                }
+                viewControllers.append(ConversationViewController.instance(ownerUser: ownerUser))
             }
+            navigation.setViewControllers(viewControllers, animated: true)
         }
     }
 

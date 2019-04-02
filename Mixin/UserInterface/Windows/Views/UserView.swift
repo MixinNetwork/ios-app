@@ -301,13 +301,14 @@ class UserView: CornerView {
     }
     
     private func changeNumber() {
-        let viewController: UIViewController
         if AccountAPI.shared.account?.has_pin ?? false {
-            viewController = ChangeNumberNavigationController(rootViewController: R.storyboard.contact.verifyPin()!)
+            let viewController = ChangeNumberNavigationController(rootViewController: R.storyboard.contact.verifyPin()!)
+            UIApplication.rootNavigationController()?.present(viewController, animated: true, completion: nil)
         } else {
-            viewController = WalletPasswordViewController.instance(dismissTarget: .changePhone)
+            let viewController = WalletPasswordViewController.instance(dismissTarget: .changePhone)
+            UIApplication.rootNavigationController()?.pushViewController(viewController, animated: true)
         }
-        UIApplication.rootNavigationController()?.present(viewController, animated: true, completion: nil)
+
     }
     
     private func openApp() {

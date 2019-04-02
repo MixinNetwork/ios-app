@@ -165,7 +165,7 @@ class HomeViewController: UIViewController {
             }
             connectingView.stopAnimating()
             connectingView.isHidden = true
-            titleLabel.text = Localized.HOME_TITLE
+            titleLabel.text = "Mixin"
         } else {
             guard connectingView.isHidden else {
                 return
@@ -184,7 +184,7 @@ class HomeViewController: UIViewController {
             return
         }
         if progress >= 100 {
-            titleLabel.text = Localized.HOME_TITLE
+            titleLabel.text = "Mixin"
             connectingView.stopAnimating()
             connectingView.isHidden = true
         } else {
@@ -212,7 +212,7 @@ class HomeViewController: UIViewController {
                 navigationController?.pushViewController(WalletViewController.instance(), animated: true)
             }
         } else {
-            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1), animated: true)
+            navigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: .wallet), animated: true)
         }
     }
 

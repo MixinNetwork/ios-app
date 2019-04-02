@@ -61,7 +61,6 @@ class CommonUserDefault {
         }
         set {
             session.set(newValue, forKey: keyCameraQRCodeTips)
-            session.synchronize()
         }
     }
 

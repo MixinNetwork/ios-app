@@ -15,7 +15,7 @@ protocol CameraViewControllerDelegate: class {
 class CameraViewController: UIViewController, MixinNavigationAnimating {
 
     @IBOutlet weak var previewView: PreviewView!
-    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    @IBOutlet weak var loadingView: ActivityIndicatorView!
     @IBOutlet weak var sendButton: BouncingButton!
     @IBOutlet weak var takeButton: RecordButton!
     @IBOutlet weak var saveButton: BouncingButton!

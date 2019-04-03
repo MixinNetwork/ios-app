@@ -5,7 +5,7 @@ class AuthorizationsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var networkIndicatorTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var networkIndicatorHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var networkIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var networkIndicatorView: ActivityIndicatorView!
     
     private let cellReuseId = "authorization"
     

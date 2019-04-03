@@ -18,7 +18,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var participantsLabel: UILabel!
-    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    @IBOutlet weak var loadingView: ActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
     
     @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
@@ -1246,15 +1246,13 @@ extension ConversationViewController {
             previewDocumentController?.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
         }
     }
-
+    
     private func showLoading() {
-        loadingView.isHidden = false
         loadingView.startAnimating()
         titleStackView.isHidden = true
     }
-
+    
     private func hideLoading() {
-        loadingView.isHidden = true
         loadingView.stopAnimating()
         titleStackView.isHidden = false
     }

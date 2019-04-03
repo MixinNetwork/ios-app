@@ -4,7 +4,7 @@ import Alamofire
 
 class UrlWindow: BottomSheetView {
 
-    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    @IBOutlet weak var loadingView: ActivityIndicatorView!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var assistView: UIView!
@@ -59,8 +59,6 @@ class UrlWindow: BottomSheetView {
             windowBackgroundColor = UIColor.clear
         }
         super.presentPopupControllerAnimated()
-        loadingView.startAnimating()
-        loadingView.isHidden = false
         errorLabel.isHidden = true
     }
 
@@ -296,7 +294,6 @@ extension UrlWindow {
 
     private func failedHandler(_ errorMsg: String) {
         loadingView.stopAnimating()
-        loadingView.isHidden = true
         errorLabel.text = errorMsg
         errorLabel.isHidden = false
         autoDismissWindow()
@@ -304,7 +301,6 @@ extension UrlWindow {
 
     private func successHandler() {
         loadingView.stopAnimating()
-        loadingView.isHidden = true
         errorLabel.isHidden = true
     }
 }

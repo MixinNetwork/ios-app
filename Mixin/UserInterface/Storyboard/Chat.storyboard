@@ -598,10 +598,14 @@
                                                     <action selector="profileAction:" destination="RcH-pv-rc2" eventType="touchUpInside" id="gA5-T8-XGV"/>
                                                 </connections>
                                             </button>
-                                            <activityIndicatorView contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="pcl-Ex-irR">
+                                            <view contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="pcl-Ex-irR" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="177.5" y="18" width="20" height="20"/>
-                                                <color key="color" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
-                                            </activityIndicatorView>
+                                                <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jbb-Gh-CU3">
                                                 <rect key="frame" x="0.0" y="55" width="375" height="1"/>
                                                 <color key="backgroundColor" red="0.7843137255" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>

@@ -28,7 +28,7 @@ class RoundedButton: UIButton {
     private let backgroundLayer = CAShapeLayer()
     private let shadowLayer = CALayer()
     
-    private lazy var activityIndicator = UIActivityIndicatorView(style: .white)
+    private lazy var activityIndicator = ActivityIndicatorView()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -75,6 +75,7 @@ class RoundedButton: UIButton {
         guard !activityIndicator.isDescendant(of: self) else {
             return
         }
+        activityIndicator.tintColor = .white
         addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { (make) in
             make.center.equalToSuperview()

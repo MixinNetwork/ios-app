@@ -4,7 +4,7 @@ class AddAssetViewController: UIViewController {
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     @IBOutlet weak var noResultIndicator: UIView!
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     

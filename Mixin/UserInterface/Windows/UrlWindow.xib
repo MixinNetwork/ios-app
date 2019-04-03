@@ -33,10 +33,15 @@
                                 <constraint firstAttribute="height" priority="250" constant="369" id="QzS-ax-9fo"/>
                             </constraints>
                         </view>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="wf9-GX-H4l">
+                        <view opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="37" placeholderIntrinsicHeight="37" translatesAutoresizingMaskIntoConstraints="NO" id="wf9-GX-H4l" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="188.66666666666666" y="166" width="37" height="37"/>
-                            <color key="color" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </activityIndicatorView>
+                            <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                        </view>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Couldn't Join Group" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GVD-n0-wWc">
                             <rect key="frame" x="30" y="175" width="354" height="19.333333333333343"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>

@@ -2,7 +2,7 @@ import UIKit
 
 class BusyButton: UIButton {
     
-    let busyIndicator = UIActivityIndicatorView(style: .gray)
+    let busyIndicator = ActivityIndicatorView()
     
     var isBusy = false {
         didSet {
@@ -28,6 +28,7 @@ class BusyButton: UIButton {
     }
     
     private func prepare() {
+        busyIndicator.tintColor = .indicatorGray
         busyIndicator.backgroundColor = .white
         busyIndicator.hidesWhenStopped = true
         busyIndicator.stopAnimating()

@@ -27,6 +27,8 @@ extension UIColor {
     
     static let modernCellSelection = UIColor(rgbValue: 0xF6F8FC)
     
+    static let indicatorGray = UIColor(displayP3RgbValue: 0xBCBEC3)
+    
     static let usernameColors = [UIColor(rgbValue: 0xAA4848),
                                  UIColor(rgbValue: 0xB0665E),
                                  UIColor(rgbValue: 0xEF8A44),
@@ -77,9 +79,19 @@ extension UIColor {
                                  UIColor(rgbValue: 0x92B288)]
     
     convenience init(rgbValue: UInt, alpha: CGFloat = 1.0) {
-        self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0, green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0, blue: CGFloat(rgbValue & 0x0000FF) / 255.0, alpha: alpha)
+        self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+                  green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+                  blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+                  alpha: alpha)
     }
-
+    
+    convenience init(displayP3RgbValue value: UInt, alpha: CGFloat = 1) {
+        self.init(displayP3Red: CGFloat((value & 0xFF0000) >> 16) / 255.0,
+                  green: CGFloat((value & 0x00FF00) >> 8) / 255.0,
+                  blue: CGFloat(value & 0x0000FF) / 255.0,
+                  alpha: alpha)
+    }
+    
     convenience init?(hexString: String) {
         var cString = hexString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         if cString.hasPrefix("#") {

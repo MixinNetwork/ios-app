@@ -3,16 +3,16 @@ import UIKit
 class ConversationSettingViewController: UITableViewController {
     
     @IBOutlet weak var messageSourceEverybodyCell: UITableViewCell!
-    @IBOutlet weak var messageSourceEverybodyIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var messageSourceEverybodyIndicator: ActivityIndicatorView!
     @IBOutlet weak var messageSourceEverybodyCheckmarkView: CheckmarkView!
     @IBOutlet weak var messageSourceContactsCell: UITableViewCell!
-    @IBOutlet weak var messageSourceContactsIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var messageSourceContactsIndicator: ActivityIndicatorView!
     @IBOutlet weak var messageSourceContactsCheckmarkView: CheckmarkView!
     @IBOutlet weak var conversationSourceEverybodyCell: UITableViewCell!
-    @IBOutlet weak var conversationSourceEverybodyIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var conversationSourceEverybodyIndicator: ActivityIndicatorView!
     @IBOutlet weak var conversationSourceEverybodyCheckmarkView: CheckmarkView!
     @IBOutlet weak var conversationSourceContactsCell: UITableViewCell!
-    @IBOutlet weak var conversationSourceContactsIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var conversationSourceContactsIndicator: ActivityIndicatorView!
     @IBOutlet weak var conversationSourceContactsCheckmarkView: CheckmarkView!
     
     @IBOutlet var cells: [UITableViewCell]!

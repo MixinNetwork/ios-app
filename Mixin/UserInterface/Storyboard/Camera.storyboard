@@ -106,9 +106,15 @@
                                     <constraint firstAttribute="trailing" secondItem="30s-ZG-fbq" secondAttribute="trailing" id="uOK-s7-3Rx"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="o5Y-dL-Imf">
+                            <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="37" placeholderIntrinsicHeight="37" translatesAutoresizingMaskIntoConstraints="NO" id="o5Y-dL-Imf" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="141.5" y="275.5" width="37" height="37"/>
-                            </activityIndicatorView>
+                                <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8L-Tp-H0W" customClass="RecordButton" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="124" y="466" width="72" height="72"/>
                                 <constraints>

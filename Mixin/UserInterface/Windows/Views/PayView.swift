@@ -13,7 +13,7 @@ class PayView: UIStackView {
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var amountExchangeLabel: UILabel!
     @IBOutlet weak var memoLabel: UILabel!
-    @IBOutlet weak var transferLoadingView: UIActivityIndicatorView!
+    @IBOutlet weak var transferLoadingView: ActivityIndicatorView!
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var memoView: UIView!
     @IBOutlet weak var assetIconView: AssetIconView!
@@ -216,7 +216,6 @@ extension PayView: PinFieldDelegate {
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                 }
                 weakSelf.transferLoadingView.stopAnimating()
-                weakSelf.transferLoadingView.isHidden = true
                 weakSelf.paySuccessImageView.isHidden = false
                 weakSelf.playSuccessSound()
                 weakSelf.delayDismissWindow()

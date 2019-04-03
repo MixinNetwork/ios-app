@@ -21,7 +21,7 @@ final class AddressDAO {
     }
     
     func insertOrUpdateAddress(addresses: [Address]) {
-        guard addresses.count > 0 else {
+        guard !addresses.isEmpty else {
             return
         }
         MixinDatabase.shared.insertOrReplace(objects: addresses)

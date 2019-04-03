@@ -157,7 +157,7 @@ class ActivityIndicatorView: UIView {
         }
         let anim = CABasicAnimation(keyPath: "transform.rotation.z")
         anim.toValue = CGFloat.pi * 2
-        anim.duration = 2
+        anim.duration = 0.8
         anim.repeatCount = .infinity
         indicatorLayer.add(anim, forKey: "rotation")
     }

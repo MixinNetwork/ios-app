@@ -555,21 +555,17 @@ extension ConversationInputViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        guard !audioViewController.isRecording else {
-            return false
-        }
-        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        if textView.text.isEmpty && !newText.isEmpty {
-            layoutForTextViewIsEmpty(false, animated: true)
-        } else if !textView.text.isEmpty && newText.isEmpty {
-            layoutForTextViewIsEmpty(true, animated: true)
-        }
-        return true
+        return !audioViewController.isRecording
     }
     
     func textViewDidChange(_ textView: UITextView) {
         guard let lineHeight = textView.font?.lineHeight else {
             return
+        }
+        if sendButton.alpha == 0 && !textView.text.isEmpty {
+            layoutForTextViewIsEmpty(false, animated: true)
+        } else if sendButton.alpha == 1 && textView.text.isEmpty {
+            layoutForTextViewIsEmpty(true, animated: true)
         }
         let maxHeight = ceil(lineHeight * CGFloat(maxInputRow)
             + textView.textContainerInset.top

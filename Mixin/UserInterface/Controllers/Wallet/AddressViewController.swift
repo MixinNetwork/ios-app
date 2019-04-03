@@ -34,8 +34,16 @@ class AddressViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
-        loadAddresses()
-        NotificationCenter.default.addObserver(self, selector: #selector(loadAddresses), name: .AddressDidChange, object: nil)
+        reloadLocalAddresses()
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadLocalAddresses), name: .AddressDidChange, object: nil)
+        WithdrawalAPI.shared.addresses(assetId: asset.assetId) { (result) in
+            guard case let .success(addresses) = result else {
+                return
+            }
+            DispatchQueue.global().async {
+                AddressDAO.shared.insertOrUpdateAddress(addresses: addresses)
+            }
+        }
     }
     
     @IBAction func searchAction(_ sender: Any) {
@@ -122,7 +130,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension AddressViewController {
     
-    @objc private func loadAddresses() {
+    @objc private func reloadLocalAddresses() {
         let assetId = asset.assetId
         DispatchQueue.global().async { [weak self] in
             let addresses = AddressDAO.shared.getAddresses(assetId: assetId)

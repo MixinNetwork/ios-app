@@ -1981,10 +1981,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Tc-9y-fxw">
-                                <rect key="frame" x="0.0" y="236" width="375" height="60"/>
+                                <rect key="frame" x="0.0" y="232" width="375" height="64"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="Wda-0K-PpV"/>
+                                    <constraint firstAttribute="height" constant="64" id="Wda-0K-PpV"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Dug-6r-qaU">
                                     <size key="itemSize" width="110" height="60"/>
@@ -1994,7 +1994,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="album" id="Sw1-NR-Rbg" customClass="PhotoInputAlbumCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="110" height="60"/>
+                                        <rect key="frame" x="0.0" y="2" width="110" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="110" height="60"/>
@@ -2021,7 +2021,7 @@
                                 </cells>
                             </collectionView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z5h-qz-w1E">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="236"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="232"/>
                                 <connections>
                                     <segue destination="SbT-mw-qT6" kind="embed" id="W09-GN-aSV"/>
                                 </connections>
@@ -2054,11 +2054,11 @@
             <objects>
                 <viewController id="SbT-mw-qT6" customClass="PhotoInputGridViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CO2-1a-7hY">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="236"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="232"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="49L-o4-XJu">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="236"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="232"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="6Tq-Qx-Cw8">
                                     <size key="itemSize" width="106" height="106"/>
@@ -2216,7 +2216,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ayN-NN-5gU">
-                                <rect key="frame" x="0.0" y="226" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="216" width="375" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="ZBN-4O-2LJ"/>
@@ -2261,8 +2261,8 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="0ZS-Ao-ejZ" firstAttribute="bottom" secondItem="ayN-NN-5gU" secondAttribute="bottom" id="0ri-G5-7vK"/>
-                            <constraint firstItem="ayN-NN-5gU" firstAttribute="top" secondItem="XEL-TZ-DTw" secondAttribute="bottom" constant="16" id="3dW-HI-VGf"/>
+                            <constraint firstItem="0ZS-Ao-ejZ" firstAttribute="bottom" secondItem="ayN-NN-5gU" secondAttribute="bottom" constant="10" id="0ri-G5-7vK"/>
+                            <constraint firstItem="ayN-NN-5gU" firstAttribute="top" secondItem="XEL-TZ-DTw" secondAttribute="bottom" constant="10" id="3dW-HI-VGf"/>
                             <constraint firstAttribute="trailing" secondItem="XEL-TZ-DTw" secondAttribute="trailing" id="Ggd-ei-sg3"/>
                             <constraint firstItem="XEL-TZ-DTw" firstAttribute="leading" secondItem="4tP-FW-X3A" secondAttribute="leading" id="KZh-pq-I3d"/>
                             <constraint firstItem="ayN-NN-5gU" firstAttribute="leading" secondItem="4tP-FW-X3A" secondAttribute="leading" id="dtg-aN-dkG"/>

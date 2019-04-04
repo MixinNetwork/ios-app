@@ -150,7 +150,8 @@ class SignalProtocol {
             return try sessionCipher.encrypt(content)
         } catch {
             if let err = error as? SignalError, err == SignalError.unknownError {
-                store.sessionStore.deleteSession(for: address)
+                FileManager.default.writeLog(log: "[SignalProtocol][EncryptSession]...destination:\(destination)...deviceId:\(deviceId)...containsSession:\(store.sessionStore.containsSession(for: address))")
+                _ = store.sessionStore.deleteSession(for: address)
             }
             throw error
         }

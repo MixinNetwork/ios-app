@@ -74,14 +74,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         checkServerData()
     }
 
-    private func checkServerData() {
+    private func checkServerData(isPushKit: Bool = false) {
         WebSocketService.shared.checkConnectStatus()
 
         cancelBackgroundTask()
         self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {
             self.cancelBackgroundTask()
         })
-        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: 120, repeats: false) { (time) in
+        let timeInterval: TimeInterval = !isPushKit || BlazeMessageDAO.shared.getCount() + JobDAO.shared.getCount() > 50 ? 120 : 20
+        if isPushKit {
+            FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didReceiveIncomingPushWith...timeInterval:\(timeInterval)")
+        }
+        self.backgroundTime = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { (time) in
             self.cancelBackgroundTask()
         }
     }
@@ -160,8 +164,7 @@ extension AppDelegate: PKPushRegistryDelegate {
 
 
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
-        checkServerData()
-        FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didReceiveIncomingPushWith...")
+        checkServerData(isPushKit: true)
     }
 
 }

@@ -7,7 +7,7 @@ class UsernameViewController: ContinueButtonViewController {
     @IBOutlet weak var textField: UITextField!
     
     private var username: String {
-        return textField.text ?? ""
+        return textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
     
     override func viewDidLoad() {

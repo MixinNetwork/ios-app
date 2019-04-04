@@ -20,9 +20,12 @@ class PinValidationPresentationController: UIPresentationController {
             backgroundView.effect = blurEffect
             return
         }
+        presentingViewController.beginAppearanceTransition(false, animated: true)
         coordinator.animate(alongsideTransition: { (_) in
             self.backgroundView.effect = self.blurEffect
-        })
+        }) { (_) in
+            self.presentingViewController.endAppearanceTransition()
+        }
     }
     
     override func dismissalTransitionWillBegin() {
@@ -30,9 +33,12 @@ class PinValidationPresentationController: UIPresentationController {
             backgroundView.effect = nil
             return
         }
+        presentingViewController.beginAppearanceTransition(true, animated: true)
         coordinator.animate(alongsideTransition: { (_) in
             self.backgroundView.effect = nil
-        })
+        }) { (_) in
+            self.presentingViewController.endAppearanceTransition()
+        }
     }
     
 }

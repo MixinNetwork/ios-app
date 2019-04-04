@@ -274,6 +274,7 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func sendTextMessageAction(_ sender: Any) {
+        textView.unmarkText()
         guard !trimmedMessageDraft.isEmpty else {
             return
         }

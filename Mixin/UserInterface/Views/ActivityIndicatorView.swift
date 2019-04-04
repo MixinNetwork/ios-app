@@ -4,11 +4,14 @@ class ActivityIndicatorView: UIView {
     
     @IBInspectable var usesLargerStyle: Bool = false {
         didSet {
-            if usesLargerStyle != oldValue && (_isAnimating || indicatorLayer != nil) {
-                reloadIndicatorLayer(usesLargerStyle: usesLargerStyle)
+            guard usesLargerStyle != oldValue else {
+                return
             }
-            if _isAnimating {
-                setupAnimation()
+            if indicatorLayer != nil {
+                reloadIndicatorLayer(usesLargerStyle: usesLargerStyle)
+                if _isAnimating {
+                    setupAnimation()
+                }
             }
         }
     }
@@ -34,7 +37,7 @@ class ActivityIndicatorView: UIView {
         }
     }
     
-    private var indicatorLayer: CAShapeLayer!
+    private var indicatorLayer: CAShapeLayer?
     private var _isAnimating = false
     
     private var contentLength: CGFloat {
@@ -47,9 +50,7 @@ class ActivityIndicatorView: UIView {
     
     override var tintColor: UIColor! {
         didSet {
-            if let indicator = indicatorLayer {
-                indicator.strokeColor = tintColor.cgColor
-            }
+            indicatorLayer?.strokeColor = tintColor.cgColor
         }
     }
     
@@ -69,9 +70,7 @@ class ActivityIndicatorView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        if let indicatorLayer = indicatorLayer {
-            indicatorLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        }
+        indicatorLayer?.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
     override func didMoveToWindow() {
@@ -98,7 +97,7 @@ class ActivityIndicatorView: UIView {
         guard _isAnimating else {
             return
         }
-        indicatorLayer.removeAllAnimations()
+        indicatorLayer?.removeAllAnimations()
         if hidesWhenStopped {
             isHidden = true
         }
@@ -117,9 +116,7 @@ class ActivityIndicatorView: UIView {
     }
     
     @objc private func applicationDidEnterBackground() {
-        if _isAnimating {
-            indicatorLayer.removeAllAnimations()
-        }
+        indicatorLayer?.removeAllAnimations()
     }
     
     @objc private func applicationWillEnterForeground() {
@@ -129,10 +126,8 @@ class ActivityIndicatorView: UIView {
     }
     
     private func reloadIndicatorLayer(usesLargerStyle: Bool) {
-        if let old = indicatorLayer {
-            old.removeFromSuperlayer()
-        }
-        indicatorLayer = CAShapeLayer()
+        self.indicatorLayer?.removeFromSuperlayer()
+        let indicatorLayer = CAShapeLayer()
         indicatorLayer.backgroundColor = UIColor.clear.cgColor
         indicatorLayer.strokeColor = tintColor.cgColor
         indicatorLayer.fillColor = UIColor.clear.cgColor
@@ -148,18 +143,19 @@ class ActivityIndicatorView: UIView {
                                            endAngle: .pi * 2,
                                            clockwise: true).cgPath
         layer.addSublayer(indicatorLayer)
+        self.indicatorLayer = indicatorLayer
         setNeedsLayout()
     }
     
     private func setupAnimation() {
-        guard window != nil else {
+        guard window != nil, let indicator = indicatorLayer else {
             return
         }
         let anim = CABasicAnimation(keyPath: "transform.rotation.z")
         anim.toValue = CGFloat.pi * 2
         anim.duration = 0.8
         anim.repeatCount = .infinity
-        indicatorLayer.add(anim, forKey: "rotation")
+        indicator.add(anim, forKey: "rotation")
     }
     
 }

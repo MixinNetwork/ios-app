@@ -290,6 +290,10 @@ extension PayView: PinFieldDelegate {
             }
             weakSelf.processing = false
             weakSelf.superView?.dismissPopupControllerAnimated()
+            
+            guard !((weakSelf.superView as? UrlWindow)?.fromWeb ?? false) else {
+                return
+            }
             guard let navigation = UIApplication.rootNavigationController(), let ownerUser = weakSelf.user else {
                 return
             }

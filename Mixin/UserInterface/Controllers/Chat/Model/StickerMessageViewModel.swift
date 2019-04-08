@@ -6,7 +6,7 @@ class StickerMessageViewModel: DetailInfoMessageViewModel {
     static let maxWH: CGFloat = 120
     static let minWH: CGFloat = 48
     
-    internal(set) var contentFrame = CGRect.zero
+    var contentFrame = CGRect.zero
 
     override var contentMargin: Margin {
         return Margin(leading: 17, trailing: 0, top: 2, bottom: 2)

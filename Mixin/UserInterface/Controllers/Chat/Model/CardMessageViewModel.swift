@@ -2,8 +2,8 @@ import UIKit
 
 class CardMessageViewModel: DetailInfoMessageViewModel {
     
-    internal(set) var leadingConstant: CGFloat = 0
-    internal(set) var trailingConstant: CGFloat = 0
+    var leadingConstant: CGFloat = 0
+    var trailingConstant: CGFloat = 0
     
     override class var bubbleImageProvider: BubbleImageProvider.Type {
         return LightRightBubbleImageProvider.self

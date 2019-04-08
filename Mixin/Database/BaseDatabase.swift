@@ -281,9 +281,9 @@ class BaseDatabase {
     }
 }
 
-internal extension Database {
+extension Database {
 
-    internal func create<T: BaseCodable>(of rootType: T.Type) throws{
+    func create<T: BaseCodable>(of rootType: T.Type) throws{
         try create(table: T.tableName, of: rootType)
     }
 

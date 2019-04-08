@@ -19,15 +19,15 @@ class DetailInfoMessageViewModel: MessageViewModel {
         return BubbleImageProvider.self
     }
     
-    internal(set) var statusImage: UIImage?
-    internal(set) var statusTintColor = UIColor.infoGray
-    internal(set) var timeSize = CGSize.zero
-    internal(set) var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
-    internal(set) var fullnameColor = UIColor.darkTheme
-    internal(set) var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
-    internal(set) var statusFrame = CGRect.zero
-    internal(set) var fullnameWidth: CGFloat = 0
-    internal(set) var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
+    var statusImage: UIImage?
+    var statusTintColor = UIColor.infoGray
+    var timeSize = CGSize.zero
+    var fullnameFrame = CGRect(x: 24, y: 1, width: 24, height: 23)
+    var fullnameColor = UIColor.darkTheme
+    var timeFrame = CGRect(x: 0, y: 0, width: 0, height: 12)
+    var statusFrame = CGRect.zero
+    var fullnameWidth: CGFloat = 0
+    var identityIconFrame = CGRect(origin: .zero, size: DetailInfoMessageViewModel.identityIconSize)
     
     internal var statusNormalTintColor: UIColor {
         return .infoGray

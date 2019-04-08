@@ -110,8 +110,8 @@ extension Peer: Equatable {
 
 extension Peer: Hashable {
     
-    var hashValue: Int {
-        return conversationId.hashValue
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(conversationId)
     }
     
 }

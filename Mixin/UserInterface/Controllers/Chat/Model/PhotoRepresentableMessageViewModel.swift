@@ -8,10 +8,10 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
     
     let aspectRatio: CGSize
     
-    internal(set) var contentFrame = CGRect.zero
-    internal(set) var shadowImageOrigin = CGPoint.zero
-    internal(set) var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
-    internal(set) var layoutPosition = PhotoMessageCell.VerticalPositioningImageView.Position.center
+    var contentFrame = CGRect.zero
+    var shadowImageOrigin = CGPoint.zero
+    var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
+    var layoutPosition = PhotoMessageCell.VerticalPositioningImageView.Position.center
     
     override var contentMargin: Margin {
         return Margin(leading: 9, trailing: 5, top: 4, bottom: 6)

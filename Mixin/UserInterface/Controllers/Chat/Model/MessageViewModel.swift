@@ -10,10 +10,10 @@ class MessageViewModel: CustomDebugStringConvertible {
     let time: String
     let layoutWidth: CGFloat
     
-    internal(set) var thumbnail: UIImage?
-    internal(set) var backgroundImage: UIImage?
-    internal(set) var backgroundImageFrame = CGRect.zero
-    internal(set) var cellHeight: CGFloat = 44
+    var thumbnail: UIImage?
+    var backgroundImage: UIImage?
+    var backgroundImageFrame = CGRect.zero
+    var cellHeight: CGFloat = 44
 
     internal var contentMargin: Margin {
         return Margin(leading: 16, trailing: 10, top: 7, bottom: 7)

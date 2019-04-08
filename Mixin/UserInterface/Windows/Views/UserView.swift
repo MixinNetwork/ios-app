@@ -159,52 +159,52 @@ class UserView: CornerView {
         superView?.dismissPopupControllerAnimated()
         let alc = UIAlertController(title: user.fullName, message: user.phone ?? user.identityNumber, preferredStyle: .actionSheet)
         if user.isBot {
-            alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_DEVELOPER, style: .default, handler: { [weak self](action) in
-                self?.developerAction()
+            alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_DEVELOPER, style: .default, handler: { (action) in
+                self.developerAction()
             }))
         }
         if isMe {
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
-                self?.editName()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { (action) in
+                self.editName()
             }))
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_CHANGE_AVATAR, style: .default, handler: { [weak self](action) in
-                self?.changeProfilePhoto()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_CHANGE_AVATAR, style: .default, handler: { (action) in
+                self.changeProfilePhoto()
             }))
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_CHANGE_NUMBER, style: .default, handler: { [weak self](action) in
-                self?.changeNumber()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_CHANGE_NUMBER, style: .default, handler: { (action) in
+                self.changeNumber()
             }))
         } else {
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { [weak self](action) in
-                self?.shareAction()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_SHARE_CARD, style: .default, handler: { (action) in
+                self.shareAction()
             }))
 
             if user.isSelfBot {
-                alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_TRANSFER, style: .default, handler: { [weak self](action) in
-                    self?.transferAction(alc)
+                alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_TRANSFER, style: .default, handler: { (action) in
+                    self.transferAction(alc)
                 }))
             }
 
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_TRANSACTIONS, style: .default, handler: { [weak self](action) in
-                self?.transactionsAction()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_TRANSACTIONS, style: .default, handler: { (action) in
+                self.transactionsAction()
             }))
         }
         switch user.relationship {
         case Relationship.FRIEND.rawValue:
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { [weak self](action) in
-                self?.editName()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_EDIT_NAME, style: .default, handler: { (action) in
+                self.editName()
             }))
             addMuteAlertAction(alc: alc)
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_REMOVE, style: .destructive, handler: { [weak self](action) in
-                self?.removeAction()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_REMOVE, style: .destructive, handler: { (action) in
+                self.removeAction()
             }))
         case Relationship.STRANGER.rawValue:
             addMuteAlertAction(alc: alc)
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_BLOCK, style: .destructive, handler: { [weak self](action) in
-                self?.blockAction()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_BLOCK, style: .destructive, handler: { (action) in
+                self.blockAction()
             }))
         case Relationship.BLOCKING.rawValue:
-            alc.addAction(UIAlertAction(title: Localized.PROFILE_UNBLOCK, style: .destructive, handler: { [weak self](action) in
-                self?.unblockAction()
+            alc.addAction(UIAlertAction(title: Localized.PROFILE_UNBLOCK, style: .destructive, handler: { (action) in
+                self.unblockAction()
             }))
         default:
             break

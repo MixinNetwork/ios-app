@@ -178,7 +178,9 @@ class ReceiveMessageService: MixinService {
         guard data.category == MessageCategory.APP_BUTTON_GROUP.rawValue || data.category == MessageCategory.APP_CARD.rawValue else {
             return
         }
-        MessageDAO.shared.insertMessage(message: Message.createMessage(appMessage: data), messageSource: data.source)
+        let message = Message.createMessage(appMessage: data)
+        MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+        SendMessageService.shared.sendSessionMessage(message: message, data: data.data)
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
 

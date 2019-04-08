@@ -126,6 +126,7 @@ class SendMessageService: MixinService {
             message.category.hasSuffix("_DATA") ||
             message.category.hasSuffix("_AUDIO") ||
             message.category.hasSuffix("_VIDEO") ||
+            message.category.hasPrefix("APP_") ||
             message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {
             return
         }
@@ -510,25 +511,26 @@ extension SendMessageService {
         blazeMessage.params?.primitiveMessageId = messageId
         if category.hasPrefix("SYSTEM_") {
             blazeMessage.params?.primitiveId = User.systemUser
-        } else if category.hasPrefix("PLAIN_") {
+        } else {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
                 return
             }
-            if let representativeId = blazeMessage.params?.representativeId, !representativeId.isEmpty {
-                blazeMessage.params?.primitiveId = representativeId
-                blazeMessage.params?.representativeId = message.userId
-            } else {
+            if category.hasPrefix("PLAIN_") {
+                if let representativeId = blazeMessage.params?.representativeId, !representativeId.isEmpty {
+                    blazeMessage.params?.primitiveId = representativeId
+                    blazeMessage.params?.representativeId = message.userId
+                } else {
+                    blazeMessage.params?.primitiveId = message.userId
+                }
+            } else if category.hasPrefix("SIGNAL_") {
+                blazeMessage.params?.primitiveId = message.userId
+                _ = try checkSignalSession(recipientId: accountId, sessionId: sessionId)
+
+                let content = blazeMessage.params?.data ?? ""
+                blazeMessage.params?.data = try SignalProtocol.shared.encryptTransferSessionMessageData(content: content, sessionId: sessionId, recipientId: accountId)
+            } else if category.hasPrefix("APP_") {
                 blazeMessage.params?.primitiveId = message.userId
             }
-        } else if category.hasPrefix("SIGNAL_") {
-            guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
-                return
-            }
-            blazeMessage.params?.primitiveId = message.userId
-            _ = try checkSignalSession(recipientId: accountId, sessionId: sessionId)
-
-            let content = blazeMessage.params?.data ?? ""
-            blazeMessage.params?.data = try SignalProtocol.shared.encryptTransferSessionMessageData(content: content, sessionId: sessionId, recipientId: accountId)
         }
         try deliverMessage(blazeMessage: blazeMessage)
     }

@@ -58,10 +58,11 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
             case let .success(response):
                 weakSelf.saveGroupImage()
                 weakSelf.saveConversation(conversation: response)
-            case .failure:
+            case let .failure(error):
                 if !NetworkManager.shared.isReachable {
                     weakSelf.saveOfflineConversation()
                 } else {
+                    showHud(style: .error, text: error.localizedDescription)
                     weakSelf.createButton.isBusy = false
                 }
             }

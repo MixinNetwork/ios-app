@@ -408,7 +408,9 @@ extension ConversationInputViewController {
                 - endFrame.origin.y
                 - interactiveDismissResponder.height
             height = max(minimizedHeight, height)
-            setPreferredContentHeight(height, animated: false)
+            if view.frame.height != height {
+                setPreferredContentHeight(height, animated: false)
+            }
         }
     }
     

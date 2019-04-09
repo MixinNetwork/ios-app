@@ -682,6 +682,7 @@ extension ConversationInputViewController {
     private func updateQuotePreview() {
         if let quote = quote {
             audioViewController.cancelIfRecording()
+            quotePreviewView.alpha = 1
             UIView.performWithoutAnimation {
                 quotePreviewView.render(message: quote.message, contentImageThumbnail: quote.thumbnail)
                 quotePreviewView.layoutIfNeeded()
@@ -696,6 +697,7 @@ extension ConversationInputViewController {
                 textView.becomeFirstResponder()
             }
         } else {
+            quotePreviewView.alpha = 0
             if quotePreviewWrapperHeightConstraint.constant != 0 {
                 let newHeight = preferredContentHeight - quotePreviewWrapperHeightConstraint.constant
                 quotePreviewWrapperHeightConstraint.constant = 0

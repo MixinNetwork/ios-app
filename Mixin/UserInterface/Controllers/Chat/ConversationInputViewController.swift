@@ -283,7 +283,6 @@ class ConversationInputViewController: UIViewController {
                                value: trimmedMessageDraft)
         textView.text = ""
         textViewDidChange(textView)
-        layoutForTextViewIsEmpty(true, animated: true)
         quote = nil
     }
     
@@ -671,7 +670,6 @@ extension ConversationInputViewController {
             beginEditingRightActionsStackLeadingConstraint.priority = .almostInexist
             endEditingTextViewTrailingConstraint.priority = .almostRequired
             endEditingRightActionsStackTrailingConstraint.priority = .almostRequired
-            inputBarView.layoutIfNeeded()
             sendButton.alpha = 0
             rightActionsStackView.alpha = 1
             audioInputContainerView.alpha = 1
@@ -681,12 +679,12 @@ extension ConversationInputViewController {
             beginEditingRightActionsStackLeadingConstraint.priority = .almostRequired
             endEditingTextViewTrailingConstraint.priority = .almostInexist
             endEditingRightActionsStackTrailingConstraint.priority = .almostInexist
-            inputBarView.layoutIfNeeded()
             sendButton.alpha = 1
             rightActionsStackView.alpha = 0
             audioInputContainerView.alpha = 0
             textViewRightAccessoryView.alpha = 0
         }
+        inputBarView.layoutIfNeeded()
         if animated {
             UIView.commitAnimations()
         }

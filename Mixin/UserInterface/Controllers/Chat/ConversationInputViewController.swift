@@ -7,6 +7,8 @@ protocol ConversationInputInteractiveResizableViewController {
 
 class ConversationInputViewController: UIViewController {
     
+    typealias Quote = (message: MessageItem, thumbnail: UIImage?)
+    
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
     @IBOutlet weak var deleteConversationButton: BusyButton!
     @IBOutlet weak var unblockButton: BusyButton!
@@ -55,9 +57,9 @@ class ConversationInputViewController: UIViewController {
         return UIView.layoutFittingExpandedSize.height
     }
     
-    var quote: (message: MessageItem, thumbnail: UIImage?)? {
+    var quote: Quote? {
         didSet {
-            updateQuotePreview()
+            updateQuotePreview(oldValue: oldValue)
         }
     }
     
@@ -681,30 +683,32 @@ extension ConversationInputViewController {
         }
     }
     
-    private func updateQuotePreview() {
+    private func updateQuotePreview(oldValue: Quote?) {
+        let quotePreviewHeight = quotePreviewHeightConstraint.constant
         if let quote = quote {
             audioViewController.cancelIfRecording()
-            quotePreviewView.alpha = 1
             UIView.performWithoutAnimation {
                 quotePreviewView.render(message: quote.message, contentImageThumbnail: quote.thumbnail)
                 quotePreviewView.layoutIfNeeded()
             }
-            let diff = quotePreviewHeightConstraint.constant - quotePreviewWrapperHeightConstraint.constant
-            quotePreviewWrapperHeightConstraint.constant = quotePreviewHeightConstraint.constant
+            if oldValue == nil {
+                quotePreviewView.alpha = 1
+                quotePreviewWrapperHeightConstraint.constant = quotePreviewHeight
+                interactiveDismissResponder.height += quotePreviewHeight
+            }
             if textView.isFirstResponder {
-                if abs(diff) > 0 {
-                    setPreferredContentHeight(preferredContentHeight + diff, animated: true)
+                if oldValue == nil {
+                    setPreferredContentHeight(preferredContentHeight + quotePreviewHeight, animated: true)
                 }
             } else {
                 textView.becomeFirstResponder()
             }
-        } else {
+        } else if oldValue != nil {
             quotePreviewView.alpha = 0
-            if quotePreviewWrapperHeightConstraint.constant != 0 {
-                let newHeight = preferredContentHeight - quotePreviewWrapperHeightConstraint.constant
-                quotePreviewWrapperHeightConstraint.constant = 0
-                setPreferredContentHeight(newHeight, animated: true)
-            }
+            interactiveDismissResponder.height -= quotePreviewHeight
+            let newHeight = preferredContentHeight - quotePreviewHeight
+            quotePreviewWrapperHeightConstraint.constant = 0
+            setPreferredContentHeight(newHeight, animated: true)
         }
     }
     

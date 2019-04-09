@@ -23,6 +23,7 @@ class QuotePreviewView: UIView, XibDesignable {
     func render(message: MessageItem, contentImageThumbnail: UIImage?) {
         if !isXibLoaded {
             loadXib()
+            isXibLoaded = true
             dismissButton.imageView?.contentMode = .center
         }
         let tintColor = UIColor.usernameColors[message.userId.positiveHashCode() % UIColor.usernameColors.count]

@@ -15,7 +15,9 @@ class KeyboardBasedLayoutViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        AppDelegate.current.window?.endEditing(true)
+        if !viewHasAppeared {
+            AppDelegate.current.window?.endEditing(true)
+        }
         super.viewWillAppear(animated)
         viewIsDisappearing = false
     }

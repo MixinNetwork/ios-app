@@ -309,8 +309,8 @@
 "wallet_menu_hide_asset" = "Hide asset";
 "wallet_hide_asset_empty" = "No hidden assets";
 "wallet_send_to_address" = "Address";
-"wallet_withdraw_amount" = "Amount";
-"wallet_withdraw_memo" = "Memo (Optional)";
+"wallet_send_amount" = "Amount";
+"wallet_send_memo" = "Memo (Optional)";
 "wallet_button_add_address" = "Tap to add address";
 "wallet_hint_transaction_fee" = "A transaction fee of %@ is required for withdrawing %@.";
 "wallet_password_address_tips" = "Confirm PIN to protect your address security.";

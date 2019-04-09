@@ -22,6 +22,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var transactionFeeHintLabel: UILabel!
     @IBOutlet weak var continueWrapperView: UIView!
     @IBOutlet weak var switchAmountButton: UIButton!
+    @IBOutlet weak var memoView: CornerView!
 
     @IBOutlet weak var opponentImageViewWidthConstraint: ScreenSizeCompatibleLayoutConstraint!
     @IBOutlet weak var continueWrapperBottomConstraint: NSLayoutConstraint!
@@ -226,11 +227,13 @@ class SendViewController: KeyboardBasedLayoutViewController {
         
         if let address = self.targetAddress {
             if asset.isAccount {
-                container?.titleLabel.text = address.accountName
+                container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + (address.accountName ?? "")
                 container?.setSubtitle(subtitle: address.accountTag?.toSimpleKey())
+                memoView.isHidden = true
             } else {
                 container?.titleLabel.text = Localized.ACTION_SEND_TO + " " + (address.label ?? "")
                 container?.setSubtitle(subtitle: address.publicKey?.toSimpleKey())
+                memoView.isHidden = false
             }
         }
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"

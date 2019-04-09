@@ -303,8 +303,8 @@
 "wallet_menu_hide_asset" = "資産を隠す";
 "wallet_hide_asset_empty" = "隠し資産なし";
 "wallet_menu_withdraw" = "引き出す";
-"wallet_withdraw_amount" = "金額";
-"wallet_withdraw_memo" = "メモ（オプション）";
+"wallet_send_amount" = "金額";
+"wallet_send_memo" = "メモ（オプション）";
 "wallet_button_add_address" = "タップして住所を追加";
 "wallet_hint_transaction_fee" = "%@ を引き出すには、%@ の取引手数料が必要です。";
 "wallet_password_address_tips" = "あなたのアドレスを保護するためにPINを確認してください。";

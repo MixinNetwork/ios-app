@@ -29,6 +29,7 @@ class PayView: UIStackView {
     private var address: Address!
     private var amount = ""
     private var memo = ""
+    private var isWithdrawal = false
     private(set) var processing = false
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
@@ -60,12 +61,13 @@ class PayView: UIStackView {
         self.trackId = trackId
         self.superView = superView
         if let user = user {
+            self.isWithdrawal = false
             self.user = user
             avatarImageView.setImage(with: user)
-            avatarImageView.isHidden = false
             nameLabel.text = Localized.PAY_TRANSFER_TITLE(fullname: user.fullName)
             mixinIDLabel.text = user.identityNumber
         } else if let address = address {
+            self.isWithdrawal = true
             self.address = address
             avatarImageView.image = R.image.wallet.ic_transaction_external()
             if asset.isAccount {
@@ -192,7 +194,6 @@ extension PayView: PinFieldDelegate {
         }
         processing = true
         let assetId = asset.assetId
-        let isWithdrawal = avatarImageView.isHidden
         dismissButton.isEnabled = false
         preparePayView(show: false)
 
@@ -203,15 +204,13 @@ extension PayView: PinFieldDelegate {
 
             switch result {
             case let .success(snapshot):
-                if isWithdrawal {
-                    ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
-                }
-                SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
-                if weakSelf.avatarImageView.isHidden {
+                if weakSelf.isWithdrawal {
                     WalletUserDefault.shared.lastWithdrawalAddress[assetId] = weakSelf.address.addressId
+                    ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                 } else {
                     WalletUserDefault.shared.defalutTransferAssetId = assetId
                 }
+                SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
                 if !weakSelf.isAutoFillPIN {
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
                 }
@@ -294,20 +293,28 @@ extension PayView: PinFieldDelegate {
             guard !((weakSelf.superView as? UrlWindow)?.fromWeb ?? false) else {
                 return
             }
-            guard let navigation = UIApplication.rootNavigationController(), let ownerUser = weakSelf.user else {
+            guard let navigation = UIApplication.rootNavigationController() else {
                 return
             }
             var viewControllers = navigation.viewControllers
-
-            if (viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController)?.dataSource.ownerUser?.userId == ownerUser.userId {
-                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
-                    viewControllers.removeLast()
-                }
-            } else {
+            if weakSelf.isWithdrawal {
                 while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
+                    if let _ = (viewControllers.last as? ContainerViewController)?.viewController as? AssetViewController {
+                        break
+                    }
                     viewControllers.removeLast()
                 }
-                viewControllers.append(ConversationViewController.instance(ownerUser: ownerUser))
+            } else if let ownerUser = weakSelf.user {
+                if (viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController)?.dataSource.ownerUser?.userId == ownerUser.userId {
+                    while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
+                        viewControllers.removeLast()
+                    }
+                } else {
+                    while (viewControllers.count > 0 && !(viewControllers.last is HomeViewController)) {
+                        viewControllers.removeLast()
+                    }
+                    viewControllers.append(ConversationViewController.instance(ownerUser: ownerUser))
+                }
             }
             navigation.setViewControllers(viewControllers, animated: true)
         }

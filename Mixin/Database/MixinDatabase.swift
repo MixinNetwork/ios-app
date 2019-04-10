@@ -3,7 +3,7 @@ import Bugsnag
 
 class MixinDatabase: BaseDatabase {
 
-    private static let databaseVersion: Int = 6
+    private static let databaseVersion: Int = 7
 
     static let shared = MixinDatabase()
 
@@ -45,9 +45,7 @@ class MixinDatabase: BaseDatabase {
 
                 try self.createAfter(database: database, currentVersion: currentVersion)
 
-                try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageInsert).execute()
                 try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerLastMessageDelete).execute()
-                try database.prepareUpdateSQL(sql: MessageDAO.sqlTriggerUnseenMessageInsert).execute()
 
                 DatabaseUserDefault.shared.mixinDatabaseVersion = MixinDatabase.databaseVersion
             })
@@ -77,6 +75,11 @@ class MixinDatabase: BaseDatabase {
         if currentVersion < 6 {
             try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS messages_status_index").execute()
             try database.prepareUpdateSQL(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_update").execute()
+        }
+
+        if currentVersion < 7 {
+            try database.prepareUpdateSQL(sql: "DROP TRIGGER IF EXISTS conversation_unseen_message_count_insert").execute()
+            try database.prepareUpdateSQL(sql: "DROP TRIGGER IF EXISTS conversation_last_message_update").execute()
         }
     }
 

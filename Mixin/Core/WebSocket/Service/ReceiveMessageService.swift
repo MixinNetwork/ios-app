@@ -174,11 +174,12 @@ class ReceiveMessageService: MixinService {
 
                         try database.insert(objects: jobs, intoTable: Job.tableName)
                         try database.delete(fromTable: MessageBlaze.tableName, where: MessageBlaze.Properties.conversationId == conversationId && MessageBlaze.Properties.createdAt <= lastCreatedAt, orderBy: [MessageBlaze.Properties.createdAt.asOrder(by: .ascending)], limit: pageCount)
-                        try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+                        try ConversationDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
 
                         //_ = syncUser(userId: data.getSenderId())
                         //sharedUserId
                         //sticker
+                        //notification
 
                         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
                     }

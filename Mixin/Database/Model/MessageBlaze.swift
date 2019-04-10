@@ -6,12 +6,14 @@ struct MessageBlaze: BaseCodable {
     static var tableName: String = "messages_blaze"
 
     let messageId: String
+    let conversationId: String
     let message: Data
     let createdAt: String
 
     enum CodingKeys: String, CodingTableKey {
         typealias Root = MessageBlaze
         case messageId = "_id"
+        case conversationId = "conversation_id"
         case message
         case createdAt = "created_at"
 

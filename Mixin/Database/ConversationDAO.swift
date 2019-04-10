@@ -76,6 +76,25 @@ final class ConversationDAO {
         }
     }
 
+    func getBotConversations() throws -> [String] {
+        let conversationIdColumn = Conversation.Properties.conversationId.in(table: Conversation.tableName)
+        let ownerIdColumn = Conversation.Properties.ownerId.in(table: Conversation.tableName)
+        let userIdColumn = User.Properties.userId.in(table: User.tableName)
+        let appIdColumn = User.Properties.appId.in(table: User.tableName)
+
+        let joinClause = JoinClause(with: Conversation.tableName)
+            .join(User.tableName, with: .inner)
+            .on(ownerIdColumn == userIdColumn)
+        let statementSelect = StatementSelect().select(conversationIdColumn).from(joinClause).where(appIdColumn.isNotNull())
+        let coreStatement = try MixinDatabase.shared.database.prepare(statementSelect)
+
+        var result = [String]()
+        while try coreStatement.step() {
+            result.append(coreStatement.value(atIndex: 0).stringValue)
+        }
+        return result
+    }
+
     func getCategoryStorages(conversationId: String) -> [ConversationCategoryStorage] {
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationStorageUsage, values: [conversationId])
     }

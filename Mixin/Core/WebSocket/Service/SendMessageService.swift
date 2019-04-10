@@ -524,8 +524,9 @@ extension SendMessageService {
                 }
             } else if category.hasPrefix("SIGNAL_") {
                 blazeMessage.params?.primitiveId = message.userId
-                _ = try checkSignalSession(recipientId: accountId, sessionId: sessionId)
-
+                guard try checkSignalSession(recipientId: accountId, sessionId: sessionId) else {
+                    return
+                }
                 let content = blazeMessage.params?.data ?? ""
                 blazeMessage.params?.data = try SignalProtocol.shared.encryptTransferSessionMessageData(content: content, sessionId: sessionId, recipientId: accountId)
             } else if category.hasPrefix("APP_") {

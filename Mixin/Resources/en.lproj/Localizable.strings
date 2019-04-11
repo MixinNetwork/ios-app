@@ -396,7 +396,7 @@
 "transfer_error_fee_insufficient" = "Insufficient transaction fee";
 "transfer_error_amount_too_small" = "Transfer amount too small";
 "transfer_error_pin_incorrect" = "PIN incorrect";
-"transfer_paid" = "Paid";
+"transfer_paid" = "This payment link has already been paid by someone, you can not make a duplicate payment.";
 "transfer_pay_password" = "Pay with PIN";
 "pay_transfer_title" = "Transfer to %@";
 "pay_withdrawal_title" = "Withdrawal to %@";

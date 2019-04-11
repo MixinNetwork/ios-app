@@ -395,7 +395,7 @@
 "transfer_error_fee_insufficient" = "手续费不足";
 "transfer_error_amount_too_small" = "转账金额太小";
 "transfer_error_pin_incorrect" = "支付密码不正确";
-"transfer_paid" = "已支付";
+"transfer_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "transfer_pay_password" = "通过密码支付";
 "pay_transfer_title" = "转账给%@";
 "pay_withdrawal_title" = "提现到%@";

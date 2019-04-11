@@ -512,7 +512,7 @@ public class Localized {
     }
     public static let TRANSFER_TRANSACTIONS = LocalizedString("transfer_transactions", comment: "TRANSACTIONS")
     public static let TRANSFER_TOUCH_ID_REASON = LocalizedString("transfer_touch_id_reason", comment: "Use an existing fingerprint to make the payment")
-    public static let TRANSFER_PAID = LocalizedString("transfer_paid", comment: "Paid")
+    public static let TRANSFER_PAID = LocalizedString("transfer_paid", comment: "This payment link has already been paid by someone, you can not make a duplicate payment.")
     public static let TRANSFER_PAY_PASSWORD = LocalizedString("transfer_pay_password", comment: "Pay with PIN")
     public static func PAY_TRANSFER_TITLE(fullname: String) -> String {
         return String(format: LocalizedString("pay_transfer_title", comment: "Transfer to %@"), fullname)

@@ -203,15 +203,6 @@ extension UrlWindow {
             self.layoutIfNeeded()
         })
     }
-    
-    private func autoDismissWindow() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            guard let weakSelf = self, weakSelf.isShowing else {
-                return
-            }
-            weakSelf.dismissPopupControllerAnimated()
-        }
-    }
 
     private func load(authorization: AuthorizationResponse, fromWeb: Bool = false) {
         DispatchQueue.global().async { [weak self] in
@@ -296,7 +287,6 @@ extension UrlWindow {
         loadingView.stopAnimating()
         errorLabel.text = errorMsg
         errorLabel.isHidden = false
-        autoDismissWindow()
     }
 
     private func successHandler() {

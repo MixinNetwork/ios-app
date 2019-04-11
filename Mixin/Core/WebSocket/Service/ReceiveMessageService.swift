@@ -40,7 +40,7 @@ class ReceiveMessageService: MixinService {
                     MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
                     ReceiveMessageService.shared.sendSessionStatus(messageId: data.messageId, status: data.status)
                 } else {
-                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, conversationId: data.conversationId, data: blazeMessage.data, createdAt: data.createdAt) else {
+                    guard BlazeMessageDAO.shared.insertOrReplace(data: data, originalData: blazeMessage.data) else {
                         return
                     }
                     ReceiveMessageService.shared.processReceiveMessages()
@@ -49,7 +49,7 @@ class ReceiveMessageService: MixinService {
                 if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty && data.sessionId == AccountAPI.shared.accountSessionId {
 
                 } else {
-                    guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, conversationId: data.conversationId, data: blazeMessage.data, createdAt: data.createdAt) else {
+                    guard BlazeMessageDAO.shared.insertOrReplace(data: data, originalData: blazeMessage.data)  else {
                         return
                     }
                     ReceiveMessageService.shared.processReceiveMessages()
@@ -142,7 +142,8 @@ class ReceiveMessageService: MixinService {
                     var jobs = [Job]()
                     for i in stride(from: 0, to: messages.count, by: 100) {
                         let by = i + 100 > messages.count ? messages.count : i + 100
-                        let statusMessages: [TransferMessage] = messages[i..<by].map { TransferMessage(messageId: $0.messageId, status: MessageStatus.DELIVERED.rawValue ) }
+
+                        let statusMessages: [TransferMessage] = messages[i..<by].map { TransferMessage(messageId: $0.messageId, status: $0.category.hasPrefix("APP_") ? MessageStatus.READ.rawValue : MessageStatus.DELIVERED.rawValue ) }
                         let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: statusMessages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
                         jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
 
@@ -152,12 +153,6 @@ class ReceiveMessageService: MixinService {
                         }
                     }
 
-                    for i in 0..<messages.count {
-                        guard let quoteMessageId = messages[i].quoteMessageId, !quoteMessageId.isEmpty else {
-                            continue
-                        }
-                        messages[i].quoteContent = MessageDAO.shared.getQuoteMessage(messageId: messages[i].messageId)
-                    }
                     let quoteMessages = messages.filter({ !($0.quoteMessageId?.isEmpty ?? true) })
                     let hasShareContact = messages.contains(where: { !($0.sharedUserId?.isEmpty ?? true) })
 
@@ -175,7 +170,7 @@ class ReceiveMessageService: MixinService {
                         }
 
                         try database.insert(objects: jobs, intoTable: Job.tableName)
-                        try database.delete(fromTable: MessageBlaze.tableName, where: MessageBlaze.Properties.conversationId == conversationId && MessageBlaze.Properties.createdAt <= lastCreatedAt, orderBy: [MessageBlaze.Properties.createdAt.asOrder(by: .ascending)], limit: pageCount)
+                        try database.delete(fromTable: MessageBlaze.tableName, where: MessageBlaze.Properties.conversationId == conversationId && MessageBlaze.Properties.isSessionMessage == false && MessageBlaze.Properties.createdAt <= lastCreatedAt, orderBy: [MessageBlaze.Properties.createdAt.asOrder(by: .ascending)], limit: pageCount)
                         try ConversationDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
 
                         let firstCreatedAt = blazeMessageDatas[0].createdAt
@@ -198,9 +193,6 @@ class ReceiveMessageService: MixinService {
     }
 
     private func parseBlazeMessage(data: BlazeMessageData) -> (Message, Job?)? {
-        guard !data.isSessionMessage else {
-            return nil
-        }
         var plainText = data.data
         var message: Message?
         switch data.category {
@@ -241,6 +233,8 @@ class ReceiveMessageService: MixinService {
                 return nil
             }
             message = Message.createMessage(contactData: transferData, data: data)
+        case MessageCategory.APP_CARD.rawValue, MessageCategory.APP_BUTTON_GROUP.rawValue:
+            message = Message.createMessage(appMessage: data)
         default:
             return nil
         }

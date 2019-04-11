@@ -132,6 +132,7 @@
 "contact_my_qr_code" = "私の QR コード";
 "contact_receive_money" = "お金を受け取る";
 "contact_qr_code_save" = "画像を保存";
+"chat_stranger_tip" = "送信者は連絡先に未登録です";
 
 "button_title_search" = "サーチ";
 "placeholder_mixin_id_or_phone" = "MIXIN IDまたは電話番号";
@@ -424,7 +425,7 @@
 "profile_transactions" = "取引履歴";
 "profile_open_bot" = "アプリを開く";
 "profile_notification" = "通知";
-"profile_add" = "連絡先を追加";
+"profile_add" = "連絡先に追加";
 "profile_remove" = "連絡先を削除します";
 "profile_block" = "ブロック";
 "profile_unblock" = "ブロック解除";

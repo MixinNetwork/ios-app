@@ -66,6 +66,10 @@ final class ConversationDAO {
     private static let sqlUpdateLastMessage = """
     UPDATE conversations SET last_message_id = ?, last_message_created_at = ? WHERE conversation_id = ?
     """
+    private static let sqlQueryBotConversation = """
+    SELECT c.conversation_id FROM conversations c
+    INNER JOIN users u ON u.user_id = c.owner_id ON u.app_id IS NOT NULL
+    """
 
     func updateUnseenMessageCount(database: Database, conversationId: String) throws {
         try database.prepareUpdateSQL(sql: ConversationDAO.sqlUpdateUnseenMessageCount).execute(with: [conversationId, conversationId])
@@ -91,22 +95,7 @@ final class ConversationDAO {
     }
 
     func getBotConversations() throws -> [String] {
-        let conversationIdColumn = Conversation.Properties.conversationId.in(table: Conversation.tableName)
-        let ownerIdColumn = Conversation.Properties.ownerId.in(table: Conversation.tableName)
-        let userIdColumn = User.Properties.userId.in(table: User.tableName)
-        let appIdColumn = User.Properties.appId.in(table: User.tableName)
-
-        let joinClause = JoinClause(with: Conversation.tableName)
-            .join(User.tableName, with: .inner)
-            .on(ownerIdColumn == userIdColumn)
-        let statementSelect = StatementSelect().select(conversationIdColumn).from(joinClause).where(appIdColumn.isNotNull())
-        let coreStatement = try MixinDatabase.shared.database.prepare(statementSelect)
-
-        var result = [String]()
-        while try coreStatement.step() {
-            result.append(coreStatement.value(atIndex: 0).stringValue)
-        }
-        return result
+        return MixinDatabase.shared.getStringValues(sql: ConversationDAO.sqlQueryBotConversation)
     }
 
     func getCategoryStorages(conversationId: String) -> [ConversationCategoryStorage] {

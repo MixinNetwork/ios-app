@@ -139,6 +139,9 @@ class ReceiveMessageService: MixinService {
                         return ReceiveMessageService.shared.parseBlazeMessage(data: data)
                     })
                     var messages = blazeMessages.compactMap({ $0.0 })
+                    if messages.count > 0 {
+                        break
+                    }
                     var jobs = [Job]()
                     for i in stride(from: 0, to: messages.count, by: 100) {
                         let by = i + 100 > messages.count ? messages.count : i + 100
@@ -146,11 +149,10 @@ class ReceiveMessageService: MixinService {
                         let statusMessages: [TransferMessage] = messages[i..<by].map { TransferMessage(messageId: $0.messageId, status: $0.category.hasPrefix("APP_") ? MessageStatus.READ.rawValue : MessageStatus.DELIVERED.rawValue ) }
                         let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: statusMessages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
                         jobs.append(Job(jobId: blazeMessage.id, action: .SEND_ACK_MESSAGES, blazeMessage: blazeMessage))
+                    }
 
-                        if let sessionId = AccountUserDefault.shared.extensionSession {
-                            let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, messages: statusMessages), action: BlazeMessageAction.createSessionMessage.rawValue)
-                            jobs.append(Job(jobId: blazeMessage.id, action: .SEND_SESSION_MESSAGES, blazeMessage: blazeMessage, isSessionMessage: true))
-                        }
+                    if AccountUserDefault.shared.isDesktopLoggedIn {
+                        jobs += blazeMessages.compactMap({ $0.1 })
                     }
 
                     let quoteMessages = messages.filter({ !($0.quoteMessageId?.isEmpty ?? true) })
@@ -172,6 +174,7 @@ class ReceiveMessageService: MixinService {
                         try database.insert(objects: jobs, intoTable: Job.tableName)
                         try database.delete(fromTable: MessageBlaze.tableName, where: MessageBlaze.Properties.conversationId == conversationId && MessageBlaze.Properties.isSessionMessage == false && MessageBlaze.Properties.createdAt <= lastCreatedAt, orderBy: [MessageBlaze.Properties.createdAt.asOrder(by: .ascending)], limit: pageCount)
                         try ConversationDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+                        try ConversationDAO.shared.updateLastMessage(database: database, lastMessage: messages.last!)
 
                         let firstCreatedAt = blazeMessageDatas[0].createdAt
                         syncUserIds = try database.prepareSelectSQL(sql: MessageDAO.sqlQueryNeedSyncUsers, values: [conversationId, firstCreatedAt]).getStringValues()
@@ -183,6 +186,7 @@ class ReceiveMessageService: MixinService {
                     ReceiveMessageService.shared.syncUsers(userIds: syncUserIds)
 
                     NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
+                    SendMessageService.shared.processMessages()
 
                     if blazeMessageDatas.count >= pageCount {
                         Thread.sleep(forTimeInterval: 0.1)

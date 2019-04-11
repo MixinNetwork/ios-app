@@ -501,6 +501,13 @@ extension SendMessageService {
         guard let messageId = blazeMessage.params?.messageId, let category = blazeMessage.params?.category, let sessionId = AccountUserDefault.shared.extensionSession else {
             return
         }
+        guard let conversationId = blazeMessage.params?.conversationId, let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId) else {
+            return
+        }
+        if conversation.category == ConversationCategory.CONTACT.rawValue {
+            try requestCreateConversation(conversation: conversation)
+        }
+
         let accountId = AccountAPI.shared.accountUserId
 
         var blazeMessage = blazeMessage
@@ -563,21 +570,10 @@ extension SendMessageService {
                 try checkSentSenderKey(conversationId: message.conversationId)
             } else {
                 if (conversation.isGroup()) {
-                    switch ConversationAPI.shared.getConversation(conversationId: message.conversationId) {
-                    case let .success(response):
-                        ConversationDAO.shared.updateConversation(conversation: response)
-                        try sendGroupSenderKey(conversationId: conversation.conversationId)
-                    case let .failure(error):
-                        if error.code == 404 && conversation.status == ConversationStatus.START.rawValue {
-                            try requestCreateConversation(conversation: conversation)
-                            try sendGroupSenderKey(conversationId: conversation.conversationId)
-                            break
-                        } else if error.code == 404 || error.code == 403 {
-                            ParticipantDAO.shared.removeParticipant(conversationId: message.conversationId)
-                            return
-                        }
-                        throw error
+                    guard try syncConversation(conversation: conversation) else {
+                        return
                     }
+                    try sendGroupSenderKey(conversationId: conversation.conversationId)
                 } else {
                     try requestCreateConversation(conversation: conversation)
                     try sendSenderKey(conversationId: conversation.conversationId, recipientId: conversation.ownerId)
@@ -619,12 +615,34 @@ extension SendMessageService {
         }
     }
 
+    private func syncConversation(conversation: ConversationItem) throws -> Bool {
+        switch ConversationAPI.shared.getConversation(conversationId: conversation.conversationId) {
+        case let .success(response):
+            ConversationDAO.shared.updateConversation(conversation: response)
+            return true
+        case let .failure(error):
+            if error.code == 404 && conversation.status == ConversationStatus.START.rawValue {
+                try requestCreateConversation(conversation: conversation)
+                return true
+            } else if error.code == 404 || error.code == 403 {
+                ParticipantDAO.shared.removeParticipant(conversationId: conversation.conversationId)
+                return false
+            }
+            throw error
+        }
+    }
+
     private func requestCreateConversation(conversation: ConversationItem) throws {
         guard conversation.status == ConversationStatus.START.rawValue else {
             return
         }
 
-        let participants = ParticipantDAO.shared.participantRequests(conversationId: conversation.conversationId, currentAccountId: currentAccountId)
+        var participants: [ParticipantRequest]
+        if conversation.category == ConversationCategory.CONTACT.rawValue {
+            participants = [ParticipantRequest(userId: conversation.ownerId, role: "")]
+        } else {
+            participants = ParticipantDAO.shared.participantRequests(conversationId: conversation.conversationId, currentAccountId: currentAccountId)
+        }
         let request = ConversationRequest(conversationId: conversation.conversationId, name: nil, category: conversation.category, participants: participants, duration: nil, announcement: nil)
         switch ConversationAPI.shared.createConversation(conversation: request) {
         case let .success(response):

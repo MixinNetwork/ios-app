@@ -396,7 +396,7 @@ final class MessageDAO {
         let change = ConversationChange(conversationId: newMessage.conversationId, action: .addMessage(message: newMessage))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
 
-        if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(message.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 10 {
+        if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(message.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 60 {
             ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
         }
     }

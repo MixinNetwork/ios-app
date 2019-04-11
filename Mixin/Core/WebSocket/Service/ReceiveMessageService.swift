@@ -159,7 +159,9 @@ class ReceiveMessageService: MixinService {
                         messages[i].quoteContent = MessageDAO.shared.getQuoteMessage(messageId: messages[i].messageId)
                     }
                     let quoteMessages = messages.filter({ !($0.quoteMessageId?.isEmpty ?? true) })
+                    let hasShareContact = messages.contains(where: { !($0.sharedUserId?.isEmpty ?? true) })
 
+                    var syncUserIds = [String]()
                     MixinDatabase.shared.transaction { (database) in
                         try database.insertOrReplace(objects: messages, intoTable: Message.tableName)
                         for message in quoteMessages {
@@ -176,13 +178,16 @@ class ReceiveMessageService: MixinService {
                         try database.delete(fromTable: MessageBlaze.tableName, where: MessageBlaze.Properties.conversationId == conversationId && MessageBlaze.Properties.createdAt <= lastCreatedAt, orderBy: [MessageBlaze.Properties.createdAt.asOrder(by: .ascending)], limit: pageCount)
                         try ConversationDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
 
-                        //_ = syncUser(userId: data.getSenderId())
-                        //sharedUserId
-                        //sticker
-                        //notification
-
-                        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
+                        let firstCreatedAt = blazeMessageDatas[0].createdAt
+                        syncUserIds = try database.prepareSelectSQL(sql: MessageDAO.sqlQueryNeedSyncUsers, values: [conversationId, firstCreatedAt]).getStringValues()
+                        if hasShareContact {
+                            syncUserIds += try database.prepareSelectSQL(sql: MessageDAO.sqlQueryNeedSyncShareUsers, values: [conversationId, firstCreatedAt]).getStringValues()
+                        }
                     }
+
+                    ReceiveMessageService.shared.syncUsers(userIds: syncUserIds)
+
+                    NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
 
                     if blazeMessageDatas.count >= pageCount {
                         Thread.sleep(forTimeInterval: 0.1)
@@ -627,6 +632,26 @@ class ReceiveMessageService: MixinService {
         } while AccountAPI.shared.didLogin
 
         return false
+    }
+
+    private func syncUsers(userIds: [String]) {
+        guard userIds.count > 0 else {
+            return
+        }
+        let ids = userIds.distinct().filter({ $0 != User.systemUser && $0 != currentAccountId && !$0.isEmpty })
+        guard ids.count > 0 else {
+            return
+        }
+
+        repeat {
+            switch UserAPI.shared.showUsers(userIds: ids) {
+            case let .success(response):
+                UserDAO.shared.updateUsers(users: response)
+                return
+            case .failure:
+                checkNetworkAndWebSocket()
+            }
+        } while AccountAPI.shared.didLogin
     }
 
     private func processPlainMessage(data: BlazeMessageData) {

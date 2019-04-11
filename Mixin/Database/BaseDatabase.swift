@@ -70,6 +70,10 @@ class BaseDatabase {
         }
     }
 
+    func getStringValues(sql: String, values: [ColumnEncodable] = []) -> [String] {
+        return try! database.prepareSelectSQL(sql: sql, values: values).getStringValues()
+    }
+
     func getInt32Values(column: ColumnResultConvertible, tableName: String, isDistinct: Bool = false, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, inTransaction: Bool = true) -> [Int32] {
         if inTransaction {
             var result = [Int32]()

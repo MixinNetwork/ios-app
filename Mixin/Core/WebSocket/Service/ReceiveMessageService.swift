@@ -198,7 +198,7 @@ class ReceiveMessageService: MixinService {
 
     private func parseBlazeMessage(data: BlazeMessageData) -> (Message, Job?)? {
         var plainText = data.data
-        var message: Message?
+        var message: Message
         switch data.category {
         case MessageCategory.PLAIN_TEXT.rawValue:
             guard let content = plainText.base64Decoded() else {
@@ -242,10 +242,7 @@ class ReceiveMessageService: MixinService {
         default:
             return nil
         }
-        guard let msg = message else {
-            return nil
-        }
-        return AccountUserDefault.shared.isDesktopLoggedIn ? (msg, Job(message: msg, isSessionMessage: true, representativeId: data.getDataUserId(), data: plainText)) : (msg, nil)
+        return AccountUserDefault.shared.isDesktopLoggedIn ? (message, Job(message: message, isSessionMessage: true, representativeId: data.getDataUserId(), data: plainText)) : (message, nil)
     }
     
     private func processWebRTCMessage(data: BlazeMessageData) {

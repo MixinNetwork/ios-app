@@ -614,7 +614,7 @@ extension ReceiveMessageService {
     }
 
     private func processSystemSnapshotMessage(data: BlazeMessageData) {
-        guard let base64Data = Data(base64Encoded: data.data), var snapshot = (try? jsonDecoder.decode(Snapshot.self, from: base64Data)) else {
+        guard let base64Data = Data(base64Encoded: data.data), let snapshot = (try? jsonDecoder.decode(Snapshot.self, from: base64Data)) else {
             return
         }
 
@@ -633,7 +633,6 @@ extension ReceiveMessageService {
             SnapshotDAO.shared.removePendingDeposits(assetId: snapshot.assetId, transactionHash: transactionHash)
         }
 
-        snapshot.createdAt = data.createdAt
         SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
         MessageDAO.shared.insertMessage(message: Message.createMessage(snapshotMesssage: snapshot, data: data), messageSource: data.source)
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)

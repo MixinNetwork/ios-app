@@ -203,6 +203,7 @@
 "chat_restore" = "Restore";
 "chat_restore_title" = "Restore your\nchat history from iCloud";
 "chat_restore_subtitle" = "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.";
+"chat_stranger_tip" = "This sender is not in your contacts";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";

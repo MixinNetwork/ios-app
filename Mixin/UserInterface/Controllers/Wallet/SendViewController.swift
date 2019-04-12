@@ -222,7 +222,9 @@ class SendViewController: KeyboardBasedLayoutViewController {
 
         switchAmountButton.isHidden = asset.priceBtc.doubleValue <= 0
         symbolLabel.text = asset.name
-        balanceLabel.text = asset.localizedBalance + " " + Localized.TRANSFER_BALANCE
+        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
+            ?? asset.localizedBalance
+        balanceLabel.text = balance + " " + Localized.TRANSFER_BALANCE
         assetIconView.setIcon(asset: asset)
         
         if let address = self.targetAddress {

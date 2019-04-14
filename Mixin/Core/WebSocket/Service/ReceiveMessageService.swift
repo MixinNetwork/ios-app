@@ -122,7 +122,7 @@ class ReceiveMessageService: MixinService {
     }
 
     private func processBotMessages() {
-        guard BlazeMessageDAO.shared.getCount() > 200 else {
+        guard BlazeMessageDAO.shared.getCount() > 500 else {
             return
         }
         guard let conversationIds = try? ConversationDAO.shared.getBotConversations(), conversationIds.count > 0 else {
@@ -134,14 +134,11 @@ class ReceiveMessageService: MixinService {
             var blazeMessageDatas = [BlazeMessageData]()
             repeat {
                 blazeMessageDatas = BlazeMessageDAO.shared.getBlazeMessageData(conversationId: conversationId, limit: pageCount)
-                if blazeMessageDatas.count > 1, let lastCreatedAt = blazeMessageDatas.last?.createdAt {
-                    let blazeMessages = blazeMessageDatas.compactMap({ (data) -> (Message, Job?)? in
-                        return ReceiveMessageService.shared.parseBlazeMessage(data: data)
-                    })
-                    var messages = blazeMessages.compactMap({ $0.0 })
-                    if messages.count > 0 {
-                        break
-                    }
+                let blazeMessages = blazeMessageDatas.compactMap({ (data) -> (Message, Job?)? in
+                    return ReceiveMessageService.shared.parseBlazeMessage(data: data)
+                })
+                let messages = blazeMessages.compactMap({ $0.0 })
+                if messages.count > 1, let lastCreatedAt = blazeMessageDatas.last?.createdAt {
                     var jobs = [Job]()
                     for i in stride(from: 0, to: messages.count, by: 100) {
                         let by = i + 100 > messages.count ? messages.count : i + 100
@@ -183,7 +180,9 @@ class ReceiveMessageService: MixinService {
                         }
                     }
 
-                    ReceiveMessageService.shared.syncUsers(userIds: syncUserIds)
+                    if syncUserIds.count > 0 {
+                        ReceiveMessageService.shared.syncUsers(userIds: syncUserIds)
+                    }
 
                     NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
                     SendMessageService.shared.processMessages()

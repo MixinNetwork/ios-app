@@ -67,8 +67,9 @@ final class ConversationDAO {
     UPDATE conversations SET last_message_id = ?, last_message_created_at = ? WHERE conversation_id = ?
     """
     private static let sqlQueryBotConversation = """
-    SELECT c.conversation_id FROM conversations c
-    INNER JOIN users u ON u.user_id = c.owner_id ON u.app_id IS NOT NULL
+    SELECT DISTINCT c.conversation_id FROM conversations c
+    INNER JOIN users u ON u.user_id = c.owner_id AND u.app_id IS NOT NULL
+    INNER JOIN messages_blaze mb ON mb.conversation_id = c.conversation_id
     """
 
     func updateUnseenMessageCount(database: Database, conversationId: String) throws {

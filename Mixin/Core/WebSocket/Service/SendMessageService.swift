@@ -236,7 +236,7 @@ class SendMessageService: MixinService {
                     MixinDatabase.shared.transaction { (database) in
                         try database.insert(objects: jobs, intoTable: Job.tableName)
                         try database.update(table: Message.tableName, on: [Message.Properties.status], with: [MessageStatus.READ.rawValue], where: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.createdAt <= lastCreatedAt && Message.Properties.userId != AccountAPI.shared.accountUserId)
-                        try ConversationDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+                        try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
                     }
 
                     position = nextPosition
@@ -270,7 +270,7 @@ class SendMessageService: MixinService {
                     guard updateStatment.changes ?? 0 > 0 else {
                         return
                     }
-                    try ConversationDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+                    try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
                     try database.insert(objects: jobs, intoTable: Job.tableName)
                     NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
                 })

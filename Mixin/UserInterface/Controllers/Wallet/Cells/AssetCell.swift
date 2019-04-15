@@ -1,6 +1,6 @@
 import UIKit
 
-class WalletAssetCell: UITableViewCell {
+class AssetCell: UITableViewCell {
     
     static let height: CGFloat = 74
     static let balanceAttributes: [NSAttributedString.Key: Any] = [
@@ -38,7 +38,7 @@ class WalletAssetCell: UITableViewCell {
         } else {
             balance = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never) ?? ""
         }
-        balanceLabel.attributedText = NSAttributedString(string: balance, attributes: WalletAssetCell.balanceAttributes)
+        balanceLabel.attributedText = NSAttributedString(string: balance, attributes: AssetCell.balanceAttributes)
         symbolLabel.text = asset.symbol
         if asset.priceUsd.doubleValue > 0 {
             changeLabel.text = " \(asset.localizedUSDChange)%"

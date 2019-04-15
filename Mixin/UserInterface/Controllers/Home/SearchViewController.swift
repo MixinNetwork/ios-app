@@ -40,7 +40,7 @@ class SearchViewController: UIViewController {
                            forCellReuseIdentifier: ReuseId.contact)
         tableView.register(UINib(nibName: "ConversationCell", bundle: .main),
                            forCellReuseIdentifier: ReuseId.conversation)
-        tableView.register(UINib(nibName: "WalletAssetCell", bundle: .main),
+        tableView.register(UINib(nibName: "AssetCell", bundle: .main),
                            forCellReuseIdentifier: ReuseId.asset)
         tableView.register(SearchFooterView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
@@ -220,7 +220,7 @@ extension SearchViewController: UITableViewDataSource {
         } else {
             let section = indexPath.section
             if section == 0 && assets.count > 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.asset, for: indexPath) as! WalletAssetCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.asset, for: indexPath) as! AssetCell
                 cell.render(asset: assets[indexPath.row])
                 return cell
             } else if users.count > 0 && (section == 0 || (assets.count > 0 && section == 1)) {
@@ -244,7 +244,7 @@ extension SearchViewController: UITableViewDelegate {
         } else {
             let section = indexPath.section
             if section == 0 && assets.count > 0 {
-                return WalletAssetCell.height
+                return AssetCell.height
             } else if users.count > 0 && (section == 0 || (assets.count > 0 && section == 1)) {
                 return SearchResultContactCell.height
             } else {

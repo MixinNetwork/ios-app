@@ -25,7 +25,7 @@ class HiddenAssetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateTableViewContentInset()
-        tableView.register(UINib(nibName: "WalletAssetCell", bundle: nil),
+        tableView.register(UINib(nibName: "AssetCell", bundle: nil),
                            forCellReuseIdentifier: cellReuseId)
         tableView.dataSource = self
         tableView.delegate = self
@@ -92,7 +92,7 @@ extension HiddenAssetViewController: UITableViewDataSource, UITableViewDelegate 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let asset = assets[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! WalletAssetCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! AssetCell
         cell.render(asset: asset)
         return cell
     }

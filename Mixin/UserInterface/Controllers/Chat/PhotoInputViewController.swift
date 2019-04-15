@@ -34,21 +34,28 @@ class PhotoInputViewController: UIViewController {
         albumsCollectionLayout.estimatedItemSize = CGSize(width: 110, height: 60)
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
-        DispatchQueue.global().async {
-            let allPhotos = PHAsset.fetchAssets(with: self.creationDateDescendingFetchOptions)
+        let fetchOption = self.creationDateDescendingFetchOptions
+        DispatchQueue.global().async { [weak self] in
+            let allPhotos = PHAsset.fetchAssets(with: fetchOption)
             let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
             let sortedSmartAlbums = sortedAssetCollections(from: smartAlbums)
             let userCollections = PHCollectionList.fetchTopLevelUserCollections(with: nil)
-            PHPhotoLibrary.shared().register(self)
+            guard let weakSelf = self else {
+                return
+            }
+            PHPhotoLibrary.shared().register(weakSelf)
             DispatchQueue.main.async {
-                self.allPhotos = allPhotos
-                self.smartAlbums = smartAlbums
-                self.sortedSmartAlbums = sortedSmartAlbums
-                self.userCollections = userCollections
-                self.albumsCollectionView.reloadData()
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.allPhotos = allPhotos
+                weakSelf.smartAlbums = smartAlbums
+                weakSelf.sortedSmartAlbums = sortedSmartAlbums
+                weakSelf.userCollections = userCollections
+                weakSelf.albumsCollectionView.reloadData()
                 let firstItem = IndexPath(item: 0, section: 0)
-                self.albumsCollectionView.selectItem(at: firstItem, animated: false, scrollPosition: .left)
-                self.reloadGrid(at: firstItem)
+                weakSelf.albumsCollectionView.selectItem(at: firstItem, animated: false, scrollPosition: .left)
+                weakSelf.reloadGrid(at: firstItem)
             }
         }
     }

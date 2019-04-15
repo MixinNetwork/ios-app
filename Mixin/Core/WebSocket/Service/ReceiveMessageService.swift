@@ -634,7 +634,9 @@ extension ReceiveMessageService {
         }
 
         SnapshotDAO.shared.insertOrReplaceSnapshots(snapshots: [snapshot])
-        MessageDAO.shared.insertMessage(message: Message.createMessage(snapshotMesssage: snapshot, data: data), messageSource: data.source)
+        let message = Message.createMessage(snapshotMesssage: snapshot, data: data)
+        MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+        SendMessageService.shared.sendSessionMessage(message: message, data: data.data)
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
 

@@ -9,31 +9,21 @@ class PhotoInputViewController: UIViewController {
         case userCollections
     }
     
-    private static let creationDateDescendingFetchOptions: PHFetchOptions = {
+    @IBOutlet weak var albumsCollectionView: UICollectionView!
+    @IBOutlet weak var albumsCollectionLayout: UICollectionViewFlowLayout!
+    
+    private let cellReuseId = "album"
+    private let creationDateDescendingFetchOptions: PHFetchOptions = {
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         return options
     }()
     
-    @IBOutlet weak var albumsCollectionView: UICollectionView!
-    @IBOutlet weak var albumsCollectionLayout: UICollectionViewFlowLayout!
-    
-    private let cellReuseId = "album"
-    
-    private var allPhotos: PHFetchResult<PHAsset>
-    private var smartAlbums: PHFetchResult<PHAssetCollection>
-    private var sortedSmartAlbums: [PHAssetCollection]
-    private var userCollections: PHFetchResult<PHCollection>
+    private var allPhotos: PHFetchResult<PHAsset>?
+    private var smartAlbums: PHFetchResult<PHAssetCollection>?
+    private var sortedSmartAlbums: [PHAssetCollection]?
+    private var userCollections: PHFetchResult<PHCollection>?
     private var gridViewController: PhotoInputGridViewController!
-    
-    required init?(coder aDecoder: NSCoder) {
-        allPhotos = PHAsset.fetchAssets(with: PhotoInputViewController.creationDateDescendingFetchOptions)
-        smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
-        sortedSmartAlbums = sortedAssetCollections(from: smartAlbums)
-        userCollections = PHCollectionList.fetchTopLevelUserCollections(with: nil)
-        super.init(coder: aDecoder)
-        PHPhotoLibrary.shared().register(self)
-    }
     
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
@@ -44,7 +34,30 @@ class PhotoInputViewController: UIViewController {
         albumsCollectionLayout.estimatedItemSize = CGSize(width: 110, height: 60)
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
-        albumsCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .left)
+        let fetchOption = self.creationDateDescendingFetchOptions
+        DispatchQueue.global().async { [weak self] in
+            let allPhotos = PHAsset.fetchAssets(with: fetchOption)
+            let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
+            let sortedSmartAlbums = sortedAssetCollections(from: smartAlbums)
+            let userCollections = PHCollectionList.fetchTopLevelUserCollections(with: nil)
+            guard let weakSelf = self else {
+                return
+            }
+            PHPhotoLibrary.shared().register(weakSelf)
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.allPhotos = allPhotos
+                weakSelf.smartAlbums = smartAlbums
+                weakSelf.sortedSmartAlbums = sortedSmartAlbums
+                weakSelf.userCollections = userCollections
+                weakSelf.albumsCollectionView.reloadData()
+                let firstItem = IndexPath(item: 0, section: 0)
+                weakSelf.albumsCollectionView.selectItem(at: firstItem, animated: false, scrollPosition: .left)
+                weakSelf.reloadGrid(at: firstItem)
+            }
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -52,6 +65,26 @@ class PhotoInputViewController: UIViewController {
         if let vc = segue.destination as? PhotoInputGridViewController {
             vc.fetchResult = allPhotos
             gridViewController = vc
+        }
+    }
+    
+    private func reloadGrid(at indexPath: IndexPath) {
+        switch Section(rawValue: indexPath.section)! {
+        case .allPhotos:
+            gridViewController.firstCellIsCamera = true
+            gridViewController.fetchResult = allPhotos
+        case .smartAlbums:
+            gridViewController.firstCellIsCamera = false
+            if let collection = sortedSmartAlbums?[indexPath.row] {
+                gridViewController.fetchResult = PHAsset.fetchAssets(in: collection, options: creationDateDescendingFetchOptions)
+            }
+        case .userCollections:
+            gridViewController.firstCellIsCamera = false
+            if let collection = userCollections?[indexPath.row] as? PHAssetCollection {
+                gridViewController.fetchResult = PHAsset.fetchAssets(in: collection, options: creationDateDescendingFetchOptions)
+            } else {
+                gridViewController.fetchResult = nil
+            }
         }
     }
     
@@ -72,9 +105,9 @@ extension PhotoInputViewController: UICollectionViewDataSource {
         case .allPhotos:
             return 1
         case .smartAlbums:
-            return sortedSmartAlbums.count
+            return sortedSmartAlbums?.count ?? 0
         case .userCollections:
-            return userCollections.count
+            return userCollections?.count ?? 0
         }
     }
     
@@ -84,9 +117,9 @@ extension PhotoInputViewController: UICollectionViewDataSource {
         case .allPhotos:
             cell.textLabel.text = Localized.ALL_PHOTOS
         case .smartAlbums:
-            cell.textLabel.text = sortedSmartAlbums[indexPath.row].localizedTitle
+            cell.textLabel.text = sortedSmartAlbums?[indexPath.row].localizedTitle ?? ""
         case .userCollections:
-            cell.textLabel.text = userCollections[indexPath.row].localizedTitle
+            cell.textLabel.text = userCollections?[indexPath.row].localizedTitle ?? ""
         }
         return cell
     }
@@ -100,22 +133,7 @@ extension PhotoInputViewController: UICollectionViewDataSource {
 extension PhotoInputViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch Section(rawValue: indexPath.section)! {
-        case .allPhotos:
-            gridViewController.firstCellIsCamera = true
-            gridViewController.fetchResult = allPhotos
-        case .smartAlbums:
-            gridViewController.firstCellIsCamera = false
-            let assetCollection = sortedSmartAlbums[indexPath.row]
-            gridViewController.fetchResult = PHAsset.fetchAssets(in: assetCollection, options: PhotoInputViewController.creationDateDescendingFetchOptions)
-        case .userCollections:
-            gridViewController.firstCellIsCamera = false
-            if let assetCollection = userCollections[indexPath.row] as? PHAssetCollection {
-                gridViewController.fetchResult = PHAsset.fetchAssets(in: assetCollection, options: PhotoInputViewController.creationDateDescendingFetchOptions)
-            } else {
-                gridViewController.fetchResult = nil
-            }
-        }
+        reloadGrid(at: indexPath)
     }
     
 }
@@ -124,15 +142,15 @@ extension PhotoInputViewController: PHPhotoLibraryChangeObserver {
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         DispatchQueue.main.sync {
-            if let changeDetails = changeInstance.changeDetails(for: allPhotos) {
-                allPhotos = changeDetails.fetchResultAfterChanges
+            if let allPhotos = self.allPhotos, let changeDetails = changeInstance.changeDetails(for: allPhotos) {
+                self.allPhotos = changeDetails.fetchResultAfterChanges
             }
-            if let changeDetails = changeInstance.changeDetails(for: smartAlbums) {
-                smartAlbums = changeDetails.fetchResultAfterChanges
-                sortedSmartAlbums = sortedAssetCollections(from: smartAlbums)
+            if let smartAlbums = self.smartAlbums, let changeDetails = changeInstance.changeDetails(for: smartAlbums) {
+                self.smartAlbums = changeDetails.fetchResultAfterChanges
+                self.sortedSmartAlbums = sortedAssetCollections(from: smartAlbums)
             }
-            if let changeDetails = changeInstance.changeDetails(for: userCollections) {
-                userCollections = changeDetails.fetchResultAfterChanges
+            if let userCollections = self.userCollections, let changeDetails = changeInstance.changeDetails(for: userCollections) {
+                self.userCollections = changeDetails.fetchResultAfterChanges
             }
         }
     }

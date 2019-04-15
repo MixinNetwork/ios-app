@@ -7,34 +7,30 @@ class LoginConfirmWindow: BottomSheetView {
     private var uuid: String!
     private var publicKey: String!
 
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
-        NotificationCenter.default.addObserver(self, selector: #selector(sessionChanged), name: .UserSessionDidChange, object: nil)
-    }
-
-    @objc func sessionChanged() {
-        guard loginButton.isBusy else {
-            return
-        }
-
-        loginButton.isBusy = false
-        dismissView()
-        showHud(style: .notification, text: Localized.TOAST_LOGINED)
-        UIApplication.rootNavigationController()?.popViewController(animated: true)
-    }
-
     @IBAction func loginAction(_ sender: Any) {
         guard !loginButton.isBusy else {
             return
         }
         loginButton.isBusy = true
         ProvisionManager.updateProvision(uuid: uuid, base64EncodedPublicKey: publicKey, completion: { [weak self](success) in
-            guard !success else {
-                return
-            }
             self?.loginButton.isBusy = false
+            if success {
+                self?.loginSuccessAction()
+            }
         })
     }
+
+    func loginSuccessAction() {
+        dismissView()
+        showHud(style: .notification, text: Localized.TOAST_LOGINED)
+
+        if let viewController = UIApplication.rootNavigationController()?.viewControllers.first(where: { ($0 as? ContainerViewController)?.viewController is DesktopViewController }), let desktopVC =  (viewController as? ContainerViewController)?.viewController as? DesktopViewController {
+            desktopVC.layoutForIsLoading(false)
+            desktopVC.updateLabels(isDesktopLoggedIn: true)
+        }
+        UIApplication.rootNavigationController()?.popViewController(animated: true)
+    }
+
 
     @IBAction func dismissAction(_ sender: Any) {
         dismissView()

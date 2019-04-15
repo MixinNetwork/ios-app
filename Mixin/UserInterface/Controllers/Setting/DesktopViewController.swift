@@ -7,10 +7,6 @@ class DesktopViewController: UITableViewController {
     @IBOutlet weak var actionLabel: UILabel!
     @IBOutlet weak var footerLabel: UILabel!
     
-    private var isDesktopLoggedIn: Bool {
-        return AccountUserDefault.shared.isDesktopLoggedIn
-    }
-    
     class func instance() -> UIViewController {
         let vc = Storyboard.setting.instantiateViewController(withIdentifier: "desktop") as! DesktopViewController
         let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_DESKTOP)
@@ -21,33 +17,48 @@ class DesktopViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(sessionChanged), name: .UserSessionDidChange, object: nil)
-        updateLabels()
+        updateLabels(isDesktopLoggedIn: AccountUserDefault.shared.isDesktopLoggedIn)
         actionCell.selectedBackgroundView = UIView.createSelectedBackgroundView()
     }
     
     @objc func sessionChanged() {
-        updateLabels()
+        updateLabels(isDesktopLoggedIn: AccountUserDefault.shared.isDesktopLoggedIn)
         layoutForIsLoading(false)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let sessionId = AccountUserDefault.shared.extensionSession {
+            guard !indicatorView.isAnimating else {
+                return
+            }
             layoutForIsLoading(true)
-            AccountAPI.shared.logoutSession(sessionId: sessionId, completion: { _ in })
+            AccountAPI.shared.logoutSession(sessionId: sessionId) { [weak self](result) in
+                guard let weakSelf = self else {
+                    return
+                }
+
+                weakSelf.layoutForIsLoading(false)
+                switch result {
+                case .success:
+                    weakSelf.updateLabels(isDesktopLoggedIn: false)
+                case let .failure(error):
+                    showHud(style: .error, text: error.localizedDescription)
+                }
+            }
         } else {
             let vc = CameraViewController.instance()
             navigationController?.pushViewController(vc, animated: true)
         }
     }
     
-    private func layoutForIsLoading(_ isLoading: Bool) {
+    func layoutForIsLoading(_ isLoading: Bool) {
         actionCell.isUserInteractionEnabled = !isLoading
         actionLabel.isHidden = isLoading
         indicatorView.isAnimating = isLoading
     }
     
-    private func updateLabels() {
+    func updateLabels(isDesktopLoggedIn: Bool) {
         if isDesktopLoggedIn {
             actionLabel.text = Localized.SETTING_DESKTOP_LOG_OUT
             footerLabel.text = Localized.SETTING_DESKTOP_DESKTOP_ON

@@ -400,6 +400,8 @@
 "transfer_pay_password" = "通过密码支付";
 "pay_transfer_title" = "转账给%@";
 "pay_withdrawal_title" = "提现到%@";
+"pay_use_face" = "使用面容支付";
+"pay_use_touch" = "使用指纹支付";
 
 // QRCode
 "myqrcode_title" = "我的二维码";

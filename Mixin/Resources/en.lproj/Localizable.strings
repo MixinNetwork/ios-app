@@ -401,6 +401,8 @@
 "transfer_pay_password" = "Pay with PIN";
 "pay_transfer_title" = "Transfer to %@";
 "pay_withdrawal_title" = "Withdrawal to %@";
+"pay_use_face" = "Use Face Pay";
+"pay_use_touch" = "Use Touch Pay";
 
 // QRCode
 "myqrcode_title" = "My QR Code";

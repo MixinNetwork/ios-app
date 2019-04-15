@@ -395,6 +395,8 @@
 "transfer_pay_password" = "PINで支払う";
 "pay_transfer_title" = " %@ に振込";
 "pay_withdrawal_title" = " %@ に送金";
+"pay_use_face" = "フェイスペイを使う";
+"pay_use_touch" = "タッチペイを使う";
 
 // QRCode
 "myqrcode_title" = "私のQRコード";

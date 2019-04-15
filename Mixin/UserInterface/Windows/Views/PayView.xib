@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" id="NpM-cu-K6u" customClass="PayView" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="523"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="545"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v9c-Te-5SQ" userLabel="User">
@@ -129,10 +129,10 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="yfc-sw-leV">
-                    <rect key="frame" x="0.0" y="216" width="375" height="27"/>
+                    <rect key="frame" x="0.0" y="216" width="375" height="49"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="749" text="Happy Birthday!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C02-xQ-2hI">
-                            <rect key="frame" x="30" y="12" width="315" height="15"/>
+                            <rect key="frame" x="30" y="12" width="315" height="37"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -156,62 +156,98 @@
                         <constraint firstItem="C02-xQ-2hI" firstAttribute="leading" secondItem="yfc-sw-leV" secondAttribute="leading" constant="30" id="tYO-u6-63K"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYl-I4-Vjb" userLabel="Payment Password">
-                    <rect key="frame" x="0.0" y="243" width="375" height="130"/>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="R9h-Cc-Ey4">
+                    <rect key="frame" x="0.0" y="265" width="375" height="130"/>
                     <subviews>
-                        <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TOW-aq-cCZ" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="101.5" y="25.5" width="172" height="10"/>
-                            <color key="tintColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYl-I4-Vjb" userLabel="Payment Password">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                            <subviews>
+                                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TOW-aq-cCZ" customClass="PinField" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="101.5" y="25.5" width="172" height="10"/>
+                                    <color key="tintColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="10" id="Dqu-S0-QcM" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                                    <real key="value" value="12"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </constraint>
+                                        <constraint firstAttribute="width" constant="172" id="q3M-uz-a3Q"/>
+                                    </constraints>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pay with Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3y-3k-wek">
+                                    <rect key="frame" x="135" y="51.5" width="105" height="14.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="transfer_pay_password"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="10" id="Dqu-S0-QcM" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                <constraint firstAttribute="height" constant="100" id="FdF-8u-ucj" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                            <real key="value" value="12"/>
+                                            <real key="value" value="60"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </constraint>
-                                <constraint firstAttribute="width" constant="172" id="q3M-uz-a3Q"/>
+                                <constraint firstItem="i3y-3k-wek" firstAttribute="centerX" secondItem="XYl-I4-Vjb" secondAttribute="centerX" id="RON-FG-m2J"/>
+                                <constraint firstAttribute="bottom" secondItem="i3y-3k-wek" secondAttribute="bottom" constant="34" id="Y0y-KE-9C4" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                            <real key="value" value="4"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
+                                <constraint firstItem="TOW-aq-cCZ" firstAttribute="centerX" secondItem="XYl-I4-Vjb" secondAttribute="centerX" id="rZz-Ii-ayQ"/>
+                                <constraint firstItem="i3y-3k-wek" firstAttribute="top" secondItem="TOW-aq-cCZ" secondAttribute="bottom" constant="16" id="uqS-qj-7y4" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                                            <real key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pay with Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3y-3k-wek">
-                            <rect key="frame" x="135" y="51.5" width="105" height="14.5"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                            <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ve7-qT-qdQ">
+                            <rect key="frame" x="0.0" y="100" width="375" height="6"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="6" id="Ghe-e7-HNM"/>
+                            </constraints>
+                        </view>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q1O-QG-owb">
+                            <rect key="frame" x="0.0" y="100" width="375" height="0.0"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="contentEdgeInsets" minX="6" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="-6" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Use Face Pay" image="ic_pay_face">
+                                <color key="titleColor" red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </state>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="transfer_pay_password"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="pay_use_face"/>
                             </userDefinedRuntimeAttributes>
-                        </label>
+                            <connections>
+                                <action selector="biometricAction:" destination="NpM-cu-K6u" eventType="touchUpInside" id="qhR-B3-nGN"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pgk-HX-ta0">
+                            <rect key="frame" x="0.0" y="100" width="375" height="30"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="5wL-EV-dMa"/>
+                            </constraints>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="130" id="FdF-8u-ucj" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="60"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
-                        <constraint firstItem="i3y-3k-wek" firstAttribute="centerX" secondItem="XYl-I4-Vjb" secondAttribute="centerX" id="RON-FG-m2J"/>
-                        <constraint firstAttribute="bottom" secondItem="i3y-3k-wek" secondAttribute="bottom" constant="64" id="Y0y-KE-9C4" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="4"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
-                        <constraint firstItem="TOW-aq-cCZ" firstAttribute="centerX" secondItem="XYl-I4-Vjb" secondAttribute="centerX" id="rZz-Ii-ayQ"/>
-                        <constraint firstItem="i3y-3k-wek" firstAttribute="top" secondItem="TOW-aq-cCZ" secondAttribute="bottom" constant="16" id="uqS-qj-7y4" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                    <real key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
-                    </constraints>
-                </view>
+                </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TcR-wF-VBN">
-                    <rect key="frame" x="0.0" y="373" width="375" height="150"/>
+                    <rect key="frame" x="0.0" y="395" width="375" height="150"/>
                     <subviews>
                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pay_success" translatesAutoresizingMaskIntoConstraints="NO" id="Ef6-lQ-oaM">
                             <rect key="frame" x="167.5" y="26" width="40" height="40"/>
@@ -274,13 +310,15 @@
                 <outlet property="amountLabel" destination="gWl-Tf-cO3" id="2sn-6w-C1o"/>
                 <outlet property="assetIconView" destination="jh7-KJ-x9H" id="gfB-i4-jDW"/>
                 <outlet property="avatarImageView" destination="U7S-vg-56w" id="NDd-24-b1m"/>
+                <outlet property="biometricButton" destination="q1O-QG-owb" id="L33-V0-6es"/>
+                <outlet property="biometricPlaceView" destination="Ve7-qT-qdQ" id="Lac-gA-XJL"/>
                 <outlet property="dismissButton" destination="rxd-aL-AVQ" id="TQd-R2-Ddq"/>
                 <outlet property="memoLabel" destination="C02-xQ-2hI" id="UYk-cd-JkZ"/>
                 <outlet property="memoView" destination="yfc-sw-leV" id="0I6-CO-OJZ"/>
                 <outlet property="mixinIDLabel" destination="Fxd-ej-wDj" id="rhY-xR-BAf"/>
                 <outlet property="nameLabel" destination="cuL-5U-gf3" id="ZVy-fM-f6n"/>
                 <outlet property="paySuccessImageView" destination="Ef6-lQ-oaM" id="7kn-6B-Ft7"/>
-                <outlet property="payView" destination="XYl-I4-Vjb" id="KIK-6O-zCV"/>
+                <outlet property="payView" destination="R9h-Cc-Ey4" id="PY5-JV-8EG"/>
                 <outlet property="pinField" destination="TOW-aq-cCZ" id="Bsq-Rg-90L"/>
                 <outlet property="statusView" destination="TcR-wF-VBN" id="Ex9-Xy-kGl"/>
                 <outlet property="transferLoadingView" destination="4Uy-ZM-9QU" id="Tka-3k-aUN"/>
@@ -290,6 +328,7 @@
     </objects>
     <resources>
         <image name="ic_dialog_close" width="26" height="26"/>
+        <image name="ic_pay_face" width="20" height="20"/>
         <image name="ic_pay_success" width="42" height="42"/>
     </resources>
 </document>

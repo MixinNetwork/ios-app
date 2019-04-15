@@ -10,7 +10,7 @@ final class UserDAO {
     LEFT JOIN apps a ON a.app_id = u.app_id
     """
 
-    private static let sqlQueryContacts = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.full_name"
+    private static let sqlQueryContacts = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
     private static let sqlQueryUserByNameOrIdentityNumber = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND (u.full_name LIKE ? OR u.identity_number LIKE ?)"
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"

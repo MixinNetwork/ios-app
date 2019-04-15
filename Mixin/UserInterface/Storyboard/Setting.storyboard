@@ -527,20 +527,20 @@
         <scene sceneID="CQN-2C-um9">
             <objects>
                 <tableViewController storyboardIdentifier="storage" id="Hvy-Zk-MIr" customClass="StorageUsageViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="64" estimatedRowHeight="64" sectionHeaderHeight="28" sectionFooterHeight="28" id="MVE-O9-Nhc">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" estimatedRowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" id="MVE-O9-Nhc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="storage_usage" rowHeight="64" id="ct7-F3-vIh" customClass="StorageUsageCell" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="64"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="storage_usage" rowHeight="80" id="ct7-F3-vIh" customClass="StorageUsageCell" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ct7-F3-vIh" id="S4G-PF-4qg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="gfG-2B-Fdn">
-                                            <rect key="frame" x="36" y="0.0" width="297" height="64"/>
+                                            <rect key="frame" x="36" y="8" width="297" height="64"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="riJ-hy-GZO" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="7" width="50" height="50"/>
@@ -575,9 +575,12 @@
                                                     </subviews>
                                                 </stackView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="64" id="xLM-Xt-198"/>
+                                            </constraints>
                                         </stackView>
                                         <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="i5h-gf-BMv">
-                                            <rect key="frame" x="333" y="0.0" width="42" height="64"/>
+                                            <rect key="frame" x="333" y="0.0" width="42" height="80"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="42" id="dRl-m1-w3V"/>
                                             </constraints>
@@ -585,12 +588,11 @@
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstItem="gfG-2B-Fdn" firstAttribute="top" secondItem="S4G-PF-4qg" secondAttribute="top" id="2Ta-C4-WAm"/>
-                                        <constraint firstAttribute="bottom" secondItem="gfG-2B-Fdn" secondAttribute="bottom" id="2z1-OY-7Et"/>
                                         <constraint firstItem="gfG-2B-Fdn" firstAttribute="leading" secondItem="S4G-PF-4qg" secondAttribute="leading" constant="36" id="JVw-Gv-wyE"/>
                                         <constraint firstItem="i5h-gf-BMv" firstAttribute="leading" secondItem="gfG-2B-Fdn" secondAttribute="trailing" id="PPh-Hj-IaK"/>
                                         <constraint firstItem="i5h-gf-BMv" firstAttribute="top" secondItem="S4G-PF-4qg" secondAttribute="top" id="XEZ-Hy-84f"/>
                                         <constraint firstAttribute="bottom" secondItem="i5h-gf-BMv" secondAttribute="bottom" id="cBr-9w-Gj4"/>
+                                        <constraint firstItem="gfG-2B-Fdn" firstAttribute="centerY" secondItem="S4G-PF-4qg" secondAttribute="centerY" id="jBP-Kk-MxI"/>
                                         <constraint firstAttribute="trailing" secondItem="i5h-gf-BMv" secondAttribute="trailing" id="wix-eC-tv3"/>
                                     </constraints>
                                 </tableViewCellContentView>

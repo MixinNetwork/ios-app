@@ -195,8 +195,10 @@ extension WebSocketService: SRWebSocketDelegate {
         awaitingPong = false
         sentPingCount = 0
         receivedPongCount = 0
-        timer?.invalidate()
-        timer = nil
+        DispatchQueue.main.async {
+            self.timer?.invalidate()
+            self.timer = nil
+        }
     }
 
     @objc func writePingFrame() {

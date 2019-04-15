@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dU6-HB-DNX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dU6-HB-DNX">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1084,7 +1084,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Back Up Now" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="814-d3-ePT">
-                                                    <rect key="frame" x="16" y="23" width="92.5" height="18"/>
+                                                    <rect key="frame" x="20" y="23" width="92.5" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1104,8 +1104,8 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="5N8-W9-npF" firstAttribute="centerY" secondItem="2K7-F4-IMA" secondAttribute="centerY" id="HUb-LA-oyY"/>
+                                                <constraint firstItem="814-d3-ePT" firstAttribute="leading" secondItem="2K7-F4-IMA" secondAttribute="leading" constant="20" id="bgO-Ok-Va5"/>
                                                 <constraint firstAttribute="trailing" secondItem="5N8-W9-npF" secondAttribute="trailing" constant="16" id="ePd-L7-t8A"/>
-                                                <constraint firstItem="814-d3-ePT" firstAttribute="leading" secondItem="2K7-F4-IMA" secondAttribute="leadingMargin" id="nkG-N9-EO0"/>
                                                 <constraint firstItem="814-d3-ePT" firstAttribute="centerY" secondItem="2K7-F4-IMA" secondAttribute="centerY" id="qcs-Kc-bdp"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -1122,7 +1122,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="jJ5-no-kfK">
-                                                    <rect key="frame" x="16" y="23" width="343" height="18"/>
+                                                    <rect key="frame" x="20" y="23" width="339" height="18"/>
                                                     <subviews>
                                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalHuggingPriority="750" insetsLayoutMarginsFromSafeArea="NO" text="Auto Backup" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cbf-BI-qT4">
                                                             <rect key="frame" x="0.0" y="0.0" width="87" height="18"/>
@@ -1134,20 +1134,20 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" horizontalCompressionResistancePriority="250" insetsLayoutMarginsFromSafeArea="NO" text="Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qld-F5-PXt">
-                                                            <rect key="frame" x="95" y="0.5" width="234" height="17"/>
+                                                            <rect key="frame" x="95" y="0.5" width="230" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="B9W-wp-mle">
-                                                            <rect key="frame" x="337" y="4" width="6" height="10"/>
+                                                            <rect key="frame" x="333" y="4" width="6" height="10"/>
                                                         </imageView>
                                                     </subviews>
                                                 </stackView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="jJ5-no-kfK" firstAttribute="centerY" secondItem="6lD-xC-pCV" secondAttribute="centerY" id="UMg-HJ-lbW"/>
-                                                <constraint firstItem="jJ5-no-kfK" firstAttribute="leading" secondItem="6lD-xC-pCV" secondAttribute="leading" constant="16" id="qEd-qu-Tq6"/>
+                                                <constraint firstItem="jJ5-no-kfK" firstAttribute="leading" secondItem="6lD-xC-pCV" secondAttribute="leading" constant="20" id="qEd-qu-Tq6"/>
                                                 <constraint firstAttribute="trailing" secondItem="jJ5-no-kfK" secondAttribute="trailing" constant="16" id="zm6-Zg-sL6"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -1160,7 +1160,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Include Files" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fsg-P7-fCy">
-                                                    <rect key="frame" x="16" y="23" width="85.5" height="18"/>
+                                                    <rect key="frame" x="20" y="23" width="85.5" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1179,7 +1179,7 @@
                                             <constraints>
                                                 <constraint firstItem="sVG-X5-64M" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fsg-P7-fCy" secondAttribute="trailing" constant="8" id="SpR-d7-TKB"/>
                                                 <constraint firstItem="sVG-X5-64M" firstAttribute="centerY" secondItem="SAe-rA-tZl" secondAttribute="centerY" id="ULv-hx-wno"/>
-                                                <constraint firstItem="fsg-P7-fCy" firstAttribute="leading" secondItem="SAe-rA-tZl" secondAttribute="leadingMargin" id="VXx-Sd-A9a"/>
+                                                <constraint firstItem="fsg-P7-fCy" firstAttribute="leading" secondItem="SAe-rA-tZl" secondAttribute="leading" constant="20" id="VAM-25-DfZ"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="sVG-X5-64M" secondAttribute="trailing" id="jsf-WX-tkA"/>
                                                 <constraint firstItem="fsg-P7-fCy" firstAttribute="centerY" secondItem="SAe-rA-tZl" secondAttribute="centerY" id="ora-rd-p6D"/>
                                             </constraints>
@@ -1193,7 +1193,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Include Videos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z73-p6-vgr">
-                                                    <rect key="frame" x="16" y="23" width="101" height="18"/>
+                                                    <rect key="frame" x="20" y="23" width="101" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1210,9 +1210,9 @@
                                                 </switch>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="z73-p6-vgr" firstAttribute="leading" secondItem="INw-af-djn" secondAttribute="leadingMargin" id="3U1-xP-VJ3"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="5kh-D3-WeL" secondAttribute="trailing" id="a2E-wj-duJ"/>
                                                 <constraint firstItem="5kh-D3-WeL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="z73-p6-vgr" secondAttribute="trailing" constant="8" id="cdq-CC-UEm"/>
+                                                <constraint firstItem="z73-p6-vgr" firstAttribute="leading" secondItem="INw-af-djn" secondAttribute="leading" constant="20" id="mSI-eJ-JXG"/>
                                                 <constraint firstItem="z73-p6-vgr" firstAttribute="centerY" secondItem="INw-af-djn" secondAttribute="centerY" id="rS1-f2-3ro"/>
                                                 <constraint firstItem="5kh-D3-WeL" firstAttribute="centerY" secondItem="INw-af-djn" secondAttribute="centerY" id="zce-pm-5Y0"/>
                                             </constraints>

@@ -18,13 +18,12 @@ class AssetInfoWindow: BottomSheetView {
     }
 
     func presentWindow(asset: AssetItem) {
-        print(asset)
         self.asset = asset
         assetView.setIcon(asset: asset)
         nameLabel.text = asset.name
         symbolLabel.text = asset.symbol
         chainLabel.text = asset.chainName
-        if !asset.assetKey.isEmpty && asset.chainId != asset.assetId {
+        if !asset.assetKey.isEmpty {
             contractLabel.text = asset.assetKey
             contractView.isHidden = false
         } else {

@@ -31,7 +31,7 @@ class ContactViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(PhoneContactHeaderView.self,
+        tableView.register(ContactHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SeparatorShadowFooterView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
@@ -169,17 +169,19 @@ extension ContactViewController {
 extension ContactViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let lastCellBottomMargin: CGFloat = 15
+        let additionalBottomMargin: CGFloat = 15
         if indexPath.section == 0 {
-            if indexPath.row == contacts.count - 1 {
-                return ContactCell.height + lastCellBottomMargin
+            if indexPath.row == self.tableView(tableView, numberOfRowsInSection: 0) - 1 {
+                return PhoneContactCell.height + additionalBottomMargin
             } else {
-                return ContactCell.height
+                return PhoneContactCell.height
             }
         } else {
             if isPhoneContactAuthorized {
-                if indexPath.row == phoneContacts[indexPath.section - 1].count - 1 {
-                    return PhoneContactCell.height + lastCellBottomMargin
+                let lastSection = numberOfSections(in: tableView) - 1
+                let lastRow = self.tableView(tableView, numberOfRowsInSection: lastSection) - 1
+                if indexPath == IndexPath(row: lastRow, section: lastSection) {
+                    return PhoneContactCell.height + additionalBottomMargin
                 } else {
                     return PhoneContactCell.height
                 }
@@ -190,10 +192,18 @@ extension ContactViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if (section == 0 && !contacts.isEmpty) || (section >= 1 && isPhoneContactAuthorized) {
-            return 41
+        if section == 0 {
+            return contacts.isEmpty ? .leastNormalMagnitude : 41
         } else {
-            return .leastNormalMagnitude
+            if isPhoneContactAuthorized {
+                if section == 1 || section == numberOfSections(in: tableView) - 1 {
+                    return 41
+                } else {
+                    return 36
+                }
+            } else {
+                return .leastNormalMagnitude
+            }
         }
     }
     
@@ -202,12 +212,12 @@ extension ContactViewController {
             if contacts.isEmpty {
                 return nil
             } else {
-                let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! PhoneContactHeaderView
+                let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! ContactHeaderView
                 view.label.text = Localized.CONTACT_TITLE.uppercased()
                 return view
             }
         } else if isPhoneContactAuthorized {
-            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! PhoneContactHeaderView
+            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! ContactHeaderView
             if section == 1 {
                 view.label.text = Localized.CONTACT_PHONE_CONTACTS
             } else {

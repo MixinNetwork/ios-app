@@ -442,7 +442,7 @@
 		DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB6720233657002BF028 /* MixinWebView.swift */; };
 		DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */; };
 		DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */; };
-		DF56966F1FAAB11D00226D42 /* PhoneContactHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* PhoneContactHeaderView.swift */; };
+		DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */; };
 		DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */; };
 		DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */; };
 		DF5CDA74204FEBA1004A52BA /* BaseCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */; };
@@ -1079,7 +1079,7 @@
 		DF53BB6720233657002BF028 /* MixinWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinWebView.swift; sourceTree = "<group>"; };
 		DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeCell.xib; sourceTree = "<group>"; };
 		DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeCell.swift; sourceTree = "<group>"; };
-		DF56966E1FAAB11D00226D42 /* PhoneContactHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactHeaderView.swift; sourceTree = "<group>"; };
+		DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHeaderView.swift; sourceTree = "<group>"; };
 		DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewController.swift; sourceTree = "<group>"; };
 		DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCodable.swift; sourceTree = "<group>"; };
@@ -1504,6 +1504,14 @@
 				7B9863901FA313E300D4B16C /* BottomWrapperView.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		7B3F78512264689B00029D48 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		7B51DDA7223A31E4008ACDBB /* Model */ = {
@@ -2348,6 +2356,7 @@
 		DFD294331FA6BECE00FADAAD /* Contact */ = {
 			isa = PBXGroup;
 			children = (
+				7B3F78512264689B00029D48 /* View */,
 				7BAE1B42223B51E9004F2D16 /* Model */,
 				DFD294391FA7066500FADAAD /* Cells */,
 				DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */,
@@ -2369,7 +2378,6 @@
 				DFF44179223BC63100DDD5F8 /* ContactCell.swift */,
 				DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */,
 				7BF071BF2244E6A1007240AD /* UploadContactCell.swift */,
-				DF56966E1FAAB11D00226D42 /* PhoneContactHeaderView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3232,7 +3240,7 @@
 				DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */,
 				DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
-				DF56966F1FAAB11D00226D42 /* PhoneContactHeaderView.swift in Sources */,
+				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,

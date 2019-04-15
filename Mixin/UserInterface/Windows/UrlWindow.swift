@@ -320,8 +320,8 @@ extension UrlWindow {
                 weakSelf.payView.snp.makeConstraints({ (make) in
                     make.edges.equalToSuperview()
                 })
-                let chainIconUrl = AssetDAO.shared.getChainIconUrl(chainId: payment.asset.chainId)
-                weakSelf.payView.render(asset: AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainIconUrl), user: UserItem.createUser(from: payment.recipient), amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
+                let chainAsset = AssetDAO.shared.getAsset(assetId: payment.asset.chainId)
+                weakSelf.payView.render(asset: AssetItem.createAsset(asset: payment.asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name), user: UserItem.createUser(from: payment.recipient), amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
                 weakSelf.successHandler()
             case let .failure(error):
                 weakSelf.failedHandler(error.localizedDescription)

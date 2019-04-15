@@ -84,8 +84,8 @@ class AddAssetViewController: UIViewController {
                 result = []
             }
             let assetItems = result.map({ (asset) -> (AssetItem, Bool) in
-                let chainIconUrl = AssetDAO.shared.getChainIconUrl(chainId: asset.chainId)
-                let item = AssetItem.createAsset(asset: asset, chainIconUrl: chainIconUrl)
+                let chainAsset = AssetDAO.shared.getAsset(assetId: asset.chainId)
+                let item = AssetItem.createAsset(asset: asset, chainIconUrl: chainAsset?.iconUrl, chainName: chainAsset?.name)
                 let alreadyHasTheAsset = AssetDAO.shared.isExist(assetId: asset.assetId)
                 return (item, alreadyHasTheAsset)
             })

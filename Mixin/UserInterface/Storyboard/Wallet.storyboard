@@ -725,7 +725,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="FZF-Lv-pQL">
-                                            <rect key="frame" x="36" y="26" width="342" height="51"/>
+                                            <rect key="frame" x="36" y="26" width="361" height="51"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OIb-Ux-chy" customClass="AssetIconView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="51" height="51"/>
@@ -736,24 +736,37 @@
                                                     </constraints>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="mve-ky-yYM">
-                                                    <rect key="frame" x="61" y="0.0" width="281" height="51"/>
+                                                    <rect key="frame" x="61" y="0.0" width="260" height="51"/>
                                                     <subviews>
                                                         <textView opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" scrollEnabled="NO" editable="NO" text="655366553" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aaK-2a-XZi">
-                                                            <rect key="frame" x="0.0" y="0.0" width="281" height="34"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="260" height="34"/>
                                                             <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="34"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                         </textView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="≈ $4080" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t3B-IR-dY1">
-                                                            <rect key="frame" x="0.0" y="34" width="281" height="17"/>
+                                                            <rect key="frame" x="0.0" y="34" width="260" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                 </stackView>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_arrow_down" translatesAutoresizingMaskIntoConstraints="NO" id="Jmx-L8-lnm">
+                                                    <rect key="frame" x="331" y="0.0" width="30" height="46"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="46" id="Jxl-6j-VOY"/>
+                                                        <constraint firstAttribute="width" constant="30" id="XQu-v0-ti7"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                         </stackView>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ifZ-2C-T8l">
+                                            <rect key="frame" x="0.0" y="28" width="414" height="60"/>
+                                            <connections>
+                                                <action selector="infoAction:" destination="kef-KV-TZS" eventType="touchUpInside" id="VDo-nC-O8M"/>
+                                            </connections>
+                                        </button>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="I3f-eB-HAW">
                                             <rect key="frame" x="0.0" y="88" width="414" height="60"/>
                                             <subviews>
@@ -836,12 +849,16 @@
                                         <constraint firstItem="GD6-mT-59f" firstAttribute="top" secondItem="CsL-pa-tlx" secondAttribute="bottom" constant="10" id="Fv9-XU-hau"/>
                                         <constraint firstItem="FZF-Lv-pQL" firstAttribute="leading" secondItem="t9N-Yl-Ul3" secondAttribute="leading" constant="36" id="HKY-eI-b6H"/>
                                         <constraint firstItem="I3f-eB-HAW" firstAttribute="leading" secondItem="mhU-mx-dK5" secondAttribute="leading" id="Lr3-DA-USh"/>
+                                        <constraint firstItem="ifZ-2C-T8l" firstAttribute="top" secondItem="t9N-Yl-Ul3" secondAttribute="topMargin" id="MOa-c6-5l3"/>
                                         <constraint firstItem="CsL-pa-tlx" firstAttribute="top" secondItem="I3f-eB-HAW" secondAttribute="bottom" id="Mcg-TJ-sMa"/>
                                         <constraint firstItem="I3f-eB-HAW" firstAttribute="top" secondItem="FZF-Lv-pQL" secondAttribute="bottom" constant="11" id="Ulx-Zy-g9a"/>
                                         <constraint firstAttribute="bottom" secondItem="GD6-mT-59f" secondAttribute="bottom" id="VwW-Aq-L8S"/>
                                         <constraint firstItem="mhU-mx-dK5" firstAttribute="trailing" secondItem="I3f-eB-HAW" secondAttribute="trailing" id="Z1e-yS-IyL"/>
-                                        <constraint firstAttribute="trailing" secondItem="FZF-Lv-pQL" secondAttribute="trailing" constant="36" id="bWE-T6-5jd"/>
+                                        <constraint firstItem="ifZ-2C-T8l" firstAttribute="leading" secondItem="mhU-mx-dK5" secondAttribute="leading" id="ach-dz-Dae"/>
+                                        <constraint firstAttribute="trailing" secondItem="FZF-Lv-pQL" secondAttribute="trailing" constant="17" id="bWE-T6-5jd"/>
+                                        <constraint firstItem="mhU-mx-dK5" firstAttribute="trailing" secondItem="ifZ-2C-T8l" secondAttribute="trailing" id="bn6-V7-lBB"/>
                                         <constraint firstItem="FZF-Lv-pQL" firstAttribute="top" secondItem="t9N-Yl-Ul3" secondAttribute="top" constant="26" id="hPj-01-uaq"/>
+                                        <constraint firstItem="I3f-eB-HAW" firstAttribute="top" secondItem="ifZ-2C-T8l" secondAttribute="bottom" id="iYP-Nm-xyE"/>
                                         <constraint firstAttribute="trailing" secondItem="GD6-mT-59f" secondAttribute="trailing" id="sIG-h8-3HV"/>
                                         <constraint firstAttribute="trailing" secondItem="CsL-pa-tlx" secondAttribute="trailing" id="vN6-iY-0bj"/>
                                     </constraints>
@@ -2185,6 +2202,7 @@
         <image name="Wallet/ic_token_indicator_middle" width="19" height="25"/>
         <image name="Wallet/ic_token_indicator_right" width="19" height="25"/>
         <image name="ic_accessory_disclosure" width="6" height="10"/>
+        <image name="ic_arrow_down" width="11" height="6"/>
         <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_input_menu" width="11" height="6"/>
         <image name="ic_no_result" width="125" height="125"/>

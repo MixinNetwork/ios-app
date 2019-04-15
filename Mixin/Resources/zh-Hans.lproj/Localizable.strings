@@ -355,6 +355,9 @@
 "transactions_filter_filter_by_all" = "全部";
 "pending_deposit_confirmation" = "%@ 区块确认数";
 "pending_deposit_hint" = "待入账";
+"wallet_asset_symbol" = "符号";
+"wallet_asset_chain" = "所属公链";
+"wallet_asset_contract" = "合约地址";
 
 // Transaction
 "transaction_title" = "交易详情";

@@ -415,6 +415,8 @@
 		DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */; };
 		DF3FF05B20123BD6000A0C0A /* FileDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */; };
 		DF3FF05D20134C4C000A0C0A /* DatabaseUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */; };
+		DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF43304422648B32006D971D /* AssetInfoWindow.swift */; };
+		DF43304722648B4E006D971D /* AssetInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF43304622648B4E006D971D /* AssetInfoWindow.xib */; };
 		DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44B0CB20C6897000A099B6 /* EmptyView.swift */; };
 		DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF44B0CD20C6897D00A099B6 /* EmptyView.xib */; };
 		DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF46B4041FA9B48500243A8B /* ContactsManager.swift */; };
@@ -1050,6 +1052,8 @@
 		DF3FF0582011F3BC000A0C0A /* TransferAttachmentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAttachmentData.swift; sourceTree = "<group>"; };
 		DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloadJob.swift; sourceTree = "<group>"; };
 		DF3FF05C20134C4C000A0C0A /* DatabaseUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUserDefault.swift; sourceTree = "<group>"; };
+		DF43304422648B32006D971D /* AssetInfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetInfoWindow.swift; sourceTree = "<group>"; };
+		DF43304622648B4E006D971D /* AssetInfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssetInfoWindow.xib; sourceTree = "<group>"; };
 		DF44B0CB20C6897000A099B6 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		DF44B0CD20C6897D00A099B6 /* EmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyView.xib; sourceTree = "<group>"; };
 		DF46B4041FA9B48500243A8B /* ContactsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsManager.swift; sourceTree = "<group>"; };
@@ -1733,6 +1737,8 @@
 			children = (
 				DF53BB6D202362A9002BF028 /* Cells */,
 				DF53BB6620233647002BF028 /* Views */,
+				DF43304422648B32006D971D /* AssetInfoWindow.swift */,
+				DF43304622648B4E006D971D /* AssetInfoWindow.xib */,
 				DF114B0B2020B56E00EA8F9C /* WebWindow.swift */,
 				DF114B0D2020B85600EA8F9C /* WebWindow.xib */,
 				DF8CECD61FC2EE4200E40064 /* PayWindow.swift */,
@@ -2614,6 +2620,7 @@
 				7BA4A1CF1FF347130086CD56 /* GroupParticipantCell.xib in Resources */,
 				7B45A51C2189F28E0008F894 /* call.caf in Resources */,
 				DFF2145B209ABBB400612234 /* GroupWindow.xib in Resources */,
+				DF43304722648B4E006D971D /* AssetInfoWindow.xib in Resources */,
 				7BFF3B021FAAE92F0039A1C5 /* SearchResultContactCell.xib in Resources */,
 				7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
@@ -3106,6 +3113,7 @@
 				DF68F1862014CF5E001C4225 /* StickerAPI.swift in Sources */,
 				DF68F1842014CEAB001C4225 /* RefreshStickerJob.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
+				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
 				DF03C8611FF2C1EF00C1ED6B /* RatchetSenderKeyDAO.swift in Sources */,
 				7B4D112C205BC9160074BF60 /* AddressDAO.swift in Sources */,

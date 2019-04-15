@@ -21,6 +21,8 @@ struct Asset: BaseCodable, AssetKeyConvertible {
     let accountName: String?
     let accountTag: String?
 
+    let assetKey: String
+
     enum CodingKeys: String, CodingTableKey {
         typealias Root = Asset
         case assetId = "asset_id"
@@ -37,6 +39,7 @@ struct Asset: BaseCodable, AssetKeyConvertible {
         case confirmations
         case accountName = "account_name"
         case accountTag = "account_tag"
+        case assetKey = "asset_key"
 
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
         static var columnConstraintBindings: [CodingKeys: ColumnConstraintBinding]? {
@@ -61,7 +64,7 @@ extension Asset {
     }
 
     static func createAsset(asset: AssetItem) -> Asset {
-        return Asset(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, changeUsd: asset.changeUsd, chainId: asset.chainId, confirmations: asset.confirmations, accountName: asset.accountName, accountTag: asset.accountTag)
+        return Asset(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, changeUsd: asset.changeUsd, chainId: asset.chainId, confirmations: asset.confirmations, accountName: asset.accountName, accountTag: asset.accountTag, assetKey: asset.assetKey)
     }
 
 }

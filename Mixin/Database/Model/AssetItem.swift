@@ -18,6 +18,8 @@ struct AssetItem: TableCodable, NumberStringLocalizable, AssetKeyConvertible {
     let confirmations: Int
     var accountName: String?
     var accountTag: String?
+    let assetKey: String
+    let chainName: String?
 
     enum CodingKeys: String, CodingTableKey {
         static let objectRelationalMapping = TableBinding(CodingKeys.self)
@@ -38,6 +40,8 @@ struct AssetItem: TableCodable, NumberStringLocalizable, AssetKeyConvertible {
         case confirmations
         case accountName = "account_name"
         case accountTag = "account_tag"
+        case assetKey = "asset_key"
+        case chainName = "chain_name"
     }
 }
 
@@ -69,11 +73,11 @@ extension AssetItem {
 
 extension AssetItem {
 
-    static func createAsset(asset: Asset, chainIconUrl: String?) -> AssetItem {
-        return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd, confirmations: asset.confirmations, accountName: asset.accountName, accountTag: asset.accountTag)
+    static func createAsset(asset: Asset, chainIconUrl: String?, chainName: String?) -> AssetItem {
+        return AssetItem(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, chainId: asset.chainId, chainIconUrl: chainIconUrl, changeUsd: asset.changeUsd, confirmations: asset.confirmations, accountName: asset.accountName, accountTag: asset.accountTag, assetKey: asset.assetKey, chainName: chainName)
     }
 
     static func createDefaultAsset() -> AssetItem  {
-        return AssetItem(assetId: "c94ac88f-4671-3976-b60a-09064f1811e8", type: "", symbol: "XIN", name: "Mixin", iconUrl: "https://images.mixin.one/UasWtBZO0TZyLTLCFQjvE_UYekjC7eHCuT_9_52ZpzmCC-X-NPioVegng7Hfx0XmIUavZgz5UL-HIgPCBECc-Ws=s128", balance: "0", publicKey: nil, priceBtc: "0", priceUsd: "0", chainId: "43d61dcd-e413-450d-80b8-101d5e903357", chainIconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128", changeUsd: "0", confirmations: 100, accountName: nil, accountTag: nil)
+        return AssetItem(assetId: "c94ac88f-4671-3976-b60a-09064f1811e8", type: "", symbol: "XIN", name: "Mixin", iconUrl: "https://images.mixin.one/UasWtBZO0TZyLTLCFQjvE_UYekjC7eHCuT_9_52ZpzmCC-X-NPioVegng7Hfx0XmIUavZgz5UL-HIgPCBECc-Ws=s128", balance: "0", publicKey: nil, priceBtc: "0", priceUsd: "0", chainId: "43d61dcd-e413-450d-80b8-101d5e903357", chainIconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128", changeUsd: "0", confirmations: 100, accountName: nil, accountTag: nil, assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33", chainName: "Ether")
     }
 }

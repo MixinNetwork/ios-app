@@ -63,6 +63,11 @@ class AssetViewController: UIViewController {
         filterController.delegate = self
         present(filterController, animated: true, completion: nil)
     }
+
+    
+    @IBAction func infoAction(_ sender: Any) {
+        AssetInfoWindow.instance().presentWindow(asset: asset)
+    }
     
     @IBAction func transfer(_ sender: Any) {
         guard let asset = self.asset else {

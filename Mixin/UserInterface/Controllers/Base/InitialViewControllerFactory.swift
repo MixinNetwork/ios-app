@@ -19,7 +19,7 @@ func makeInitialViewController() -> UIViewController {
         return SignalLoadingViewController.instance()
     } else {
         let navigationController = MixinNavigationController.instance()
-        navigationController.setViewControllers([HomeViewController.instance()], animated: false)
+        navigationController.setViewControllers([R.storyboard.home.home()!], animated: false)
         return navigationController
     }
 }

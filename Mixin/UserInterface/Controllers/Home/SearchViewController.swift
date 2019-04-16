@@ -14,11 +14,6 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
-    @IBOutlet weak var navigationBarContentHeightConstraint: NSLayoutConstraint!
-    
-    @IBOutlet var beforePresentingConstraints: [NSLayoutConstraint]!
-    @IBOutlet var afterPresentingConstraints: [NSLayoutConstraint]!
-    
     private let searchImageView = UIImageView(image: #imageLiteral(resourceName: "ic_search"))
     private let headerHeight: CGFloat = 41
     
@@ -48,8 +43,8 @@ class SearchViewController: UIViewController {
         tableHeaderView.frame = CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude)
         tableView.tableHeaderView = tableHeaderView
         tableView.tableFooterView = UIView()
-        tableView.dataSource = self
-        tableView.delegate = self
+//        tableView.dataSource = self
+//        tableView.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: .ContactsDidChange, object: nil)
     }
     
@@ -94,31 +89,6 @@ class SearchViewController: UIViewController {
         reloadContacts()
     }
     
-    func present() {
-        prepareForReuse()
-        isPresenting = true
-        beforePresentingConstraints.forEach {
-            $0.priority = .defaultLow
-        }
-        afterPresentingConstraints.forEach {
-            $0.priority = .defaultHigh
-        }
-        showContacts()
-        keywordTextField.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.layoutIfNeeded()
-        }) { (_) in
-            self.keywordTextField.becomeFirstResponder()
-        }
-    }
-    
-    func dismiss() {
-        isPresenting = false
-        keywordTextField.resignFirstResponder()
-        searchQueue.cancelAllOperations()
-        contactsLoadingQueue.cancelAllOperations()
-    }
-    
     @objc func contactsDidChange(_ notification: Notification) {
         reloadContacts()
     }
@@ -152,23 +122,6 @@ class SearchViewController: UIViewController {
             tableView.reloadData()
             updateNoResultIndicator()
         }
-    }
-    
-    private func prepareForReuse() {
-        keywordTextField.text = nil
-        users = []
-        assets = []
-        conversations = []
-        tableView.reloadData()
-        beforePresentingConstraints.forEach {
-            $0.priority = .defaultHigh
-        }
-        afterPresentingConstraints.forEach {
-            $0.priority = .defaultLow
-        }
-        keywordTextField.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        view.layoutIfNeeded()
-        tableView.contentOffset.y = -tableView.contentInset.top
     }
     
     private func updateNoResultIndicator() {

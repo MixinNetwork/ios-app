@@ -1188,6 +1188,9 @@ extension ConversationViewController {
     
     private func finishInitialLoading() {
         resizeInputRecognizer = ResizeInputWrapperGestureRecognizer(target: self, action: #selector(resizeInputWrapperAction(_:)))
+        if let popRecognizer = navigationController?.interactivePopGestureRecognizer {
+            resizeInputRecognizer.require(toFail: popRecognizer)
+        }
         resizeInputRecognizer.delegate = self
         tableView.addGestureRecognizer(resizeInputRecognizer)
         

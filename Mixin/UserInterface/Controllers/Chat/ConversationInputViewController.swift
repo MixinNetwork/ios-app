@@ -527,6 +527,10 @@ extension ConversationInputViewController: UIGestureRecognizerDelegate {
         return isMaximizable
     }
     
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return otherGestureRecognizer is UIScreenEdgePanGestureRecognizer
+    }
+    
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         // Avoid conflicting with audio recording
         return !(otherGestureRecognizer is UILongPressGestureRecognizer)

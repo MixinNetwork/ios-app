@@ -330,6 +330,10 @@ extension UrlWindow {
     }
 
     class func checkPayUrl(url: URL, fromWeb: Bool = false) -> Bool {
+        guard AccountAPI.shared.account?.has_pin ?? false else {
+            UIApplication.rootNavigationController()?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            return true
+        }
         guard let query = url.getKeyVals() else {
             return false
         }

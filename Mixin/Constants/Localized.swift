@@ -148,7 +148,8 @@ public class Localized {
     public static let CONTACT_CHANGE_NAME_FAIL = LocalizedString("contact_change_name_fail", comment: "Failed to change your name")
     public static let CONTACT_MY_QR_CODE = LocalizedString("contact_my_qr_code", comment: "My QR Code")
     public static let CONTACT_RECEIVE_MONEY = LocalizedString("contact_receive_money", comment: "Receive Money")
-
+    public static let PLACEHOLDER_MIXIN_ID_OR_PHONE = LocalizedString("placeholder_mixin_id_or_phone", comment: "Mixin ID, Phone number")
+    
     // Home
     public static let HOME_TITLE = LocalizedString("home_title", comment: "Chats")
 

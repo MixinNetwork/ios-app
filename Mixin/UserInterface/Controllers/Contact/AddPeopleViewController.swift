@@ -3,7 +3,7 @@ import PhoneNumberKit
 
 class AddPeopleViewController: KeyboardBasedLayoutViewController {
     
-    @IBOutlet weak var keywordTextField: UITextField!
+    @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var myIdLabel: UILabel!
     @IBOutlet weak var searchButton: RoundedButton!
     
@@ -11,7 +11,16 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     
     private let legalKeywordCharactersSet = Set("+0123456789")
     private let phoneNumberKit = PhoneNumberKit()
+    
     private var userWindow = UserWindow.instance()
+    
+    private var keywordTextField: UITextField {
+        return searchBoxView.textField
+    }
+    
+    private var keyword: String {
+        return keywordTextField.text ?? ""
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +31,9 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
             self?.keywordTextField.becomeFirstResponder()
         }
         searchButton.isEnabled = false
+        keywordTextField.keyboardType = .phonePad
+        keywordTextField.placeholder = Localized.PLACEHOLDER_MIXIN_ID_OR_PHONE
+        keywordTextField.addTarget(self, action: #selector(checkKeywordAction), for: .editingChanged)
         keywordTextField.becomeFirstResponder()
     }
     
@@ -38,7 +50,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
         view.layoutIfNeeded()
     }
     
-    @IBAction func checkKeywordAction(_ sender: Any) {
+    @objc func checkKeywordAction(_ sender: Any) {
         let filteredKeyword = String(keyword.filter(legalKeywordCharactersSet.contains))
         keywordTextField.text = filteredKeyword
         searchButton.isEnabled = isLegalKeyword(filteredKeyword)
@@ -64,10 +76,6 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     class func instance() -> UIViewController {
         let vc = Storyboard.contact.instantiateViewController(withIdentifier: "add_people")
         return ContainerViewController.instance(viewController: vc, title: Localized.PROFILE_ADD)
-    }
-    
-    private var keyword: String {
-        return keywordTextField.text ?? ""
     }
     
     private func isLegalKeyword(_ keyword: String) -> Bool {

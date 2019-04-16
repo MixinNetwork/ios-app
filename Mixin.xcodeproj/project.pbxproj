@@ -201,7 +201,7 @@
 		7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */; };
 		7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B9863901FA313E300D4B16C /* BottomWrapperView.xib */; };
 		7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9863921FA3141F00D4B16C /* XibDesignable.swift */; };
-		7B9916D421945A6800C11401 /* WalletAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9916D321945A6800C11401 /* WalletAssetCell.swift */; };
+		7B9916D421945A6800C11401 /* AssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9916D321945A6800C11401 /* AssetCell.swift */; };
 		7B99768B210870DC002D48D8 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */; };
 		7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */; };
 		7B9C642F2240B62600465A6A /* WhiteBackgroundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */; };
@@ -297,7 +297,7 @@
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
 		7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6E16B218089F100C32EE5 /* GCDExtension.swift */; };
 		7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */; };
-		7BEC4DF121A7D054003336F2 /* WalletAssetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BEC4DF021A7D054003336F2 /* WalletAssetCell.xib */; };
+		7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BEC4DF021A7D054003336F2 /* AssetCell.xib */; };
 		7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEDF9F720510CD300371266 /* ConversationDataSource.swift */; };
 		7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */; };
 		7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */; };
@@ -442,7 +442,7 @@
 		DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB6720233657002BF028 /* MixinWebView.swift */; };
 		DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */; };
 		DF53BB71202362F1002BF028 /* AuthorizationScopeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */; };
-		DF56966F1FAAB11D00226D42 /* PhoneContactHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* PhoneContactHeaderView.swift */; };
+		DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */; };
 		DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */; };
 		DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */; };
 		DF5CDA74204FEBA1004A52BA /* BaseCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */; };
@@ -823,7 +823,7 @@
 		7B98638E1FA313D300D4B16C /* BottomWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomWrapperView.swift; sourceTree = "<group>"; };
 		7B9863901FA313E300D4B16C /* BottomWrapperView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomWrapperView.xib; sourceTree = "<group>"; };
 		7B9863921FA3141F00D4B16C /* XibDesignable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XibDesignable.swift; sourceTree = "<group>"; };
-		7B9916D321945A6800C11401 /* WalletAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAssetCell.swift; sourceTree = "<group>"; };
+		7B9916D321945A6800C11401 /* AssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCell.swift; sourceTree = "<group>"; };
 		7B99768A210870DC002D48D8 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		7B9A2BD02023729E00135DA4 /* AppButtonGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupViewModel.swift; sourceTree = "<group>"; };
 		7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteBackgroundedView.swift; sourceTree = "<group>"; };
@@ -933,7 +933,7 @@
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
 		7BE6E16B218089F100C32EE5 /* GCDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDExtension.swift; sourceTree = "<group>"; };
 		7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputViewController.swift; sourceTree = "<group>"; };
-		7BEC4DF021A7D054003336F2 /* WalletAssetCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletAssetCell.xib; sourceTree = "<group>"; };
+		7BEC4DF021A7D054003336F2 /* AssetCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssetCell.xib; sourceTree = "<group>"; };
 		7BEDF9F720510CD300371266 /* ConversationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDataSource.swift; sourceTree = "<group>"; };
 		7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionCell.swift; sourceTree = "<group>"; };
 		7BEE5352222E21D7008D3911 /* KeyboardHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHeight.swift; sourceTree = "<group>"; };
@@ -1079,7 +1079,7 @@
 		DF53BB6720233657002BF028 /* MixinWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinWebView.swift; sourceTree = "<group>"; };
 		DF53BB6E202362E5002BF028 /* AuthorizationScopeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthorizationScopeCell.xib; sourceTree = "<group>"; };
 		DF53BB70202362F1002BF028 /* AuthorizationScopeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationScopeCell.swift; sourceTree = "<group>"; };
-		DF56966E1FAAB11D00226D42 /* PhoneContactHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactHeaderView.swift; sourceTree = "<group>"; };
+		DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHeaderView.swift; sourceTree = "<group>"; };
 		DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewController.swift; sourceTree = "<group>"; };
 		DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		DF5CDA73204FEBA1004A52BA /* BaseCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCodable.swift; sourceTree = "<group>"; };
@@ -1504,6 +1504,14 @@
 				7B9863901FA313E300D4B16C /* BottomWrapperView.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		7B3F78512264689B00029D48 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				DF56966E1FAAB11D00226D42 /* ContactHeaderView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		7B51DDA7223A31E4008ACDBB /* Model */ = {
@@ -2167,8 +2175,8 @@
 				DF87949B207505F4004A1E55 /* TransactionCell.swift */,
 				7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */,
 				7B71F5252191CC1500F93B98 /* WalletHeaderView.swift */,
-				7BEC4DF021A7D054003336F2 /* WalletAssetCell.xib */,
-				7B9916D321945A6800C11401 /* WalletAssetCell.swift */,
+				7BEC4DF021A7D054003336F2 /* AssetCell.xib */,
+				7B9916D321945A6800C11401 /* AssetCell.swift */,
 				7BCE296521AC132E00B1A507 /* SnapshotCell.xib */,
 				7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */,
 				7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */,
@@ -2348,6 +2356,7 @@
 		DFD294331FA6BECE00FADAAD /* Contact */ = {
 			isa = PBXGroup;
 			children = (
+				7B3F78512264689B00029D48 /* View */,
 				7BAE1B42223B51E9004F2D16 /* Model */,
 				DFD294391FA7066500FADAAD /* Cells */,
 				DFD294341FA6EC0D00FADAAD /* ContactViewController.swift */,
@@ -2369,7 +2378,6 @@
 				DFF44179223BC63100DDD5F8 /* ContactCell.swift */,
 				DF46B4061FA9E78A00243A8B /* PhoneContactCell.swift */,
 				7BF071BF2244E6A1007240AD /* UploadContactCell.swift */,
-				DF56966E1FAAB11D00226D42 /* PhoneContactHeaderView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2624,7 +2632,7 @@
 				7BFF3B021FAAE92F0039A1C5 /* SearchResultContactCell.xib in Resources */,
 				7B0B01961FEA628F000EEE4F /* StrangerTipsView.xib in Resources */,
 				DFF44176223A035000DDD5F8 /* GoogleService-Info.plist in Resources */,
-				7BEC4DF121A7D054003336F2 /* WalletAssetCell.xib in Resources */,
+				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
@@ -3120,7 +3128,7 @@
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
 				DF17B51320525485006447C2 /* ConversationItem.swift in Sources */,
-				7B9916D421945A6800C11401 /* WalletAssetCell.swift in Sources */,
+				7B9916D421945A6800C11401 /* AssetCell.swift in Sources */,
 				7BAD3339216E1DFA006C0309 /* RTCSessionDescription+JSON.swift in Sources */,
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,
@@ -3232,7 +3240,7 @@
 				DFB2062821ABC088006E4341 /* RestoreViewController.swift in Sources */,
 				DFD294371FA6EF4500FADAAD /* DateExtension.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
-				DF56966F1FAAB11D00226D42 /* PhoneContactHeaderView.swift in Sources */,
+				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
 				7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,

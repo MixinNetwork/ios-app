@@ -1,6 +1,6 @@
 import UIKit
 
-class PhoneContactHeaderView: UITableViewHeaderFooterView {
+class ContactHeaderView: UITableViewHeaderFooterView {
     
     let label = UILabel()
     
@@ -21,8 +21,10 @@ class PhoneContactHeaderView: UITableViewHeaderFooterView {
         label.textColor = .darkText
         contentView.addSubview(label)
         label.snp.makeConstraints { (make) in
-            make.top.leading.equalToSuperview().offset(20)
+            make.height.equalTo(16)
+            make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20).priority(999)
+            make.bottom.equalToSuperview().offset(-5)
         }
     }
     

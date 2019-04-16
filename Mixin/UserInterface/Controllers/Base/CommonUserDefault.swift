@@ -3,7 +3,9 @@ import Foundation
 class CommonUserDefault {
 
     static let shared = CommonUserDefault()
-
+    
+    static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.ios.recently.used.app.ids.change")
+    
     private let keyFirstLaunchSince1970 = "first_launch_since_1970"
     private let keyHasPerformedTransfer = "has_performed_transfer"
     private var keyConversationDraft: String {
@@ -45,7 +47,10 @@ class CommonUserDefault {
     private var keyHasForceLogout: String {
         return "has_force_logout_\(AccountAPI.shared.accountIdentityNumber)"
     }
-
+    private var keyRecentlyUsedAppIds: String {
+        return "recently_used_app_ids_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    
     enum BackupCategory: String {
         case daily
         case weekly
@@ -220,5 +225,26 @@ class CommonUserDefault {
         }
         self.hasUnreadAnnouncement[conversationId] = hasUnreadAnnouncement
     }
-
+    
+    private(set) var recentlyUsedAppIds: [String] {
+        get {
+            return session.stringArray(forKey: keyRecentlyUsedAppIds) ?? []
+        }
+        set {
+            session.set(newValue, forKey: keyRecentlyUsedAppIds)
+        }
+    }
+    
+    func insertRecentlyUsedAppId(id: String) {
+        let maxNumberOfIds = 12
+        var ids = recentlyUsedAppIds
+        ids.removeAll(where: { $0 == id })
+        ids.insert(id, at: 0)
+        if ids.count > maxNumberOfIds {
+            ids.removeLast(ids.count - maxNumberOfIds)
+        }
+        recentlyUsedAppIds = ids
+        NotificationCenter.default.post(name: CommonUserDefault.didChangeRecentlyUsedAppIdsNotification, object: ids)
+    }
+    
 }

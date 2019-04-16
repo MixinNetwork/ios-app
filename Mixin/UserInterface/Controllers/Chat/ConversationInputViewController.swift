@@ -309,6 +309,7 @@ class ConversationInputViewController: UIViewController {
             extensionViewController.apps = apps
         } else if let ownerId = dataSource.ownerUser?.userId, let app = AppDAO.shared.getApp(ofUserId: ownerId) {
             opponentApp = app
+            CommonUserDefault.shared.insertRecentlyUsedAppId(id: app.appId)
         }
         if dataSource.category == .contact, let ownerUser = dataSource.ownerUser, !ownerUser.isBot {
             extensionViewController.fixedExtensions = [.transfer, .call, .camera, .file, .contact]

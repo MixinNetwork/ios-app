@@ -239,7 +239,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aqx-mP-qVC">
-                                            <rect key="frame" x="36" y="15" width="134.5" height="50"/>
+                                            <rect key="frame" x="20" y="15" width="134.5" height="50"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zfQ-YP-r58" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -277,8 +277,8 @@
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="aqx-mP-qVC" secondAttribute="trailing" constant="36" id="MkD-dR-mQ7"/>
-                                        <constraint firstItem="aqx-mP-qVC" firstAttribute="leading" secondItem="qjm-Vf-Fv9" secondAttribute="leading" constant="36" id="SAU-wp-WXi"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="aqx-mP-qVC" secondAttribute="trailing" constant="20" id="MkD-dR-mQ7"/>
+                                        <constraint firstItem="aqx-mP-qVC" firstAttribute="leading" secondItem="qjm-Vf-Fv9" secondAttribute="leading" constant="20" id="SAU-wp-WXi"/>
                                         <constraint firstItem="aqx-mP-qVC" firstAttribute="top" secondItem="qjm-Vf-Fv9" secondAttribute="top" constant="15" id="enF-df-3gf"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -297,7 +297,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="YFc-vL-DzB">
-                                            <rect key="frame" x="36" y="15" width="238" height="50"/>
+                                            <rect key="frame" x="20" y="15" width="254" height="50"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sEC-6A-J0y" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -325,7 +325,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Ttc-dn-kK9">
-                                                    <rect key="frame" x="66" y="4.5" width="172" height="41.5"/>
+                                                    <rect key="frame" x="66" y="4.5" width="188" height="41.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OVER140" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N1f-yz-cUB">
                                                             <rect key="frame" x="0.0" y="0.0" width="68.5" height="19.5"/>
@@ -362,7 +362,7 @@
                                         <constraint firstItem="YFc-vL-DzB" firstAttribute="top" secondItem="GfE-NY-ajQ" secondAttribute="top" constant="15" id="9Uv-oE-Kxi"/>
                                         <constraint firstItem="Vxf-Oa-RU6" firstAttribute="top" secondItem="GfE-NY-ajQ" secondAttribute="top" constant="25.5" id="D5s-Ln-xWS"/>
                                         <constraint firstItem="Vxf-Oa-RU6" firstAttribute="leading" secondItem="YFc-vL-DzB" secondAttribute="trailing" constant="20" id="Yq7-ph-Kur"/>
-                                        <constraint firstItem="YFc-vL-DzB" firstAttribute="leading" secondItem="GfE-NY-ajQ" secondAttribute="leading" constant="36" id="gSM-JX-XFG"/>
+                                        <constraint firstItem="YFc-vL-DzB" firstAttribute="leading" secondItem="GfE-NY-ajQ" secondAttribute="leading" constant="20" id="gSM-JX-XFG"/>
                                         <constraint firstAttribute="trailing" secondItem="Vxf-Oa-RU6" secondAttribute="trailing" constant="20" id="t4R-Z1-nCT"/>
                                     </constraints>
                                 </tableViewCellContentView>

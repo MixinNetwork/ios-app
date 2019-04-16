@@ -146,7 +146,6 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
             let vc = AssetSendViewController.instance(asset: asset, dataSource: dataSource)
             navigationController?.pushViewController(vc, animated: true)
         }
-        conversationInputViewController?.downsizeToRegularIfMaximized()
         return true
     }
     

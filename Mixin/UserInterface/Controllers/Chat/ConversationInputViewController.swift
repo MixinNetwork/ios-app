@@ -351,21 +351,6 @@ class ConversationInputViewController: UIViewController {
         }
     }
     
-    func downsizeToRegularOrDismiss() {
-        if height == .maximized {
-            setPreferredContentHeight(regularHeight, animated: true)
-        } else if height == .regular {
-            dismiss()
-        }
-    }
-    
-    func downsizeToRegularIfMaximized() {
-        guard height == .maximized else {
-            return
-        }
-        setPreferredContentHeightAnimated(.regular)
-    }
-    
     func setPreferredContentHeightAnimated(_ height: Height) {
         let heightValue: CGFloat
         switch height {
@@ -377,6 +362,14 @@ class ConversationInputViewController: UIViewController {
             heightValue = maximizedHeight
         }
         setPreferredContentHeight(heightValue, animated: true)
+    }
+    
+    func dismiss() {
+        if textView.isFirstResponder {
+            textView.resignFirstResponder()
+        } else if height != .minimized {
+            dismissCustomInput(minimize: true)
+        }
     }
     
 }
@@ -591,14 +584,6 @@ extension ConversationInputViewController {
     private func setPreferredContentHeight(_ height: CGFloat, animated: Bool) {
         preferredContentHeight = height
         conversationViewController.updateInputWrapper(for: height, animated: animated)
-    }
-    
-    private func dismiss() {
-        if textView.isFirstResponder {
-            textView.resignFirstResponder()
-        } else if height != .minimized {
-            dismissCustomInput(minimize: true)
-        }
     }
     
     private func resignTextViewFirstResponderWithoutReportingContentHeightChange() {

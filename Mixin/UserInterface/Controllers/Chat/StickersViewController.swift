@@ -16,7 +16,6 @@ class StickersViewController: StickersCollectionViewController, ConversationInpu
     
     func send(sticker: Sticker) {
         dataSource?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
-        conversationInputViewController?.downsizeToRegularIfMaximized()
         if updateUsedAtAfterSent {
             DispatchQueue.global().async {
                 let newUsedAt = Date().toUTCString()

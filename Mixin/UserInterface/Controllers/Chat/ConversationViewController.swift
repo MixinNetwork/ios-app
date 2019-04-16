@@ -385,7 +385,7 @@ class ConversationViewController: UIViewController {
                 AudioManager.shared.playOrStop(node: node)
             } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue, let item = GalleryItem(message: message) {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
-                conversationInputViewController.downsizeToRegularOrDismiss()
+                conversationInputViewController.dismiss()
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
                 AudioManager.shared.stop(deactivateAudioSession: true)
                 view.bringSubviewToFront(galleryWrapperView)
@@ -397,13 +397,13 @@ class ConversationViewController: UIViewController {
                 homeIndicatorAutoHidden = true
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue {
-                    conversationInputViewController.downsizeToRegularOrDismiss()
+                    conversationInputViewController.dismiss()
                     openDocumentAction(message: message)
                 } else {
                     attachmentLoadingCellDidSelectNetworkOperation(cell)
                 }
             } else if message.category.hasSuffix("_CONTACT"), let shareUserId = message.sharedUserId {
-                conversationInputViewController.downsizeToRegularOrDismiss()
+                conversationInputViewController.dismiss()
                 if shareUserId == AccountAPI.shared.accountUserId {
                     guard let account = AccountAPI.shared.account else {
                         return
@@ -413,10 +413,10 @@ class ConversationViewController: UIViewController {
                     UserWindow.instance().updateUser(user: user).presentView()
                 }
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
-                conversationInputViewController.downsizeToRegularOrDismiss()
+                conversationInputViewController.dismiss()
                 open(url: .aboutEncryption)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
-                conversationInputViewController.downsizeToRegularOrDismiss()
+                conversationInputViewController.dismiss()
                 DispatchQueue.global().async { [weak self] in
                     guard let assetId = message.snapshotAssetId, let snapshotId = message.snapshotId, let asset = AssetDAO.shared.getAsset(assetId: assetId), let snapshot = SnapshotDAO.shared.getSnapshot(snapshotId: snapshotId) else {
                         return
@@ -426,13 +426,13 @@ class ConversationViewController: UIViewController {
                     }
                 }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let action = message.appCard?.action {
-                conversationInputViewController.downsizeToRegularOrDismiss()
+                conversationInputViewController.dismiss()
                 open(url: action)
             } else {
-                conversationInputViewController.downsizeToRegularOrDismiss()
+                conversationInputViewController.dismiss()
             }
         } else {
-            conversationInputViewController.downsizeToRegularOrDismiss()
+            conversationInputViewController.dismiss()
         }
     }
     

@@ -17,7 +17,8 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var bottomNavConstraint: NSLayoutConstraint!
-
+    @IBOutlet weak var navigationBarContentTopConstraint: NSLayoutConstraint!
+    
     private var conversations = [ConversationItem]()
     private var needRefresh = true
     private var refreshing = false
@@ -49,6 +50,11 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 11.0, *) {
+            navigationBarContentTopConstraint.constant = view.safeAreaInsets.top
+        } else {
+            navigationBarContentTopConstraint.constant = UIApplication.shared.statusBarFrame.height
+        }
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "ConversationCell", bundle: nil), forCellReuseIdentifier: ConversationCell.cellIdentifier)
@@ -58,6 +64,7 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange(_:)), name: .UserDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(socketStatusChange), name: .SocketStatusChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(syncStatusChange), name: .SyncMessageDidAppear, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(statusBarFrameWillChange(_:)), name: UIApplication.willChangeStatusBarFrameNotification, object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
             self?.searchViewController?.prepare()
         }
@@ -91,6 +98,12 @@ class HomeViewController: UIViewController {
         #if RELEASE
         requestAppStoreReviewIfNeeded()
         #endif
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        navigationBarContentTopConstraint.constant = view.safeAreaInsets.top
     }
     
     private func fetchConversations() {
@@ -193,7 +206,18 @@ class HomeViewController: UIViewController {
             connectingView.startAnimating()
         }
     }
-
+    
+    @objc func statusBarFrameWillChange(_ notification: Notification) {
+        guard let frame = notification.userInfo?[UIApplication.statusBarFrameUserInfoKey] as? CGRect else {
+            return
+        }
+        if #available(iOS 11.0, *) {
+            
+        } else {
+            navigationBarContentTopConstraint.constant = frame.height
+        }
+    }
+    
     @IBAction func walletAction(_ sender: Any) {
         guard let account = AccountAPI.shared.account else {
             return

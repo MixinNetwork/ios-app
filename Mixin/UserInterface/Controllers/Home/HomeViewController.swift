@@ -17,9 +17,8 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var connectingView: ActivityIndicatorView!
     @IBOutlet weak var titleLabel: UILabel!
     
+    @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomNavConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideHomeConstraint: NSLayoutConstraint!
-    @IBOutlet weak var showHomeConstraint: NSLayoutConstraint!
     
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
@@ -30,6 +29,7 @@ class HomeViewController: UIViewController {
     private var refreshing = false
     private var beginDraggingOffset: CGFloat = 0
     private var searchViewController: SearchViewController!
+    private var searchContainerBeginTopConstant: CGFloat!
     
     private lazy var deleteAction = UITableViewRowAction(style: .destructive, title: Localized.MENU_DELETE, handler: tableViewCommitDeleteAction)
     private lazy var pinAction: UITableViewRowAction = {
@@ -56,7 +56,8 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchViewController.cancelButton.addTarget(self, action: #selector(dismissSearch), for: .touchUpInside)
+        searchContainerBeginTopConstant = searchContainerTopConstraint.constant
+        searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "ConversationCell", bundle: nil), forCellReuseIdentifier: ConversationCell.cellIdentifier)
@@ -148,46 +149,13 @@ class HomeViewController: UIViewController {
         navigationController?.pushViewController(ContactViewController.instance(), animated: true)
     }
     
-    @IBAction func panAction(_ recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            recognizer.setTranslation(.zero, in: view)
-        case .changed:
-            let translation = min(0, recognizer.translation(in: view).y)
-            navigationBarView.alpha = translation / view.bounds.height
-            hideHomeConstraint.constant = translation
-            view.layoutIfNeeded()
-        case .ended:
-            if recognizer.velocity(in: view).y < 0 {
-                hideHomeConstraint.priority = .defaultLow
-                showHomeConstraint.priority = .defaultHigh
-                UIView.animate(withDuration: 0.5, animations: {
-                    UIView.setAnimationCurve(.overdamped)
-                    self.navigationBarView.alpha = 1
-                    self.view.layoutIfNeeded()
-                }) { (_) in
-                    self.hideHomeConstraint.constant = 0
-                }
-            } else {
-                hideHomeConstraint.constant = 0
-                UIView.animate(withDuration: 0.5, animations: {
-                    UIView.setAnimationCurve(.overdamped)
-                    self.navigationBarView.alpha = 0
-                    self.view.layoutIfNeeded()
-                })
-            }
-        default:
-            break
-        }
-    }
-    
     @objc func applicationDidBecomeActive(_ sender: Notification) {
         guard needRefresh else {
             return
         }
         fetchConversations()
     }
-
+    
     @objc func dataDidChange(_ sender: Notification) {
         guard view?.isVisibleInScreen ?? false else {
             needRefresh = true
@@ -198,18 +166,6 @@ class HomeViewController: UIViewController {
             return
         }
         fetchConversations()
-    }
-    
-    @objc func dismissSearch() {
-        hideHomeConstraint.priority = .defaultLow
-        showHomeConstraint.priority = .defaultHigh
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
-            self.navigationBarView.alpha = 1
-            self.view.layoutIfNeeded()
-        }) { (_) in
-            self.hideHomeConstraint.constant = 0
-        }
     }
     
     @objc func socketStatusChange(_ sender: Any) {
@@ -305,30 +261,14 @@ extension HomeViewController: UIScrollViewDelegate {
         } else if scrollView.contentOffset.y > -dragDownThreshold && dragDownIndicator.isHighlighted {
             dragDownIndicator.isHighlighted = false
         }
-        if scrollView.isDragging {
-            if scrollView.contentOffset.y < 0 {
-                navigationBarView.alpha = 1 + scrollView.contentOffset.y / view.bounds.height
-            } else {
-                navigationBarView.alpha = 1
-            }
-        }
-    }
-    
-    fileprivate func showSearch() {
-        showHomeConstraint.priority = .defaultLow
-        hideHomeConstraint.priority = .defaultHigh
-        UIView.animate(withDuration: 0.5) {
-            UIView.setAnimationCurve(.overdamped)
-            self.navigationBarView.alpha = 0
-            self.view.layoutIfNeeded()
-        }
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        guard velocity.y <= 0 && tableView.contentOffset.y <= -dragDownThreshold else {
-            return
+        if tableView.contentOffset.y <= -dragDownThreshold {
+            showSearch()
+        } else {
+            hideSearch()
         }
-        showSearch()
     }
     
 }
@@ -464,6 +404,26 @@ extension HomeViewController {
             self.bottomNavConstraint.constant = 0
             self.view.layoutIfNeeded()
         }, completion: nil)
+    }
+    
+    private func showSearch() {
+        searchContainerTopConstraint.constant = 0
+        searchViewController.becomeFirstResponder()
+        UIView.animate(withDuration: 0.2) {
+            self.navigationBarView.alpha = 0
+            self.searchContainerView.alpha = 1
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    @objc private func hideSearch() {
+        searchContainerTopConstraint.constant = searchContainerBeginTopConstant
+        UIView.animate(withDuration: 0.2) {
+            self.navigationBarView.alpha = 1
+            self.searchContainerView.alpha = 0
+            self.view.layoutIfNeeded()
+        }
+        view.endEditing(true)
     }
     
     private func requestAppStoreReviewIfNeeded() {

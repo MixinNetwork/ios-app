@@ -31,15 +31,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uc0-po-iUR">
-                                <rect key="frame" x="0.0" y="-667" width="375" height="667"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <gestureRecognizers/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="wHp-es-kYA" appends="YES" id="6wE-AW-dlC"/>
-                                    <segue destination="wBP-M4-Xow" kind="embed" id="IFL-df-duU"/>
-                                </connections>
-                            </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i5D-40-ldq">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
@@ -119,7 +110,7 @@
                                         <rect key="frame" x="178.5" y="618.5" width="18" height="17"/>
                                     </imageView>
                                 </subviews>
-                                <color key="backgroundColor" red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="IpN-ia-USo" firstAttribute="centerY" secondItem="BkB-8V-9ox" secondAttribute="centerY" id="6Zj-ki-LAh"/>
                                     <constraint firstItem="z69-58-QNg" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="9SN-B1-YUE"/>
@@ -206,23 +197,30 @@
                                     <constraint firstAttribute="trailing" secondItem="JkM-gn-X6q" secondAttribute="trailing" constant="10" id="hac-oe-hM7"/>
                                 </constraints>
                             </view>
+                            <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uc0-po-iUR">
+                                <rect key="frame" x="0.0" y="-8" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <segue destination="wBP-M4-Xow" kind="embed" id="IFL-df-duU"/>
+                                </connections>
+                            </containerView>
                         </subviews>
-                        <color key="backgroundColor" red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="uc0-po-iUR" secondAttribute="trailing" id="44Q-aU-MzI"/>
                             <constraint firstAttribute="trailing" secondItem="2PV-tA-eIh" secondAttribute="trailing" id="BPC-s8-zeI"/>
-                            <constraint firstItem="i5D-40-ldq" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="bottom" priority="250" id="HOn-kg-YHj"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="Hzi-ct-Nth"/>
                             <constraint firstAttribute="trailing" secondItem="i5D-40-ldq" secondAttribute="trailing" id="Q9i-7q-GXv"/>
                             <constraint firstItem="i5D-40-ldq" firstAttribute="height" secondItem="J91-yj-SMd" secondAttribute="height" id="R3W-S2-Yvj"/>
                             <constraint firstItem="i5D-40-ldq" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="cSc-X1-1De"/>
-                            <constraint firstItem="uc0-po-iUR" firstAttribute="bottom" secondItem="i5D-40-ldq" secondAttribute="top" id="fwq-KE-LA7"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="lic-EF-P70"/>
+                            <constraint firstItem="uc0-po-iUR" firstAttribute="top" secondItem="5mk-Fk-SFN" secondAttribute="top" constant="-28" id="o6R-WF-m77"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="height" secondItem="J91-yj-SMd" secondAttribute="height" id="pNg-Et-Q8c"/>
                             <constraint firstItem="5mk-Fk-SFN" firstAttribute="bottom" secondItem="z69-58-QNg" secondAttribute="bottom" id="pTL-Be-PuM"/>
                             <constraint firstItem="BAu-gi-TQg" firstAttribute="height" secondItem="2PV-tA-eIh" secondAttribute="height" id="swY-bH-tag"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" id="tuS-El-9K3"/>
-                            <constraint firstAttribute="bottom" secondItem="i5D-40-ldq" secondAttribute="bottom" priority="750" id="uwV-cj-FMZ"/>
+                            <constraint firstAttribute="bottom" secondItem="i5D-40-ldq" secondAttribute="bottom" id="uwV-cj-FMZ"/>
                             <constraint firstItem="5mk-Fk-SFN" firstAttribute="top" secondItem="JkM-gn-X6q" secondAttribute="top" id="vPl-Uf-b9R"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5mk-Fk-SFN"/>
@@ -234,21 +232,15 @@
                         <outlet property="cameraButton" destination="BkB-8V-9ox" id="ym5-Sw-87q"/>
                         <outlet property="connectingView" destination="px1-MZ-UBh" id="pJF-Aq-gui"/>
                         <outlet property="guideView" destination="L82-pj-DlR" id="X4h-WI-gQy"/>
-                        <outlet property="hideHomeConstraint" destination="HOn-kg-YHj" id="co9-PO-hce"/>
                         <outlet property="navigationBarView" destination="2PV-tA-eIh" id="CLx-za-35J"/>
                         <outlet property="qrcodeImageView" destination="IpN-ia-USo" id="ham-aT-BqO"/>
+                        <outlet property="searchContainerTopConstraint" destination="o6R-WF-m77" id="5U8-yb-0fY"/>
                         <outlet property="searchContainerView" destination="uc0-po-iUR" id="Q0R-V2-fEi"/>
-                        <outlet property="showHomeConstraint" destination="uwV-cj-FMZ" id="h9U-zg-46t"/>
                         <outlet property="tableView" destination="9MA-tT-pfZ" id="c0q-R0-LjX"/>
                         <outlet property="titleLabel" destination="l2d-Un-d5h" id="geD-uZ-1wa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rdn-hv-2gX" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="wHp-es-kYA">
-                    <connections>
-                        <action selector="panAction:" destination="hQE-mj-dkd" id="pST-Yj-IGd"/>
-                    </connections>
-                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-196" y="-278"/>
         </scene>
@@ -364,6 +356,7 @@
                     <navigationItem key="navigationItem" id="oNh-bA-9Hf"/>
                     <connections>
                         <outlet property="cancelButton" destination="Bb6-Fw-r7x" id="M2Q-Xi-zlO"/>
+                        <outlet property="searchBox" destination="1gJ-C8-eTf" id="9gL-cG-iN3"/>
                         <outlet property="tableView" destination="fJ7-r4-Szs" id="o3z-Ff-t8W"/>
                     </connections>
                 </viewController>

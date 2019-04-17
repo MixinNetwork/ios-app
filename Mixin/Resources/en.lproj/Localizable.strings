@@ -49,8 +49,9 @@
 "date_format_month" = "E, d MMM";
 "date_format_transation" = "MMM dd, HH:mm";
 
+// Search
+"search_placeholder_number" = "Search Mixin ID or phone number: ";
 "search_placeholder_address" = "Label";
-"search_placeholder_user" = "Mixin ID, Phone Number";
 "search_placeholder_asset" = "Name, Symbol";
 "search_placeholder_home" = "Contacts, Assets, Chats";
 "search_placeholder_participants" = "Name";

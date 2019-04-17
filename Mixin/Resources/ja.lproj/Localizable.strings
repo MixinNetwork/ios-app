@@ -45,6 +45,8 @@
 "date_format_month" = "E, d MMM";
 "date_format_transation" = "MMM dd, HH:mm";
 
+// Search
+"search_placeholder_number" = "MIXIN IDまたは電話番号から検索: ";
 "search_placeholder_address" = "ラベル";
 "search_placeholder_user" = "MIXIN ID、電話番号";
 "search_placeholder_asset" = "名前、シンボル";

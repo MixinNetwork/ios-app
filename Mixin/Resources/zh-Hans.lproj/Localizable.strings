@@ -49,8 +49,9 @@
 "date_format_month" = "MM月d日 E";
 "date_format_transation" = "MM月d日 HH:mm";
 
+// Search
+"search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
 "search_placeholder_address" = "标签名";
-"search_placeholder_user" = "Mixin ID, 手机号码";
 "search_placeholder_asset" = "名称, 符号";
 "search_placeholder_home" = "联系人, 资产, 聊天";
 "search_placeholder_participants" = "名称";

@@ -280,24 +280,7 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pcV-Ly-sGP" id="Y7c-YT-zHU">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="314"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NoX-iL-Z0Z" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="10"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="10" id="C7G-wQ-rzG"/>
-                                                    </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="YES"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </view>
-                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="NoX-iL-Z0Z" secondAttribute="trailing" id="MuR-SV-AHr"/>
-                                                <constraint firstItem="NoX-iL-Z0Z" firstAttribute="leading" secondItem="Y7c-YT-zHU" secondAttribute="leading" id="h57-Eu-mX8"/>
-                                                <constraint firstItem="NoX-iL-Z0Z" firstAttribute="top" secondItem="Y7c-YT-zHU" secondAttribute="top" id="pow-CT-QRS"/>
-                                            </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
@@ -386,15 +369,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="593"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="02j-FC-3Sa" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="02j-FC-3Sa" customClass="TopShadowView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="GeT-MC-7Gb"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="NO"/>
-                                </userDefinedRuntimeAttributes>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="BN3-h1-eZm">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="593"/>
@@ -402,15 +382,19 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lR2-7f-hUd">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
                                         <subviews>
-                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kbr-yF-lLp" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kbr-yF-lLp" customClass="TopShadowView" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="10"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="10" id="1WE-3r-mJl"/>
                                                 </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="hasUpperShadow" value="NO"/>
-                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4iV-8w-DBb" customClass="BottomShadowView" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="304" width="375" height="20"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="20" id="dIg-SY-cMU"/>
+                                                </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yi5-ew-n4K">
                                                 <rect key="frame" x="0.0" y="10" width="375" height="294"/>
@@ -498,16 +482,6 @@
                                                     <constraint firstAttribute="trailing" secondItem="0Td-Cb-sQg" secondAttribute="trailing" id="naz-Nl-03q"/>
                                                 </constraints>
                                             </view>
-                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4iV-8w-DBb" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="304" width="375" height="20"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="20" id="dIg-SY-cMU"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="NO"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -566,7 +540,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="CZJ-hH-T5C">
-                                <rect key="frame" x="179.5" y="114" width="16" height="16"/>
+                                <rect key="frame" x="147.5" y="114" width="80" height="80"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wZL-Va-cvk">
                                 <rect key="frame" x="0.0" y="502" width="375" height="45"/>
@@ -591,7 +565,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Messages between users are protected with an end- to-end encryption" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YgL-nK-KrB">
-                                <rect key="frame" x="36" y="146" width="303" height="38.5"/>
+                                <rect key="frame" x="36" y="210" width="303" height="38.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -645,10 +619,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_clock_skew" translatesAutoresizingMaskIntoConstraints="NO" id="hmp-73-im2">
-                                <rect key="frame" x="179.5" y="114" width="16" height="16"/>
+                                <rect key="frame" x="147.5" y="114" width="80" height="80"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="System time is unusual" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tou-53-uta">
-                                <rect key="frame" x="50" y="180" width="275" height="21.5"/>
+                                <rect key="frame" x="50" y="244" width="275" height="21.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -670,7 +644,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Please continue to use again after correction. Settings &gt; General &gt; Date &amp; Time &gt; Turn on Set Automatically" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gh-oY-fRs">
-                                <rect key="frame" x="36" y="231.5" width="303" height="50.5"/>
+                                <rect key="frame" x="36" y="295.5" width="303" height="50.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>

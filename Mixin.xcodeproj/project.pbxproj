@@ -135,6 +135,9 @@
 		7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5843442175D3EC0053332F /* PendingDeposit.swift */; };
 		7B59534522670A5800D59DB4 /* SearchNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */; };
 		7B59534722670C5E00D59DB4 /* ExpandingSizedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534622670C5E00D59DB4 /* ExpandingSizedView.swift */; };
+		7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534A2267206D00D59DB4 /* OneSideShadowView.swift */; };
+		7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534C226720F700D59DB4 /* TopShadowView.swift */; };
+		7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534E2267215B00D59DB4 /* BottomShadowView.swift */; };
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
@@ -762,6 +765,9 @@
 		7B5843442175D3EC0053332F /* PendingDeposit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingDeposit.swift; sourceTree = "<group>"; };
 		7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationViewController.swift; sourceTree = "<group>"; };
 		7B59534622670C5E00D59DB4 /* ExpandingSizedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandingSizedView.swift; sourceTree = "<group>"; };
+		7B59534A2267206D00D59DB4 /* OneSideShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneSideShadowView.swift; sourceTree = "<group>"; };
+		7B59534C226720F700D59DB4 /* TopShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopShadowView.swift; sourceTree = "<group>"; };
+		7B59534E2267215B00D59DB4 /* BottomShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomShadowView.swift; sourceTree = "<group>"; };
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
@@ -2091,6 +2097,9 @@
 				7B95534222438ECD00CE95E6 /* TopRoundedView.swift */,
 				7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */,
 				7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */,
+				7B59534A2267206D00D59DB4 /* OneSideShadowView.swift */,
+				7B59534C226720F700D59DB4 /* TopShadowView.swift */,
+				7B59534E2267215B00D59DB4 /* BottomShadowView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2865,6 +2874,7 @@
 				7B61EB8F20978856001C1985 /* AttachmentEncryptingInputStream.swift in Sources */,
 				7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
+				7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */,
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
 				DF503D411FED162300C008E7 /* MixinPreKeyStore.swift in Sources */,
 				273FACBA205FB9A800513327 /* SenderKeyStore.swift in Sources */,
@@ -3006,6 +3016,7 @@
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
 				DF048CCE223FCA02005F1EF5 /* SelectedTableViewCell.swift in Sources */,
+				7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
 				7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
@@ -3164,6 +3175,7 @@
 				7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */,
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				DF8DA1981FD5301200425CEC /* Participant.swift in Sources */,
+				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
 				7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */,
 				7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,

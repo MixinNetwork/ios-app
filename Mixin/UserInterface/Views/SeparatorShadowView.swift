@@ -2,12 +2,6 @@ import UIKit
 
 class SeparatorShadowView: UIView {
     
-    @IBInspectable var hasUpperShadow: Bool = true {
-        didSet {
-            upperShadowProviderLayer.isHidden = !hasUpperShadow
-        }
-    }
-    
     @IBInspectable var hasLowerShadow: Bool = true {
         didSet {
             lowerShadowProviderLayer.isHidden = !hasLowerShadow

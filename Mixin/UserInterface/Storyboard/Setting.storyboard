@@ -294,9 +294,6 @@
                                     <constraints>
                                         <constraint firstAttribute="height" constant="10" id="3Ks-cu-1E2"/>
                                     </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="YES"/>
-                                    </userDefinedRuntimeAttributes>
                                 </view>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -316,15 +313,12 @@
                             <rect key="frame" x="0.0" y="264" width="375" height="28"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7ps-h0-Bmi" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7ps-h0-Bmi" customClass="BottomShadowView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="10"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="10" id="AKb-g8-2Jo"/>
                                     </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="boolean" keyPath="hasLowerShadow" value="NO"/>
-                                    </userDefinedRuntimeAttributes>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last active: Thursday, 3:06 PM." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O4z-7b-DoM">
                                     <rect key="frame" x="20" y="13.5" width="335" height="14.5"/>

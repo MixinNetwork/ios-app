@@ -375,7 +375,7 @@
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_group_link_share" translatesAutoresizingMaskIntoConstraints="NO" id="vB1-mZ-YkH">
                                                         <rect key="frame" x="24" y="0.0" width="20" height="26"/>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Link" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssC-lD-hqw">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Link" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ssC-lD-hqw">
                                                         <rect key="frame" x="0.0" y="40" width="68" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
@@ -395,7 +395,7 @@
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_group_link_copy" translatesAutoresizingMaskIntoConstraints="NO" id="nD5-DV-3E2">
                                                         <rect key="frame" x="23" y="0.0" width="22" height="24"/>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copy Link" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HZ4-1J-sHm">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copy Link" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HZ4-1J-sHm">
                                                         <rect key="frame" x="2" y="38" width="64" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
@@ -415,7 +415,7 @@
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_group_link_code" translatesAutoresizingMaskIntoConstraints="NO" id="Chd-Df-gMM">
                                                         <rect key="frame" x="23" y="0.0" width="22" height="21"/>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r01-9g-vL3">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r01-9g-vL3">
                                                         <rect key="frame" x="5" y="35.000000000000028" width="58" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
@@ -435,11 +435,13 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="ao5-4a-lxR" secondAttribute="trailing" constant="30" id="WnV-5D-72V"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="6Um-Rd-otx" secondAttribute="trailing" constant="20" id="Xbc-uc-ehQ"/>
                                     <constraint firstAttribute="bottom" secondItem="6Um-Rd-otx" secondAttribute="bottom" constant="44" id="cHI-nH-mOA"/>
                                     <constraint firstItem="ao5-4a-lxR" firstAttribute="leading" secondItem="ydE-1Y-cEF" secondAttribute="leading" constant="30" id="cdd-uT-4FJ"/>
                                     <constraint firstItem="6Um-Rd-otx" firstAttribute="centerX" secondItem="ydE-1Y-cEF" secondAttribute="centerX" id="etv-mj-DXs"/>
                                     <constraint firstItem="6Um-Rd-otx" firstAttribute="top" secondItem="ao5-4a-lxR" secondAttribute="bottom" constant="36" id="h73-ls-je8"/>
                                     <constraint firstItem="ao5-4a-lxR" firstAttribute="top" secondItem="ydE-1Y-cEF" secondAttribute="top" constant="48" id="jQS-rg-oIw"/>
+                                    <constraint firstItem="6Um-Rd-otx" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ydE-1Y-cEF" secondAttribute="leading" constant="20" id="qeV-Om-tVa"/>
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ovh-AR-cnC" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">

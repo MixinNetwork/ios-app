@@ -358,7 +358,7 @@
 "pending_deposit_hint" = "Pending";
 "wallet_asset_symbol" = "Symbol";
 "wallet_asset_chain" = "Chain";
-"wallet_asset_contract" = "Contract";
+"wallet_asset_key" = "Asset Key";
 
 // Transaction
 "transaction_title" = "Transaction";

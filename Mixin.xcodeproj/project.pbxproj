@@ -133,6 +133,8 @@
 		7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B56DBD01FEFC5B900B50D82 /* PinField.swift */; };
 		7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B58433E2175911D0053332F /* SnapKitExtension.swift */; };
 		7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5843442175D3EC0053332F /* PendingDeposit.swift */; };
+		7B59534522670A5800D59DB4 /* SearchNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */; };
+		7B59534722670C5E00D59DB4 /* ExpandingSizedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534622670C5E00D59DB4 /* ExpandingSizedView.swift */; };
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
@@ -758,6 +760,8 @@
 		7B56DBD01FEFC5B900B50D82 /* PinField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinField.swift; sourceTree = "<group>"; };
 		7B58433E2175911D0053332F /* SnapKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapKitExtension.swift; sourceTree = "<group>"; };
 		7B5843442175D3EC0053332F /* PendingDeposit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingDeposit.swift; sourceTree = "<group>"; };
+		7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationViewController.swift; sourceTree = "<group>"; };
+		7B59534622670C5E00D59DB4 /* ExpandingSizedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandingSizedView.swift; sourceTree = "<group>"; };
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
@@ -1565,6 +1569,7 @@
 			children = (
 				7B955337224375D600CE95E6 /* SearchFooterView.swift */,
 				7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */,
+				7B59534622670C5E00D59DB4 /* ExpandingSizedView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2167,11 +2172,12 @@
 				7B9553322243757400CE95E6 /* Views */,
 				DFD2943B1FA7069600FADAAD /* Cells */,
 				DF3C47461FA071F400A07C71 /* HomeViewController.swift */,
+				7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */,
 				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
+				7B5281732265D7E30023616D /* RecentBotsViewController.swift */,
 				DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
 				DFB2062721ABC088006E4341 /* RestoreViewController.swift */,
-				7B5281732265D7E30023616D /* RecentBotsViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2820,6 +2826,7 @@
 				7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */,
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
 				DFDC7E431FAC8D50003233EE /* ContactAPI.swift in Sources */,
+				7B59534722670C5E00D59DB4 /* ExpandingSizedView.swift in Sources */,
 				7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */,
 				273FACBB205FB9A800513327 /* SignedPreKeyStore.swift in Sources */,
 				7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */,
@@ -3146,6 +3153,7 @@
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
 				DFA5B5871FADBE7D00549728 /* AddMemberViewController.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
+				7B59534522670A5800D59DB4 /* SearchNavigationViewController.swift in Sources */,
 				DFEE215C200CAD8800D9B3F7 /* AuthorizationRequest.swift in Sources */,
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,

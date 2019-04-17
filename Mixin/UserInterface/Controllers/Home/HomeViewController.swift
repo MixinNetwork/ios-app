@@ -49,7 +49,7 @@ class HomeViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        if let vc = segue.destination as? SearchViewController {
+        if let vc = (segue.destination as? UINavigationController)?.viewControllers.first as? SearchViewController {
             searchViewController = vc
         }
     }

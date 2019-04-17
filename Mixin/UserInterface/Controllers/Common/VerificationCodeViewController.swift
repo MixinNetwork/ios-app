@@ -25,12 +25,19 @@ class VerificationCodeViewController: ContinueButtonViewController {
         if ScreenSize.current == .inch3_5 {
             contentStackView.spacing = 12
         } else if ScreenSize.current == .inch4 {
-            contentStackView.spacing = 24
+            contentStackView.spacing = 18
         }
         resendButton.normalTitle = Localized.BUTTON_TITLE_RESEND_CODE
         resendButton.pendingTitleTemplate = Localized.BUTTON_TITLE_RESEND_CODE_PENDING
         resendButton.beginCountDown(resendInterval)
         verificationCodeField.becomeFirstResponder()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !verificationCodeField.isFirstResponder {
+            verificationCodeField.becomeFirstResponder()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -49,6 +56,7 @@ class VerificationCodeViewController: ContinueButtonViewController {
     
     @IBAction func resendAction(_ sender: Any) {
         resendButton.isBusy = true
+        verificationCodeField.clear()
         requestVerificationCode(reCaptchaToken: nil)
     }
     

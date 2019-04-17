@@ -269,9 +269,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iBG-MH-dDj" customClass="BottomShadowView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="74" width="375" height="20"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="seT-q0-IaU"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="70" estimatedRowHeight="70" sectionHeaderHeight="41" estimatedSectionHeaderHeight="-1" sectionFooterHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="fJ7-r4-Szs">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                                <color key="backgroundColor" red="0.96470588239999999" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="78" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="314" id="pcV-Ly-sGP">
@@ -288,7 +295,7 @@
                             </tableView>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpQ-dJ-ucd">
                                 <rect key="frame" x="0.0" y="74" width="375" height="593"/>
-                                <color key="backgroundColor" red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <segue destination="EIL-n2-XsE" kind="embed" id="27b-jG-RjJ"/>
                                 </connections>
@@ -296,13 +303,16 @@
                         </subviews>
                         <color key="backgroundColor" red="0.96470588239999999" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
+                            <constraint firstItem="iBG-MH-dDj" firstAttribute="top" secondItem="3KR-9K-hdW" secondAttribute="top" constant="10" id="LZm-Jm-3VX"/>
                             <constraint firstAttribute="trailing" secondItem="fJ7-r4-Szs" secondAttribute="trailing" id="Mb0-3g-lrT"/>
                             <constraint firstItem="fJ7-r4-Szs" firstAttribute="top" secondItem="3KR-9K-hdW" secondAttribute="top" id="QpN-Sx-OER"/>
                             <constraint firstItem="fJ7-r4-Szs" firstAttribute="leading" secondItem="VMk-AN-tc7" secondAttribute="leading" id="aUI-B7-Al3"/>
                             <constraint firstAttribute="bottom" secondItem="fJ7-r4-Szs" secondAttribute="bottom" id="fdW-sL-a5Y"/>
+                            <constraint firstAttribute="trailing" secondItem="iBG-MH-dDj" secondAttribute="trailing" id="g2O-M5-FBh"/>
                             <constraint firstAttribute="bottom" secondItem="xpQ-dJ-ucd" secondAttribute="bottom" id="iC9-li-wQ5"/>
                             <constraint firstItem="xpQ-dJ-ucd" firstAttribute="leading" secondItem="VMk-AN-tc7" secondAttribute="leading" id="k9q-4S-5zZ"/>
                             <constraint firstItem="xpQ-dJ-ucd" firstAttribute="top" secondItem="3KR-9K-hdW" secondAttribute="top" constant="10" id="lkn-77-4PA"/>
+                            <constraint firstItem="iBG-MH-dDj" firstAttribute="leading" secondItem="VMk-AN-tc7" secondAttribute="leading" id="n9N-74-VGB"/>
                             <constraint firstAttribute="trailing" secondItem="xpQ-dJ-ucd" secondAttribute="trailing" id="viD-Dd-lmE"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="3KR-9K-hdW"/>
@@ -359,7 +369,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FYX-l7-xTH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1246" y="-278"/>
+            <point key="canvasLocation" x="1245.5999999999999" y="-278.41079460269867"/>
         </scene>
         <!--Recent Bots View Controller-->
         <scene sceneID="iot-9Z-ZOc">
@@ -369,13 +379,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="593"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="02j-FC-3Sa" customClass="TopShadowView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="GeT-MC-7Gb"/>
-                                </constraints>
-                            </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="BN3-h1-eZm">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="593"/>
                                 <subviews>
@@ -508,14 +511,11 @@
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" red="0.96470588239999999" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="02j-FC-3Sa" secondAttribute="trailing" id="7qY-Lf-CXI"/>
                             <constraint firstAttribute="bottom" secondItem="BN3-h1-eZm" secondAttribute="bottom" id="BCH-ye-zkM"/>
                             <constraint firstItem="BN3-h1-eZm" firstAttribute="top" secondItem="9aE-T7-dUh" secondAttribute="top" id="HEM-oA-2Jd"/>
-                            <constraint firstItem="02j-FC-3Sa" firstAttribute="top" secondItem="9aE-T7-dUh" secondAttribute="top" id="PbB-YQ-QBP"/>
                             <constraint firstItem="BN3-h1-eZm" firstAttribute="leading" secondItem="9aE-T7-dUh" secondAttribute="leading" id="YeY-iR-MkI"/>
-                            <constraint firstItem="02j-FC-3Sa" firstAttribute="leading" secondItem="9aE-T7-dUh" secondAttribute="leading" id="iMv-oS-tFO"/>
                             <constraint firstAttribute="trailing" secondItem="BN3-h1-eZm" secondAttribute="trailing" id="jgh-nN-JiK"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="uxD-WG-QhL"/>

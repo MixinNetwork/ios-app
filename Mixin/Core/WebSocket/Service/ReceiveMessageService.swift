@@ -95,6 +95,7 @@ class ReceiveMessageService: MixinService {
                         return
                     }
                     if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
+                        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
                         BlazeMessageDAO.shared.delete(data: data)
                         continue
                     }

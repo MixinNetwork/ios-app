@@ -61,6 +61,10 @@ class HomeViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
             self?.searchViewController?.prepare()
         }
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationDidBecomeActive(_:)),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             UNUserNotificationCenter.current().checkNotificationSettings { (authorizationStatus: UNAuthorizationStatus) in
                 switch authorizationStatus {
@@ -136,6 +140,13 @@ class HomeViewController: UIViewController {
         case .denied, .restricted:
             alertSettings(Localized.PERMISSION_DENIED_CAMERA)
         }
+    }
+
+    @objc func applicationDidBecomeActive(_ sender: Notification) {
+        guard needRefresh else {
+            return
+        }
+        fetchConversations()
     }
 
     @objc func dataDidChange(_ sender: Notification) {

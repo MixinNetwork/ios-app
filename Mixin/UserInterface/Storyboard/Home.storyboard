@@ -379,51 +379,9 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="oNh-bA-9Hf">
                         <nil key="title"/>
-                        <view key="titleView" contentMode="scaleToFill" id="gwE-iF-GPo" customClass="ExpandingSizedView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="8" y="0.0" width="359" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1gJ-C8-eTf" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="12" y="2" width="277" height="40"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="40" id="xIt-Ws-Zbx"/>
-                                    </constraints>
-                                </view>
-                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bb6-Fw-r7x">
-                                    <rect key="frame" x="289" y="0.0" width="70" height="44"/>
-                                    <inset key="contentEdgeInsets" minX="15" minY="0.0" maxX="7" maxY="0.0"/>
-                                    <state key="normal" title="Cancel"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
-                                    </userDefinedRuntimeAttributes>
-                                </button>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6o6-wg-ZiE">
-                                    <rect key="frame" x="-20" y="44" width="399" height="10"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="10" id="BKj-dy-Q32"/>
-                                    </constraints>
-                                </view>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="bottom" secondItem="Bb6-Fw-r7x" secondAttribute="bottom" id="6vb-z3-zTW"/>
-                                <constraint firstItem="Bb6-Fw-r7x" firstAttribute="leading" secondItem="1gJ-C8-eTf" secondAttribute="trailing" id="8BI-vM-lyg"/>
-                                <constraint firstAttribute="trailing" secondItem="6o6-wg-ZiE" secondAttribute="trailing" constant="-20" id="Dwl-gf-a9R"/>
-                                <constraint firstAttribute="bottom" secondItem="6o6-wg-ZiE" secondAttribute="top" id="IrY-Fi-Ha7"/>
-                                <constraint firstItem="6o6-wg-ZiE" firstAttribute="leading" secondItem="gwE-iF-GPo" secondAttribute="leading" constant="-20" id="Ucu-sC-OEv"/>
-                                <constraint firstItem="1gJ-C8-eTf" firstAttribute="centerY" secondItem="gwE-iF-GPo" secondAttribute="centerY" id="Udl-zy-1Xt"/>
-                                <constraint firstAttribute="trailing" secondItem="Bb6-Fw-r7x" secondAttribute="trailing" id="VVT-tP-LmA"/>
-                                <constraint firstItem="1gJ-C8-eTf" firstAttribute="leading" secondItem="gwE-iF-GPo" secondAttribute="leading" constant="12" id="auj-bx-JLT"/>
-                                <constraint firstItem="Bb6-Fw-r7x" firstAttribute="top" secondItem="gwE-iF-GPo" secondAttribute="top" id="nHe-kn-7LR"/>
-                            </constraints>
-                        </view>
                     </navigationItem>
                     <connections>
-                        <outlet property="cancelButton" destination="Bb6-Fw-r7x" id="M2Q-Xi-zlO"/>
                         <outlet property="recentBotsContainerView" destination="xpQ-dJ-ucd" id="mZV-M7-5Kc"/>
-                        <outlet property="searchBox" destination="1gJ-C8-eTf" id="9gL-cG-iN3"/>
                         <outlet property="tableView" destination="fJ7-r4-Szs" id="o3z-Ff-t8W"/>
                     </connections>
                 </viewController>

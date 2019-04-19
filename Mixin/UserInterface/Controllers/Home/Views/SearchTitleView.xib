@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SearchTitleView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="359" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cCI-7F-51C" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="12" y="2" width="277" height="40"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="zd9-Jt-69P"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n3x-eW-Q5i">
+                    <rect key="frame" x="289" y="0.0" width="70" height="44"/>
+                    <inset key="contentEdgeInsets" minX="15" minY="0.0" maxX="7" maxY="0.0"/>
+                    <state key="normal" title="Cancel"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
+                    </userDefinedRuntimeAttributes>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ygE-5o-Bhx">
+                    <rect key="frame" x="-20" y="44" width="399" height="10"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="10" id="n6z-TI-Xkv"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="cCI-7F-51C" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="1Vk-xP-Y7J"/>
+                <constraint firstAttribute="bottom" secondItem="n3x-eW-Q5i" secondAttribute="bottom" id="3Jh-d5-NZI"/>
+                <constraint firstAttribute="bottom" secondItem="ygE-5o-Bhx" secondAttribute="top" id="AaA-qu-7bb"/>
+                <constraint firstItem="cCI-7F-51C" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="KNv-uR-afI"/>
+                <constraint firstAttribute="trailing" secondItem="n3x-eW-Q5i" secondAttribute="trailing" id="Mdi-n9-dy2"/>
+                <constraint firstItem="ygE-5o-Bhx" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="-20" id="NIw-80-htI"/>
+                <constraint firstItem="n3x-eW-Q5i" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="NOL-Ym-1kn"/>
+                <constraint firstAttribute="trailing" secondItem="ygE-5o-Bhx" secondAttribute="trailing" constant="-20" id="cCr-Sh-Jtf"/>
+                <constraint firstItem="n3x-eW-Q5i" firstAttribute="leading" secondItem="cCI-7F-51C" secondAttribute="trailing" id="nzd-hu-bbZ"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="cancelButton" destination="n3x-eW-Q5i" id="QZb-jd-MnM"/>
+                <outlet property="searchBoxView" destination="cCI-7F-51C" id="JOS-Ei-yV6"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="313.72767857142856"/>
+        </view>
+    </objects>
+</document>

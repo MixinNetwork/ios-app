@@ -30,10 +30,10 @@ class SearchViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var searchBox: SearchBoxView!
-    @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var recentBotsContainerView: UIView!
+    
+    let titleView = R.nib.searchTitleView(owner: nil)!
     
     private let searchingFooterView = R.nib.searchingFooterView(owner: nil)
     private let resultLimit = 3
@@ -49,7 +49,7 @@ class SearchViewController: UIViewController {
     }
     
     private var textField: UITextField {
-        return searchBox.textField
+        return titleView.searchBoxView.textField
     }
     
     private var keywordMaybeIdOrPhone: Bool {
@@ -63,6 +63,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
+        navigationItem.titleView = titleView
         tableView.register(SearchHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SearchFooterView.self,

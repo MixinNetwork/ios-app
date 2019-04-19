@@ -35,7 +35,6 @@
 "action_copy" = "Copy";
 "action_authorize" = "Authorize";
 "action_deauthorize" = "Deauthorize";
-"wallet_deposit_tips" = "Don’t remind me again";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "no_result" = "No result";
@@ -309,7 +308,6 @@
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";
 "wallet_hide_asset_empty" = "No hidden assets";
-"wallet_send_to_address" = "Address";
 "wallet_send_amount" = "Amount";
 "wallet_send_memo" = "Memo (Optional)";
 "wallet_button_add_address" = "Tap to add address";

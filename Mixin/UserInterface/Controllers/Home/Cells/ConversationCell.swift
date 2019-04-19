@@ -32,7 +32,7 @@ class ConversationCell: UITableViewCell {
         if item.category == ConversationCategory.CONTACT.rawValue {
             avatarView.setImage(with: item.ownerAvatarUrl, userId: item.ownerId, name: item.ownerFullName)
         } else {
-            avatarView.setGroupImage(with: item.iconUrl, conversationId: item.conversationId)
+            avatarView.setGroupImage(with: item.iconUrl)
         }
         nameLabel.text = item.getConversationName()
         timeLabel.text = item.createdAt.toUTCDate().timeAgo()

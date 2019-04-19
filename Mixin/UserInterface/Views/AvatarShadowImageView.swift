@@ -36,7 +36,7 @@ class AvatarShadowIconView: UIView {
         iconImageView.image = nil
     }
 
-    func setGroupImage(with iconUrl: String, conversationId: String) {
+    func setGroupImage(with iconUrl: String) {
         titleLabel.text = nil
         iconImageView.backgroundColor = .clear
 

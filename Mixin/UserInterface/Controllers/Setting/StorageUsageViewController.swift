@@ -58,7 +58,7 @@ extension StorageUsageViewController {
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             cell.avatarImageView.setImage(with: conversation.ownerAvatarUrl, userId: conversation.ownerId, name: conversation.ownerFullName)
         } else {
-            cell.avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
+            cell.avatarImageView.setGroupImage(with: conversation.iconUrl)
         }
         cell.nameLabel.text = conversation.getConversationName()
         cell.sizeLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: conversation.mediaSize)

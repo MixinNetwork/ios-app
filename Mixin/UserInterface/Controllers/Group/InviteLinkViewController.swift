@@ -20,7 +20,7 @@ class InviteLinkViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        iconImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
+        iconImageView.setGroupImage(with: conversation.iconUrl)
         groupNameLabel.text = conversation.name
         updateUI()
     }

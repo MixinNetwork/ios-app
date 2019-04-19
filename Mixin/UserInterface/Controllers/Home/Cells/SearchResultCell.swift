@@ -21,12 +21,15 @@ class SearchResultCell: UITableViewCell {
     }
     
     func render(result: ConversationSearchResult) {
-        let iconUrl = result.iconUrl ?? ""
-        switch result.category {
-        case .contact(let userId):
-            avatarImageView.setImage(with: iconUrl, userId: userId, name: result.title?.string ?? "")
-        case .group:
-            avatarImageView.setGroupImage(with: iconUrl)
+        switch result.target {
+        case let .contact(user):
+            avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
+        case let .group(conversation):
+            avatarImageView.setGroupImage(with: conversation.iconUrl)
+        case let .searchMessageWithContact(userId, _):
+            avatarImageView.setImage(with: result.iconUrl ?? "", userId: userId, name: result.name)
+        case .searchMessageWithGroup:
+            avatarImageView.setGroupImage(with: result.name)
         }
         titleLabel.attributedText = result.title
         if let badge = result.badgeImage {

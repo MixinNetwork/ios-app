@@ -2,31 +2,25 @@ import Foundation
 
 struct ConversationSearchResult {
     
-    let category: Category
     let target: Target
     let style: Style
+    let name: String
     let iconUrl: String?
-    let userId: String?
     let title: NSAttributedString?
     let badgeImage: UIImage?
     let superscript: String?
     let description: NSAttributedString?
     
-    init(user: User, keyword: String) {
-        self.category = .contact(id: user.userId)
-        self.target = .user(id: user.userId)
+    init(user: UserItem, keyword: String) {
+        self.target = .contact(user)
         self.style = .normal
+        self.name = user.fullName
         self.iconUrl = user.avatarUrl
-        self.userId = user.userId
-        if let fullName = user.fullName {
-            self.title = ConversationSearchResult.attributedText(text: fullName,
-                                                                 textAttributes: ConversationSearchResult.titleAttributes,
-                                                                 keyword: keyword,
-                                                                 keywordAttributes: ConversationSearchResult.highlightedTitleAttributes)
-        } else {
-            self.title = nil
-        }
-        if user.isVerified ?? false {
+        self.title = ConversationSearchResult.attributedText(text: user.fullName,
+                                                             textAttributes: ConversationSearchResult.titleAttributes,
+                                                             keyword: keyword,
+                                                             keywordAttributes: ConversationSearchResult.highlightedTitleAttributes)
+        if user.isVerified {
             self.badgeImage = R.image.ic_user_verified()
         } else if user.appId != nil {
             self.badgeImage = R.image.ic_user_bot()
@@ -49,20 +43,15 @@ struct ConversationSearchResult {
         }
     }
     
-    init(group: Conversation, keyword: String) {
-        self.category = .group
-        self.target = .conversation(id: group.conversationId)
+    init(group: ConversationItem, keyword: String) {
+        self.target = .group(group)
         self.style = .normal
+        self.name = group.name
         self.iconUrl = group.iconUrl
-        self.userId = nil
-        if let name = group.name {
-            self.title = ConversationSearchResult.attributedText(text: name,
-                                                                 textAttributes: ConversationSearchResult.titleAttributes,
-                                                                 keyword: keyword,
-                                                                 keywordAttributes: ConversationSearchResult.highlightedTitleAttributes)
-        } else {
-            self.title = nil
-        }
+        self.title = ConversationSearchResult.attributedText(text: group.name,
+                                                             textAttributes: ConversationSearchResult.titleAttributes,
+                                                             keyword: keyword,
+                                                             keywordAttributes: ConversationSearchResult.highlightedTitleAttributes)
         self.badgeImage = nil
         self.superscript = nil
         self.description = nil
@@ -71,14 +60,13 @@ struct ConversationSearchResult {
     init(conversationId: String, category: ConversationCategory, name: String, iconUrl: String, userId: String?, relatedMessageCount: Int, keyword: String) {
         switch category {
         case .CONTACT:
-            self.category = .contact(id: userId ?? "")
+            self.target = .searchMessageWithContact(userId: userId ?? "", conversationId: conversationId)
         case .GROUP:
-            self.category = .group
+            self.target = .searchMessageWithGroup(conversationId: conversationId)
         }
-        self.target = .searchMessages(conversationId: conversationId)
         self.style = .normal
+        self.name = name
         self.iconUrl = iconUrl
-        self.userId = userId
         self.title = ConversationSearchResult.attributedText(text: name,
                                                              textAttributes: ConversationSearchResult.titleAttributes,
                                                              keyword: keyword,
@@ -93,15 +81,11 @@ struct ConversationSearchResult {
 
 extension ConversationSearchResult {
     
-    enum Category {
-        case contact(id: String)
-        case group
-    }
-    
     enum Target {
-        case user(id: String)
-        case conversation(id: String)
-        case searchMessages(conversationId: String)
+        case contact(UserItem)
+        case group(ConversationItem)
+        case searchMessageWithContact(userId: String, conversationId: String)
+        case searchMessageWithGroup(conversationId: String)
     }
     
     enum Style {

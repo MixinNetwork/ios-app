@@ -28,6 +28,7 @@ final class ConversationDAO {
     private static let sqlQueryConversationList = String(format: sqlQueryConversation, "")
     private static let sqlQueryConversationByOwnerId = String(format: sqlQueryConversation, " AND c.owner_id = ? AND c.category = 'CONTACT'")
     private static let sqlQueryConversationByCoversationId = String(format: sqlQueryConversation, " AND c.conversation_id = ? ")
+    private static let sqlQueryGroupConversationByName = String(format: sqlQueryConversation, " AND c.category = 'GROUP' AND c.name LIKE ?")
     private static let sqlQueryStorageUsage = """
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name, u.identity_number as ownerIdentityNumber,
     u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl, u.is_verified as ownerIsVerified, m.mediaSize
@@ -155,12 +156,12 @@ final class ConversationDAO {
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationByCoversationId, values: [conversationId]).first
     }
     
-    func getGroupConversation(nameLike keyword: String, limit: Int?) -> [Conversation] {
-        let condition = Conversation.Properties.category == ConversationCategory.GROUP.rawValue
-            && Conversation.Properties.name.like("%\(keyword)%")
-        let order = [Conversation.Properties.pinTime.asOrder(by: .descending),
-                     Conversation.Properties.lastMessageCreatedAt.asOrder(by: .descending)]
-        return MixinDatabase.shared.getCodables(condition: condition, orderBy: order, limit: limit, inTransaction: false)
+    func getGroupConversation(nameLike keyword: String, limit: Int?) -> [ConversationItem] {
+        var sql = ConversationDAO.sqlQueryGroupConversationByName
+        if let limit = limit {
+            sql += " LIMIT \(limit)"
+        }
+        return MixinDatabase.shared.getCodables(sql: sql, values: ["%\(keyword)%"])
     }
     
     func getConversation(withMessageLike keyword: String, limit: Int?) -> [ConversationSearchResult] {

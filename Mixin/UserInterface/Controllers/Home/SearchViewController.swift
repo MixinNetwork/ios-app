@@ -44,6 +44,10 @@ class SearchViewController: UIViewController {
     private var groups = [ConversationSearchResult]()
     private var conversations = [ConversationSearchResult]()
     
+    private var homeNavigationController: UINavigationController? {
+        return parent?.parent?.navigationController
+    }
+    
     private var textField: UITextField {
         return searchBox.textField
     }
@@ -90,7 +94,7 @@ class SearchViewController: UIViewController {
         }
         tableView.isHidden = false
         recentBotsContainerView.isHidden = true
-        let limit = self.resultLimit
+        let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
             guard self != nil, !op.isCancelled else {
@@ -125,18 +129,27 @@ class SearchViewController: UIViewController {
         
     }
     
+    private func models(forSection section: Section) -> [Any] {
+        switch section {
+        case .searchNumber:
+            return []
+        case .asset:
+            return assets
+        case .contact:
+            return contacts
+        case .group:
+            return groups
+        case .message:
+            return conversations
+        }
+    }
+    
     private func isEmptySection(_ section: Section) -> Bool {
         switch section {
         case .searchNumber:
             return !keywordMaybeIdOrPhone
-        case .asset:
-            return assets.isEmpty
-        case .contact:
-            return contacts.isEmpty
-        case .group:
-            return groups.isEmpty
-        case .message:
-            return conversations.isEmpty
+        case .asset, .contact, .group, .message:
+            return models(forSection: section).isEmpty
         }
     }
     
@@ -155,6 +168,21 @@ class SearchViewController: UIViewController {
         }
     }
     
+    private func pushViewController(result: ConversationSearchResult) {
+        switch result.target {
+        case let .contact(user):
+            let vc = ConversationViewController.instance(ownerUser: user)
+            homeNavigationController?.pushViewController(vc, animated: true)
+        case let .group(conversation):
+            let vc = ConversationViewController.instance(conversation: conversation)
+            homeNavigationController?.pushViewController(vc, animated: true)
+        case let .searchMessageWithContact(_, conversationId):
+            break
+        case let .searchMessageWithGroup(conversationId):
+            break
+        }
+    }
+    
 }
 
 extension SearchViewController: UITableViewDataSource {
@@ -164,13 +192,13 @@ extension SearchViewController: UITableViewDataSource {
         case .searchNumber:
             return keywordMaybeIdOrPhone ? 1 : 0
         case .asset:
-            return assets.count
+            return min(resultLimit, assets.count)
         case .contact:
-            return contacts.count
+            return min(resultLimit, contacts.count)
         case .group:
-            return groups.count
+            return min(resultLimit, groups.count)
         case .message:
-            return conversations.count
+            return min(resultLimit, conversations.count)
         }
     }
     
@@ -256,6 +284,7 @@ extension SearchViewController: UITableViewDelegate {
                 let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! SearchHeaderView
                 view.isFirstSection = isFirstSection(section)
                 view.label.text = section.title
+                view.button.isHidden = models(forSection: section).count <= resultLimit
                 return view
             }
         }
@@ -277,6 +306,20 @@ extension SearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        switch Section(rawValue: indexPath.section)! {
+        case .searchNumber:
+            break
+        case .asset:
+            let asset = assets[indexPath.row].asset
+            let vc = AssetViewController.instance(asset: asset)
+            homeNavigationController?.pushViewController(vc, animated: true)
+        case .contact:
+            pushViewController(result: contacts[indexPath.row])
+        case .group:
+            pushViewController(result: groups[indexPath.row])
+        case .message:
+            pushViewController(result: conversations[indexPath.row])
+        }
     }
     
 }

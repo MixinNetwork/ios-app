@@ -11,7 +11,6 @@ final class UserDAO {
     """
 
     private static let sqlQueryContacts = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
-    private static let sqlQueryUserByNameOrIdentityNumber = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND (u.full_name LIKE ? OR u.identity_number LIKE ?)"
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"
     private static let sqlQueryBlockedUsers = "\(sqlQueryColumns) WHERE relationship = 'BLOCKING'"
@@ -43,12 +42,15 @@ final class UserDAO {
         return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByIdentityNumber, values: [identityNumber], inTransaction: false).first
     }
 
-    func getUsers(nameOrPhone keyword: String) -> [UserItem] {
-        guard !keyword.isEmpty else {
-            return []
-        }
-        let replacement = "%\(keyword)%"
-        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByNameOrIdentityNumber, values: [replacement, replacement], inTransaction: false)
+    func getUsers(keyword: String, limit: Int?) -> [User] {
+        let keyword = "%\(keyword)%"
+        let matchesKeyword = User.Properties.fullName.like(keyword)
+            || User.Properties.identityNumber.like(keyword)
+            || User.Properties.phone.like(keyword)
+        let condition = User.Properties.relationship == Relationship.FRIEND.rawValue
+            && User.Properties.identityNumber > "0"
+            && matchesKeyword
+        return MixinDatabase.shared.getCodables(condition: condition, limit: limit, inTransaction: false)
     }
 
     func contacts() -> [UserItem] {

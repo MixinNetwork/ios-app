@@ -33,7 +33,7 @@ class WalletViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateTableViewContentInset()
-        tableView.register(UINib(nibName: "AssetCell", bundle: .main), forCellReuseIdentifier: ReuseId.asset)
+        tableView.register(R.nib.assetCell)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -97,7 +97,7 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.section {
         case 0:
             let asset = assets[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.asset) as! AssetCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
             cell.render(asset: asset)
             return cell
         default:
@@ -134,7 +134,6 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
 extension WalletViewController {
     
     private enum ReuseId {
-        static let asset = "wallet_asset"
         static let addAsset = "wallet_add_asset"
     }
     

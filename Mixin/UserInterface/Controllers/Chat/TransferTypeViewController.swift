@@ -14,7 +14,7 @@ class TransferTypeViewController: UIViewController {
     var assets = [AssetItem]()
     var asset: AssetItem?
     
-    private let cellReuseId = "asset"
+    private let cellReuseId = "transfer_type"
     
     private var searchResults = [AssetItem]()
     private var lastKeyword = ""

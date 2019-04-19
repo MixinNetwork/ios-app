@@ -5,7 +5,12 @@ class AssetCell: UITableViewCell {
     static let height: CGFloat = 74
     static let balanceAttributes: [NSAttributedString.Key: Any] = [
         .font: UIFont(name: "DINCondensed-Bold", size: 19)!,
+        .foregroundColor: UIColor.darkText,
         .kern: 0.7
+    ]
+    static let symbolAttributes: [NSAttributedString.Key: Any] = [
+        .font: UIFont.systemFont(ofSize: 12, weight: .medium),
+        .foregroundColor: UIColor.darkText
     ]
     
     @IBOutlet weak var assetIconView: AssetIconView!
@@ -30,7 +35,7 @@ class AssetCell: UITableViewCell {
         assetIconView.prepareForReuse()
     }
     
-    func render(asset: AssetItem) {
+    func render(asset: AssetItem, attributedSymbol: NSAttributedString? = nil) {
         assetIconView.setIcon(asset: asset)
         let balance: String
         if asset.balance == "0" {
@@ -39,7 +44,11 @@ class AssetCell: UITableViewCell {
             balance = CurrencyFormatter.localizedString(from: asset.balance, format: .pretty, sign: .never) ?? ""
         }
         balanceLabel.attributedText = NSAttributedString(string: balance, attributes: AssetCell.balanceAttributes)
-        symbolLabel.text = asset.symbol
+        if let attributedSymbol = attributedSymbol {
+            symbolLabel.attributedText = attributedSymbol
+        } else {
+            symbolLabel.attributedText = NSAttributedString(string: asset.symbol, attributes: AssetCell.symbolAttributes)
+        }
         if asset.priceUsd.doubleValue > 0 {
             changeLabel.text = " \(asset.localizedUSDChange)%"
             if asset.changeUsd.doubleValue > 0 {

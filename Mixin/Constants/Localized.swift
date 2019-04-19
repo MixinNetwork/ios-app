@@ -15,7 +15,6 @@ public class Localized {
     public static let ACTION_DONE = LocalizedString("action_done", comment: "Done")
     public static let ACTION_CHOOSE_PHOTO = LocalizedString("action_choose_photo", comment: "Choose Photo")
     public static let ACTION_SAVE = LocalizedString("action_save", comment: "Save")
-    public static let ACTION_SEE_MORE = LocalizedString("action_see_more", comment: "See more")
     public static let ACTION_OPEN_SAFARI = LocalizedString("action_open_safari", comment: "Open in Safari")
     public static let ACTION_REFRESH = LocalizedString("action_refresh", comment: "Refresh")
     public static let ACTION_SELECT = LocalizedString("action_select", comment: "Select")

@@ -19,7 +19,7 @@
 "action_remove" = "Remove";
 "action_done" = "Done";
 "action_save" = "Save";
-"action_see_more" = "See more";
+"action_more" = "More";
 "action_open_safari" = "Open in Safari";
 "action_refresh" = "Refresh";
 "action_select" = "Select";
@@ -56,6 +56,11 @@
 "search_placeholder_home" = "Contacts, Assets, Chats";
 "search_placeholder_participants" = "Name";
 "search_placeholder_contact" = "Mixin ID, Name";
+"search_related_messages_count" = " related messages";
+"search_section_title_assets" = "Assets";
+"search_section_title_contacts" = "Contacts";
+"search_section_title_group" = "Groups";
+"search_section_title_messages" = "Messages";
 
 // Toast
 "toast_server_error" = "Server is under maintenance";
@@ -462,12 +467,6 @@
 "profile_mute" = "Mute";
 "profile_toast_unmuted" = "Unmuted";
 "profile_toast_muted" = "Muted until %@";
-
-// Home
-"button_title_contacts_and_chats" = "Contacts and Chats";
-"section_title_contacts" = "CONTACTS";
-"section_title_messages" = "MESSAGES";
-"section_title_assets" = "ASSETS";
 
 // Setting
 "setting_title" = "Setting";

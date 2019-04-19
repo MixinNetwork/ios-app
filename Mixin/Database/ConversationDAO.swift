@@ -25,20 +25,9 @@ final class ConversationDAO {
     WHERE c.category IS NOT NULL AND c.status <> 2 %@
     ORDER BY c.pin_time DESC, c.last_message_created_at DESC
     """
-    private static let sqlQuerySearchConversation = """
-    \(sqlQueryColumns)
-    FROM messages m
-    LEFT JOIN conversations c ON m.conversation_id = c.conversation_id
-    LEFT JOIN users u ON u.user_id = m.user_id
-    INNER JOIN users u1 ON u1.user_id = c.owner_id
-    LEFT JOIN users u2 ON u2.user_id = m.participant_id
-    WHERE (m.category LIKE '%_TEXT' AND m.content LIKE ?) OR (m.category LIKE '%_DATA' AND m.name LIKE ?)
-    ORDER BY c.pin_time DESC, m.created_at DESC
-    """
     private static let sqlQueryConversationList = String(format: sqlQueryConversation, "")
     private static let sqlQueryConversationByOwnerId = String(format: sqlQueryConversation, " AND c.owner_id = ? AND c.category = 'CONTACT'")
     private static let sqlQueryConversationByCoversationId = String(format: sqlQueryConversation, " AND c.conversation_id = ? ")
-    private static let sqlQueryConversationByName = String(format: sqlQueryConversation, "AND c.name LIKE ?") + " LIMIT 1"
     private static let sqlQueryStorageUsage = """
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name, u.identity_number as ownerIdentityNumber,
     u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl, u.is_verified as ownerIsVerified, m.mediaSize
@@ -165,6 +154,77 @@ final class ConversationDAO {
         }
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationByCoversationId, values: [conversationId]).first
     }
+    
+    func getGroupConversation(nameLike keyword: String, limit: Int?) -> [Conversation] {
+        let condition = Conversation.Properties.category == ConversationCategory.GROUP.rawValue
+            && Conversation.Properties.name.like("%\(keyword)%")
+        let order = [Conversation.Properties.pinTime.asOrder(by: .descending),
+                     Conversation.Properties.lastMessageCreatedAt.asOrder(by: .descending)]
+        return MixinDatabase.shared.getCodables(condition: condition, orderBy: order, limit: limit, inTransaction: false)
+    }
+    
+    func getConversation(withMessageLike keyword: String, limit: Int?) -> [ConversationSearchResult] {
+        let keyword = "%\(keyword)%"
+        let name = Expression.case(Conversation.Properties.category.in(table: Conversation.tableName),
+                                   [(when: "'\(ConversationCategory.CONTACT.rawValue)'",
+                                    then: User.Properties.fullName.in(table: User.tableName))],
+                                   else: Conversation.Properties.name.in(table: Conversation.tableName))
+        let iconUrl = Expression.case(Conversation.Properties.category.in(table: Conversation.tableName),
+                                      [(when: "'\(ConversationCategory.CONTACT.rawValue)'",
+                                        then: User.Properties.avatarUrl.in(table: User.tableName))],
+                                      else: Conversation.Properties.iconUrl.in(table: Conversation.tableName))
+        let userId = Expression.case(Conversation.Properties.category.in(table: Conversation.tableName),
+                                     [(when: "'\(ConversationCategory.CONTACT.rawValue)'",
+                                        then: User.Properties.userId.in(table: User.tableName))],
+                                     else: LiteralValue(nil))
+        let properties: [ColumnResultConvertible] = [
+            Conversation.Properties.conversationId.in(table: Conversation.tableName),
+            Conversation.Properties.category.in(table: Conversation.tableName),
+            name, iconUrl, userId,
+            Conversation.Properties.conversationId.in(table: Conversation.tableName).count()
+        ]
+        let joinClause = JoinClause(with: Message.tableName)
+            .join(Conversation.tableName, with: .left)
+            .on(Message.Properties.conversationId.in(table: Message.tableName)
+                == Conversation.Properties.conversationId.in(table: Conversation.tableName))
+            .join(User.tableName, with: .left)
+            .on(Conversation.Properties.ownerId.in(table: Conversation.tableName)
+                == User.Properties.userId.in(table: User.tableName))
+        let textMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_TEXT")
+            && Message.Properties.content.in(table: Message.tableName).like(keyword)
+        let dataMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_DATA")
+            && Message.Properties.name.in(table: Message.tableName).like(keyword)
+        var stmt = StatementSelect()
+            .select(properties)
+            .from(joinClause)
+            .where(textMessageContainsKeyword || dataMessageContainsKeyword)
+            .group(by: Message.Properties.conversationId.in(table: Message.tableName))
+        if let limit = limit {
+            stmt = stmt.limit(limit)
+        }
+        return MixinDatabase.shared.getCodables(callback: { (db) -> [ConversationSearchResult] in
+            var items = [ConversationSearchResult]()
+            let cs = try db.prepare(stmt)
+            while try cs.step() {
+                var i = -1
+                var autoIncrement: Int {
+                    i += 1
+                    return i
+                }
+                if let conversationId: String = cs.value(atIndex: autoIncrement), let categoryString: String = cs.value(atIndex: autoIncrement), let category = ConversationCategory(rawValue: categoryString) {
+                    let item = ConversationSearchResult(conversationId: conversationId,
+                                                        category: category,
+                                                        name: cs.value(atIndex: autoIncrement) ?? "",
+                                                        iconUrl: cs.value(atIndex: autoIncrement) ?? "",
+                                                        userId: cs.value(atIndex: autoIncrement),
+                                                        relatedMessageCount: cs.value(atIndex: autoIncrement) ?? 0,
+                                                        keyword: keyword)
+                    items.append(item)
+                }
+            }
+            return items
+        })
+    }
 
     func getOriginalConversation(conversationId: String) -> Conversation? {
         return MixinDatabase.shared.getCodable(condition: Conversation.Properties.conversationId == conversationId, inTransaction: false)
@@ -180,18 +240,7 @@ final class ConversationDAO {
     func getConversationCategory(conversationId: String) -> String? {
         return MixinDatabase.shared.scalar(on: Conversation.Properties.category, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)?.stringValue
     }
-
-    func searchConversation(content: String) -> [ConversationItem] {
-        guard !content.isEmpty else {
-            return []
-        }
-        let keyword = "%\(content)%"
-
-        let conversations: [ConversationItem] = MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationByName, values: [keyword], inTransaction: false)
-        let messages: [ConversationItem] = MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQuerySearchConversation, values: [keyword, keyword], inTransaction: false)
-        return conversations + messages
-    }
-
+    
     func conversationList() -> [ConversationItem] {
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationList, inTransaction: false)
     }

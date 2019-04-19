@@ -17,7 +17,7 @@
 "action_remove" = "削除";
 "action_done" = "完了";
 "action_save" = "セーブ";
-"action_see_more" = "もっと見る";
+"action_more" = "もっと";
 "action_open_safari" = "Safariで開く";
 "action_refresh" = "更新";
 "action_select" = "選択";
@@ -53,6 +53,11 @@
 "search_placeholder_home" = "連絡先、資産、チャット";
 "search_placeholder_participants" = "名前";
 "search_placeholder_contact" = "MIXIN ID、名前";
+"search_related_messages_count" = "メッセージ";
+"search_section_title_assets" = "資産";
+"search_section_title_contacts" = "連絡先";
+"search_section_title_group" = "グループ";
+"search_section_title_messages" = "メッセージ";
 
 // Toast
 "toast_server_error" = "サーバーはメンテナンス中です";
@@ -456,12 +461,6 @@
 "profile_mute" = "消音";
 "profile_toast_unmuted" = "消音解除しました";
 "profile_toast_muted" = " %@ まで消音しました";
-
-// Home
-"button_title_contacts_and_chats" = "連絡先とチャット";
-"section_title_contacts" = "連絡先";
-"section_title_messages" = "メッセージ";
-"section_title_assets" = "資産";
 
 // Setting
 "setting_title" = "設定";

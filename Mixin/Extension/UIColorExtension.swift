@@ -14,7 +14,9 @@ extension UIColor {
     static let cameraSendBlue = UIColor(rgbValue: 0x0a5ffe)
     static let selection = UIColor(rgbValue: 0xEDEEEE)
     static let accessoryText = UIColor(rgbValue: 0xBBBEC3)
-    static let darkText = UIColor(rgbValue: 0x333333)
+    static let darkText = UIColor(displayP3RgbValue: 0x333333)
+    static let highlightedText = UIColor(displayP3RgbValue: 0x3D75E3)
+    static let descriptionText = UIColor(displayP3RgbValue: 0xBBBEC2)
     static let shadow = UIColor(rgbValue: 0xC3C3C3)
     
     static let walletGreen = UIColor(rgbValue: 0x29BE73)

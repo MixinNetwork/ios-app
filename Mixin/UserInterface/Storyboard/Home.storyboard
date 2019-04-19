@@ -198,7 +198,7 @@
                                 </constraints>
                             </view>
                             <containerView opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uc0-po-iUR">
-                                <rect key="frame" x="0.0" y="-8" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="-8" width="375" height="675"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -209,6 +209,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="uc0-po-iUR" secondAttribute="trailing" id="44Q-aU-MzI"/>
+                            <constraint firstAttribute="bottom" secondItem="uc0-po-iUR" secondAttribute="bottom" id="AYK-Hw-Hy9"/>
                             <constraint firstAttribute="trailing" secondItem="2PV-tA-eIh" secondAttribute="trailing" id="BPC-s8-zeI"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="Hzi-ct-Nth"/>
                             <constraint firstAttribute="trailing" secondItem="i5D-40-ldq" secondAttribute="trailing" id="Q9i-7q-GXv"/>
@@ -216,7 +217,6 @@
                             <constraint firstItem="i5D-40-ldq" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="cSc-X1-1De"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="lic-EF-P70"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="top" secondItem="5mk-Fk-SFN" secondAttribute="top" constant="-28" id="o6R-WF-m77"/>
-                            <constraint firstItem="uc0-po-iUR" firstAttribute="height" secondItem="J91-yj-SMd" secondAttribute="height" id="pNg-Et-Q8c"/>
                             <constraint firstItem="5mk-Fk-SFN" firstAttribute="bottom" secondItem="z69-58-QNg" secondAttribute="bottom" id="pTL-Be-PuM"/>
                             <constraint firstItem="BAu-gi-TQg" firstAttribute="height" secondItem="2PV-tA-eIh" secondAttribute="height" id="swY-bH-tag"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" id="tuS-El-9K3"/>
@@ -266,7 +266,7 @@
             <objects>
                 <viewController storyboardIdentifier="search" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="wBP-M4-Xow" customClass="SearchViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VMk-AN-tc7">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="675"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g21-4i-h25" userLabel="Additional Safe Area Placeholder">
@@ -284,18 +284,18 @@
                                 </constraints>
                             </view>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpQ-dJ-ucd">
-                                <rect key="frame" x="0.0" y="74" width="375" height="593"/>
+                                <rect key="frame" x="0.0" y="74" width="375" height="601"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <segue destination="EIL-n2-XsE" kind="embed" id="27b-jG-RjJ"/>
                                 </connections>
                             </containerView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="70" estimatedRowHeight="70" sectionHeaderHeight="41" estimatedSectionHeaderHeight="-1" sectionFooterHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="fJ7-r4-Szs">
-                                <rect key="frame" x="0.0" y="74" width="375" height="593"/>
+                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="70" sectionHeaderHeight="41" estimatedSectionHeaderHeight="-1" sectionFooterHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="fJ7-r4-Szs">
+                                <rect key="frame" x="0.0" y="74" width="375" height="601"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="78" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="85" id="wcl-KA-lJ3" customClass="SearchNumberCell" customModule="Mixin" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="search_number" rowHeight="85" id="wcl-KA-lJ3" customClass="SearchNumberCell" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="375" height="85"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wcl-KA-lJ3" id="ad5-9S-eUX">
@@ -320,7 +320,7 @@
                                                     <rect key="frame" x="0.0" y="10" width="375" height="65"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search Mixin ID or Phone number: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lx1-QB-xFP">
-                                                            <rect key="frame" x="20" y="20" width="335" height="25"/>
+                                                            <rect key="frame" x="20" y="24" width="335" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" red="0.20002" green="0.19997999999999999" blue="0.20003000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                             <nil key="highlightedColor"/>
@@ -329,9 +329,9 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="Lx1-QB-xFP" firstAttribute="leading" secondItem="tY1-R3-K1U" secondAttribute="leading" constant="20" id="3jW-9p-qD1"/>
-                                                        <constraint firstAttribute="bottom" secondItem="Lx1-QB-xFP" secondAttribute="bottom" constant="20" id="I8J-5L-HFC"/>
+                                                        <constraint firstAttribute="bottom" secondItem="Lx1-QB-xFP" secondAttribute="bottom" constant="24" id="I8J-5L-HFC"/>
                                                         <constraint firstAttribute="trailing" secondItem="Lx1-QB-xFP" secondAttribute="trailing" constant="20" id="KD9-YU-aKX"/>
-                                                        <constraint firstItem="Lx1-QB-xFP" firstAttribute="top" secondItem="tY1-R3-K1U" secondAttribute="top" constant="20" id="QN0-v9-BXi"/>
+                                                        <constraint firstItem="Lx1-QB-xFP" firstAttribute="top" secondItem="tY1-R3-K1U" secondAttribute="top" constant="24" id="QN0-v9-BXi"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -351,6 +351,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="label" destination="Lx1-QB-xFP" id="pND-PC-US7"/>
+                                            <outlet property="labelBackgroundView" destination="tY1-R3-K1U" id="4mG-sR-a4p"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -421,6 +422,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="cancelButton" destination="Bb6-Fw-r7x" id="M2Q-Xi-zlO"/>
+                        <outlet property="recentBotsContainerView" destination="xpQ-dJ-ucd" id="mZV-M7-5Kc"/>
                         <outlet property="searchBox" destination="1gJ-C8-eTf" id="9gL-cG-iN3"/>
                         <outlet property="tableView" destination="fJ7-r4-Szs" id="o3z-Ff-t8W"/>
                     </connections>
@@ -434,11 +436,11 @@
             <objects>
                 <viewController id="EIL-n2-XsE" customClass="RecentBotsViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9aE-T7-dUh">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="593"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="601"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="BN3-h1-eZm">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="593"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="601"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lR2-7f-hUd">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>

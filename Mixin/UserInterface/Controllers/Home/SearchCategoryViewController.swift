@@ -11,6 +11,8 @@ class SearchCategoryViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    let titleView = R.nib.searchTitleView(owner: nil)!
+    
     var category = Category.asset
     var keyword = ""
     
@@ -22,6 +24,10 @@ class SearchCategoryViewController: UIViewController {
         return parent?.parent?.navigationController
     }
     
+    private var textField: UITextField {
+        return titleView.searchBoxView.textField
+    }
+    
     deinit {
         queue.cancelAllOperations()
     }
@@ -29,11 +35,10 @@ class SearchCategoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
-        let titleView = R.nib.searchTitleView(owner: nil)!
         titleView.searchBoxLeadingConstraint.constant = 0
-        titleView.searchBoxView.textField.text = keyword
-        titleView.searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         titleView.cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
+        textField.text = keyword
+        textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         navigationItem.titleView = titleView
         switch category {
         case .asset:
@@ -142,18 +147,9 @@ extension SearchCategoryViewController: UITableViewDelegate {
             homeNavigationController?.pushViewController(vc, animated: true)
         case .contact, .group, .conversation:
             let result = model as! ConversationSearchResult
-            switch result.target {
-            case let .contact(user):
-                let vc = ConversationViewController.instance(ownerUser: user)
-                homeNavigationController?.pushViewController(vc, animated: true)
-            case let .group(conversation):
-                let vc = ConversationViewController.instance(conversation: conversation)
-                homeNavigationController?.pushViewController(vc, animated: true)
-            case let .searchMessageWithContact(_, conversationId):
-                break
-            case let .searchMessageWithGroup(conversationId):
-                break
-            }
+            let keyword = textField.text ?? ""
+            let searchNavigation = navigationController as? SearchNavigationViewController
+            searchNavigation?.pushViewController(keyword: keyword, result: result)
         }
     }
     

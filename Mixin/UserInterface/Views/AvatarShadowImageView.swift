@@ -26,11 +26,15 @@ class AvatarShadowIconView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        iconImageView.frame = bounds
+        layoutIconImageView()
         iconImageView.layer.cornerRadius = iconImageView.bounds.width / 2
         updateShadowPath()
     }
-
+    
+    func layoutIconImageView() {
+        iconImageView.frame = bounds
+    }
+    
     func prepareForReuse() {
         iconImageView.sd_cancelCurrentImageLoad()
         iconImageView.image = nil

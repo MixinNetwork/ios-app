@@ -63,6 +63,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
+        navigationItem.title = " "
         navigationItem.titleView = titleView
         tableView.register(SearchHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
@@ -158,21 +159,6 @@ class SearchViewController: UIViewController {
             return !keywordMaybeIdOrPhone && assets.isEmpty && contacts.isEmpty
         case .message:
             return !keywordMaybeIdOrPhone && assets.isEmpty && contacts.isEmpty && groups.isEmpty
-        }
-    }
-    
-    private func pushViewController(result: ConversationSearchResult) {
-        switch result.target {
-        case let .contact(user):
-            let vc = ConversationViewController.instance(ownerUser: user)
-            homeNavigationController?.pushViewController(vc, animated: true)
-        case let .group(conversation):
-            let vc = ConversationViewController.instance(conversation: conversation)
-            homeNavigationController?.pushViewController(vc, animated: true)
-        case let .searchMessageWithContact(_, conversationId):
-            break
-        case let .searchMessageWithGroup(conversationId):
-            break
         }
     }
     
@@ -302,6 +288,8 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         textField.resignFirstResponder()
+        let searchNavigation = navigationController as? SearchNavigationViewController
+        let keyword = textField.text ?? ""
         switch Section(rawValue: indexPath.section)! {
         case .searchNumber:
             break
@@ -310,11 +298,11 @@ extension SearchViewController: UITableViewDelegate {
             let vc = AssetViewController.instance(asset: asset)
             homeNavigationController?.pushViewController(vc, animated: true)
         case .contact:
-            pushViewController(result: contacts[indexPath.row])
+            searchNavigation?.pushViewController(keyword: keyword, result: contacts[indexPath.row])
         case .group:
-            pushViewController(result: groups[indexPath.row])
+            searchNavigation?.pushViewController(keyword: keyword, result: groups[indexPath.row])
         case .message:
-            pushViewController(result: conversations[indexPath.row])
+            searchNavigation?.pushViewController(keyword: keyword, result: conversations[indexPath.row])
         }
     }
     

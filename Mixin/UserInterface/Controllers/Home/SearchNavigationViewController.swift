@@ -11,7 +11,7 @@ class SearchNavigationViewController: UINavigationController {
         navigationBar.backIndicatorTransitionMaskImage = R.image.ic_search_back()
     }
     
-    func pushViewController(keyword: String, result: ConversationSearchResult) {
+    func pushViewController(keyword: String, result: SearchResult) {
         switch result.target {
         case let .contact(user):
             let vc = ConversationViewController.instance(ownerUser: user)

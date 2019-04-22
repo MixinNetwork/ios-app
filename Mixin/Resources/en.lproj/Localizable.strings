@@ -57,10 +57,10 @@
 "search_placeholder_participants" = "Name";
 "search_placeholder_contact" = "Mixin ID, Name";
 "search_related_messages_count" = " related messages";
-"search_section_title_assets" = "Assets";
-"search_section_title_contacts" = "Contacts";
+"search_section_title_asset" = "Assets";
+"search_section_title_user" = "Contacts";
 "search_section_title_group" = "Groups";
-"search_section_title_messages" = "Messages";
+"search_section_title_conversation" = "Messages";
 
 // Toast
 "toast_server_error" = "Server is under maintenance";

@@ -20,7 +20,7 @@ class SearchResultCell: UITableViewCell {
         avatarImageView.iconImageView.sd_setImage(with: nil, completed: nil)
     }
     
-    func render(result: ConversationSearchResult) {
+    func render(result: SearchResult) {
         switch result.target {
         case let .contact(user):
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)

@@ -76,10 +76,10 @@ class SearchCategoryViewController: UIViewController {
                     .map { AssetSearchResult(asset: $0, keyword: keyword) }
             case .contact:
                 models = UserDAO.shared.getUsers(keyword: keyword, limit: nil)
-                    .map { ConversationSearchResult(user: $0, keyword: keyword) }
+                    .map { SearchResult(user: $0, keyword: keyword) }
             case .group:
                 models = ConversationDAO.shared.getGroupConversation(nameLike: keyword, limit: nil)
-                    .map { ConversationSearchResult(group: $0, keyword: keyword) }
+                    .map { SearchResult(group: $0, keyword: keyword) }
             case .conversation:
                 models = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: nil)
             }
@@ -123,7 +123,7 @@ extension SearchCategoryViewController: UITableViewDataSource {
             return cell
         case .contact, .group, .conversation:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
-            let result = model as! ConversationSearchResult
+            let result = model as! SearchResult
             cell.render(result: result)
             return cell
         }
@@ -146,7 +146,7 @@ extension SearchCategoryViewController: UITableViewDelegate {
             let vc = AssetViewController.instance(asset: asset)
             homeNavigationController?.pushViewController(vc, animated: true)
         case .contact, .group, .conversation:
-            let result = model as! ConversationSearchResult
+            let result = model as! SearchResult
             let keyword = textField.text ?? ""
             let searchNavigation = navigationController as? SearchNavigationViewController
             searchNavigation?.pushViewController(keyword: keyword, result: result)

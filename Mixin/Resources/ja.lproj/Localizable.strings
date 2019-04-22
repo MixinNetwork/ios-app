@@ -54,10 +54,10 @@
 "search_placeholder_participants" = "名前";
 "search_placeholder_contact" = "MIXIN ID、名前";
 "search_related_messages_count" = "メッセージ";
-"search_section_title_assets" = "資産";
-"search_section_title_contacts" = "連絡先";
+"search_section_title_asset" = "資産";
+"search_section_title_user" = "連絡先";
 "search_section_title_group" = "グループ";
-"search_section_title_messages" = "メッセージ";
+"search_section_title_conversation" = "メッセージ";
 
 // Toast
 "toast_server_error" = "サーバーはメンテナンス中です";

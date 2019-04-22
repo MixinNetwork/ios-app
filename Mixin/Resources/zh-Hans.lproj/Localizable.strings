@@ -57,10 +57,10 @@
 "search_placeholder_participants" = "名称";
 "search_placeholder_contact" = "Mixin ID, 名称";
 "search_related_messages_count" = "条相关消息";
-"search_section_title_assets" = "资产";
-"search_section_title_contacts" = "联系人";
+"search_section_title_asset" = "资产";
+"search_section_title_user" = "联系人";
 "search_section_title_group" = "群聊";
-"search_section_title_messages" = "消息";
+"search_section_title_conversation" = "消息";
 
 // Toast
 "toast_server_error" = "服务器正在维护中";

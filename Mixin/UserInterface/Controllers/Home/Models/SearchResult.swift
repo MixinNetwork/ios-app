@@ -1,6 +1,6 @@
 import Foundation
 
-struct ConversationSearchResult {
+struct SearchResult {
     
     let target: Target
     let style: Style
@@ -16,10 +16,10 @@ struct ConversationSearchResult {
         self.style = .normal
         self.name = user.fullName
         self.iconUrl = user.avatarUrl
-        self.title = ConversationSearchResult.attributedText(text: user.fullName,
-                                                             textAttributes: ConversationSearchResult.titleAttributes,
-                                                             keyword: keyword,
-                                                             keywordAttributes: ConversationSearchResult.highlightedTitleAttributes)
+        self.title = SearchResult.attributedText(text: user.fullName,
+                                                 textAttributes: SearchResult.titleAttributes,
+                                                 keyword: keyword,
+                                                 keywordAttributes: SearchResult.highlightedTitleAttributes)
         if user.isVerified {
             self.badgeImage = R.image.ic_user_verified()
         } else if user.appId != nil {
@@ -29,15 +29,15 @@ struct ConversationSearchResult {
         }
         self.superscript = nil
         if user.identityNumber.contains(keyword) {
-            self.description = ConversationSearchResult.attributedText(text: user.identityNumber,
-                                                                       textAttributes: ConversationSearchResult.normalDescriptionAttributes,
-                                                                       keyword: keyword,
-                                                                       keywordAttributes: ConversationSearchResult.highlightedNormalDescriptionAttributes)
+            self.description = SearchResult.attributedText(text: user.identityNumber,
+                                                           textAttributes: SearchResult.normalDescriptionAttributes,
+                                                           keyword: keyword,
+                                                           keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
         } else if let phone = user.phone, phone.contains(keyword) {
-            self.description = ConversationSearchResult.attributedText(text: phone,
-                                                                       textAttributes: ConversationSearchResult.normalDescriptionAttributes,
-                                                                       keyword: keyword,
-                                                                       keywordAttributes: ConversationSearchResult.highlightedNormalDescriptionAttributes)
+            self.description = SearchResult.attributedText(text: phone,
+                                                           textAttributes: SearchResult.normalDescriptionAttributes,
+                                                           keyword: keyword,
+                                                           keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
         } else {
             self.description = nil
         }
@@ -48,10 +48,10 @@ struct ConversationSearchResult {
         self.style = .normal
         self.name = group.name
         self.iconUrl = group.iconUrl
-        self.title = ConversationSearchResult.attributedText(text: group.name,
-                                                             textAttributes: ConversationSearchResult.titleAttributes,
-                                                             keyword: keyword,
-                                                             keywordAttributes: ConversationSearchResult.highlightedTitleAttributes)
+        self.title = SearchResult.attributedText(text: group.name,
+                                                 textAttributes: SearchResult.titleAttributes,
+                                                 keyword: keyword,
+                                                 keywordAttributes: SearchResult.highlightedTitleAttributes)
         self.badgeImage = nil
         self.superscript = nil
         self.description = nil
@@ -67,19 +67,19 @@ struct ConversationSearchResult {
         self.style = .normal
         self.name = name
         self.iconUrl = iconUrl
-        self.title = ConversationSearchResult.attributedText(text: name,
-                                                             textAttributes: ConversationSearchResult.titleAttributes,
-                                                             keyword: keyword,
-                                                             keywordAttributes: ConversationSearchResult.highlightedTitleAttributes)
+        self.title = SearchResult.attributedText(text: name,
+                                                 textAttributes: SearchResult.titleAttributes,
+                                                 keyword: keyword,
+                                                 keywordAttributes: SearchResult.highlightedTitleAttributes)
         self.badgeImage = nil
         self.superscript = nil
         let desc = "\(relatedMessageCount)" + R.string.localizable.search_related_messages_count()
-        self.description = NSAttributedString(string: desc, attributes: ConversationSearchResult.normalDescriptionAttributes)
+        self.description = NSAttributedString(string: desc, attributes: SearchResult.normalDescriptionAttributes)
     }
     
 }
 
-extension ConversationSearchResult {
+extension SearchResult {
     
     enum Target {
         case contact(UserItem)

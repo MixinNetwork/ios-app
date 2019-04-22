@@ -10,22 +10,22 @@ class SearchViewController: UIViewController {
     enum Section: Int, CaseIterable {
         case searchNumber = 0
         case asset
-        case contact
+        case user
         case group
-        case message
+        case conversation
         
         var title: String? {
             switch self {
             case .searchNumber:
                 return nil
             case .asset:
-                return R.string.localizable.search_section_title_assets()
-            case .contact:
-                return R.string.localizable.search_section_title_contacts()
+                return R.string.localizable.search_section_title_asset()
+            case .user:
+                return R.string.localizable.search_section_title_user()
             case .group:
                 return R.string.localizable.search_section_title_group()
-            case .message:
-                return R.string.localizable.search_section_title_messages()
+            case .conversation:
+                return R.string.localizable.search_section_title_conversation()
             }
         }
     }
@@ -44,9 +44,9 @@ class SearchViewController: UIViewController {
     
     private var queue = OperationQueue()
     private var assets = [AssetSearchResult]()
-    private var contacts = [ConversationSearchResult]()
-    private var groups = [ConversationSearchResult]()
-    private var conversations = [ConversationSearchResult]()
+    private var users = [SearchResult]()
+    private var groups = [SearchResult]()
+    private var conversations = [SearchResult]()
     
     private var homeNavigationController: UINavigationController? {
         return parent?.parent?.navigationController
@@ -97,16 +97,16 @@ class SearchViewController: UIViewController {
             let assets = AssetDAO.shared.getAssets(keyword: keyword, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: keyword) }
             let contacts = UserDAO.shared.getUsers(keyword: keyword, limit: limit)
-                .map { ConversationSearchResult(user: $0, keyword: keyword) }
+                .map { SearchResult(user: $0, keyword: keyword) }
             let groups = ConversationDAO.shared.getGroupConversation(nameLike: keyword, limit: limit)
-                .map { ConversationSearchResult(group: $0, keyword: keyword) }
+                .map { SearchResult(group: $0, keyword: keyword) }
             let conversations = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit)
             guard let weakSelf = self, !op.isCancelled else {
                 return
             }
             DispatchQueue.main.sync {
                 weakSelf.assets = assets
-                weakSelf.contacts = contacts
+                weakSelf.users = contacts
                 weakSelf.groups = groups
                 weakSelf.conversations = conversations
                 weakSelf.tableView.reloadData()
@@ -129,11 +129,11 @@ class SearchViewController: UIViewController {
             return []
         case .asset:
             return assets
-        case .contact:
-            return contacts
+        case .user:
+            return users
         case .group:
             return groups
-        case .message:
+        case .conversation:
             return conversations
         }
     }
@@ -142,7 +142,7 @@ class SearchViewController: UIViewController {
         switch section {
         case .searchNumber:
             return !keywordMaybeIdOrPhone
-        case .asset, .contact, .group, .message:
+        case .asset, .user, .group, .conversation:
             return models(forSection: section).isEmpty
         }
     }
@@ -153,12 +153,12 @@ class SearchViewController: UIViewController {
             return keywordMaybeIdOrPhone
         case .asset:
             return !keywordMaybeIdOrPhone
-        case .contact:
+        case .user:
             return !keywordMaybeIdOrPhone && assets.isEmpty
         case .group:
-            return !keywordMaybeIdOrPhone && assets.isEmpty && contacts.isEmpty
-        case .message:
-            return !keywordMaybeIdOrPhone && assets.isEmpty && contacts.isEmpty && groups.isEmpty
+            return !keywordMaybeIdOrPhone && assets.isEmpty && users.isEmpty
+        case .conversation:
+            return !keywordMaybeIdOrPhone && assets.isEmpty && users.isEmpty && groups.isEmpty
         }
     }
     
@@ -172,11 +172,11 @@ extension SearchViewController: UITableViewDataSource {
             return keywordMaybeIdOrPhone ? 1 : 0
         case .asset:
             return min(resultLimit, assets.count)
-        case .contact:
-            return min(resultLimit, contacts.count)
+        case .user:
+            return min(resultLimit, users.count)
         case .group:
             return min(resultLimit, groups.count)
-        case .message:
+        case .conversation:
             return min(resultLimit, conversations.count)
         }
     }
@@ -194,15 +194,15 @@ extension SearchViewController: UITableViewDataSource {
             let result = assets[indexPath.row]
             cell.render(asset: result.asset, attributedSymbol: result.attributedSymbol)
             return cell
-        case .contact:
+        case .user:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
-            cell.render(result: contacts[indexPath.row])
+            cell.render(result: users[indexPath.row])
             return cell
         case .group:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
             cell.render(result: groups[indexPath.row])
             return cell
-        case .message:
+        case .conversation:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
             cell.render(result: conversations[indexPath.row])
             return cell
@@ -222,7 +222,7 @@ extension SearchViewController: UITableViewDelegate {
         switch section {
         case .searchNumber:
             return UITableView.automaticDimension
-        case .asset, .contact, .group, .message:
+        case .asset, .user, .group, .conversation:
             return SearchResultCell.height
         }
     }
@@ -232,7 +232,7 @@ extension SearchViewController: UITableViewDelegate {
         switch section {
         case .searchNumber:
             return .leastNormalMagnitude
-        case .asset, .contact, .group, .message:
+        case .asset, .user, .group, .conversation:
             if isEmptySection(section) {
                 return .leastNormalMagnitude
             } else {
@@ -246,7 +246,7 @@ extension SearchViewController: UITableViewDelegate {
         switch section {
         case .searchNumber:
             return .leastNormalMagnitude
-        case .asset, .contact, .group, .message:
+        case .asset, .user, .group, .conversation:
             return isEmptySection(section) ? .leastNormalMagnitude : SearchFooterView.height
         }
     }
@@ -256,7 +256,7 @@ extension SearchViewController: UITableViewDelegate {
         switch section {
         case .searchNumber:
             return nil
-        case .asset, .contact, .group, .message:
+        case .asset, .user, .group, .conversation:
             if isEmptySection(section) {
                 return nil
             } else {
@@ -276,7 +276,7 @@ extension SearchViewController: UITableViewDelegate {
         switch section {
         case .searchNumber:
             return nil
-        case .asset, .contact, .group, .message:
+        case .asset, .user, .group, .conversation:
             if isEmptySection(section) {
                 return nil
             } else {
@@ -297,11 +297,11 @@ extension SearchViewController: UITableViewDelegate {
             let asset = assets[indexPath.row].asset
             let vc = AssetViewController.instance(asset: asset)
             homeNavigationController?.pushViewController(vc, animated: true)
-        case .contact:
-            searchNavigation?.pushViewController(keyword: keyword, result: contacts[indexPath.row])
+        case .user:
+            searchNavigation?.pushViewController(keyword: keyword, result: users[indexPath.row])
         case .group:
             searchNavigation?.pushViewController(keyword: keyword, result: groups[indexPath.row])
-        case .message:
+        case .conversation:
             searchNavigation?.pushViewController(keyword: keyword, result: conversations[indexPath.row])
         }
     }
@@ -320,11 +320,11 @@ extension SearchViewController: SearchHeaderViewDelegate {
             return
         case .asset:
             vc.category = .asset
-        case .contact:
+        case .user:
             vc.category = .contact
         case .group:
             vc.category = .group
-        case .message:
+        case .conversation:
             vc.category = .conversation
         }
         vc.keyword = textField.text ?? ""

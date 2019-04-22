@@ -164,7 +164,7 @@ final class ConversationDAO {
         return MixinDatabase.shared.getCodables(sql: sql, values: ["%\(keyword)%"])
     }
     
-    func getConversation(withMessageLike keyword: String, limit: Int?) -> [ConversationSearchResult] {
+    func getConversation(withMessageLike keyword: String, limit: Int?) -> [SearchResult] {
         let keyword = "%\(keyword)%"
         let name = Expression.case(Conversation.Properties.category.in(table: Conversation.tableName),
                                    [(when: "'\(ConversationCategory.CONTACT.rawValue)'",
@@ -203,8 +203,8 @@ final class ConversationDAO {
         if let limit = limit {
             stmt = stmt.limit(limit)
         }
-        return MixinDatabase.shared.getCodables(callback: { (db) -> [ConversationSearchResult] in
-            var items = [ConversationSearchResult]()
+        return MixinDatabase.shared.getCodables(callback: { (db) -> [SearchResult] in
+            var items = [SearchResult]()
             let cs = try db.prepare(stmt)
             while try cs.step() {
                 var i = -1
@@ -213,13 +213,13 @@ final class ConversationDAO {
                     return i
                 }
                 if let conversationId: String = cs.value(atIndex: autoIncrement), let categoryString: String = cs.value(atIndex: autoIncrement), let category = ConversationCategory(rawValue: categoryString) {
-                    let item = ConversationSearchResult(conversationId: conversationId,
-                                                        category: category,
-                                                        name: cs.value(atIndex: autoIncrement) ?? "",
-                                                        iconUrl: cs.value(atIndex: autoIncrement) ?? "",
-                                                        userId: cs.value(atIndex: autoIncrement),
-                                                        relatedMessageCount: cs.value(atIndex: autoIncrement) ?? 0,
-                                                        keyword: keyword)
+                    let item = SearchResult(conversationId: conversationId,
+                                            category: category,
+                                            name: cs.value(atIndex: autoIncrement) ?? "",
+                                            iconUrl: cs.value(atIndex: autoIncrement) ?? "",
+                                            userId: cs.value(atIndex: autoIncrement),
+                                            relatedMessageCount: cs.value(atIndex: autoIncrement) ?? 0,
+                                            keyword: keyword)
                     items.append(item)
                 }
             }

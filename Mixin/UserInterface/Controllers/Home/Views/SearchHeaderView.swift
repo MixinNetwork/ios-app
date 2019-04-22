@@ -1,5 +1,9 @@
 import UIKit
 
+protocol SearchHeaderViewDelegate: class {
+    func searchHeaderViewDidSendMoreAction(_ view: SearchHeaderView)
+}
+
 class SearchHeaderView: UITableViewHeaderFooterView {
     
     static func height(isFirstSection: Bool) -> CGFloat {
@@ -10,6 +14,10 @@ class SearchHeaderView: UITableViewHeaderFooterView {
     let button = UIButton(type: .system)
     let normalBackgroundView = UIView()
     let topShadowView = TopShadowView()
+    
+    var section: Int?
+    
+    weak var delegate: SearchHeaderViewDelegate?
     
     lazy var topFillingBackgroundView: InfiniteTopView = {
         let view = InfiniteTopView()
@@ -33,6 +41,10 @@ class SearchHeaderView: UITableViewHeaderFooterView {
         prepare()
     }
     
+    @objc func moreAction(_ sender: Any) {
+        delegate?.searchHeaderViewDidSendMoreAction(self)
+    }
+    
     private func prepare() {
         normalBackgroundView.backgroundColor = .white
         backgroundView = normalBackgroundView
@@ -48,6 +60,7 @@ class SearchHeaderView: UITableViewHeaderFooterView {
         button.setTitleColor(.highlightedText, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 12)
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 20)
+        button.addTarget(self, action: #selector(moreAction(_:)), for: .touchUpInside)
         contentView.addSubview(topShadowView)
         contentView.addSubview(label)
         contentView.addSubview(button)

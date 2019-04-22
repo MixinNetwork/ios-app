@@ -35,6 +35,10 @@ class SearchViewController: UIViewController {
     
     let titleView = R.nib.searchTitleView(owner: nil)!
     
+    var textField: UITextField {
+        return titleView.searchBoxView.textField
+    }
+    
     private let searchingFooterView = R.nib.searchingFooterView(owner: nil)
     private let resultLimit = 3
     
@@ -46,10 +50,6 @@ class SearchViewController: UIViewController {
     
     private var homeNavigationController: UINavigationController? {
         return parent?.parent?.navigationController
-    }
-    
-    private var textField: UITextField {
-        return titleView.searchBoxView.textField
     }
     
     private var keywordMaybeIdOrPhone: Bool {
@@ -77,14 +77,6 @@ class SearchViewController: UIViewController {
         tableView.delegate = self
         textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: .ContactsDidChange, object: nil)
-    }
-    
-    @discardableResult
-    override func becomeFirstResponder() -> Bool {
-        guard !super.becomeFirstResponder() else {
-            return false
-        }
-        return textField.becomeFirstResponder()
     }
     
     @IBAction func searchAction(_ sender: Any) {
@@ -286,6 +278,8 @@ extension SearchViewController: UITableViewDelegate {
                 view.isFirstSection = isFirstSection(section)
                 view.label.text = section.title
                 view.button.isHidden = models(forSection: section).count <= resultLimit
+                view.section = section.rawValue
+                view.delegate = self
                 return view
             }
         }
@@ -307,6 +301,7 @@ extension SearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        textField.resignFirstResponder()
         switch Section(rawValue: indexPath.section)! {
         case .searchNumber:
             break
@@ -321,6 +316,32 @@ extension SearchViewController: UITableViewDelegate {
         case .message:
             pushViewController(result: conversations[indexPath.row])
         }
+    }
+    
+}
+
+extension SearchViewController: SearchHeaderViewDelegate {
+    
+    func searchHeaderViewDidSendMoreAction(_ view: SearchHeaderView) {
+        guard let sectionValue = view.section, let section = Section(rawValue: sectionValue) else {
+            return
+        }
+        let vc = R.storyboard.home.search_category()!
+        switch section {
+        case .searchNumber:
+            return
+        case .asset:
+            vc.category = .asset
+        case .contact:
+            vc.category = .contact
+        case .group:
+            vc.category = .group
+        case .message:
+            vc.category = .conversation
+        }
+        vc.keyword = textField.text ?? ""
+        textField.resignFirstResponder()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }

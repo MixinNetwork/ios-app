@@ -408,7 +408,7 @@ extension HomeViewController {
     
     private func showSearch() {
         searchContainerTopConstraint.constant = 0
-        searchViewController.becomeFirstResponder()
+        searchViewController.textField.becomeFirstResponder()
         UIView.animate(withDuration: 0.2) {
             self.navigationBarView.alpha = 0
             self.searchContainerView.alpha = 1

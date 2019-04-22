@@ -30,29 +30,20 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_cancel"/>
                     </userDefinedRuntimeAttributes>
                 </button>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ygE-5o-Bhx">
-                    <rect key="frame" x="-20" y="44" width="399" height="10"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="10" id="n6z-TI-Xkv"/>
-                    </constraints>
-                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="cCI-7F-51C" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="1Vk-xP-Y7J"/>
                 <constraint firstAttribute="bottom" secondItem="n3x-eW-Q5i" secondAttribute="bottom" id="3Jh-d5-NZI"/>
-                <constraint firstAttribute="bottom" secondItem="ygE-5o-Bhx" secondAttribute="top" id="AaA-qu-7bb"/>
                 <constraint firstItem="cCI-7F-51C" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="KNv-uR-afI"/>
                 <constraint firstAttribute="trailing" secondItem="n3x-eW-Q5i" secondAttribute="trailing" id="Mdi-n9-dy2"/>
-                <constraint firstItem="ygE-5o-Bhx" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="-20" id="NIw-80-htI"/>
                 <constraint firstItem="n3x-eW-Q5i" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="NOL-Ym-1kn"/>
-                <constraint firstAttribute="trailing" secondItem="ygE-5o-Bhx" secondAttribute="trailing" constant="-20" id="cCr-Sh-Jtf"/>
                 <constraint firstItem="n3x-eW-Q5i" firstAttribute="leading" secondItem="cCI-7F-51C" secondAttribute="trailing" id="nzd-hu-bbZ"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="cancelButton" destination="n3x-eW-Q5i" id="QZb-jd-MnM"/>
+                <outlet property="searchBoxLeadingConstraint" destination="KNv-uR-afI" id="FtL-wH-A9Y"/>
                 <outlet property="searchBoxView" destination="cCI-7F-51C" id="JOS-Ei-yV6"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="313.72767857142856"/>

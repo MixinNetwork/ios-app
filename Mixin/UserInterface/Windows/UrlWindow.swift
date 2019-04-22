@@ -360,9 +360,8 @@ extension UrlWindow {
         guard let text = query["text"], !text.isEmpty else {
             return false
         }
-
-        let shareText = text.removingPercentEncoding ?? text
-        let vc = SendMessagePeerSelectionViewController.instance(content: .text(shareText))
+        
+        let vc = SendMessagePeerSelectionViewController.instance(content: .text(text))
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
 
         return true

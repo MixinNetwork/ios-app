@@ -100,7 +100,7 @@ class ReceiveMessageService: MixinService {
                         continue
                     }
 
-                    guard let category = MessageCategory(rawValue: data.category), category != .UNKNOWN else {
+                    guard let category = MessageCategory(rawValue: data.category), category != .UNKNOWN, category != .EXT_UNREAD, category != .EXT_ENCRYPTION else {
                         ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
                         BlazeMessageDAO.shared.delete(data: data)
                         continue
@@ -517,6 +517,10 @@ class ReceiveMessageService: MixinService {
 
         switch data.category {
         case MessageCategory.PLAIN_JSON.rawValue:
+            defer {
+                updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+                MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
+            }
             guard let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferPlainData.self, from: base64Data)) else {
                 return
             }
@@ -524,12 +528,6 @@ class ReceiveMessageService: MixinService {
             if let user = UserDAO.shared.getUser(userId: data.userId) {
                 FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessPlainMessage][\(user.fullName)][\(data.category)][\(plainData.action)]...messageId:\(data.messageId)...\(data.createdAt)")
             }
-
-            defer {
-                updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
-                MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
-            }
-
             switch plainData.action {
             case PlainDataAction.RESEND_KEY.rawValue:
                 guard !JobDAO.shared.isExist(conversationId: data.conversationId, userId: data.userId, action: .RESEND_KEY) else {
@@ -610,8 +608,9 @@ extension ReceiveMessageService {
         case MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue:
             processSystemSnapshotMessage(data: data)
         default:
-            return
+            break
         }
+        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
 
     private func processSystemSnapshotMessage(data: BlazeMessageData) {
@@ -638,7 +637,6 @@ extension ReceiveMessageService {
         let message = Message.createMessage(snapshotMesssage: snapshot, data: data)
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         SendMessageService.shared.sendSessionMessage(message: message, data: data.data)
-        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
 
     private func processSystemConversationMessage(data: BlazeMessageData) {
@@ -664,7 +662,6 @@ extension ReceiveMessageService {
         defer {
             if operSuccess {
                 SendMessageService.shared.sendSessionMessage(message: message, data: data.data)
-                updateRemoteMessageStatus(messageId: messageId, status: .READ)
                 if sysMessage.action != SystemConversationAction.UPDATE.rawValue && sysMessage.action != SystemConversationAction.ROLE.rawValue {
                     ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: data.conversationId))
                 }
@@ -770,6 +767,7 @@ extension ReceiveMessageService {
         switch data.category {
         case MessageCategory.PLAIN_JSON.rawValue:
             guard let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferPlainAckData.self, from: base64Data)) else {
+                SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.READ.rawValue)
                 return
             }
             if plainData.action == PlainDataAction.ACKNOWLEDGE_MESSAGE_RECEIPTS.rawValue {
@@ -826,7 +824,7 @@ extension ReceiveMessageService {
         case MessageCategory.SYSTEM_EXTENSION_SESSION.rawValue:
             processSessionSystemConversationMessage(data: data)
         default:
-            return
+            break
         }
         SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
     }

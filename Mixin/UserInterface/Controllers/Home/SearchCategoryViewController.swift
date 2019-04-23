@@ -35,6 +35,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         titleView.cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
         searchTextField.text = inheritedKeyword
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        searchTextField.delegate = self
         navigationItem.titleView = titleView
         switch category {
         case .asset:
@@ -88,6 +89,15 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     
     @objc func cancelAction() {
         navigationController?.popViewController(animated: true)
+    }
+    
+}
+
+extension SearchCategoryViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
     
 }

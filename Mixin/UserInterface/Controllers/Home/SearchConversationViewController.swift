@@ -32,6 +32,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         super.viewDidLoad()
         searchTextField.text = inheritedKeyword
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        searchTextField.delegate = self
         tableView.register(R.nib.searchResultCell)
         tableView.dataSource = self
         tableView.delegate = self
@@ -98,6 +99,15 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         }
         op.addDependency(loadConversationOp)
         queue.addOperation(op)
+    }
+    
+}
+
+extension SearchConversationViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
     
 }

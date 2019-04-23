@@ -45,6 +45,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         tableView.dataSource = self
         tableView.delegate = self
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        searchTextField.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: .ContactsDidChange, object: nil)
     }
     
@@ -97,6 +98,15 @@ class SearchViewController: UIViewController, SearchableViewController {
     
     @objc func contactsDidChange(_ notification: Notification) {
         
+    }
+    
+}
+
+extension SearchViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
     
 }

@@ -333,6 +333,66 @@ final class MessageDAO {
         return messages.reversed()
     }
     
+    func getMessages(conversationId: String, contentLike keyword: String, belowCreatedAt location: String?, limit: Int?) -> [SearchResult] {
+        let properties = [
+            Message.Properties.messageId.in(table: Message.tableName),
+            Message.Properties.content.in(table: Message.tableName),
+            Message.Properties.createdAt.in(table: Message.tableName),
+            User.Properties.userId.in(table: User.tableName),
+            User.Properties.fullName.in(table: User.tableName),
+            User.Properties.avatarUrl.in(table: User.tableName),
+            User.Properties.isVerified.in(table: User.tableName),
+            User.Properties.appId.in(table: User.tableName)
+        ]
+        let joinedTable = JoinClause(with: Message.tableName)
+            .join(User.tableName, with: .left)
+            .on(Message.Properties.userId.in(table: Message.tableName)
+                == User.Properties.userId.in(table: User.tableName))
+        let keywordReplacement = "%\(keyword)%"
+        let textMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_TEXT")
+            && Message.Properties.content.in(table: Message.tableName).like(keywordReplacement)
+        let dataMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_DATA")
+            && Message.Properties.name.in(table: Message.tableName).like(keywordReplacement)
+        var condition = textMessageContainsKeyword || dataMessageContainsKeyword
+        if let location = location {
+            condition = condition && Message.Properties.createdAt.in(table: Message.tableName) < location
+        }
+        
+        var stmt = StatementSelect()
+            .select(properties)
+            .from(joinedTable)
+            .where(condition)
+            .order(by: [Message.Properties.createdAt.in(table: Message.tableName).asOrder(by: .descending)])
+        
+        if let limit = limit {
+            stmt = stmt.limit(limit)
+        }
+        
+        return MixinDatabase.shared.getCodables(callback: { (db) -> [SearchResult] in
+            var items = [SearchResult]()
+            let cs = try db.prepare(stmt)
+            while try cs.step() {
+                var i = -1
+                var autoIncrement: Int {
+                    i += 1
+                    return i
+                }
+                let item = SearchResult(conversationId: conversationId,
+                                        messageId: cs.value(atIndex: autoIncrement) ?? "",
+                                        content: cs.value(atIndex: autoIncrement) ?? "",
+                                        createdAt: cs.value(atIndex: autoIncrement) ?? "",
+                                        userId: cs.value(atIndex: autoIncrement) ?? "",
+                                        fullname: cs.value(atIndex: autoIncrement) ?? "",
+                                        avatarUrl: cs.value(atIndex: autoIncrement) ?? "",
+                                        isVerified: cs.value(atIndex: autoIncrement) ?? false,
+                                        appId: cs.value(atIndex: autoIncrement) ?? "",
+                                        keyword: keyword)
+                items.append(item)
+            }
+            return items
+        })
+    }
+    
     func getUnreadMessagesCount(conversationId: String) -> Int {
         guard let firstUnreadMessage = self.firstUnreadMessage(conversationId: conversationId) else {
             return 0

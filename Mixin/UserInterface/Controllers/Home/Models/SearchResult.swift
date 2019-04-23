@@ -3,9 +3,7 @@ import Foundation
 struct SearchResult {
     
     let target: Target
-    let style: Style
-    let name: String
-    let iconUrl: String?
+    let iconUrl: String
     let title: NSAttributedString?
     let badgeImage: UIImage?
     let superscript: String?
@@ -13,20 +11,13 @@ struct SearchResult {
     
     init(user: UserItem, keyword: String) {
         self.target = .contact(user)
-        self.style = .normal
-        self.name = user.fullName
         self.iconUrl = user.avatarUrl
         self.title = SearchResult.attributedText(text: user.fullName,
                                                  textAttributes: SearchResult.titleAttributes,
                                                  keyword: keyword,
                                                  keywordAttributes: SearchResult.highlightedTitleAttributes)
-        if user.isVerified {
-            self.badgeImage = R.image.ic_user_verified()
-        } else if user.appId != nil {
-            self.badgeImage = R.image.ic_user_bot()
-        } else {
-            self.badgeImage = nil
-        }
+        self.badgeImage = SearchResult.userBadgeImage(isVerified: user.isVerified,
+                                                      appId: user.appId)
         self.superscript = nil
         if user.identityNumber.contains(keyword) {
             self.description = SearchResult.attributedText(text: user.identityNumber,
@@ -45,8 +36,6 @@ struct SearchResult {
     
     init(group: ConversationItem, keyword: String) {
         self.target = .group(group)
-        self.style = .normal
-        self.name = group.name
         self.iconUrl = group.iconUrl
         self.title = SearchResult.attributedText(text: group.name,
                                                  textAttributes: SearchResult.titleAttributes,
@@ -60,12 +49,12 @@ struct SearchResult {
     init(conversationId: String, category: ConversationCategory, name: String, iconUrl: String, userId: String?, relatedMessageCount: Int, keyword: String) {
         switch category {
         case .CONTACT:
-            self.target = .searchMessageWithContact(userId: userId ?? "", conversationId: conversationId)
+            self.target = .searchMessageWithContact(conversationId: conversationId,
+                                                    userId: userId ?? "",
+                                                    userFullName: name)
         case .GROUP:
             self.target = .searchMessageWithGroup(conversationId: conversationId)
         }
-        self.style = .normal
-        self.name = name
         self.iconUrl = iconUrl
         self.title = SearchResult.attributedText(text: name,
                                                  textAttributes: SearchResult.titleAttributes,
@@ -77,6 +66,23 @@ struct SearchResult {
         self.description = NSAttributedString(string: desc, attributes: SearchResult.normalDescriptionAttributes)
     }
     
+    init(conversationId: String, messageId: String, content: String, createdAt: String, userId: String, fullname: String, avatarUrl: String, isVerified: Bool, appId: String?, keyword: String) {
+        self.target = .message(conversationId: conversationId, messageId: messageId, userId: userId, userFullName: fullname, createdAt: createdAt)
+        self.iconUrl = avatarUrl
+        self.title = SearchResult.attributedText(text: fullname,
+                                                 textAttributes: SearchResult.titleAttributes,
+                                                 keyword: keyword,
+                                                 keywordAttributes: SearchResult.highlightedTitleAttributes)
+        self.badgeImage = SearchResult.userBadgeImage(isVerified: isVerified,
+                                                      appId: appId)
+        self.superscript = createdAt.toUTCDate().timeAgo()
+        // TODO: Tokenize
+        self.description = SearchResult.attributedText(text: content,
+                                                       textAttributes: SearchResult.largerDescriptionAttributes,
+                                                       keyword: keyword,
+                                                       keywordAttributes: SearchResult.highlightedLargerDescriptionAttributes)
+    }
+    
 }
 
 extension SearchResult {
@@ -84,8 +90,9 @@ extension SearchResult {
     enum Target {
         case contact(UserItem)
         case group(ConversationItem)
-        case searchMessageWithContact(userId: String, conversationId: String)
+        case searchMessageWithContact(conversationId: String, userId: String, userFullName: String)
         case searchMessageWithGroup(conversationId: String)
+        case message(conversationId: String, messageId: String, userId: String, userFullName: String, createdAt: String)
     }
     
     enum Style {
@@ -115,6 +122,16 @@ extension SearchResult {
         .foregroundColor: UIColor.highlightedText
     ]
     
+    private static let largerDescriptionFont = UIFont.systemFont(ofSize: 14)
+    private static let largerDescriptionAttributes: Attributes = [
+        .font: largerDescriptionFont,
+        .foregroundColor: UIColor.descriptionText
+    ]
+    private static let highlightedLargerDescriptionAttributes: Attributes = [
+        .font: largerDescriptionFont,
+        .foregroundColor: UIColor.highlightedText
+    ]
+    
     private static func attributedText(text: String, textAttributes: Attributes, keyword: String, keywordAttributes: Attributes) -> NSAttributedString {
         let str = NSMutableAttributedString(string: text, attributes: textAttributes)
         let nsText = NSString(string: text)
@@ -131,6 +148,16 @@ extension SearchResult {
             enclosingRange = NSRange(location: nextLocation, length: nsText.length - nextLocation)
         }
         return str
+    }
+    
+    private static func userBadgeImage(isVerified: Bool, appId: String?) -> UIImage? {
+        if isVerified {
+            return R.image.ic_user_verified()
+        } else if appId != nil {
+            return R.image.ic_user_bot()
+        } else {
+            return nil
+        }
     }
     
 }

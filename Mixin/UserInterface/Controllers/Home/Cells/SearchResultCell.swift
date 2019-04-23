@@ -26,10 +26,12 @@ class SearchResultCell: UITableViewCell {
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
         case let .group(conversation):
             avatarImageView.setGroupImage(with: conversation.iconUrl)
-        case let .searchMessageWithContact(userId, _):
-            avatarImageView.setImage(with: result.iconUrl ?? "", userId: userId, name: result.name)
+        case let .searchMessageWithContact(_, userId, name):
+            avatarImageView.setImage(with: result.iconUrl, userId: userId, name: name)
         case .searchMessageWithGroup:
-            avatarImageView.setGroupImage(with: result.name)
+            avatarImageView.setGroupImage(with: result.iconUrl)
+        case let .message(_, _, userId, userFullName, _):
+            avatarImageView.setImage(with: result.iconUrl, userId: userId, name: userFullName)
         }
         titleLabel.attributedText = result.title
         if let badge = result.badgeImage {

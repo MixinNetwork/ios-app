@@ -19,16 +19,13 @@ class SearchNavigationViewController: UINavigationController {
         case let .group(conversation):
             let vc = ConversationViewController.instance(conversation: conversation)
             parent?.navigationController?.pushViewController(vc, animated: true)
-        case let .searchMessageWithContact(_, conversationId):
+        case .searchMessageWithContact, .searchMessageWithGroup:
             let vc = R.storyboard.home.search_conversation()!
-            vc.conversationId = conversationId
-            vc.keyword = keyword
+            vc.load(searchResult: result)
+            vc.inheritedKeyword = keyword
             pushViewController(vc, animated: true)
-        case let .searchMessageWithGroup(conversationId):
-            let vc = R.storyboard.home.search_conversation()!
-            vc.conversationId = conversationId
-            vc.keyword = keyword
-            pushViewController(vc, animated: true)
+        case .message:
+            assertionFailure()
         }
     }
     

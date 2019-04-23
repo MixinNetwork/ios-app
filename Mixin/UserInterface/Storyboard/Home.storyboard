@@ -213,15 +213,15 @@
                             <constraint firstAttribute="trailing" secondItem="2PV-tA-eIh" secondAttribute="trailing" id="BPC-s8-zeI"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="Hzi-ct-Nth"/>
                             <constraint firstAttribute="trailing" secondItem="i5D-40-ldq" secondAttribute="trailing" id="Q9i-7q-GXv"/>
-                            <constraint firstItem="i5D-40-ldq" firstAttribute="height" secondItem="J91-yj-SMd" secondAttribute="height" id="R3W-S2-Yvj"/>
+                            <constraint firstItem="i5D-40-ldq" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" id="XID-fV-hz4"/>
                             <constraint firstItem="i5D-40-ldq" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="cSc-X1-1De"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="leading" secondItem="J91-yj-SMd" secondAttribute="leading" id="lic-EF-P70"/>
                             <constraint firstItem="uc0-po-iUR" firstAttribute="top" secondItem="5mk-Fk-SFN" secondAttribute="top" constant="-28" id="o6R-WF-m77"/>
                             <constraint firstItem="5mk-Fk-SFN" firstAttribute="bottom" secondItem="z69-58-QNg" secondAttribute="bottom" id="pTL-Be-PuM"/>
                             <constraint firstItem="BAu-gi-TQg" firstAttribute="height" secondItem="2PV-tA-eIh" secondAttribute="height" id="swY-bH-tag"/>
                             <constraint firstItem="2PV-tA-eIh" firstAttribute="top" secondItem="J91-yj-SMd" secondAttribute="top" id="tuS-El-9K3"/>
-                            <constraint firstAttribute="bottom" secondItem="i5D-40-ldq" secondAttribute="bottom" id="uwV-cj-FMZ"/>
                             <constraint firstItem="5mk-Fk-SFN" firstAttribute="top" secondItem="JkM-gn-X6q" secondAttribute="top" id="vPl-Uf-b9R"/>
+                            <constraint firstAttribute="bottom" secondItem="i5D-40-ldq" secondAttribute="bottom" id="w6d-O5-5g8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5mk-Fk-SFN"/>
                     </view>

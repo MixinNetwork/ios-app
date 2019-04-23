@@ -15,6 +15,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     
     var category = Category.asset
     var inheritedKeyword = ""
+    var lastKeyword = ""
     
     var searchTextField: UITextField {
         return titleView.searchBoxView.textField
@@ -51,6 +52,9 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     @objc func searchAction(_ sender: Any) {
         let keyword = self.trimmedLowercaseKeyword
         queue.cancelAllOperations()
+        guard keyword != lastKeyword else {
+            return
+        }
         guard !keyword.isEmpty else {
             models = []
             tableView.reloadData()
@@ -82,6 +86,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
                 }
                 weakSelf.models = [models]
                 weakSelf.tableView.reloadData()
+                weakSelf.lastKeyword = keyword
             }
         }
         queue.addOperation(op)

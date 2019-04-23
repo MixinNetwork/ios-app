@@ -9,6 +9,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     @IBOutlet weak var tableView: UITableView!
     
     var inheritedKeyword = ""
+    var lastKeyword = ""
     
     var searchTextField: UITextField {
         return searchBoxView.textField
@@ -70,6 +71,9 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
             .filter({ $0 != loadConversationOp })
             .forEach({ $0.cancel() })
         let keyword = self.trimmedLowercaseKeyword
+        guard keyword != lastKeyword else {
+            return
+        }
         if keyword.isEmpty {
             messages = []
             tableView.reloadData()
@@ -95,6 +99,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
                 weakSelf.didLoadAllMessages = messages.count < limit
                 weakSelf.tableView.reloadData()
                 weakSelf.tableView.setContentOffset(.zero, animated: false)
+                weakSelf.lastKeyword = keyword
             }
         }
         op.addDependency(loadConversationOp)
@@ -152,7 +157,7 @@ extension SearchConversationViewController: UITableViewDelegate {
                 return
             }
             DispatchQueue.main.sync {
-                guard let weakSelf = self else {
+                guard !op.isCancelled, let weakSelf = self else {
                     return
                 }
                 let section = IndexSet(integer: weakSelf.messages.count)

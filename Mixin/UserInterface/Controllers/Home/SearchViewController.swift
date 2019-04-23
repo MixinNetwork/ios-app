@@ -19,6 +19,7 @@ class SearchViewController: UIViewController, SearchableViewController {
     private var users = [SearchResult]()
     private var groups = [SearchResult]()
     private var conversations = [SearchResult]()
+    private var lastKeyword = ""
     
     private var keywordMaybeIdOrPhone: Bool {
         return searchTextField.text?.isNumeric ?? false
@@ -51,6 +52,9 @@ class SearchViewController: UIViewController, SearchableViewController {
     
     @IBAction func searchAction(_ sender: Any) {
         let keyword = self.trimmedLowercaseKeyword
+        guard keyword != lastKeyword else {
+            return
+        }
         guard !keyword.isEmpty else {
             tableView.isHidden = true
             recentBotsContainerView.isHidden = false
@@ -71,15 +75,16 @@ class SearchViewController: UIViewController, SearchableViewController {
             let groups = ConversationDAO.shared.getGroupConversation(nameLike: keyword, limit: limit)
                 .map { SearchResult(group: $0, keyword: keyword) }
             let conversations = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit)
-            guard let weakSelf = self, !op.isCancelled else {
-                return
-            }
             DispatchQueue.main.sync {
+                guard let weakSelf = self, !op.isCancelled else {
+                    return
+                }
                 weakSelf.assets = assets
                 weakSelf.users = contacts
                 weakSelf.groups = groups
                 weakSelf.conversations = conversations
                 weakSelf.tableView.reloadData()
+                weakSelf.lastKeyword = keyword
             }
         }
         queue.addOperation(op)

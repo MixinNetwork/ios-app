@@ -2,34 +2,6 @@ import UIKit
 
 class SearchViewController: UIViewController {
     
-    enum ReuseId {
-        static let header = "header"
-        static let footer = "footer"
-    }
-    
-    enum Section: Int, CaseIterable {
-        case searchNumber = 0
-        case asset
-        case user
-        case group
-        case conversation
-        
-        var title: String? {
-            switch self {
-            case .searchNumber:
-                return nil
-            case .asset:
-                return R.string.localizable.search_section_title_asset()
-            case .user:
-                return R.string.localizable.search_section_title_user()
-            case .group:
-                return R.string.localizable.search_section_title_group()
-            case .conversation:
-                return R.string.localizable.search_section_title_conversation()
-            }
-        }
-    }
-    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var recentBotsContainerView: UIView!
     
@@ -128,45 +100,6 @@ class SearchViewController: UIViewController {
     
     @objc func contactsDidChange(_ notification: Notification) {
         
-    }
-    
-    private func models(forSection section: Section) -> [Any] {
-        switch section {
-        case .searchNumber:
-            return []
-        case .asset:
-            return assets
-        case .user:
-            return users
-        case .group:
-            return groups
-        case .conversation:
-            return conversations
-        }
-    }
-    
-    private func isEmptySection(_ section: Section) -> Bool {
-        switch section {
-        case .searchNumber:
-            return !keywordMaybeIdOrPhone
-        case .asset, .user, .group, .conversation:
-            return models(forSection: section).isEmpty
-        }
-    }
-    
-    private func isFirstSection(_ section: Section) -> Bool {
-        switch section {
-        case .searchNumber:
-            return keywordMaybeIdOrPhone
-        case .asset:
-            return !keywordMaybeIdOrPhone
-        case .user:
-            return !keywordMaybeIdOrPhone && assets.isEmpty
-        case .group:
-            return !keywordMaybeIdOrPhone && assets.isEmpty && users.isEmpty
-        case .conversation:
-            return !keywordMaybeIdOrPhone && assets.isEmpty && users.isEmpty && groups.isEmpty
-        }
     }
     
 }
@@ -337,6 +270,77 @@ extension SearchViewController: SearchHeaderViewDelegate {
         vc.keyword = textField.text ?? ""
         textField.resignFirstResponder()
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+}
+
+extension SearchViewController {
+    
+    enum ReuseId {
+        static let header = "header"
+        static let footer = "footer"
+    }
+    
+    enum Section: Int, CaseIterable {
+        case searchNumber = 0
+        case asset
+        case user
+        case group
+        case conversation
+        
+        var title: String? {
+            switch self {
+            case .searchNumber:
+                return nil
+            case .asset:
+                return R.string.localizable.search_section_title_asset()
+            case .user:
+                return R.string.localizable.search_section_title_user()
+            case .group:
+                return R.string.localizable.search_section_title_group()
+            case .conversation:
+                return R.string.localizable.search_section_title_conversation()
+            }
+        }
+    }
+    
+    private func models(forSection section: Section) -> [Any] {
+        switch section {
+        case .searchNumber:
+            return []
+        case .asset:
+            return assets
+        case .user:
+            return users
+        case .group:
+            return groups
+        case .conversation:
+            return conversations
+        }
+    }
+    
+    private func isEmptySection(_ section: Section) -> Bool {
+        switch section {
+        case .searchNumber:
+            return !keywordMaybeIdOrPhone
+        case .asset, .user, .group, .conversation:
+            return models(forSection: section).isEmpty
+        }
+    }
+    
+    private func isFirstSection(_ section: Section) -> Bool {
+        switch section {
+        case .searchNumber:
+            return keywordMaybeIdOrPhone
+        case .asset:
+            return !keywordMaybeIdOrPhone
+        case .user:
+            return !keywordMaybeIdOrPhone && assets.isEmpty
+        case .group:
+            return !keywordMaybeIdOrPhone && assets.isEmpty && users.isEmpty
+        case .conversation:
+            return !keywordMaybeIdOrPhone && assets.isEmpty && users.isEmpty && groups.isEmpty
+        }
     }
     
 }

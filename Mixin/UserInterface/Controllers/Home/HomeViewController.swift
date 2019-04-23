@@ -142,8 +142,16 @@ class HomeViewController: UIViewController {
         }
     }
     
-    @IBAction func searchAction(_ sender: Any) {
-        showSearch()
+    @IBAction func showSearchAction() {
+        searchViewController.prepareForReuse()
+        searchContainerTopConstraint.constant = 0
+        UIView.animate(withDuration: 0.2, animations: {
+            self.navigationBarView.alpha = 0
+            self.searchContainerView.alpha = 1
+            self.view.layoutIfNeeded()
+        }) { (_) in
+            self.searchViewController.textField.becomeFirstResponder()
+        }
     }
     
     @IBAction func contactsAction(_ sender: Any) {
@@ -266,7 +274,7 @@ extension HomeViewController: UIScrollViewDelegate {
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if tableView.contentOffset.y <= -dragDownThreshold {
-            showSearch()
+            showSearchAction()
         } else {
             hideSearch()
         }
@@ -405,17 +413,6 @@ extension HomeViewController {
             self.bottomNavConstraint.constant = 0
             self.view.layoutIfNeeded()
         }, completion: nil)
-    }
-    
-    private func showSearch() {
-        searchContainerTopConstraint.constant = 0
-        UIView.animate(withDuration: 0.2, animations: {
-            self.navigationBarView.alpha = 0
-            self.searchContainerView.alpha = 1
-            self.view.layoutIfNeeded()
-        }) { (_) in
-            self.searchViewController.textField.becomeFirstResponder()
-        }
     }
     
     @objc private func hideSearch() {

@@ -115,8 +115,15 @@ class SearchViewController: UIViewController {
         queue.addOperation(op)
     }
     
-    func prepare() {
-        
+    func prepareForReuse() {
+        textField.text = nil
+        tableView.isHidden = true
+        recentBotsContainerView.isHidden = false
+        assets = []
+        users = []
+        groups = []
+        conversations = []
+        tableView.reloadData()
     }
     
     @objc func contactsDidChange(_ notification: Notification) {

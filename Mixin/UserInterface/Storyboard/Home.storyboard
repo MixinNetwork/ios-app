@@ -159,7 +159,7 @@
                                                 </constraints>
                                                 <state key="normal" image="ic_title_search"/>
                                                 <connections>
-                                                    <action selector="searchAction:" destination="hQE-mj-dkd" eventType="touchUpInside" id="uGf-dU-90K"/>
+                                                    <action selector="showSearchAction" destination="hQE-mj-dkd" eventType="touchUpInside" id="Vfm-8z-tYR"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sgk-eO-xl5">

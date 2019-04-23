@@ -99,6 +99,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         groups = []
         conversations = []
         tableView.reloadData()
+        lastKeyword = ""
     }
     
     @objc func contactsDidChange(_ notification: Notification) {

@@ -1,13 +1,13 @@
 import UIKit
 
-class SearchViewController: UIViewController {
+class SearchViewController: UIViewController, SearchableViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var recentBotsContainerView: UIView!
     
     let titleView = R.nib.searchTitleView(owner: nil)!
     
-    var textField: UITextField {
+    var searchTextField: UITextField {
         return titleView.searchBoxView.textField
     }
     
@@ -20,12 +20,8 @@ class SearchViewController: UIViewController {
     private var groups = [SearchResult]()
     private var conversations = [SearchResult]()
     
-    private var homeNavigationController: UINavigationController? {
-        return parent?.parent?.navigationController
-    }
-    
     private var keywordMaybeIdOrPhone: Bool {
-        return textField.text?.isNumeric ?? false
+        return searchTextField.text?.isNumeric ?? false
     }
     
     deinit {
@@ -48,12 +44,13 @@ class SearchViewController: UIViewController {
         tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
         tableView.delegate = self
-        textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: .ContactsDidChange, object: nil)
     }
     
     @IBAction func searchAction(_ sender: Any) {
-        guard let keyword = textField.text?.lowercased(), !keyword.isEmpty else {
+        let keyword = self.trimmedLowercaseKeyword
+        guard !keyword.isEmpty else {
             tableView.isHidden = true
             recentBotsContainerView.isHidden = false
             return
@@ -88,7 +85,7 @@ class SearchViewController: UIViewController {
     }
     
     func prepareForReuse() {
-        textField.text = nil
+        searchTextField.text = nil
         tableView.isHidden = true
         recentBotsContainerView.isHidden = false
         assets = []
@@ -125,7 +122,7 @@ extension SearchViewController: UITableViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .searchNumber:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_number, for: indexPath)!
-            if let keyword = textField.text {
+            if let keyword = searchTextField.text {
                 cell.render(number: keyword)
             }
             return cell
@@ -227,22 +224,18 @@ extension SearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        textField.resignFirstResponder()
-        let searchNavigation = navigationController as? SearchNavigationViewController
-        let keyword = textField.text ?? ""
+        searchTextField.resignFirstResponder()
         switch Section(rawValue: indexPath.section)! {
         case .searchNumber:
             break
         case .asset:
-            let asset = assets[indexPath.row].asset
-            let vc = AssetViewController.instance(asset: asset)
-            homeNavigationController?.pushViewController(vc, animated: true)
+            pushAssetViewController(asset: assets[indexPath.row].asset)
         case .user:
-            searchNavigation?.pushViewController(keyword: keyword, result: users[indexPath.row])
+            pushViewController(keyword: trimmedLowercaseKeyword, result: users[indexPath.row])
         case .group:
-            searchNavigation?.pushViewController(keyword: keyword, result: groups[indexPath.row])
+            pushViewController(keyword: trimmedLowercaseKeyword, result: groups[indexPath.row])
         case .conversation:
-            searchNavigation?.pushViewController(keyword: keyword, result: conversations[indexPath.row])
+            pushViewController(keyword: trimmedLowercaseKeyword, result: conversations[indexPath.row])
         }
     }
     
@@ -267,9 +260,9 @@ extension SearchViewController: SearchHeaderViewDelegate {
         case .conversation:
             vc.category = .conversation
         }
-        vc.keyword = textField.text ?? ""
-        textField.resignFirstResponder()
-        navigationController?.pushViewController(vc, animated: true)
+        vc.inheritedKeyword = trimmedLowercaseKeyword
+        searchTextField.resignFirstResponder()
+        searchNavigationController?.pushViewController(vc, animated: true)
     }
     
 }

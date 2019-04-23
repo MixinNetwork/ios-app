@@ -243,6 +243,7 @@
 		7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */; };
 		7BA9D9C6226DE0C000255943 /* ExpandingSizedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C5226DE0C000255943 /* ExpandingSizedView.swift */; };
 		7BA9D9C8226DE71E00255943 /* NavigationAvatarIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */; };
+		7BA9D9EE226F114700255943 /* SearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9ED226F114700255943 /* SearchableViewController.swift */; };
 		7BAB5D3E20C520F2009F4EE6 /* AudioUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */; };
 		7BAB5D4020C5213C009F4EE6 /* AudioDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAB5D3F20C5213C009F4EE6 /* AudioDownloadJob.swift */; };
 		7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD2E54207DE046006D7887 /* UnreadHintMessageCell.swift */; };
@@ -884,6 +885,7 @@
 		7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConversationViewController.swift; sourceTree = "<group>"; };
 		7BA9D9C5226DE0C000255943 /* ExpandingSizedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandingSizedView.swift; sourceTree = "<group>"; };
 		7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationAvatarIconView.swift; sourceTree = "<group>"; };
+		7BA9D9ED226F114700255943 /* SearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableViewController.swift; sourceTree = "<group>"; };
 		7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUploadJob.swift; sourceTree = "<group>"; };
 		7BAB5D3F20C5213C009F4EE6 /* AudioDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadJob.swift; sourceTree = "<group>"; };
 		7BAD2E54207DE046006D7887 /* UnreadHintMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadHintMessageCell.swift; sourceTree = "<group>"; };
@@ -2220,6 +2222,7 @@
 				DFD2943B1FA7069600FADAAD /* Cells */,
 				DF3C47461FA071F400A07C71 /* HomeViewController.swift */,
 				7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */,
+				7BA9D9ED226F114700255943 /* SearchableViewController.swift */,
 				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
 				7B5281732265D7E30023616D /* RecentBotsViewController.swift */,
 				7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */,
@@ -3370,6 +3373,7 @@
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				DF92A51F20A5BDAD00427B80 /* ResendMessageDAO.swift in Sources */,
+				7BA9D9EE226F114700255943 /* SearchableViewController.swift in Sources */,
 				7B2E3E511FA07F7B00DDDDEB /* GeneralTableViewHeader.swift in Sources */,
 				7BEFDC211FB08E9B00F66885 /* GroupUser.swift in Sources */,
 				DF6175C02223985C00624609 /* ProvisionManager.swift in Sources */,

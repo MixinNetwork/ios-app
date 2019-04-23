@@ -1,6 +1,6 @@
 import UIKit
 
-class SearchConversationViewController: UIViewController {
+class SearchConversationViewController: UIViewController, SearchableViewController {
     
     @IBOutlet weak var navigationTitleLabel: UILabel!
     @IBOutlet weak var navigationSubtitleLabel: UILabel!
@@ -9,6 +9,10 @@ class SearchConversationViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var inheritedKeyword = ""
+    
+    var searchTextField: UITextField {
+        return searchBoxView.textField
+    }
     
     private let queue = OperationQueue()
     private let messageCountPerPage = 50
@@ -20,18 +24,14 @@ class SearchConversationViewController: UIViewController {
     private var messages = [[SearchResult]]()
     private var didLoadAllMessages = false
     
-    private var keyword: String {
-        return searchBoxView.textField.text ?? ""
-    }
-    
     deinit {
         queue.cancelAllOperations()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBoxView.textField.text = inheritedKeyword
-        searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        searchTextField.text = inheritedKeyword
+        searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         tableView.register(R.nib.searchResultCell)
         tableView.dataSource = self
         tableView.delegate = self
@@ -64,14 +64,17 @@ class SearchConversationViewController: UIViewController {
         navigationSubtitleLabel.text = searchResult.description?.string
     }
     
-    @objc func searchAction(_ textField: UITextField) {
-        guard let keyword = textField.text, !keyword.isEmpty else {
-            return
-        }
+    @objc func searchAction(_ sender: Any) {
         queue.operations
             .filter({ $0 != loadConversationOp })
             .forEach({ $0.cancel() })
-        reloadMessages(keyword: keyword)
+        let keyword = self.trimmedLowercaseKeyword
+        if keyword.isEmpty {
+            messages = []
+            tableView.reloadData()
+        } else {
+            reloadMessages(keyword: keyword)
+        }
     }
     
     private func reloadMessages(keyword: String) {
@@ -162,7 +165,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         }
         let highlight = ConversationDataSource.Highlight(keyword: inheritedKeyword, messageId: id)
         let vc = ConversationViewController.instance(conversation: conversation, highlight: highlight)
-        navigationController?.parent?.navigationController?.pushViewController(vc, animated: true)
+        homeNavigationController?.pushViewController(vc, animated: true)
     }
     
 }

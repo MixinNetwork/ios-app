@@ -150,7 +150,7 @@ class HomeViewController: UIViewController {
             self.searchContainerView.alpha = 1
             self.view.layoutIfNeeded()
         }) { (_) in
-            self.searchViewController.textField.becomeFirstResponder()
+            self.searchViewController.searchTextField.becomeFirstResponder()
         }
     }
     

@@ -1,6 +1,6 @@
 import UIKit
 
-class SearchCategoryViewController: UIViewController {
+class SearchCategoryViewController: UIViewController, SearchableViewController {
     
     enum Category {
         case asset
@@ -14,19 +14,15 @@ class SearchCategoryViewController: UIViewController {
     let titleView = R.nib.searchTitleView(owner: nil)!
     
     var category = Category.asset
-    var keyword = ""
+    var inheritedKeyword = ""
+    
+    var searchTextField: UITextField {
+        return titleView.searchBoxView.textField
+    }
     
     private let queue = OperationQueue()
     
     private var models = [[Any]]()
-    
-    private var homeNavigationController: UINavigationController? {
-        return parent?.parent?.navigationController
-    }
-    
-    private var textField: UITextField {
-        return titleView.searchBoxView.textField
-    }
     
     deinit {
         queue.cancelAllOperations()
@@ -37,8 +33,8 @@ class SearchCategoryViewController: UIViewController {
         queue.maxConcurrentOperationCount = 1
         titleView.searchBoxLeadingConstraint.constant = 0
         titleView.cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
-        textField.text = keyword
-        textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        searchTextField.text = inheritedKeyword
+        searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         navigationItem.titleView = titleView
         switch category {
         case .asset:
@@ -52,14 +48,7 @@ class SearchCategoryViewController: UIViewController {
     }
     
     @objc func searchAction(_ sender: Any) {
-        let keyword: String
-        if let sender = sender as? UITextField {
-            keyword = sender.text ?? ""
-        } else if (sender as? NSObject) == self {
-            keyword = self.keyword
-        } else {
-            return
-        }
+        let keyword = self.trimmedLowercaseKeyword
         queue.cancelAllOperations()
         guard !keyword.isEmpty else {
             models = []
@@ -143,13 +132,10 @@ extension SearchCategoryViewController: UITableViewDelegate {
         switch category {
         case .asset:
             let asset = (model as! AssetSearchResult).asset
-            let vc = AssetViewController.instance(asset: asset)
-            homeNavigationController?.pushViewController(vc, animated: true)
+            pushAssetViewController(asset: asset)
         case .contact, .group, .conversation:
-            let result = model as! SearchResult
-            let keyword = textField.text ?? ""
-            let searchNavigation = navigationController as? SearchNavigationViewController
-            searchNavigation?.pushViewController(keyword: keyword, result: result)
+            pushViewController(keyword: trimmedLowercaseKeyword,
+                               result: model as! SearchResult)
         }
     }
     

@@ -248,7 +248,7 @@
         <scene sceneID="zZl-87-H7J">
             <objects>
                 <navigationController id="IAS-fa-uaX" customClass="SearchNavigationViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="l2G-1J-rtW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="l2G-1J-rtW" customClass="SearchNavigationBar" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -623,50 +623,38 @@
                     </view>
                     <navigationItem key="navigationItem" id="OSH-xO-him">
                         <nil key="title"/>
-                        <view key="titleView" contentMode="scaleToFill" id="zE3-oN-AB2" customClass="ExpandingSizedView" customModule="Mixin" customModuleProvider="target">
+                        <view key="titleView" contentMode="scaleToFill" id="zE3-oN-AB2">
                             <rect key="frame" x="39.5" y="0.0" width="296" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="P6P-LQ-i5j">
-                                    <rect key="frame" x="0.0" y="5" width="252" height="34"/>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="P6P-LQ-i5j">
+                                    <rect key="frame" x="0.0" y="4.5" width="296" height="35"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gah-3s-ldM">
-                                            <rect key="frame" x="0.0" y="0.0" width="252" height="19.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="296" height="19.5"/>
                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                             <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99 related messages" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m1v-Dd-pkr">
-                                            <rect key="frame" x="0.0" y="19.5" width="252" height="14.5"/>
+                                            <rect key="frame" x="0.0" y="20.5" width="296" height="14.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76078431372549016" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </stackView>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XJf-EE-Hgg" customClass="NavigationAvatarIconView" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="252" y="0.0" width="44" height="44"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="XJf-EE-Hgg" secondAttribute="height" id="sJ5-L3-oVF"/>
-                                    </constraints>
-                                </view>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstItem="XJf-EE-Hgg" firstAttribute="leading" secondItem="P6P-LQ-i5j" secondAttribute="trailing" id="2Il-aF-2cx"/>
-                                <constraint firstItem="XJf-EE-Hgg" firstAttribute="top" secondItem="zE3-oN-AB2" secondAttribute="top" id="6SZ-dn-1y3"/>
-                                <constraint firstAttribute="bottom" secondItem="P6P-LQ-i5j" secondAttribute="bottom" constant="5" id="7Lc-1Y-wyn"/>
-                                <constraint firstItem="P6P-LQ-i5j" firstAttribute="top" secondItem="zE3-oN-AB2" secondAttribute="top" constant="5" id="ahs-1v-QjZ"/>
+                                <constraint firstAttribute="trailing" secondItem="P6P-LQ-i5j" secondAttribute="trailing" id="03O-5D-TkJ"/>
+                                <constraint firstItem="P6P-LQ-i5j" firstAttribute="centerY" secondItem="zE3-oN-AB2" secondAttribute="centerY" id="aRh-nE-jP9"/>
                                 <constraint firstItem="P6P-LQ-i5j" firstAttribute="leading" secondItem="zE3-oN-AB2" secondAttribute="leading" id="hs2-Aq-jL0"/>
-                                <constraint firstAttribute="bottom" secondItem="XJf-EE-Hgg" secondAttribute="bottom" id="php-Og-gWt"/>
-                                <constraint firstAttribute="trailing" secondItem="XJf-EE-Hgg" secondAttribute="trailing" id="ttV-kH-sqG"/>
                             </constraints>
                         </view>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
-                        <outlet property="navigationIconView" destination="XJf-EE-Hgg" id="sQv-Lp-hQo"/>
                         <outlet property="navigationSubtitleLabel" destination="m1v-Dd-pkr" id="rGJ-XZ-RVC"/>
                         <outlet property="navigationTitleLabel" destination="Gah-3s-ldM" id="UJe-1K-Fz5"/>
                         <outlet property="searchBoxView" destination="iPK-xL-ZBc" id="k6f-0N-ViW"/>

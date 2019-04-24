@@ -4,15 +4,24 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     
     @IBOutlet weak var navigationTitleLabel: UILabel!
     @IBOutlet weak var navigationSubtitleLabel: UILabel!
-    @IBOutlet weak var navigationIconView: NavigationAvatarIconView!
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
+    
+    let iconView = NavigationAvatarIconView()
     
     var inheritedKeyword = ""
     var lastKeyword = ""
     
     var searchTextField: UITextField {
         return searchBoxView.textField
+    }
+    
+    var wantsNavigationSearchBox: Bool {
+        return false
+    }
+    
+    var navigationSearchBoxInsets: UIEdgeInsets {
+        return .zero
     }
     
     private let queue = OperationQueue()
@@ -31,6 +40,10 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let rightButton = UIBarButtonItem(customView: iconView)
+        rightButton.width = 44
+        navigationItem.title = " "
+        navigationItem.rightBarButtonItem = rightButton
         searchTextField.text = inheritedKeyword
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
@@ -51,14 +64,19 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         reloadMessages(keyword: inheritedKeyword)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        searchTextField.resignFirstResponder()
+    }
+    
     func load(searchResult: SearchResult) {
         switch searchResult.target {
         case let .searchMessageWithGroup(conversationId):
             self.conversationId = conversationId
-            navigationIconView.setGroupImage(with: searchResult.iconUrl)
+            iconView.setGroupImage(with: searchResult.iconUrl)
         case let .searchMessageWithContact(conversationId, userId, userFullName):
             self.conversationId = conversationId
-            navigationIconView.setImage(with: searchResult.iconUrl, userId: userId, name: userFullName)
+            iconView.setImage(with: searchResult.iconUrl, userId: userId, name: userFullName)
         default:
             break
         }

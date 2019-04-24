@@ -11,14 +11,18 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let titleView = R.nib.searchTitleView(owner: nil)!
+    let cancelButton = SearchCancelButton()
     
     var category = Category.asset
     var inheritedKeyword = ""
     var lastKeyword = ""
     
-    var searchTextField: UITextField {
-        return titleView.searchBoxView.textField
+    var wantsNavigationSearchBox: Bool {
+        return true
+    }
+    
+    var navigationSearchBoxInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: backButtonWidth, bottom: 0, right: cancelButton.frame.width + cancelButtonRightMargin)
     }
     
     private let queue = OperationQueue()
@@ -32,12 +36,12 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
-        titleView.searchBoxLeadingConstraint.constant = 0
-        titleView.cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
+        navigationItem.title = " "
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
         searchTextField.text = inheritedKeyword
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
-        navigationItem.titleView = titleView
         switch category {
         case .asset:
             tableView.register(R.nib.assetCell)
@@ -47,6 +51,22 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         tableView.dataSource = self
         tableView.delegate = self
         searchAction(self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        searchTextField.text = lastKeyword
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        searchTextField.resignFirstResponder()
+        searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
     }
     
     @objc func searchAction(_ sender: Any) {

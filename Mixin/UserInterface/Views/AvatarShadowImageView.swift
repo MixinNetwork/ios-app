@@ -86,7 +86,7 @@ class AvatarShadowIconView: UIView {
     }
 
     private func updateShadowPath() {
-        let iconFrame = CGRect(x: 0,
+        let iconFrame = CGRect(x: iconImageView.frame.origin.x,
                                y: iconImageView.frame.origin.y + shadowOffset,
                                width: iconImageView.frame.width,
                                height: iconImageView.frame.height)

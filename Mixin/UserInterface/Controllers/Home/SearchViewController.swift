@@ -5,10 +5,14 @@ class SearchViewController: UIViewController, SearchableViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var recentBotsContainerView: UIView!
     
-    let titleView = R.nib.searchTitleView(owner: nil)!
+    let cancelButton = SearchCancelButton()
     
-    var searchTextField: UITextField {
-        return titleView.searchBoxView.textField
+    var wantsNavigationSearchBox: Bool {
+        return true
+    }
+    
+    var navigationSearchBoxInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: cancelButton.frame.width + cancelButtonRightMargin)
     }
     
     private let searchingFooterView = R.nib.searchingFooterView(owner: nil)
@@ -33,7 +37,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
         navigationItem.title = " "
-        navigationItem.titleView = titleView
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
         tableView.register(SearchHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SearchFooterView.self,
@@ -45,9 +49,22 @@ class SearchViewController: UIViewController, SearchableViewController {
         tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
         tableView.delegate = self
-        searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-        searchTextField.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: .ContactsDidChange, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        searchTextField.text = lastKeyword
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
     }
     
     @IBAction func searchAction(_ sender: Any) {
@@ -104,15 +121,6 @@ class SearchViewController: UIViewController, SearchableViewController {
     
     @objc func contactsDidChange(_ notification: Notification) {
         
-    }
-    
-}
-
-extension SearchViewController: UITextFieldDelegate {
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return false
     }
     
 }

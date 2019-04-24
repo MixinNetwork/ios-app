@@ -2,7 +2,8 @@ import UIKit
 
 protocol SearchableViewController {
     var searchTextField: UITextField { get }
-    var trimmedLowercaseKeyword: String { get }
+    var wantsNavigationSearchBox: Bool { get }
+    var navigationSearchBoxInsets: UIEdgeInsets { get }
 }
 
 extension SearchableViewController where Self: UIViewController {
@@ -21,6 +22,22 @@ extension SearchableViewController where Self: UIViewController {
     
     var searchNavigationController: SearchNavigationViewController? {
         return navigationController as? SearchNavigationViewController
+    }
+    
+    var cancelButtonRightMargin: CGFloat {
+        return 20
+    }
+    
+    var backButtonWidth: CGFloat {
+        return 54
+    }
+    
+    var navigationSearchBoxView: SearchBoxView {
+        return searchNavigationController!.searchNavigationBar.searchBoxView
+    }
+    
+    var searchTextField: UITextField {
+        return navigationSearchBoxView.textField
     }
     
     func pushViewController(keyword: String, result: SearchResult) {

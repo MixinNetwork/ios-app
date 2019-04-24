@@ -57,7 +57,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
-        searchViewController.titleView.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
+        searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "ConversationCell", bundle: nil), forCellReuseIdentifier: ConversationCell.cellIdentifier)

@@ -229,8 +229,6 @@
 		7B9F8110222EA40F0012BFDD /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F810F222EA40F0012BFDD /* PopupPresentationController.swift */; };
 		7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8AA221ED35200DBFCE2 /* Hud.swift */; };
 		7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */; };
-		7BA25E4F2269F81A007B904B /* SearchTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA25E4E2269F81A007B904B /* SearchTitleView.swift */; };
-		7BA25E512269F842007B904B /* SearchTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BA25E502269F842007B904B /* SearchTitleView.xib */; };
 		7BA4193C209AF7E600DFCD39 /* AppCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193B209AF7E600DFCD39 /* AppCardData.swift */; };
 		7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */; };
 		7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */; };
@@ -241,9 +239,9 @@
 		7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA931F41FC08DF4005DF478 /* TextMessageCell.swift */; };
 		7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */; };
 		7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */; };
-		7BA9D9C6226DE0C000255943 /* ExpandingSizedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C5226DE0C000255943 /* ExpandingSizedView.swift */; };
 		7BA9D9C8226DE71E00255943 /* NavigationAvatarIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */; };
 		7BA9D9EE226F114700255943 /* SearchableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9ED226F114700255943 /* SearchableViewController.swift */; };
+		7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */; };
 		7BAB5D3E20C520F2009F4EE6 /* AudioUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */; };
 		7BAB5D4020C5213C009F4EE6 /* AudioDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAB5D3F20C5213C009F4EE6 /* AudioDownloadJob.swift */; };
 		7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD2E54207DE046006D7887 /* UnreadHintMessageCell.swift */; };
@@ -266,6 +264,7 @@
 		7BB3855C21E77D0D0070FF8F /* ProvisioningCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855B21E77D0D0070FF8F /* ProvisioningCodeResponse.swift */; };
 		7BB3856021E77F1D0070FF8F /* ProvisioningResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855F21E77F1D0070FF8F /* ProvisioningResponse.swift */; };
 		7BB470491FB1965E0059AE79 /* GroupMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */; };
+		7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
 		7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */; };
 		7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B3216C5AA900EDE7B4 /* NoResultFooterView.xib */; };
@@ -871,8 +870,6 @@
 		7B9F810F222EA40F0012BFDD /* PopupPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationController.swift; sourceTree = "<group>"; };
 		7BA1F8AA221ED35200DBFCE2 /* Hud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hud.swift; sourceTree = "<group>"; };
 		7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
-		7BA25E4E2269F81A007B904B /* SearchTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTitleView.swift; sourceTree = "<group>"; };
-		7BA25E502269F842007B904B /* SearchTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchTitleView.xib; sourceTree = "<group>"; };
 		7BA4193B209AF7E600DFCD39 /* AppCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardData.swift; sourceTree = "<group>"; };
 		7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageCell.swift; sourceTree = "<group>"; };
 		7BA4193F209AFBCD00DFCD39 /* AppCardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardMessageViewModel.swift; sourceTree = "<group>"; };
@@ -883,9 +880,9 @@
 		7BA931F41FC08DF4005DF478 /* TextMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMessageCell.swift; sourceTree = "<group>"; };
 		7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCategoryViewController.swift; sourceTree = "<group>"; };
 		7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConversationViewController.swift; sourceTree = "<group>"; };
-		7BA9D9C5226DE0C000255943 /* ExpandingSizedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandingSizedView.swift; sourceTree = "<group>"; };
 		7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationAvatarIconView.swift; sourceTree = "<group>"; };
 		7BA9D9ED226F114700255943 /* SearchableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableViewController.swift; sourceTree = "<group>"; };
+		7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationBar.swift; sourceTree = "<group>"; };
 		7BAB5D3D20C520F2009F4EE6 /* AudioUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUploadJob.swift; sourceTree = "<group>"; };
 		7BAB5D3F20C5213C009F4EE6 /* AudioDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadJob.swift; sourceTree = "<group>"; };
 		7BAD2E54207DE046006D7887 /* UnreadHintMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadHintMessageCell.swift; sourceTree = "<group>"; };
@@ -908,6 +905,7 @@
 		7BB3855B21E77D0D0070FF8F /* ProvisioningCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningCodeResponse.swift; sourceTree = "<group>"; };
 		7BB3855F21E77F1D0070FF8F /* ProvisioningResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningResponse.swift; sourceTree = "<group>"; };
 		7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberCell.swift; sourceTree = "<group>"; };
+		7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCancelButton.swift; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorFooterView.xib; sourceTree = "<group>"; };
 		7BB788B3216C5AA900EDE7B4 /* NoResultFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoResultFooterView.xib; sourceTree = "<group>"; };
@@ -1606,14 +1604,13 @@
 		7B9553322243757400CE95E6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */,
 				7B595352226736BD00D59DB4 /* SearchHeaderView.swift */,
 				7B955337224375D600CE95E6 /* SearchFooterView.swift */,
 				7B59535C2267602200D59DB4 /* SearchingFooterView.xib */,
 				7B59535A22675F4B00D59DB4 /* SearchingFooterView.swift */,
-				7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */,
-				7BA9D9C5226DE0C000255943 /* ExpandingSizedView.swift */,
-				7BA25E502269F842007B904B /* SearchTitleView.xib */,
-				7BA25E4E2269F81A007B904B /* SearchTitleView.swift */,
+				7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */,
+				7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */,
 				7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */,
 			);
 			path = Views;
@@ -2720,7 +2717,6 @@
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
-				7BA25E512269F842007B904B /* SearchTitleView.xib in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				DF016B2B2096BDB100B8FFDE /* UserWindow.xib in Resources */,
 				7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */,
@@ -3021,7 +3017,6 @@
 				7B2E3E521FA07F7B00DDDDEB /* CountryCell.swift in Sources */,
 				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
 				DFF1AD802227D7CA0087173D /* TransferPlainAckData.swift in Sources */,
-				7BA9D9C6226DE0C000255943 /* ExpandingSizedView.swift in Sources */,
 				DF5D9F231F9C79E10036D5FD /* Localized.swift in Sources */,
 				7B51DDB0223A3A6F008ACDBB /* MobileNumberViewController.swift in Sources */,
 				7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */,
@@ -3067,6 +3062,7 @@
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
 				DF048CCE223FCA02005F1EF5 /* SelectedTableViewCell.swift in Sources */,
+				7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */,
 				7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
 				7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */,
@@ -3290,6 +3286,7 @@
 				DF16681E20A6F84200C45E31 /* AllTransactionsViewController.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
+				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
 				7B6372101FE3E849006BCAB8 /* NetworkOperationButton.swift in Sources */,
 				7B894CD820D25ABA004FA5A8 /* RecorderLongPressHintView.swift in Sources */,
 				7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */,
@@ -3345,7 +3342,6 @@
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
-				7BA25E4F2269F81A007B904B /* SearchTitleView.swift in Sources */,
 				DF503D361FECF86D00C008E7 /* SessionDAO.swift in Sources */,
 				DF5D9F3D1F9CA3160036D5FD /* UserAPI.swift in Sources */,
 				7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift in Sources */,

@@ -66,8 +66,9 @@ struct SearchResult {
         self.description = NSAttributedString(string: desc, attributes: SearchResult.normalDescriptionAttributes)
     }
     
-    init(conversationId: String, messageId: String, content: String, createdAt: String, userId: String, fullname: String, avatarUrl: String, isVerified: Bool, appId: String?, keyword: String) {
-        self.target = .message(conversationId: conversationId, messageId: messageId, userId: userId, userFullName: fullname, createdAt: createdAt)
+    init(conversationId: String, messageId: String, category: String, content: String, createdAt: String, userId: String, fullname: String, avatarUrl: String, isVerified: Bool, appId: String?, keyword: String) {
+        let isData = category.hasSuffix("_DATA")
+        self.target = .message(conversationId: conversationId, messageId: messageId, isData: isData, userId: userId, userFullName: fullname, createdAt: createdAt)
         self.iconUrl = avatarUrl
         self.title = SearchResult.attributedText(text: fullname,
                                                  textAttributes: SearchResult.titleAttributes,
@@ -76,11 +77,16 @@ struct SearchResult {
         self.badgeImage = SearchResult.userBadgeImage(isVerified: isVerified,
                                                       appId: appId)
         self.superscript = createdAt.toUTCDate().timeAgo()
-        // TODO: Tokenize
-        self.description = SearchResult.attributedText(text: content,
-                                                       textAttributes: SearchResult.largerDescriptionAttributes,
-                                                       keyword: keyword,
-                                                       keywordAttributes: SearchResult.highlightedLargerDescriptionAttributes)
+        if isData {
+            self.description = NSAttributedString(string: R.string.localizable.notification_content_file(),
+                                                  attributes: SearchResult.normalDescriptionAttributes)
+        } else {
+            // TODO: Tokenize
+            self.description = SearchResult.attributedText(text: content,
+                                                           textAttributes: SearchResult.largerDescriptionAttributes,
+                                                           keyword: keyword,
+                                                           keywordAttributes: SearchResult.highlightedLargerDescriptionAttributes)
+        }
     }
     
 }
@@ -92,7 +98,7 @@ extension SearchResult {
         case group(ConversationItem)
         case searchMessageWithContact(conversationId: String, userId: String, userFullName: String)
         case searchMessageWithGroup(conversationId: String)
-        case message(conversationId: String, messageId: String, userId: String, userFullName: String, createdAt: String)
+        case message(conversationId: String, messageId: String, isData: Bool, userId: String, userFullName: String, createdAt: String)
     }
     
     enum Style {

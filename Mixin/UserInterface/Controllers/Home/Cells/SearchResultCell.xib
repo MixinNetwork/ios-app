@@ -60,12 +60,20 @@
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9R-Ws-7AF">
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="PeR-5o-3us">
                                         <rect key="frame" x="0.0" y="24.5" width="214" height="14.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76078431372549016" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                        <subviews>
+                                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_message_file" translatesAutoresizingMaskIntoConstraints="NO" id="2Qp-ea-sPd">
+                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="14.5"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9R-Ws-7AF">
+                                                <rect key="frame" x="0.0" y="0.0" width="214" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76078431372549016" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -93,10 +101,14 @@
                 <outlet property="avatarImageView" destination="54d-qY-M42" id="MEf-tG-PUp"/>
                 <outlet property="badgeImageView" destination="2kh-Zu-ESW" id="U5Y-Qo-jUi"/>
                 <outlet property="descriptionLabel" destination="n9R-Ws-7AF" id="In9-L0-Jiy"/>
+                <outlet property="fileIcon" destination="2Qp-ea-sPd" id="uPT-QI-DfL"/>
                 <outlet property="superscriptLabel" destination="rvg-EV-kX6" id="LAw-G3-3Sa"/>
                 <outlet property="titleLabel" destination="fno-5B-bwC" id="qCy-2b-ZvP"/>
             </connections>
             <point key="canvasLocation" x="47.826086956521742" y="35.491071428571423"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="ic_message_file" width="10" height="12"/>
+    </resources>
 </document>

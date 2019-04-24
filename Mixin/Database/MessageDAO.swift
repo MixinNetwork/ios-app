@@ -336,6 +336,7 @@ final class MessageDAO {
     func getMessages(conversationId: String, contentLike keyword: String, belowCreatedAt location: String?, limit: Int?) -> [SearchResult] {
         let properties = [
             Message.Properties.messageId.in(table: Message.tableName),
+            Message.Properties.category.in(table: Message.tableName),
             Message.Properties.content.in(table: Message.tableName),
             Message.Properties.createdAt.in(table: Message.tableName),
             User.Properties.userId.in(table: User.tableName),
@@ -379,6 +380,7 @@ final class MessageDAO {
                 }
                 let item = SearchResult(conversationId: conversationId,
                                         messageId: cs.value(atIndex: autoIncrement) ?? "",
+                                        category: cs.value(atIndex: autoIncrement) ?? "",
                                         content: cs.value(atIndex: autoIncrement) ?? "",
                                         createdAt: cs.value(atIndex: autoIncrement) ?? "",
                                         userId: cs.value(atIndex: autoIncrement) ?? "",

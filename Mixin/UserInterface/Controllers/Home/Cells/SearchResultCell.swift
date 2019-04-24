@@ -8,6 +8,7 @@ class SearchResultCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var badgeImageView: UIImageView!
     @IBOutlet weak var superscriptLabel: UILabel!
+    @IBOutlet weak var fileIcon: UIImageView!
     @IBOutlet weak var descriptionLabel: UILabel!
     
     override func awakeFromNib() {
@@ -21,6 +22,7 @@ class SearchResultCell: UITableViewCell {
     }
     
     func render(result: SearchResult) {
+        var isDataMessage = false
         switch result.target {
         case let .contact(user):
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
@@ -30,7 +32,8 @@ class SearchResultCell: UITableViewCell {
             avatarImageView.setImage(with: result.iconUrl, userId: userId, name: name)
         case .searchMessageWithGroup:
             avatarImageView.setGroupImage(with: result.iconUrl)
-        case let .message(_, _, userId, userFullName, _):
+        case let .message(_, _, isData, userId, userFullName, _):
+            isDataMessage = isData
             avatarImageView.setImage(with: result.iconUrl, userId: userId, name: userFullName)
         }
         titleLabel.attributedText = result.title
@@ -41,6 +44,7 @@ class SearchResultCell: UITableViewCell {
             badgeImageView.isHidden = true
         }
         superscriptLabel.text = result.superscript
+        fileIcon.isHidden = !isDataMessage
         if let description = result.description {
             descriptionLabel.attributedText = description
             descriptionLabel.isHidden = false

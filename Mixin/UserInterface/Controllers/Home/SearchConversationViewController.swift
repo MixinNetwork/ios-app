@@ -163,7 +163,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard indexPath.row >= messageCountPerPage - loadMoreMessageThreshold else {
             return
         }
-        guard let last = messages.last?.last, case let .message(_, _, _, _, location) = last.target else {
+        guard let last = messages.last?.last, case let .message(_, _, _, _, _, location) = last.target else {
             return
         }
         let conversationId = self.conversationId
@@ -194,7 +194,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard let conversation = conversation else {
             return
         }
-        guard case let .message(_, id, _, _, _) = messages[indexPath.section][indexPath.row].target else {
+        guard case let .message(_, id, _, _, _, _) = messages[indexPath.section][indexPath.row].target else {
             return
         }
         let highlight = ConversationDataSource.Highlight(keyword: inheritedKeyword, messageId: id)

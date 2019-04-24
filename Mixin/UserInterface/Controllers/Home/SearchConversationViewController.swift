@@ -95,6 +95,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         if keyword.isEmpty {
             messages = []
             tableView.reloadData()
+            lastKeyword = ""
         } else {
             reloadMessages(keyword: keyword)
         }

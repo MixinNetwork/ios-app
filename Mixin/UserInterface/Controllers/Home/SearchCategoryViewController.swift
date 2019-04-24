@@ -78,6 +78,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         guard !keyword.isEmpty else {
             models = []
             tableView.reloadData()
+            lastKeyword = ""
             return
         }
         let category = self.category

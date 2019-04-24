@@ -75,6 +75,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         guard !keyword.isEmpty else {
             tableView.isHidden = true
             recentBotsContainerView.isHidden = false
+            lastKeyword = ""
             return
         }
         tableView.isHidden = false

@@ -14,6 +14,7 @@ final class UserDAO {
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"
     private static let sqlQueryUserByKeyword = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND ((u.full_name LIKE ?) OR (u.identity_number LIKE ?) OR (u.phone LIKE ?))"
+    private static let sqlQueryUserByAppId = "\(sqlQueryColumns) WHERE u.app_id = ? LIMIT 1"
     private static let sqlQueryBlockedUsers = "\(sqlQueryColumns) WHERE relationship = 'BLOCKING'"
 
     func deleteUser(userId: String) {
@@ -50,6 +51,16 @@ final class UserDAO {
             sql += " LIMIT \(limit)"
         }
         return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword, keyword], inTransaction: false)
+    }
+    
+    func getUsers(ofAppIds ids: [String]) -> [UserItem] {
+        var users = [UserItem]()
+        MixinDatabase.shared.transaction { (db) in
+            users = ids.compactMap {
+                MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByAppId, values: [$0], inTransaction: false).first
+            }
+        }
+        return users
     }
     
     func contacts() -> [UserItem] {

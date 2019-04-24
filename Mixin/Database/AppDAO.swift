@@ -24,16 +24,4 @@ final class AppDAO {
         return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryAppsByUser, values: [userId], inTransaction: false).first
     }
     
-    func getApps(ids: [String]) -> [App] {
-        var apps = [App]()
-        MixinDatabase.shared.transaction { (db) in
-            apps = try ids.compactMap {
-                try db.getObject(on: App.Properties.all,
-                                 fromTable: App.tableName,
-                                 where: App.Properties.appId == $0)
-            }
-        }
-        return apps
-    }
-    
 }

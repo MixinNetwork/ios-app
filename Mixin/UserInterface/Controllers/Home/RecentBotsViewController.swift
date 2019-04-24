@@ -8,12 +8,11 @@ class RecentBotsViewController: UIViewController {
     
     @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     
-    private let reuseId = "app"
     private let cellCountPerRow = 4
     private let maxRowCount = 2
     private let queue = OperationQueue()
     
-    private var apps = [App]()
+    private var users = [UserItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,22 +41,22 @@ class RecentBotsViewController: UIViewController {
                 return
             }
             let ids = CommonUserDefault.shared.recentlyUsedAppIds.prefix(maxIdCount)
-            let apps = AppDAO.shared.getApps(ids: Array(ids))
-            guard let weakSelf = self, !op.isCancelled else {
-                return
-            }
+            let users = UserDAO.shared.getUsers(ofAppIds: Array(ids))
             DispatchQueue.main.sync {
-                weakSelf.reload(apps: apps)
+                guard let weakSelf = self, !op.isCancelled else {
+                    return
+                }
+                weakSelf.reload(users: users)
             }
         }
         queue.addOperation(op)
     }
     
-    private func reload(apps: [App]) {
-        self.apps = apps
-        contentView.isHidden = apps.isEmpty
-        if !apps.isEmpty {
-            let lineCount = apps.count > cellCountPerRow ? 2 : 1
+    private func reload(users: [UserItem]) {
+        self.users = users
+        contentView.isHidden = users.isEmpty
+        if !users.isEmpty {
+            let lineCount = users.count > cellCountPerRow ? 2 : 1
             let height = collectionLayout.itemSize.height * CGFloat(lineCount)
             collectionViewHeightConstraint.constant = height
             collectionView.reloadData()
@@ -70,17 +69,23 @@ class RecentBotsViewController: UIViewController {
 extension RecentBotsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return apps.count
+        return users.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseId, for: indexPath) as! RecentBotCell
-        cell.render(app: apps[indexPath.row])
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.recent_app, for: indexPath)!
+        cell.render(user: users[indexPath.row])
         return cell
     }
     
 }
 
 extension RecentBotsViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let user = users[indexPath.row]
+        let vc = ConversationViewController.instance(ownerUser: user)
+        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+    }
     
 }

@@ -1,6 +1,6 @@
 import UIKit
 
-class RecentBotCell: UICollectionViewCell {
+class RecentAppCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var label: UILabel!
@@ -10,9 +10,9 @@ class RecentBotCell: UICollectionViewCell {
         imageView.sd_cancelCurrentImageLoad()
     }
     
-    func render(app: App) {
-        imageView.sd_setImage(with: URL(string: app.iconUrl), completed: nil)
-        label.text = app.name
+    func render(user: UserItem) {
+        imageView.sd_setImage(with: URL(string: user.avatarUrl), completed: nil)
+        label.text = user.fullName
     }
     
 }

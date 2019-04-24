@@ -381,7 +381,7 @@
                         <nil key="title"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="recentBotsContainerView" destination="xpQ-dJ-ucd" id="mZV-M7-5Kc"/>
+                        <outlet property="recentAppsContainerView" destination="xpQ-dJ-ucd" id="mZV-M7-5Kc"/>
                         <outlet property="tableView" destination="fJ7-r4-Szs" id="o3z-Ff-t8W"/>
                     </connections>
                 </viewController>
@@ -389,10 +389,10 @@
             </objects>
             <point key="canvasLocation" x="1245.5999999999999" y="-278.41079460269867"/>
         </scene>
-        <!--Recent Bots View Controller-->
+        <!--Recent Apps View Controller-->
         <scene sceneID="iot-9Z-ZOc">
             <objects>
-                <viewController id="EIL-n2-XsE" customClass="RecentBotsViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="EIL-n2-XsE" customClass="RecentAppsViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9aE-T7-dUh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="601"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

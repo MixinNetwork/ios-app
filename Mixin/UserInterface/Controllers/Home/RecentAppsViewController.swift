@@ -1,6 +1,6 @@
 import UIKit
 
-class RecentBotsViewController: UIViewController {
+class RecentAppsViewController: UIViewController {
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -13,14 +13,18 @@ class RecentBotsViewController: UIViewController {
     private let queue = OperationQueue()
     
     private var users = [UserItem]()
+    private var needsReload = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
         collectionView.dataSource = self
         collectionView.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: CommonUserDefault.didChangeRecentlyUsedAppIdsNotification, object: nil)
-        reloadData()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didChangeRecentlyUsedAppIds),
+                                               name: CommonUserDefault.didChangeRecentlyUsedAppIdsNotification,
+                                               object: nil)
+        reloadIfNeeded()
     }
     
     override func viewWillLayoutSubviews() {
@@ -32,7 +36,15 @@ class RecentBotsViewController: UIViewController {
         collectionLayout.sectionInset = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
     }
     
-    @objc func reloadData() {
+    @objc func didChangeRecentlyUsedAppIds() {
+        needsReload = true
+    }
+    
+    func reloadIfNeeded() {
+        guard needsReload else {
+            return
+        }
+        needsReload = false
         queue.cancelAllOperations()
         let maxIdCount = maxRowCount * cellCountPerRow
         let op = BlockOperation()
@@ -66,7 +78,7 @@ class RecentBotsViewController: UIViewController {
     
 }
 
-extension RecentBotsViewController: UICollectionViewDataSource {
+extension RecentAppsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return users.count
@@ -80,7 +92,7 @@ extension RecentBotsViewController: UICollectionViewDataSource {
     
 }
 
-extension RecentBotsViewController: UICollectionViewDelegate {
+extension RecentAppsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let user = users[indexPath.row]

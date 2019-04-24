@@ -130,7 +130,7 @@
 		7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDB6223A50D5008ACDBB /* VerificationCodeViewController.swift */; };
 		7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */; };
 		7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */; };
-		7B5281742265D7E30023616D /* RecentBotsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281732265D7E30023616D /* RecentBotsViewController.swift */; };
+		7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281732265D7E30023616D /* RecentAppsViewController.swift */; };
 		7B5281762265F1730023616D /* RecentBotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281752265F1730023616D /* RecentBotCell.swift */; };
 		7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B56DBD01FEFC5B900B50D82 /* PinField.swift */; };
 		7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B58433E2175911D0053332F /* SnapKitExtension.swift */; };
@@ -771,7 +771,7 @@
 		7B51DDB6223A50D5008ACDBB /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerificationCodeView.xib; sourceTree = "<group>"; };
 		7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVerificationCodeViewController.swift; sourceTree = "<group>"; };
-		7B5281732265D7E30023616D /* RecentBotsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentBotsViewController.swift; sourceTree = "<group>"; };
+		7B5281732265D7E30023616D /* RecentAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentAppsViewController.swift; sourceTree = "<group>"; };
 		7B5281752265F1730023616D /* RecentBotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentBotCell.swift; sourceTree = "<group>"; };
 		7B56DBD01FEFC5B900B50D82 /* PinField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinField.swift; sourceTree = "<group>"; };
 		7B58433E2175911D0053332F /* SnapKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapKitExtension.swift; sourceTree = "<group>"; };
@@ -2221,7 +2221,7 @@
 				7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */,
 				7BA9D9ED226F114700255943 /* SearchableViewController.swift */,
 				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
-				7B5281732265D7E30023616D /* RecentBotsViewController.swift */,
+				7B5281732265D7E30023616D /* RecentAppsViewController.swift */,
 				7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */,
 				7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */,
 				DF1A2C5F219BCACB004EFD68 /* ClockSkewViewController.swift */,
@@ -3297,7 +3297,7 @@
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */,
-				7B5281742265D7E30023616D /* RecentBotsViewController.swift in Sources */,
+				7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */,
 				DF3C474A1FA0BECA00A07C71 /* DataExtension.swift in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardMessageViewModel.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,

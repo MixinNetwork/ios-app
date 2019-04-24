@@ -3,7 +3,7 @@ import UIKit
 class SearchViewController: UIViewController, SearchableViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var recentBotsContainerView: UIView!
+    @IBOutlet weak var recentAppsContainerView: UIView!
     
     let cancelButton = SearchCancelButton()
     
@@ -24,6 +24,7 @@ class SearchViewController: UIViewController, SearchableViewController {
     private var groups = [SearchResult]()
     private var conversations = [SearchResult]()
     private var lastKeyword = ""
+    private var recentAppsViewController: RecentAppsViewController?
     
     private var keywordMaybeIdOrPhone: Bool {
         return searchTextField.text?.isNumeric ?? false
@@ -31,6 +32,13 @@ class SearchViewController: UIViewController, SearchableViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let vc = segue.destination as? RecentAppsViewController {
+            recentAppsViewController = vc
+        }
     }
     
     override func viewDidLoad() {
@@ -73,13 +81,11 @@ class SearchViewController: UIViewController, SearchableViewController {
             return
         }
         guard !keyword.isEmpty else {
-            tableView.isHidden = true
-            recentBotsContainerView.isHidden = false
+            showRecentApps()
             lastKeyword = ""
             return
         }
-        tableView.isHidden = false
-        recentBotsContainerView.isHidden = true
+        showSearchResults()
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
@@ -110,8 +116,7 @@ class SearchViewController: UIViewController, SearchableViewController {
     
     func prepareForReuse() {
         searchTextField.text = nil
-        tableView.isHidden = true
-        recentBotsContainerView.isHidden = false
+        showRecentApps()
         assets = []
         users = []
         groups = []
@@ -320,6 +325,17 @@ extension SearchViewController {
                 return R.string.localizable.search_section_title_conversation()
             }
         }
+    }
+    
+    private func showSearchResults() {
+        tableView.isHidden = false
+        recentAppsContainerView.isHidden = true
+    }
+    
+    private func showRecentApps() {
+        tableView.isHidden = true
+        recentAppsViewController?.reloadIfNeeded()
+        recentAppsContainerView.isHidden = false
     }
     
     private func models(forSection section: Section) -> [Any] {

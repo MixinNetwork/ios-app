@@ -4,6 +4,7 @@ class SearchNumberCell: UITableViewCell {
     
     @IBOutlet weak var labelBackgroundView: UIView!
     @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     
     private let numberAttributes: [NSAttributedString.Key: Any] = [
         .font: UIFont.systemFont(ofSize: 14),
@@ -19,6 +20,13 @@ class SearchNumberCell: UITableViewCell {
         let str = NSAttributedString(string: plain, attributes: attrs)
         return str
     }()
+    
+    var isBusy = false {
+        didSet {
+            activityIndicator.isAnimating = isBusy
+            label.isHidden = isBusy
+        }
+    }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)

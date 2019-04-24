@@ -325,6 +325,11 @@
                                                             <color key="textColor" red="0.20002" green="0.19997999999999999" blue="0.20003000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <view hidden="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="yTS-4P-BRs" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="24" y="22.5" width="20" height="20"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="tintColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                        </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -332,6 +337,8 @@
                                                         <constraint firstAttribute="bottom" secondItem="Lx1-QB-xFP" secondAttribute="bottom" constant="24" id="I8J-5L-HFC"/>
                                                         <constraint firstAttribute="trailing" secondItem="Lx1-QB-xFP" secondAttribute="trailing" constant="20" id="KD9-YU-aKX"/>
                                                         <constraint firstItem="Lx1-QB-xFP" firstAttribute="top" secondItem="tY1-R3-K1U" secondAttribute="top" constant="24" id="QN0-v9-BXi"/>
+                                                        <constraint firstItem="yTS-4P-BRs" firstAttribute="centerY" secondItem="tY1-R3-K1U" secondAttribute="centerY" id="W5V-Lj-021"/>
+                                                        <constraint firstItem="yTS-4P-BRs" firstAttribute="leading" secondItem="tY1-R3-K1U" secondAttribute="leading" constant="24" id="rzL-wE-9cu"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -350,6 +357,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
+                                            <outlet property="activityIndicator" destination="yTS-4P-BRs" id="IiJ-eJ-d6R"/>
                                             <outlet property="label" destination="Lx1-QB-xFP" id="pND-PC-US7"/>
                                             <outlet property="labelBackgroundView" destination="tY1-R3-K1U" id="4mG-sR-a4p"/>
                                         </connections>

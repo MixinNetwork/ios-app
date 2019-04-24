@@ -416,6 +416,7 @@ extension HomeViewController {
     }
     
     @objc private func hideSearch() {
+        searchViewController.willHide()
         searchContainerTopConstraint.constant = searchContainerBeginTopConstant
         UIView.animate(withDuration: 0.2) {
             self.navigationBarView.alpha = 1

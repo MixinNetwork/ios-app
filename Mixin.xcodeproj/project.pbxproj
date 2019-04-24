@@ -265,6 +265,7 @@
 		7BB3856021E77F1D0070FF8F /* ProvisioningResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855F21E77F1D0070FF8F /* ProvisioningResponse.swift */; };
 		7BB470491FB1965E0059AE79 /* GroupMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */; };
 		7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */; };
+		7BB633E1227077E900A106D2 /* PhoneNumberKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB633E0227077E900A106D2 /* PhoneNumberKitExtension.swift */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
 		7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */; };
 		7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B3216C5AA900EDE7B4 /* NoResultFooterView.xib */; };
@@ -906,6 +907,7 @@
 		7BB3855F21E77F1D0070FF8F /* ProvisioningResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningResponse.swift; sourceTree = "<group>"; };
 		7BB470481FB1965E0059AE79 /* GroupMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberCell.swift; sourceTree = "<group>"; };
 		7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCancelButton.swift; sourceTree = "<group>"; };
+		7BB633E0227077E900A106D2 /* PhoneNumberKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitExtension.swift; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorFooterView.xib; sourceTree = "<group>"; };
 		7BB788B3216C5AA900EDE7B4 /* NoResultFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoResultFooterView.xib; sourceTree = "<group>"; };
@@ -2025,6 +2027,7 @@
 				7B58433E2175911D0053332F /* SnapKitExtension.swift */,
 				7BE6E16B218089F100C32EE5 /* GCDExtension.swift */,
 				7BB3854F21E74DA60070FF8F /* JSONCoderExtension.swift */,
+				7BB633E0227077E900A106D2 /* PhoneNumberKitExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3378,6 +3381,7 @@
 				7BC8503420CBA69B00A57B83 /* MXNAudioPlayer.m in Sources */,
 				DFE356271FB40C4700E0E3A8 /* NotificationCenterExtension.swift in Sources */,
 				7B4A430620AC9ABA007D6936 /* GalleryVideoView.swift in Sources */,
+				7BB633E1227077E900A106D2 /* PhoneNumberKitExtension.swift in Sources */,
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,
 				DF68F18C201567D6001C4225 /* StickerRelationshipDAO.swift in Sources */,
 				DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */,

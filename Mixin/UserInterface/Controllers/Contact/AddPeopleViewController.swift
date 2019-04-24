@@ -10,7 +10,6 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
     private let legalKeywordCharactersSet = Set("+0123456789")
-    private let phoneNumberKit = PhoneNumberKit()
     
     private var userWindow = UserWindow.instance()
     
@@ -83,7 +82,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
             return false
         }
         if keyword.hasPrefix("+") {
-            return (try? phoneNumberKit.parse(keyword)) != nil
+            return (try? PhoneNumberKit.shared.parse(keyword)) != nil
         } else {
             return true
         }

@@ -1,4 +1,6 @@
 import UIKit
+import PhoneNumberKit
+import Alamofire
 
 class SearchViewController: UIViewController, SearchableViewController {
     
@@ -17,6 +19,7 @@ class SearchViewController: UIViewController, SearchableViewController {
     
     private let searchingFooterView = R.nib.searchingFooterView(owner: nil)
     private let resultLimit = 3
+    private let idOrPhoneCharacterSet = Set("+0123456789")
     
     private var queue = OperationQueue()
     private var assets = [AssetSearchResult]()
@@ -25,9 +28,30 @@ class SearchViewController: UIViewController, SearchableViewController {
     private var conversations = [SearchResult]()
     private var lastKeyword = ""
     private var recentAppsViewController: RecentAppsViewController?
+    private var searchNumberRequest: Request?
     
     private var keywordMaybeIdOrPhone: Bool {
-        return searchTextField.text?.isNumeric ?? false
+        let keyword = trimmedLowercaseKeyword
+        guard keyword.count >= 4 else {
+            return false
+        }
+        guard idOrPhoneCharacterSet.isSuperset(of: keyword) else {
+            return false
+        }
+        if keyword.hasPrefix("+") {
+            return (try? PhoneNumberKit.shared.parse(keyword)) != nil
+        } else {
+            return true
+        }
+    }
+    
+    private var shouldShowSearchNumber: Bool {
+        return users.isEmpty && keywordMaybeIdOrPhone
+    }
+    
+    private var searchNumberCell: SearchNumberCell? {
+        let indexPath = IndexPath(row: 0, section: Section.searchNumber.rawValue)
+        return tableView.cellForRow(at: indexPath) as? SearchNumberCell
     }
     
     deinit {
@@ -57,7 +81,6 @@ class SearchViewController: UIViewController, SearchableViewController {
         tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
         tableView.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(contactsDidChange(_:)), name: .ContactsDidChange, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,6 +102,10 @@ class SearchViewController: UIViewController, SearchableViewController {
         let keyword = self.trimmedLowercaseKeyword
         guard keyword != lastKeyword else {
             return
+        }
+        defer {
+            searchNumberRequest?.cancel()
+            searchNumberRequest = nil
         }
         guard !keyword.isEmpty else {
             showRecentApps()
@@ -125,8 +152,9 @@ class SearchViewController: UIViewController, SearchableViewController {
         lastKeyword = ""
     }
     
-    @objc func contactsDidChange(_ notification: Notification) {
-        
+    func willHide() {
+        searchNumberRequest?.cancel()
+        searchNumberRequest = nil
     }
     
 }
@@ -136,7 +164,7 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
         case .searchNumber:
-            return keywordMaybeIdOrPhone ? 1 : 0
+            return shouldShowSearchNumber ? 1 : 0
         case .asset:
             return min(resultLimit, assets.count)
         case .user:
@@ -155,6 +183,7 @@ extension SearchViewController: UITableViewDataSource {
             if let keyword = searchTextField.text {
                 cell.render(number: keyword)
             }
+            cell.isBusy = searchNumberRequest != nil
             return cell
         case .asset:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
@@ -257,7 +286,7 @@ extension SearchViewController: UITableViewDelegate {
         searchTextField.resignFirstResponder()
         switch Section(rawValue: indexPath.section)! {
         case .searchNumber:
-            break
+            searchNumber()
         case .asset:
             pushAssetViewController(asset: assets[indexPath.row].asset)
         case .user:
@@ -356,7 +385,7 @@ extension SearchViewController {
     private func isEmptySection(_ section: Section) -> Bool {
         switch section {
         case .searchNumber:
-            return !keywordMaybeIdOrPhone
+            return !shouldShowSearchNumber
         case .asset, .user, .group, .conversation:
             return models(forSection: section).isEmpty
         }
@@ -365,15 +394,37 @@ extension SearchViewController {
     private func isFirstSection(_ section: Section) -> Bool {
         switch section {
         case .searchNumber:
-            return keywordMaybeIdOrPhone
+            return shouldShowSearchNumber
         case .asset:
-            return !keywordMaybeIdOrPhone
+            return !shouldShowSearchNumber
         case .user:
-            return !keywordMaybeIdOrPhone && assets.isEmpty
+            return !shouldShowSearchNumber && assets.isEmpty
         case .group:
-            return !keywordMaybeIdOrPhone && assets.isEmpty && users.isEmpty
+            return !shouldShowSearchNumber && assets.isEmpty && users.isEmpty
         case .conversation:
-            return !keywordMaybeIdOrPhone && assets.isEmpty && users.isEmpty && groups.isEmpty
+            return !shouldShowSearchNumber && assets.isEmpty && users.isEmpty && groups.isEmpty
+        }
+    }
+    
+    private func searchNumber() {
+        searchNumberRequest?.cancel()
+        searchNumberCell?.isBusy = true
+        searchNumberRequest = UserAPI.shared.search(keyword: trimmedLowercaseKeyword) { [weak self] (result) in
+            guard let weakSelf = self, weakSelf.searchNumberRequest != nil else {
+                return
+            }
+            weakSelf.searchNumberCell?.isBusy = false
+            weakSelf.searchNumberRequest = nil
+            switch result {
+            case let .success(user):
+                UserDAO.shared.updateUsers(users: [user])
+                UserWindow.instance()
+                    .updateUser(user: UserItem.createUser(from: user), refreshUser: false)
+                    .presentView()
+            case let .failure(error):
+                let text = error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription
+                showHud(style: .error, text: text)
+            }
         }
     }
     

@@ -349,12 +349,14 @@ final class MessageDAO {
             .join(User.tableName, with: .left)
             .on(Message.Properties.userId.in(table: Message.tableName)
                 == User.Properties.userId.in(table: User.tableName))
+        
         let keywordReplacement = "%\(keyword)%"
         let textMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_TEXT")
             && Message.Properties.content.in(table: Message.tableName).like(keywordReplacement)
         let dataMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_DATA")
             && Message.Properties.name.in(table: Message.tableName).like(keywordReplacement)
-        var condition = textMessageContainsKeyword || dataMessageContainsKeyword
+        let matchesKeyword = textMessageContainsKeyword || dataMessageContainsKeyword
+        var condition = Message.Properties.conversationId == conversationId && matchesKeyword
         if let location = location {
             condition = condition && Message.Properties.createdAt.in(table: Message.tableName) < location
         }

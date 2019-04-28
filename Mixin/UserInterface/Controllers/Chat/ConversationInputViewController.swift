@@ -389,7 +389,7 @@ extension ConversationInputViewController {
             return
         }
         let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
-        guard textView.isFirstResponder || keyboardWillBeInvisible else {
+        guard textView.isFirstResponder || (keyboardWillBeInvisible && customInputViewController == nil) else {
             return
         }
         if !keyboardWillBeInvisible {

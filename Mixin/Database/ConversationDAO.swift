@@ -195,11 +195,14 @@ final class ConversationDAO {
             && Message.Properties.content.in(table: Message.tableName).like(keyword)
         let dataMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_DATA")
             && Message.Properties.name.in(table: Message.tableName).like(keyword)
+        let order = [Conversation.Properties.pinTime.in(table: Conversation.tableName).asOrder(by: .descending),
+                     Conversation.Properties.lastMessageCreatedAt.in(table: Conversation.tableName).asOrder(by: .descending)]
         var stmt = StatementSelect()
             .select(properties)
             .from(joinClause)
             .where(textMessageContainsKeyword || dataMessageContainsKeyword)
             .group(by: Message.Properties.conversationId.in(table: Message.tableName))
+            .order(by: order)
         if let limit = limit {
             stmt = stmt.limit(limit)
         }

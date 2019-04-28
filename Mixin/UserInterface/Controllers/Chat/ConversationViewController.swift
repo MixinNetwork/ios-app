@@ -280,6 +280,7 @@ class ConversationViewController: UIViewController {
             let canMoveUp = !conversationInputViewController.textView.isFirstResponder
                 || inputWrapperHeight < conversationInputViewController.regularHeight
             let shouldMoveUp = canMoveUp
+                && location.y < 0
                 && verticalVelocity < 0
                 && recognizer.hasMovedInputWrapperDuringChangedState
             if shouldMoveDown || shouldMoveUp {

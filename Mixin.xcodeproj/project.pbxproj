@@ -143,8 +143,6 @@
 		7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B595352226736BD00D59DB4 /* SearchHeaderView.swift */; };
 		7B595358226749A100D59DB4 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B595356226749A100D59DB4 /* SearchResultCell.swift */; };
 		7B595359226749A100D59DB4 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B595357226749A100D59DB4 /* SearchResultCell.xib */; };
-		7B59535B22675F4B00D59DB4 /* SearchingFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59535A22675F4B00D59DB4 /* SearchingFooterView.swift */; };
-		7B59535D2267602200D59DB4 /* SearchingFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B59535C2267602200D59DB4 /* SearchingFooterView.xib */; };
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
@@ -785,8 +783,6 @@
 		7B595352226736BD00D59DB4 /* SearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHeaderView.swift; sourceTree = "<group>"; };
 		7B595356226749A100D59DB4 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		7B595357226749A100D59DB4 /* SearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultCell.xib; sourceTree = "<group>"; };
-		7B59535A22675F4B00D59DB4 /* SearchingFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchingFooterView.swift; sourceTree = "<group>"; };
-		7B59535C2267602200D59DB4 /* SearchingFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchingFooterView.xib; sourceTree = "<group>"; };
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
@@ -1609,8 +1605,6 @@
 				7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */,
 				7B595352226736BD00D59DB4 /* SearchHeaderView.swift */,
 				7B955337224375D600CE95E6 /* SearchFooterView.swift */,
-				7B59535C2267602200D59DB4 /* SearchingFooterView.xib */,
-				7B59535A22675F4B00D59DB4 /* SearchingFooterView.swift */,
 				7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */,
 				7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */,
 				7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */,
@@ -2695,7 +2689,6 @@
 				7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */,
 				7BDBDE7022365017006220DF /* SettingCell.xib in Resources */,
 				7BA4A1CF1FF347130086CD56 /* GroupParticipantCell.xib in Resources */,
-				7B59535D2267602200D59DB4 /* SearchingFooterView.xib in Resources */,
 				7B45A51C2189F28E0008F894 /* call.caf in Resources */,
 				DFF2145B209ABBB400612234 /* GroupWindow.xib in Resources */,
 				DF43304722648B4E006D971D /* AssetInfoWindow.xib in Resources */,
@@ -3391,7 +3384,6 @@
 				DF53BB6820233657002BF028 /* MixinWebView.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,
 				7BA4193C209AF7E600DFCD39 /* AppCardData.swift in Sources */,
-				7B59535B22675F4B00D59DB4 /* SearchingFooterView.swift in Sources */,
 				273FACB2205FB9A800513327 /* Fingerprint.swift in Sources */,
 				7BD97DD52179DD3400FAE490 /* WebRTCClient.swift in Sources */,
 				DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */,

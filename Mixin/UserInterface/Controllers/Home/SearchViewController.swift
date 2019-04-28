@@ -17,7 +17,6 @@ class SearchViewController: UIViewController, SearchableViewController {
         return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: cancelButton.frame.width + cancelButtonRightMargin)
     }
     
-    private let searchingFooterView = R.nib.searchingFooterView(owner: nil)
     private let resultLimit = 3
     private let idOrPhoneCharacterSet = Set("+0123456789")
     

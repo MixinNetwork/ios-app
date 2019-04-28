@@ -235,6 +235,7 @@ class ConversationInputViewController: UIViewController {
     
     @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {
         if sender.isOn {
+            quote = nil
             resignTextViewFirstResponderWithoutReportingContentHeightChange()
             if height == .maximized {
                 setPreferredContentHeightAnimated(.regular)
@@ -248,6 +249,7 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func showStickersAction(_ sender: Any) {
+        quote = nil
         resignTextViewFirstResponderWithoutReportingContentHeightChange()
         setRightAccessoryButton(keyboardButton)
         extensionsSwitch.isOn = false
@@ -719,6 +721,7 @@ extension ConversationInputViewController {
         setRightAccessoryButton(stickersButton)
         if photosButton.isSelected {
             loadCustomInputViewController(photoViewController)
+            quote = nil
         } else {
             dismissCustomInput(minimize: true)
         }

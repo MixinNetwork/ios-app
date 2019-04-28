@@ -10,6 +10,7 @@ class CallManager {
     
     private let rtcClient = WebRTCClient()
     private let queue = DispatchQueue(label: "one.mixin.messenger.call-manager")
+    private let vibrator = Vibrator()
     private let ringtonePlayer = try? AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "call", withExtension: "caf")!)
     
     private(set) var call: Call?
@@ -81,6 +82,7 @@ class CallManager {
     }
     
     func completeCurrentCall(isUserInitiated: Bool) {
+        vibrator.stopVibrating()
         queue.async {
             guard let call = self.call else {
                 DispatchQueue.main.sync {
@@ -123,6 +125,7 @@ class CallManager {
     
     func acceptCurrentCall() {
         view.style = .connecting
+        vibrator.stopVibrating()
         queue.async {
             guard let call = self.call, let sdp = self.pendingRemoteSdp else {
                 return
@@ -259,15 +262,26 @@ extension CallManager {
         pendingRemoteSdp = sdp
         call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
         if reportIncomingCallToInterface {
+            var isNotificationAuthorized = false
+            let semaphore = DispatchSemaphore(value: 0)
+            UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+                isNotificationAuthorized = settings.authorizationStatus == .authorized
+                semaphore.signal()
+            }
+            semaphore.wait()
             performSynchronouslyOnMainThread {
                 view.reload(user: user)
                 view.style = .calling
                 view.show()
-                if UIApplication.shared.applicationState != .active {
+                if UIApplication.shared.applicationState == .active {
+                    vibrator.startVibrating()
+                    playRingtone(usesSpeaker: true)
+                } else if isNotificationAuthorized {
                     UNUserNotificationCenter.current().sendCallNotification(callerName: user.fullName)
+                    vibrator.startVibrating()
+                    playRingtone(usesSpeaker: true)
                 }
             }
-            playRingtone(usesSpeaker: true)
         }
     }
     
@@ -489,6 +503,7 @@ extension CallManager {
         usesSpeaker = false
         invalidateUnansweredTimeoutTimerAndSetNil()
         performSynchronouslyOnMainThread {
+            vibrator.stopVibrating()
             view.dismiss()
         }
     }
@@ -500,6 +515,39 @@ extension CallManager {
             try? AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .voiceChat, options: [])
         }
         ringtonePlayer?.play()
+    }
+    
+}
+
+extension CallManager {
+    
+    class Vibrator {
+        
+        private var isVibrating = false
+        private var timer: Timer?
+        
+        func startVibrating() {
+            guard !isVibrating else {
+                return
+            }
+            isVibrating = true
+            let timer = Timer(timeInterval: 1, repeats: true, block: { (_) in
+                AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, nil)
+            })
+            timer.fire()
+            RunLoop.main.add(timer, forMode: .common)
+            self.timer = timer
+        }
+        
+        func stopVibrating() {
+            guard isVibrating else {
+                return
+            }
+            timer?.invalidate()
+            timer = nil
+            isVibrating = false
+        }
+        
     }
     
 }

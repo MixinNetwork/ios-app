@@ -181,10 +181,9 @@ class ConversationInputViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        guard height != .minimized else {
-            return
+        if height != .minimized {
+            customInputContainerHeightConstraint.constant = view.frame.height - inputBarView.frame.height
         }
-        customInputContainerHeightConstraint.constant = view.frame.height - inputBarView.frame.height
     }
     
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
@@ -419,7 +418,9 @@ extension ConversationInputViewController {
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
-        view.backgroundColor = .white
+        UIView.performWithoutAnimation {
+            self.view.backgroundColor = .white
+        }
     }
     
     @objc private func saveDraft() {

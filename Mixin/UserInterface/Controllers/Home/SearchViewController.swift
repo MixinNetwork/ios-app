@@ -29,6 +29,8 @@ class SearchViewController: UIViewController, SearchableViewController {
     private var recentAppsViewController: RecentAppsViewController?
     private var searchNumberRequest: Request?
     
+    private lazy var userWindow = UserWindow.instance()
+    
     private var keywordMaybeIdOrPhone: Bool {
         let keyword = trimmedLowercaseKeyword
         guard keyword.count >= 4 else {
@@ -417,7 +419,7 @@ extension SearchViewController {
             switch result {
             case let .success(user):
                 UserDAO.shared.updateUsers(users: [user])
-                UserWindow.instance()
+                weakSelf.userWindow
                     .updateUser(user: UserItem.createUser(from: user), refreshUser: false)
                     .presentView()
             case let .failure(error):

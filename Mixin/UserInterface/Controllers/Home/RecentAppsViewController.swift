@@ -97,6 +97,7 @@ extension RecentAppsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let user = users[indexPath.row]
         let vc = ConversationViewController.instance(ownerUser: user)
+        (parent as? SearchViewController)?.searchTextField.resignFirstResponder()
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
     }
     

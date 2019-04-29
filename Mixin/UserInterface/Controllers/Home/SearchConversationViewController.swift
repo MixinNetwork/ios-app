@@ -9,8 +9,8 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     
     let iconView = NavigationAvatarIconView()
     
-    var inheritedKeyword = ""
-    var lastKeyword = ""
+    var inheritedKeyword: Keyword?
+    var lastKeyword: Keyword?
     
     var searchTextField: UITextField {
         return searchBoxView.textField
@@ -44,7 +44,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         rightButton.width = 44
         navigationItem.title = " "
         navigationItem.rightBarButtonItem = rightButton
-        searchTextField.text = inheritedKeyword
+        searchTextField.text = inheritedKeyword?.raw
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
         tableView.register(R.nib.searchResultCell)
@@ -61,7 +61,9 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
             }
         }
         queue.addOperation(loadConversationOp)
-        reloadMessages(keyword: inheritedKeyword)
+        if let keyword = inheritedKeyword {
+            reloadMessages(keyword: keyword)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -88,25 +90,27 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         queue.operations
             .filter({ $0 != loadConversationOp })
             .forEach({ $0.cancel() })
-        let keyword = self.trimmedLowercaseKeyword
+        guard let keyword = self.keyword else {
+            messages = []
+            tableView.reloadData()
+            lastKeyword = nil
+            return
+        }
         guard keyword != lastKeyword else {
             return
         }
-        if keyword.isEmpty {
-            messages = []
-            tableView.reloadData()
-            lastKeyword = ""
-        } else {
-            reloadMessages(keyword: keyword)
-        }
+        reloadMessages(keyword: keyword)
     }
     
-    private func reloadMessages(keyword: String) {
+    private func reloadMessages(keyword: Keyword) {
         let conversationId = self.conversationId
         let limit = self.messageCountPerPage
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
-            let messages = MessageDAO.shared.getMessages(conversationId: conversationId, contentLike: keyword, belowCreatedAt: nil, limit: limit)
+            let messages = MessageDAO.shared.getMessages(conversationId: conversationId,
+                                                         contentLike: keyword.trimmed,
+                                                         belowCreatedAt: nil,
+                                                         limit: limit)
             guard !op.isCancelled else {
                 return
             }
@@ -166,12 +170,17 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard let last = messages.last?.last, case let .message(_, _, _, _, _, location) = last.target else {
             return
         }
+        guard let keyword = self.keyword else {
+            return
+        }
         let conversationId = self.conversationId
-        let keyword = self.inheritedKeyword
         let limit = self.messageCountPerPage
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
-            let messages = MessageDAO.shared.getMessages(conversationId: conversationId, contentLike: keyword, belowCreatedAt: location, limit: limit)
+            let messages = MessageDAO.shared.getMessages(conversationId: conversationId,
+                                                         contentLike: keyword.trimmed,
+                                                         belowCreatedAt: location,
+                                                         limit: limit)
             guard !op.isCancelled else {
                 return
             }
@@ -197,7 +206,10 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard case let .message(_, id, _, _, _, _) = messages[indexPath.section][indexPath.row].target else {
             return
         }
-        let highlight = ConversationDataSource.Highlight(keyword: inheritedKeyword, messageId: id)
+        guard let keyword = self.keyword?.trimmed else {
+            return
+        }
+        let highlight = ConversationDataSource.Highlight(keyword: keyword, messageId: id)
         let vc = ConversationViewController.instance(conversation: conversation, highlight: highlight)
         homeNavigationController?.pushViewController(vc, animated: true)
     }

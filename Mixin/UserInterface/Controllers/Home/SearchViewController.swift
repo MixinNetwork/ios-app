@@ -25,22 +25,24 @@ class SearchViewController: UIViewController, SearchableViewController {
     private var users = [SearchResult]()
     private var groups = [SearchResult]()
     private var conversations = [SearchResult]()
-    private var lastKeyword = ""
+    private var lastKeyword: Keyword?
     private var recentAppsViewController: RecentAppsViewController?
     private var searchNumberRequest: Request?
     
     private lazy var userWindow = UserWindow.instance()
     
     private var keywordMaybeIdOrPhone: Bool {
-        let keyword = trimmedLowercaseKeyword
-        guard keyword.count >= 4 else {
+        guard let trimmedKeyword = self.keyword?.trimmed else {
             return false
         }
-        guard idOrPhoneCharacterSet.isSuperset(of: keyword) else {
+        guard trimmedKeyword.count >= 4 else {
             return false
         }
-        if keyword.hasPrefix("+") {
-            return (try? PhoneNumberKit.shared.parse(keyword)) != nil
+        guard idOrPhoneCharacterSet.isSuperset(of: trimmedKeyword) else {
+            return false
+        }
+        if trimmedKeyword.hasPrefix("+") {
+            return (try? PhoneNumberKit.shared.parse(trimmedKeyword)) != nil
         } else {
             return true
         }
@@ -91,7 +93,7 @@ class SearchViewController: UIViewController, SearchableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        searchTextField.text = lastKeyword
+        searchTextField.text = lastKeyword?.raw
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -100,19 +102,16 @@ class SearchViewController: UIViewController, SearchableViewController {
     }
     
     @IBAction func searchAction(_ sender: Any) {
-        let keyword = self.trimmedLowercaseKeyword
+        guard let keyword = self.keyword else {
+            showRecentApps()
+            lastKeyword = nil
+            return
+        }
         guard keyword != lastKeyword else {
             return
         }
-        defer {
-            searchNumberRequest?.cancel()
-            searchNumberRequest = nil
-        }
-        guard !keyword.isEmpty else {
-            showRecentApps()
-            lastKeyword = ""
-            return
-        }
+        searchNumberRequest?.cancel()
+        searchNumberRequest = nil
         showSearchResults()
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
         let op = BlockOperation()
@@ -120,13 +119,14 @@ class SearchViewController: UIViewController, SearchableViewController {
             guard self != nil, !op.isCancelled else {
                 return
             }
-            let assets = AssetDAO.shared.getAssets(keyword: keyword, limit: limit)
-                .map { AssetSearchResult(asset: $0, keyword: keyword) }
-            let contacts = UserDAO.shared.getUsers(keyword: keyword, limit: limit)
-                .map { SearchResult(user: $0, keyword: keyword) }
-            let groups = ConversationDAO.shared.getGroupConversation(nameLike: keyword, limit: limit)
-                .map { SearchResult(group: $0, keyword: keyword) }
-            let conversations = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit)
+            let trimmedKeyword = keyword.trimmed
+            let assets = AssetDAO.shared.getAssets(keyword: trimmedKeyword, limit: limit)
+                .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
+            let contacts = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: limit)
+                .map { SearchResult(user: $0, keyword: trimmedKeyword) }
+            let groups = ConversationDAO.shared.getGroupConversation(nameLike: trimmedKeyword, limit: limit)
+                .map { SearchResult(group: $0, keyword: trimmedKeyword) }
+            let conversations = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: limit)
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
                     return
@@ -150,7 +150,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         groups = []
         conversations = []
         tableView.reloadData()
-        lastKeyword = ""
+        lastKeyword = nil
     }
     
     func willHide() {
@@ -291,11 +291,11 @@ extension SearchViewController: UITableViewDelegate {
         case .asset:
             pushAssetViewController(asset: assets[indexPath.row].asset)
         case .user:
-            pushViewController(keyword: trimmedLowercaseKeyword, result: users[indexPath.row])
+            pushViewController(keyword: keyword, result: users[indexPath.row])
         case .group:
-            pushViewController(keyword: trimmedLowercaseKeyword, result: groups[indexPath.row])
+            pushViewController(keyword: keyword, result: groups[indexPath.row])
         case .conversation:
-            pushViewController(keyword: trimmedLowercaseKeyword, result: conversations[indexPath.row])
+            pushViewController(keyword: keyword, result: conversations[indexPath.row])
         }
     }
     
@@ -320,7 +320,7 @@ extension SearchViewController: SearchHeaderViewDelegate {
         case .conversation:
             vc.category = .conversation
         }
-        vc.inheritedKeyword = trimmedLowercaseKeyword
+        vc.inheritedKeyword = keyword
         searchTextField.resignFirstResponder()
         searchNavigationController?.pushViewController(vc, animated: true)
     }
@@ -408,9 +408,12 @@ extension SearchViewController {
     }
     
     private func searchNumber() {
+        guard let keyword = self.keyword else {
+            return
+        }
         searchNumberRequest?.cancel()
         searchNumberCell?.isBusy = true
-        searchNumberRequest = UserAPI.shared.search(keyword: trimmedLowercaseKeyword) { [weak self] (result) in
+        searchNumberRequest = UserAPI.shared.search(keyword: keyword.trimmed) { [weak self] (result) in
             guard let weakSelf = self, weakSelf.searchNumberRequest != nil else {
                 return
             }

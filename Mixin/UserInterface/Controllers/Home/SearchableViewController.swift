@@ -8,11 +8,8 @@ protocol SearchableViewController {
 
 extension SearchableViewController where Self: UIViewController {
     
-    var trimmedLowercaseKeyword: String {
-        guard let text = searchTextField.text else {
-            return ""
-        }
-        return text.trimmingCharacters(in: .whitespaces).lowercased()
+    var keyword: Keyword? {
+        return Keyword(raw: searchTextField.text)
     }
     
     var homeNavigationController: UINavigationController? {
@@ -40,7 +37,7 @@ extension SearchableViewController where Self: UIViewController {
         return navigationSearchBoxView.textField
     }
     
-    func pushViewController(keyword: String, result: SearchResult) {
+    func pushViewController(keyword: Keyword?, result: SearchResult) {
         switch result.target {
         case let .contact(user):
             let vc = ConversationViewController.instance(ownerUser: user)

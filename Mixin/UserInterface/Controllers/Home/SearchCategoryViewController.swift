@@ -14,8 +14,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     let cancelButton = SearchCancelButton()
     
     var category = Category.asset
-    var inheritedKeyword = ""
-    var lastKeyword = ""
+    var inheritedKeyword: Keyword?
     
     var wantsNavigationSearchBox: Bool {
         return true
@@ -27,6 +26,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     
     private let queue = OperationQueue()
     
+    private var lastKeyword: Keyword?
     private var models = [[Any]]()
     
     deinit {
@@ -39,7 +39,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         navigationItem.title = " "
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
         cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
-        searchTextField.text = inheritedKeyword
+        searchTextField.text = inheritedKeyword?.raw
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
         switch category {
@@ -60,7 +60,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        searchTextField.text = lastKeyword
+        searchTextField.text = lastKeyword?.raw
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -70,33 +70,33 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     }
     
     @objc func searchAction(_ sender: Any) {
-        let keyword = self.trimmedLowercaseKeyword
         queue.cancelAllOperations()
-        guard keyword != lastKeyword else {
-            return
-        }
-        guard !keyword.isEmpty else {
+        guard let keyword = self.keyword else {
             models = []
             tableView.reloadData()
-            lastKeyword = ""
+            lastKeyword = nil
+            return
+        }
+        guard keyword != lastKeyword else {
             return
         }
         let category = self.category
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
+            let trimmedKeyword = keyword.trimmed
             let models: [Any]
             switch category {
             case .asset:
-                models = AssetDAO.shared.getAssets(keyword: keyword, limit: nil)
-                    .map { AssetSearchResult(asset: $0, keyword: keyword) }
+                models = AssetDAO.shared.getAssets(keyword: trimmedKeyword, limit: nil)
+                    .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
             case .contact:
-                models = UserDAO.shared.getUsers(keyword: keyword, limit: nil)
-                    .map { SearchResult(user: $0, keyword: keyword) }
+                models = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: nil)
+                    .map { SearchResult(user: $0, keyword: trimmedKeyword) }
             case .group:
-                models = ConversationDAO.shared.getGroupConversation(nameLike: keyword, limit: nil)
-                    .map { SearchResult(group: $0, keyword: keyword) }
+                models = ConversationDAO.shared.getGroupConversation(nameLike: trimmedKeyword, limit: nil)
+                    .map { SearchResult(group: $0, keyword: trimmedKeyword) }
             case .conversation:
-                models = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: nil)
+                models = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: nil)
             }
             guard !op.isCancelled, self != nil else {
                 return
@@ -170,8 +170,7 @@ extension SearchCategoryViewController: UITableViewDelegate {
             let asset = (model as! AssetSearchResult).asset
             pushAssetViewController(asset: asset)
         case .contact, .group, .conversation:
-            pushViewController(keyword: trimmedLowercaseKeyword,
-                               result: model as! SearchResult)
+            pushViewController(keyword: keyword, result: model as! SearchResult)
         }
     }
     

@@ -38,6 +38,11 @@ class RecentAppsViewController: UIViewController {
         collectionLayout.sectionInset = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
     }
     
+    @IBAction func hideSearchAction() {
+        let top = UIApplication.rootNavigationController()?.topViewController
+        (top as? HomeViewController)?.hideSearch()
+    }
+    
     @objc func didChangeRecentlyUsedAppIds() {
         needsReload = true
     }
@@ -80,6 +85,15 @@ class RecentAppsViewController: UIViewController {
     
 }
 
+extension RecentAppsViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        let location = gestureRecognizer.location(in: scrollView)
+        return !contentView.frame.contains(location)
+    }
+    
+}
+
 extension RecentAppsViewController: UIScrollViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -87,7 +101,7 @@ extension RecentAppsViewController: UIScrollViewDelegate {
             return
         }
         if scrollView.panGestureRecognizer.velocity(in: scrollView).y < 0 {
-            (UIApplication.rootNavigationController()?.topViewController as? HomeViewController)?.hideSearch()
+            hideSearchAction()
         }
     }
     

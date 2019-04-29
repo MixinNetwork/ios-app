@@ -41,7 +41,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         guard idOrPhoneCharacterSet.isSuperset(of: trimmedKeyword) else {
             return false
         }
-        if trimmedKeyword.hasPrefix("+") {
+        if trimmedKeyword.contains("+") {
             return (try? PhoneNumberKit.shared.parse(trimmedKeyword)) != nil
         } else {
             return true
@@ -314,7 +314,7 @@ extension SearchViewController: SearchHeaderViewDelegate {
         case .asset:
             vc.category = .asset
         case .user:
-            vc.category = .contact
+            vc.category = .user
         case .group:
             vc.category = .group
         case .conversation:

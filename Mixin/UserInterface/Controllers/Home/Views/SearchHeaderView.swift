@@ -58,7 +58,7 @@ class SearchHeaderView: UITableViewHeaderFooterView {
         button.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         button.setTitle(R.string.localizable.action_more(), for: .normal)
         button.setTitleColor(.highlightedText, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 12)
+        button.titleLabel?.font = .systemFont(ofSize: 14)
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 20)
         button.addTarget(self, action: #selector(moreAction(_:)), for: .touchUpInside)
         contentView.addSubview(topShadowView)

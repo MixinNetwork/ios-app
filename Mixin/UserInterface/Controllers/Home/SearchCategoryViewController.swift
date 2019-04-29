@@ -4,9 +4,22 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     
     enum Category {
         case asset
-        case contact
+        case user
         case group
         case conversation
+        
+        var title: String {
+            switch self {
+            case .asset:
+                return R.string.localizable.search_section_title_asset()
+            case .user:
+                return R.string.localizable.search_section_title_user()
+            case .group:
+                return R.string.localizable.search_section_title_group()
+            case .conversation:
+                return R.string.localizable.search_section_title_conversation()
+            }
+        }
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -45,9 +58,15 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         switch category {
         case .asset:
             tableView.register(R.nib.assetCell)
-        case .contact, .group, .conversation:
+        case .user, .group, .conversation:
             tableView.register(R.nib.searchResultCell)
         }
+        let headerView = SearchHeaderView()
+        headerView.label.text = category.title
+        headerView.button.isHidden = true
+        headerView.isFirstSection = true
+        headerView.frame.size = CGSize(width: tableView.bounds.width, height: 36)
+        tableView.tableHeaderView = headerView
         tableView.dataSource = self
         tableView.delegate = self
         searchAction(self)
@@ -89,7 +108,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
             case .asset:
                 models = AssetDAO.shared.getAssets(keyword: trimmedKeyword, limit: nil)
                     .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
-            case .contact:
+            case .user:
                 models = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: nil)
                     .map { SearchResult(user: $0, keyword: trimmedKeyword) }
             case .group:
@@ -146,7 +165,7 @@ extension SearchCategoryViewController: UITableViewDataSource {
             let asset = (model as! AssetSearchResult).asset
             cell.render(asset: asset)
             return cell
-        case .contact, .group, .conversation:
+        case .user, .group, .conversation:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
             let result = model as! SearchResult
             cell.render(result: result)
@@ -169,7 +188,7 @@ extension SearchCategoryViewController: UITableViewDelegate {
         case .asset:
             let asset = (model as! AssetSearchResult).asset
             pushAssetViewController(asset: asset)
-        case .contact, .group, .conversation:
+        case .user, .group, .conversation:
             pushViewController(keyword: keyword, result: model as! SearchResult)
         }
     }

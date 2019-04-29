@@ -58,6 +58,7 @@
 "search_section_title_user" = "連絡先";
 "search_section_title_group" = "グループ";
 "search_section_title_conversation" = "メッセージ";
+"search_section_title_recent_apps" = "最近使ったアプリ";
 
 // Toast
 "toast_server_error" = "サーバーはメンテナンス中です";

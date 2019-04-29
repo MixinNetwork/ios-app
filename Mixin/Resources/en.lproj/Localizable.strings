@@ -61,6 +61,7 @@
 "search_section_title_user" = "Contacts";
 "search_section_title_group" = "Groups";
 "search_section_title_conversation" = "Messages";
+"search_section_title_recent_apps" = "Recently used bots";
 
 // Toast
 "toast_server_error" = "Server is under maintenance";

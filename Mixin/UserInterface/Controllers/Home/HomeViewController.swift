@@ -203,6 +203,17 @@ class HomeViewController: UIViewController {
         }
     }
     
+    @objc func hideSearch() {
+        searchViewController.willHide()
+        searchContainerTopConstraint.constant = searchContainerBeginTopConstant
+        UIView.animate(withDuration: 0.2) {
+            self.navigationBarView.alpha = 1
+            self.searchContainerView.alpha = 0
+            self.view.layoutIfNeeded()
+        }
+        view.endEditing(true)
+    }
+    
 }
 
 extension HomeViewController: UITableViewDataSource {
@@ -413,17 +424,6 @@ extension HomeViewController {
             self.bottomNavConstraint.constant = 0
             self.view.layoutIfNeeded()
         }, completion: nil)
-    }
-    
-    @objc private func hideSearch() {
-        searchViewController.willHide()
-        searchContainerTopConstraint.constant = searchContainerBeginTopConstant
-        UIView.animate(withDuration: 0.2) {
-            self.navigationBarView.alpha = 1
-            self.searchContainerView.alpha = 0
-            self.view.layoutIfNeeded()
-        }
-        view.endEditing(true)
     }
     
     private func requestAppStoreReviewIfNeeded() {

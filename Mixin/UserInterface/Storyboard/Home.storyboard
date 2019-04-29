@@ -551,6 +551,7 @@
                         <outlet property="collectionView" destination="eAo-ZX-i9D" id="CGW-7y-hn3"/>
                         <outlet property="collectionViewHeightConstraint" destination="cAp-XY-y6W" id="fKJ-UZ-83P"/>
                         <outlet property="contentView" destination="lR2-7f-hUd" id="cfb-rB-hOO"/>
+                        <outlet property="scrollView" destination="BN3-h1-eZm" id="oLD-13-MEg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LZd-9s-bcF" userLabel="First Responder" sceneMemberID="firstResponder"/>

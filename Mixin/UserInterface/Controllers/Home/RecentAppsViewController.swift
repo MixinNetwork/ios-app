@@ -2,6 +2,7 @@ import UIKit
 
 class RecentAppsViewController: UIViewController {
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionLayout: UICollectionViewFlowLayout!
@@ -18,6 +19,7 @@ class RecentAppsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
+        scrollView.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
         NotificationCenter.default.addObserver(self,
@@ -73,6 +75,19 @@ class RecentAppsViewController: UIViewController {
             collectionViewHeightConstraint.constant = height
             collectionView.reloadData()
             view.layoutIfNeeded()
+        }
+    }
+    
+}
+
+extension RecentAppsViewController: UIScrollViewDelegate {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        guard scrollView == self.scrollView else {
+            return
+        }
+        if scrollView.panGestureRecognizer.velocity(in: scrollView).y < 0 {
+            (UIApplication.rootNavigationController()?.topViewController as? HomeViewController)?.hideSearch()
         }
     }
     

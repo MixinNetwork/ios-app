@@ -280,12 +280,18 @@ class ConversationViewController: UIViewController {
             let canMoveUp = !conversationInputViewController.textView.isFirstResponder
                 || inputWrapperHeight < conversationInputViewController.regularHeight
             let shouldMoveUp = canMoveUp
+                && location.y < 0
                 && verticalVelocity < 0
                 && recognizer.hasMovedInputWrapperDuringChangedState
             if shouldMoveDown || shouldMoveUp {
                 recognizer.hasMovedInputWrapperDuringChangedState = true
                 var newHeight = inputWrapperHeight - recognizer.translation(in: view).y
-                newHeight = max(newHeight, conversationInputViewController.minimizedHeight)
+                if newHeight < conversationInputViewController.minimizedHeight {
+                    newHeight = conversationInputViewController.minimizedHeight
+                    if shouldMoveDown && conversationInputViewController.view.backgroundColor == .clear {
+                        conversationInputViewController.view.backgroundColor = .white
+                    }
+                }
                 if conversationInputViewController.isMaximizable {
                     newHeight = min(newHeight, maxInputWrapperHeight)
                 } else {

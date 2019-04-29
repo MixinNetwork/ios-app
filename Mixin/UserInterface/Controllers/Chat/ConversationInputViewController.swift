@@ -7,6 +7,8 @@ protocol ConversationInputInteractiveResizableViewController {
 
 class ConversationInputViewController: UIViewController {
     
+    typealias Quote = (message: MessageItem, thumbnail: UIImage?)
+    
     @IBOutlet weak var quotePreviewView: QuotePreviewView!
     @IBOutlet weak var deleteConversationButton: BusyButton!
     @IBOutlet weak var unblockButton: BusyButton!
@@ -55,9 +57,9 @@ class ConversationInputViewController: UIViewController {
         return UIView.layoutFittingExpandedSize.height
     }
     
-    var quote: (message: MessageItem, thumbnail: UIImage?)? {
+    var quote: Quote? {
         didSet {
-            updateQuotePreview()
+            updateQuotePreview(oldValue: oldValue)
         }
     }
     
@@ -179,10 +181,9 @@ class ConversationInputViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        guard height != .minimized else {
-            return
+        if height != .minimized {
+            customInputContainerHeightConstraint.constant = view.frame.height - inputBarView.frame.height
         }
-        customInputContainerHeightConstraint.constant = view.frame.height - inputBarView.frame.height
     }
     
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
@@ -233,6 +234,7 @@ class ConversationInputViewController: UIViewController {
     
     @IBAction func toggleExtensionAction(_ sender: ConversationExtensionSwitch) {
         if sender.isOn {
+            quote = nil
             resignTextViewFirstResponderWithoutReportingContentHeightChange()
             if height == .maximized {
                 setPreferredContentHeightAnimated(.regular)
@@ -246,6 +248,7 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func showStickersAction(_ sender: Any) {
+        quote = nil
         resignTextViewFirstResponderWithoutReportingContentHeightChange()
         setRightAccessoryButton(keyboardButton)
         extensionsSwitch.isOn = false
@@ -389,7 +392,7 @@ extension ConversationInputViewController {
             return
         }
         let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
-        guard textView.isFirstResponder || keyboardWillBeInvisible else {
+        guard textView.isFirstResponder || (keyboardWillBeInvisible && customInputViewController == nil) else {
             return
         }
         if !keyboardWillBeInvisible {
@@ -408,12 +411,16 @@ extension ConversationInputViewController {
                 - endFrame.origin.y
                 - interactiveDismissResponder.height
             height = max(minimizedHeight, height)
-            setPreferredContentHeight(height, animated: false)
+            if view.frame.height != height {
+                setPreferredContentHeight(height, animated: false)
+            }
         }
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
-        view.backgroundColor = .white
+        UIView.performWithoutAnimation {
+            self.view.backgroundColor = .white
+        }
     }
     
     @objc private func saveDraft() {
@@ -679,28 +686,32 @@ extension ConversationInputViewController {
         }
     }
     
-    private func updateQuotePreview() {
+    private func updateQuotePreview(oldValue: Quote?) {
+        let quotePreviewHeight = quotePreviewHeightConstraint.constant
         if let quote = quote {
             audioViewController.cancelIfRecording()
             UIView.performWithoutAnimation {
                 quotePreviewView.render(message: quote.message, contentImageThumbnail: quote.thumbnail)
                 quotePreviewView.layoutIfNeeded()
             }
-            let diff = quotePreviewHeightConstraint.constant - quotePreviewWrapperHeightConstraint.constant
-            quotePreviewWrapperHeightConstraint.constant = quotePreviewHeightConstraint.constant
+            if oldValue == nil {
+                quotePreviewView.alpha = 1
+                quotePreviewWrapperHeightConstraint.constant = quotePreviewHeight
+                interactiveDismissResponder.height += quotePreviewHeight
+            }
             if textView.isFirstResponder {
-                if abs(diff) > 0 {
-                    setPreferredContentHeight(preferredContentHeight + diff, animated: true)
+                if oldValue == nil {
+                    setPreferredContentHeight(preferredContentHeight + quotePreviewHeight, animated: true)
                 }
             } else {
                 textView.becomeFirstResponder()
             }
-        } else {
-            if quotePreviewWrapperHeightConstraint.constant != 0 {
-                let newHeight = preferredContentHeight - quotePreviewWrapperHeightConstraint.constant
-                quotePreviewWrapperHeightConstraint.constant = 0
-                setPreferredContentHeight(newHeight, animated: true)
-            }
+        } else if oldValue != nil {
+            quotePreviewView.alpha = 0
+            interactiveDismissResponder.height -= quotePreviewHeight
+            let newHeight = preferredContentHeight - quotePreviewHeight
+            quotePreviewWrapperHeightConstraint.constant = 0
+            setPreferredContentHeight(newHeight, animated: true)
         }
     }
     
@@ -711,6 +722,7 @@ extension ConversationInputViewController {
         setRightAccessoryButton(stickersButton)
         if photosButton.isSelected {
             loadCustomInputViewController(photoViewController)
+            quote = nil
         } else {
             dismissCustomInput(minimize: true)
         }

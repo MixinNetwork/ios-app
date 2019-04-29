@@ -182,6 +182,8 @@ final class ConversationDAO {
             Conversation.Properties.conversationId.in(table: Conversation.tableName),
             Conversation.Properties.category.in(table: Conversation.tableName),
             name, iconUrl, userId,
+            User.Properties.isVerified.in(table: User.tableName),
+            User.Properties.appId.in(table: User.tableName),
             Conversation.Properties.conversationId.in(table: Conversation.tableName).count()
         ]
         let joinClause = JoinClause(with: Message.tableName)
@@ -221,6 +223,8 @@ final class ConversationDAO {
                                             name: cs.value(atIndex: autoIncrement) ?? "",
                                             iconUrl: cs.value(atIndex: autoIncrement) ?? "",
                                             userId: cs.value(atIndex: autoIncrement),
+                                            userIsVerified: cs.value(atIndex: autoIncrement) ?? false,
+                                            userAppId: cs.value(atIndex: autoIncrement),
                                             relatedMessageCount: cs.value(atIndex: autoIncrement) ?? 0,
                                             keyword: keyword)
                     items.append(item)

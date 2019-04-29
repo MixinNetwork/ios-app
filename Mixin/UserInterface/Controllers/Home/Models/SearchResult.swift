@@ -46,7 +46,7 @@ struct SearchResult {
         self.description = nil
     }
     
-    init(conversationId: String, category: ConversationCategory, name: String, iconUrl: String, userId: String?, relatedMessageCount: Int, keyword: String) {
+    init(conversationId: String, category: ConversationCategory, name: String, iconUrl: String, userId: String?, userIsVerified: Bool, userAppId: String?, relatedMessageCount: Int, keyword: String) {
         switch category {
         case .CONTACT:
             self.target = .searchMessageWithContact(conversationId: conversationId,
@@ -60,7 +60,7 @@ struct SearchResult {
                                                  textAttributes: SearchResult.titleAttributes,
                                                  keyword: keyword,
                                                  keywordAttributes: SearchResult.highlightedTitleAttributes)
-        self.badgeImage = nil
+        self.badgeImage = SearchResult.userBadgeImage(isVerified: userIsVerified, appId: userAppId)
         self.superscript = nil
         let desc = "\(relatedMessageCount)" + R.string.localizable.search_related_messages_count()
         self.description = NSAttributedString(string: desc, attributes: SearchResult.normalDescriptionAttributes)
@@ -159,7 +159,7 @@ extension SearchResult {
     private static func userBadgeImage(isVerified: Bool, appId: String?) -> UIImage? {
         if isVerified {
             return R.image.ic_user_verified()
-        } else if appId != nil {
+        } else if !appId.isNilOrEmpty {
             return R.image.ic_user_bot()
         } else {
             return nil

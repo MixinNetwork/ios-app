@@ -166,7 +166,19 @@ class BaseDatabase {
         }
         return []
     }
-
+    
+    func getCodables<T: TableDecodable>(statement: StatementSelect, inTransaction: Bool = true) -> [T] {
+        if inTransaction {
+            var result = [T]()
+            try! database.runTransaction {
+                result = try database.getObjects(on: T.Properties.all, stmt: statement)
+            }
+            return result
+        } else {
+            return try! database.getObjects(on: T.Properties.all, stmt: statement)
+        }
+    }
+    
     func getCodable<T: BaseCodable>(condition: Condition, orderBy orderList: [OrderBy]? = nil, inTransaction: Bool = true) -> T? {
         if inTransaction {
             var result: T?

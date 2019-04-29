@@ -1,6 +1,6 @@
 import WCDBSwift
 
-struct SnapshotItem {
+struct SnapshotItem: TableDecodable {
 
     let snapshotId: String
     let type: String
@@ -20,5 +20,29 @@ struct SnapshotItem {
     let opponentUserFullName: String?
     let opponentUserAvatarUrl: String?
     let opponentUserIdentityNumber: String?
+    
+    enum CodingKeys: String, CodingTableKey {
+        typealias Root = SnapshotItem
+        case snapshotId = "snapshot_id"
+        case type
+        case assetId = "asset_id"
+        case amount
+        case opponentId = "opponent_id"
+        case transactionHash = "transaction_hash"
+        case sender
+        case receiver
+        case memo
+        case confirmations
+        case createdAt = "created_at"
+        
+        case assetSymbol = "symbol"
+        
+        case opponentUserId = "user_id"
+        case opponentUserFullName = "full_name"
+        case opponentUserAvatarUrl = "avatar_url"
+        case opponentUserIdentityNumber = "identity_number"
+        
+        static let objectRelationalMapping = TableBinding(CodingKeys.self)
+    }
     
 }

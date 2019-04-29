@@ -106,53 +106,28 @@ final class SnapshotDAO {
 
 extension SnapshotDAO {
     
-    private static let columns = Snapshot.Properties.all.map({ $0.in(table: Snapshot.tableName) })
-        + [Asset.Properties.symbol.in(table: Asset.tableName),
-           User.Properties.userId.in(table: User.tableName),
-           User.Properties.fullName.in(table: User.tableName),
-           User.Properties.avatarUrl.in(table: User.tableName),
-           User.Properties.identityNumber.in(table: User.tableName)]
-    private static let joinClause = JoinClause(with: Snapshot.tableName)
-        .join(Asset.tableName, with: .left)
-        .on(Snapshot.Properties.assetId.in(table: Snapshot.tableName)
-            == Asset.Properties.assetId.in(table: Asset.tableName))
-        .join(User.tableName, with: .left)
-        .on(Snapshot.Properties.opponentId.in(table: Snapshot.tableName)
-            == User.Properties.userId.in(table: User.tableName))
-    
     private func getSnapshotsAndRefreshCorrespondingAssetIfNeeded(prepare: (StatementSelect) -> (StatementSelect)) -> [SnapshotItem] {
-        var items = [SnapshotItem]()
-        var stmt = StatementSelect().select(SnapshotDAO.columns).from(SnapshotDAO.joinClause)
+        let columns = Snapshot.Properties.all.map({ $0.in(table: Snapshot.tableName) })
+            + [Asset.Properties.symbol.in(table: Asset.tableName),
+               User.Properties.userId.in(table: User.tableName),
+               User.Properties.fullName.in(table: User.tableName),
+               User.Properties.avatarUrl.in(table: User.tableName),
+               User.Properties.identityNumber.in(table: User.tableName)]
+        let joinedTable = JoinClause(with: Snapshot.tableName)
+            .join(Asset.tableName, with: .left)
+            .on(Snapshot.Properties.assetId.in(table: Snapshot.tableName)
+                == Asset.Properties.assetId.in(table: Asset.tableName))
+            .join(User.tableName, with: .left)
+            .on(Snapshot.Properties.opponentId.in(table: Snapshot.tableName)
+                == User.Properties.userId.in(table: User.tableName))
+        var stmt = StatementSelect().select(columns).from(joinedTable)
         stmt = prepare(stmt)
-        return MixinDatabase.shared.getCodables(callback: { (db) in
-            let cs = try db.prepare(stmt)
-            while try cs.step() {
-                var i = -1
-                var autoIncrementIndex: Int {
-                    i += 1
-                    return i
-                }
-                let item = SnapshotItem(snapshotId: cs.value(atIndex: autoIncrementIndex, of: String.self) ?? "",
-                                        type: cs.value(atIndex: autoIncrementIndex, of: String.self) ?? "",
-                                        assetId: cs.value(atIndex: autoIncrementIndex, of: String.self) ?? "",
-                                        amount: cs.value(atIndex: autoIncrementIndex, of: String.self) ?? "",
-                                        opponentId: cs.value(atIndex: autoIncrementIndex, of: String.self),
-                                        transactionHash: cs.value(atIndex: autoIncrementIndex, of: String.self),
-                                        sender: cs.value(atIndex: autoIncrementIndex, of: String.self),
-                                        receiver: cs.value(atIndex: autoIncrementIndex, of: String.self),
-                                        memo: cs.value(atIndex: autoIncrementIndex, of: String.self),
-                                        confirmations: cs.value(atIndex: autoIncrementIndex, of: Int.self),
-                                        createdAt: cs.value(atIndex: autoIncrementIndex, of: String.self) ?? "",
-                                        assetSymbol: cs.value(atIndex: autoIncrementIndex, of: String.self),
-                                        opponentUserId: cs.value(atIndex: autoIncrementIndex, of: String.self),
-                                        opponentUserFullName: cs.value(atIndex: autoIncrementIndex, of: String.self),
-                                        opponentUserAvatarUrl: cs.value(atIndex: autoIncrementIndex, of: String.self),
-                                        opponentUserIdentityNumber: cs.value(atIndex: autoIncrementIndex, of: String.self))
-                refreshAssetIfNeeded(item)
-                items.append(item)
-            }
-            return items
-        })
+        let snapshots: [SnapshotItem] = MixinDatabase.shared.getCodables(statement: stmt)
+        for snapshot in snapshots where snapshot.assetSymbol == nil {
+            let job = RefreshAssetsJob(assetId: snapshot.assetId)
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
+        return snapshots
     }
     
     private func refreshAssetIfNeeded(_ snapshot: SnapshotItem) {

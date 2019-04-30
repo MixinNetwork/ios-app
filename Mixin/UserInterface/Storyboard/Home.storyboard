@@ -39,7 +39,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" estimatedRowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9MA-tT-pfZ">
-                                        <rect key="frame" x="0.0" y="64" width="375" height="595"/>
+                                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableView>
@@ -124,7 +124,7 @@
                                     <constraint firstAttribute="trailing" secondItem="BAu-gi-TQg" secondAttribute="trailing" id="cfw-jq-hi5"/>
                                     <constraint firstItem="9MA-tT-pfZ" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="gUI-OH-Dsh"/>
                                     <constraint firstItem="BAu-gi-TQg" firstAttribute="top" secondItem="i5D-40-ldq" secondAttribute="top" id="iA0-b7-dRg"/>
-                                    <constraint firstAttribute="bottomMargin" secondItem="9MA-tT-pfZ" secondAttribute="bottom" id="tNx-Gk-iAm"/>
+                                    <constraint firstAttribute="bottom" secondItem="9MA-tT-pfZ" secondAttribute="bottom" id="tNx-Gk-iAm"/>
                                     <constraint firstItem="L82-pj-DlR" firstAttribute="centerY" secondItem="i5D-40-ldq" secondAttribute="centerY" id="ttx-86-JkN"/>
                                     <constraint firstItem="L82-pj-DlR" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" constant="40" id="vsD-b9-INs"/>
                                     <constraint firstItem="BAu-gi-TQg" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="yxJ-e8-ZQf"/>

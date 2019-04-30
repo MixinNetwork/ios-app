@@ -3,34 +3,12 @@ import SDWebImage
 
 class PeerCell: UITableViewCell {
     
-    static let cellIdentifier = "cell_identifier_contact"
-    static let cellHeight: CGFloat = 70
-    
     @IBOutlet weak var checkmarkView: CheckmarkView!
-    
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var identityImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var selectionView: UIStackView!
-    
-    @IBOutlet weak var contentStackViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var contentStackViewTrailingConstraint: NSLayoutConstraint!
-    
-    var usesModernStyle: Bool = false {
-        didSet {
-            if usesModernStyle {
-                contentStackViewLeadingConstraint.constant = 20
-                contentStackViewTrailingConstraint.constant = 20
-                let view = UIView()
-                view.backgroundColor = .modernCellSelection
-                selectedBackgroundView = view
-            } else {
-                contentStackViewLeadingConstraint.constant = 15
-                contentStackViewTrailingConstraint.constant = 15
-                selectedBackgroundView = nil
-            }
-        }
-    }
     
     var supportsMultipleSelection = false {
         didSet {

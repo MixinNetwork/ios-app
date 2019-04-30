@@ -31,8 +31,11 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     
     private var conversationId = ""
     private var conversation: ConversationItem?
+    private var user: UserItem?
     private var messages = [[SearchResult]]()
     private var didLoadAllMessages = false
+    
+    private lazy var userWindow = UserWindow.instance()
     
     deinit {
         queue.cancelAllOperations()
@@ -40,6 +43,10 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileAction))
+        iconView.addGestureRecognizer(tapRecognizer)
+        iconView.frame.size = iconView.intrinsicContentSize
+        iconView.isUserInteractionEnabled = true
         let rightButton = UIBarButtonItem(customView: iconView)
         rightButton.width = 44
         navigationItem.title = " "
@@ -53,11 +60,16 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         let conversationId = self.conversationId
         loadConversationOp.addExecutionBlock { [weak self] in
             let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
+            var user: UserItem?
+            if let id = conversation?.ownerId, !id.isEmpty {
+                user = UserDAO.shared.getUser(userId: id)
+            }
             DispatchQueue.main.sync {
                 guard let weakSelf = self else {
                     return
                 }
                 weakSelf.conversation = conversation
+                weakSelf.user = user
             }
         }
         queue.addOperation(loadConversationOp)
@@ -100,6 +112,13 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
             return
         }
         reloadMessages(keyword: keyword)
+    }
+    
+    @objc func profileAction() {
+        guard let user = user else {
+            return
+        }
+        userWindow.updateUser(user: user).presentView()
     }
     
     private func reloadMessages(keyword: Keyword) {

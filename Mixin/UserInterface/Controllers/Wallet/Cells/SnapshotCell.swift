@@ -6,12 +6,11 @@ protocol SnapshotCellDelegate: class {
 
 class SnapshotCell: UITableViewCell {
     
-    static let cellHeight: CGFloat = 50
-    
     @IBOutlet weak var pendingDepositProgressView: UIView!
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var amountLabel: InsetLabel!
+    @IBOutlet weak var symbolLabel: UILabel!
     
     @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
     
@@ -35,7 +34,7 @@ class SnapshotCell: UITableViewCell {
         delegate?.walletSnapshotCellDidSelectIcon(self)
     }
     
-    func render(snapshot: SnapshotItem, asset: AssetItem? = nil, showSymbol: Bool = false) {
+    func render(snapshot: SnapshotItem, asset: AssetItem? = nil) {
         if snapshot.type == SnapshotType.transfer.rawValue, let iconUrl = snapshot.opponentUserAvatarUrl, let userId = snapshot.opponentUserId, let name = snapshot.opponentUserFullName {
             iconImageView.setImage(with: iconUrl, userId: userId, name: name)
         } else {
@@ -73,6 +72,7 @@ class SnapshotCell: UITableViewCell {
             break
         }
         amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.amount, format: .precision, sign: .always)
+        symbolLabel.text = asset?.symbol ?? snapshot.assetSymbol
         if snapshot.type == SnapshotType.pendingDeposit.rawValue, let finished = snapshot.confirmations, let total = asset?.confirmations {
             pendingDepositProgressView.isHidden = false
             let multiplier = CGFloat(finished) / CGFloat(total)
@@ -83,14 +83,6 @@ class SnapshotCell: UITableViewCell {
             }
         } else {
             pendingDepositProgressView.isHidden = true
-        }
-
-        if showSymbol {
-            guard let transactionType = titleLabel.text, let symbol = snapshot.assetSymbol else {
-                return
-            }
-
-            titleLabel.text = transactionType + " " + symbol
         }
     }
     

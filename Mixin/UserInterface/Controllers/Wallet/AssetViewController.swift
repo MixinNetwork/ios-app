@@ -6,7 +6,6 @@ class AssetViewController: UIViewController {
     @IBOutlet weak var tableHeaderView: AssetTableHeaderView!
     
     private enum ReuseId {
-        static let cell  = "snapshot"
         static let header = "header"
     }
     
@@ -25,7 +24,7 @@ class AssetViewController: UIViewController {
         updateTableHeaderFooterView()
         tableHeaderView.render(asset: asset)
         tableHeaderView.sizeToFit()
-        tableView.register(UINib(nibName: "SnapshotCell", bundle: .main), forCellReuseIdentifier: ReuseId.cell)
+        tableView.register(R.nib.snapshotCell)
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.dataSource = self
         tableView.delegate = self
@@ -148,7 +147,7 @@ extension AssetViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
         cell.render(snapshot: snapshotDataSource.snapshots[indexPath.section][indexPath.row], asset: asset)
         cell.delegate = self
         return cell
@@ -171,10 +170,6 @@ extension AssetViewController: UITableViewDelegate {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! AssetHeaderView
         header.label.text = snapshotDataSource.titles[section]
         return header
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SnapshotCell.cellHeight
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

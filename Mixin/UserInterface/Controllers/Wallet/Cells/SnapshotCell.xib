@@ -1,75 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="abF-IG-txU" customClass="SnapshotCell" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+        <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="snapshot" rowHeight="62" id="abF-IG-txU" customClass="SnapshotCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="abF-IG-txU" id="z2Z-lz-lZP">
-                <rect key="frame" x="0.0" y="0.0" width="414" height="49.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="414" height="61.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uZv-Qf-jhM">
-                        <rect key="frame" x="290" y="0.0" width="124" height="49.5"/>
+                        <rect key="frame" x="290" y="0.0" width="124" height="61.5"/>
                         <color key="backgroundColor" red="0.94901960780000005" green="0.98039215690000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
-                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="mI8-4d-1QY">
-                        <rect key="frame" x="20" y="0.0" width="374" height="49.5"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ITh-bd-CG3">
+                        <rect key="frame" x="19" y="10" width="42" height="42"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ITh-bd-CG3">
-                                <rect key="frame" x="0.0" y="10" width="30" height="30"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dvX-OJ-H0b" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="14"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
-                                                <real key="value" value="12"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uXI-Ar-8rs">
-                                        <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
-                                        <connections>
-                                            <action selector="selectIconAction:" destination="abF-IG-txU" eventType="touchUpInside" id="si6-eZ-rJQ"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="0Dc-7s-Kb6"/>
-                                    <constraint firstAttribute="trailing" secondItem="uXI-Ar-8rs" secondAttribute="trailing" id="2d5-f6-9id"/>
-                                    <constraint firstItem="uXI-Ar-8rs" firstAttribute="leading" secondItem="ITh-bd-CG3" secondAttribute="leading" id="4fL-L2-6T7"/>
-                                    <constraint firstAttribute="width" secondItem="ITh-bd-CG3" secondAttribute="height" multiplier="1:1" id="7lf-iF-iua"/>
-                                    <constraint firstAttribute="trailing" secondItem="dvX-OJ-H0b" secondAttribute="trailing" id="MM3-mu-RAi"/>
-                                    <constraint firstItem="dvX-OJ-H0b" firstAttribute="top" secondItem="ITh-bd-CG3" secondAttribute="top" id="koB-3c-Nu9"/>
-                                    <constraint firstAttribute="bottom" secondItem="uXI-Ar-8rs" secondAttribute="bottom" id="lCf-yH-1DP"/>
-                                    <constraint firstItem="uXI-Ar-8rs" firstAttribute="top" secondItem="ITh-bd-CG3" secondAttribute="top" id="pLK-qV-PQW"/>
-                                    <constraint firstAttribute="bottom" secondItem="dvX-OJ-H0b" secondAttribute="bottom" id="reP-ps-JeJ"/>
-                                    <constraint firstItem="dvX-OJ-H0b" firstAttribute="leading" secondItem="ITh-bd-CG3" secondAttribute="leading" id="snI-L2-dF4"/>
-                                </constraints>
-                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dvX-OJ-H0b" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="21"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="titleFontSize">
+                                        <real key="value" value="14"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uXI-Ar-8rs">
+                                <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
+                                <connections>
+                                    <action selector="selectIconAction:" destination="abF-IG-txU" eventType="touchUpInside" id="si6-eZ-rJQ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="42" id="0Dc-7s-Kb6"/>
+                            <constraint firstAttribute="trailing" secondItem="uXI-Ar-8rs" secondAttribute="trailing" id="2d5-f6-9id"/>
+                            <constraint firstItem="uXI-Ar-8rs" firstAttribute="leading" secondItem="ITh-bd-CG3" secondAttribute="leading" id="4fL-L2-6T7"/>
+                            <constraint firstAttribute="width" secondItem="ITh-bd-CG3" secondAttribute="height" multiplier="1:1" id="7lf-iF-iua"/>
+                            <constraint firstAttribute="trailing" secondItem="dvX-OJ-H0b" secondAttribute="trailing" id="MM3-mu-RAi"/>
+                            <constraint firstItem="dvX-OJ-H0b" firstAttribute="top" secondItem="ITh-bd-CG3" secondAttribute="top" id="koB-3c-Nu9"/>
+                            <constraint firstAttribute="bottom" secondItem="uXI-Ar-8rs" secondAttribute="bottom" id="lCf-yH-1DP"/>
+                            <constraint firstItem="uXI-Ar-8rs" firstAttribute="top" secondItem="ITh-bd-CG3" secondAttribute="top" id="pLK-qV-PQW"/>
+                            <constraint firstAttribute="bottom" secondItem="dvX-OJ-H0b" secondAttribute="bottom" id="reP-ps-JeJ"/>
+                            <constraint firstItem="dvX-OJ-H0b" firstAttribute="leading" secondItem="ITh-bd-CG3" secondAttribute="leading" id="snI-L2-dF4"/>
+                        </constraints>
+                    </view>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="mI8-4d-1QY">
+                        <rect key="frame" x="77" y="0.0" width="317" height="61.5"/>
+                        <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="Transfer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o1a-sz-8up">
-                                <rect key="frame" x="40" y="17.5" width="47" height="14.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <rect key="frame" x="0.0" y="22.5" width="53.5" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="+20" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Eq-Iz-C6X" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="97" y="15.5" width="277" height="19"/>
+                                <rect key="frame" x="63.5" y="21.5" width="222.5" height="19"/>
                                 <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="19"/>
                                 <color key="textColor" red="0.16078431369999999" green="0.74509803919999995" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="XIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gns-Tw-VaL">
+                                <rect key="frame" x="296" y="23.5" width="21" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -77,9 +83,11 @@
                 </subviews>
                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
+                    <constraint firstItem="ITh-bd-CG3" firstAttribute="leading" secondItem="z2Z-lz-lZP" secondAttribute="leading" constant="19" id="6hk-dK-N7g"/>
                     <constraint firstAttribute="bottom" secondItem="uZv-Qf-jhM" secondAttribute="bottom" id="9xv-Wf-jwd"/>
-                    <constraint firstItem="mI8-4d-1QY" firstAttribute="leading" secondItem="z2Z-lz-lZP" secondAttribute="leading" constant="20" id="Av4-um-GcI"/>
                     <constraint firstAttribute="bottom" secondItem="mI8-4d-1QY" secondAttribute="bottom" id="DGy-7D-Xs6"/>
+                    <constraint firstItem="mI8-4d-1QY" firstAttribute="leading" secondItem="ITh-bd-CG3" secondAttribute="trailing" constant="16" id="GO6-yX-eni"/>
+                    <constraint firstItem="ITh-bd-CG3" firstAttribute="centerY" secondItem="z2Z-lz-lZP" secondAttribute="centerY" id="JaM-A6-rTE"/>
                     <constraint firstItem="uZv-Qf-jhM" firstAttribute="top" secondItem="z2Z-lz-lZP" secondAttribute="top" id="L5w-T8-pg4"/>
                     <constraint firstAttribute="trailing" secondItem="mI8-4d-1QY" secondAttribute="trailing" constant="20" id="NRT-PY-DfA"/>
                     <constraint firstItem="uZv-Qf-jhM" firstAttribute="width" secondItem="z2Z-lz-lZP" secondAttribute="width" multiplier="0.3" id="S35-bw-lYC"/>
@@ -93,6 +101,7 @@
                 <outlet property="iconImageView" destination="dvX-OJ-H0b" id="eeu-vd-xVw"/>
                 <outlet property="pendingDepositProgressConstraint" destination="S35-bw-lYC" id="0kT-sJ-2Zw"/>
                 <outlet property="pendingDepositProgressView" destination="uZv-Qf-jhM" id="IS2-2s-rtZ"/>
+                <outlet property="symbolLabel" destination="gns-Tw-VaL" id="nxd-iD-gje"/>
                 <outlet property="titleLabel" destination="o1a-sz-8up" id="3zw-Xa-dLS"/>
             </connections>
         </tableViewCell>

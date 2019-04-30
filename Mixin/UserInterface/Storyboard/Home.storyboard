@@ -290,7 +290,7 @@
                                     <segue destination="EIL-n2-XsE" kind="embed" id="27b-jG-RjJ"/>
                                 </connections>
                             </containerView>
-                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="70" sectionHeaderHeight="41" estimatedSectionHeaderHeight="-1" sectionFooterHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="fJ7-r4-Szs">
+                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="85" sectionHeaderHeight="41" estimatedSectionHeaderHeight="-1" sectionFooterHeight="25" translatesAutoresizingMaskIntoConstraints="NO" id="fJ7-r4-Szs">
                                 <rect key="frame" x="0.0" y="74" width="375" height="593"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="78" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -319,14 +319,14 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tY1-R3-K1U">
                                                     <rect key="frame" x="0.0" y="10" width="375" height="65"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search Mixin ID or Phone number: " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lx1-QB-xFP">
-                                                            <rect key="frame" x="20" y="24" width="335" height="17"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Search Mixin ID or Phone number: " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lx1-QB-xFP">
+                                                            <rect key="frame" x="20" y="24" width="303" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" red="0.20002" green="0.19997999999999999" blue="0.20003000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <view hidden="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="yTS-4P-BRs" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                                            <rect key="frame" x="24" y="22.5" width="20" height="20"/>
+                                                        <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="yTS-4P-BRs" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                                            <rect key="frame" x="331" y="22.5" width="20" height="20"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <color key="tintColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         </view>
@@ -335,10 +335,10 @@
                                                     <constraints>
                                                         <constraint firstItem="Lx1-QB-xFP" firstAttribute="leading" secondItem="tY1-R3-K1U" secondAttribute="leading" constant="20" id="3jW-9p-qD1"/>
                                                         <constraint firstAttribute="bottom" secondItem="Lx1-QB-xFP" secondAttribute="bottom" constant="24" id="I8J-5L-HFC"/>
-                                                        <constraint firstAttribute="trailing" secondItem="Lx1-QB-xFP" secondAttribute="trailing" constant="20" id="KD9-YU-aKX"/>
                                                         <constraint firstItem="Lx1-QB-xFP" firstAttribute="top" secondItem="tY1-R3-K1U" secondAttribute="top" constant="24" id="QN0-v9-BXi"/>
+                                                        <constraint firstAttribute="trailing" secondItem="yTS-4P-BRs" secondAttribute="trailing" constant="24" id="TnG-g8-0Zo"/>
                                                         <constraint firstItem="yTS-4P-BRs" firstAttribute="centerY" secondItem="tY1-R3-K1U" secondAttribute="centerY" id="W5V-Lj-021"/>
-                                                        <constraint firstItem="yTS-4P-BRs" firstAttribute="leading" secondItem="tY1-R3-K1U" secondAttribute="leading" constant="24" id="rzL-wE-9cu"/>
+                                                        <constraint firstItem="yTS-4P-BRs" firstAttribute="leading" secondItem="Lx1-QB-xFP" secondAttribute="trailing" constant="8" id="Xya-et-IzJ"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>

@@ -24,7 +24,6 @@ class SearchNumberCell: UITableViewCell {
     var isBusy = false {
         didSet {
             activityIndicator.isAnimating = isBusy
-            label.isHidden = isBusy
         }
     }
     

@@ -21,7 +21,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var loadingView: ActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
     
-    @IBOutlet weak var statusBarPlaceholderHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputWrapperHeightConstraint: NSLayoutConstraint!
@@ -151,7 +151,6 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeStatusBarFrame(_:)), name: UIApplication.didChangeStatusBarFrameNotification, object: nil)
     }
     
     @available(iOS 11.0, *)
@@ -164,7 +163,7 @@ class ConversationViewController: UIViewController {
         isAppearanceAnimating = true
         if !didInitData {
             didInitData = true
-            updateTableViewContentInsetTop()
+            updateNavigationBarHeightAndTableViewTopInset()
             conversationInputViewController = R.storyboard.chat.input()
             addChild(conversationInputViewController)
             inputWrapperView.addSubview(conversationInputViewController.view)
@@ -215,6 +214,12 @@ class ConversationViewController: UIViewController {
         if parent == nil {
             dataSource?.cancelMessageProcessing()
         }
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateNavigationBarHeightAndTableViewTopInset()
     }
     
     deinit {
@@ -518,10 +523,6 @@ class ConversationViewController: UIViewController {
             return
         }
         unreadBadgeValue += count
-    }
-    
-    @objc func didChangeStatusBarFrame(_ notification: Notification) {
-        updateTableViewContentInsetTop()
     }
     
     // MARK: - Interface
@@ -1028,14 +1029,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, willShowForItemOfMessageId id: String?) {
         setCell(ofMessageId: id, contentViewHidden: true)
-        if UIApplication.shared.statusBarFrame.height == StatusBarHeight.inCall {
-            UIView.performWithoutAnimation {
-                self.statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.inCall
-                self.statusBarHidden = true
-            }
-        } else {
-            self.statusBarHidden = true
-        }
+        statusBarHidden = true
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didShowForItemOfMessageId id: String?) {
@@ -1053,18 +1047,13 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, willDismissForItemOfMessageId id: String?) {
         setCell(ofMessageId: id, contentViewHidden: true)
-        if statusBarPlaceholderHeightConstraint.constant != StatusBarHeight.inCall {
-            statusBarHidden = false
-        }
+        statusBarHidden = false
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didDismissForItemOfMessageId id: String?) {
         setCell(ofMessageId: id, contentViewHidden: false)
-        if statusBarPlaceholderHeightConstraint.constant == StatusBarHeight.inCall {
-            statusBarPlaceholderHeightConstraint.constant = StatusBarHeight.normal
-            statusBarHidden = false
-        }
         view.sendSubviewToBack(galleryWrapperView)
+        statusBarHidden = false
         homeIndicatorAutoHidden = false
     }
     
@@ -1196,10 +1185,12 @@ extension ConversationViewController {
         }
     }
     
-    private func updateTableViewContentInsetTop() {
-        let top = UIApplication.shared.statusBarFrame.height
-            + titleViewHeightConstraint.constant
-        tableView.contentInset.top = top
+    private func updateNavigationBarHeightAndTableViewTopInset() {
+        guard #available(iOS 11.0, *) else {
+            return
+        }
+        titleViewTopConstraint.constant = view.safeAreaInsets.top
+        tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
     }
     
     private func blinkCellBackground(at indexPath: IndexPath) {

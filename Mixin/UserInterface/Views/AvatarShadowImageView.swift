@@ -26,17 +26,21 @@ class AvatarShadowIconView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        iconImageView.frame = bounds
+        layoutIconImageView()
         iconImageView.layer.cornerRadius = iconImageView.bounds.width / 2
         updateShadowPath()
     }
-
+    
+    func layoutIconImageView() {
+        iconImageView.frame = bounds
+    }
+    
     func prepareForReuse() {
         iconImageView.sd_cancelCurrentImageLoad()
         iconImageView.image = nil
     }
 
-    func setGroupImage(with iconUrl: String, conversationId: String) {
+    func setGroupImage(with iconUrl: String) {
         titleLabel.text = nil
         iconImageView.backgroundColor = .clear
 
@@ -82,7 +86,7 @@ class AvatarShadowIconView: UIView {
     }
 
     private func updateShadowPath() {
-        let iconFrame = CGRect(x: 0,
+        let iconFrame = CGRect(x: iconImageView.frame.origin.x,
                                y: iconImageView.frame.origin.y + shadowOffset,
                                width: iconImageView.frame.width,
                                height: iconImageView.frame.height)

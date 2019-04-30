@@ -463,7 +463,7 @@ class ConversationViewController: UIViewController {
         }
         switch change.action {
         case let .updateGroupIcon(iconUrl):
-            avatarImageView?.setGroupImage(with: iconUrl, conversationId: conversationId)
+            avatarImageView?.setGroupImage(with: iconUrl)
         case .update:
             hideLoading()
         case let .updateConversation(conversation):
@@ -1054,7 +1054,7 @@ extension ConversationViewController {
         if let dataSource = dataSource, dataSource.category == .group {
             let conversation = dataSource.conversation
             titleLabel.text = conversation.name
-            avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
+            avatarImageView.setGroupImage(with: conversation.iconUrl)
         } else {
             guard let user = ownerUser else {
                 return

@@ -88,7 +88,7 @@ class GroupView: CornerView {
         moreButton.isHidden = !alreadyInTheGroup
         viewButton.isHidden = !alreadyInTheGroup
         
-        avatarImageView.setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
+        avatarImageView.setGroupImage(with: conversation.iconUrl)
         nameLabel.text = conversation.name
         announcementLabel.text = conversation.announcement
         announcementLabel.mode = initialAnnouncementMode

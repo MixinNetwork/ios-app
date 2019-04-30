@@ -7,8 +7,7 @@ class ContactsManager {
     static let shared = ContactsManager()
 
     let store = CNContactStore()
-    private let phoneNumberKit = PhoneNumberKit()
-
+    
     var authorization: CNAuthorizationStatus {
         return CNContactStore.authorizationStatus(for: .contacts)
     }
@@ -25,6 +24,7 @@ class ContactsManager {
             guard let contacts = try? store.unifiedContacts(matching: predicate, keysToFetch: keysToFetch) else { continue }
             cnContacts += contacts
         }
+        let phoneNumberKit = PhoneNumberKit.shared
         var result: [PhoneContact] = []
         for cnContact in cnContacts {
             guard let fullName = CNContactFormatter.string(from: cnContact, style: .fullName) else { continue }

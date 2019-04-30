@@ -21,10 +21,10 @@ class AvatarImageView: CornerImageView {
     }
 
     func setGroupImage(conversation: ConversationItem) {
-        setGroupImage(with: conversation.iconUrl, conversationId: conversation.conversationId)
+        setGroupImage(with: conversation.iconUrl)
     }
 
-    func setGroupImage(with iconUrl: String, conversationId: String) {
+    func setGroupImage(with iconUrl: String) {
         titleLabel.text = nil
         backgroundColor = .clear
 

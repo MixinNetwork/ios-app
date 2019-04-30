@@ -19,7 +19,7 @@
 "action_remove" = "删除";
 "action_done" = "完成";
 "action_save" = "保存";
-"action_see_more" = "查看更多";
+"action_more" = "更多";
 "action_open_safari" = "在 Safari 中打开";
 "action_refresh" = "刷新";
 "action_select" = "选择";
@@ -49,12 +49,21 @@
 "date_format_month" = "MM月d日 E";
 "date_format_transation" = "MM月d日 HH:mm";
 
+// Search
+"search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
 "search_placeholder_address" = "标签名";
-"search_placeholder_user" = "Mixin ID, 手机号码";
 "search_placeholder_asset" = "名称, 符号";
 "search_placeholder_home" = "联系人, 资产, 聊天";
 "search_placeholder_participants" = "名称";
 "search_placeholder_contact" = "Mixin ID, 名称";
+"search_related_messages_count" = "条相关消息";
+"search_section_title_asset" = "资产";
+"search_section_title_user" = "联系人";
+"search_section_title_group" = "群聊";
+"search_section_title_conversation" = "消息";
+"search_section_title_recent_apps" = "最近使用";
+"search_result_prefix_id" = "Mixin ID：";
+"search_result_prefix_phone" = "手机号码：";
 
 // Toast
 "toast_server_error" = "服务器正在维护中";
@@ -145,6 +154,8 @@
 // Home
 "home_start_messaging_guide" = "你可以与你的 Mixin 好友一起聊天。";
 "home_start_messaging" = "开始聊天";
+"home_cell_action_pin" = "置顶";
+"home_cell_action_unpin" = "取消置顶";
 "home_title" = "聊天";
 
 // Chat
@@ -462,14 +473,6 @@
 "profile_mute" = "静音";
 "profile_toast_unmuted" = "已取消静音";
 "profile_toast_muted" = "已静音至 %@";
-
-// Home
-"button_title_contacts_and_chats" = "搜索";
-"section_title_contacts" = "联系";
-"section_title_messages" = "信息";
-"section_title_assets" = "资产";
-"home_cell_action_pin" = "置顶";
-"home_cell_action_unpin" = "取消置顶";
 
 // Setting
 "setting_title" = "设置";

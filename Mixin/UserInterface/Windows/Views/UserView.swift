@@ -115,6 +115,7 @@ class UserView: CornerView {
         } else {
             editNameButton.isHidden = true
             qrcodeButton.isHidden = true
+            sendButton.isHidden = false
             
             if refreshUser {
                 UserAPI.shared.showUser(userId: user.userId) { [weak self](result) in

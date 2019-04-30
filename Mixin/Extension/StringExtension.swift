@@ -160,7 +160,7 @@ extension Optional where Wrapped == String {
         case .some(let value):
             return value.isEmpty
         case .none:
-            return false
+            return true
         }
     }
     

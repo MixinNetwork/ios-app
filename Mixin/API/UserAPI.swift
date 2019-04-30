@@ -40,9 +40,10 @@ final class UserAPI: BaseAPI {
     func showUsers(userIds: [String]) -> APIResult<[UserResponse]> {
         return request(method: .post, url: url.users, parameters: userIds.toParameters(), encoding: JSONArrayEncoding())
     }
-
-    func search(keyword: String, completion: @escaping (APIResult<UserResponse>) -> Void) {
-        request(method: .get, url: url.search(keyword: keyword), completion: completion)
+    
+    @discardableResult
+    func search(keyword: String, completion: @escaping (APIResult<UserResponse>) -> Void) -> Request? {
+        return request(method: .get, url: url.search(keyword: keyword), completion: completion)
     }
 
     func search(keyword: String) -> APIResult<UserResponse> {

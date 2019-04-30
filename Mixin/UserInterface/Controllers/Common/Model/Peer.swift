@@ -93,8 +93,7 @@ class Peer {
                                userId: user.userId,
                                name: user.fullName)
         case .group(let conversation):
-            imageView.setGroupImage(with: conversation.iconUrl,
-                                    conversationId: conversation.conversationId)
+            imageView.setGroupImage(with: conversation.iconUrl)
         }
     }
     

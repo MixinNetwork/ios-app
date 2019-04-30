@@ -2,27 +2,33 @@ import UIKit
 
 class SearchFooterView: UITableViewHeaderFooterView {
     
-    let shadowView = SeparatorShadowView()
+    static let height: CGFloat = 30
+    
+    let topView = UIView()
+    let shadowView = BottomShadowView()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        contentView.addSubview(shadowView)
-        shadowView.clipsToBounds = true
+        prepare()
     }
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(shadowView)
-        shadowView.clipsToBounds = true
+        prepare()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        let shadowViewHeight: CGFloat = 10
-        shadowView.frame = CGRect(x: 0,
-                                  y: bounds.height - shadowViewHeight,
-                                  width: bounds.width,
-                                  height: shadowViewHeight)
+    private func prepare() {
+        topView.backgroundColor = .white
+        contentView.addSubview(shadowView)
+        contentView.addSubview(topView)
+        topView.snp.makeConstraints { (make) in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(20)
+        }
+        shadowView.snp.makeConstraints { (make) in
+            make.leading.bottom.trailing.equalToSuperview()
+            make.height.equalTo(10)
+        }
     }
     
 }

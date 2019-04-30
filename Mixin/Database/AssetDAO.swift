@@ -36,12 +36,16 @@ final class AssetDAO {
             NotificationCenter.default.afterPostOnMain(name: .AssetsDidChange)
         }
     }
-
-    func searchAssets(content: String) -> [AssetItem] {
-        let keyword = "%\(content)%"
-        return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQuerySearch, values: [keyword, keyword], inTransaction: false)
+    
+    func getAssets(keyword: String, limit: Int?) -> [AssetItem] {
+        let keyword = "%\(keyword)%"
+        var sql = AssetDAO.sqlQuerySearch
+        if let limit = limit {
+            sql += " LIMIT \(limit)"
+        }
+        return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword], inTransaction: false)
     }
-
+    
     func getAssets() -> [AssetItem] {
         return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQuery, inTransaction: false)
     }

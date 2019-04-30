@@ -20,12 +20,14 @@ struct SearchResult {
                                                       appId: user.appId)
         self.superscript = nil
         if user.identityNumber.contains(keyword) {
-            self.description = SearchResult.attributedText(text: user.identityNumber,
+            let text = R.string.localizable.search_result_prefix_id() + user.identityNumber
+            self.description = SearchResult.attributedText(text: text,
                                                            textAttributes: SearchResult.normalDescriptionAttributes,
                                                            keyword: keyword,
                                                            keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
         } else if let phone = user.phone, phone.contains(keyword) {
-            self.description = SearchResult.attributedText(text: phone,
+            let text = R.string.localizable.search_result_prefix_phone() + phone
+            self.description = SearchResult.attributedText(text: text,
                                                            textAttributes: SearchResult.normalDescriptionAttributes,
                                                            keyword: keyword,
                                                            keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)

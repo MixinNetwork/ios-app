@@ -59,6 +59,8 @@
 "search_section_title_group" = "グループ";
 "search_section_title_conversation" = "メッセージ";
 "search_section_title_recent_apps" = "最近使ったアプリ";
+"search_result_prefix_id" = "Mixin ID：";
+"search_result_prefix_phone" = "電話番号：";
 
 // Toast
 "toast_server_error" = "サーバーはメンテナンス中です";

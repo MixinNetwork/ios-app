@@ -62,6 +62,8 @@
 "search_section_title_group" = "Groups";
 "search_section_title_conversation" = "Messages";
 "search_section_title_recent_apps" = "Recently used bots";
+"search_result_prefix_id" = "Mixin ID: ";
+"search_result_prefix_phone" = "Phone Number: ";
 
 // Toast
 "toast_server_error" = "Server is under maintenance";

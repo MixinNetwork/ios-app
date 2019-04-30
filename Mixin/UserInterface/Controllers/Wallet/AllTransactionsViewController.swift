@@ -60,6 +60,7 @@ extension AllTransactionsViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
         let snapshot = dataSource.snapshots[indexPath.section][indexPath.row]
         cell.render(snapshot: snapshot)
+        cell.delegate = self
         return cell
     }
     
@@ -126,6 +127,28 @@ extension AllTransactionsViewController: AssetFilterViewControllerDelegate {
     func assetFilterViewController(_ controller: AssetFilterViewController, didApplySort sort: Snapshot.Sort, filter: Snapshot.Filter) {
         tableView.setContentOffset(.zero, animated: false)
         dataSource.setSort(sort, filter: filter)
+    }
+    
+}
+
+extension AllTransactionsViewController: SnapshotCellDelegate {
+    
+    func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
+        let snapshot = dataSource.snapshots[indexPath.section][indexPath.row]
+        guard snapshot.type == SnapshotType.transfer.rawValue, let userId = snapshot.opponentUserId else {
+            return
+        }
+        DispatchQueue.global().async {
+            guard let user = UserDAO.shared.getUser(userId: userId), user.identityNumber != "0" else {
+                return
+            }
+            DispatchQueue.main.async {
+                UserWindow.instance().updateUser(user: user).presentView()
+            }
+        }
     }
     
 }

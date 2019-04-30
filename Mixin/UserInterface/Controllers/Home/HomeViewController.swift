@@ -11,14 +11,15 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var searchContainerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var guideView: UIView!
-    @IBOutlet weak var bottomNavView: UIView!
-    @IBOutlet weak var cameraButton: BouncingButton!
+    @IBOutlet weak var cameraButtonWrapperView: UIView!
     @IBOutlet weak var qrcodeImageView: UIImageView!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
     @IBOutlet weak var titleLabel: UILabel!
     
+    @IBOutlet weak var showCameraButtonConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideCameraButtonConstraint: NSLayoutConstraint!
+    @IBOutlet weak var cameraWrapperSafeAreaPlaceholderHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var bottomNavConstraint: NSLayoutConstraint!
     
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
@@ -56,6 +57,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateCameraWrapperHeight()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(hideSearch), for: .touchUpInside)
         tableView.dataSource = self
@@ -90,7 +92,7 @@ class HomeViewController: UIViewController {
         if needRefresh {
             fetchConversations()
         }
-        showBottomNav()
+        showCameraButton()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -103,6 +105,12 @@ class HomeViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         dragDownIndicator.center.x = tableView.frame.width / 2
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateCameraWrapperHeight()
     }
     
     @IBAction func cameraAction(_ sender: Any) {
@@ -270,9 +278,9 @@ extension HomeViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if abs(scrollView.contentOffset.y - beginDraggingOffset) > 10 {
             if scrollView.contentOffset.y > beginDraggingOffset {
-                hideBottomNav()
+                hideCameraButton()
             } else {
-                showBottomNav()
+                showCameraButton()
             }
         }
         if scrollView.contentOffset.y <= -dragDownThreshold && !dragDownIndicator.isHighlighted {
@@ -294,6 +302,14 @@ extension HomeViewController: UIScrollViewDelegate {
 }
 
 extension HomeViewController {
+    
+    private func updateCameraWrapperHeight() {
+        guard #available(iOS 11.0, *) else {
+            return
+        }
+        cameraWrapperSafeAreaPlaceholderHeightConstraint.constant = view.safeAreaInsets.bottom
+        cameraButtonWrapperView.layoutIfNeeded()
+    }
     
     private func fetchConversations() {
         refreshing = true
@@ -404,24 +420,26 @@ extension HomeViewController {
         }
     }
     
-    private func hideBottomNav() {
-        guard bottomNavView.alpha != 0 else {
+    private func hideCameraButton() {
+        guard cameraButtonWrapperView.alpha != 0 else {
             return
         }
         UIView.animate(withDuration: 0.25, delay: 0, options: [.showHideTransitionViews, .beginFromCurrentState], animations: {
-            self.bottomNavView.alpha = 0
-            self.bottomNavConstraint.constant = -122
+            self.cameraButtonWrapperView.alpha = 0
+            self.hideCameraButtonConstraint.priority = .defaultHigh
+            self.showCameraButtonConstraint.priority = .defaultLow
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
     
-    private func showBottomNav() {
-        guard bottomNavView.alpha != 1 else {
+    private func showCameraButton() {
+        guard cameraButtonWrapperView.alpha != 1 else {
             return
         }
         UIView.animate(withDuration: 0.25, delay: 0, options: [.showHideTransitionViews, .beginFromCurrentState], animations: {
-            self.bottomNavView.alpha = 1
-            self.bottomNavConstraint.constant = 0
+            self.cameraButtonWrapperView.alpha = 1
+            self.hideCameraButtonConstraint.priority = .defaultLow
+            self.showCameraButtonConstraint.priority = .defaultHigh
             self.view.layoutIfNeeded()
         }, completion: nil)
     }

@@ -3,7 +3,6 @@ import UIKit
 class AllTransactionsViewController: UITableViewController {
     
     private enum ReuseId {
-        static let cell = "cell"
         static let header = "header"
     }
     
@@ -14,8 +13,7 @@ class AllTransactionsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UINib(nibName: "SnapshotCell", bundle: .main),
-                           forCellReuseIdentifier: ReuseId.cell)
+        tableView.register(R.nib.snapshotCell)
         tableView.register(AssetHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         dataSource.onReload = { [weak self] in
@@ -59,9 +57,9 @@ extension AllTransactionsViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SnapshotCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
         let snapshot = dataSource.snapshots[indexPath.section][indexPath.row]
-        cell.render(snapshot: snapshot, showSymbol: true)
+        cell.render(snapshot: snapshot)
         return cell
     }
     

@@ -56,6 +56,7 @@ class BackupViewController: UITableViewController {
         updateTableViewContentInsetBottom()
         switchIncludeFiles.isOn = CommonUserDefault.shared.hasBackupFiles
         switchIncludeVideos.isOn = CommonUserDefault.shared.hasBackupVideos
+        updateUIOfBackupFrequency()
         reloadActionSectionFooterLabel()
         NotificationCenter.default.addObserver(self, selector: #selector(backupChanged), name: .BackupDidChange, object: nil)
         if BackupJobQueue.shared.isBackingUp {

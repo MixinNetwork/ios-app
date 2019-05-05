@@ -4,10 +4,6 @@ class SendContactSelectionViewController: PeerSelectionViewController {
     
     var asset: AssetItem!
     
-    override var content: PeerSelectionViewController.Content {
-        return .transferReceivers
-    }
-    
     override var allowsMultipleSelection: Bool {
         return false
     }
@@ -19,6 +15,18 @@ class SendContactSelectionViewController: PeerSelectionViewController {
     override func loadView() {
         super.loadView()
         searchBoxView.textField.placeholder = Localized.SEARCH_PLACEHOLDER_PARTICIPANTS
+    }
+    
+    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
+        let transferAcceptableContacts = contacts.filter({ (user) -> Bool in
+            if user.isBot {
+                return user.appCreatorId == AccountAPI.shared.accountUserId
+            } else {
+                return true
+            }
+        })
+        let peers = transferAcceptableContacts.map(Peer.init)
+        return ([], [peers])
     }
     
     override func work(selections: [Peer]) {

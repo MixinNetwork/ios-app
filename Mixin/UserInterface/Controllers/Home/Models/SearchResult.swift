@@ -19,21 +19,7 @@ struct SearchResult {
         self.badgeImage = SearchResult.userBadgeImage(isVerified: user.isVerified,
                                                       appId: user.appId)
         self.superscript = nil
-        if user.identityNumber.contains(keyword) {
-            let text = R.string.localizable.search_result_prefix_id() + user.identityNumber
-            self.description = SearchResult.attributedText(text: text,
-                                                           textAttributes: SearchResult.normalDescriptionAttributes,
-                                                           keyword: keyword,
-                                                           keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
-        } else if let phone = user.phone, phone.contains(keyword) {
-            let text = R.string.localizable.search_result_prefix_phone() + phone
-            self.description = SearchResult.attributedText(text: text,
-                                                           textAttributes: SearchResult.normalDescriptionAttributes,
-                                                           keyword: keyword,
-                                                           keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
-        } else {
-            self.description = nil
-        }
+        self.description = SearchResult.description(user: user, keyword: keyword)
     }
     
     init(conversation: ConversationItem, keyword: String) {
@@ -163,6 +149,24 @@ extension SearchResult {
             return R.image.ic_user_verified()
         } else if !appId.isNilOrEmpty {
             return R.image.ic_user_bot()
+        } else {
+            return nil
+        }
+    }
+    
+    static func description(user: UserItem, keyword: String) -> NSAttributedString? {
+        if user.identityNumber.contains(keyword) {
+            let text = R.string.localizable.search_result_prefix_id() + user.identityNumber
+            return SearchResult.attributedText(text: text,
+                                               textAttributes: SearchResult.normalDescriptionAttributes,
+                                               keyword: keyword,
+                                               keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
+        } else if let phone = user.phone, phone.contains(keyword) {
+            let text = R.string.localizable.search_result_prefix_phone() + phone
+            return SearchResult.attributedText(text: text,
+                                               textAttributes: SearchResult.normalDescriptionAttributes,
+                                               keyword: keyword,
+                                               keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
         } else {
             return nil
         }

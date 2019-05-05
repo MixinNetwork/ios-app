@@ -648,6 +648,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="tke-V3-5nw" secondAttribute="bottom" id="GLt-j6-kBo"/>
+                                    <constraint firstItem="tke-V3-5nw" firstAttribute="top" secondItem="Zve-bN-jsA" secondAttribute="top" constant="20" id="HAZ-9r-SfD"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syC-xp-0cA" customClass="HittestBypassWrapperView" customModule="Mixin" customModuleProvider="target">
@@ -748,8 +749,7 @@
                             <constraint firstItem="N4V-uq-LHc" firstAttribute="trailing" secondItem="syC-xp-0cA" secondAttribute="trailing" constant="11" id="ryY-bD-bte"/>
                             <constraint firstAttribute="trailing" secondItem="NcT-8c-Rhc" secondAttribute="trailing" id="tht-Gx-KPX"/>
                             <constraint firstAttribute="trailing" secondItem="v0e-5f-Xnl" secondAttribute="trailing" id="ufK-2L-8Df"/>
-                            <constraint firstItem="Zve-bN-jsA" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" id="xX2-tz-12Y"/>
-                            <constraint firstItem="tke-V3-5nw" firstAttribute="top" secondItem="a5z-Op-8GF" secondAttribute="top" constant="20" id="zpg-10-Eec"/>
+                            <constraint firstAttribute="top" secondItem="Zve-bN-jsA" secondAttribute="top" id="xX2-tz-12Y"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="N4V-uq-LHc"/>
                     </view>
@@ -761,6 +761,8 @@
                         <outlet property="inputWrapperHeightConstraint" destination="MMR-mR-ES3" id="DTB-oj-FYz"/>
                         <outlet property="inputWrapperView" destination="6MP-pq-xci" id="Hyt-Ue-uBz"/>
                         <outlet property="loadingView" destination="pcl-Ex-irR" id="Xco-m3-g7P"/>
+                        <outlet property="navigationBarTopConstraint" destination="xX2-tz-12Y" id="T58-kq-Ugw"/>
+                        <outlet property="navigationBarView" destination="Zve-bN-jsA" id="829-Qa-Uo7"/>
                         <outlet property="scrollToBottomButton" destination="hzm-Vh-1BZ" id="i8J-ga-GD1"/>
                         <outlet property="scrollToBottomWrapperHeightConstraint" destination="iai-L8-XoW" id="F9Z-Pn-XNa"/>
                         <outlet property="scrollToBottomWrapperView" destination="enU-Jm-AWl" id="kR8-6F-tEk"/>
@@ -769,7 +771,7 @@
                         <outlet property="titleLabel" destination="6GB-fs-Cdu" id="Gzl-mK-sF2"/>
                         <outlet property="titleStackView" destination="eFB-Ny-P1V" id="LqH-oj-Pg0"/>
                         <outlet property="titleViewHeightConstraint" destination="8aU-zB-Vfr" id="5X3-s9-MuE"/>
-                        <outlet property="titleViewTopConstraint" destination="zpg-10-Eec" id="ivj-pa-2FX"/>
+                        <outlet property="titleViewTopConstraint" destination="HAZ-9r-SfD" id="KzX-cR-Bpf"/>
                         <outlet property="unreadBadgeLabel" destination="x2d-vg-jlV" id="M0W-3d-aPa"/>
                     </connections>
                 </viewController>
@@ -2112,27 +2114,27 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_photo_bottom_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="n9G-1i-W0G">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="98.000000000000028" height="98.000000000000028"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z8T-7O-x04">
-                                                                    <rect key="frame" x="10" y="75.5" width="78" height="14.5"/>
+                                                                    <rect key="frame" x="10" y="74" width="78" height="16"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JQ2-yd-f9u">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="16"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YFJ-6z-9up">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="16"/>
                                                                             <subviews>
                                                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="Conversation/ic_video" translatesAutoresizingMaskIntoConstraints="NO" id="qAR-Lc-IyN">
-                                                                                    <rect key="frame" x="0.0" y="2.5" width="14" height="10"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 </imageView>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="1010:01" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E1e-SE-IRb">
-                                                                                    <rect key="frame" x="14" y="0.0" width="64" height="14.5"/>
+                                                                                    <rect key="frame" x="16" y="1" width="62" height="14.5"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -45,6 +45,7 @@ class BaseDatabase {
             case .warning, .sqliteGlobal:
                 break
             default:
+                FileManager.default.writeLog(log: "[WCDB][ERROR]\(error.description)", newSection: true)
                 Bugsnag.notifyError(error)
             }
             #if DEBUG

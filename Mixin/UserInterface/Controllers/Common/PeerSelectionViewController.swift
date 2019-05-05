@@ -66,8 +66,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         tableView.rowHeight = tableRowHeight
         tableView.separatorColor = UIColor.white
         tableView.separatorStyle = .none
-        tableView.register(UINib(nibName: "PeerCell", bundle: .main),
-                           forCellReuseIdentifier: ReuseId.cell)
+        tableView.register(R.nib.peerCell)
         tableView.register(GeneralTableViewHeader.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.tableFooterView = UIView()
@@ -135,7 +134,7 @@ extension PeerSelectionViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell) as! PeerCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
         let peer = self.peer(at: indexPath)
         cell.render(peer: peer)
         cell.supportsMultipleSelection = allowsMultipleSelection
@@ -206,7 +205,6 @@ extension PeerSelectionViewController: UIScrollViewDelegate {
 extension PeerSelectionViewController {
     
     private enum ReuseId {
-        static let cell = "cell"
         static let header = "header"
     }
     

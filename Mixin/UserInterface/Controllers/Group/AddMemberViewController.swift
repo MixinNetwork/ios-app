@@ -11,7 +11,6 @@ class AddMemberViewController: UIViewController {
     
     private enum ReuseId {
         static let header = "header"
-        static let cell = "cell"
     }
     private let maxMembersCount = 256
     
@@ -37,8 +36,7 @@ class AddMemberViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBoxView.textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
-        tableView.register(UINib(nibName: "PeerCell", bundle: .main),
-                           forCellReuseIdentifier: ReuseId.cell)
+        tableView.register(R.nib.peerCell)
         tableView.register(GeneralTableViewHeader.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.tableFooterView = UIView()
@@ -108,7 +106,7 @@ extension AddMemberViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell) as! PeerCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
         let user = self.user(at: indexPath)
         let userIsAlreayInGroup = alreadyInGroupUserIds.contains(user.userId)
         cell.render(user: user, forceSelected: userIsAlreayInGroup)

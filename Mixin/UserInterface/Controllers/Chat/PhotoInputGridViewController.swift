@@ -19,7 +19,6 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     
     var firstCellIsCamera = true
     
-    private let cellReuseId = "grid"
     private let interitemSpacing: CGFloat = 0
     private let columnCount: CGFloat = 3
     private let imageManager = PHCachingImageManager()
@@ -75,7 +74,7 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! PhotoInputGridCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.photo_grid, for: indexPath)!
         if firstCellIsCamera && indexPath.item == 0 {
             cell.identifier = nil
             cell.imageView.contentMode = .center

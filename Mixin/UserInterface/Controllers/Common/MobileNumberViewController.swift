@@ -9,6 +9,7 @@ class MobileNumberViewController: ContinueButtonViewController {
     @IBOutlet weak var callingCodeButton: UIButton!
     
     private let invertedPhoneNumberCharacterSet = CharacterSet(charactersIn: "0123456789+-() ").inverted
+    private let phoneNumberKit = PhoneNumberKit()
     
     var mobileNumber: String {
         return textField.text?.components(separatedBy: invertedPhoneNumberCharacterSet).joined() ?? ""
@@ -63,7 +64,7 @@ extension MobileNumberViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
         let numericsInText = newText.digits()
-        if newText != numericsInText, let parsedPhoneNumber = try? PhoneNumberKit.shared.parse(newText), let country = CountryCodeLibrary.shared.countries.first(where: { $0.callingCode == String(parsedPhoneNumber.countryCode) }) {
+        if newText != numericsInText, let parsedPhoneNumber = try? phoneNumberKit.parse(newText), let country = CountryCodeLibrary.shared.countries.first(where: { $0.callingCode == String(parsedPhoneNumber.countryCode) }) {
             self.country = country
             textField.text = parsedPhoneNumber.adjustedNationalNumber()
             updateContinueButtonIsHidden()
@@ -94,7 +95,7 @@ extension MobileNumberViewController {
     }
     
     private func updateContinueButtonIsHidden() {
-        let numberIsLegal = (try? PhoneNumberKit.shared.parse(fullNumber(withSpacing: false))) != nil
+        let numberIsLegal = (try? phoneNumberKit.parse(fullNumber(withSpacing: false))) != nil
         continueButton.isHidden = !numberIsLegal
     }
     

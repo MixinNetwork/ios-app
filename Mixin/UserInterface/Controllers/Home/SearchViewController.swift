@@ -19,6 +19,7 @@ class SearchViewController: UIViewController, SearchableViewController {
     
     private let resultLimit = 3
     private let idOrPhoneCharacterSet = Set("+0123456789")
+    private let phoneNumberKit = PhoneNumberKit()
     
     private var queue = OperationQueue()
     private var assets = [AssetSearchResult]()
@@ -42,7 +43,7 @@ class SearchViewController: UIViewController, SearchableViewController {
             return false
         }
         if trimmedKeyword.contains("+") {
-            return (try? PhoneNumberKit.shared.parse(trimmedKeyword)) != nil
+            return (try? phoneNumberKit.parse(trimmedKeyword)) != nil
         } else {
             return true
         }

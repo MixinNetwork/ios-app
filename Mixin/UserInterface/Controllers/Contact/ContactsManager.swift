@@ -30,6 +30,7 @@ class ContactsManager {
     }
     
     private let lock = NSLock()
+    private let phoneNumberKit = PhoneNumberKit()
     
     private lazy var _contacts: [PhoneContact] = {
         guard let containers = try? store.containers(matching: nil) else {
@@ -47,7 +48,6 @@ class ContactsManager {
             }
             cnContacts += contacts
         }
-        let phoneNumberKit = PhoneNumberKit.shared
         var result: [PhoneContact] = []
         for cnContact in cnContacts {
             guard let fullName = CNContactFormatter.string(from: cnContact, style: .fullName) else {

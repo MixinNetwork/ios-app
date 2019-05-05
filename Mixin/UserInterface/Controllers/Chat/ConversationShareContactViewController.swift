@@ -5,12 +5,8 @@ class ConversationShareContactViewController: SendMessagePeerSelectionViewContro
     private var ownerUser: UserItem?
     private var parentConversation: ConversationItem!
     
-    override var content: PeerSelectionViewController.Content {
-        return .contacts
-    }
-
-    override var tableRowHeight: CGFloat {
-        return 70
+    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
+        return ([], [contacts.map(Peer.init)])
     }
     
     override func work(selections: [Peer]) {

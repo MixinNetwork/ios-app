@@ -14,9 +14,11 @@ class SendMessagePeerSelectionViewController: PeerSelectionViewController {
     override func textBarRightButton() -> String? {
         return Localized.ACTION_SEND
     }
-
-    override var tableRowHeight: CGFloat {
-        return 70
+    
+    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
+        let conversations = ConversationDAO.shared.conversationList()
+        return ([Localized.CHAT_FORWARD_CHATS, Localized.CHAT_FORWARD_CONTACTS],
+                [conversations.compactMap(Peer.init), contacts.map(Peer.init)])
     }
     
     override func work(selections: [Peer]) {

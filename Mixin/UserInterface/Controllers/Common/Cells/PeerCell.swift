@@ -40,15 +40,6 @@ class PeerCell: UITableViewCell {
         }
     }
     
-    func render(user: UserItem) {
-        iconImageView.setImage(with: user.avatarUrl,
-                               userId: user.userId,
-                               name: user.fullName)
-        render(fullName: user.fullName,
-               isVerified: user.isVerified,
-               isBot: user.isBot)
-    }
-    
     func render(user: GroupUser, forceSelected: Bool) {
         iconImageView.setImage(with: user.avatarUrl,
                                userId: user.userId,
@@ -57,13 +48,20 @@ class PeerCell: UITableViewCell {
                isVerified: user.isVerified,
                isBot: user.isBot)
         self.forceSelected = forceSelected
+        descriptionLabel.isHidden = true
     }
     
-    func render(peer: Peer) {
+    func render(peer: Peer, description: NSAttributedString?) {
         peer.setIconImage(to: iconImageView)
         render(fullName: peer.name,
                isVerified: peer.isVerified,
                isBot: peer.isBot)
+        if let description = description {
+            descriptionLabel.attributedText = description
+            descriptionLabel.isHidden = false
+        } else {
+            descriptionLabel.isHidden = true
+        }
     }
     
     private func render(fullName: String, isVerified: Bool, isBot: Bool) {

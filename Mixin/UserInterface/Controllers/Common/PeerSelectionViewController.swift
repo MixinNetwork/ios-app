@@ -56,9 +56,8 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBoxView.textField.addTarget(self,
-                                          action: #selector(search(_:)),
-                                          for: .editingChanged)
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_contact()
+        searchBoxView.textField.addTarget(self, action: #selector(search(_:)), for: .editingChanged)
         tableView.allowsMultipleSelection = allowsMultipleSelection
         tableView.rowHeight = tableRowHeight
         tableView.separatorColor = UIColor.white

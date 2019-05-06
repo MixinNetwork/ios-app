@@ -36,8 +36,7 @@ public class Localized {
     public static func CONNECTION_HINT_PROGRESS(_ progress: Int) -> String {
         return String(format: LocalizedString("connection_hint_progress", comment: "Syncing messages %@%%"), "\(progress)")
     }
-
-    public static let SEARCH_PLACEHOLDER_CONTACT = LocalizedString("search_placeholder_contact", comment: "Mixin ID, Name")
+    
     public static let SEARCH_PLACEHOLDER_PARTICIPANTS = LocalizedString("search_placeholder_participants", comment: "Name")
 
     public static let DATE_FORMAT_DAY = LocalizedString("date_format_day", comment: "hh:mm a")

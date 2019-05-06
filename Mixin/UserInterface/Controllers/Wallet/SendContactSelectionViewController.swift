@@ -11,11 +11,6 @@ class SendContactSelectionViewController: PeerSelectionViewController {
     override var tableRowHeight: CGFloat {
         return 80
     }
-
-    override func loadView() {
-        super.loadView()
-        searchBoxView.textField.placeholder = Localized.SEARCH_PLACEHOLDER_PARTICIPANTS
-    }
     
     override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
         let transferAcceptableContacts = contacts.filter({ (user) -> Bool in

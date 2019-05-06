@@ -26,7 +26,6 @@ class SearchBoxView: UIView, XibDesignable {
     
     @IBOutlet weak var textField: SearchTextField!
     
-    let height: CGFloat = 40
     let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
     
     required init?(coder aDecoder: NSCoder) {

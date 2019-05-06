@@ -77,27 +77,42 @@
                                             <constraint firstItem="mGh-0e-UXt" firstAttribute="centerX" secondItem="L82-pj-DlR" secondAttribute="centerX" id="vzv-lv-M2x"/>
                                         </constraints>
                                     </view>
-                                    <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z69-58-QNg">
-                                        <rect key="frame" x="0.0" y="545" width="375" height="122"/>
+                                    <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z69-58-QNg">
+                                        <rect key="frame" x="147.5" y="587" width="80" height="80"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QRR-8i-FIx" userLabel="Safe Area Placeholder">
-                                                <rect key="frame" x="0.0" y="122" width="375" height="0.0"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aOc-Wh-A6w">
+                                                <rect key="frame" x="-147.5" y="-42" width="375" height="122"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
+                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="122"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="122" id="w1m-b6-Nk3"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QRR-8i-FIx" userLabel="Safe Area Placeholder">
+                                                        <rect key="frame" x="0.0" y="122" width="375" height="0.0"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" id="HM0-tb-6J4"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" id="HM0-tb-6J4"/>
+                                                    <constraint firstItem="QRR-8i-FIx" firstAttribute="top" secondItem="kA4-pv-sCo" secondAttribute="bottom" id="Cfk-EQ-vDA"/>
+                                                    <constraint firstItem="kA4-pv-sCo" firstAttribute="top" secondItem="aOc-Wh-A6w" secondAttribute="top" id="Csy-5P-jyc"/>
+                                                    <constraint firstItem="QRR-8i-FIx" firstAttribute="leading" secondItem="aOc-Wh-A6w" secondAttribute="leading" id="DM5-YF-fCZ"/>
+                                                    <constraint firstItem="kA4-pv-sCo" firstAttribute="leading" secondItem="aOc-Wh-A6w" secondAttribute="leading" id="Wa1-gN-9Fa"/>
+                                                    <constraint firstAttribute="trailing" secondItem="QRR-8i-FIx" secondAttribute="trailing" id="fYb-Du-ZRq"/>
+                                                    <constraint firstAttribute="trailing" secondItem="kA4-pv-sCo" secondAttribute="trailing" id="m4C-S3-gQX"/>
+                                                    <constraint firstAttribute="bottom" secondItem="QRR-8i-FIx" secondAttribute="bottom" id="neB-Kw-rfc"/>
                                                 </constraints>
                                             </view>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="kA4-pv-sCo">
-                                                <rect key="frame" x="0.0" y="0.0" width="375" height="122"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="122" id="w1m-b6-Nk3"/>
-                                                </constraints>
-                                            </imageView>
                                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BkB-8V-9ox" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="147.5" y="42" width="80" height="80"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="80" id="30W-Lu-nai"/>
-                                                    <constraint firstAttribute="width" constant="80" id="xAq-9U-rue"/>
+                                                    <constraint firstAttribute="width" constant="80" id="Ltd-f0-2FA"/>
+                                                    <constraint firstAttribute="height" constant="80" id="vkb-b3-64J"/>
                                                 </constraints>
                                                 <state key="normal" image="ic_home_camera"/>
                                                 <connections>
@@ -105,33 +120,30 @@
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_home_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="IpN-ia-USo">
-                                                <rect key="frame" x="178.5" y="73.5" width="18" height="17"/>
+                                                <rect key="frame" x="31" y="31.5" width="18" height="17"/>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="QRR-8i-FIx" firstAttribute="top" secondItem="BkB-8V-9ox" secondAttribute="bottom" id="Bm1-uB-aY7"/>
-                                            <constraint firstItem="QRR-8i-FIx" firstAttribute="top" secondItem="kA4-pv-sCo" secondAttribute="bottom" id="IT1-HX-Zmj"/>
-                                            <constraint firstAttribute="bottom" secondItem="QRR-8i-FIx" secondAttribute="bottom" id="Q6T-Vb-tld"/>
-                                            <constraint firstItem="kA4-pv-sCo" firstAttribute="leading" secondItem="z69-58-QNg" secondAttribute="leading" id="dSH-HK-1ce"/>
-                                            <constraint firstAttribute="trailing" secondItem="QRR-8i-FIx" secondAttribute="trailing" id="l0M-jf-ydw"/>
+                                            <constraint firstAttribute="bottom" secondItem="aOc-Wh-A6w" secondAttribute="bottom" id="JL7-md-PwR"/>
+                                            <constraint firstItem="BkB-8V-9ox" firstAttribute="top" secondItem="z69-58-QNg" secondAttribute="top" id="PFl-tq-eZF"/>
+                                            <constraint firstItem="BkB-8V-9ox" firstAttribute="leading" secondItem="z69-58-QNg" secondAttribute="leading" id="PcC-0p-GN8"/>
+                                            <constraint firstAttribute="trailing" secondItem="BkB-8V-9ox" secondAttribute="trailing" id="XYz-Dq-Bdz"/>
+                                            <constraint firstItem="QRR-8i-FIx" firstAttribute="top" secondItem="BkB-8V-9ox" secondAttribute="bottom" id="f1C-2I-TNi"/>
                                             <constraint firstItem="IpN-ia-USo" firstAttribute="centerX" secondItem="BkB-8V-9ox" secondAttribute="centerX" id="mH0-t0-fvE"/>
-                                            <constraint firstItem="kA4-pv-sCo" firstAttribute="top" secondItem="z69-58-QNg" secondAttribute="top" id="nsU-97-cTp"/>
-                                            <constraint firstItem="QRR-8i-FIx" firstAttribute="leading" secondItem="z69-58-QNg" secondAttribute="leading" id="r27-O8-A1V"/>
-                                            <constraint firstAttribute="trailing" secondItem="kA4-pv-sCo" secondAttribute="trailing" id="sKu-9a-IOT"/>
                                             <constraint firstItem="IpN-ia-USo" firstAttribute="centerY" secondItem="BkB-8V-9ox" secondAttribute="centerY" id="xDv-lP-3E2"/>
-                                            <constraint firstItem="BkB-8V-9ox" firstAttribute="centerX" secondItem="z69-58-QNg" secondAttribute="centerX" id="yvC-CW-YRf"/>
                                         </constraints>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="z69-58-QNg" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="9SN-B1-YUE"/>
                                     <constraint firstItem="9MA-tT-pfZ" firstAttribute="top" secondItem="BAu-gi-TQg" secondAttribute="bottom" id="Ibu-8n-cY0"/>
                                     <constraint firstAttribute="bottom" secondItem="z69-58-QNg" secondAttribute="top" priority="250" id="L0c-Rs-bUL"/>
                                     <constraint firstAttribute="trailing" secondItem="9MA-tT-pfZ" secondAttribute="trailing" id="LxE-mt-bPq"/>
                                     <constraint firstAttribute="trailing" secondItem="L82-pj-DlR" secondAttribute="trailing" constant="40" id="NcG-IY-CiO"/>
-                                    <constraint firstAttribute="trailing" secondItem="z69-58-QNg" secondAttribute="trailing" id="bCM-tO-fO6"/>
+                                    <constraint firstItem="aOc-Wh-A6w" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="Nsu-ek-q0g"/>
+                                    <constraint firstAttribute="trailing" secondItem="aOc-Wh-A6w" secondAttribute="trailing" id="Puz-rR-cEg"/>
+                                    <constraint firstItem="z69-58-QNg" firstAttribute="centerX" secondItem="i5D-40-ldq" secondAttribute="centerX" id="aYD-HK-fmc"/>
                                     <constraint firstAttribute="trailing" secondItem="BAu-gi-TQg" secondAttribute="trailing" id="cfw-jq-hi5"/>
                                     <constraint firstItem="9MA-tT-pfZ" firstAttribute="leading" secondItem="i5D-40-ldq" secondAttribute="leading" id="gUI-OH-Dsh"/>
                                     <constraint firstItem="BAu-gi-TQg" firstAttribute="top" secondItem="i5D-40-ldq" secondAttribute="top" id="iA0-b7-dRg"/>

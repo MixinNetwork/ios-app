@@ -1,8 +1,10 @@
 import UIKit
+import SnapKit
 
 class GeneralTableViewHeader: UITableViewHeaderFooterView {
 
     var label: UILabel!
+    var labelTopConstraint: NSLayoutConstraint!
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -23,9 +25,10 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
         contentView.addSubview(label)
         label.snp.makeConstraints { (make) in
             make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.top.equalToSuperview().offset(15)
+            make.trailing.equalToSuperview().offset(-20).priority(.almostRequired)
         }
+        labelTopConstraint = label.topAnchor.constraint(equalTo: topAnchor)
+        labelTopConstraint.isActive = true
         contentView.backgroundColor = .white
     }
     

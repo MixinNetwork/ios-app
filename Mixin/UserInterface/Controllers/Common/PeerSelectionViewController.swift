@@ -49,7 +49,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
             make.height.equalTo(40)
         }
         tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(searchBoxView.snp.bottom).offset(15)
+            make.top.equalTo(searchBoxView.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
@@ -66,6 +66,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         tableView.register(R.nib.peerCell)
         tableView.register(GeneralTableViewHeader.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 15))
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -203,6 +204,7 @@ extension PeerSelectionViewController: UITableViewDelegate {
             return nil
         }
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.header) as! GeneralTableViewHeader
+        header.labelTopConstraint.constant = 10
         header.label.text = headerTitles[section]
         return header
     }
@@ -211,7 +213,7 @@ extension PeerSelectionViewController: UITableViewDelegate {
         if isSearching {
             return .leastNormalMagnitude
         } else if !headerTitles.isEmpty {
-            return peers[section].isEmpty ? .leastNormalMagnitude : 30
+            return peers[section].isEmpty ? .leastNormalMagnitude : 36
         } else {
             return .leastNormalMagnitude
         }

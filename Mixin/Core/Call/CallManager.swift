@@ -525,11 +525,15 @@ extension CallManager {
         
         private var isVibrating = false
         private var timer: Timer?
+        private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier?
         
         func startVibrating() {
             guard !isVibrating else {
                 return
             }
+            backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+                self.endBackgroundTask()
+            })
             isVibrating = true
             let timer = Timer(timeInterval: 1, repeats: true, block: { (_) in
                 AudioServicesPlaySystemSoundWithCompletion(kSystemSoundID_Vibrate, nil)
@@ -543,11 +547,19 @@ extension CallManager {
             guard isVibrating else {
                 return
             }
+            endBackgroundTask()
             timer?.invalidate()
             timer = nil
             isVibrating = false
         }
         
+        private func endBackgroundTask() {
+            guard let id = backgroundTaskIdentifier else {
+                return
+            }
+            UIApplication.shared.endBackgroundTask(id)
+            backgroundTaskIdentifier = nil
+        }
     }
     
 }

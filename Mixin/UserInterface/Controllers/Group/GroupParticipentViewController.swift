@@ -88,7 +88,8 @@ extension GroupParticipentViewController: ContainerViewControllerDelegate {
             guard let weakSelf = self else {
                 return
             }
-            let vc = AddMemberViewController.instance(appendMembersToExistedGroupOfConversationId: weakSelf.conversation.conversationId)
+            let id = weakSelf.conversation.conversationId
+            let vc = AddMemberViewController.instance(appendingMembersToConversationId: id)
             weakSelf.navigationController?.pushViewController(vc, animated: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.GROUP_NAVIGATION_TITLE_INVITE_LINK, style: .default, handler: { [weak self](_) in

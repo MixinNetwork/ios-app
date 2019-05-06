@@ -14,10 +14,6 @@ class PhoneContactAPI: BaseAPI {
             completion?(result)
         }
     }
-
-    func contacts(completion: @escaping (APIResult<[User]>) -> Void) {
-        request(method: .get, url: url.contacts, completion: completion)
-    }
 }
 
 

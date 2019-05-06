@@ -395,7 +395,6 @@ public class Localized {
     public static let WALLET_MENU_SHOW_ASSET = LocalizedString("wallet_menu_show_asset", comment: "Show asset")
     public static let WALLET_MENU_HIDE_ASSET = LocalizedString("wallet_menu_hide_asset", comment: "Hide asset")
     public static let WALLET_HIDE_ASSET_EMPTY = LocalizedString("wallet_hide_asset_empty", comment: "No hidden assets")
-    public static let WALLET_MENU_WITHDRAW = LocalizedString("wallet_menu_withdraw", comment: "Withdraw")
     public static func WALLET_HINT_TRANSACTION_FEE(feeRepresentation: String, name: String) -> String {
         return String(format: LocalizedString("wallet_hint_transaction_fee", comment: "A transaction fee of %@ is required for withdrawing %@."), feeRepresentation, name)
     }

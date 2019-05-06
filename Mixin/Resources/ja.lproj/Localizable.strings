@@ -48,7 +48,6 @@
 // Search
 "search_placeholder_number" = "MIXIN IDまたは電話番号から検索: ";
 "search_placeholder_address" = "ラベル";
-"search_placeholder_user" = "MIXIN ID、電話番号";
 "search_placeholder_asset" = "名前、シンボル";
 "search_placeholder_home" = "連絡先、資産、チャット";
 "search_placeholder_participants" = "名前";
@@ -313,7 +312,6 @@
 "wallet_menu_show_asset" = "資産を表示";
 "wallet_menu_hide_asset" = "資産を隠す";
 "wallet_hide_asset_empty" = "隠し資産なし";
-"wallet_menu_withdraw" = "引き出す";
 "wallet_send_amount" = "金額";
 "wallet_send_memo" = "メモ（オプション）";
 "wallet_button_add_address" = "タップして住所を追加";

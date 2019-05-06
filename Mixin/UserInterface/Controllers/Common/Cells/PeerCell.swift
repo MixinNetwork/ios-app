@@ -17,7 +17,7 @@ class PeerCell: UITableViewCell {
         }
     }
     
-    private var forceSelected = false
+    var forceSelected = false
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -38,17 +38,6 @@ class PeerCell: UITableViewCell {
         } else {
             checkmarkView.status = selected ? .selected : .unselected
         }
-    }
-    
-    func render(user: GroupUser, forceSelected: Bool) {
-        iconImageView.setImage(with: user.avatarUrl,
-                               userId: user.userId,
-                               name: user.fullName)
-        render(fullName: user.fullName,
-               isVerified: user.isVerified,
-               isBot: user.isBot)
-        self.forceSelected = forceSelected
-        descriptionLabel.isHidden = true
     }
     
     func render(peer: Peer, description: NSAttributedString?) {

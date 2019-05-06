@@ -5,6 +5,9 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     let tableView = UITableView()
     let searchBoxView = SearchBoxView(frame: CGRect(x: 0, y: 0, width: 375, height: 40))
     
+    var headerTitles = [String]()
+    var peers = [[Peer]]()
+    
     var allowsMultipleSelection: Bool {
         return true
     }
@@ -13,18 +16,17 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         return 70
     }
     
-    private let queue = OperationQueue()
-    
-    private var headerTitles = [String]()
-    private var peers = [[Peer]]()
-    private var searchResults = [PeerSearchResult]()
-    private var selections = Set<Peer>() {
+    private(set) var selections = Set<Peer>() {
         didSet {
-            container?.rightButton.isEnabled = selections.count > 0
+            selectionsDidChange()
         }
     }
+    
+    private let queue = OperationQueue()
+    private let initDataOperation = BlockOperation()
+    
+    private var searchResults = [PeerSearchResult]()
     private var sortedSelections = [Peer]()
-    private var loadAllPeersOperation: BlockOperation!
     private var lastKeyword: String?
     
     private var trimmedLowercaseKeyword: String {
@@ -70,32 +72,22 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         tableView.dataSource = self
         tableView.delegate = self
         queue.maxConcurrentOperationCount = 1
-        loadAllPeersOperation = BlockOperation()
-        loadAllPeersOperation.addExecutionBlock { [weak self] in
-            let contacts = UserDAO.shared.contacts()
-            guard let weakSelf = self else {
-                return
-            }
-            let catalogedPeers = weakSelf.catalogedPeers(contacts: contacts)
-            DispatchQueue.main.sync {
-                weakSelf.headerTitles = catalogedPeers.titles
-                weakSelf.peers = catalogedPeers.peers
-                weakSelf.tableView.reloadData()
-            }
+        initDataOperation.addExecutionBlock { [weak self] in
+            self?.initData()
         }
-        queue.addOperation(loadAllPeersOperation)
+        queue.addOperation(initDataOperation)
     }
     
     @objc func search(_ sender: Any) {
         searchResults = []
         tableView.reloadData()
-        reloadSelections()
+        reloadSelections(animated: false)
         let keyword = trimmedLowercaseKeyword
         guard !keyword.isEmpty, keyword != lastKeyword else {
             return
         }
         queue.operations
-            .filter { $0 != loadAllPeersOperation }
+            .filter { $0 != initDataOperation }
             .forEach { $0.cancel() }
         let op = BlockOperation()
         let peers = self.peers
@@ -128,11 +120,29 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
                 }
                 weakSelf.searchResults = results
                 weakSelf.tableView.reloadData()
-                weakSelf.reloadSelections()
+                weakSelf.reloadSelections(animated: false)
                 weakSelf.lastKeyword = keyword
             }
         }
         queue.addOperation(op)
+    }
+    
+    func initData() {
+        let contacts = UserDAO.shared.contacts()
+        let catalogedPeers = self.catalogedPeers(contacts: contacts)
+        DispatchQueue.main.sync {
+            headerTitles = catalogedPeers.titles
+            peers = catalogedPeers.peers
+            tableView.reloadData()
+        }
+    }
+    
+    func selectionsDidChange() {
+        container?.rightButton.isEnabled = selections.count > 0
+    }
+    
+    func shouldSelect(peer: Peer, at indexPath: IndexPath) -> Bool {
+        return selections.contains(peer)
     }
     
     func work(selections: [Peer]) {
@@ -141,6 +151,15 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     
     func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
         return ([], [])
+    }
+    
+    func peerAndDescription(at indexPath: IndexPath) -> (Peer, NSAttributedString?) {
+        if isSearching {
+            let result = searchResults[indexPath.row]
+            return (result.peer, result.description)
+        } else {
+            return (peers[indexPath.section][indexPath.row], nil)
+        }
     }
     
     func popToConversationWithLastSelection() {
@@ -225,7 +244,7 @@ extension PeerSelectionViewController: UITableViewDelegate {
             if inserted {
                 sortedSelections.append(peer)
             }
-            reloadSelections()
+            reloadSelections(animated: true)
         } else {
             work(selections: [peer])
         }
@@ -237,7 +256,7 @@ extension PeerSelectionViewController: UITableViewDelegate {
         if let index = sortedSelections.firstIndex(of: peer) {
             sortedSelections.remove(at: index)
         }
-        reloadSelections()
+        reloadSelections(animated: true)
     }
     
 }
@@ -258,29 +277,24 @@ extension PeerSelectionViewController {
         static let header = "header"
     }
     
-    private func peerAndDescription(at indexPath: IndexPath) -> (Peer, NSAttributedString?) {
-        if isSearching {
-            let result = searchResults[indexPath.row]
-            return (result.peer, result.description)
-        } else {
-            return (peers[indexPath.section][indexPath.row], nil)
-        }
-    }
-    
-    private func reloadSelections() {
+    private func reloadSelections(animated: Bool) {
         tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
             tableView.deselectRow(at: indexPath, animated: true)
         })
         if isSearching {
-            for (row, result) in searchResults.enumerated() where selections.contains(result.peer) {
+            for (row, result) in searchResults.enumerated() {
                 let indexPath = IndexPath(row: row, section: 0)
-                tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                if shouldSelect(peer: result.peer, at: indexPath) {
+                    tableView.selectRow(at: indexPath, animated: animated, scrollPosition: .none)
+                }
             }
         } else {
             for (section, peers) in peers.enumerated() {
-                for (row, peer) in peers.enumerated() where selections.contains(peer) {
+                for (row, peer) in peers.enumerated() {
                     let indexPath = IndexPath(row: row, section: section)
-                    tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+                    if shouldSelect(peer: peer, at: indexPath) {
+                        tableView.selectRow(at: indexPath, animated: animated, scrollPosition: .none)
+                    }
                 }
             }
         }

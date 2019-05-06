@@ -4,7 +4,7 @@ class GroupUser: NSObject {
     
     let userId: String
     let identityNumber: String
-    @objc let fullName: String
+    let fullName: String
     let avatarUrl: String
     let isVerified: Bool
     let isBot: Bool
@@ -17,5 +17,14 @@ class GroupUser: NSObject {
         self.isVerified = isVerified
         self.isBot = isBot
     }
-
+    
+    convenience init(user: UserItem) {
+        self.init(userId: user.userId,
+                  identityNumber: user.identityNumber,
+                  fullName: user.fullName,
+                  avatarUrl: user.avatarUrl,
+                  isVerified: user.isVerified,
+                  isBot: user.isBot)
+    }
+    
 }

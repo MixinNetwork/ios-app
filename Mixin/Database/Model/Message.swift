@@ -174,6 +174,7 @@ enum MessageCategory: String {
     case WEBRTC_AUDIO_FAILED
     case WEBRTC_AUDIO_END
     case WEBRTC_ICE_CANDIDATE
+    case MESSAGE_RECALL
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN

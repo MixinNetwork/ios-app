@@ -502,6 +502,7 @@
 		DF7A4B461FCDA6A000F21BCB /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A4B451FCDA6A000F21BCB /* User.swift */; };
 		DF7A4B481FCDA6ED00F21BCB /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A4B471FCDA6ED00F21BCB /* UserResponse.swift */; };
 		DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7A4B491FCE6EE200F21BCB /* UIViewExtension.swift */; };
+		DF7FB63A22801B4E00F4782F /* TransferRecallData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7FB63922801B4E00F4782F /* TransferRecallData.swift */; };
 		DF81413220C51D5E00E89DE8 /* PhotoLibraryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF81413120C51D5E00E89DE8 /* PhotoLibraryExtension.swift */; };
 		DF84281E1FE92A260018B054 /* SendMessagePeerSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF84281D1FE92A250018B054 /* SendMessagePeerSelectionViewController.swift */; };
 		DF84777820DA5A1200DE5163 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF84777720DA5A1200DE5163 /* RecordButton.swift */; };
@@ -1163,6 +1164,7 @@
 		DF7A4B451FCDA6A000F21BCB /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		DF7A4B471FCDA6ED00F21BCB /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
 		DF7A4B491FCE6EE200F21BCB /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		DF7FB63922801B4E00F4782F /* TransferRecallData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferRecallData.swift; sourceTree = "<group>"; };
 		DF81413120C51D5E00E89DE8 /* PhotoLibraryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryExtension.swift; sourceTree = "<group>"; };
 		DF84281D1FE92A250018B054 /* SendMessagePeerSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendMessagePeerSelectionViewController.swift; sourceTree = "<group>"; };
 		DF84777720DA5A1200DE5163 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
@@ -2341,6 +2343,7 @@
 				DF22D94A1FDD33E700243CAE /* TransferPlainData.swift */,
 				DFF1AD7F2227D7CA0087173D /* TransferPlainAckData.swift */,
 				DF2A3CD920173F2D0095F024 /* TransferStickerData.swift */,
+				DF7FB63922801B4E00F4782F /* TransferRecallData.swift */,
 				DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */,
 				DF22D94C1FDE500500243CAE /* SystemConversationData.swift */,
 				DF6DB8402028C1A60060CF31 /* AppButtonData.swift */,
@@ -3066,6 +3069,7 @@
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
 				7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */,
 				DF5D9F391F9C998F0036D5FD /* Account.swift in Sources */,
+				DF7FB63A22801B4E00F4782F /* TransferRecallData.swift in Sources */,
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */,

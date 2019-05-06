@@ -35,6 +35,8 @@
 "action_copy" = "复制";
 "action_authorize" = "授权";
 "action_deauthorize" = "取消授权";
+"action_delete_me" = "在我的设备上删除";
+"action_delete_everyone" = "在所有人设备上删除";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "no_result" = "未找到相关内容";
@@ -212,6 +214,7 @@
 "chat_restore_title" = "从 iCloud 恢复\n您的聊天记录";
 "chat_restore_subtitle" = "如果现在不恢复，未来将无法恢复这些记录。媒体文件将在信息恢复完成后在后台继续运行。";
 "chat_stranger_tip" = "对方不是你的联系人";
+"chat_delete_tip" = "这条消息将从所有设备上删除";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";

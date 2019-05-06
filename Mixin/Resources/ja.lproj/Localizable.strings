@@ -33,6 +33,8 @@
 "action_copy" = "コピー";
 "action_authorize" = "認証";
 "action_deauthorize" = "認証解除";
+"action_delete_me" = "自分用に削除";
+"action_delete_everyone" = "みんなのために削除";
 "menu_delete" = "デリート";
 "no_result" = "検索結果はありません";
 "all_photos" = "すべての写真";

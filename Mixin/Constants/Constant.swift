@@ -72,6 +72,7 @@ struct ConversationChange {
         case updateUploadProgress(messageId: String, progress: Double)
         case updateDownloadProgress(messageId: String, progress: Double)
         case startedUpdateConversation
+        case recallMessage(messageId: String)
     }
     
 }

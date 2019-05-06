@@ -35,6 +35,8 @@
 "action_copy" = "Copy";
 "action_authorize" = "Authorize";
 "action_deauthorize" = "Deauthorize";
+"action_delete_me" = "Delete for Me";
+"action_delete_everyone" = "Delete for Everyone";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "no_result" = "No result";
@@ -212,6 +214,7 @@
 "chat_restore_title" = "Restore your\nchat history from iCloud";
 "chat_restore_subtitle" = "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.";
 "chat_stranger_tip" = "This sender is not in your contacts";
+"chat_delete_tip" = "The message will be deleted for everyone on the latest version of Mixin Messenger";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";

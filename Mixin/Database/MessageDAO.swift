@@ -108,7 +108,7 @@ final class MessageDAO {
     }
 
     func findFailedMessages(conversationId: String, userId: String) -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000, inTransaction: false)
+        return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000, inTransaction: false)
     }
 
     func clearChat(conversationId: String, autoNotification: Bool = true) {
@@ -127,7 +127,7 @@ final class MessageDAO {
     }
 
     func updateMessageContentAndMediaStatus(content: String, mediaStatus: MediaStatus, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.mediaStatus, mediaStatus.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.mediaStatus, mediaStatus.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus))
@@ -139,7 +139,7 @@ final class MessageDAO {
     }
     
     func updateMessageContentAndStatus(content: String, status: String, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
@@ -147,7 +147,7 @@ final class MessageDAO {
     }
 
     func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.stickerId, stickerData.stickerId), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.stickerId, stickerData.stickerId), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
@@ -155,7 +155,7 @@ final class MessageDAO {
     }
 
     func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.sharedUserId, transferData.userId), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.sharedUserId, transferData.userId), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
@@ -177,7 +177,7 @@ final class MessageDAO {
             (Message.Properties.mediaWaveform, mediaData.waveform),
             (Message.Properties.status, status),
             (Message.Properties.name, mediaData.name)
-            ], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+            ], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
@@ -216,7 +216,7 @@ final class MessageDAO {
     }
 
     func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaUrl, mediaUrl), (Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaUrl, mediaUrl), (Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
 
@@ -225,7 +225,7 @@ final class MessageDAO {
     }
 
     func updateMediaStatus(messageId: String, status: MediaStatus, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
 
@@ -463,6 +463,59 @@ final class MessageDAO {
         if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(message.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 60 {
             ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
         }
+    }
+
+    func recallMessage(messageId: String) {
+        guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
+            return
+        }
+
+        var values: [(PropertyConvertible, ColumnEncodable?)] = [(Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue)]
+        if message.category.hasSuffix("_TEXT") {
+            values.append((Message.Properties.content, ""))
+        } else if message.category.hasSuffix("_IMAGE") ||
+            message.category.hasSuffix("_VIDEO") ||
+            message.category.hasSuffix("_DATA") ||
+            message.category.hasSuffix("_AUDIO") {
+            values.append((Message.Properties.content, ""))
+            values.append((Message.Properties.mediaMimeType, ""))
+            values.append((Message.Properties.mediaSize, 0))
+            values.append((Message.Properties.mediaDuration, 0))
+            values.append((Message.Properties.mediaWidth, 0))
+            values.append((Message.Properties.mediaHeight, 0))
+            values.append((Message.Properties.thumbImage, ""))
+            values.append((Message.Properties.mediaKey, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaDigest, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaWaveform, MixinDatabase.NullValue()))
+            values.append((Message.Properties.name, ""))
+            
+            if message.category.hasSuffix("_IMAGE") {
+                let url = MixinFile.url(ofChatDirectory: .photos, filename: "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ExtensionName.jpeg.rawValue))")
+                try? FileManager.default.removeItem(at: url)
+            } else if message.category.hasSuffix("_DATA") {
+                let url = MixinFile.url(ofChatDirectory: .files, filename: "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
+                try? FileManager.default.removeItem(at: url)
+            } else if message.category.hasSuffix("_AUDIO") {
+                let url = MixinFile.url(ofChatDirectory: .audios, filename: "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
+                try? FileManager.default.removeItem(at: url)
+            } else if message.category.hasSuffix("_VIDEO") {
+                let videoUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
+                let thumbUrl = MixinFile.url(ofChatDirectory: .videos, filename: message.messageId + ExtensionName.jpeg.withDot)
+                try? FileManager.default.removeItem(at: videoUrl)
+                try? FileManager.default.removeItem(at: thumbUrl)
+            }
+        } else if message.category.hasSuffix("_STICKER") {
+            values.append((Message.Properties.stickerId, ""))
+        } else if message.category.hasSuffix("_CONTACT") {
+            values.append((Message.Properties.sharedUserId, ""))
+        }
+
+        guard MixinDatabase.shared.update(maps: values, tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+            return
+        }
+
+        let change = ConversationChange(conversationId: message.conversationId, action: .recallMessage(messageId: messageId))
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     
     @discardableResult

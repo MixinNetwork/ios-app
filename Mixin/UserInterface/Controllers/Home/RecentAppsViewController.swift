@@ -17,6 +17,10 @@ class RecentAppsViewController: UIViewController {
     private var users = [UserItem]()
     private var needsReload = true
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1

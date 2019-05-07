@@ -11,6 +11,7 @@ class RecentAppsViewController: UIViewController {
     
     private let cellCountPerRow = 4
     private let maxRowCount = 2
+    private let cellMinWidth: CGFloat = 60
     private let queue = OperationQueue()
     
     private var users = [UserItem]()
@@ -31,11 +32,11 @@ class RecentAppsViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        let cellsWidth = collectionLayout.itemSize.width * CGFloat(cellCountPerRow)
+        let cellsWidth = cellMinWidth * CGFloat(cellCountPerRow)
         let totalSpacing = view.bounds.width - cellsWidth
         let spacing = floor(totalSpacing / CGFloat(cellCountPerRow + 1))
-        collectionLayout.minimumInteritemSpacing = spacing
-        collectionLayout.sectionInset = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
+        collectionLayout.itemSize = CGSize(width: cellMinWidth + spacing, height: 109)
+        collectionLayout.sectionInset = UIEdgeInsets(top: 0, left: spacing / 2, bottom: 0, right: spacing / 2)
     }
     
     @IBAction func hideSearchAction() {

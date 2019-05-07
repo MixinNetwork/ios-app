@@ -36,10 +36,10 @@ struct SearchResult {
         }
     }
     
-    init(group: ConversationItem, keyword: String) {
-        self.target = .group(group)
-        self.iconUrl = group.iconUrl
-        self.title = SearchResult.attributedText(text: group.name,
+    init(conversation: ConversationItem, keyword: String) {
+        self.target = .conversation(conversation)
+        self.iconUrl = conversation.iconUrl
+        self.title = SearchResult.attributedText(text: conversation.getConversationName(),
                                                  textAttributes: SearchResult.titleAttributes,
                                                  keyword: keyword,
                                                  keywordAttributes: SearchResult.highlightedTitleAttributes)
@@ -97,7 +97,7 @@ extension SearchResult {
     
     enum Target {
         case contact(UserItem)
-        case group(ConversationItem)
+        case conversation(ConversationItem)
         case searchMessageWithContact(conversationId: String, userId: String, userFullName: String)
         case searchMessageWithGroup(conversationId: String)
         case message(conversationId: String, messageId: String, isData: Bool, userId: String, userFullName: String, createdAt: String)

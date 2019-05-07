@@ -5,8 +5,8 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     enum Category {
         case asset
         case user
-        case group
-        case conversation
+        case conversationsByName
+        case conversationsByMessage
         
         var title: String {
             switch self {
@@ -14,10 +14,10 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
                 return R.string.localizable.search_section_title_asset()
             case .user:
                 return R.string.localizable.search_section_title_user()
-            case .group:
-                return R.string.localizable.search_section_title_group()
-            case .conversation:
-                return R.string.localizable.search_section_title_conversation()
+            case .conversationsByName:
+                return R.string.localizable.search_section_title_conversation_by_name()
+            case .conversationsByMessage:
+                return R.string.localizable.search_section_title_conversation_by_message()
             }
         }
     }
@@ -58,7 +58,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         switch category {
         case .asset:
             tableView.register(R.nib.assetCell)
-        case .user, .group, .conversation:
+        case .user, .conversationsByName, .conversationsByMessage:
             tableView.register(R.nib.searchResultCell)
         }
         let headerView = SearchHeaderView()
@@ -111,10 +111,10 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
             case .user:
                 models = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: nil)
                     .map { SearchResult(user: $0, keyword: trimmedKeyword) }
-            case .group:
-                models = ConversationDAO.shared.getGroupConversation(nameLike: trimmedKeyword, limit: nil)
-                    .map { SearchResult(group: $0, keyword: trimmedKeyword) }
-            case .conversation:
+            case .conversationsByName:
+                models = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: nil)
+                    .map { SearchResult(conversation: $0, keyword: trimmedKeyword) }
+            case .conversationsByMessage:
                 models = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: nil)
             }
             guard !op.isCancelled, self != nil else {
@@ -165,7 +165,7 @@ extension SearchCategoryViewController: UITableViewDataSource {
             let asset = (model as! AssetSearchResult).asset
             cell.render(asset: asset)
             return cell
-        case .user, .group, .conversation:
+        case .user, .conversationsByName, .conversationsByMessage:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
             let result = model as! SearchResult
             cell.render(result: result)
@@ -188,7 +188,7 @@ extension SearchCategoryViewController: UITableViewDelegate {
         case .asset:
             let asset = (model as! AssetSearchResult).asset
             pushAssetViewController(asset: asset)
-        case .user, .group, .conversation:
+        case .user, .conversationsByName, .conversationsByMessage:
             pushViewController(keyword: keyword, result: model as! SearchResult)
         }
     }

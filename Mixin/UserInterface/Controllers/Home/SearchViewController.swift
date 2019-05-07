@@ -24,8 +24,8 @@ class SearchViewController: UIViewController, SearchableViewController {
     private var queue = OperationQueue()
     private var assets = [AssetSearchResult]()
     private var users = [SearchResult]()
-    private var groups = [SearchResult]()
-    private var conversations = [SearchResult]()
+    private var conversationsByName = [SearchResult]()
+    private var conversationsByMessage = [SearchResult]()
     private var lastKeyword: Keyword?
     private var recentAppsViewController: RecentAppsViewController?
     private var searchNumberRequest: Request?
@@ -125,17 +125,17 @@ class SearchViewController: UIViewController, SearchableViewController {
                 .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
             let contacts = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: limit)
                 .map { SearchResult(user: $0, keyword: trimmedKeyword) }
-            let groups = ConversationDAO.shared.getGroupConversation(nameLike: trimmedKeyword, limit: limit)
-                .map { SearchResult(group: $0, keyword: trimmedKeyword) }
-            let conversations = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: limit)
+            let conversationsByName = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: limit)
+                .map { SearchResult(conversation: $0, keyword: trimmedKeyword) }
+            let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: limit)
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
                     return
                 }
                 weakSelf.assets = assets
                 weakSelf.users = contacts
-                weakSelf.groups = groups
-                weakSelf.conversations = conversations
+                weakSelf.conversationsByName = conversationsByName
+                weakSelf.conversationsByMessage = conversationsByMessage
                 weakSelf.tableView.reloadData()
                 weakSelf.lastKeyword = keyword
             }
@@ -148,8 +148,8 @@ class SearchViewController: UIViewController, SearchableViewController {
         showRecentApps()
         assets = []
         users = []
-        groups = []
-        conversations = []
+        conversationsByName = []
+        conversationsByMessage = []
         tableView.reloadData()
         lastKeyword = nil
     }
@@ -172,9 +172,9 @@ extension SearchViewController: UITableViewDataSource {
         case .user:
             return min(resultLimit, users.count)
         case .group:
-            return min(resultLimit, groups.count)
+            return min(resultLimit, conversationsByName.count)
         case .conversation:
-            return min(resultLimit, conversations.count)
+            return min(resultLimit, conversationsByMessage.count)
         }
     }
     
@@ -198,11 +198,11 @@ extension SearchViewController: UITableViewDataSource {
             return cell
         case .group:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
-            cell.render(result: groups[indexPath.row])
+            cell.render(result: conversationsByName[indexPath.row])
             return cell
         case .conversation:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
-            cell.render(result: conversations[indexPath.row])
+            cell.render(result: conversationsByMessage[indexPath.row])
             return cell
         }
     }
@@ -294,9 +294,9 @@ extension SearchViewController: UITableViewDelegate {
         case .user:
             pushViewController(keyword: keyword, result: users[indexPath.row])
         case .group:
-            pushViewController(keyword: keyword, result: groups[indexPath.row])
+            pushViewController(keyword: keyword, result: conversationsByName[indexPath.row])
         case .conversation:
-            pushViewController(keyword: keyword, result: conversations[indexPath.row])
+            pushViewController(keyword: keyword, result: conversationsByMessage[indexPath.row])
         }
     }
     
@@ -317,9 +317,9 @@ extension SearchViewController: SearchHeaderViewDelegate {
         case .user:
             vc.category = .user
         case .group:
-            vc.category = .group
+            vc.category = .conversationsByName
         case .conversation:
-            vc.category = .conversation
+            vc.category = .conversationsByMessage
         }
         vc.inheritedKeyword = keyword
         searchTextField.resignFirstResponder()
@@ -351,9 +351,9 @@ extension SearchViewController {
             case .user:
                 return R.string.localizable.search_section_title_user()
             case .group:
-                return R.string.localizable.search_section_title_group()
+                return R.string.localizable.search_section_title_conversation_by_name()
             case .conversation:
-                return R.string.localizable.search_section_title_conversation()
+                return R.string.localizable.search_section_title_conversation_by_message()
             }
         }
     }
@@ -378,9 +378,9 @@ extension SearchViewController {
         case .user:
             return users
         case .group:
-            return groups
+            return conversationsByName
         case .conversation:
-            return conversations
+            return conversationsByMessage
         }
     }
     
@@ -404,7 +404,7 @@ extension SearchViewController {
         case .group:
             return !shouldShowSearchNumber && assets.isEmpty && users.isEmpty
         case .conversation:
-            return !shouldShowSearchNumber && assets.isEmpty && users.isEmpty && groups.isEmpty
+            return !shouldShowSearchNumber && assets.isEmpty && users.isEmpty && conversationsByName.isEmpty
         }
     }
     

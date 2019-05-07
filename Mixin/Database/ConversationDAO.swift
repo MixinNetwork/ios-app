@@ -28,7 +28,7 @@ final class ConversationDAO {
     private static let sqlQueryConversationList = String(format: sqlQueryConversation, "")
     private static let sqlQueryConversationByOwnerId = String(format: sqlQueryConversation, " AND c.owner_id = ? AND c.category = 'CONTACT'")
     private static let sqlQueryConversationByCoversationId = String(format: sqlQueryConversation, " AND c.conversation_id = ? ")
-    private static let sqlQueryGroupConversationByName = String(format: sqlQueryConversation, " AND c.category = 'GROUP' AND c.name LIKE ?")
+    private static let sqlQueryGroupOrStrangerConversationByName = String(format: sqlQueryConversation, " AND ((c.category = 'GROUP' AND c.name LIKE ?) OR (c.category = 'CONTACT' AND u1.relationship = 'STRANGER' AND u1.full_name LIKE ?))")
     private static let sqlQueryStorageUsage = """
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name, u.identity_number as ownerIdentityNumber,
     u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl, u.is_verified as ownerIsVerified, m.mediaSize
@@ -156,12 +156,13 @@ final class ConversationDAO {
         return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationByCoversationId, values: [conversationId]).first
     }
     
-    func getGroupConversation(nameLike keyword: String, limit: Int?) -> [ConversationItem] {
-        var sql = ConversationDAO.sqlQueryGroupConversationByName
+    func getGroupOrStrangerConversation(withNameLike keyword: String, limit: Int?) -> [ConversationItem] {
+        var sql = ConversationDAO.sqlQueryGroupOrStrangerConversationByName
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        return MixinDatabase.shared.getCodables(sql: sql, values: ["%\(keyword)%"])
+        let keyword = "%\(keyword)%"
+        return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword])
     }
     
     func getConversation(withMessageLike keyword: String, limit: Int?) -> [SearchResult] {

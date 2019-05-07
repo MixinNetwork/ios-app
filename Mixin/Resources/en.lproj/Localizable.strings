@@ -59,8 +59,8 @@
 "search_related_messages_count" = " related messages";
 "search_section_title_asset" = "Assets";
 "search_section_title_user" = "Contacts";
-"search_section_title_group" = "Groups";
-"search_section_title_conversation" = "Messages";
+"search_section_title_conversation_by_name" = "Conversations";
+"search_section_title_conversation_by_message" = "Messages";
 "search_section_title_recent_apps" = "Recently used bots";
 "search_result_prefix_id" = "Mixin ID: ";
 "search_result_prefix_phone" = "Phone Number: ";

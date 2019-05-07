@@ -27,6 +27,10 @@ class RecentAppsViewController: UIViewController {
                                                selector: #selector(didChangeRecentlyUsedAppIds),
                                                name: CommonUserDefault.didChangeRecentlyUsedAppIdsNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(userDidChange(_:)),
+                                               name: .UserDidChange,
+                                               object: nil)
         reloadIfNeeded()
     }
     
@@ -46,6 +50,20 @@ class RecentAppsViewController: UIViewController {
     
     @objc func didChangeRecentlyUsedAppIds() {
         needsReload = true
+    }
+    
+    @objc func userDidChange(_ sender: Notification) {
+        let userId: String
+        if let response = sender.object as? UserResponse {
+            userId = response.userId
+        } else if let user = sender.object as? UserItem {
+            userId = user.userId
+        } else {
+            return
+        }
+        if users.contains(where: { $0.userId == userId }) {
+            needsReload = true
+        }
     }
     
     func reloadIfNeeded() {

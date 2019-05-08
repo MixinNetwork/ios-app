@@ -174,6 +174,7 @@
 		7B7E7144217D87860052C7DD /* CallView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B7E7143217D87860052C7DD /* CallView.xib */; };
 		7B7E7146217D89790052C7DD /* CallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7E7145217D89790052C7DD /* CallView.swift */; };
 		7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7F7E381FD43F2500A1C91F /* DetailInfoMessageCell.swift */; };
+		7B7FBF8D2282D51100644693 /* IconPrefixedTextMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */; };
 		7B8144631FDD62B900404431 /* SystemMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8144621FDD62B900404431 /* SystemMessageViewModel.swift */; };
 		7B836C7E1FD17D6100529754 /* DetailInfoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */; };
 		7B84218D2011A214000EF99C /* CardMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B84218C2011A214000EF99C /* CardMessageCell.swift */; };
@@ -302,7 +303,7 @@
 		7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BD69C441FF2755D00758D7C /* GroupView.xib */; };
 		7BD7055F215BAEDE00639FA8 /* PeerTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */; };
 		7BD7534C2182CD7A00BAC172 /* CallMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD7534B2182CD7A00BAC172 /* CallMessageViewModel.swift */; };
-		7BD7534E2182CDCE00BAC172 /* CallMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD7534D2182CDCE00BAC172 /* CallMessageCell.swift */; };
+		7BD7534E2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD7534D2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift */; };
 		7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD89DBD1FB2D59000665635 /* PlaceholderTextView.swift */; };
 		7BD97DD52179DD3400FAE490 /* WebRTCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD97DD42179DD3400FAE490 /* WebRTCClient.swift */; };
 		7BD97DD72179DDD600FAE490 /* IceServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD97DD62179DDD600FAE490 /* IceServer.swift */; };
@@ -815,6 +816,7 @@
 		7B7E7143217D87860052C7DD /* CallView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CallView.xib; sourceTree = "<group>"; };
 		7B7E7145217D89790052C7DD /* CallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallView.swift; sourceTree = "<group>"; };
 		7B7F7E381FD43F2500A1C91F /* DetailInfoMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoMessageCell.swift; sourceTree = "<group>"; };
+		7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPrefixedTextMessageViewModel.swift; sourceTree = "<group>"; };
 		7B8144621FDD62B900404431 /* SystemMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageViewModel.swift; sourceTree = "<group>"; };
 		7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoMessageViewModel.swift; sourceTree = "<group>"; };
 		7B84218C2011A214000EF99C /* CardMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageCell.swift; sourceTree = "<group>"; };
@@ -957,7 +959,7 @@
 		7BD69C441FF2755D00758D7C /* GroupView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupView.xib; sourceTree = "<group>"; };
 		7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerTransactionsViewController.swift; sourceTree = "<group>"; };
 		7BD7534B2182CD7A00BAC172 /* CallMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallMessageViewModel.swift; sourceTree = "<group>"; };
-		7BD7534D2182CDCE00BAC172 /* CallMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallMessageCell.swift; sourceTree = "<group>"; };
+		7BD7534D2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPrefixedTextMessageCell.swift; sourceTree = "<group>"; };
 		7BD89DBD1FB2D59000665635 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		7BD97DD42179DD3400FAE490 /* WebRTCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebRTCClient.swift; sourceTree = "<group>"; };
 		7BD97DD62179DDD600FAE490 /* IceServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IceServer.swift; sourceTree = "<group>"; };
@@ -1507,6 +1509,7 @@
 				7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */,
 				7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */,
 				7B84358620D8DC2600237242 /* QuoteTextMessageViewModel.swift */,
+				7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */,
 				7BD7534B2182CD7A00BAC172 /* CallMessageViewModel.swift */,
 				7BFDB73820DA41E3005673CC /* Quote.swift */,
 				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
@@ -2472,7 +2475,7 @@
 				7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */,
 				7B9F06C720A985E70095A51B /* VideoMessageCell.swift */,
 				7B84358820D8DC2E00237242 /* QuoteTextMessageCell.swift */,
-				7BD7534D2182CDCE00BAC172 /* CallMessageCell.swift */,
+				7BD7534D2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift */,
 				7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */,
 				7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */,
 				7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */,
@@ -3035,6 +3038,7 @@
 				DFB9B39A1FAB01E6009503CE /* MixinNavigationController.swift in Sources */,
 				273FACB3205FB9A800513327 /* CiphertextMessage.swift in Sources */,
 				DF0E2D2420FDEB2500BB2658 /* Keychain.swift in Sources */,
+				7B7FBF8D2282D51100644693 /* IconPrefixedTextMessageViewModel.swift in Sources */,
 				DF503D431FED1A8C00C008E7 /* MixinSignedPreKeyStore.swift in Sources */,
 				7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */,
 				DFE63CA41FC6B6D300D6E028 /* ConversationRequest.swift in Sources */,
@@ -3279,7 +3283,7 @@
 				DF22D94D1FDE500500243CAE /* SystemConversationData.swift in Sources */,
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
 				DF03C85D1FF2BE6500C1ED6B /* MessageHistoryDAO.swift in Sources */,
-				7BD7534E2182CDCE00BAC172 /* CallMessageCell.swift in Sources */,
+				7BD7534E2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift in Sources */,
 				27D6E8D22045473300BA678A /* TransferMessage.swift in Sources */,
 				7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */,
 				7B84358920D8DC2E00237242 /* QuoteTextMessageCell.swift in Sources */,

@@ -1,12 +1,12 @@
 import UIKit
 
-class CallMessageCell: TextMessageCell {
+class IconPrefixedTextMessageCell: TextMessageCell {
     
     let prefixImageView = UIImageView(frame: CGRect(origin: .zero, size: CallMessageViewModel.prefixSize))
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
-        if let viewModel = viewModel as? CallMessageViewModel {
+        if let viewModel = viewModel as? IconPrefixedTextMessageViewModel {
             prefixImageView.frame = viewModel.prefixFrame
             prefixImageView.image = viewModel.prefixImage
         }

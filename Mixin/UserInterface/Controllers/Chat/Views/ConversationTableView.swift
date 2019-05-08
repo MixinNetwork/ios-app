@@ -271,7 +271,7 @@ class ConversationTableView: UITableView {
         register(AppButtonGroupMessageCell.self, forCellReuseIdentifier: ReuseId.appButtonGroup.rawValue)
         register(VideoMessageCell.self, forCellReuseIdentifier: ReuseId.video.rawValue)
         register(QuoteTextMessageCell.self, forCellReuseIdentifier: ReuseId.quoteText.rawValue)
-        register(CallMessageCell.self, forCellReuseIdentifier: ReuseId.call.rawValue)
+        register(IconPrefixedTextMessageCell.self, forCellReuseIdentifier: ReuseId.iconPrefixedText.rawValue)
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
         addGestureRecognizer(longPressRecognizer)
@@ -311,9 +311,9 @@ extension ConversationTableView {
         case appCard = "AppCardMessageCell"
         case audio = "AudioMessageCell"
         case quoteText = "QuoteTextMessageCell"
-        case call = "CallMessageCell"
+        case iconPrefixedText = "IconPrefixedTextMessageCell"
         case header = "DateHeader"
-
+        
         init(category: String) {
             if category.hasSuffix("_TEXT") {
                 self = .text
@@ -329,8 +329,8 @@ extension ConversationTableView {
                 self = .video
             } else if category.hasSuffix("_AUDIO") {
                 self = .audio
-            } else if category.hasPrefix("WEBRTC_") {
-                self = .call
+            } else if category.hasPrefix("WEBRTC_") || category == MessageCategory.MESSAGE_RECALL.rawValue {
+                self = .iconPrefixedText
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 self = .transfer
             } else if category == MessageCategory.EXT_UNREAD.rawValue {

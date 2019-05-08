@@ -81,3 +81,9 @@ extension UIEdgeInsets {
     }
     
 }
+
+extension CGAffineTransform {
+    
+    static let pi14Slanted = CGAffineTransform(a: 1, b: 0, c: tan(.pi / 14), d: 1, tx: 0, ty: 0)
+    
+}

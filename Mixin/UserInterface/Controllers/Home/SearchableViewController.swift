@@ -42,7 +42,7 @@ extension SearchableViewController where Self: UIViewController {
         case let .contact(user):
             let vc = ConversationViewController.instance(ownerUser: user)
             homeNavigationController?.pushViewController(vc, animated: true)
-        case let .group(conversation):
+        case let .conversation(conversation):
             let vc = ConversationViewController.instance(conversation: conversation)
             homeNavigationController?.pushViewController(vc, animated: true)
         case .searchMessageWithContact, .searchMessageWithGroup:

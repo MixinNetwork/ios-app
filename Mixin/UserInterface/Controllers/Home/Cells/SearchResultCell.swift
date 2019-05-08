@@ -26,8 +26,12 @@ class SearchResultCell: UITableViewCell {
         switch result.target {
         case let .contact(user):
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
-        case let .group(conversation):
-            avatarImageView.setGroupImage(with: conversation.iconUrl)
+        case let .conversation(conversation):
+            if conversation.isGroup() {
+                avatarImageView.setGroupImage(with: conversation.iconUrl)
+            } else {
+                avatarImageView.setImage(with: conversation.ownerAvatarUrl, userId: conversation.ownerId, name: conversation.ownerFullName)
+            }
         case let .searchMessageWithContact(_, userId, name):
             avatarImageView.setImage(with: result.iconUrl, userId: userId, name: name)
         case .searchMessageWithGroup:

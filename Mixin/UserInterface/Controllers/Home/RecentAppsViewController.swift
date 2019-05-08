@@ -11,10 +11,15 @@ class RecentAppsViewController: UIViewController {
     
     private let cellCountPerRow = 4
     private let maxRowCount = 2
+    private let cellMinWidth: CGFloat = 60
     private let queue = OperationQueue()
     
     private var users = [UserItem]()
     private var needsReload = true
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,16 +31,20 @@ class RecentAppsViewController: UIViewController {
                                                selector: #selector(didChangeRecentlyUsedAppIds),
                                                name: CommonUserDefault.didChangeRecentlyUsedAppIdsNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(userDidChange(_:)),
+                                               name: .UserDidChange,
+                                               object: nil)
         reloadIfNeeded()
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        let cellsWidth = collectionLayout.itemSize.width * CGFloat(cellCountPerRow)
+        let cellsWidth = cellMinWidth * CGFloat(cellCountPerRow)
         let totalSpacing = view.bounds.width - cellsWidth
         let spacing = floor(totalSpacing / CGFloat(cellCountPerRow + 1))
-        collectionLayout.minimumInteritemSpacing = spacing
-        collectionLayout.sectionInset = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
+        collectionLayout.itemSize = CGSize(width: cellMinWidth + spacing, height: 109)
+        collectionLayout.sectionInset = UIEdgeInsets(top: 0, left: spacing / 2, bottom: 0, right: spacing / 2)
     }
     
     @IBAction func hideSearchAction() {
@@ -45,6 +54,20 @@ class RecentAppsViewController: UIViewController {
     
     @objc func didChangeRecentlyUsedAppIds() {
         needsReload = true
+    }
+    
+    @objc func userDidChange(_ sender: Notification) {
+        let userId: String
+        if let response = sender.object as? UserResponse {
+            userId = response.userId
+        } else if let user = sender.object as? UserItem {
+            userId = user.userId
+        } else {
+            return
+        }
+        if users.contains(where: { $0.userId == userId }) {
+            needsReload = true
+        }
     }
     
     func reloadIfNeeded() {

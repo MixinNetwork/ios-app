@@ -480,7 +480,7 @@
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="228" id="cAp-XY-y6W"/>
                                                         </constraints>
-                                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="KuQ-f8-Jg6">
+                                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="KuQ-f8-Jg6">
                                                             <size key="itemSize" width="60" height="109"/>
                                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -498,14 +498,15 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="cpS-4e-0xb" secondAttribute="height" id="C2f-DK-oEc"/>
+                                                                                <constraint firstAttribute="width" constant="60" id="bRI-QA-Rhz"/>
                                                                             </constraints>
                                                                         </imageView>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aEA-e7-GQV">
-                                                                            <rect key="frame" x="0.0" y="71" width="60" height="20"/>
+                                                                            <rect key="frame" x="2" y="71" width="56" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="20" id="IDg-rs-57Z"/>
                                                                             </constraints>
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                             <color key="textColor" red="0.23137254901960785" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
@@ -513,11 +514,10 @@
                                                                 </view>
                                                                 <constraints>
                                                                     <constraint firstItem="aEA-e7-GQV" firstAttribute="top" secondItem="cpS-4e-0xb" secondAttribute="bottom" constant="11" id="2qL-Vw-j29"/>
-                                                                    <constraint firstItem="cpS-4e-0xb" firstAttribute="leading" secondItem="hDP-Tv-XXM" secondAttribute="leading" id="CBP-3B-Dpv"/>
-                                                                    <constraint firstItem="aEA-e7-GQV" firstAttribute="leading" secondItem="hDP-Tv-XXM" secondAttribute="leading" id="CMK-nN-wEq"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="aEA-e7-GQV" secondAttribute="trailing" id="MpQ-Pz-9wh"/>
+                                                                    <constraint firstItem="cpS-4e-0xb" firstAttribute="centerX" secondItem="hDP-Tv-XXM" secondAttribute="centerX" id="9Sm-sI-cxj"/>
+                                                                    <constraint firstItem="aEA-e7-GQV" firstAttribute="leading" secondItem="hDP-Tv-XXM" secondAttribute="leading" constant="2" id="CMK-nN-wEq"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="aEA-e7-GQV" secondAttribute="trailing" constant="2" id="MpQ-Pz-9wh"/>
                                                                     <constraint firstItem="cpS-4e-0xb" firstAttribute="top" secondItem="hDP-Tv-XXM" secondAttribute="top" id="n3s-9L-VOD"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="cpS-4e-0xb" secondAttribute="trailing" id="pNe-jW-tfc"/>
                                                                 </constraints>
                                                                 <connections>
                                                                     <outlet property="imageView" destination="cpS-4e-0xb" id="4Si-Qv-mjM"/>

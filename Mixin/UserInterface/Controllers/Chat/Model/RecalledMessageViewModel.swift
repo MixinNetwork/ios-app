@@ -4,7 +4,7 @@ class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
     
     private enum Font {
         private static let font: UIFont = {
-            let descriptor = UIFont.systemFont(ofSize: 16).fontDescriptor.withMatrix(.pi14Slanted)
+            let descriptor = UIFont.systemFont(ofSize: 16).fontDescriptor.withMatrix(.italic)
             return UIFont(descriptor: descriptor, size: 16)
         }()
         static let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)

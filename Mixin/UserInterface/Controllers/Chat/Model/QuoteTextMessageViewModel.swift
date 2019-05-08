@@ -11,7 +11,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         static let iconTrailingMargin: CGFloat = 4
         static let normalSubtitleFont = UIFont.systemFont(ofSize: 13, weight: .light)
         static let recalledSubtitleFont: UIFont = {
-            let descriptor = normalSubtitleFont.fontDescriptor.withMatrix(.pi14Slanted)
+            let descriptor = normalSubtitleFont.fontDescriptor.withMatrix(.italic)
             return UIFont(descriptor: descriptor, size: 13)
         }()
         static let subtitleTopMargin: CGFloat = 4

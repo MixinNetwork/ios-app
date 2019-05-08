@@ -5,7 +5,7 @@ class ConversationCell: UITableViewCell {
     
     static let contentLabelNormalFont = UIFont.systemFont(ofSize: 14)
     static let contentLabelItalicFont: UIFont = {
-        let desc = contentLabelNormalFont.fontDescriptor.withMatrix(.pi14Slanted)
+        let desc = contentLabelNormalFont.fontDescriptor.withMatrix(.italic)
         return UIFont(descriptor: desc, size: 14)
     }()
     static let cellIdentifier = "cell_identifier_conversation"

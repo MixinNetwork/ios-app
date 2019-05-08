@@ -21,6 +21,7 @@ class QuoteTextMessageCell: TextMessageCell {
             quoteTitleLabel.frame = viewModel.quoteTitleFrame
             quoteIconImageView.frame = viewModel.quoteIconFrame
             quoteSubtitleLabel.frame = viewModel.quoteSubtitleFrame
+            quoteSubtitleLabel.font = viewModel.subtitleFont
             quoteImageView.frame = viewModel.quoteImageFrame
             if let quote = viewModel.quote {
                 quoteBackgroundImageView.tintColor = quote.tintColor
@@ -59,7 +60,6 @@ class QuoteTextMessageCell: TextMessageCell {
         quoteIconImageView.contentMode = .center
         contentView.addSubview(quoteIconImageView)
         
-        quoteSubtitleLabel.font = QuoteTextMessageViewModel.Quote.subtitleFont
         quoteSubtitleLabel.textColor = UIColor.gray
         quoteSubtitleLabel.numberOfLines = QuoteTextMessageViewModel.Quote.subtitleNumberOfLines
         contentView.addSubview(quoteSubtitleLabel)

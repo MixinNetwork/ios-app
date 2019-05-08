@@ -2,11 +2,11 @@ import UIKit
 
 class CallMessageViewModel: TextMessageViewModel {
     
-    static let prefixImage = UIImage(named: "Call/ic_message_prefix")!
-    static let prefixSize = prefixImage.size
+    static let prefixSize = CGSize(width: 14, height: 14)
     static let prefixInset = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 6)
     
     var prefixFrame = CGRect.zero
+    var prefixImage: UIImage?
     
     override var rawContent: String {
         let isRemote = message.userId != AccountAPI.shared.accountUserId
@@ -38,6 +38,11 @@ class CallMessageViewModel: TextMessageViewModel {
     
     override func didSetStyle() {
         super.didSetStyle()
+        if style.contains(.received) {
+            prefixImage = R.image.call.ic_message_prefix_received()
+        } else {
+            prefixImage = R.image.call.ic_message_prefix_sent()
+        }
         prefixFrame = CGRect(x: contentLabelFrame.origin.x + CallMessageViewModel.prefixInset.left,
                              y: contentLabelFrame.origin.y,
                              width: CallMessageViewModel.prefixSize.width,

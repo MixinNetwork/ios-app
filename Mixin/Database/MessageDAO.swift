@@ -108,7 +108,7 @@ final class MessageDAO {
     }
 
     func findFailedMessages(conversationId: String, userId: String) -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000, inTransaction: false)
+        return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000, inTransaction: false)
     }
 
     func clearChat(conversationId: String, autoNotification: Bool = true) {
@@ -200,11 +200,11 @@ final class MessageDAO {
         let conversationId = oldMessage.conversationId
         if updateUnseen {
             MixinDatabase.shared.transaction { (database) in
-                try database.update(table: Message.tableName, on: [Message.Properties.status], with: [status], where: Message.Properties.messageId == messageId)
+                try database.update(table: Message.tableName, on: [Message.Properties.status], with: [status], where: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
                 try updateUnseenMessageCount(database: database, conversationId: conversationId)
             }
         } else {
-            MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+            MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMessageStatus(messageId: messageId, newStatus: MessageStatus(rawValue: status) ?? .UNKNOWN))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
@@ -470,7 +470,20 @@ final class MessageDAO {
             return
         }
 
-        var values: [(PropertyConvertible, ColumnEncodable?)] = [(Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue)]
+        AttachmentDownloadJob.cancelAndRemoveAttachment(message: message)
+        guard MixinDatabase.shared.update(maps: getRecallUpdateColumns(message: message), tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+            return
+        }
+
+        let change = ConversationChange(conversationId: message.conversationId, action: .recallMessage(messageId: messageId))
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        UNUserNotificationCenter.current().removeNotifications(identifier: messageId)
+    }
+
+    func getRecallUpdateColumns(message: Message) -> [(PropertyConvertible, ColumnEncodable?)] {
+        var values: [(PropertyConvertible, ColumnEncodable?)] = [
+            (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue),
+            (Message.Properties.status, MessageStatus.READ.rawValue)]
         if message.category.hasSuffix("_TEXT") {
             values.append((Message.Properties.content, ""))
         } else if message.category.hasSuffix("_IMAGE") ||
@@ -488,34 +501,12 @@ final class MessageDAO {
             values.append((Message.Properties.mediaDigest, MixinDatabase.NullValue()))
             values.append((Message.Properties.mediaWaveform, MixinDatabase.NullValue()))
             values.append((Message.Properties.name, ""))
-            
-            if message.category.hasSuffix("_IMAGE") {
-                let url = MixinFile.url(ofChatDirectory: .photos, filename: "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ExtensionName.jpeg.rawValue))")
-                try? FileManager.default.removeItem(at: url)
-            } else if message.category.hasSuffix("_DATA") {
-                let url = MixinFile.url(ofChatDirectory: .files, filename: "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
-                try? FileManager.default.removeItem(at: url)
-            } else if message.category.hasSuffix("_AUDIO") {
-                let url = MixinFile.url(ofChatDirectory: .audios, filename: "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
-                try? FileManager.default.removeItem(at: url)
-            } else if message.category.hasSuffix("_VIDEO") {
-                let videoUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
-                let thumbUrl = MixinFile.url(ofChatDirectory: .videos, filename: message.messageId + ExtensionName.jpeg.withDot)
-                try? FileManager.default.removeItem(at: videoUrl)
-                try? FileManager.default.removeItem(at: thumbUrl)
-            }
         } else if message.category.hasSuffix("_STICKER") {
             values.append((Message.Properties.stickerId, ""))
         } else if message.category.hasSuffix("_CONTACT") {
             values.append((Message.Properties.sharedUserId, ""))
         }
-
-        guard MixinDatabase.shared.update(maps: values, tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
-            return
-        }
-
-        let change = ConversationChange(conversationId: message.conversationId, action: .recallMessage(messageId: messageId))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        return values
     }
     
     @discardableResult

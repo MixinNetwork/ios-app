@@ -107,6 +107,36 @@ class SendMessageService: MixinService {
         }
     }
 
+    func recallMessage(message: Message) {
+        guard message.category.hasSuffix("_TEXT") ||
+            message.category.hasSuffix("_STICKER") ||
+            message.category.hasSuffix("_CONTACT") ||
+            message.category.hasSuffix("_IMAGE") ||
+            message.category.hasSuffix("_DATA") ||
+            message.category.hasSuffix("_AUDIO") ||
+            message.category.hasSuffix("_VIDEO") else {
+                return
+        }
+
+        saveDispatchQueue.async {
+            let transferPlainData = TransferRecallData(messageId: message.messageId)
+            let encoded = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
+            let params = BlazeMessageParam(conversationId: message.conversationId, category: MessageCategory.MESSAGE_RECALL.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: message.messageId)
+            let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
+            var jobs = [Job]()
+            jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: message.conversationId, blazeMessage: blazeMessage))
+            if AccountUserDefault.shared.isDesktopLoggedIn {
+                //jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_SESSION_MESSAGE, conversationId: message.conversationId, blazeMessage: blazeMessage, isSessionMessage: true))
+            }
+            MixinDatabase.shared.transaction { (database) in
+                try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
+                let maps = MessageDAO.shared.getRecallUpdateColumns(message: message)
+                try database.update(maps: maps, tableName: Message.tableName, condition: Message.Properties.messageId == message.messageId)
+            }
+            SendMessageService.shared.processMessages()
+        }
+    }
+
     func sendMessage(message: Message, data: String?) {
         let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data
         saveDispatchQueue.async {
@@ -202,7 +232,7 @@ class SendMessageService: MixinService {
                 return
             }
             DispatchQueue.global().async {
-                let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)
+                let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)
                 var position = 0
                 let pageCount = AccountUserDefault.shared.isDesktopLoggedIn ? 1000 : 2000
                 while messageIds.count > 0 && position < messageIds.count {
@@ -557,7 +587,7 @@ extension SendMessageService {
         blazeMessage.params?.category = message.category
         blazeMessage.params?.quoteMessageId = message.quoteMessageId
 
-        if message.category.hasPrefix("PLAIN_") {
+        if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue {
             try requestCreateConversation(conversation: conversation)
             if blazeMessage.params?.data == nil {
                 if message.category == MessageCategory.PLAIN_TEXT.rawValue {

@@ -26,6 +26,37 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     class func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"
     }
+
+    class func cancelAndRemoveAttachment(message: Message) {
+        let category = message.category
+        guard category.hasSuffix("_IMAGE") ||
+            category.hasSuffix("_VIDEO") ||
+            category.hasSuffix("_DATA") ||
+            category.hasSuffix("_AUDIO") else {
+            return
+        }
+
+        let messageId = message.messageId
+        if category.hasSuffix("_IMAGE") {
+            let url = MixinFile.url(ofChatDirectory: .photos, filename: "\(messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ExtensionName.jpeg.rawValue))")
+            try? FileManager.default.removeItem(at: url)
+            FileJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(messageId: messageId))
+        } else if category.hasSuffix("_DATA") {
+            let url = MixinFile.url(ofChatDirectory: .files, filename: "\(messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
+            try? FileManager.default.removeItem(at: url)
+            FileJobQueue.shared.cancelJob(jobId: FileDownloadJob.jobId(messageId: messageId))
+        } else if category.hasSuffix("_AUDIO") {
+            let url = MixinFile.url(ofChatDirectory: .audios, filename: "\(messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
+            try? FileManager.default.removeItem(at: url)
+            FileJobQueue.shared.cancelJob(jobId: AudioDownloadJob.jobId(messageId: messageId))
+        } else if category.hasSuffix("_VIDEO") {
+            let videoUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
+            let thumbUrl = MixinFile.url(ofChatDirectory: .videos, filename: message.messageId + ExtensionName.jpeg.withDot)
+            try? FileManager.default.removeItem(at: videoUrl)
+            try? FileManager.default.removeItem(at: thumbUrl)
+            FileJobQueue.shared.cancelJob(jobId: VideoDownloadJob.jobId(messageId: messageId))
+        }
+    }
     
     override func getJobId() -> String {
         return AttachmentDownloadJob.jobId(messageId: messageId)
@@ -35,7 +66,7 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
         guard !self.messageId.isEmpty else {
             return false
         }
-        guard let message = MessageDAO.shared.getMessage(messageId: self.messageId), (message.mediaUrl == nil || (message.mediaStatus != MediaStatus.DONE.rawValue && message.mediaStatus != MediaStatus.EXPIRED.rawValue)) else {
+        guard let message = MessageDAO.shared.getMessage(messageId: self.messageId), (message.mediaUrl == nil || (message.mediaStatus != MediaStatus.DONE.rawValue && message.mediaStatus != MediaStatus.EXPIRED.rawValue && message.category != MessageCategory.MESSAGE_RECALL.rawValue)) else {
             return false
         }
         guard let attachmentId = message.content, !attachmentId.isEmpty else {

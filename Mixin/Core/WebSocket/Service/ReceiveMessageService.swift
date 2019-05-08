@@ -185,6 +185,19 @@ class ReceiveMessageService: MixinService {
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
     }
 
+    private func processRecallMessage(data: BlazeMessageData) {
+        guard data.category == MessageCategory.MESSAGE_RECALL.rawValue else {
+            return
+        }
+
+        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+        MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
+
+        if let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty {
+            MessageDAO.shared.recallMessage(messageId: plainData.messageId)
+        }
+    }
+
     private func processSignalMessage(data: BlazeMessageData) {
         guard data.category.hasPrefix("SIGNAL_") else {
             return
@@ -547,16 +560,6 @@ class ReceiveMessageService: MixinService {
             default:
                 break
             }
-        case MessageCategory.MESSAGE_RECALL.rawValue:
-            defer {
-                updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
-                MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
-            }
-            guard let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty else {
-                return
-            }
-            
-            MessageDAO.shared.recallMessage(messageId: plainData.messageId)
         case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
             _ = syncUser(userId: data.getSenderId())
             processDecryptSuccess(data: data, plainText: data.data, dataUserId: data.getDataUserId())

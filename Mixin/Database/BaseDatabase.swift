@@ -233,17 +233,8 @@ class BaseDatabase {
 
     @discardableResult
     func update(maps: [(PropertyConvertible, ColumnEncodable?)], tableName: String, condition: Condition? = nil) -> Bool {
-        var keys = [PropertyConvertible]()
-        var values = [ColumnEncodable]()
-        for (key, value) in maps {
-            guard let val = value else {
-                continue
-            }
-            keys.append(key)
-            values.append(val)
-        }
         try! database.runTransaction {
-            try database.update(table: tableName, on: keys, with: values, where: condition)
+            try database.update(maps: maps, tableName: tableName, condition: condition)
         }
         return true
     }
@@ -296,8 +287,21 @@ class BaseDatabase {
 
 extension Database {
 
-    func create<T: BaseCodable>(of rootType: T.Type) throws{
+    func create<T: BaseCodable>(of rootType: T.Type) throws {
         try create(table: T.tableName, of: rootType)
+    }
+
+    func update(maps: [(PropertyConvertible, ColumnEncodable?)], tableName: String, condition: Condition? = nil) throws {
+        var keys = [PropertyConvertible]()
+        var values = [ColumnEncodable]()
+        for (key, value) in maps {
+            guard let val = value else {
+                continue
+            }
+            keys.append(key)
+            values.append(val)
+        }
+        try update(table: tableName, on: keys, with: values, where: condition)
     }
 
 }

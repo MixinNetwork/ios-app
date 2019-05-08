@@ -363,7 +363,7 @@ extension ConversationDataSource {
             return
         }
         let messageIsSentByMe = message.userId == me.user_id
-        if !messageIsSentByMe, message.status == MessageStatus.DELIVERED.rawValue {
+        if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue && message.category != MessageCategory.MESSAGE_RECALL.rawValue {
             SendMessageService.shared.sendReadMessage(conversationId: message.conversationId, messageId: message.messageId)
         }
         if !didLoadLatestMessage {
@@ -443,7 +443,7 @@ extension ConversationDataSource {
                 return
             }
             
-            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId {
+            if message.status == MessageStatus.DELIVERED.rawValue && message.userId != AccountAPI.shared.accountUserId && message.category != MessageCategory.MESSAGE_RECALL.rawValue {
                 SendMessageService.shared.sendReadMessage(conversationId: message.conversationId, messageId: message.messageId)
             }
             

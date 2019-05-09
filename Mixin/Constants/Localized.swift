@@ -170,9 +170,6 @@ public class Localized {
     public static func CHAT_MESSAGE_CALL_DURATION(duration: String) -> String {
         return String(format: LocalizedString("chat_message_call_duration", comment: "Duration %@"), duration)
     }
-    public static func CHAT_MESSAGE_RECALLED_BY_OPPONENT(name: String) -> String {
-        return String(format: LocalizedString("chat_message_recalled_by_opponent", comment: "%@ deleted this message"), name)
-    }
     public static let CHAT_TIME_TODAY = LocalizedString("chat_time_today", comment: "Today")
     public static let CHAT_MESSAGE_YOU = LocalizedString("chat_message_you", comment: "You")
     public static func CHAT_MESSAGE_CREATED(fullName: String) -> String {

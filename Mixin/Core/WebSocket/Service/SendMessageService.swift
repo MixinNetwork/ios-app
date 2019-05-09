@@ -129,13 +129,14 @@ class SendMessageService: MixinService {
                 jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_SESSION_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage, isSessionMessage: true))
             }
             MixinDatabase.shared.transaction { (database) in
-                try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
                 let maps = MessageDAO.shared.getRecallUpdateColumns(category: category)
                 try database.update(maps: maps, tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
-
-                let change = ConversationChange(conversationId: conversationId, action: .recallMessage(messageId: messageId))
-                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+                try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
+                SendMessageService.shared.processMessages()
             }
+
+            let change = ConversationChange(conversationId: conversationId, action: .recallMessage(messageId: messageId))
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
             SendMessageService.shared.processMessages()
         }
     }
@@ -587,8 +588,12 @@ extension SendMessageService {
             return
         }
 
-        blazeMessage.params?.category = message.category
-        blazeMessage.params?.quoteMessageId = message.quoteMessageId
+        if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
+            blazeMessage.params?.messageId = UUID().uuidString.lowercased()
+        } else {
+            blazeMessage.params?.category = message.category
+            blazeMessage.params?.quoteMessageId = message.quoteMessageId
+        }
 
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue {
             try requestCreateConversation(conversation: conversation)

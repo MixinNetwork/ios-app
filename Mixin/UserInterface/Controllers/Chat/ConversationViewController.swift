@@ -712,8 +712,9 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
     }
 
     private func showRecallTips(message: MessageItem, forIndexPath indexPath: IndexPath) {
-        let alc = UIAlertController(title: "", message: R.string.localizable.chat_delete_tip(), preferredStyle: .alert)
+        let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
+            CommonUserDefault.shared.isRecallTips = true
             UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360023738212")
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
@@ -740,12 +741,8 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             }
 
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .default, handler: { (_) in
-                self.deleteForMe(message: message, forIndexPath: indexPath)
-            }))
-
             if abs(message.createdAt.toUTCDate().timeIntervalSinceNow) < 3600 {
-                controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .default, handler: { (_) in
+                controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
                     if CommonUserDefault.shared.isRecallTips {
                         self.deleteForEveryone(message: message, forIndexPath: indexPath)
                     } else {
@@ -753,6 +750,9 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                     }
                 }))
             }
+            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .destructive, handler: { (_) in
+                self.deleteForMe(message: message, forIndexPath: indexPath)
+            }))
             controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
             self.present(controller, animated: true, completion: nil)
         case .forward:

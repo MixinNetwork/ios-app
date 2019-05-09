@@ -54,7 +54,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         searchTextField.text = inheritedKeyword?.raw
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
-        tableView.register(R.nib.searchResultCell)
+        tableView.register(R.nib.peerCell)
         tableView.dataSource = self
         tableView.delegate = self
         let conversationId = self.conversationId
@@ -166,7 +166,7 @@ extension SearchConversationViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
         cell.render(result: messages[indexPath.section][indexPath.row])
         return cell
     }

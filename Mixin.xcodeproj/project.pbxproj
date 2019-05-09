@@ -142,8 +142,8 @@
 		7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59534E2267215B00D59DB4 /* BottomShadowView.swift */; };
 		7B59535122672D3500D59DB4 /* SearchNumberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B59535022672D3500D59DB4 /* SearchNumberCell.swift */; };
 		7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B595352226736BD00D59DB4 /* SearchHeaderView.swift */; };
-		7B595358226749A100D59DB4 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B595356226749A100D59DB4 /* SearchResultCell.swift */; };
-		7B595359226749A100D59DB4 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B595357226749A100D59DB4 /* SearchResultCell.xib */; };
+		7B595358226749A100D59DB4 /* PeerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B595356226749A100D59DB4 /* PeerCell.swift */; };
+		7B595359226749A100D59DB4 /* PeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B595357226749A100D59DB4 /* PeerCell.xib */; };
 		7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */; };
 		7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */; };
 		7B5C77232220188200395C7D /* AssetFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */; };
@@ -786,8 +786,8 @@
 		7B59534E2267215B00D59DB4 /* BottomShadowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomShadowView.swift; sourceTree = "<group>"; };
 		7B59535022672D3500D59DB4 /* SearchNumberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNumberCell.swift; sourceTree = "<group>"; };
 		7B595352226736BD00D59DB4 /* SearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHeaderView.swift; sourceTree = "<group>"; };
-		7B595356226749A100D59DB4 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
-		7B595357226749A100D59DB4 /* SearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultCell.xib; sourceTree = "<group>"; };
+		7B595356226749A100D59DB4 /* PeerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerCell.swift; sourceTree = "<group>"; };
+		7B595357226749A100D59DB4 /* PeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerCell.xib; sourceTree = "<group>"; };
 		7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		7B5BC7B620AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingMessageCell.swift; sourceTree = "<group>"; };
 		7B5C77222220188200395C7D /* AssetFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterHeaderView.swift; sourceTree = "<group>"; };
@@ -1531,6 +1531,8 @@
 		7B26D1CD219EEB5A00AE113A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				7B595356226749A100D59DB4 /* PeerCell.swift */,
+				7B595357226749A100D59DB4 /* PeerCell.xib */,
 				DFD294401FA7075300FADAAD /* PeerCell_Legacy.swift */,
 				DFD294461FA7092800FADAAD /* PeerCell_Legacy.xib */,
 				DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */,
@@ -2496,8 +2498,6 @@
 				DF121F321FA1C778000F701D /* ConversationCell.xib */,
 				7B5281752265F1730023616D /* RecentBotCell.swift */,
 				7B59535022672D3500D59DB4 /* SearchNumberCell.swift */,
-				7B595356226749A100D59DB4 /* SearchResultCell.swift */,
-				7B595357226749A100D59DB4 /* SearchResultCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2690,7 +2690,7 @@
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
 				7BB1EDC71FB1B43B000DF9E7 /* GroupMemberCell.xib in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
-				7B595359226749A100D59DB4 /* SearchResultCell.xib in Resources */,
+				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
@@ -2904,7 +2904,7 @@
 				7B5EA41420B2791F00940D1A /* GalleryScrollView.swift in Sources */,
 				DF191196208F186100BD415D /* SendMessageService.swift in Sources */,
 				7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */,
-				7B595358226749A100D59DB4 /* SearchResultCell.swift in Sources */,
+				7B595358226749A100D59DB4 /* PeerCell.swift in Sources */,
 				7BC13AD52277052D00237647 /* Keyword.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupViewModel.swift in Sources */,

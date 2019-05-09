@@ -1,6 +1,6 @@
 import UIKit
 
-class SearchResultCell: UITableViewCell {
+class PeerCell: UITableViewCell {
     
     static let height: CGFloat = 70
     

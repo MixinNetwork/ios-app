@@ -352,7 +352,7 @@ extension ConversationDataSource {
         case .updateDownloadProgress(let messageId, let progress):
             updateMediaProgress(messageId: messageId, progress: progress)
         case .recallMessage(let messageId):
-            recallMessage(messageId: messageId)
+            updateMessage(messageId: messageId)
         default:
             break
         }
@@ -388,14 +388,7 @@ extension ConversationDataSource {
             }
         }
     }
-
-    private func recallMessage(messageId: String) {
-        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? DetailInfoMessageViewModel else {
-            return
-        }
-        // TODO
-    }
-
+    
     private func updateMessageStatus(messageId: String, status: MessageStatus) {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? DetailInfoMessageViewModel else {
             return

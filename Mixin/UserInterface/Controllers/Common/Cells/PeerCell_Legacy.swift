@@ -1,7 +1,7 @@
 import UIKit
 import SDWebImage
 
-class PeerCell: UITableViewCell {
+class PeerCell_Legacy: UITableViewCell {
     
     @IBOutlet weak var checkmarkView: CheckmarkView!
     @IBOutlet weak var iconImageView: AvatarImageView!
@@ -40,7 +40,7 @@ class PeerCell: UITableViewCell {
         }
     }
     
-    func render(peer: Peer, description: NSAttributedString?) {
+    func render(peer: Peer_Legacy, description: NSAttributedString?) {
         peer.setIconImage(to: iconImageView)
         render(fullName: peer.name,
                isVerified: peer.isVerified,

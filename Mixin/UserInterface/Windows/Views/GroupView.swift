@@ -180,7 +180,7 @@ class GroupView: CornerView {
     
     @IBAction func showParticipantsAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
-        let vc = GroupParticipentViewController.instance(conversation: conversation)
+        let vc = GroupParticipentViewController_Legacy.instance(conversation: conversation)
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
     }
     

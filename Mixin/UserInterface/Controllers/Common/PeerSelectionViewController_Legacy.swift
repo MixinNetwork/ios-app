@@ -1,12 +1,12 @@
 import UIKit
 
-class PeerSelectionViewController: UIViewController, ContainerViewControllerDelegate {
+class PeerSelectionViewController_Legacy: UIViewController, ContainerViewControllerDelegate {
     
     let tableView = UITableView()
     let searchBoxView = SearchBoxView(frame: CGRect(x: 0, y: 0, width: 375, height: 40))
     
     var headerTitles = [String]()
-    var peers = [[Peer]]()
+    var peers = [[Peer_Legacy]]()
     
     var allowsMultipleSelection: Bool {
         return true
@@ -16,7 +16,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         return 70
     }
     
-    private(set) var selections = Set<Peer>() {
+    private(set) var selections = Set<Peer_Legacy>() {
         didSet {
             selectionsDidChange()
         }
@@ -25,8 +25,8 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     private let queue = OperationQueue()
     private let initDataOperation = BlockOperation()
     
-    private var searchResults = [PeerSearchResult]()
-    private var sortedSelections = [Peer]()
+    private var searchResults = [PeerSearchResult_Legacy]()
+    private var sortedSelections = [Peer_Legacy]()
     private var lastKeyword: String?
     
     private var trimmedLowercaseKeyword: String {
@@ -64,7 +64,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         tableView.rowHeight = tableRowHeight
         tableView.separatorColor = UIColor.white
         tableView.separatorStyle = .none
-        tableView.register(R.nib.peerCell)
+        tableView.register(R.nib.peerCell_Legacy)
         tableView.register(GeneralTableViewHeader.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 15))
@@ -95,7 +95,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
             guard !op.isCancelled else {
                 return
             }
-            var unique = Set<Peer>()
+            var unique = Set<Peer_Legacy>()
             let results = peers.flatMap { $0 }
                 .filter { (peer) -> Bool in
                     if peer.name.lowercased().contains(keyword) {
@@ -110,7 +110,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
                     return false
                 }
                 .filter { unique.insert($0).inserted }
-                .map { PeerSearchResult(peer: $0, keyword: keyword) }
+                .map { PeerSearchResult_Legacy(peer: $0, keyword: keyword) }
             guard !op.isCancelled else {
                 return
             }
@@ -141,19 +141,19 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
         container?.rightButton.isEnabled = selections.count > 0
     }
     
-    func shouldSelect(peer: Peer, at indexPath: IndexPath) -> Bool {
+    func shouldSelect(peer: Peer_Legacy, at indexPath: IndexPath) -> Bool {
         return selections.contains(peer)
     }
     
-    func work(selections: [Peer]) {
+    func work(selections: [Peer_Legacy]) {
         
     }
     
-    func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
+    func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer_Legacy]]) {
         return ([], [])
     }
     
-    func peerAndDescription(at indexPath: IndexPath) -> (Peer, NSAttributedString?) {
+    func peerAndDescription(at indexPath: IndexPath) -> (Peer_Legacy, NSAttributedString?) {
         if isSearching {
             let result = searchResults[indexPath.row]
             return (result.peer, result.description)
@@ -192,7 +192,7 @@ class PeerSelectionViewController: UIViewController, ContainerViewControllerDele
     
 }
 
-extension PeerSelectionViewController: UITableViewDataSource {
+extension PeerSelectionViewController_Legacy: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard !peers.isEmpty else {
@@ -202,7 +202,7 @@ extension PeerSelectionViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer_legacy, for: indexPath)!
         let (peer, description) = peerAndDescription(at: indexPath)
         cell.render(peer: peer, description: description)
         cell.supportsMultipleSelection = allowsMultipleSelection
@@ -215,7 +215,7 @@ extension PeerSelectionViewController: UITableViewDataSource {
     
 }
 
-extension PeerSelectionViewController: UITableViewDelegate {
+extension PeerSelectionViewController_Legacy: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard !isSearching, !headerTitles.isEmpty else {
@@ -261,7 +261,7 @@ extension PeerSelectionViewController: UITableViewDelegate {
     
 }
 
-extension PeerSelectionViewController: UIScrollViewDelegate {
+extension PeerSelectionViewController_Legacy: UIScrollViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if searchBoxView.textField.isFirstResponder {
@@ -271,7 +271,7 @@ extension PeerSelectionViewController: UIScrollViewDelegate {
     
 }
 
-extension PeerSelectionViewController {
+extension PeerSelectionViewController_Legacy {
     
     private enum ReuseId {
         static let header = "header"

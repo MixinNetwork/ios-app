@@ -61,7 +61,7 @@ class ContactViewController: UITableViewController {
     }
     
     @IBAction func newGroupAction(_ sender: Any) {
-        let vc = AddMemberViewController.instance()
+        let vc = AddMemberViewController_Legacy.instance()
         navigationController?.pushViewController(vc, animated: true)
     }
     

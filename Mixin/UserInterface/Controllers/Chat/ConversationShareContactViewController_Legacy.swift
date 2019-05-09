@@ -1,15 +1,15 @@
 import UIKit
 
-class ConversationShareContactViewController: SendMessagePeerSelectionViewController, MixinNavigationAnimating {
+class ConversationShareContactViewController_Legacy: SendMessagePeerSelectionViewController_Legacy, MixinNavigationAnimating {
     
     private var ownerUser: UserItem?
     private var parentConversation: ConversationItem!
     
-    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
-        return ([], [contacts.map(Peer.init)])
+    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer_Legacy]]) {
+        return ([], [contacts.map(Peer_Legacy.init)])
     }
     
-    override func work(selections: [Peer]) {
+    override func work(selections: [Peer_Legacy]) {
         let ownerUser = self.ownerUser
         let parentConversation = self.parentConversation!
         DispatchQueue.global().async { [weak self] in
@@ -35,7 +35,7 @@ class ConversationShareContactViewController: SendMessagePeerSelectionViewContro
     }
     
     class func instance(ownerUser: UserItem?, conversation: ConversationItem) -> UIViewController {
-        let vc = ConversationShareContactViewController()
+        let vc = ConversationShareContactViewController_Legacy()
         vc.ownerUser = ownerUser
         vc.parentConversation = conversation
         return ContainerViewController.instance(viewController: vc, title: Localized.PROFILE_SHARE_CARD)

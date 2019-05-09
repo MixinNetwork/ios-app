@@ -1,12 +1,12 @@
 import UIKit
 import AVKit
 
-class SendMessagePeerSelectionViewController: PeerSelectionViewController {
+class SendMessagePeerSelectionViewController_Legacy: PeerSelectionViewController_Legacy {
     
     private var messageContent: MessageContent!
     
     class func instance(content: MessageContent) -> UIViewController {
-        let vc = SendMessagePeerSelectionViewController()
+        let vc = SendMessagePeerSelectionViewController_Legacy()
         vc.messageContent = content
         return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SHARE_TO)
     }
@@ -15,18 +15,18 @@ class SendMessagePeerSelectionViewController: PeerSelectionViewController {
         return Localized.ACTION_SEND
     }
     
-    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
+    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer_Legacy]]) {
         let conversations = ConversationDAO.shared.conversationList()
         return ([Localized.CHAT_FORWARD_CHATS, Localized.CHAT_FORWARD_CONTACTS],
-                [conversations.compactMap(Peer.init), contacts.map(Peer.init)])
+                [conversations.compactMap(Peer_Legacy.init), contacts.map(Peer_Legacy.init)])
     }
     
-    override func work(selections: [Peer]) {
+    override func work(selections: [Peer_Legacy]) {
         container?.rightButton.isBusy = true
         let content = self.messageContent!
         DispatchQueue.global().async { [weak self] in
             for peer in selections {
-                guard let message = SendMessagePeerSelectionViewController.makeMessage(content: content, to: peer) else {
+                guard let message = SendMessagePeerSelectionViewController_Legacy.makeMessage(content: content, to: peer) else {
                     continue
                 }
                 SendMessageService.shared.sendMessage(message: message, ownerUser: peer.user, isGroupMessage: peer.isGroup)
@@ -39,7 +39,7 @@ class SendMessagePeerSelectionViewController: PeerSelectionViewController {
     
 }
 
-extension SendMessagePeerSelectionViewController {
+extension SendMessagePeerSelectionViewController_Legacy {
     
     enum MessageContent {
         case message(MessageItem)
@@ -49,7 +49,7 @@ extension SendMessagePeerSelectionViewController {
         case video(URL)
     }
     
-    static func makeMessage(content: MessageContent, to peer: Peer) -> Message? {
+    static func makeMessage(content: MessageContent, to peer: Peer_Legacy) -> Message? {
         switch content {
         case .message(let message):
             return makeMessage(message: message, to: peer)
@@ -89,7 +89,7 @@ extension SendMessagePeerSelectionViewController {
         return targetUrl.lastPathComponent
     }
     
-    static func makeMessage(message: MessageItem, to peer: Peer) -> Message? {
+    static func makeMessage(message: MessageItem, to peer: Peer_Legacy) -> Message? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: peer.conversationId,
                                                userId: AccountAPI.shared.accountUserId)
@@ -144,7 +144,7 @@ extension SendMessagePeerSelectionViewController {
         return newMessage
     }
     
-    static func makeMessage(userId: String, to peer: Peer) -> Message? {
+    static func makeMessage(userId: String, to peer: Peer_Legacy) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_CONTACT.rawValue,
                                             conversationId: peer.conversationId,
                                             userId: AccountAPI.shared.accountUserId)
@@ -154,7 +154,7 @@ extension SendMessagePeerSelectionViewController {
         return message
     }
     
-    static func makeMessage(image: UIImage, to peer: Peer) -> Message? {
+    static func makeMessage(image: UIImage, to peer: Peer_Legacy) -> Message? {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: peer.conversationId,
                                             userId: AccountAPI.shared.accountUserId)
@@ -174,7 +174,7 @@ extension SendMessagePeerSelectionViewController {
         return message
     }
     
-    static func makeMessage(text: String, to peer: Peer) -> Message {
+    static func makeMessage(text: String, to peer: Peer_Legacy) -> Message {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_TEXT.rawValue,
                                             conversationId: peer.conversationId,
                                             userId: AccountAPI.shared.accountUserId)
@@ -182,7 +182,7 @@ extension SendMessagePeerSelectionViewController {
         return message
     }
     
-    static func makeMessage(videoUrl: URL, to peer: Peer) -> Message? {
+    static func makeMessage(videoUrl: URL, to peer: Peer_Legacy) -> Message? {
         let asset = AVAsset(url: videoUrl)
         guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
             return nil

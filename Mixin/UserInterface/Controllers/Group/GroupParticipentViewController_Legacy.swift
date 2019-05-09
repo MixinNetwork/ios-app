@@ -1,6 +1,6 @@
 import UIKit
 
-class GroupParticipentViewController: UIViewController {
+class GroupParticipentViewController_Legacy: UIViewController {
 
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
@@ -70,14 +70,14 @@ class GroupParticipentViewController: UIViewController {
 
     
     class func instance(conversation: ConversationItem) -> UIViewController {
-        let vc = Storyboard.group.instantiateViewController(withIdentifier: "group_info") as! GroupParticipentViewController
+        let vc = Storyboard.group.instantiateViewController(withIdentifier: "group_info") as! GroupParticipentViewController_Legacy
         vc.conversation = conversation
         return ContainerViewController.instance(viewController: vc, title: Localized.GROUP_MENU_PARTICIPANTS)
     }
     
 }
 
-extension GroupParticipentViewController: ContainerViewControllerDelegate {
+extension GroupParticipentViewController_Legacy: ContainerViewControllerDelegate {
 
     func barRightButtonTappedAction() {
         guard showAdminActions else {
@@ -89,7 +89,7 @@ extension GroupParticipentViewController: ContainerViewControllerDelegate {
                 return
             }
             let id = weakSelf.conversation.conversationId
-            let vc = AddMemberViewController.instance(appendingMembersToConversationId: id)
+            let vc = AddMemberViewController_Legacy.instance(appendingMembersToConversationId: id)
             weakSelf.navigationController?.pushViewController(vc, animated: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.GROUP_NAVIGATION_TITLE_INVITE_LINK, style: .default, handler: { [weak self](_) in
@@ -109,7 +109,7 @@ extension GroupParticipentViewController: ContainerViewControllerDelegate {
 }
 
 // MARK: - UITableViewDataSource
-extension GroupParticipentViewController: UITableViewDataSource {
+extension GroupParticipentViewController_Legacy: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching {
@@ -136,7 +136,7 @@ extension GroupParticipentViewController: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate
-extension GroupParticipentViewController: UITableViewDelegate {
+extension GroupParticipentViewController_Legacy: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
@@ -187,7 +187,7 @@ extension GroupParticipentViewController: UITableViewDelegate {
 }
 
 // MARK: - Private works
-extension GroupParticipentViewController {
+extension GroupParticipentViewController_Legacy {
     
     private func prepareTableView() {
         tableView.register(UINib(nibName: "GroupMemberCell", bundle: .main), forCellReuseIdentifier: memberCellReuseId)
@@ -268,7 +268,7 @@ extension GroupParticipentViewController {
     
 }
 
-extension GroupParticipentViewController: UITextFieldDelegate {
+extension GroupParticipentViewController_Legacy: UITextFieldDelegate {
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         searchBoxView.textField.text = nil

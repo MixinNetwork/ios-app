@@ -1,6 +1,6 @@
 import Foundation
 
-class Peer {
+class Peer_Legacy {
     
     enum Item {
         case group(ConversationItem)
@@ -99,15 +99,15 @@ class Peer {
     
 }
 
-extension Peer: Equatable {
+extension Peer_Legacy: Equatable {
     
-    static func == (lhs: Peer, rhs: Peer) -> Bool {
+    static func == (lhs: Peer_Legacy, rhs: Peer_Legacy) -> Bool {
         return lhs.conversationId == rhs.conversationId
     }
     
 }
 
-extension Peer: Hashable {
+extension Peer_Legacy: Hashable {
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(conversationId)

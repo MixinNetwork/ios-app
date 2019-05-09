@@ -1,6 +1,6 @@
 import UIKit
 
-class AddMemberViewController: PeerSelectionViewController {
+class AddMemberViewController_Legacy: PeerSelectionViewController_Legacy {
     
     private let maxMembersCount = 256
     
@@ -16,7 +16,7 @@ class AddMemberViewController: PeerSelectionViewController {
     }
     
     class func instance(appendingMembersToConversationId conversationId: String? = nil) -> UIViewController {
-        let vc = AddMemberViewController()
+        let vc = AddMemberViewController_Legacy()
         vc.conversationId = conversationId
         return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SEND_TO)
     }
@@ -59,26 +59,26 @@ class AddMemberViewController: PeerSelectionViewController {
         updateSubtitle()
     }
     
-    override func shouldSelect(peer: Peer, at indexPath: IndexPath) -> Bool {
+    override func shouldSelect(peer: Peer_Legacy, at indexPath: IndexPath) -> Bool {
         if selections.contains(peer) {
             return true
         } else {
-            if let userId = peer.user?.userId, alreadyInGroupUserIds.contains(userId), let cell = tableView.cellForRow(at: indexPath) as? PeerCell {
+            if let userId = peer.user?.userId, alreadyInGroupUserIds.contains(userId), let cell = tableView.cellForRow(at: indexPath) as? PeerCell_Legacy {
                 cell.forceSelected = true
             }
             return false
         }
     }
     
-    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
+    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer_Legacy]]) {
         
         class ObjcAccessiblePeer: NSObject {
             @objc let fullName: String
-            let peer: Peer
+            let peer: Peer_Legacy
             
             init(user: UserItem) {
                 self.fullName = user.fullName
-                self.peer = Peer(user: user)
+                self.peer = Peer_Legacy(user: user)
                 super.init()
             }
         }
@@ -90,7 +90,7 @@ class AddMemberViewController: PeerSelectionViewController {
         return (titles, peers)
     }
     
-    override func work(selections: [Peer]) {
+    override func work(selections: [Peer_Legacy]) {
         let users = selections.compactMap({ $0.user })
         if let conversationId = conversationId {
             rightButton.isBusy = true
@@ -117,7 +117,7 @@ class AddMemberViewController: PeerSelectionViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         let (peer, _) = peerAndDescription(at: indexPath)
-        if let userId = peer.user?.userId, alreadyInGroupUserIds.contains(userId), let cell = cell as? PeerCell {
+        if let userId = peer.user?.userId, alreadyInGroupUserIds.contains(userId), let cell = cell as? PeerCell_Legacy {
             cell.forceSelected = true
         }
         return cell

@@ -1,6 +1,6 @@
 import UIKit
 
-class SendContactSelectionViewController: PeerSelectionViewController {
+class SendContactSelectionViewController_Legacy: PeerSelectionViewController_Legacy {
     
     var asset: AssetItem!
     
@@ -12,7 +12,7 @@ class SendContactSelectionViewController: PeerSelectionViewController {
         return 80
     }
     
-    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer]]) {
+    override func catalogedPeers(contacts: [UserItem]) -> (titles: [String], peers: [[Peer_Legacy]]) {
         let transferAcceptableContacts = contacts.filter({ (user) -> Bool in
             if user.isBot {
                 return user.appCreatorId == AccountAPI.shared.accountUserId
@@ -20,11 +20,11 @@ class SendContactSelectionViewController: PeerSelectionViewController {
                 return true
             }
         })
-        let peers = transferAcceptableContacts.map(Peer.init)
+        let peers = transferAcceptableContacts.map(Peer_Legacy.init)
         return ([], [peers])
     }
     
-    override func work(selections: [Peer]) {
+    override func work(selections: [Peer_Legacy]) {
         guard let peer = selections.first, let user = peer.user, let navigationController = navigationController else {
             return
         }
@@ -38,7 +38,7 @@ class SendContactSelectionViewController: PeerSelectionViewController {
     }
     
     class func instance(asset: AssetItem) -> UIViewController {
-        let vc = SendContactSelectionViewController()
+        let vc = SendContactSelectionViewController_Legacy()
         vc.asset = asset
         return ContainerViewController.instance(viewController: vc, title: Localized.ACTION_SEND_TO)
     }

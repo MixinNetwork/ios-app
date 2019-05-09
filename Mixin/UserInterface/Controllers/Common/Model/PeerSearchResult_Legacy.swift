@@ -1,11 +1,11 @@
 import Foundation
 
-class PeerSearchResult {
+class PeerSearchResult_Legacy {
     
-    let peer: Peer
+    let peer: Peer_Legacy
     let description: NSAttributedString?
     
-    init(peer: Peer, keyword: String) {
+    init(peer: Peer_Legacy, keyword: String) {
         self.peer = peer
         switch peer.item {
         case .group:

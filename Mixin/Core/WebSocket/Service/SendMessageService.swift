@@ -107,31 +107,34 @@ class SendMessageService: MixinService {
         }
     }
 
-    func recallMessage(message: Message) {
-        guard message.category.hasSuffix("_TEXT") ||
-            message.category.hasSuffix("_STICKER") ||
-            message.category.hasSuffix("_CONTACT") ||
-            message.category.hasSuffix("_IMAGE") ||
-            message.category.hasSuffix("_DATA") ||
-            message.category.hasSuffix("_AUDIO") ||
-            message.category.hasSuffix("_VIDEO") else {
+    func recallMessage(messageId: String, category: String, conversationId: String, sendToSession: Bool) {
+        guard category.hasSuffix("_TEXT") ||
+            category.hasSuffix("_STICKER") ||
+            category.hasSuffix("_CONTACT") ||
+            category.hasSuffix("_IMAGE") ||
+            category.hasSuffix("_DATA") ||
+            category.hasSuffix("_AUDIO") ||
+            category.hasSuffix("_VIDEO") else {
                 return
         }
 
         saveDispatchQueue.async {
-            let transferPlainData = TransferRecallData(messageId: message.messageId)
+            let transferPlainData = TransferRecallData(messageId: messageId)
             let encoded = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
-            let params = BlazeMessageParam(conversationId: message.conversationId, category: MessageCategory.MESSAGE_RECALL.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: message.messageId)
+            let params = BlazeMessageParam(conversationId: conversationId, category: MessageCategory.MESSAGE_RECALL.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId)
             let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
             var jobs = [Job]()
-            jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: message.conversationId, blazeMessage: blazeMessage))
-            if AccountUserDefault.shared.isDesktopLoggedIn {
-                //jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_SESSION_MESSAGE, conversationId: message.conversationId, blazeMessage: blazeMessage, isSessionMessage: true))
+            jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage))
+            if sendToSession && AccountUserDefault.shared.isDesktopLoggedIn {
+                jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_SESSION_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage, isSessionMessage: true))
             }
             MixinDatabase.shared.transaction { (database) in
                 try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
-                let maps = MessageDAO.shared.getRecallUpdateColumns(message: message)
-                try database.update(maps: maps, tableName: Message.tableName, condition: Message.Properties.messageId == message.messageId)
+                let maps = MessageDAO.shared.getRecallUpdateColumns(category: category)
+                try database.update(maps: maps, tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+
+                let change = ConversationChange(conversationId: conversationId, action: .recallMessage(messageId: messageId))
+                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
             }
             SendMessageService.shared.processMessages()
         }
@@ -554,7 +557,7 @@ extension SendMessageService {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
                 return
             }
-            if category.hasPrefix("PLAIN_") {
+            if category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue  {
                 if let representativeId = blazeMessage.params?.representativeId, !representativeId.isEmpty {
                     blazeMessage.params?.primitiveId = representativeId
                     blazeMessage.params?.representativeId = message.userId

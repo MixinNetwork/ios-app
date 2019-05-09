@@ -35,6 +35,7 @@
 "action_deauthorize" = "認証解除";
 "action_delete_me" = "自分用に削除";
 "action_delete_everyone" = "みんなのために削除";
+"action_learn_more" = "もっと詳しく知る";
 "menu_delete" = "デリート";
 "no_result" = "検索結果はありません";
 "all_photos" = "すべての写真";

@@ -37,6 +37,7 @@
 "action_deauthorize" = "取消授权";
 "action_delete_me" = "在我的设备上删除";
 "action_delete_everyone" = "在所有人设备上删除";
+"action_learn_more" = "了解更多";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "no_result" = "未找到相关内容";

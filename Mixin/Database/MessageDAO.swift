@@ -471,7 +471,7 @@ final class MessageDAO {
         }
 
         AttachmentDownloadJob.cancelAndRemoveAttachment(message: message)
-        guard MixinDatabase.shared.update(maps: getRecallUpdateColumns(message: message), tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: getRecallUpdateColumns(category: message.category), tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
             return
         }
 
@@ -480,16 +480,16 @@ final class MessageDAO {
         UNUserNotificationCenter.current().removeNotifications(identifier: messageId)
     }
 
-    func getRecallUpdateColumns(message: Message) -> [(PropertyConvertible, ColumnEncodable?)] {
+    func getRecallUpdateColumns(category: String) -> [(PropertyConvertible, ColumnEncodable?)] {
         var values: [(PropertyConvertible, ColumnEncodable?)] = [
             (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue),
             (Message.Properties.status, MessageStatus.READ.rawValue)]
-        if message.category.hasSuffix("_TEXT") {
+        if category.hasSuffix("_TEXT") {
             values.append((Message.Properties.content, ""))
-        } else if message.category.hasSuffix("_IMAGE") ||
-            message.category.hasSuffix("_VIDEO") ||
-            message.category.hasSuffix("_DATA") ||
-            message.category.hasSuffix("_AUDIO") {
+        } else if category.hasSuffix("_IMAGE") ||
+            category.hasSuffix("_VIDEO") ||
+            category.hasSuffix("_DATA") ||
+            category.hasSuffix("_AUDIO") {
             values.append((Message.Properties.content, ""))
             values.append((Message.Properties.mediaMimeType, ""))
             values.append((Message.Properties.mediaSize, 0))
@@ -501,9 +501,9 @@ final class MessageDAO {
             values.append((Message.Properties.mediaDigest, MixinDatabase.NullValue()))
             values.append((Message.Properties.mediaWaveform, MixinDatabase.NullValue()))
             values.append((Message.Properties.name, ""))
-        } else if message.category.hasSuffix("_STICKER") {
+        } else if category.hasSuffix("_STICKER") {
             values.append((Message.Properties.stickerId, ""))
-        } else if message.category.hasSuffix("_CONTACT") {
+        } else if category.hasSuffix("_CONTACT") {
             values.append((Message.Properties.sharedUserId, ""))
         }
         return values

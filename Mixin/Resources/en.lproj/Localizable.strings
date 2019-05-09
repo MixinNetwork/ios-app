@@ -37,6 +37,7 @@
 "action_deauthorize" = "Deauthorize";
 "action_delete_me" = "Delete for Me";
 "action_delete_everyone" = "Delete for Everyone";
+"action_learn_more" = "Learn More";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "no_result" = "No result";

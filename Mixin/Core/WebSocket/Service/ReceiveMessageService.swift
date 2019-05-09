@@ -111,12 +111,14 @@ class ReceiveMessageService: MixinService {
                         ReceiveMessageService.shared.processSessionSystemMessage(data: data)
                         ReceiveMessageService.shared.processSessionPlainMessage(data: data)
                         ReceiveMessageService.shared.processSessionSignalMessage(data: data)
+                        ReceiveMessageService.shared.processSessionRecallMessage(data: data)
                     } else {
                         ReceiveMessageService.shared.processSystemMessage(data: data)
                         ReceiveMessageService.shared.processPlainMessage(data: data)
                         ReceiveMessageService.shared.processSignalMessage(data: data)
                         ReceiveMessageService.shared.processAppButton(data: data)
                         ReceiveMessageService.shared.processWebRTCMessage(data: data)
+                        ReceiveMessageService.shared.processRecallMessage(data: data)
                     }
                     BlazeMessageDAO.shared.delete(data: data)
                 }
@@ -771,6 +773,22 @@ extension CiphertextMessage.MessageType {
 }
 
 extension ReceiveMessageService {
+
+    private func processSessionRecallMessage(data: BlazeMessageData) {
+        guard data.isSessionMessage, data.category == MessageCategory.MESSAGE_RECALL.rawValue else {
+            return
+        }
+        SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
+
+        guard let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty else {
+            return
+        }
+        guard let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) else {
+            return
+        }
+        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, sendToSession: false)
+        UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
+    }
 
     private func processSessionPlainMessage(data: BlazeMessageData) {
         guard data.isSessionMessage, data.category.hasPrefix("PLAIN_") else {

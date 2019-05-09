@@ -687,6 +687,41 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         }
         return message.allowedActions.contains(action)
     }
+
+    private func deleteForMe(message: MessageItem, forIndexPath indexPath: IndexPath) {
+        dataSource?.queue.async { [weak self] in
+            MessageDAO.shared.deleteMessage(id: message.messageId)
+            DispatchQueue.main.sync {
+                guard let weakSelf = self else {
+                    return
+                }
+                if let (didRemoveRow, didRemoveSection) = weakSelf.dataSource?.removeViewModel(at: indexPath) {
+                    if didRemoveSection {
+                        weakSelf.tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
+                    } else if didRemoveRow {
+                        weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
+                    }
+                }
+                weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
+            }
+        }
+    }
+
+    private func deleteForEveryone(message: MessageItem, forIndexPath indexPath: IndexPath) {
+        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, sendToSession: true)
+    }
+
+    private func showRecallTips(message: MessageItem, forIndexPath indexPath: IndexPath) {
+        let alc = UIAlertController(title: "", message: R.string.localizable.chat_delete_tip(), preferredStyle: .alert)
+        alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360023738212")
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
+            CommonUserDefault.shared.isRecallTips = true
+            self.deleteForEveryone(message: message, forIndexPath: indexPath)
+        }))
+        present(alc, animated: true, completion: nil)
+    }
     
     func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: ConversationTableView.Action, forIndexPath indexPath: IndexPath) {
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
@@ -703,22 +738,23 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             if viewModel.message.messageId == AudioManager.shared.playingNode?.message.messageId {
                 AudioManager.shared.stop(deactivateAudioSession: true)
             }
-            dataSource?.queue.async { [weak self] in
-                MessageDAO.shared.deleteMessage(id: message.messageId)
-                DispatchQueue.main.sync {
-                    guard let weakSelf = self else {
-                        return
+
+            let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .default, handler: { (_) in
+                self.deleteForMe(message: message, forIndexPath: indexPath)
+            }))
+
+            if abs(message.createdAt.toUTCDate().timeIntervalSinceNow) < 3600 {
+                controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .default, handler: { (_) in
+                    if CommonUserDefault.shared.isRecallTips {
+                        self.deleteForEveryone(message: message, forIndexPath: indexPath)
+                    } else {
+                        self.showRecallTips(message: message, forIndexPath: indexPath)
                     }
-                    if let (didRemoveRow, didRemoveSection) = weakSelf.dataSource?.removeViewModel(at: indexPath) {
-                        if didRemoveSection {
-                            weakSelf.tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
-                        } else if didRemoveRow {
-                            weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
-                        }
-                    }
-                    weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
-                }
+                }))
             }
+            controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+            self.present(controller, animated: true, completion: nil)
         case .forward:
             conversationInputViewController.audioViewController.cancelIfRecording()
             let vc = SendMessagePeerSelectionViewController.instance(content: .message(message))

@@ -347,6 +347,7 @@
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
 		7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */; };
+		7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */; };
 		7BFDB73920DA41E3005673CC /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFDB73820DA41E3005673CC /* Quote.swift */; };
 		7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */; };
 		7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47DC228432A600FC4379 /* PeerInfoView.xib */; };
@@ -374,7 +375,6 @@
 		DF05F0191FE90A1B00F98479 /* SignalKeyCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */; };
 		DF0649612110724F00E91CD6 /* WalletSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */; };
 		DF06D91F222FAE1400FE7FBC /* SendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D91E222FAE1300FE7FBC /* SendViewController.swift */; };
-		DF06D921222FAE2200FE7FBC /* SendContactSelectionViewController_Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D920222FAE2200FE7FBC /* SendContactSelectionViewController_Legacy.swift */; };
 		DF06D923222FAE7200FE7FBC /* AvatarShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D922222FAE7100FE7FBC /* AvatarShadowImageView.swift */; };
 		DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF06D924222FAEC900FE7FBC /* CALayerExtension.swift */; };
 		DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */; };
@@ -1014,6 +1014,7 @@
 		7BF9969420CA6F3800FD948F /* Waveform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
 		7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSelectorViewController.swift; sourceTree = "<group>"; };
+		7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferReceiverViewController.swift; sourceTree = "<group>"; };
 		7BFDB73820DA41E3005673CC /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
 		7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserItemPeerViewController.swift; sourceTree = "<group>"; };
 		7BFE47DC228432A600FC4379 /* PeerInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerInfoView.xib; sourceTree = "<group>"; };
@@ -1042,7 +1043,6 @@
 		DF05F0181FE90A1B00F98479 /* SignalKeyCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalKeyCount.swift; sourceTree = "<group>"; };
 		DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingViewController.swift; sourceTree = "<group>"; };
 		DF06D91E222FAE1300FE7FBC /* SendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendViewController.swift; sourceTree = "<group>"; };
-		DF06D920222FAE2200FE7FBC /* SendContactSelectionViewController_Legacy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendContactSelectionViewController_Legacy.swift; sourceTree = "<group>"; };
 		DF06D922222FAE7100FE7FBC /* AvatarShadowImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvatarShadowImageView.swift; sourceTree = "<group>"; };
 		DF06D924222FAEC900FE7FBC /* CALayerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CALayerExtension.swift; sourceTree = "<group>"; };
 		DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginConfirmWindow.xib; sourceTree = "<group>"; };
@@ -2425,7 +2425,7 @@
 				DF736F881FC08B67001DB063 /* Cells */,
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				7B0BE45D21A55E6C00B91A1E /* AddAssetViewController.swift */,
-				DF06D920222FAE2200FE7FBC /* SendContactSelectionViewController_Legacy.swift */,
+				7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* AssetViewController.swift */,
 				DF8794932074FB4E004A1E55 /* TransactionViewController.swift */,
 				DF16681D20A6F84200C45E31 /* AllTransactionsViewController.swift */,
@@ -3294,7 +3294,6 @@
 				7B331B6D21B10349000370E9 /* LoadMoreSnapshotsJob.swift in Sources */,
 				7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */,
 				DF2A3CD82016DC860095F024 /* Sticker.swift in Sources */,
-				DF06D921222FAE2200FE7FBC /* SendContactSelectionViewController_Legacy.swift in Sources */,
 				7BDBDE6522361D85006220DF /* SeparatorShadowFooterView.swift in Sources */,
 				DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */,
 				DF30D7441FA22D4E00683C1A /* WebSocketService.swift in Sources */,
@@ -3380,6 +3379,7 @@
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				DF56966F1FAAB11D00226D42 /* ContactHeaderView.swift in Sources */,
 				7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */,
+				7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */,
 				7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				DF2A244E1FC84E3F003A8C1E /* Conversation.swift in Sources */,

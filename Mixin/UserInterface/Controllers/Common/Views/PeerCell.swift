@@ -28,10 +28,6 @@ class PeerCell: UITableViewCell {
         peerInfoView.render(result: result)
     }
     
-    func render(conversation: ConversationItem) {
-        peerInfoView.render(conversation: conversation)
-    }
-    
     func render(user: UserItem) {
         peerInfoView.render(user: user)
     }

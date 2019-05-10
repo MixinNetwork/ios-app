@@ -29,7 +29,13 @@ class PeerInfoView: UIView, XibDesignable {
         case let .contact(user):
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
         case let .conversation(conversation):
-            setAvatarImage(conversation: conversation)
+            if conversation.isGroup() {
+                avatarImageView.setGroupImage(with: conversation.iconUrl)
+            } else {
+                avatarImageView.setImage(with: conversation.ownerAvatarUrl,
+                                         userId: conversation.ownerId,
+                                         name: conversation.ownerFullName)
+            }
         case let .searchMessageWithContact(_, userId, name):
             avatarImageView.setImage(with: result.iconUrl, userId: userId, name: name)
         case .searchMessageWithGroup:
@@ -62,14 +68,13 @@ class PeerInfoView: UIView, XibDesignable {
         }
     }
     
-    func render(conversation: ConversationItem) {
-        setAvatarImage(conversation: conversation)
-        titleLabel.text = conversation.getConversationName()
-    }
-    
     func render(user: UserItem) {
         avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
         titleLabel.text = user.fullName
+        badgeImageView.image = SearchResult.userBadgeImage(isVerified: user.isVerified, appId: user.appId)
+        superscriptLabel.text = nil
+        fileIcon.isHidden = true
+        descriptionLabel.isHidden = true
     }
     
     func render(receiver: MessageReceiver) {
@@ -84,14 +89,6 @@ class PeerInfoView: UIView, XibDesignable {
         superscriptLabel.text = nil
         fileIcon.isHidden = true
         descriptionLabel.isHidden = true
-    }
-    
-    private func setAvatarImage(conversation: ConversationItem) {
-        if conversation.isGroup() {
-            avatarImageView.setGroupImage(with: conversation.iconUrl)
-        } else {
-            avatarImageView.setImage(with: conversation.ownerAvatarUrl, userId: conversation.ownerId, name: conversation.ownerFullName)
-        }
     }
     
 }

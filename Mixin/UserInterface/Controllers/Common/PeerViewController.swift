@@ -1,0 +1,135 @@
+import UIKit
+
+class PeerViewController<ModelType, CellType: PeerCell>: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    @IBOutlet weak var searchBoxView: SearchBoxView!
+    @IBOutlet weak var tableView: UITableView!
+    
+    let queue = OperationQueue()
+    let initDataOperation = BlockOperation()
+    let headerReuseId = "header"
+    
+    var sectionTitles = [String]()
+    var models = [ModelType]()
+    
+    var searchResults = [SearchResult]()
+    var searchingKeyword: String?
+    
+    var isSearching: Bool {
+        return searchingKeyword != nil
+    }
+    
+    convenience init() {
+        self.init(nib: R.nib.peerView)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.register(CellType.nib, forCellReuseIdentifier: CellType.reuseIdentifier)
+        tableView.register(PeerHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseId)
+        tableView.dataSource = self
+        tableView.delegate = self
+        searchBoxView.textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
+        initData()
+    }
+    
+    @objc func textFieldEditingChanged(_ textField: UITextField) {
+        let trimmedLowercaseKeyword = (textField.text ?? "")
+            .trimmingCharacters(in: .whitespaces)
+            .lowercased()
+        guard !trimmedLowercaseKeyword.isEmpty else {
+            searchingKeyword = nil
+            tableView.reloadData()
+            reloadTableViewSelections()
+            return
+        }
+        guard trimmedLowercaseKeyword != searchingKeyword else {
+            return
+        }
+        search(keyword: trimmedLowercaseKeyword)
+    }
+    
+    func initData() {
+        initDataOperation.addExecutionBlock { [weak self] in
+            let users = UserDAO.shared.contacts()
+            guard let weakSelf = self else {
+                return
+            }
+            let catalogedModels = weakSelf.catalog(users: users)
+            DispatchQueue.main.sync {
+                weakSelf.sectionTitles = catalogedModels.titles
+                weakSelf.models = catalogedModels.models
+                weakSelf.tableView.reloadData()
+            }
+        }
+        queue.addOperation(initDataOperation)
+    }
+    
+    func catalog(users: [UserItem]) -> (titles: [String], models: [ModelType]) {
+        return ([], [])
+    }
+    
+    func search(keyword: String) {
+        
+    }
+    
+    func configure(cell: CellType, at indexPath: IndexPath) {
+        
+    }
+    
+    func reloadTableViewSelections() {
+        
+    }
+    
+    // MARK: - UITableViewDataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return isSearching ? searchResults.count : models.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: CellType.reuseIdentifier, for: indexPath) as! CellType
+        configure(cell: cell, at: indexPath)
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return isSearching ? 1 : sectionTitles.count
+    }
+    
+    // MARK: - UITableViewDelegate
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard !isSearching, !sectionTitles.isEmpty else {
+            return nil
+        }
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseId) as! PeerHeaderView
+        header.label.text = sectionTitles[section]
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if isSearching {
+            return .leastNormalMagnitude
+        } else if !sectionTitles.isEmpty {
+            return 36
+        } else {
+            return .leastNormalMagnitude
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        return indexPath
+    }
+    
+    func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+        return indexPath
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        
+    }
+    
+}

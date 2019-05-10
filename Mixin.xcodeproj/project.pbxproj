@@ -161,6 +161,7 @@
 		7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */; };
 		7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B63C49021A4334C0044C4BF /* DepositFieldView.swift */; };
 		7B68F78B2191741300B79978 /* BiometryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B68F78A2191741300B79978 /* BiometryType.swift */; };
+		7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */; };
 		7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */; };
 		7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */; };
 		7B6EC8FE20A91579009A7020 /* VideoDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6EC8FD20A91579009A7020 /* VideoDownloadJob.swift */; };
@@ -301,6 +302,8 @@
 		7BD150E22160C1560019FD5B /* GiphyCoreSDKExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */; };
 		7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD38B5F20BEA03200D06E5C /* WaveformView.swift */; };
 		7BD38B6220BEA12800D06E5C /* AudioMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */; };
+		7BD639CA2282B17B00B7B3A6 /* PeerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD639C82282B17B00B7B3A6 /* PeerViewController.swift */; };
+		7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BD639C92282B17B00B7B3A6 /* PeerView.xib */; };
 		7BD69C431FF2753E00758D7C /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD69C421FF2753E00758D7C /* GroupView.swift */; };
 		7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BD69C441FF2755D00758D7C /* GroupView.xib */; };
 		7BD7055F215BAEDE00639FA8 /* PeerTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */; };
@@ -344,6 +347,13 @@
 		7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF9969420CA6F3800FD948F /* Waveform.swift */; };
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
 		7BFDB73920DA41E3005673CC /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFDB73820DA41E3005673CC /* Quote.swift */; };
+		7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */; };
+		7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47DC228432A600FC4379 /* PeerInfoView.xib */; };
+		7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47DE228432C800FC4379 /* PeerInfoView.swift */; };
+		7BFE47E22284394000FC4379 /* CheckmarkPeerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E02284394000FC4379 /* CheckmarkPeerCell.swift */; };
+		7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */; };
+		7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E42284530200FC4379 /* PeerHeaderView.swift */; };
+		7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47E622845DE100FC4379 /* MessageReceiver.swift */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
@@ -805,6 +815,7 @@
 		7B63C48E21A4333A0044C4BF /* DepositFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositFieldView.xib; sourceTree = "<group>"; };
 		7B63C49021A4334C0044C4BF /* DepositFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFieldView.swift; sourceTree = "<group>"; };
 		7B68F78A2191741300B79978 /* BiometryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometryType.swift; sourceTree = "<group>"; };
+		7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiverViewController.swift; sourceTree = "<group>"; };
 		7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardBasedLayoutViewController.swift; sourceTree = "<group>"; };
 		7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoUploadJob.swift; sourceTree = "<group>"; };
 		7B6EC8FD20A91579009A7020 /* VideoDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloadJob.swift; sourceTree = "<group>"; };
@@ -959,6 +970,8 @@
 		7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyCoreSDKExtension.swift; sourceTree = "<group>"; };
 		7BD38B5F20BEA03200D06E5C /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		7BD38B6120BEA12800D06E5C /* AudioMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageViewModel.swift; sourceTree = "<group>"; };
+		7BD639C82282B17B00B7B3A6 /* PeerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerViewController.swift; sourceTree = "<group>"; };
+		7BD639C92282B17B00B7B3A6 /* PeerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerView.xib; sourceTree = "<group>"; };
 		7BD69C421FF2753E00758D7C /* GroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupView.swift; sourceTree = "<group>"; };
 		7BD69C441FF2755D00758D7C /* GroupView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupView.xib; sourceTree = "<group>"; };
 		7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerTransactionsViewController.swift; sourceTree = "<group>"; };
@@ -1002,6 +1015,13 @@
 		7BF9969420CA6F3800FD948F /* Waveform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
 		7BFDB73820DA41E3005673CC /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
+		7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserItemPeerViewController.swift; sourceTree = "<group>"; };
+		7BFE47DC228432A600FC4379 /* PeerInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerInfoView.xib; sourceTree = "<group>"; };
+		7BFE47DE228432C800FC4379 /* PeerInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerInfoView.swift; sourceTree = "<group>"; };
+		7BFE47E02284394000FC4379 /* CheckmarkPeerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckmarkPeerCell.swift; sourceTree = "<group>"; };
+		7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckmarkPeerCell.xib; sourceTree = "<group>"; };
+		7BFE47E42284530200FC4379 /* PeerHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerHeaderView.swift; sourceTree = "<group>"; };
+		7BFE47E622845DE100FC4379 /* MessageReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiver.swift; sourceTree = "<group>"; };
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
@@ -1524,20 +1544,27 @@
 				7B8ED47F21198EC20039946B /* StickerInputModelController.swift */,
 				7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */,
 				7B29044D21F5C8AA00556488 /* GiphyImageURL.swift */,
+				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
 		};
-		7B26D1CD219EEB5A00AE113A /* Cells */ = {
+		7B26D1CD219EEB5A00AE113A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7B595356226749A100D59DB4 /* PeerCell.swift */,
 				7B595357226749A100D59DB4 /* PeerCell.xib */,
-				DFD294401FA7075300FADAAD /* PeerCell_Legacy.swift */,
+				7B595356226749A100D59DB4 /* PeerCell.swift */,
+				7BFE47E12284394000FC4379 /* CheckmarkPeerCell.xib */,
+				7BFE47E02284394000FC4379 /* CheckmarkPeerCell.swift */,
 				DFD294461FA7092800FADAAD /* PeerCell_Legacy.xib */,
+				DFD294401FA7075300FADAAD /* PeerCell_Legacy.swift */,
 				DF048CCD223FCA02005F1EF5 /* SelectedTableViewCell.swift */,
+				7BD639C92282B17B00B7B3A6 /* PeerView.xib */,
+				7BFE47DC228432A600FC4379 /* PeerInfoView.xib */,
+				7BFE47DE228432C800FC4379 /* PeerInfoView.swift */,
+				7BFE47E42284530200FC4379 /* PeerHeaderView.swift */,
 			);
-			path = Cells;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		7B2E3E491FA07F4500DDDDEB /* Login */ = {
@@ -1650,7 +1677,7 @@
 			children = (
 				7B9F810A222EA30A0012BFDD /* Popup Presentation */,
 				7B51DDA7223A31E4008ACDBB /* Model */,
-				7B26D1CD219EEB5A00AE113A /* Cells */,
+				7B26D1CD219EEB5A00AE113A /* Views */,
 				DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */,
 				7BA4E092219D99B300A2176D /* PeerSelectionViewController_Legacy.swift */,
 				7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */,
@@ -1660,6 +1687,8 @@
 				7B51DDB7223A50D5008ACDBB /* VerificationCodeView.xib */,
 				7B51DDB6223A50D5008ACDBB /* VerificationCodeViewController.swift */,
 				7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */,
+				7BD639C82282B17B00B7B3A6 /* PeerViewController.swift */,
+				7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1774,6 +1803,7 @@
 				7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */,
 				7B05CFDC22293B72006DA9E3 /* PhotoInputViewController.swift */,
 				7B93CAA4222963120053AE90 /* PhotoInputGridViewController.swift */,
+				7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */,
 				DF84281D1FE92A250018B054 /* SendMessagePeerSelectionViewController_Legacy.swift */,
 				DF16682120AC3B5D00C45E31 /* ConversationShareContactViewController_Legacy.swift */,
 				7BF374A52063951E008A166B /* GalleryViewController.swift */,
@@ -2680,6 +2710,7 @@
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				DFD294471FA7092800FADAAD /* PeerCell_Legacy.xib in Resources */,
+				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
@@ -2719,10 +2750,12 @@
 				DF114B0E2020B85600EA8F9C /* WebWindow.xib in Resources */,
 				DF8EF6B32031614700E99CE8 /* LoginView.xib in Resources */,
 				7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */,
+				7BD639CB2282B17B00B7B3A6 /* PeerView.xib in Resources */,
 				DF3F6D6920EF2618006D0CBC /* QrcodeWindow.xib in Resources */,
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
+				7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
@@ -3026,6 +3059,7 @@
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,
 				DF7A4B481FCDA6ED00F21BCB /* UserResponse.swift in Sources */,
 				273FACC3205FB9A800513327 /* GroupCipher.swift in Sources */,
+				7B6A4046228400AF0037C7E5 /* MessageReceiverViewController.swift in Sources */,
 				7B0B01981FEA63FA000EEE4F /* StrangerTipsView.swift in Sources */,
 				7BA4193E209AFAB500DFCD39 /* AppCardMessageCell.swift in Sources */,
 				DF22D94B1FDD33E700243CAE /* TransferPlainData.swift in Sources */,
@@ -3072,12 +3106,15 @@
 				DFE63C9C1FC6B18900D6E028 /* SignalKeyResponse.swift in Sources */,
 				DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */,
 				DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */,
+				7BD639CA2282B17B00B7B3A6 /* PeerViewController.swift in Sources */,
 				7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */,
 				7BD7055F215BAEDE00639FA8 /* PeerTransactionsViewController.swift in Sources */,
 				7B402F88214692C300383687 /* BubbleLayer.swift in Sources */,
+				7BFE47E22284394000FC4379 /* CheckmarkPeerCell.swift in Sources */,
 				DFB37D951FF7C2B6000875BD /* ResendData.swift in Sources */,
 				DFA606312013AA4F0006EEE4 /* FileJobQueue.swift in Sources */,
 				27DA337F1FE8F92900A4D16F /* SignalProtocol.swift in Sources */,
+				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
 				7B17F06F22267FE100D617A2 /* ConversationExtensionViewController.swift in Sources */,
 				7B51DDB8223A50D5008ACDBB /* VerificationCodeViewController.swift in Sources */,
 				DF048CCE223FCA02005F1EF5 /* SelectedTableViewCell.swift in Sources */,
@@ -3086,6 +3123,7 @@
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
 				7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
+				7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */,
 				7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */,
 				DF5D9F391F9C998F0036D5FD /* Account.swift in Sources */,
 				DF7FB63A22801B4E00F4782F /* TransferRecallData.swift in Sources */,
@@ -3382,9 +3420,11 @@
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,
 				7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */,
 				7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */,
+				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				273FACC9205FB9A800513327 /* SenderKeyStoreWrapper.swift in Sources */,
 				7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */,
 				DF06D923222FAE7200FE7FBC /* AvatarShadowImageView.swift in Sources */,
+				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */,
 				7B1AEB5C221D25F000256A18 /* SeparatorShadowView.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,

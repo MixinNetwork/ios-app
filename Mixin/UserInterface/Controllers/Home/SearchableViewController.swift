@@ -50,7 +50,7 @@ extension SearchableViewController where Self: UIViewController {
             vc.load(searchResult: result)
             vc.inheritedKeyword = keyword
             searchNavigationController?.pushViewController(vc, animated: true)
-        case .message:
+        case .message, .messageReceiver:
             assertionFailure()
         }
     }

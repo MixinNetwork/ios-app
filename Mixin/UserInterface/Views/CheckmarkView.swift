@@ -11,7 +11,7 @@ class CheckmarkView: UIView {
     
     let imageView = UIImageView()
     
-    var status = Status.unselected {
+    var status = Status.hidden {
         didSet {
             switch status {
             case .selected:

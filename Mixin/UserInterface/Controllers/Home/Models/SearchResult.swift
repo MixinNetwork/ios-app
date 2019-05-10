@@ -77,6 +77,24 @@ struct SearchResult {
         }
     }
     
+    init(receiver: MessageReceiver, keyword: String) {
+        self.target = .messageReceiver(receiver)
+        switch receiver.item {
+        case let .group(conversation):
+            self.iconUrl = conversation.iconUrl
+            self.description = nil
+        case let .user(user):
+            self.iconUrl = user.avatarUrl
+            self.description = SearchResult.description(user: user, keyword: keyword)
+        }
+        self.title = SearchResult.attributedText(text: receiver.name,
+                                                 textAttributes: SearchResult.titleAttributes,
+                                                 keyword: keyword,
+                                                 keywordAttributes: SearchResult.highlightedTitleAttributes)
+        self.badgeImage = receiver.badgeImage
+        self.superscript = nil
+    }
+    
 }
 
 extension SearchResult {
@@ -87,6 +105,7 @@ extension SearchResult {
         case searchMessageWithContact(conversationId: String, userId: String, userFullName: String)
         case searchMessageWithGroup(conversationId: String)
         case message(conversationId: String, messageId: String, isData: Bool, userId: String, userFullName: String, createdAt: String)
+        case messageReceiver(MessageReceiver)
     }
     
     enum Style {
@@ -144,7 +163,7 @@ extension SearchResult {
         return str
     }
     
-    private static func userBadgeImage(isVerified: Bool, appId: String?) -> UIImage? {
+    static func userBadgeImage(isVerified: Bool, appId: String?) -> UIImage? {
         if isVerified {
             return R.image.ic_user_verified()
         } else if !appId.isNilOrEmpty {

@@ -229,7 +229,7 @@ class MixinService {
 
         DispatchQueue.main.sync {
             if let chatVC = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController, conversationId == chatVC.dataSource?.conversationId {
-                
+                chatVC.handleMessageRecalling(messageId: messageId)
             }
         }
 

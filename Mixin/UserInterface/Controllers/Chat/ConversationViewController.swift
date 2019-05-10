@@ -1227,7 +1227,7 @@ extension ConversationViewController {
         return rect
     }
     
-    private func handleMessageRecalling(messageId: String) {
+    func handleMessageRecalling(messageId: String) {
         if messageId == previewDocumentMessageId {
             previewDocumentController?.dismissPreview(animated: true)
             previewDocumentController?.dismissMenu(animated: true)

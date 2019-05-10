@@ -61,6 +61,31 @@ extension SendMessagePeerSelectionViewController {
             return makeMessage(videoUrl: url, to: peer)
         }
     }
+
+    static func getMediaUrl(message: MessageItem, newMessage: Message) -> String? {
+        guard #available(iOS 10.3, *) else {
+            return message.mediaUrl
+        }
+        guard let mimeType = message.mediaMimeType, let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: message.category), let mediaUrl = message.mediaUrl else {
+            return message.mediaUrl
+        }
+        let fromUrl = MixinFile.url(ofChatDirectory: chatDirectory, filename: mediaUrl)
+        let targetUrl = MixinFile.url(ofChatDirectory: chatDirectory, messageId: newMessage.messageId, mimeType: mimeType)
+
+        if !FileManager.default.fileExists(atPath: fromUrl.path) {
+            return message.mediaUrl
+        }
+
+        try? FileManager.default.copyItem(at: fromUrl, to: targetUrl)
+
+        if message.category.hasSuffix("_VIDEO") {
+            let fromThumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+            let targetThumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: newMessage.messageId + ExtensionName.jpeg.withDot)
+            try? FileManager.default.copyItem(at: fromThumbnailUrl, to: targetThumbnailUrl)
+        }
+
+        return targetUrl.lastPathComponent
+    }
     
     static func makeMessage(message: MessageItem, to peer: Peer) -> Message? {
         var newMessage = Message.createMessage(category: message.category,
@@ -74,18 +99,18 @@ extension SendMessagePeerSelectionViewController {
             newMessage.mediaWidth = message.mediaWidth
             newMessage.mediaHeight = message.mediaHeight
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaUrl = getMediaUrl(message: message, newMessage: newMessage)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_DATA") {
             newMessage.name = message.name
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaUrl = getMediaUrl(message: message, newMessage: newMessage)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_AUDIO") {
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaUrl = getMediaUrl(message: message, newMessage: newMessage)
             newMessage.mediaWaveform = message.mediaWaveform
             newMessage.mediaDuration = message.mediaDuration
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
@@ -95,7 +120,7 @@ extension SendMessagePeerSelectionViewController {
             newMessage.mediaWidth = message.mediaWidth
             newMessage.mediaHeight = message.mediaHeight
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaUrl = getMediaUrl(message: message, newMessage: newMessage)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
             newMessage.mediaDuration = message.mediaDuration
         } else if message.category.hasSuffix("_STICKER") {
@@ -111,6 +136,8 @@ extension SendMessagePeerSelectionViewController {
             newMessage.sharedUserId = sharedUserId
             let transferData = TransferContactData(userId: sharedUserId)
             newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+        } else {
+            return nil
         }
         return newMessage
     }

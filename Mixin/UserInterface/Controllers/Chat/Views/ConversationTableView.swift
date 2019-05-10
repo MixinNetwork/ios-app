@@ -36,6 +36,8 @@ extension MessageItem {
             actions = [.delete]
         } else if category == MessageCategory.APP_CARD.rawValue {
             actions = [.reply, .delete]
+        } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
+            actions = [.delete]
         } else {
             actions = []
         }

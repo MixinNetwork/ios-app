@@ -118,6 +118,20 @@ struct MixinFile {
                 return "_AUDIO"
             }
         }
+
+        static func getDirectory(category: String) -> ChatDirectory? {
+            if category.hasSuffix("_IMAGE") {
+                return .photos
+            } else if category.hasSuffix("_DATA") {
+                return .files
+            } else if category.hasSuffix("_AUDIO") {
+                return .audios
+            } else if category.hasSuffix("_VIDEO") {
+                return .videos
+            } else {
+                return nil
+            }
+        }
     }
 
     static var iCloudBackupDirectory: URL? {
@@ -161,6 +175,15 @@ struct MixinFile {
         } else {
             return url
         }
+    }
+
+    static func url(ofChatDirectory directory: ChatDirectory, messageId: String, mimeType: String) -> URL {
+        let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent(directory.rawValue)
+        if !FileManager.default.fileExists(atPath: url.path) {
+            try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        }
+        let fileExtension = FileManager.default.pathExtension(mimeType: mimeType).lowercased()
+        return url.appendingPathComponent("\(messageId).\(fileExtension)")
     }
     
     static func clean(chatDirectory: ChatDirectory) {

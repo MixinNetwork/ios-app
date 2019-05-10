@@ -470,43 +470,55 @@ final class MessageDAO {
             return
         }
 
-        AttachmentDownloadJob.cancelAndRemoveAttachment(message: message)
-        guard MixinDatabase.shared.update(maps: getRecallUpdateColumns(category: message.category), tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
-            return
+        let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
+        AttachmentDownloadJob.cancelAndRemoveAttachment(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl)
+        MixinDatabase.shared.transaction { (database) in
+            try MessageDAO.shared.recallMessage(database: database, messageId: message.messageId, category: message.category, quoteMessageIds: quoteMessageIds)
         }
 
-        let change = ConversationChange(conversationId: message.conversationId, action: .recallMessage(messageId: messageId))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-        UNUserNotificationCenter.current().removeNotifications(identifier: messageId)
+        let messageIds = quoteMessageIds + [messageId]
+        for messageId in messageIds {
+            let change = ConversationChange(conversationId: message.conversationId, action: .recallMessage(messageId: messageId))
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        }
     }
 
-    func getRecallUpdateColumns(category: String) -> [(PropertyConvertible, ColumnEncodable?)] {
+    func recallMessage(database: Database, messageId: String, category: String, quoteMessageIds: [String]) throws {
         var values: [(PropertyConvertible, ColumnEncodable?)] = [
             (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue),
             (Message.Properties.status, MessageStatus.READ.rawValue)]
         if category.hasSuffix("_TEXT") {
-            values.append((Message.Properties.content, ""))
+            values.append((Message.Properties.content, MixinDatabase.NullValue()))
+            values.append((Message.Properties.quoteMessageId, MixinDatabase.NullValue()))
+            values.append((Message.Properties.quoteContent, MixinDatabase.NullValue()))
         } else if category.hasSuffix("_IMAGE") ||
             category.hasSuffix("_VIDEO") ||
             category.hasSuffix("_DATA") ||
             category.hasSuffix("_AUDIO") {
-            values.append((Message.Properties.content, ""))
-            values.append((Message.Properties.mediaMimeType, ""))
+            values.append((Message.Properties.content, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaUrl, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaStatus, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaMimeType, MixinDatabase.NullValue()))
             values.append((Message.Properties.mediaSize, 0))
             values.append((Message.Properties.mediaDuration, 0))
             values.append((Message.Properties.mediaWidth, 0))
             values.append((Message.Properties.mediaHeight, 0))
-            values.append((Message.Properties.thumbImage, ""))
+            values.append((Message.Properties.thumbImage, MixinDatabase.NullValue()))
             values.append((Message.Properties.mediaKey, MixinDatabase.NullValue()))
             values.append((Message.Properties.mediaDigest, MixinDatabase.NullValue()))
             values.append((Message.Properties.mediaWaveform, MixinDatabase.NullValue()))
-            values.append((Message.Properties.name, ""))
+            values.append((Message.Properties.name, MixinDatabase.NullValue()))
         } else if category.hasSuffix("_STICKER") {
-            values.append((Message.Properties.stickerId, ""))
+            values.append((Message.Properties.stickerId, MixinDatabase.NullValue()))
         } else if category.hasSuffix("_CONTACT") {
-            values.append((Message.Properties.sharedUserId, ""))
+            values.append((Message.Properties.sharedUserId, MixinDatabase.NullValue()))
         }
-        return values
+
+        try database.update(maps: values, tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+
+        if quoteMessageIds.count > 0, let quoteMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryQuoteMessageById, values: [messageId]).allObjects().first, let data = try? JSONEncoder().encode(quoteMessage) {
+            try database.update(maps: [(Message.Properties.quoteContent, data)], tableName: Message.tableName, condition: Message.Properties.messageId.in(quoteMessageIds))
+        }
     }
     
     @discardableResult

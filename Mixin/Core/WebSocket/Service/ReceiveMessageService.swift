@@ -197,6 +197,7 @@ class ReceiveMessageService: MixinService {
 
         if let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty {
             MessageDAO.shared.recallMessage(messageId: plainData.messageId)
+            UNUserNotificationCenter.current().removeNotifications(identifier: plainData.messageId)
         }
     }
 
@@ -786,7 +787,7 @@ extension ReceiveMessageService {
         guard let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) else {
             return
         }
-        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, sendToSession: false)
+        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, sendToSession: false)
         UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
     }
 

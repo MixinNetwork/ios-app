@@ -107,7 +107,7 @@ class SendMessageService: MixinService {
         }
     }
 
-    func recallMessage(messageId: String, category: String, conversationId: String, sendToSession: Bool) {
+    func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, sendToSession: Bool) {
         guard category.hasSuffix("_TEXT") ||
             category.hasSuffix("_STICKER") ||
             category.hasSuffix("_CONTACT") ||
@@ -128,15 +128,18 @@ class SendMessageService: MixinService {
             if sendToSession && AccountUserDefault.shared.isDesktopLoggedIn {
                 jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_SESSION_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage, isSessionMessage: true))
             }
+            AttachmentDownloadJob.cancelAndRemoveAttachment(messageId: messageId, category: category, mediaUrl: mediaUrl)
+            let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
+            
             MixinDatabase.shared.transaction { (database) in
-                let maps = MessageDAO.shared.getRecallUpdateColumns(category: category)
-                try database.update(maps: maps, tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
                 try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
-                SendMessageService.shared.processMessages()
+                try MessageDAO.shared.recallMessage(database: database, messageId: messageId, category: category, quoteMessageIds: quoteMessageIds)
             }
-
-            let change = ConversationChange(conversationId: conversationId, action: .recallMessage(messageId: messageId))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+            let messageIds = quoteMessageIds + [messageId]
+            for messageId in messageIds {
+                let change = ConversationChange(conversationId: conversationId, action: .recallMessage(messageId: messageId))
+                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+            }
             SendMessageService.shared.processMessages()
         }
     }

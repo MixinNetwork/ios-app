@@ -459,11 +459,14 @@ extension ConversationDataSource {
 // MARK: - Send Message
 extension ConversationDataSource {
     
-    func sendMessage(type: MessageCategory, quoteMessageId: String? = nil , value: Any) {
+    func sendMessage(type: MessageCategory, messageId: String? = nil, quoteMessageId: String? = nil , value: Any) {
         let isGroupMessage = category == .group
         let ownerUser = self.ownerUser
         var message = Message.createMessage(category: type.rawValue, conversationId: conversationId, userId: me.user_id)
         message.quoteMessageId = quoteMessageId
+        if let messageId = messageId {
+            message.messageId = messageId
+        }
         if type == .SIGNAL_TEXT, let text = value as? String {
             message.content = text
             queue.async {
@@ -475,26 +478,18 @@ extension ConversationDataSource {
                     showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                     return
                 }
-                var filename = url.lastPathComponent.substring(endChar: ".").lowercased().md5()
-                var targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(filename).\(url.pathExtension)")
+                let fileExtension = url.pathExtension.lowercased()
+                let targetUrl = MixinFile.url(ofChatDirectory: .files, filename: "\(message.messageId).\(fileExtension)")
                 do {
-                    if FileManager.default.fileExists(atPath: targetUrl.path) {
-                        if !FileManager.default.compare(path1: url.path, path2: targetUrl.path) {
-                            filename = UUID().uuidString.lowercased()
-                            targetUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(filename).\(url.pathExtension)")
-                            try FileManager.default.moveItem(at: url, to: targetUrl)
-                        }
-                    } else {
-                        try FileManager.default.moveItem(at: url, to: targetUrl)
-                    }
+                    try FileManager.default.copyItem(at: url, to: targetUrl)
                 } catch {
                     showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 message.name = url.lastPathComponent
                 message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                message.mediaMimeType = FileManager.default.mimeType(ext: targetUrl.pathExtension)
-                message.mediaUrl = "\(filename).\(targetUrl.pathExtension)"
+                message.mediaMimeType = FileManager.default.mimeType(ext: fileExtension)
+                message.mediaUrl = targetUrl.lastPathComponent
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
             }
@@ -505,10 +500,8 @@ extension ConversationDataSource {
                     showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                     return
                 }
-                let filename = url.lastPathComponent.substring(endChar: ".")
-                let thumbnailFilename = filename + ExtensionName.jpeg.withDot
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
-                    let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: thumbnailFilename)
+                    let thumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: url.lastPathComponent.substring(endChar: ".") + ExtensionName.jpeg.withDot)
                     thumbnail.saveToFile(path: thumbnailURL)
                     message.thumbImage = thumbnail.base64Thumbnail()
                 } else {
@@ -531,7 +524,7 @@ extension ConversationDataSource {
                     showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                     return
                 }
-                let url = MixinFile.url(ofChatDirectory: .audios, filename: UUID().uuidString.lowercased() + ExtensionName.ogg.withDot)
+                let url = MixinFile.url(ofChatDirectory: .audios, filename: message.messageId + ExtensionName.ogg.withDot)
                 do {
                     try FileManager.default.moveItem(at: value.tempUrl, to: url)
                     message.mediaSize = FileManager.default.fileSize(url.path)

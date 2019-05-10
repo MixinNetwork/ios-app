@@ -149,8 +149,8 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         }
         sendButton.isBusy = true
         if let asset = self.videoAsset {
-            let filename = UUID().uuidString.lowercased()
-            let outputURL = MixinFile.url(ofChatDirectory: .videos, filename: filename + ExtensionName.mp4.withDot)
+            let messageId = UUID().uuidString.lowercased()
+            let outputURL = MixinFile.url(ofChatDirectory: .videos, filename: messageId + ExtensionName.mp4.withDot)
             let exportSession = AssetExportSession(asset: asset, videoSettings: videoSettings, audioSettings: audioSettings, outputURL: outputURL)
             exportSession.exportAsynchronously { [weak self] in
                 guard let weakSelf = self else {
@@ -159,7 +159,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 DispatchQueue.main.async {
                     if exportSession.status == .completed {
                         if let dataSource = weakSelf.dataSource {
-                            dataSource.sendMessage(type: .SIGNAL_VIDEO, value: outputURL)
+                            dataSource.sendMessage(type: .SIGNAL_VIDEO, messageId: messageId, value: outputURL)
                             weakSelf.navigationController?.popViewController(animated: true)
                         } else {
                             let vc = SendMessagePeerSelectionViewController.instance(content: .video(outputURL))

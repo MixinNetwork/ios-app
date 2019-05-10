@@ -27,34 +27,33 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
         return "attachment-download-\(messageId)"
     }
 
-    class func cancelAndRemoveAttachment(message: Message) {
-        let category = message.category
-        guard category.hasSuffix("_IMAGE") ||
-            category.hasSuffix("_VIDEO") ||
-            category.hasSuffix("_DATA") ||
-            category.hasSuffix("_AUDIO") else {
+    class func jobId(category: String, messageId: String) -> String {
+        if category.hasSuffix("_IMAGE") {
+            return AttachmentDownloadJob.jobId(messageId: messageId)
+        } else if category.hasSuffix("_DATA") {
+            return FileDownloadJob.jobId(messageId: messageId)
+        } else if category.hasSuffix("_AUDIO") {
+            return AudioDownloadJob.jobId(messageId: messageId)
+        } else if category.hasSuffix("_VIDEO") {
+            return VideoDownloadJob.jobId(messageId: messageId)
+        }
+        return ""
+    }
+
+    class func cancelAndRemoveAttachment(messageId: String, category: String, mediaUrl: String?) {
+        guard let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: category) else {
+            return
+        }
+        guard let mediaUrl = mediaUrl else {
             return
         }
 
-        let messageId = message.messageId
-        if category.hasSuffix("_IMAGE") {
-            let url = MixinFile.url(ofChatDirectory: .photos, filename: "\(messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ExtensionName.jpeg.rawValue))")
-            try? FileManager.default.removeItem(at: url)
-            FileJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(messageId: messageId))
-        } else if category.hasSuffix("_DATA") {
-            let url = MixinFile.url(ofChatDirectory: .files, filename: "\(messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
-            try? FileManager.default.removeItem(at: url)
-            FileJobQueue.shared.cancelJob(jobId: FileDownloadJob.jobId(messageId: messageId))
-        } else if category.hasSuffix("_AUDIO") {
-            let url = MixinFile.url(ofChatDirectory: .audios, filename: "\(messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
-            try? FileManager.default.removeItem(at: url)
-            FileJobQueue.shared.cancelJob(jobId: AudioDownloadJob.jobId(messageId: messageId))
-        } else if category.hasSuffix("_VIDEO") {
-            let videoUrl = MixinFile.url(ofChatDirectory: .videos, filename: "\(messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))")
-            let thumbUrl = MixinFile.url(ofChatDirectory: .videos, filename: message.messageId + ExtensionName.jpeg.withDot)
-            try? FileManager.default.removeItem(at: videoUrl)
+        FileJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))
+        try? FileManager.default.removeItem(at: MixinFile.url(ofChatDirectory: chatDirectory, filename: mediaUrl))
+
+        if category.hasSuffix("_VIDEO") {
+            let thumbUrl = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
             try? FileManager.default.removeItem(at: thumbUrl)
-            FileJobQueue.shared.cancelJob(jobId: VideoDownloadJob.jobId(messageId: messageId))
         }
     }
     

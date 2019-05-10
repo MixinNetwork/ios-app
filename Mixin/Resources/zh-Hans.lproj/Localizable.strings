@@ -218,7 +218,7 @@
 "chat_restore_title" = "从 iCloud 恢复\n您的聊天记录";
 "chat_restore_subtitle" = "如果现在不恢复，未来将无法恢复这些记录。媒体文件将在信息恢复完成后在后台继续运行。";
 "chat_stranger_tip" = "对方不是你的联系人";
-"chat_delete_tip" = "这条消息将从所有设备上删除";
+"chat_delete_tip" = "所有使用最新版本 Mixin Messenger 的设备都将删除这条消息";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";

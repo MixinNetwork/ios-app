@@ -690,7 +690,9 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
 
     private func deleteForMe(message: MessageItem, forIndexPath indexPath: IndexPath) {
         dataSource?.queue.async { [weak self] in
-            MessageDAO.shared.deleteMessage(id: message.messageId)
+            if MessageDAO.shared.deleteMessage(id: message.messageId) {
+                AttachmentDownloadJob.cancelAndRemoveAttachment(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl)
+            }
             DispatchQueue.main.sync {
                 guard let weakSelf = self else {
                     return
@@ -708,14 +710,14 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
     }
 
     private func deleteForEveryone(message: MessageItem, forIndexPath indexPath: IndexPath) {
-        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, sendToSession: true)
+        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, sendToSession: true)
     }
 
     private func showRecallTips(message: MessageItem, forIndexPath indexPath: IndexPath) {
         let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
             CommonUserDefault.shared.isRecallTips = true
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360023738212")
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209791")
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
             CommonUserDefault.shared.isRecallTips = true
@@ -741,7 +743,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             }
 
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            if abs(message.createdAt.toUTCDate().timeIntervalSinceNow) < 3600 {
+            if message.canRecall() {
                 controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
                     if CommonUserDefault.shared.isRecallTips {
                         self.deleteForEveryone(message: message, forIndexPath: indexPath)

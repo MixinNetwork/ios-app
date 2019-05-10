@@ -22,7 +22,7 @@ class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
     override var rawContent: String {
         let isRecalledByRemote = message.userId != AccountAPI.shared.accountUserId
         if isRecalledByRemote {
-            return R.string.localizable.chat_message_recalled_by_opponent()
+            return R.string.localizable.chat_message_recalled()
         } else {
             return R.string.localizable.chat_message_recalled_by_me()
         }

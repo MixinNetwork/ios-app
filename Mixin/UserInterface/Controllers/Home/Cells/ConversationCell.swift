@@ -123,7 +123,7 @@ class ConversationCell: UITableViewCell {
                 if senderIsMe {
                     contentLabel.text = R.string.localizable.chat_message_recalled_by_me()
                 } else {
-                    contentLabel.text = R.string.localizable.chat_message_recalled_by_opponent()
+                    contentLabel.text = R.string.localizable.chat_message_recalled()
                 }
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {

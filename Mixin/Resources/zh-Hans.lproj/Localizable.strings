@@ -186,7 +186,6 @@
 "chat_message_call_failed" = "连接失败";
 "chat_message_call_duration" = "通话时长 %@";
 "chat_message_recalled" = "此消息已撤回";
-"chat_message_recalled_by_opponent" = "这条消息被撤回了";
 "chat_message_recalled_by_me" = "你撤回了一条消息";
 "chat_cell_title_encryption" = "此对话中的消息使用端对端加密。点击了解更多。";
 "chat_cell_title_unknown_category" = "不支持此类型消息。请升级 Mixin 查看。";
@@ -218,7 +217,7 @@
 "chat_restore_title" = "从 iCloud 恢复\n您的聊天记录";
 "chat_restore_subtitle" = "如果现在不恢复，未来将无法恢复这些记录。媒体文件将在信息恢复完成后在后台继续运行。";
 "chat_stranger_tip" = "对方不是你的联系人";
-"chat_delete_tip" = "所有使用最新版本 Mixin Messenger 的设备都将删除这条消息";
+"chat_delete_tip" = "这条消息将从所有使用最新版本 Mixin Messenger 的设备上删除";
 
 // Call
 "call_hint_on_another_call" = "正在通话中，请挂断当前电话后重试";

@@ -186,7 +186,6 @@
 "chat_message_call_failed" = "Failed";
 "chat_message_call_duration" = "Duration %@";
 "chat_message_recalled" = "This message was deleted";
-"chat_message_recalled_by_opponent" = "This message was deleted.";
 "chat_message_recalled_by_me" = "You deleted this message";
 "chat_cell_title_encryption" = "Messages to this conversation are encrypted end-to-end, click for more information";
 "chat_cell_title_unknown_category" = "This type of message is not supported, please upgrade Mixin to the latest version.";
@@ -218,7 +217,7 @@
 "chat_restore_title" = "Restore your\nchat history from iCloud";
 "chat_restore_subtitle" = "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.";
 "chat_stranger_tip" = "This sender is not in your contacts";
-"chat_delete_tip" = "The message will be deleted for everyone on the latest version of Mixin Messenger";
+"chat_delete_tip" = "The message will be deleted for everyone on the latest version of Mixin Messenger in this chat.";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";

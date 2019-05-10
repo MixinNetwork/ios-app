@@ -60,6 +60,13 @@ struct UserItem: BaseCodable {
         }
         return appCreatorId == AccountAPI.shared.accountUserId
     }
+    
+    func matches(lowercasedKeyword keyword: String) -> Bool {
+        return fullName.lowercased().contains(keyword)
+            || identityNumber.contains(keyword)
+            || (phone?.contains(keyword) ?? false)
+    }
+    
 }
 
 extension UserItem {

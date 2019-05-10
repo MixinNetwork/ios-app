@@ -66,9 +66,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     }
     
     override func reloadTableViewSelections() {
-        tableView.indexPathsForSelectedRows?.forEach {
-            tableView.deselectRow(at: $0, animated: false)
-        }
+        super.reloadTableViewSelections()
         if isSearching {
             for (index, result) in searchResults.enumerated() {
                 guard case let .messageReceiver(receiver) = result.target else {
@@ -223,6 +221,31 @@ extension MessageReceiverViewController {
         }
     }
     
+    // Copy media file in case of deletion or recalling
+    static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
+        guard #available(iOS 10.3, *) else {
+            return message.mediaUrl
+        }
+        guard let mimeType = message.mediaMimeType, let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: message.category), let mediaUrl = message.mediaUrl else {
+            return message.mediaUrl
+        }
+        
+        let fromUrl = MixinFile.url(ofChatDirectory: chatDirectory, filename: mediaUrl)
+        guard FileManager.default.fileExists(atPath: fromUrl.path) else {
+            return message.mediaUrl
+        }
+        
+        let toUrl = MixinFile.url(ofChatDirectory: chatDirectory, messageId: newMessageId, mimeType: mimeType)
+        try? FileManager.default.copyItem(at: fromUrl, to: toUrl)
+        if message.category.hasSuffix("_VIDEO") {
+            let fromThumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+            let targetThumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: newMessageId + ExtensionName.jpeg.withDot)
+            try? FileManager.default.copyItem(at: fromThumbnailUrl, to: targetThumbnailUrl)
+        }
+        
+        return toUrl.lastPathComponent
+    }
+    
     static func makeMessage(message: MessageItem, to conversationId: String) -> Message? {
         var newMessage = Message.createMessage(category: message.category,
                                                conversationId: conversationId,
@@ -235,18 +258,18 @@ extension MessageReceiverViewController {
             newMessage.mediaWidth = message.mediaWidth
             newMessage.mediaHeight = message.mediaHeight
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_DATA") {
             newMessage.name = message.name
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
         } else if message.category.hasSuffix("_AUDIO") {
             newMessage.mediaSize = message.mediaSize
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
             newMessage.mediaWaveform = message.mediaWaveform
             newMessage.mediaDuration = message.mediaDuration
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
@@ -256,7 +279,7 @@ extension MessageReceiverViewController {
             newMessage.mediaWidth = message.mediaWidth
             newMessage.mediaHeight = message.mediaHeight
             newMessage.mediaMimeType = message.mediaMimeType
-            newMessage.mediaUrl = message.mediaUrl
+            newMessage.mediaUrl = mediaUrl(from: message, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
             newMessage.mediaDuration = message.mediaDuration
         } else if message.category.hasSuffix("_STICKER") {
@@ -272,6 +295,8 @@ extension MessageReceiverViewController {
             newMessage.sharedUserId = sharedUserId
             let transferData = TransferContactData(userId: sharedUserId)
             newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+        } else {
+            return nil
         }
         return newMessage
     }

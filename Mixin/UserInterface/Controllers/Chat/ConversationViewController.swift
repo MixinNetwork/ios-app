@@ -562,7 +562,7 @@ class ConversationViewController: UIViewController {
     }
 
     func contactAction() {
-        let vc = ConversationShareContactViewController_Legacy.instance(ownerUser: ownerUser, conversation: dataSource.conversation)
+        let vc = ContactSelectorViewController.instance(ownerUser: ownerUser, conversation: dataSource.conversation)
         navigationController?.pushViewController(vc, animated: true)
     }
     

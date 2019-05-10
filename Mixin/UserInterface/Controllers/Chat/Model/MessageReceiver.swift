@@ -43,9 +43,7 @@ class MessageReceiver {
         case let .group(conversation):
             return conversation.name.lowercased().contains(keyword)
         case let .user(user):
-            return user.fullName.lowercased().contains(keyword)
-                || user.identityNumber.contains(keyword)
-                || (user.phone?.contains(keyword) ?? false)
+            return user.matches(lowercasedKeyword: keyword)
         }
     }
     

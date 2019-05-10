@@ -39,23 +39,6 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
         }
         return ""
     }
-
-    class func cancelAndRemoveAttachment(messageId: String, category: String, mediaUrl: String?) {
-        guard let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: category) else {
-            return
-        }
-        guard let mediaUrl = mediaUrl else {
-            return
-        }
-
-        FileJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))
-        try? FileManager.default.removeItem(at: MixinFile.url(ofChatDirectory: chatDirectory, filename: mediaUrl))
-
-        if category.hasSuffix("_VIDEO") {
-            let thumbUrl = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
-            try? FileManager.default.removeItem(at: thumbUrl)
-        }
-    }
     
     override func getJobId() -> String {
         return AttachmentDownloadJob.jobId(messageId: messageId)

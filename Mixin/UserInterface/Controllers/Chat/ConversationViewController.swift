@@ -692,7 +692,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
     private func deleteForMe(message: MessageItem, forIndexPath indexPath: IndexPath) {
         dataSource?.queue.async { [weak self] in
             if MessageDAO.shared.deleteMessage(id: message.messageId) {
-                AttachmentDownloadJob.cancelAndRemoveAttachment(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl)
+                ReceiveMessageService.shared.stopRecallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
             }
             DispatchQueue.main.sync {
                 guard let weakSelf = self else {

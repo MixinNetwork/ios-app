@@ -1,4 +1,5 @@
 import Foundation
+import UserNotifications
 
 class MixinService {
 
@@ -221,6 +222,33 @@ class MixinService {
         }
 
         Thread.sleep(forTimeInterval: 2)
+    }
+
+    func stopRecallMessage(messageId: String, category: String, conversationId: String, mediaUrl: String?) {
+        UNUserNotificationCenter.current().removeNotifications(identifier: messageId)
+
+        DispatchQueue.main.sync {
+            if let chatVC = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController, conversationId == chatVC.dataSource?.conversationId {
+                
+            }
+        }
+
+        if messageId == AudioManager.shared.playingNode?.message.messageId {
+            AudioManager.shared.stop(deactivateAudioSession: true)
+        }
+
+        FileJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))
+
+        if let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: category), let mediaUrl = mediaUrl {
+            try? FileManager.default.removeItem(at: MixinFile.url(ofChatDirectory: chatDirectory, filename: mediaUrl))
+
+            if category.hasSuffix("_VIDEO") {
+                let thumbUrl = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)
+                try? FileManager.default.removeItem(at: thumbUrl)
+            }
+        }
+
+
     }
 
 }

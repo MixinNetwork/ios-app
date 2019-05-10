@@ -195,9 +195,9 @@ class ReceiveMessageService: MixinService {
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
 
-        if let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty {
-            MessageDAO.shared.recallMessage(messageId: plainData.messageId)
-            UNUserNotificationCenter.current().removeNotifications(identifier: plainData.messageId)
+        if let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty, let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) {
+            MessageDAO.shared.recallMessage(message: message)
+            SendMessageService.shared.sendRecallSessionMessage(messageId: message.messageId, conversationId: message.conversationId)
         }
     }
 
@@ -788,7 +788,6 @@ extension ReceiveMessageService {
             return
         }
         SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, sendToSession: false)
-        UNUserNotificationCenter.current().removeNotifications(identifier: message.messageId)
     }
 
     private func processSessionPlainMessage(data: BlazeMessageData) {

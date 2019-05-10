@@ -119,18 +119,16 @@ class SendMessageService: MixinService {
         }
 
         saveDispatchQueue.async {
-            let transferPlainData = TransferRecallData(messageId: messageId)
-            let encoded = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
-            let params = BlazeMessageParam(conversationId: conversationId, category: MessageCategory.MESSAGE_RECALL.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId)
-            let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
+            let blazeMessage = BlazeMessage(recallMessageId: messageId, conversationId: conversationId)
             var jobs = [Job]()
             jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage))
             if sendToSession && AccountUserDefault.shared.isDesktopLoggedIn {
-                jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_SESSION_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage, isSessionMessage: true))
+                jobs.append(Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage, isSessionMessage: true))
             }
-            AttachmentDownloadJob.cancelAndRemoveAttachment(messageId: messageId, category: category, mediaUrl: mediaUrl)
+
+            ReceiveMessageService.shared.stopRecallMessage(messageId: messageId, category: category, conversationId: conversationId, mediaUrl: mediaUrl)
+
             let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
-            
             MixinDatabase.shared.transaction { (database) in
                 try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
                 try MessageDAO.shared.recallMessage(database: database, messageId: messageId, category: category, quoteMessageIds: quoteMessageIds)
@@ -148,6 +146,18 @@ class SendMessageService: MixinService {
         let content = message.category == MessageCategory.PLAIN_TEXT.rawValue ? data?.base64Encoded() : data
         saveDispatchQueue.async {
             MixinDatabase.shared.insertOrReplace(objects: [Job(message: message, data: content)])
+            SendMessageService.shared.processMessages()
+        }
+    }
+
+    func sendRecallSessionMessage(messageId: String, conversationId: String) {
+        guard AccountUserDefault.shared.isDesktopLoggedIn else {
+            return
+        }
+        let blazeMessage = BlazeMessage(recallMessageId: messageId, conversationId: conversationId)
+        let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage, isSessionMessage: true)
+        saveDispatchQueue.async {
+            MixinDatabase.shared.insertOrReplace(objects: [job])
             SendMessageService.shared.processMessages()
         }
     }

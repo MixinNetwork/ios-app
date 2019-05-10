@@ -465,13 +465,11 @@ final class MessageDAO {
         }
     }
 
-    func recallMessage(messageId: String) {
-        guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
-            return
-        }
+    func recallMessage(message: Message) {
+        let messageId = message.messageId
+        ReceiveMessageService.shared.stopRecallMessage(messageId: messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
 
         let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
-        AttachmentDownloadJob.cancelAndRemoveAttachment(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl)
         MixinDatabase.shared.transaction { (database) in
             try MessageDAO.shared.recallMessage(database: database, messageId: message.messageId, category: message.category, quoteMessageIds: quoteMessageIds)
         }

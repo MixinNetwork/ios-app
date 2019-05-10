@@ -69,6 +69,13 @@ extension BlazeMessage {
         let params = BlazeMessageParam(messageId: messageId, status: status)
         self.init(params: params, action: BlazeMessageAction.acknowledgeMessageReceipt.rawValue)
     }
+
+    init(recallMessageId messageId: String, conversationId: String) {
+        let transferPlainData = TransferRecallData(messageId: messageId)
+        let encoded = (try? JSONEncoder().encode(transferPlainData).base64EncodedString()) ?? ""
+        let params = BlazeMessageParam(conversationId: conversationId, category: MessageCategory.MESSAGE_RECALL.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId)
+        self.init(params: params, action: BlazeMessageAction.createMessage.rawValue)
+    }
 }
 
 extension BlazeMessage {

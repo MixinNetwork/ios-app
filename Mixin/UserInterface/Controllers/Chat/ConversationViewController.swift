@@ -63,6 +63,7 @@ class ConversationViewController: UIViewController {
     private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
     private var conversationInputViewController: ConversationInputViewController!
     private var previewDocumentController: UIDocumentInteractionController?
+    private var previewDocumentMessageId: String?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userWindow = UserWindow.instance()
@@ -994,6 +995,7 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
     
     func documentInteractionControllerDidEndPreview(_ controller: UIDocumentInteractionController) {
         previewDocumentController = nil
+        previewDocumentMessageId = nil
     }
     
 }
@@ -1225,6 +1227,17 @@ extension ConversationViewController {
         return rect
     }
     
+    private func handleMessageRecalling(messageId: String) {
+        if messageId == previewDocumentMessageId {
+            previewDocumentController?.dismissPreview(animated: true)
+            previewDocumentController?.dismissMenu(animated: true)
+            previewDocumentController = nil
+            previewDocumentMessageId = nil
+        } else {
+            galleryViewController.handleMessageRecalling(messageId: messageId)
+        }
+    }
+    
 }
 
 // MARK: - Helpers
@@ -1292,6 +1305,7 @@ extension ConversationViewController {
         if !(previewDocumentController?.presentPreview(animated: true) ?? false) {
             previewDocumentController?.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
         }
+        previewDocumentMessageId = message.messageId
     }
     
     private func showLoading() {

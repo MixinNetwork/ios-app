@@ -331,6 +331,15 @@ class GalleryViewController: UIViewController {
         })
     }
     
+    func handleMessageRecalling(messageId: String) {
+        if messageId == item?.messageId {
+            dismiss()
+        } else if items.map({ $0.messageId }).contains(messageId) {
+            items = []
+            reload()
+        }
+    }
+    
     class func instance(conversationId: String) -> GalleryViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "photo_preview") as! GalleryViewController
         vc.conversationId = conversationId

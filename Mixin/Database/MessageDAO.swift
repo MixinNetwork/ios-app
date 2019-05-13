@@ -425,17 +425,11 @@ final class MessageDAO {
 
         let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
         MixinDatabase.shared.transaction { (database) in
-            try MessageDAO.shared.recallMessage(database: database, messageId: message.messageId, category: message.category, quoteMessageIds: quoteMessageIds)
-        }
-
-        let messageIds = quoteMessageIds + [messageId]
-        for messageId in messageIds {
-            let change = ConversationChange(conversationId: message.conversationId, action: .recallMessage(messageId: messageId))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+            try MessageDAO.shared.recallMessage(database: database, messageId: message.messageId, conversationId: message.conversationId, category: message.category, quoteMessageIds: quoteMessageIds)
         }
     }
 
-    func recallMessage(database: Database, messageId: String, category: String, quoteMessageIds: [String]) throws {
+    func recallMessage(database: Database, messageId: String, conversationId: String, category: String, quoteMessageIds: [String]) throws {
         var values: [(PropertyConvertible, ColumnEncodable?)] = [
             (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue),
             (Message.Properties.status, MessageStatus.READ.rawValue)]
@@ -470,6 +464,12 @@ final class MessageDAO {
 
         if quoteMessageIds.count > 0, let quoteMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryQuoteMessageById, values: [messageId]).allObjects().first, let data = try? JSONEncoder().encode(quoteMessage) {
             try database.update(maps: [(Message.Properties.quoteContent, data)], tableName: Message.tableName, condition: Message.Properties.messageId.in(quoteMessageIds))
+        }
+
+        let messageIds = quoteMessageIds + [messageId]
+        for messageId in messageIds {
+            let change = ConversationChange(conversationId: conversationId, action: .recallMessage(messageId: messageId))
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
         }
     }
     

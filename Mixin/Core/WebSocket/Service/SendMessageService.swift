@@ -131,12 +131,7 @@ class SendMessageService: MixinService {
             let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
             MixinDatabase.shared.transaction { (database) in
                 try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
-                try MessageDAO.shared.recallMessage(database: database, messageId: messageId, category: category, quoteMessageIds: quoteMessageIds)
-            }
-            let messageIds = quoteMessageIds + [messageId]
-            for messageId in messageIds {
-                let change = ConversationChange(conversationId: conversationId, action: .recallMessage(messageId: messageId))
-                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+                try MessageDAO.shared.recallMessage(database: database, messageId: messageId, conversationId: conversationId, category: category, quoteMessageIds: quoteMessageIds)
             }
             SendMessageService.shared.processMessages()
         }

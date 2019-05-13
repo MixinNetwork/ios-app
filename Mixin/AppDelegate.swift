@@ -23,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if RELEASE
         initBugsnag()
-        FirebaseApp.configure()
         #endif
+        FirebaseApp.configure()
         if SDWebImagePrefetcher.shared.context != nil {
             SDWebImagePrefetcher.shared.context![.animatedImageClass] = YYImage.self
         } else {

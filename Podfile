@@ -9,6 +9,8 @@ target 'Mixin' do
   pod 'Bugsnag'
   pod 'Firebase/Core'
   pod 'Firebase/Analytics'
+  pod 'Firebase/MLVision'
+  pod 'Firebase/MLVisionBarcodeModel'
   pod 'SDWebImageYYPlugin/YYImage'
   pod 'YYImage/WebP'
   pod 'SnapKit'

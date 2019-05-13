@@ -2,6 +2,9 @@ import UIKit
 import Photos
 import YYImage
 import SnapKit
+import FirebaseMLCommon
+import FirebaseMLVision
+import Bugsnag
 
 class GalleryItemViewController: UIViewController {
     
@@ -20,7 +23,7 @@ class GalleryItemViewController: UIViewController {
     
     @IBOutlet var tapRecognizer: UITapGestureRecognizer!
     
-    private static let qrCodeDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)
+    private lazy var qrcodeDetector = Vision.vision().barcodeDetector(options: VisionBarcodeDetectorOptions(formats: .qrCode))
     
     let imageView = YYAnimatedImageView()
     
@@ -371,22 +374,22 @@ extension GalleryItemViewController {
             guard let image = image else {
                 return
             }
-            DispatchQueue.global().async {
-                guard self != nil, self?.item?.messageId == item.messageId, let ciImage = CIImage(image: image), let features = GalleryItemViewController.qrCodeDetector?.features(in: ciImage) else {
+            guard let weakSelf = self, weakSelf.item?.messageId == item.messageId else {
+                return
+            }
+            weakSelf.qrcodeDetector.detect(in: VisionImage(image: image), completion: { (features, error) in
+                if let err = error {
+                    Bugsnag.notifyError(err)
                     return
                 }
-                for case let feature as CIQRCodeFeature in features {
-                    guard let messageString = feature.messageString, let url = URL(string: messageString) else {
-                        continue
-                    }
-                    DispatchQueue.main.async {
-                        if self?.item?.messageId == item.messageId {
-                            self?.urlFromQRCode = url
-                        }
-                    }
-                    break
+                guard let qrcodeText = features?.first?.url?.url, let qrcodeUrl = URL(string: qrcodeText) else {
+                    return
                 }
-            }
+
+                if self?.item?.messageId == item.messageId {
+                    self?.urlFromQRCode = qrcodeUrl
+                }
+            })
         })
     }
     

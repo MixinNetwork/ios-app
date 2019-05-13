@@ -2,6 +2,9 @@ import Foundation
 import WebKit
 import Photos
 import UIKit.UIGestureRecognizerSubclass
+import FirebaseMLCommon
+import FirebaseMLVision
+import Bugsnag
 
 class WebWindow: BottomSheetView {
 
@@ -44,6 +47,8 @@ class WebWindow: BottomSheetView {
         config.requestCachePolicy = .returnCacheDataElseLoad
         return URLSession(configuration: config)
     }()
+
+    private lazy var qrcodeDetector = Vision.vision().barcodeDetector(options: VisionBarcodeDetectorOptions(formats: .qrCode))
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -150,7 +155,9 @@ class WebWindow: BottomSheetView {
                 guard let data = data, let image = UIImage(data: data) else {
                     return
                 }
-                self?.presentAlertController(for: image)
+                DispatchQueue.main.async {
+                    self?.presentAlertController(for: image)
+                }
             })
             self.imageDownloadTask?.resume()
         }
@@ -255,38 +262,29 @@ extension WebWindow {
     }
     
     private func presentAlertController(for image: UIImage) {
-        DispatchQueue.global().async {
-            var qrcodeUrl: URL!
-            if let ciImage = CIImage(image: image), let features = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: nil)?.features(in: ciImage) {
-                for case let feature as CIQRCodeFeature in features {
-                    guard let messageString = feature.messageString, let url = URL(string: messageString) else {
-                        continue
-                    }
-                    qrcodeUrl = url
-                    break
+        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alc.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
+            PHPhotoLibrary.checkAuthorization { (authorized) in
+                guard authorized else {
+                    return
                 }
+                PHPhotoLibrary.saveImageToLibrary(image: image)
             }
-            DispatchQueue.main.async {
-                let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                alc.addAction(UIAlertAction(title: Localized.CHAT_PHOTO_SAVE, style: .default, handler: { (_) in
-                    PHPhotoLibrary.checkAuthorization { (authorized) in
-                        guard authorized else {
-                            return
-                        }
-                        PHPhotoLibrary.saveImageToLibrary(image: image)
+        }))
+
+        qrcodeDetector.detect(in: VisionImage(image: image), completion: { (features, error) in
+            if error == nil, let qrcodeText = features?.first?.url?.url, let qrcodeUrl = URL(string: qrcodeText) {
+                alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
+                    if !UrlWindow.checkUrl(url: qrcodeUrl, clearNavigationStack: false) {
+                        showHud(style: .error, text: Localized.NOT_MIXIN_QR_CODE)
                     }
                 }))
-                if qrcodeUrl != nil {
-                    alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
-                        if !UrlWindow.checkUrl(url: qrcodeUrl, clearNavigationStack: false) {
-                            showHud(style: .error, text: Localized.NOT_MIXIN_QR_CODE)
-                        }
-                    }))
-                }
-                alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-                UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
             }
-        }
+
+            alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+            UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
+
+        })
     }
     
 }

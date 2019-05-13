@@ -11,6 +11,10 @@ class NetworkManager {
         return reachabilityManager?.isReachable ?? false
     }
 
+    var isReachableOnWiFi: Bool {
+        return reachabilityManager?.isReachableOnEthernetOrWiFi ?? false
+    }
+
     func startListening() {
         reachabilityManager?.startListening()
     }

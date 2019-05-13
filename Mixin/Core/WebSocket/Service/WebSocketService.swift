@@ -156,7 +156,7 @@ extension WebSocketService: SRWebSocketDelegate {
         ConcurrentJobQueue.shared.addJob(job: RefreshOffsetJob())
         pingRunnable()
 
-        if CommonUserDefault.shared.backupCategory != .off {
+        if CommonUserDefault.shared.backupCategory != .off && NetworkManager.shared.isReachableOnWiFi {
             BackupJobQueue.shared.addJob(job: BackupJob())
         }
     }

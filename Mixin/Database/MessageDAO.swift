@@ -137,52 +137,6 @@ final class MessageDAO {
     func updateMessageQuoteContent(quoteMessageId: String, quoteContent: Data) {
         MixinDatabase.shared.update(maps: [(Message.Properties.quoteContent, quoteContent)], tableName: Message.tableName, condition: Message.Properties.quoteMessageId == quoteContent)
     }
-    
-    func updateMessageContentAndStatus(content: String, status: String, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
-            return
-        }
-        let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-    }
-
-    func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.stickerId, stickerData.stickerId), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
-            return
-        }
-        let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-    }
-
-    func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.sharedUserId, transferData.userId), (Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
-            return
-        }
-        let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-    }
-
-    func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, conversationId: String, mediaStatus: MediaStatus) {
-        guard MixinDatabase.shared.update(maps: [
-            (Message.Properties.content, mediaData.attachmentId),
-            (Message.Properties.mediaMimeType, mediaData.mimeType),
-            (Message.Properties.mediaSize, mediaData.size),
-            (Message.Properties.mediaDuration, mediaData.duration),
-            (Message.Properties.mediaWidth, mediaData.width),
-            (Message.Properties.mediaHeight, mediaData.height),
-            (Message.Properties.thumbImage, mediaData.thumbnail),
-            (Message.Properties.mediaKey, mediaData.key),
-            (Message.Properties.mediaDigest, mediaData.digest),
-            (Message.Properties.mediaStatus, mediaStatus.rawValue),
-            (Message.Properties.mediaWaveform, mediaData.waveform),
-            (Message.Properties.status, status),
-            (Message.Properties.name, mediaData.name)
-            ], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
-            return
-        }
-        let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-    }
 
     func isExist(messageId: String) -> Bool {
         return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == messageId)
@@ -546,6 +500,70 @@ final class MessageDAO {
             return nil
         }
         return try? JSONEncoder().encode(quoteMessage)
+    }
+
+}
+
+extension MessageDAO {
+
+    private func updateRedecryptMessage(maps: [(PropertyConvertible, ColumnEncodable?)], messageId: String, conversationId: String, messageSource: String) {
+        MixinDatabase.shared.transaction { (database) in
+            try database.update(maps: maps, tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
+            try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+
+            guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).allObjects().first else {
+                return
+            }
+            let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+
+            if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(newMessage.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 60 {
+                ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
+            }
+        }
+    }
+
+    func updateMessageContentAndStatus(content: String, status: String, messageId: String, conversationId: String, messageSource: String) {
+        let maps: [(PropertyConvertible, ColumnEncodable?)] = [
+            (Message.Properties.content, content),
+            (Message.Properties.status, status)
+        ]
+        updateRedecryptMessage(maps: maps, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    }
+
+    func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, conversationId: String, mediaStatus: MediaStatus, messageSource: String) {
+        let maps: [(PropertyConvertible, ColumnEncodable?)] = [
+            (Message.Properties.content, mediaData.attachmentId),
+            (Message.Properties.mediaMimeType, mediaData.mimeType),
+            (Message.Properties.mediaSize, mediaData.size),
+            (Message.Properties.mediaDuration, mediaData.duration),
+            (Message.Properties.mediaWidth, mediaData.width),
+            (Message.Properties.mediaHeight, mediaData.height),
+            (Message.Properties.thumbImage, mediaData.thumbnail),
+            (Message.Properties.mediaKey, mediaData.key),
+            (Message.Properties.mediaDigest, mediaData.digest),
+            (Message.Properties.mediaStatus, mediaStatus.rawValue),
+            (Message.Properties.mediaWaveform, mediaData.waveform),
+            (Message.Properties.status, status),
+            (Message.Properties.name, mediaData.name)
+        ]
+        updateRedecryptMessage(maps: maps, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    }
+
+    func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, conversationId: String, messageSource: String) {
+        let maps: [(PropertyConvertible, ColumnEncodable?)] = [
+            (Message.Properties.stickerId, stickerData.stickerId),
+            (Message.Properties.status, status)
+        ]
+        updateRedecryptMessage(maps: maps, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    }
+
+    func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, conversationId: String, messageSource: String) {
+        let maps: [(PropertyConvertible, ColumnEncodable?)] = [
+            (Message.Properties.sharedUserId, transferData.userId),
+            (Message.Properties.status, status)
+        ]
+        updateRedecryptMessage(maps: maps, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
     }
 
 }

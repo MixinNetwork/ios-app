@@ -121,6 +121,7 @@ extension Keychain {
 
     func getPIN(prompt: String) -> String? {
         guard let encryptedString = getString(keyEncryptedPIN), let encryptedData = Data(base64Encoded: encryptedString) else {
+            UIApplication.trackError("Keychain", action: "Get encryption PIN failed")
             return nil
         }
         guard let privateKey = getPrivateKeyRef(prompt: prompt), SecKeyIsAlgorithmSupported(privateKey, .decrypt, .eciesEncryptionStandardX963SHA256AESGCM) else {

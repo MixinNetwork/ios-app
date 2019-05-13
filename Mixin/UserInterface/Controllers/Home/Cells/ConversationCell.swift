@@ -2,7 +2,12 @@ import UIKit
 import SDWebImage
 
 class ConversationCell: UITableViewCell {
-
+    
+    static let contentLabelNormalFont = UIFont.systemFont(ofSize: 14)
+    static let contentLabelItalicFont: UIFont = {
+        let desc = contentLabelNormalFont.fontDescriptor.withMatrix(.italic)
+        return UIFont(descriptor: desc, size: 14)
+    }()
     static let cellIdentifier = "cell_identifier_conversation"
     static let height: CGFloat = 80
 
@@ -26,8 +31,9 @@ class ConversationCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         avatarView.prepareForReuse()
+        setContentLabelFontItalic(false)
     }
-
+    
     func render(item: ConversationItem) {
         if item.category == ConversationCategory.CONTACT.rawValue {
             avatarView.setImage(with: item.ownerAvatarUrl, userId: item.ownerId, name: item.ownerFullName)
@@ -54,8 +60,9 @@ class ConversationCell: UITableViewCell {
             contentLabel.text = Localized.CHAT_DECRYPTION_FAILED_HINT(username: item.senderFullName)
         } else {
             showMessageIndicate(conversation: item)
-            let senderName = item.senderId == AccountAPI.shared.accountUserId ? Localized.CHAT_MESSAGE_YOU : item.senderFullName
-
+            let senderIsMe = item.senderId == AccountAPI.shared.accountUserId
+            let senderName = senderIsMe ? Localized.CHAT_MESSAGE_YOU : item.senderFullName
+            
             let category = item.contentType
             messageTypeImageView.image = MessageCategory.iconImage(forMessageCategoryString: category)
             messageTypeImageView.isHidden = (messageTypeImageView.image == nil)
@@ -105,14 +112,19 @@ class ConversationCell: UITableViewCell {
                 contentLabel.text = Localized.NOTIFICATION_CONTENT_VOICE_CALL
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 contentLabel.text = Localized.NOTIFICATION_CONTENT_TRANSFER
-                messageTypeImageView.image = #imageLiteral(resourceName: "ic_message_transfer")
-                messageTypeImageView.isHidden = false
             } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 contentLabel.text = (item.appButtons?.map({ (appButton) -> String in
                     return "[\(appButton.label)]"
                 }) ?? []).joined()
             } else if category == MessageCategory.APP_CARD.rawValue, let appCard = item.appCard {
                 contentLabel.text = "[\(appCard.title)]"
+            } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
+                setContentLabelFontItalic(true)
+                if senderIsMe {
+                    contentLabel.text = R.string.localizable.chat_message_recalled_by_me()
+                } else {
+                    contentLabel.text = R.string.localizable.chat_message_recalled()
+                }
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
                     contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName, userId: item.senderId, userFullName: item.senderFullName, participantId: item.participantUserId, participantFullName: item.participantFullName, content: item.content)
@@ -135,9 +147,8 @@ class ConversationCell: UITableViewCell {
     }
 
     private func showMessageIndicate(conversation: ConversationItem) {
-        if conversation.contentType.hasPrefix("WEBRTC_") {
-            messageStatusImageView.isHidden = false
-            messageStatusImageView.image = UIImage(named: "ic_message_call")
+        if conversation.contentType.hasPrefix("WEBRTC_") || conversation.contentType == MessageCategory.MESSAGE_RECALL.rawValue {
+            messageStatusImageView.isHidden = true
         } else if conversation.senderId == AccountAPI.shared.accountUserId, !conversation.contentType.hasPrefix("SYSTEM_") {
             messageStatusImageView.isHidden = false
             switch conversation.messageStatus {
@@ -156,5 +167,9 @@ class ConversationCell: UITableViewCell {
             messageStatusImageView.isHidden = true
         }
     }
-
+    
+    private func setContentLabelFontItalic(_ isItalic: Bool) {
+        contentLabel.font = isItalic ? ConversationCell.contentLabelItalicFont : ConversationCell.contentLabelNormalFont
+    }
+    
 }

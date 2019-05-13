@@ -3,7 +3,7 @@ import Foundation
 class AudioDownloadJob: AttachmentDownloadJob {
     
     override var fileName: String {
-        return "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))"
+        return "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ""))"
     }
     
     override var fileUrl: URL {

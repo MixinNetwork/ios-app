@@ -158,6 +158,8 @@ class GalleryViewController: UIViewController {
             updateDownloadProgress(messageId: messageId, progress: progress)
         case .updateMediaStatus(let messageId, let mediaStatus):
             updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus)
+        case .recallMessage(let messageId):
+            removeItem(messageId: messageId)
         default:
             break
         }
@@ -329,6 +331,12 @@ class GalleryViewController: UIViewController {
                 page.item = nil
             }
         })
+    }
+    
+    func handleMessageRecalling(messageId: String) {
+        if messageId == item?.messageId {
+            dismiss()
+        }
     }
     
     class func instance(conversationId: String) -> GalleryViewController {
@@ -601,6 +609,15 @@ extension GalleryViewController {
         items[index].mediaStatus = mediaStatus
         if let page = pages.first(where: { $0.item?.messageId == messageId }) {
             page.item = items[index]
+        }
+    }
+    
+    private func removeItem(messageId: String) {
+        if let idx = items.firstIndex(where: { $0.messageId == messageId }) {
+            items.remove(at: idx)
+        }
+        if pages.contains(where: { $0.item?.messageId == messageId }) {
+            reloadPages()
         }
     }
     

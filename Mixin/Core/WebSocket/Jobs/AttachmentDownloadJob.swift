@@ -26,6 +26,19 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     class func jobId(messageId: String) -> String {
         return "attachment-download-\(messageId)"
     }
+
+    class func jobId(category: String, messageId: String) -> String {
+        if category.hasSuffix("_IMAGE") {
+            return AttachmentDownloadJob.jobId(messageId: messageId)
+        } else if category.hasSuffix("_DATA") {
+            return FileDownloadJob.jobId(messageId: messageId)
+        } else if category.hasSuffix("_AUDIO") {
+            return AudioDownloadJob.jobId(messageId: messageId)
+        } else if category.hasSuffix("_VIDEO") {
+            return VideoDownloadJob.jobId(messageId: messageId)
+        }
+        return ""
+    }
     
     override func getJobId() -> String {
         return AttachmentDownloadJob.jobId(messageId: messageId)
@@ -35,7 +48,7 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
         guard !self.messageId.isEmpty else {
             return false
         }
-        guard let message = MessageDAO.shared.getMessage(messageId: self.messageId), (message.mediaUrl == nil || (message.mediaStatus != MediaStatus.DONE.rawValue && message.mediaStatus != MediaStatus.EXPIRED.rawValue)) else {
+        guard let message = MessageDAO.shared.getMessage(messageId: self.messageId), (message.mediaUrl == nil || (message.mediaStatus != MediaStatus.DONE.rawValue && message.mediaStatus != MediaStatus.EXPIRED.rawValue && message.category != MessageCategory.MESSAGE_RECALL.rawValue)) else {
             return false
         }
         guard let attachmentId = message.content, !attachmentId.isEmpty else {

@@ -63,6 +63,7 @@ class ConversationViewController: UIViewController {
     private var resizeInputRecognizer: ResizeInputWrapperGestureRecognizer!
     private var conversationInputViewController: ConversationInputViewController!
     private var previewDocumentController: UIDocumentInteractionController?
+    private var previewDocumentMessageId: String?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     private lazy var userWindow = UserWindow.instance()
@@ -687,6 +688,44 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         }
         return message.allowedActions.contains(action)
     }
+
+    private func deleteForMe(message: MessageItem, forIndexPath indexPath: IndexPath) {
+        dataSource?.queue.async { [weak self] in
+            if MessageDAO.shared.deleteMessage(id: message.messageId) {
+                ReceiveMessageService.shared.stopRecallMessage(messageId: message.messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
+            }
+            DispatchQueue.main.sync {
+                guard let weakSelf = self else {
+                    return
+                }
+                if let (didRemoveRow, didRemoveSection) = weakSelf.dataSource?.removeViewModel(at: indexPath) {
+                    if didRemoveSection {
+                        weakSelf.tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
+                    } else if didRemoveRow {
+                        weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
+                    }
+                }
+                weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
+            }
+        }
+    }
+
+    private func deleteForEveryone(message: MessageItem) {
+        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, sendToSession: true)
+    }
+
+    private func showRecallTips(message: MessageItem) {
+        let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
+        alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
+            CommonUserDefault.shared.isRecallTips = true
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209791")
+        }))
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
+            CommonUserDefault.shared.isRecallTips = true
+            self.deleteForEveryone(message: message)
+        }))
+        present(alc, animated: true, completion: nil)
+    }
     
     func conversationTableView(_ tableView: ConversationTableView, didSelectAction action: ConversationTableView.Action, forIndexPath indexPath: IndexPath) {
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
@@ -703,22 +742,22 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             if viewModel.message.messageId == AudioManager.shared.playingNode?.message.messageId {
                 AudioManager.shared.stop(deactivateAudioSession: true)
             }
-            dataSource?.queue.async { [weak self] in
-                MessageDAO.shared.deleteMessage(id: message.messageId)
-                DispatchQueue.main.sync {
-                    guard let weakSelf = self else {
-                        return
+
+            let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            if message.canRecall() {
+                controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_EVERYONE, style: .destructive, handler: { (_) in
+                    if CommonUserDefault.shared.isRecallTips {
+                        self.deleteForEveryone(message: message)
+                    } else {
+                        self.showRecallTips(message: message)
                     }
-                    if let (didRemoveRow, didRemoveSection) = weakSelf.dataSource?.removeViewModel(at: indexPath) {
-                        if didRemoveSection {
-                            weakSelf.tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
-                        } else if didRemoveRow {
-                            weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
-                        }
-                    }
-                    weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
-                }
+                }))
             }
+            controller.addAction(UIAlertAction(title: Localized.ACTION_DELETE_ME, style: .destructive, handler: { (_) in
+                self.deleteForMe(message: message, forIndexPath: indexPath)
+            }))
+            controller.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+            self.present(controller, animated: true, completion: nil)
         case .forward:
             conversationInputViewController.audioViewController.cancelIfRecording()
             let vc = SendMessagePeerSelectionViewController.instance(content: .message(message))
@@ -956,6 +995,7 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
     
     func documentInteractionControllerDidEndPreview(_ controller: UIDocumentInteractionController) {
         previewDocumentController = nil
+        previewDocumentMessageId = nil
     }
     
 }
@@ -1187,6 +1227,17 @@ extension ConversationViewController {
         return rect
     }
     
+    func handleMessageRecalling(messageId: String) {
+        if messageId == previewDocumentMessageId {
+            previewDocumentController?.dismissPreview(animated: true)
+            previewDocumentController?.dismissMenu(animated: true)
+            previewDocumentController = nil
+            previewDocumentMessageId = nil
+        } else {
+            galleryViewController.handleMessageRecalling(messageId: messageId)
+        }
+    }
+    
 }
 
 // MARK: - Helpers
@@ -1254,6 +1305,7 @@ extension ConversationViewController {
         if !(previewDocumentController?.presentPreview(animated: true) ?? false) {
             previewDocumentController?.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
         }
+        previewDocumentMessageId = message.messageId
     }
     
     private func showLoading() {

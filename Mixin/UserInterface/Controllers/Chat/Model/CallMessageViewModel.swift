@@ -1,12 +1,6 @@
 import UIKit
 
-class CallMessageViewModel: TextMessageViewModel {
-    
-    static let prefixSize = CGSize(width: 14, height: 14)
-    static let prefixInset = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 6)
-    
-    var prefixFrame = CGRect.zero
-    var prefixImage: UIImage?
+class CallMessageViewModel: IconPrefixedTextMessageViewModel {
     
     override var rawContent: String {
         let isRemote = message.userId != AccountAPI.shared.accountUserId
@@ -32,10 +26,6 @@ class CallMessageViewModel: TextMessageViewModel {
         return false
     }
     
-    override var contentAdditionalLeadingMargin: CGFloat {
-        return CallMessageViewModel.prefixSize.width + CallMessageViewModel.prefixInset.horizontal
-    }
-    
     override func didSetStyle() {
         super.didSetStyle()
         if style.contains(.received) {
@@ -43,11 +33,6 @@ class CallMessageViewModel: TextMessageViewModel {
         } else {
             prefixImage = R.image.call.ic_message_prefix_sent()
         }
-        prefixFrame = CGRect(x: contentLabelFrame.origin.x + CallMessageViewModel.prefixInset.left,
-                             y: contentLabelFrame.origin.y,
-                             width: CallMessageViewModel.prefixSize.width,
-                             height: contentLabelFrame.height)
-        contentLabelFrame.origin.x += (prefixFrame.width + CallMessageViewModel.prefixInset.horizontal)
     }
     
 }

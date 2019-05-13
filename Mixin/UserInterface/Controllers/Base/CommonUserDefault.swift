@@ -50,6 +50,9 @@ class CommonUserDefault {
     private var keyRecentlyUsedAppIds: String {
         return "recently_used_app_ids_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyRecallTips: String {
+        return "default_recall_tips_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     
     enum BackupCategory: String {
         case daily
@@ -59,6 +62,15 @@ class CommonUserDefault {
     }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
+
+    var isRecallTips: Bool {
+        get {
+            return session.bool(forKey: keyRecallTips)
+        }
+        set {
+            session.set(newValue, forKey: keyRecallTips)
+        }
+    }
 
     var isCameraQRCodeTips: Bool {
         get {

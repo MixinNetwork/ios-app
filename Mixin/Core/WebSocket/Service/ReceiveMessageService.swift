@@ -111,12 +111,14 @@ class ReceiveMessageService: MixinService {
                         ReceiveMessageService.shared.processSessionSystemMessage(data: data)
                         ReceiveMessageService.shared.processSessionPlainMessage(data: data)
                         ReceiveMessageService.shared.processSessionSignalMessage(data: data)
+                        ReceiveMessageService.shared.processSessionRecallMessage(data: data)
                     } else {
                         ReceiveMessageService.shared.processSystemMessage(data: data)
                         ReceiveMessageService.shared.processPlainMessage(data: data)
                         ReceiveMessageService.shared.processSignalMessage(data: data)
                         ReceiveMessageService.shared.processAppButton(data: data)
                         ReceiveMessageService.shared.processWebRTCMessage(data: data)
+                        ReceiveMessageService.shared.processRecallMessage(data: data)
                     }
                     BlazeMessageDAO.shared.delete(data: data)
                 }
@@ -183,6 +185,20 @@ class ReceiveMessageService: MixinService {
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
         SendMessageService.shared.sendSessionMessage(message: message, data: data.data)
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+    }
+
+    private func processRecallMessage(data: BlazeMessageData) {
+        guard data.category == MessageCategory.MESSAGE_RECALL.rawValue else {
+            return
+        }
+
+        updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+        MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
+
+        if let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty, let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) {
+            MessageDAO.shared.recallMessage(message: message)
+            SendMessageService.shared.sendRecallSessionMessage(messageId: message.messageId, conversationId: message.conversationId)
+        }
     }
 
     private func processSignalMessage(data: BlazeMessageData) {
@@ -758,6 +774,21 @@ extension CiphertextMessage.MessageType {
 }
 
 extension ReceiveMessageService {
+
+    private func processSessionRecallMessage(data: BlazeMessageData) {
+        guard data.isSessionMessage, data.category == MessageCategory.MESSAGE_RECALL.rawValue else {
+            return
+        }
+        SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
+
+        guard let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty else {
+            return
+        }
+        guard let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) else {
+            return
+        }
+        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, sendToSession: false)
+    }
 
     private func processSessionPlainMessage(data: BlazeMessageData) {
         guard data.isSessionMessage, data.category.hasPrefix("PLAIN_") else {

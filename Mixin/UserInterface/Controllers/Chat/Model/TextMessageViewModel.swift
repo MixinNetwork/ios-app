@@ -2,11 +2,21 @@ import UIKit
 
 class TextMessageViewModel: DetailInfoMessageViewModel {
     
-    private static let font = UIFont.systemFont(ofSize: 16)
-    private static let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
-    private static let lineHeight = round(font.lineHeight)
+    private enum Font {
+        private static let font = UIFont.systemFont(ofSize: 16)
+        static let ctFont = CTFontCreateWithFontDescriptor(font.fontDescriptor as CTFontDescriptor, 0, nil)
+        static let lineHeight = round(font.lineHeight)
+    }
     
-    internal class var textColor: UIColor {
+    class var ctFont: CTFont {
+        return Font.ctFont
+    }
+    
+    class var lineHeight: CGFloat {
+        return Font.lineHeight
+    }
+    
+    class var textColor: UIColor {
         return .black
     }
     
@@ -71,8 +81,8 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         // Set attributes
         let cfStr = str as CFMutableAttributedString
         let fullRange = CFRange(location: 0, length: CFAttributedStringGetLength(cfStr))
-        CFAttributedStringSetAttribute(cfStr, fullRange, kCTFontAttributeName, TextMessageViewModel.ctFont)
-        CFAttributedStringSetAttribute(cfStr, fullRange, kCTForegroundColorAttributeName, TextMessageViewModel.textColor)
+        CFAttributedStringSetAttribute(cfStr, fullRange, kCTFontAttributeName, type(of: self).ctFont)
+        CFAttributedStringSetAttribute(cfStr, fullRange, kCTForegroundColorAttributeName, type(of: self).textColor)
         for link in linksMap {
             let range = CFRange(nsRange: link.key)
             CFAttributedStringSetAttribute(cfStr, range, kCTForegroundColorAttributeName, linkColor)
@@ -95,9 +105,9 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
                 lines.append(line)
                 lineOrigins.append(lineOrigin)
                 lineRanges.append(lineRange)
-                textSize.height += TextMessageViewModel.lineHeight
+                textSize.height += type(of: self).lineHeight
                 textSize.width = max(textSize.width, lineWidth)
-                y += TextMessageViewModel.lineHeight
+                y += type(of: self).lineHeight
                 lastLineWidth = lineWidth
                 characterIndex += lineCharacterCount
             } else {

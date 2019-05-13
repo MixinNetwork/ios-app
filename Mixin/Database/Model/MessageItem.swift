@@ -203,4 +203,24 @@ extension MessageItem {
         }
         return conversation.ownerId != userId && conversation.category == ConversationCategory.CONTACT.rawValue
     }
+
+    func canRecall() -> Bool {
+        guard userId == AccountAPI.shared.accountUserId else {
+            return false
+        }
+        guard category.hasSuffix("_TEXT") ||
+            category.hasSuffix("_STICKER") ||
+            category.hasSuffix("_CONTACT") ||
+            category.hasSuffix("_IMAGE") ||
+            category.hasSuffix("_DATA") ||
+            category.hasSuffix("_AUDIO") ||
+            category.hasSuffix("_VIDEO") else {
+                return false
+        }
+        guard abs(createdAt.toUTCDate().timeIntervalSinceNow) < 3600 else {
+            return false
+        }
+
+        return true
+    }
 }

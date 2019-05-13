@@ -25,6 +25,8 @@ public class Localized {
     public static let ACTION_HIDE = LocalizedString("action_hide", comment: "Hide")
     public static let ACTION_SHOW = LocalizedString("action_show", comment: "Show")
     public static let ACTION_DEAUTHORIZE = LocalizedString("action_deauthorize", comment: "Deauthorize")
+    public static let ACTION_DELETE_ME = LocalizedString("action_delete_me", comment: "Delete for Me")
+    public static let ACTION_DELETE_EVERYONE = LocalizedString("action_delete_everyone", comment: "Delete for Everyone")
     public static let MENU_DELETE = LocalizedString("menu_delete", comment: "Delete")
     public static let MENU_EDIT = LocalizedString("menu_edit", comment: "Edit")
     public static let ALL_PHOTOS = LocalizedString("all_photos", comment: "All Photos")

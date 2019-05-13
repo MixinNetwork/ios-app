@@ -9,7 +9,11 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         static let titleHeight = ceil(titleFont.lineHeight)
         static let iconSize = MessageCategory.maxIconSize
         static let iconTrailingMargin: CGFloat = 4
-        static let subtitleFont = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.light)
+        static let normalSubtitleFont = UIFont.systemFont(ofSize: 13, weight: .light)
+        static let recalledSubtitleFont: UIFont = {
+            let descriptor = normalSubtitleFont.fontDescriptor.withMatrix(.italic)
+            return UIFont(descriptor: descriptor, size: 13)
+        }()
         static let subtitleTopMargin: CGFloat = 4
         static let subtitleNumberOfLines = 3
         static let imageSize = CGSize(width: 50, height: 50)
@@ -22,6 +26,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     private(set) var quoteIconFrame = CGRect.zero
     private(set) var quoteSubtitleFrame = CGRect.zero
     private(set) var quoteImageFrame = CGRect.zero
+    private(set) var subtitleFont = Quote.normalSubtitleFont
     
     private var quoteMaxWidth: CGFloat = 0
     private var quoteContentHeight: CGFloat = 0
@@ -41,6 +46,12 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
     override func didSetStyle() {
         guard let quote = quote else {
             return
+        }
+        switch quote.category {
+        case .normal:
+            subtitleFont = Quote.normalSubtitleFont
+        case .recalled:
+            subtitleFont = Quote.recalledSubtitleFont
         }
         let paddedQuoteIconWidth = quote.icon == nil ? 0 : Quote.iconSize.width + Quote.iconTrailingMargin
         let quoteImageWidth = quote.image == nil ? 0 : Quote.imageSize.width
@@ -64,11 +75,11 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
         var subtitleSize = CGSize.zero
         let subtitleFittingSize = CGSize(width: maxSubtitleWidth, height: UIView.layoutFittingExpandedSize.height)
         subtitleSize = (quote.subtitle as NSString)
-            .boundingRect(with: subtitleFittingSize, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [.font: Quote.subtitleFont], context: nil)
+            .boundingRect(with: subtitleFittingSize, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [.font: subtitleFont], context: nil)
             .size
         var subtitleHeight = subtitleSize.height
-        subtitleHeight = min(Quote.subtitleFont.lineHeight * CGFloat(Quote.subtitleNumberOfLines), subtitleHeight)
-        subtitleHeight = max(ceil(Quote.subtitleFont.lineHeight), subtitleHeight)
+        subtitleHeight = min(subtitleFont.lineHeight * CGFloat(Quote.subtitleNumberOfLines), subtitleHeight)
+        subtitleHeight = max(ceil(subtitleFont.lineHeight), subtitleHeight)
         subtitleSize = ceil(CGSize(width: subtitleSize.width, height: subtitleHeight))
         
         quoteMaxWidth = max(titleWidth + quoteImageWidth, paddedQuoteIconWidth + subtitleSize.width + quoteImageWidth)
@@ -100,7 +111,7 @@ class QuoteTextMessageViewModel: TextMessageViewModel {
                                  height: Quote.titleHeight)
         
         let quoteIconOrigin = CGPoint(x: quoteTitleFrame.origin.x,
-                                      y: round(quoteTitleFrame.maxY + Quote.subtitleTopMargin + (Quote.subtitleFont.lineHeight - Quote.iconSize.height) / 2))
+                                      y: round(quoteTitleFrame.maxY + Quote.subtitleTopMargin + (subtitleFont.lineHeight - Quote.iconSize.height) / 2))
         if quote.icon == nil {
             quoteIconFrame = CGRect(origin: quoteIconOrigin, size: .zero)
         } else {

@@ -174,6 +174,7 @@ enum MessageCategory: String {
     case WEBRTC_AUDIO_FAILED
     case WEBRTC_AUDIO_END
     case WEBRTC_ICE_CANDIDATE
+    case MESSAGE_RECALL
     case EXT_UNREAD
     case EXT_ENCRYPTION
     case UNKNOWN
@@ -205,6 +206,10 @@ enum MessageCategory: String {
             return #imageLiteral(resourceName: "ic_message_audio")
         } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
             return #imageLiteral(resourceName: "ic_message_transfer")
+        } else if category.hasPrefix("WEBRTC_") {
+            return R.image.ic_message_call()
+        } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
+            return R.image.ic_message_recalled()
         } else if category == MessageCategory.APP_BUTTON_GROUP.rawValue || category == MessageCategory.APP_CARD.rawValue {
             return #imageLiteral(resourceName: "ic_message_bot_menu")
         } else {

@@ -4,7 +4,7 @@ import Bugsnag
 class VideoDownloadJob: AttachmentDownloadJob {
     
     override var fileName: String {
-        return "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType ?? ""))"
+        return "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ""))"
     }
     
     override var fileUrl: URL {

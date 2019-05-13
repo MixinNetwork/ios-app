@@ -33,6 +33,9 @@
 "action_copy" = "コピー";
 "action_authorize" = "認証";
 "action_deauthorize" = "認証解除";
+"action_delete_me" = "自分用に削除";
+"action_delete_everyone" = "みんなのために削除";
+"action_learn_more" = "もっと詳しく知る";
 "menu_delete" = "デリート";
 "no_result" = "検索結果はありません";
 "all_photos" = "すべての写真";
@@ -179,6 +182,8 @@
 "chat_message_call_remote_busy" = "通話中";
 "chat_message_call_failed" = "失敗";
 "chat_message_call_duration" = "継続時間 %@";
+"chat_message_recalled" = "送信取り消しました";
+"chat_message_recalled_by_me" = "メッセージの送信を取り消しました";
 "chat_cell_title_encryption" = "この会話へのメッセージはエンドツーエンドで暗号化されています。詳細についてはクリックしてください";
 "chat_cell_title_unknown_category" = "このタイプのメッセージはサポートされていません。Mixinを最新バージョンにアップグレードしてください。";
 "chat_forward_title" = "転送";

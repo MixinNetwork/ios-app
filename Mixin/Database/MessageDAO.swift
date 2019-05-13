@@ -127,7 +127,7 @@ final class MessageDAO {
     }
 
     func updateMessageContentAndMediaStatus(content: String, mediaStatus: MediaStatus, messageId: String, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.mediaStatus, mediaStatus.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.content, content), (Message.Properties.mediaStatus, mediaStatus.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: mediaStatus))
@@ -154,11 +154,11 @@ final class MessageDAO {
         let conversationId = oldMessage.conversationId
         if updateUnseen {
             MixinDatabase.shared.transaction { (database) in
-                try database.update(table: Message.tableName, on: [Message.Properties.status], with: [status], where: Message.Properties.messageId == messageId)
+                try database.update(table: Message.tableName, on: [Message.Properties.status], with: [status], where: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
                 try updateUnseenMessageCount(database: database, conversationId: conversationId)
             }
         } else {
-            MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+            MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMessageStatus(messageId: messageId, newStatus: MessageStatus(rawValue: status) ?? .UNKNOWN))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
@@ -170,7 +170,7 @@ final class MessageDAO {
     }
 
     func updateMediaMessage(messageId: String, mediaUrl: String, status: MediaStatus, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaUrl, mediaUrl), (Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaUrl, mediaUrl), (Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
 
@@ -179,7 +179,7 @@ final class MessageDAO {
     }
 
     func updateMediaStatus(messageId: String, status: MediaStatus, conversationId: String) {
-        guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId) else {
+        guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
 
@@ -418,6 +418,60 @@ final class MessageDAO {
             ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
         }
     }
+
+    func recallMessage(message: Message) {
+        let messageId = message.messageId
+        ReceiveMessageService.shared.stopRecallMessage(messageId: messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
+
+        let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
+        MixinDatabase.shared.transaction { (database) in
+            try MessageDAO.shared.recallMessage(database: database, messageId: message.messageId, conversationId: message.conversationId, category: message.category, quoteMessageIds: quoteMessageIds)
+        }
+    }
+
+    func recallMessage(database: Database, messageId: String, conversationId: String, category: String, quoteMessageIds: [String]) throws {
+        var values: [(PropertyConvertible, ColumnEncodable?)] = [
+            (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue),
+            (Message.Properties.status, MessageStatus.READ.rawValue)]
+        if category.hasSuffix("_TEXT") {
+            values.append((Message.Properties.content, MixinDatabase.NullValue()))
+            values.append((Message.Properties.quoteMessageId, MixinDatabase.NullValue()))
+            values.append((Message.Properties.quoteContent, MixinDatabase.NullValue()))
+        } else if category.hasSuffix("_IMAGE") ||
+            category.hasSuffix("_VIDEO") ||
+            category.hasSuffix("_DATA") ||
+            category.hasSuffix("_AUDIO") {
+            values.append((Message.Properties.content, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaUrl, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaStatus, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaMimeType, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaSize, 0))
+            values.append((Message.Properties.mediaDuration, 0))
+            values.append((Message.Properties.mediaWidth, 0))
+            values.append((Message.Properties.mediaHeight, 0))
+            values.append((Message.Properties.thumbImage, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaKey, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaDigest, MixinDatabase.NullValue()))
+            values.append((Message.Properties.mediaWaveform, MixinDatabase.NullValue()))
+            values.append((Message.Properties.name, MixinDatabase.NullValue()))
+        } else if category.hasSuffix("_STICKER") {
+            values.append((Message.Properties.stickerId, MixinDatabase.NullValue()))
+        } else if category.hasSuffix("_CONTACT") {
+            values.append((Message.Properties.sharedUserId, MixinDatabase.NullValue()))
+        }
+
+        try database.update(maps: values, tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+
+        if quoteMessageIds.count > 0, let quoteMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryQuoteMessageById, values: [messageId]).allObjects().first, let data = try? JSONEncoder().encode(quoteMessage) {
+            try database.update(maps: [(Message.Properties.quoteContent, data)], tableName: Message.tableName, condition: Message.Properties.messageId.in(quoteMessageIds))
+        }
+
+        let messageIds = quoteMessageIds + [messageId]
+        for messageId in messageIds {
+            let change = ConversationChange(conversationId: conversationId, action: .recallMessage(messageId: messageId))
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        }
+    }
     
     @discardableResult
     func deleteMessage(id: String) -> Bool {
@@ -454,7 +508,7 @@ extension MessageDAO {
 
     private func updateRedecryptMessage(maps: [(PropertyConvertible, ColumnEncodable?)], messageId: String, conversationId: String, messageSource: String) {
         MixinDatabase.shared.transaction { (database) in
-            try database.update(maps: maps, tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+            try database.update(maps: maps, tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
             try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
 
             guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).allObjects().first else {

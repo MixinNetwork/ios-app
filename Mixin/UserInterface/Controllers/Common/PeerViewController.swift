@@ -95,7 +95,7 @@ class PeerViewController<ModelType, CellType: PeerCell>: UIViewController, UITab
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return isSearching ? 1 : sectionTitles.count
+        return 0
     }
     
     // MARK: - UITableViewDelegate

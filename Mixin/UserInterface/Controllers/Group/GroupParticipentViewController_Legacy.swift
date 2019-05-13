@@ -89,7 +89,7 @@ extension GroupParticipentViewController_Legacy: ContainerViewControllerDelegate
                 return
             }
             let id = weakSelf.conversation.conversationId
-            let vc = AddMemberViewController_Legacy.instance(appendingMembersToConversationId: id)
+            let vc = AddMemberViewController.instance(appendingMembersToConversationId: id)
             weakSelf.navigationController?.pushViewController(vc, animated: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.GROUP_NAVIGATION_TITLE_INVITE_LINK, style: .default, handler: { [weak self](_) in

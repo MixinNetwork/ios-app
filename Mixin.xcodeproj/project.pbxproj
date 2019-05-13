@@ -348,6 +348,7 @@
 		7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */; };
 		7BFD3458228589ED00524EA0 /* ContactSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */; };
 		7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */; };
+		7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFD345B2285AB4200524EA0 /* AddMemberViewController.swift */; };
 		7BFDB73920DA41E3005673CC /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFDB73820DA41E3005673CC /* Quote.swift */; };
 		7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */; };
 		7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BFE47DC228432A600FC4379 /* PeerInfoView.xib */; };
@@ -555,7 +556,6 @@
 		DF9E66ED205C16AD00F1A0B9 /* WithdrawalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */; };
 		DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA4573A200AED2D001E10FA /* CommonUserDefault.swift */; };
 		DFA586B21FE3B1E00078BC2C /* AsynchronousJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA586B11FE3B1E00078BC2C /* AsynchronousJob.swift */; };
-		DFA5B5871FADBE7D00549728 /* AddMemberViewController_Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA5B5861FADBE7D00549728 /* AddMemberViewController_Legacy.swift */; };
 		DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B58D1FADC88D00549728 /* Group.storyboard */; };
 		DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B5901FB04C9C00549728 /* Wallet.storyboard */; };
 		DFA5B5931FB051BB00549728 /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA5B5921FB051BB00549728 /* WalletViewController.swift */; };
@@ -1015,6 +1015,7 @@
 		7BFA9B6F2229810A00C88625 /* PhotoInputGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputGridCell.swift; sourceTree = "<group>"; };
 		7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSelectorViewController.swift; sourceTree = "<group>"; };
 		7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferReceiverViewController.swift; sourceTree = "<group>"; };
+		7BFD345B2285AB4200524EA0 /* AddMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberViewController.swift; sourceTree = "<group>"; };
 		7BFDB73820DA41E3005673CC /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
 		7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserItemPeerViewController.swift; sourceTree = "<group>"; };
 		7BFE47DC228432A600FC4379 /* PeerInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PeerInfoView.xib; sourceTree = "<group>"; };
@@ -1231,7 +1232,6 @@
 		DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalRequest.swift; sourceTree = "<group>"; };
 		DFA4573A200AED2D001E10FA /* CommonUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUserDefault.swift; sourceTree = "<group>"; };
 		DFA586B11FE3B1E00078BC2C /* AsynchronousJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsynchronousJob.swift; sourceTree = "<group>"; };
-		DFA5B5861FADBE7D00549728 /* AddMemberViewController_Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemberViewController_Legacy.swift; sourceTree = "<group>"; };
 		DFA5B58D1FADC88D00549728 /* Group.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Group.storyboard; sourceTree = "<group>"; };
 		DFA5B5901FB04C9C00549728 /* Wallet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Wallet.storyboard; sourceTree = "<group>"; };
 		DFA5B5921FB051BB00549728 /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
@@ -2396,7 +2396,7 @@
 			children = (
 				DFA5B5881FADC37A00549728 /* Cells */,
 				7BEFDC201FB08E9B00F66885 /* GroupUser.swift */,
-				DFA5B5861FADBE7D00549728 /* AddMemberViewController_Legacy.swift */,
+				7BFD345B2285AB4200524EA0 /* AddMemberViewController.swift */,
 				7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */,
 				7BB1EDBE1FB1A481000DF9E7 /* GroupParticipentViewController_Legacy.swift */,
 				7B78B2451FF2170400371632 /* InviteLinkViewController.swift */,
@@ -3045,6 +3045,7 @@
 				DFD294411FA7075300FADAAD /* PeerCell_Legacy.swift in Sources */,
 				273FACC7205FB9A800513327 /* SignedPreKeyStoreWrapper.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
+				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
 				7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */,
 				DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */,
 				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
@@ -3264,7 +3265,6 @@
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
-				DFA5B5871FADBE7D00549728 /* AddMemberViewController_Legacy.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
 				7B59534522670A5800D59DB4 /* SearchNavigationViewController.swift in Sources */,
 				7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */,

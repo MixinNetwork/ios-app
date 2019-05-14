@@ -219,11 +219,15 @@ class SendMessageService: MixinService {
                 continue
             }
 
-            if MessageDAO.shared.isExist(messageId: messageId) {
-                let param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, status: MessageStatus.SENT.rawValue, messageId: messageId)
-                let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createMessage.rawValue)
-                jobs.append(Job(jobId: blazeMessage.id, action: .RESEND_MESSAGE, userId: userId, conversationId: conversationId, resendMessageId: UUID().uuidString.lowercased(), blazeMessage: blazeMessage))
-                resendMessages.append(ResendMessage(messageId: messageId, userId: userId, status: 1))
+            if let message = MessageDAO.shared.getMessage(messageId: messageId) {
+                if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
+                    continue
+                } else {
+                    let param = BlazeMessageParam(conversationId: conversationId, recipientId: userId, status: MessageStatus.SENT.rawValue, messageId: messageId)
+                    let blazeMessage = BlazeMessage(params: param, action: BlazeMessageAction.createMessage.rawValue)
+                    jobs.append(Job(jobId: blazeMessage.id, action: .RESEND_MESSAGE, userId: userId, conversationId: conversationId, resendMessageId: UUID().uuidString.lowercased(), blazeMessage: blazeMessage))
+                    resendMessages.append(ResendMessage(messageId: messageId, userId: userId, status: 1))
+                }
             } else {
                 resendMessages.append(ResendMessage(messageId: messageId, userId: userId, status: 0))
             }

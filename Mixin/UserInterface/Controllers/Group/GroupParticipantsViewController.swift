@@ -51,7 +51,8 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBoxView.textField.resignFirstResponder()
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let user = user(at: indexPath), user.userId != AccountAPI.shared.accountUserId else {
+        let user = self.user(at: indexPath)
+        guard user.userId != AccountAPI.shared.accountUserId else {
             return
         }
         let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

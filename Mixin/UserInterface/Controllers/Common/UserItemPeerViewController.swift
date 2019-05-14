@@ -1,6 +1,6 @@
 import Foundation
 
-class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserItem, CellType> {
+class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserItem, CellType, UserSearchResult> {
     
     override func catalog(users: [UserItem]) -> (titles: [String], models: [UserItem]) {
         return ([], users)
@@ -30,12 +30,9 @@ class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserIte
         return 1
     }
     
-    func user(at indexPath: IndexPath) -> UserItem? {
+    func user(at indexPath: IndexPath) -> UserItem {
         if isSearching {
-            guard case let .contact(user) = searchResults[indexPath.row].target else {
-                return nil
-            }
-            return user
+            return searchResults[indexPath.row].user
         } else {
             return models[indexPath.row]
         }
@@ -60,7 +57,7 @@ class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserIte
             }
             let searchResult = users
                 .filter({ $0.matches(lowercasedKeyword: keyword) })
-                .map({ SearchResult(user: $0, keyword: keyword) })
+                .map({ UserSearchResult(user: $0, keyword: keyword) })
             DispatchQueue.main.sync {
                 guard let viewController = viewController, !isCancelled else {
                     return

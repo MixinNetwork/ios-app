@@ -165,7 +165,7 @@ final class ConversationDAO {
         return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword])
     }
     
-    func getConversation(withMessageLike keyword: String, limit: Int?) -> [SearchResult] {
+    func getConversation(withMessageLike keyword: String, limit: Int?) -> [MessagesWithinConversationSearchResult] {
         let keyword = "%\(keyword)%"
         let name = Expression.case(Conversation.Properties.category.in(table: Conversation.tableName),
                                    [(when: "'\(ConversationCategory.CONTACT.rawValue)'",
@@ -209,8 +209,8 @@ final class ConversationDAO {
         if let limit = limit {
             stmt = stmt.limit(limit)
         }
-        return MixinDatabase.shared.getCodables(callback: { (db) -> [SearchResult] in
-            var items = [SearchResult]()
+        return MixinDatabase.shared.getCodables(callback: { (db) -> [MessagesWithinConversationSearchResult] in
+            var items = [MessagesWithinConversationSearchResult]()
             let cs = try db.prepare(stmt)
             while try cs.step() {
                 var i = -1
@@ -218,18 +218,36 @@ final class ConversationDAO {
                     i += 1
                     return i
                 }
-                if let conversationId: String = cs.value(atIndex: autoIncrement), let categoryString: String = cs.value(atIndex: autoIncrement), let category = ConversationCategory(rawValue: categoryString) {
-                    let item = SearchResult(conversationId: conversationId,
-                                            category: category,
-                                            name: cs.value(atIndex: autoIncrement) ?? "",
-                                            iconUrl: cs.value(atIndex: autoIncrement) ?? "",
-                                            userId: cs.value(atIndex: autoIncrement),
-                                            userIsVerified: cs.value(atIndex: autoIncrement) ?? false,
-                                            userAppId: cs.value(atIndex: autoIncrement),
-                                            relatedMessageCount: cs.value(atIndex: autoIncrement) ?? 0,
-                                            keyword: keyword)
-                    items.append(item)
+                let conversationId: String = cs.value(atIndex: autoIncrement) ?? ""
+                let categoryString: String = cs.value(atIndex: autoIncrement) ?? ""
+                guard let category = ConversationCategory(rawValue: categoryString) else {
+                    continue
                 }
+                let name = cs.value(atIndex: autoIncrement) ?? ""
+                let iconUrl = cs.value(atIndex: autoIncrement) ?? ""
+                let userId = cs.value(atIndex: autoIncrement) ?? ""
+                let userIsVerified = cs.value(atIndex: autoIncrement) ?? false
+                let userAppId: String? = cs.value(atIndex: autoIncrement)
+                let relatedMessageCount = cs.value(atIndex: autoIncrement) ?? 0
+                let item: MessagesWithinConversationSearchResult
+                switch category {
+                case .CONTACT:
+                    item = MessagesWithUserSearchResult(conversationId: conversationId,
+                                                        name: name,
+                                                        iconUrl: iconUrl,
+                                                        userId: userId,
+                                                        userIsVerified: userIsVerified,
+                                                        userAppId: userAppId,
+                                                        relatedMessageCount: relatedMessageCount,
+                                                        keyword: keyword)
+                case .GROUP:
+                    item = MessagesWithGroupSearchResult(conversationId: conversationId,
+                                                         name: name,
+                                                         iconUrl: iconUrl,
+                                                         relatedMessageCount: relatedMessageCount,
+                                                         keyword: keyword)
+                }
+                items.append(item)
             }
             return items
         })

@@ -31,8 +31,8 @@ class GroupParticipantCell: PeerCell {
     
     override func render(result: SearchResult) {
         peerInfoView.render(result: result)
-        if case let .contact(user) = result.target {
-            renderUserRole(user: user)
+        if let result = result as? UserSearchResult {
+            renderUserRole(user: result.user)
         }
     }
     

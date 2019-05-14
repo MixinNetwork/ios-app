@@ -1,6 +1,6 @@
 import UIKit
 
-class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell> {
+class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell, UserSearchResult> {
     
     private let maxMembersCount = 256
     
@@ -83,7 +83,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell>
             }
             let searchResult = users.flatMap({ $0 })
                 .filter({ $0.matches(lowercasedKeyword: keyword) })
-                .map({ SearchResult(user: $0, keyword: keyword) })
+                .map({ UserSearchResult(user: $0, keyword: keyword) })
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
                     return
@@ -100,13 +100,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell>
     override func reloadTableViewSelections() {
         super.reloadTableViewSelections()
         if isSearching {
-            for (row, searchResult) in searchResults.enumerated() {
-                guard case let .contact(user) = searchResult.target else {
-                    continue
-                }
-                guard selectedUserIds.contains(user.userId) else {
-                    continue
-                }
+            for (row, searchResult) in searchResults.enumerated() where selectedUserIds.contains(searchResult.user.userId) {
                 let indexPath = IndexPath(row: row, section: 0)
                 tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             }
@@ -121,9 +115,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell>
     }
     
     override func configure(cell: CheckmarkPeerCell, at indexPath: IndexPath) {
-        guard let user = user(at: indexPath) else {
-            return
-        }
+        let user = self.user(at: indexPath)
         cell.render(user: user)
         if alreadyInGroupUserIds.contains(user.userId) {
             cell.isForceSelected = true
@@ -139,9 +131,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell>
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        guard let user = user(at: indexPath) else {
-            return nil
-        }
+        let user = self.user(at: indexPath)
         if alreadyInGroupUserIds.contains(user.userId) {
             return nil
         } else {
@@ -150,9 +140,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell>
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let user = user(at: indexPath) else {
-            return
-        }
+        let user = self.user(at: indexPath)
         let inserted = selectedUserIds.insert(user.userId).inserted
         if inserted {
             selectedUsers.append(user)
@@ -160,9 +148,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell>
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard let user = user(at: indexPath) else {
-            return
-        }
+        let user = self.user(at: indexPath)
         guard let idx = selectedUsers.firstIndex(where: { $0.userId == user.userId }) else {
             return
         }
@@ -180,12 +166,9 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell>
         container?.subtitleLabel.text = subtitle
     }
     
-    private func user(at indexPath: IndexPath) -> UserItem? {
+    private func user(at indexPath: IndexPath) -> UserItem {
         if isSearching {
-            guard case let .contact(user) = searchResults[indexPath.row].target else {
-                return nil
-            }
-            return user
+            return searchResults[indexPath.row].user
         } else {
             return models[indexPath.section][indexPath.row]
         }

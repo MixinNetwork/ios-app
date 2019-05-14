@@ -25,10 +25,12 @@ class PeerInfoView: UIView, XibDesignable {
     
     func render(result: SearchResult) {
         var isDataMessage = false
-        switch result.target {
-        case let .contact(user):
+        switch result {
+        case let result as UserSearchResult:
+            let user = result.user
             avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
-        case let .conversation(conversation):
+        case let result as ConversationSearchResult:
+            let conversation = result.conversation
             if conversation.isGroup() {
                 avatarImageView.setGroupImage(with: conversation.iconUrl)
             } else {
@@ -36,20 +38,22 @@ class PeerInfoView: UIView, XibDesignable {
                                          userId: conversation.ownerId,
                                          name: conversation.ownerFullName)
             }
-        case let .searchMessageWithContact(_, userId, name):
-            avatarImageView.setImage(with: result.iconUrl, userId: userId, name: name)
-        case .searchMessageWithGroup:
+        case let result as MessagesWithUserSearchResult:
+            avatarImageView.setImage(with: result.iconUrl, userId: result.userId, name: result.userFullname)
+        case let result as MessagesWithGroupSearchResult:
             avatarImageView.setGroupImage(with: result.iconUrl)
-        case let .message(_, _, isData, userId, userFullName, _):
-            isDataMessage = isData
-            avatarImageView.setImage(with: result.iconUrl, userId: userId, name: userFullName)
-        case let .messageReceiver(receiver):
-            switch receiver.item {
+        case let result as MessageSearchResult:
+            isDataMessage = result.isData
+            avatarImageView.setImage(with: result.iconUrl, userId: result.userId, name: result.userFullname)
+        case let result as MessageReceiverSearchResult:
+            switch result.receiver.item {
             case .group(let conversation):
                 avatarImageView.setGroupImage(with: conversation.iconUrl)
             case .user(let user):
                 avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
             }
+        default:
+            break
         }
         titleLabel.attributedText = result.title
         if let badge = result.badgeImage {

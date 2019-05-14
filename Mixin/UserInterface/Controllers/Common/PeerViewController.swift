@@ -1,6 +1,6 @@
 import UIKit
 
-class PeerViewController<ModelType, CellType: PeerCell>: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: SearchResult>: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
@@ -12,7 +12,7 @@ class PeerViewController<ModelType, CellType: PeerCell>: UIViewController, UITab
     var sectionTitles = [String]()
     var models = [ModelType]()
     
-    var searchResults = [SearchResult]()
+    var searchResults = [SearchResultType]()
     var searchingKeyword: String?
     
     var isSearching: Bool {

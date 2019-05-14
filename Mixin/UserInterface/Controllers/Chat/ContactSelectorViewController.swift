@@ -22,13 +22,7 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
         super.reloadTableViewSelections()
         var rows = [Int]()
         if isSearching {
-            for (row, result) in searchResults.enumerated() {
-                guard case let .contact(user) = result.target else {
-                    continue
-                }
-                guard selections.contains(user.userId) else {
-                    continue
-                }
+            for (row, result) in searchResults.enumerated() where selections.contains(result.user.userId) {
                 rows.append(row)
             }
         } else {
@@ -43,17 +37,13 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let userId = user(at: indexPath)?.userId else {
-            return
-        }
+        let userId = user(at: indexPath).userId
         selections.append(userId)
         container?.rightButton.isEnabled = true
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard let userId = user(at: indexPath)?.userId else {
-            return
-        }
+        let userId = user(at: indexPath).userId
         if let idx = selections.index(of: userId) {
             selections.remove(at: idx)
         }

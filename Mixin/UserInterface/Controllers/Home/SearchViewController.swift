@@ -124,9 +124,9 @@ class SearchViewController: UIViewController, SearchableViewController {
             let assets = AssetDAO.shared.getAssets(keyword: trimmedKeyword, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
             let contacts = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: limit)
-                .map { SearchResult(user: $0, keyword: trimmedKeyword) }
+                .map { UserSearchResult(user: $0, keyword: trimmedKeyword) }
             let conversationsByName = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: limit)
-                .map { SearchResult(conversation: $0, keyword: trimmedKeyword) }
+                .map { ConversationSearchResult(conversation: $0, keyword: trimmedKeyword) }
             let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: limit)
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {

@@ -22,9 +22,10 @@ class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let user = user(at: indexPath), let navigationController = navigationController else {
+        guard let navigationController = navigationController else {
             return
         }
+        let user = self.user(at: indexPath)
         let vc = SendViewController.instance(asset: asset, type: .contact(user))
         var viewControllers = navigationController.viewControllers
         if let index = viewControllers.lastIndex(where: { ($0 as? ContainerViewController)?.viewController == self }) {

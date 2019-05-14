@@ -110,10 +110,10 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
                     .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
             case .user:
                 models = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: nil)
-                    .map { SearchResult(user: $0, keyword: trimmedKeyword) }
+                    .map { UserSearchResult(user: $0, keyword: trimmedKeyword) }
             case .conversationsByName:
                 models = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: nil)
-                    .map { SearchResult(conversation: $0, keyword: trimmedKeyword) }
+                    .map { ConversationSearchResult(conversation: $0, keyword: trimmedKeyword) }
             case .conversationsByMessage:
                 models = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: nil)
             }

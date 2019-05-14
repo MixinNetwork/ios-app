@@ -38,20 +38,20 @@ extension SearchableViewController where Self: UIViewController {
     }
     
     func pushViewController(keyword: Keyword?, result: SearchResult) {
-        switch result.target {
-        case let .contact(user):
-            let vc = ConversationViewController.instance(ownerUser: user)
+        switch result {
+        case let result as UserSearchResult:
+            let vc = ConversationViewController.instance(ownerUser: result.user)
             homeNavigationController?.pushViewController(vc, animated: true)
-        case let .conversation(conversation):
-            let vc = ConversationViewController.instance(conversation: conversation)
+        case let result as ConversationSearchResult:
+            let vc = ConversationViewController.instance(conversation: result.conversation)
             homeNavigationController?.pushViewController(vc, animated: true)
-        case .searchMessageWithContact, .searchMessageWithGroup:
+        case let result as MessagesWithinConversationSearchResult:
             let vc = R.storyboard.home.search_conversation()!
             vc.load(searchResult: result)
             vc.inheritedKeyword = keyword
             searchNavigationController?.pushViewController(vc, animated: true)
-        case .message, .messageReceiver:
-            assertionFailure()
+        default:
+            break
         }
     }
     

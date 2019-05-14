@@ -32,7 +32,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     private var conversationId = ""
     private var conversation: ConversationItem?
     private var user: UserItem?
-    private var messages = [[SearchResult]]()
+    private var messages = [[MessageSearchResult]]()
     private var didLoadAllMessages = false
     
     private lazy var userWindow = UserWindow.instance()
@@ -84,13 +84,14 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     }
     
     func load(searchResult: SearchResult) {
-        switch searchResult.target {
-        case let .searchMessageWithGroup(conversationId):
-            self.conversationId = conversationId
+        switch searchResult {
+        case let result as MessagesWithinConversationSearchResult:
+            self.conversationId = result.conversationId
+            fallthrough
+        case is MessagesWithGroupSearchResult:
             iconView.setGroupImage(with: searchResult.iconUrl)
-        case let .searchMessageWithContact(conversationId, userId, userFullName):
-            self.conversationId = conversationId
-            iconView.setImage(with: searchResult.iconUrl, userId: userId, name: userFullName)
+        case let result as MessagesWithUserSearchResult:
+            iconView.setImage(with: result.iconUrl, userId: result.userId, name: result.userFullname)
         default:
             break
         }
@@ -186,7 +187,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard indexPath.row >= messageCountPerPage - loadMoreMessageThreshold else {
             return
         }
-        guard let last = messages.last?.last, case let .message(_, _, _, _, _, location) = last.target else {
+        guard let location = messages.last?.last?.createdAt else {
             return
         }
         guard let keyword = self.keyword else {
@@ -222,13 +223,11 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard let conversation = conversation else {
             return
         }
-        guard case let .message(_, id, _, _, _, _) = messages[indexPath.section][indexPath.row].target else {
-            return
-        }
         guard let keyword = self.keyword?.trimmed else {
             return
         }
-        let highlight = ConversationDataSource.Highlight(keyword: keyword, messageId: id)
+        let messageId = messages[indexPath.section][indexPath.row].messageId
+        let highlight = ConversationDataSource.Highlight(keyword: keyword, messageId: messageId)
         let vc = ConversationViewController.instance(conversation: conversation, highlight: highlight)
         homeNavigationController?.pushViewController(vc, animated: true)
     }

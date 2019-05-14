@@ -1,7 +1,7 @@
 import UIKit
 import AVFoundation
 
-class MessageReceiverViewController: PeerViewController<[MessageReceiver], CheckmarkPeerCell> {
+class MessageReceiverViewController: PeerViewController<[MessageReceiver], CheckmarkPeerCell, MessageReceiverSearchResult> {
     
     private var messageContent: MessageContent!
     private var selections = [MessageReceiver]() {
@@ -43,7 +43,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
             let uniqueReceivers = Set(receivers.flatMap({ $0 }))
             let searchResults = uniqueReceivers
                 .filter { $0.matches(lowercasedKeyword: keyword) }
-                .map { SearchResult(receiver: $0, keyword: keyword) }
+                .map { MessageReceiverSearchResult(receiver: $0, keyword: keyword) }
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
                     return
@@ -69,10 +69,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         super.reloadTableViewSelections()
         if isSearching {
             for (index, result) in searchResults.enumerated() {
-                guard case let .messageReceiver(receiver) = result.target else {
-                    continue
-                }
-                guard selections.contains(receiver) else {
+                guard selections.contains(result.receiver) else {
                     continue
                 }
                 let indexPath = IndexPath(row: index, section: 0)
@@ -94,9 +91,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     
     // MARK: - UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let receiver = messageReceiver(at: indexPath) else {
-            return
-        }
+        let receiver = messageReceiver(at: indexPath)
         selections.append(receiver)
         if !isSearching {
             let counterSection = indexPath.section == 0 ? 1 : 0
@@ -107,9 +102,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard let receiver = messageReceiver(at: indexPath) else {
-            return
-        }
+        let receiver = messageReceiver(at: indexPath)
         if let idx = selections.index(of: receiver) {
             selections.remove(at: idx)
         }
@@ -157,14 +150,9 @@ extension MessageReceiverViewController: ContainerViewControllerDelegate {
 
 extension MessageReceiverViewController {
     
-    private func messageReceiver(at indexPath: IndexPath) -> MessageReceiver? {
+    private func messageReceiver(at indexPath: IndexPath) -> MessageReceiver {
         if isSearching {
-            let target = searchResults[indexPath.row].target
-            if case let .messageReceiver(value) = target {
-                return value
-            } else {
-                return nil
-            }
+            return searchResults[indexPath.row].receiver
         } else {
             return models[indexPath.section][indexPath.row]
         }

@@ -10,25 +10,7 @@ class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserIte
         queue.operations
             .filter({ $0 != initDataOperation })
             .forEach({ $0.cancel() })
-        let op = BlockOperation()
-        let users = self.models
-        op.addExecutionBlock { [unowned op, weak self] in
-            guard self != nil, !op.isCancelled else {
-                return
-            }
-            let searchResult = users
-                .filter({ $0.matches(lowercasedKeyword: keyword) })
-                .map({ SearchResult(user: $0, keyword: keyword) })
-            DispatchQueue.main.sync {
-                guard let weakSelf = self, !op.isCancelled else {
-                    return
-                }
-                weakSelf.searchingKeyword = keyword
-                weakSelf.searchResults = searchResult
-                weakSelf.tableView.reloadData()
-                weakSelf.reloadTableViewSelections()
-            }
-        }
+        let op = SearchOperation(viewController: self, keyword: keyword)
         queue.addOperation(op)
     }
     
@@ -57,6 +39,39 @@ class UserItemPeerViewController<CellType: PeerCell>: PeerViewController<UserIte
         } else {
             return models[indexPath.row]
         }
+    }
+    
+    class SearchOperation: Operation {
+        
+        weak var viewController: UserItemPeerViewController?
+        
+        let users: [UserItem]
+        let keyword: String
+        
+        init(viewController: UserItemPeerViewController, keyword: String) {
+            self.viewController = viewController
+            self.users = viewController.models
+            self.keyword = keyword
+        }
+        
+        override func main() {
+            guard viewController != nil, !isCancelled else {
+                return
+            }
+            let searchResult = users
+                .filter({ $0.matches(lowercasedKeyword: keyword) })
+                .map({ SearchResult(user: $0, keyword: keyword) })
+            DispatchQueue.main.sync {
+                guard let viewController = viewController, !isCancelled else {
+                    return
+                }
+                viewController.searchingKeyword = keyword
+                viewController.searchResults = searchResult
+                viewController.tableView.reloadData()
+                viewController.reloadTableViewSelections()
+            }
+        }
+        
     }
     
 }

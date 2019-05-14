@@ -30,6 +30,7 @@ class PeerViewController<ModelType, CellType: PeerCell>: UIViewController, UITab
         tableView.dataSource = self
         tableView.delegate = self
         searchBoxView.textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_contact()
         initData()
     }
     

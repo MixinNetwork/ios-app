@@ -37,8 +37,6 @@ public class Localized {
         return String(format: LocalizedString("connection_hint_progress", comment: "Syncing messages %@%%"), "\(progress)")
     }
     
-    public static let SEARCH_PLACEHOLDER_PARTICIPANTS = LocalizedString("search_placeholder_participants", comment: "Name")
-
     public static let DATE_FORMAT_DAY = LocalizedString("date_format_day", comment: "hh:mm a")
     public static let DATE_FORMAT_DATE = LocalizedString("date_format_date", comment: "dd/MM/yyyy")
     public static let DATE_FORMAT_MONTH = LocalizedString("date_format_month", comment: "E, d MMM")

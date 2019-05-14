@@ -84,10 +84,8 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     }
     
     func load(searchResult: SearchResult) {
+        conversationId = (searchResult as? MessagesWithinConversationSearchResult)?.conversationId ?? ""
         switch searchResult {
-        case let result as MessagesWithinConversationSearchResult:
-            self.conversationId = result.conversationId
-            fallthrough
         case is MessagesWithGroupSearchResult:
             iconView.setGroupImage(with: searchResult.iconUrl)
         case let result as MessagesWithUserSearchResult:

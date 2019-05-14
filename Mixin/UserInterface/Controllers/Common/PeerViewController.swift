@@ -100,6 +100,14 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     }
     
     // MARK: - UITableViewDelegate
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard !isSearching, !sectionTitles.isEmpty else {
             return nil

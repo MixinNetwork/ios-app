@@ -4,7 +4,8 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     
     private var myRole = ""
     private var conversation: ConversationItem!
-    private var reloadParticipantsOperation: BlockOperation!
+    private var makingAdminUserIds = Set<String>()
+    private var makingAdminCells = [String: GroupParticipantCell]() // Key is user id
     
     private lazy var userWindow = UserWindow.instance()
     
@@ -48,6 +49,14 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
         queue.addOperation(op)
     }
     
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let userId = user(at: indexPath).userId
+        if makingAdminUserIds.contains(userId), let cell = cell as? GroupParticipantCell {
+            makingAdminCells[userId] = cell
+            cell.startLoading()
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBoxView.textField.resignFirstResponder()
         tableView.deselectRow(at: indexPath, animated: true)
@@ -55,7 +64,7 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
         guard user.userId != AccountAPI.shared.accountUserId else {
             return
         }
-        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let alc = UIAlertController(title: nil, message: user.fullName, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_INFO, style: .default, handler: { (action) in
             self.showInfo(user: user)
         }))
@@ -65,12 +74,12 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
         
         if myRole == ParticipantRole.OWNER.rawValue && user.role.isEmpty {
             alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_ADMIN, style: .default, handler: { (action) in
-                self.makeAdmin(user: user, indexPath: indexPath)
+                self.makeAdmin(userId: user.userId)
             }))
         }
         if !myRole.isEmpty {
             alc.addAction(UIAlertAction(title: Localized.GROUP_PARTICIPANT_MENU_REMOVE, style: .destructive, handler: { (action) in
-                self.remove(user: user, indexPath: indexPath)
+                self.remove(userId: user.userId)
             }))
         }
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
@@ -179,25 +188,31 @@ extension GroupParticipantsViewController {
         navigationController?.pushViewController(withBackRoot: vc)
     }
     
-    private func makeAdmin(user: UserItem, indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as? GroupParticipantCell
-        cell?.startLoading()
-        ConversationAPI.shared.adminParticipant(conversationId: conversation.conversationId, userId: user.userId) { [weak cell] (result) in
+    private func makeAdmin(userId: String) {
+        makingAdminUserIds.insert(userId)
+        if let cell = cell(for: userId) {
+            cell.startLoading()
+            makingAdminCells[userId] = cell
+        }
+        ConversationAPI.shared.adminParticipant(conversationId: conversation.conversationId, userId: userId) { [weak self] (result) in
             switch result {
             case .success:
                 break
             case let .failure(error):
                 showHud(style: .error, text: error.localizedDescription)
-                cell?.stopLoading() // It's ok to stop cell's loading even if it has been reused
+            }
+            if let weakSelf = self {
+                weakSelf.makingAdminUserIds.remove(userId)
+                if let cell = weakSelf.makingAdminCells[userId] {
+                    cell.stopLoading()
+                }
             }
         }
     }
     
-    private func remove(user: UserItem, indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) as? GroupParticipantCell {
-            cell.startLoading()
-        }
-        ConversationAPI.shared.removeParticipant(conversationId: conversation.conversationId, userId: user.userId) { (result) in
+    private func remove(userId: String) {
+        cell(for: userId)?.startLoading()
+        ConversationAPI.shared.removeParticipant(conversationId: conversation.conversationId, userId: userId) { (result) in
             switch result {
             case .success:
                 break
@@ -205,6 +220,16 @@ extension GroupParticipantsViewController {
                 showHud(style: .error, text: error.localizedDescription)
             }
         }
+    }
+    
+    private func cell(for userId: String) -> GroupParticipantCell? {
+        guard let indexPaths = tableView.indexPathsForVisibleRows else {
+            return nil
+        }
+        guard let indexPath = indexPaths.first(where: { self.user(at: $0).userId == userId }) else {
+            return nil
+        }
+        return tableView.cellForRow(at: indexPath) as? GroupParticipantCell
     }
     
 }

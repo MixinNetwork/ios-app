@@ -4,7 +4,7 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
     
     private var ownerUser: UserItem?
     private var parentConversation: ConversationItem!
-    private var selections = [String]()
+    private var selections = [String]() // Element is user id
     
     class func instance(ownerUser: UserItem?, conversation: ConversationItem) -> UIViewController {
         let vc = ContactSelectorViewController()
@@ -57,10 +57,7 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
 extension ContactSelectorViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
-        guard let indexPaths = tableView.indexPathsForSelectedRows else {
-            return
-        }
-        let userIds = indexPaths.map { models[$0.row].userId }
+        let userIds = self.selections
         let ownerUser = self.ownerUser
         let parentConversation = self.parentConversation!
         DispatchQueue.global().async { [weak self] in

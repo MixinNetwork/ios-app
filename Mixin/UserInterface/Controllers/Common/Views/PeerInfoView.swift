@@ -9,18 +9,29 @@ class PeerInfoView: UIView, XibDesignable {
     @IBOutlet weak var fileIcon: UIImageView!
     @IBOutlet weak var descriptionLabel: UILabel!
     
+    private var defaultTitleFont: UIFont!
+    private var defaultTitleColor: UIColor!
+    private var defaultDescriptionFont: UIFont!
+    private var defaultDescriptionColor: UIColor!
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        loadXib()
+        loadXibAndDefaultProperties()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        loadXib()
+        loadXibAndDefaultProperties()
     }
     
     func prepareForReuse() {
         avatarImageView.iconImageView.sd_setImage(with: nil, completed: nil)
+        titleLabel.text = nil
+        titleLabel.font = defaultTitleFont
+        titleLabel.textColor = defaultTitleColor
+        descriptionLabel.text = nil
+        descriptionLabel.font = defaultDescriptionFont
+        descriptionLabel.textColor = defaultDescriptionColor
     }
     
     func render(result: SearchResult) {
@@ -93,6 +104,14 @@ class PeerInfoView: UIView, XibDesignable {
         superscriptLabel.text = nil
         fileIcon.isHidden = true
         descriptionLabel.isHidden = true
+    }
+    
+    private func loadXibAndDefaultProperties() {
+        loadXib()
+        defaultTitleFont = titleLabel.font
+        defaultTitleColor = titleLabel.textColor
+        defaultDescriptionFont = descriptionLabel.font
+        defaultDescriptionColor = descriptionLabel.textColor
     }
     
 }

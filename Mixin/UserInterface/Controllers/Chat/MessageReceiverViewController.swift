@@ -85,6 +85,10 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     }
     
     // MARK: - UITableViewDataSource
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return isSearching ? 1 : models.count
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return isSearching ? searchResults.count : models[section].count
     }

@@ -21,6 +21,11 @@ class TransferReceiverViewController: UserItemPeerViewController<PeerCell> {
         return ([], transferReceiver)
     }
     
+    override func configure(cell: PeerCell, at indexPath: IndexPath) {
+        super.configure(cell: cell, at: indexPath)
+        cell.peerInfoViewLeadingConstraint.constant = 36
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let navigationController = navigationController else {
             return

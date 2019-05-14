@@ -36,6 +36,7 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="peerInfoView" destination="51o-YT-Bb2" id="9az-G7-6ny"/>
+                <outlet property="peerInfoViewLeadingConstraint" destination="ehr-wI-MxX" id="9oO-6V-MMe"/>
             </connections>
             <point key="canvasLocation" x="47.826086956521742" y="35.491071428571423"/>
         </tableViewCell>

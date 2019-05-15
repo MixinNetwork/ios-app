@@ -570,6 +570,7 @@ extension SendMessageService {
             guard let message = MessageDAO.shared.getMessage(messageId: messageId) else {
                 return
             }
+            blazeMessage.params?.quoteMessageId = message.quoteMessageId
             if category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue  {
                 if let representativeId = blazeMessage.params?.representativeId, !representativeId.isEmpty {
                     blazeMessage.params?.primitiveId = representativeId

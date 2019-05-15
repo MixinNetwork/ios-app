@@ -216,6 +216,18 @@ enum MessageCategory: String {
             return nil
         }
     }
+
+    static func isLegal(category: String) -> Bool {
+        guard let category = MessageCategory(rawValue: category) else {
+            return false
+        }
+        switch category {
+        case .UNKNOWN, .EXT_UNREAD, .EXT_ENCRYPTION:
+            return false
+        default:
+            return true
+        }
+    }
 }
 
 enum MessageStatus: String, Codable {

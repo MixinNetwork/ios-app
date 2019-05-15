@@ -107,7 +107,7 @@ class SendMessageService: MixinService {
         }
     }
 
-    func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, sendToSession: Bool) {
+    func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, status: String, sendToSession: Bool) {
         guard category.hasSuffix("_TEXT") ||
             category.hasSuffix("_STICKER") ||
             category.hasSuffix("_CONTACT") ||
@@ -131,7 +131,7 @@ class SendMessageService: MixinService {
             let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
             MixinDatabase.shared.transaction { (database) in
                 try database.insertOrReplace(objects: jobs, intoTable: Job.tableName)
-                try MessageDAO.shared.recallMessage(database: database, messageId: messageId, conversationId: conversationId, category: category, quoteMessageIds: quoteMessageIds)
+                try MessageDAO.shared.recallMessage(database: database, messageId: messageId, conversationId: conversationId, category: category, status: status, quoteMessageIds: quoteMessageIds)
             }
             SendMessageService.shared.processMessages()
         }
@@ -248,7 +248,7 @@ class SendMessageService: MixinService {
                 return
             }
             DispatchQueue.global().async {
-                let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)
+                let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)
                 var position = 0
                 let pageCount = AccountUserDefault.shared.isDesktopLoggedIn ? 1000 : 2000
                 while messageIds.count > 0 && position < messageIds.count {

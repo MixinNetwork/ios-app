@@ -711,14 +711,14 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
     }
 
     private func deleteForEveryone(message: MessageItem) {
-        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, sendToSession: true)
+        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, status: message.status, sendToSession: true)
     }
 
     private func showRecallTips(message: MessageItem) {
         let alc = UIAlertController(title: R.string.localizable.chat_delete_tip(), message: "", preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: R.string.localizable.action_learn_more(), style: .default, handler: { (_) in
             CommonUserDefault.shared.isRecallTips = true
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209791")
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209571")
         }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
             CommonUserDefault.shared.isRecallTips = true

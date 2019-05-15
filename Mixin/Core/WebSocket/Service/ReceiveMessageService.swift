@@ -94,15 +94,17 @@ class ReceiveMessageService: MixinService {
                     guard AccountAPI.shared.didLogin else {
                         return
                     }
-                    if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
-                        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
-                        BlazeMessageDAO.shared.delete(data: data)
+                    guard MessageCategory.isLegal(category: data.category) else {
+                        ReceiveMessageService.shared.processBadMessage(data: data)
                         continue
                     }
-
-                    guard let category = MessageCategory(rawValue: data.category), category != .UNKNOWN, category != .EXT_UNREAD, category != .EXT_ENCRYPTION else {
-                        ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
-                        BlazeMessageDAO.shared.delete(data: data)
+                    if data.isSessionMessage {
+                        if !AccountUserDefault.shared.isDesktopLoggedIn && !data.category.hasPrefix("SYSTEM_") {
+                            ReceiveMessageService.shared.processBadMessage(data: data)
+                            continue
+                        }
+                    } else if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
+                        ReceiveMessageService.shared.processBadMessage(data: data)
                         continue
                     }
 
@@ -126,6 +128,15 @@ class ReceiveMessageService: MixinService {
                 finishedJobCount += blazeMessageDatas.count
             } while true
         }
+    }
+
+    private func processBadMessage(data: BlazeMessageData) {
+        if data.isSessionMessage {
+            SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
+        } else {
+            ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+        }
+        BlazeMessageDAO.shared.delete(data: data)
     }
     
     private func processWebRTCMessage(data: BlazeMessageData) {
@@ -193,11 +204,10 @@ class ReceiveMessageService: MixinService {
         }
 
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
-        MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
 
         if let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty, let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) {
             MessageDAO.shared.recallMessage(message: message)
-            SendMessageService.shared.sendRecallSessionMessage(messageId: message.messageId, conversationId: message.conversationId)
+            SendMessageService.shared.sendRecallSessionMessage(messageId: plainData.messageId, conversationId: message.conversationId)
         }
     }
 
@@ -787,7 +797,7 @@ extension ReceiveMessageService {
         guard let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) else {
             return
         }
-        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, sendToSession: false)
+        SendMessageService.shared.recallMessage(messageId: message.messageId, category: message.category, mediaUrl: message.mediaUrl, conversationId: message.conversationId, status: message.status, sendToSession: false)
     }
 
     private func processSessionPlainMessage(data: BlazeMessageData) {

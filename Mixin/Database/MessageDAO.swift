@@ -154,11 +154,11 @@ final class MessageDAO {
         let conversationId = oldMessage.conversationId
         if updateUnseen {
             MixinDatabase.shared.transaction { (database) in
-                try database.update(table: Message.tableName, on: [Message.Properties.status], with: [status], where: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
+                try database.update(table: Message.tableName, on: [Message.Properties.status], with: [status], where: Message.Properties.messageId == messageId)
                 try updateUnseenMessageCount(database: database, conversationId: conversationId)
             }
         } else {
-            MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
+            MixinDatabase.shared.update(maps: [(Message.Properties.status, status)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
         }
         let change = ConversationChange(conversationId: conversationId, action: .updateMessageStatus(messageId: messageId, newStatus: MessageStatus(rawValue: status) ?? .UNKNOWN))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
@@ -425,14 +425,14 @@ final class MessageDAO {
 
         let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
         MixinDatabase.shared.transaction { (database) in
-            try MessageDAO.shared.recallMessage(database: database, messageId: message.messageId, conversationId: message.conversationId, category: message.category, quoteMessageIds: quoteMessageIds)
+            try MessageDAO.shared.recallMessage(database: database, messageId: message.messageId, conversationId: message.conversationId, category: message.category, status: message.status, quoteMessageIds: quoteMessageIds)
         }
     }
 
-    func recallMessage(database: Database, messageId: String, conversationId: String, category: String, quoteMessageIds: [String]) throws {
+    func recallMessage(database: Database, messageId: String, conversationId: String, category: String, status: String, quoteMessageIds: [String]) throws {
         var values: [(PropertyConvertible, ColumnEncodable?)] = [
-            (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue),
-            (Message.Properties.status, MessageStatus.READ.rawValue)]
+            (Message.Properties.category, MessageCategory.MESSAGE_RECALL.rawValue)
+        ]
         if category.hasSuffix("_TEXT") {
             values.append((Message.Properties.content, MixinDatabase.NullValue()))
             values.append((Message.Properties.quoteMessageId, MixinDatabase.NullValue()))
@@ -459,8 +459,15 @@ final class MessageDAO {
         } else if category.hasSuffix("_CONTACT") {
             values.append((Message.Properties.sharedUserId, MixinDatabase.NullValue()))
         }
+        if status == MessageStatus.FAILED.rawValue {
+            values.append((Message.Properties.status, MessageStatus.DELIVERED.rawValue))
+        }
 
         try database.update(maps: values, tableName: Message.tableName, condition: Message.Properties.messageId == messageId)
+
+        if status == MessageStatus.FAILED.rawValue {
+            try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
+        }
 
         if quoteMessageIds.count > 0, let quoteMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryQuoteMessageById, values: [messageId]).allObjects().first, let data = try? JSONEncoder().encode(quoteMessage) {
             try database.update(maps: [(Message.Properties.quoteContent, data)], tableName: Message.tableName, condition: Message.Properties.messageId.in(quoteMessageIds))
@@ -506,9 +513,14 @@ final class MessageDAO {
 
 extension MessageDAO {
 
-    private func updateRedecryptMessage(maps: [(PropertyConvertible, ColumnEncodable?)], messageId: String, conversationId: String, messageSource: String) {
+    private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], messageId: String, conversationId: String, messageSource: String) {
         MixinDatabase.shared.transaction { (database) in
-            try database.update(maps: maps, tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
+            let updateStatment = try database.prepareUpdate(table: Message.tableName, on: keys).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
+            try updateStatment.execute(with: values)
+            guard updateStatment.changes ?? 0 > 0 else {
+                return
+            }
+
             try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
 
             guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).allObjects().first else {
@@ -524,46 +536,47 @@ extension MessageDAO {
     }
 
     func updateMessageContentAndStatus(content: String, status: String, messageId: String, conversationId: String, messageSource: String) {
-        let maps: [(PropertyConvertible, ColumnEncodable?)] = [
-            (Message.Properties.content, content),
-            (Message.Properties.status, status)
-        ]
-        updateRedecryptMessage(maps: maps, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+        updateRedecryptMessage(keys: [Message.Properties.content, Message.Properties.status], values: [content, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
     }
 
     func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, conversationId: String, mediaStatus: MediaStatus, messageSource: String) {
-        let maps: [(PropertyConvertible, ColumnEncodable?)] = [
-            (Message.Properties.content, mediaData.attachmentId),
-            (Message.Properties.mediaMimeType, mediaData.mimeType),
-            (Message.Properties.mediaSize, mediaData.size),
-            (Message.Properties.mediaDuration, mediaData.duration),
-            (Message.Properties.mediaWidth, mediaData.width),
-            (Message.Properties.mediaHeight, mediaData.height),
-            (Message.Properties.thumbImage, mediaData.thumbnail),
-            (Message.Properties.mediaKey, mediaData.key),
-            (Message.Properties.mediaDigest, mediaData.digest),
-            (Message.Properties.mediaStatus, mediaStatus.rawValue),
-            (Message.Properties.mediaWaveform, mediaData.waveform),
-            (Message.Properties.status, status),
-            (Message.Properties.name, mediaData.name)
-        ]
-        updateRedecryptMessage(maps: maps, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+        updateRedecryptMessage(keys: [
+            Message.Properties.content,
+            Message.Properties.mediaMimeType,
+            Message.Properties.mediaSize,
+            Message.Properties.mediaDuration,
+            Message.Properties.mediaWidth,
+            Message.Properties.mediaHeight,
+            Message.Properties.thumbImage,
+            Message.Properties.mediaKey,
+            Message.Properties.mediaDigest,
+            Message.Properties.mediaStatus,
+            Message.Properties.mediaWaveform,
+            Message.Properties.name,
+            Message.Properties.status
+        ], values: [
+            mediaData.attachmentId,
+            mediaData.mimeType,
+            mediaData.size,
+            mediaData.duration,
+            mediaData.width,
+            mediaData.height,
+            mediaData.thumbnail,
+            mediaData.key,
+            mediaData.digest,
+            mediaStatus.rawValue,
+            mediaData.waveform,
+            mediaData.name,
+            status
+        ], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
     }
 
     func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, conversationId: String, messageSource: String) {
-        let maps: [(PropertyConvertible, ColumnEncodable?)] = [
-            (Message.Properties.stickerId, stickerData.stickerId),
-            (Message.Properties.status, status)
-        ]
-        updateRedecryptMessage(maps: maps, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+        updateRedecryptMessage(keys: [Message.Properties.stickerId, Message.Properties.status], values: [stickerData.stickerId, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
     }
 
     func updateContactMessage(transferData: TransferContactData, status: String, messageId: String, conversationId: String, messageSource: String) {
-        let maps: [(PropertyConvertible, ColumnEncodable?)] = [
-            (Message.Properties.sharedUserId, transferData.userId),
-            (Message.Properties.status, status)
-        ]
-        updateRedecryptMessage(maps: maps, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+        updateRedecryptMessage(keys: [Message.Properties.sharedUserId, Message.Properties.status], values: [transferData.userId, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
     }
 
 }

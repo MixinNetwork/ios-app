@@ -74,7 +74,7 @@ class AssetViewController: UIViewController {
         }
         let alc = UIAlertController(title: Localized.ACTION_SEND_TO, message: nil, preferredStyle: .actionSheet)
         alc.addAction(UIAlertAction(title: Localized.CHAT_MENU_CONTACT, style: .default, handler: { [weak self] (_) in
-            let vc = SendContactSelectionViewController.instance(asset: asset)
+            let vc = TransferReceiverViewController.instance(asset: asset)
             self?.navigationController?.pushViewController(vc, animated: true)
         }))
         alc.addAction(UIAlertAction(title: Localized.WALLET_ADDRESS, style: .default, handler: { [weak self](_) in

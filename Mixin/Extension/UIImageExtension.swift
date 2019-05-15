@@ -158,8 +158,9 @@ extension UIImage {
 }
 
 extension UIImage {
-
-    static func createGroupImage(participants: [ParticipantUser]) -> UIImage? {
+    
+    static func makeGroupImage(participants: [ParticipantUser]) -> UIImage? {
+        let participants = participants.prefix(4)
         let squareRect = CGRect(x: 7.0/34.0, y: 7.0/34.0, width: 20.0/34.0, height: 20.0/34.0)
         let rectangleRect = CGRect(x: 13.0/46.0, y: 3.0/46.0, width: 20.0/46.0, height: 40.0/46.0)
 

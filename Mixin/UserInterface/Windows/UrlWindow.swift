@@ -361,7 +361,7 @@ extension UrlWindow {
             return false
         }
         
-        let vc = SendMessagePeerSelectionViewController.instance(content: .text(text))
+        let vc = MessageReceiverViewController.instance(content: .text(text))
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
 
         return true

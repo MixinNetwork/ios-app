@@ -562,7 +562,7 @@ class ConversationViewController: UIViewController {
     }
 
     func contactAction() {
-        let vc = ConversationShareContactViewController.instance(ownerUser: ownerUser, conversation: dataSource.conversation)
+        let vc = ContactSelectorViewController.instance(ownerUser: ownerUser, conversation: dataSource.conversation)
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -760,7 +760,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
             self.present(controller, animated: true, completion: nil)
         case .forward:
             conversationInputViewController.audioViewController.cancelIfRecording()
-            let vc = SendMessagePeerSelectionViewController.instance(content: .message(message))
+            let vc = MessageReceiverViewController.instance(content: .message(message))
             navigationController?.pushViewController(vc, animated: true)
         case .reply:
             conversationInputViewController.quote = (message, viewModel.thumbnail)

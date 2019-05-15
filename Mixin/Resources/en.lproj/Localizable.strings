@@ -57,8 +57,7 @@
 "search_placeholder_address" = "Label";
 "search_placeholder_asset" = "Name, Symbol";
 "search_placeholder_home" = "Contacts, Assets, Chats";
-"search_placeholder_participants" = "Name";
-"search_placeholder_contact" = "Mixin ID, Name";
+"search_placeholder_contact" = "Mixin ID, Name, Phone number";
 "search_related_messages_count" = " related messages";
 "search_section_title_asset" = "Assets";
 "search_section_title_user" = "Contacts";

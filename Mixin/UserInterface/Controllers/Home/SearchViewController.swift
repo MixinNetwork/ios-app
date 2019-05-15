@@ -78,7 +78,7 @@ class SearchViewController: UIViewController, SearchableViewController {
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SearchFooterView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
-        tableView.register(R.nib.searchResultCell)
+        tableView.register(R.nib.peerCell)
         tableView.register(R.nib.assetCell)
         let tableHeaderView = UIView()
         tableHeaderView.frame = CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude)
@@ -124,9 +124,9 @@ class SearchViewController: UIViewController, SearchableViewController {
             let assets = AssetDAO.shared.getAssets(keyword: trimmedKeyword, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
             let contacts = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: limit)
-                .map { SearchResult(user: $0, keyword: trimmedKeyword) }
+                .map { UserSearchResult(user: $0, keyword: trimmedKeyword) }
             let conversationsByName = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: limit)
-                .map { SearchResult(conversation: $0, keyword: trimmedKeyword) }
+                .map { ConversationSearchResult(conversation: $0, keyword: trimmedKeyword) }
             let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: limit)
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
@@ -193,15 +193,15 @@ extension SearchViewController: UITableViewDataSource {
             cell.render(asset: result.asset, attributedSymbol: result.attributedSymbol)
             return cell
         case .user:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
             cell.render(result: users[indexPath.row])
             return cell
         case .group:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
             cell.render(result: conversationsByName[indexPath.row])
             return cell
         case .conversation:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
             cell.render(result: conversationsByMessage[indexPath.row])
             return cell
         }
@@ -221,7 +221,7 @@ extension SearchViewController: UITableViewDelegate {
         case .searchNumber:
             return UITableView.automaticDimension
         case .asset, .user, .group, .conversation:
-            return SearchResultCell.height
+            return PeerCell.height
         }
     }
     

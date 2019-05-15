@@ -32,7 +32,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     private var conversationId = ""
     private var conversation: ConversationItem?
     private var user: UserItem?
-    private var messages = [[SearchResult]]()
+    private var messages = [[MessageSearchResult]]()
     private var didLoadAllMessages = false
     
     private lazy var userWindow = UserWindow.instance()
@@ -54,7 +54,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         searchTextField.text = inheritedKeyword?.raw
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
-        tableView.register(R.nib.searchResultCell)
+        tableView.register(R.nib.peerCell)
         tableView.dataSource = self
         tableView.delegate = self
         let conversationId = self.conversationId
@@ -84,13 +84,12 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     }
     
     func load(searchResult: SearchResult) {
-        switch searchResult.target {
-        case let .searchMessageWithGroup(conversationId):
-            self.conversationId = conversationId
+        conversationId = (searchResult as? MessagesWithinConversationSearchResult)?.conversationId ?? ""
+        switch searchResult {
+        case is MessagesWithGroupSearchResult:
             iconView.setGroupImage(with: searchResult.iconUrl)
-        case let .searchMessageWithContact(conversationId, userId, userFullName):
-            self.conversationId = conversationId
-            iconView.setImage(with: searchResult.iconUrl, userId: userId, name: userFullName)
+        case let result as MessagesWithUserSearchResult:
+            iconView.setImage(with: result.iconUrl, userId: result.userId, name: result.userFullname)
         default:
             break
         }
@@ -166,7 +165,7 @@ extension SearchConversationViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
         cell.render(result: messages[indexPath.section][indexPath.row])
         return cell
     }
@@ -186,7 +185,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard indexPath.row >= messageCountPerPage - loadMoreMessageThreshold else {
             return
         }
-        guard let last = messages.last?.last, case let .message(_, _, _, _, _, location) = last.target else {
+        guard let location = messages.last?.last?.createdAt else {
             return
         }
         guard let keyword = self.keyword else {
@@ -222,13 +221,11 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard let conversation = conversation else {
             return
         }
-        guard case let .message(_, id, _, _, _, _) = messages[indexPath.section][indexPath.row].target else {
-            return
-        }
         guard let keyword = self.keyword?.trimmed else {
             return
         }
-        let highlight = ConversationDataSource.Highlight(keyword: keyword, messageId: id)
+        let messageId = messages[indexPath.section][indexPath.row].messageId
+        let highlight = ConversationDataSource.Highlight(keyword: keyword, messageId: messageId)
         let vc = ConversationViewController.instance(conversation: conversation, highlight: highlight)
         homeNavigationController?.pushViewController(vc, animated: true)
     }

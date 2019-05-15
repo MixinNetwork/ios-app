@@ -59,7 +59,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         case .asset:
             tableView.register(R.nib.assetCell)
         case .user, .conversationsByName, .conversationsByMessage:
-            tableView.register(R.nib.searchResultCell)
+            tableView.register(R.nib.peerCell)
         }
         let headerView = SearchHeaderView()
         headerView.label.text = category.title
@@ -110,10 +110,10 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
                     .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
             case .user:
                 models = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: nil)
-                    .map { SearchResult(user: $0, keyword: trimmedKeyword) }
+                    .map { UserSearchResult(user: $0, keyword: trimmedKeyword) }
             case .conversationsByName:
                 models = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: nil)
-                    .map { SearchResult(conversation: $0, keyword: trimmedKeyword) }
+                    .map { ConversationSearchResult(conversation: $0, keyword: trimmedKeyword) }
             case .conversationsByMessage:
                 models = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: nil)
             }
@@ -166,7 +166,7 @@ extension SearchCategoryViewController: UITableViewDataSource {
             cell.render(asset: asset)
             return cell
         case .user, .conversationsByName, .conversationsByMessage:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.search_result, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
             let result = model as! SearchResult
             cell.render(result: result)
             return cell

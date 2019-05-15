@@ -27,7 +27,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
             .compactMap(MessageReceiver.init)
         let titles = [R.string.localizable.chat_forward_chats(),
                       R.string.localizable.chat_forward_contacts()]
-        return (titles, [users, conversations])
+        return (titles, [conversations, users])
     }
     
     override func search(keyword: String) {

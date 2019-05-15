@@ -145,8 +145,13 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
                 return
             }
             DispatchQueue.main.async {
-                self?.shouldLayoutByKeyboard = false
-                self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(conversation: conversation))
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.shouldLayoutByKeyboard = false
+                weakSelf.nameTextField.resignFirstResponder()
+                let vc = ConversationViewController.instance(conversation: conversation)
+                weakSelf.navigationController?.pushViewController(withBackRoot: vc)
             }
         }
     }

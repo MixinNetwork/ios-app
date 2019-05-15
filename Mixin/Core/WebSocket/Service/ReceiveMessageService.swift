@@ -204,6 +204,7 @@ class ReceiveMessageService: MixinService {
         }
 
         updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
+        MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
 
         if let base64Data = Data(base64Encoded: data.data), let plainData = (try? jsonDecoder.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty, let message = MessageDAO.shared.getMessage(messageId: plainData.messageId) {
             MessageDAO.shared.recallMessage(message: message)

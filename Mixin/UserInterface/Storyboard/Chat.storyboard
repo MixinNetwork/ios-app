@@ -762,11 +762,11 @@
                         <outlet property="inputWrapperHeightConstraint" destination="MMR-mR-ES3" id="DTB-oj-FYz"/>
                         <outlet property="inputWrapperView" destination="6MP-pq-xci" id="Hyt-Ue-uBz"/>
                         <outlet property="loadingView" destination="pcl-Ex-irR" id="Xco-m3-g7P"/>
-                        <outlet property="participantsLabel" destination="a4C-sE-rDR" id="OnC-u4-cXC"/>
                         <outlet property="scrollToBottomButton" destination="hzm-Vh-1BZ" id="i8J-ga-GD1"/>
                         <outlet property="scrollToBottomWrapperHeightConstraint" destination="iai-L8-XoW" id="F9Z-Pn-XNa"/>
                         <outlet property="scrollToBottomWrapperView" destination="enU-Jm-AWl" id="kR8-6F-tEk"/>
                         <outlet property="statusBarPlaceholderHeightConstraint" destination="zpg-10-Eec" id="ivj-pa-2FX"/>
+                        <outlet property="subtitleLabel" destination="a4C-sE-rDR" id="OnC-u4-cXC"/>
                         <outlet property="tableView" destination="v0e-5f-Xnl" id="vhP-ha-ee7"/>
                         <outlet property="titleLabel" destination="6GB-fs-Cdu" id="Gzl-mK-sF2"/>
                         <outlet property="titleStackView" destination="eFB-Ny-P1V" id="LqH-oj-Pg0"/>
@@ -805,7 +805,7 @@
                                     <constraint firstAttribute="trailing" secondItem="4Mr-O8-dtq" secondAttribute="trailing" id="r2O-Ey-YA2"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wvu-NM-HOS">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wvu-NM-HOS">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                                 <subviews>
                                     <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FB6-Ob-yNa" customClass="ConversationExtensionSwitch" customModule="Mixin" customModuleProvider="target">

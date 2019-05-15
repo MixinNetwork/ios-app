@@ -17,7 +17,7 @@ class ConversationViewController: UIViewController {
     @IBOutlet weak var unreadBadgeLabel: UILabel!
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var participantsLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var loadingView: ActivityIndicatorView!
     @IBOutlet weak var titleStackView: UIStackView!
     
@@ -49,8 +49,6 @@ class ConversationViewController: UIViewController {
     private let animationDuration: TimeInterval = 0.3
     
     private var ownerUser: UserItem?
-    private var participants = [Participant]()
-    private var role = ""
     private var quotingMessageId: String?
     private var didInitData = false
     private var isShowingMenu = false
@@ -147,7 +145,6 @@ class ConversationViewController: UIViewController {
         updateStrangerTipsView()
         inputWrapperView.isHidden = false
         updateNavigationBar()
-        reloadParticipants()
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: .ConversationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(userDidChange(_:)), name: .UserDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidShowMenu(_:)), name: UIMenuController.didShowMenuNotification, object: nil)
@@ -175,7 +172,12 @@ class ConversationViewController: UIViewController {
                 make.edges.equalToSuperview()
             })
             conversationInputViewController.didMove(toParent: self)
-            conversationInputViewController.update(opponentUser: ownerUser)
+            if dataSource.category == .group {
+                updateSubtitleAndInputBar()
+            } else if let user = ownerUser {
+                conversationInputViewController.inputBarView.isHidden = false
+                conversationInputViewController.update(opponentUser: user)
+            }
             dataSource.initData(completion: finishInitialLoading)
         }
     }
@@ -505,10 +507,10 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func participantDidChange(_ notification: Notification) {
-        guard let conversationId = notification.object as? String, conversationId == self.conversationId else {
+        guard didInitData, let conversationId = notification.object as? String, conversationId == self.conversationId else {
             return
         }
-        reloadParticipants()
+        updateSubtitleAndInputBar()
     }
     
     @objc func didAddMessageOutOfBounds(_ notification: Notification) {
@@ -1091,17 +1093,41 @@ extension ConversationViewController: PhotoAssetPickerDelegate {
 extension ConversationViewController {
     
     private func updateNavigationBar() {
-        if let dataSource = dataSource, dataSource.category == .group {
+        if dataSource.category == .group {
             let conversation = dataSource.conversation
             titleLabel.text = conversation.name
             avatarImageView.setGroupImage(with: conversation.iconUrl)
-        } else {
-            guard let user = ownerUser else {
-                return
-            }
-            participantsLabel.text = user.identityNumber
+        } else if let user = ownerUser {
+            subtitleLabel.text = user.identityNumber
             titleLabel.text = user.fullName
             avatarImageView.setImage(with: user)
+        }
+    }
+    
+    private func updateSubtitleAndInputBar() {
+        let conversationId = dataSource.conversationId
+        dataSource.queue.async { [weak self] in
+            let isParticipant = ParticipantDAO.shared.userId(AccountAPI.shared.accountUserId, isParticipantOfConversationId: conversationId)
+            if isParticipant {
+                let count = ParticipantDAO.shared.getParticipantCount(conversationId: conversationId)
+                DispatchQueue.main.sync {
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = true
+                    weakSelf.conversationInputViewController.inputBarView.isHidden = false
+                    weakSelf.subtitleLabel.text = Localized.GROUP_SECTION_TITLE_MEMBERS(count: count)
+                }
+            } else {
+                DispatchQueue.main.sync {
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = false
+                    weakSelf.conversationInputViewController.inputBarView.isHidden = false
+                    weakSelf.subtitleLabel.text = Localized.GROUP_REMOVE_TITLE
+                }
+            }
         }
     }
     
@@ -1109,9 +1135,10 @@ extension ConversationViewController {
         if updateDatabase {
             UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: false)
         }
-        ownerUser = UserItem.createUser(from: userResponse)
+        let user = UserItem.createUser(from: userResponse)
+        conversationInputViewController.update(opponentUser: user)
+        self.ownerUser = user
         updateNavigationBar()
-        conversationInputViewController.update(opponentUser: ownerUser)
         updateStrangerTipsView()
     }
     
@@ -1254,41 +1281,6 @@ extension ConversationViewController {
         updateAccessoryButtons(animated: false)
         conversationInputViewController.finishLoading()
         hideLoading()
-    }
-    
-    private func reloadParticipants() {
-        guard dataSource?.category == .group else {
-            return
-        }
-        if Thread.isMainThread {
-            participantsLabel.text = Localized.GROUP_SECTION_TITLE_MEMBERS(count: 0)
-        }
-        let conversationId = self.conversationId
-        DispatchQueue.global().async { [weak self] in
-            let isParticipant = ParticipantDAO.shared.userId(AccountAPI.shared.accountUserId, isParticipantOfConversationId: conversationId)
-            if isParticipant {
-                let participants = ParticipantDAO.shared.participants(conversationId: conversationId)
-                DispatchQueue.main.sync {
-                    guard let weakSelf = self else {
-                        return
-                    }
-                    weakSelf.role = participants.first(where: { $0.userId == AccountAPI.shared.accountUserId })?.role ?? ""
-                    weakSelf.participants = participants
-                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = true
-                    if weakSelf.dataSource?.category == .group {
-                        weakSelf.participantsLabel.text = Localized.GROUP_SECTION_TITLE_MEMBERS(count: weakSelf.participants.count)
-                    }
-                }
-            } else {
-                DispatchQueue.main.sync {
-                    guard let weakSelf = self else {
-                        return
-                    }
-                    weakSelf.participantsLabel.text = Localized.GROUP_REMOVE_TITLE
-                    weakSelf.conversationInputViewController.deleteConversationButton.isHidden = false
-                }
-            }
-        }
     }
     
     private func openDocumentAction(message: MessageItem) {

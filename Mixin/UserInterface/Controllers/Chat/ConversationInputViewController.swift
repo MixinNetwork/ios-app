@@ -328,10 +328,7 @@ class ConversationInputViewController: UIViewController {
         view.addGestureRecognizer(recognizer)
     }
     
-    func update(opponentUser: UserItem?) {
-        guard let user = opponentUser else {
-            return
-        }
+    func update(opponentUser user: UserItem) {
         let isBlocked = user.relationship == Relationship.BLOCKING.rawValue
         unblockButton.isHidden = !isBlocked
         if !isBlocked && unblockButton.isBusy {

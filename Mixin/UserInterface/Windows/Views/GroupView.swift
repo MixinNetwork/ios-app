@@ -63,7 +63,7 @@ class GroupView: CornerView {
 
         let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in
-            let participantCount = ParticipantDAO.shared.getCount(conversationId: conversationId)
+            let participantCount = ParticipantDAO.shared.getParticipantCount(conversationId: conversationId)
             self?.isAdmin = ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: AccountAPI.shared.accountUserId)
             DispatchQueue.main.async {
                 self?.renderParticipants(count: participantCount)

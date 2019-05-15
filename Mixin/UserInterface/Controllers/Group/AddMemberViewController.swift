@@ -115,8 +115,15 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     }
     
     override func configure(cell: CheckmarkPeerCell, at indexPath: IndexPath) {
-        let user = self.user(at: indexPath)
-        cell.render(user: user)
+        let user: UserItem
+        if isSearching {
+            let searchResult = searchResults[indexPath.row]
+            cell.render(result: searchResult)
+            user = searchResult.user
+        } else {
+            user = models[indexPath.section][indexPath.row]
+            cell.render(user: user)
+        }
         if alreadyInGroupUserIds.contains(user.userId) {
             cell.isForceSelected = true
         }

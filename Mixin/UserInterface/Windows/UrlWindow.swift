@@ -39,6 +39,8 @@ class UrlWindow: BottomSheetView {
             return checkCodesUrl(code, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case .pay:
             return checkPayUrl(url: url, fromWeb: fromWeb)
+        case .withdrawal:
+            return checkWithdrawal(url: url, fromWeb: fromWeb)
         case let .users(id):
             return checkUsersUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case let .transfer(id):
@@ -297,6 +299,39 @@ extension UrlWindow {
 
 extension UrlWindow {
 
+    func presentPopupControllerAnimated(addressRequest: AddressRequest, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
+        self.fromWeb = fromWeb
+        presentPopupControllerAnimated()
+
+        DispatchQueue.global().async { [weak self] in
+            guard let asset = AssetDAO.shared.getAsset(assetId: addressRequest.assetId) else {
+                DispatchQueue.main.async {
+                    self?.failedHandler(R.string.localizable.address_asset_not_found())
+                }
+                return
+            }
+
+            DispatchQueue.main.async {
+                guard let weakSelf = self, weakSelf.isShowing else {
+                    return
+                }
+
+                if PayWindow.shared.isShowing {
+                    PayWindow.shared.removeFromSuperview()
+                }
+
+                weakSelf.interceptDismiss = true
+
+                weakSelf.containerView.addSubview(weakSelf.payView)
+                weakSelf.payView.snp.makeConstraints({ (make) in
+                    make.edges.equalToSuperview()
+                })
+                weakSelf.payView.render(asset: asset, addressRequest: addressRequest, amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
+                weakSelf.successHandler()
+            }
+        }
+    }
+
     func presentPopupControllerAnimated(assetId: String, opponentId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
@@ -349,6 +384,43 @@ extension UrlWindow {
             memo = urlDecodeMemo
         }
         UrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
+
+        return true
+    }
+
+    class func checkWithdrawal(url: URL, fromWeb: Bool = false) -> Bool {
+        guard AccountAPI.shared.account?.has_pin ?? false else {
+            UIApplication.rootNavigationController()?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            return true
+        }
+        guard let query = url.getKeyVals() else {
+            return false
+        }
+        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"] else {
+            return false
+        }
+        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !amount.isEmpty else {
+            return false
+        }
+        var memo = query["memo"]
+        if let urlDecodeMemo = memo?.removingPercentEncoding {
+            memo = urlDecodeMemo
+        }
+
+        var request: AddressRequest!
+        
+        if let publicKey = query["public_key"], var label = query["label"], !publicKey.isEmpty, !label.isEmpty {
+            if let urlDecodeLabel = label.removingPercentEncoding {
+                label = urlDecodeLabel
+            }
+            request = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: nil, accountTag: nil)
+        } else if let accountName = query["account_name"], let accountTag = query["account_tag"], !accountName.isEmpty, !accountTag.isEmpty {
+            request = AddressRequest(assetId: assetId, publicKey: nil, label: nil, pin: "", accountName: accountName, accountTag: accountTag)
+        } else {
+            return false
+        }
+
+        UrlWindow.instance().presentPopupControllerAnimated(addressRequest: request, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
 
         return true
     }

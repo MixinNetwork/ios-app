@@ -9,6 +9,14 @@ final class AddressDAO {
         return MixinDatabase.shared.getCodable(condition: Address.Properties.addressId == addressId, inTransaction: false)
     }
 
+    func getAddress(assetId: String, publicKey: String) -> Address? {
+        return MixinDatabase.shared.getCodable(condition: Address.Properties.assetId == assetId && Address.Properties.publicKey == publicKey, inTransaction: false)
+    }
+
+    func getAddress(assetId: String, accountTag: String, accountName: String) -> Address? {
+        return MixinDatabase.shared.getCodable(condition: Address.Properties.assetId == assetId && Address.Properties.accountTag == accountTag && Address.Properties.accountName == accountName, inTransaction: false)
+    }
+
     func getLastUseAddress(assetId: String) -> Address? {
         if let addressId = WalletUserDefault.shared.lastWithdrawalAddress[assetId], let address = getAddress(addressId: addressId) {
             return address

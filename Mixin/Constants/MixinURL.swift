@@ -13,6 +13,7 @@ enum MixinURL {
         static let send = "send"
         static let device = "device"
         static let auth = "auth"
+        static let withdrawal = "withdrawal"
     }
     private typealias Host = Path
     
@@ -23,6 +24,7 @@ enum MixinURL {
     case send
     case device(uuid: String, publicKey: String)
     case unknown(URL)
+    case withdrawal
     
     init?(url: URL) {
         if url.scheme == MixinURL.scheme {
@@ -42,6 +44,8 @@ enum MixinURL {
                 } else {
                     self = .unknown(url)
                 }
+            } else if url.host == Host.withdrawal {
+                self = .withdrawal
             } else {
                 self = .unknown(url)
             }
@@ -54,6 +58,8 @@ enum MixinURL {
                 self = .users(url.pathComponents[2])
             } else if url.pathComponents.count == 3 && url.pathComponents[1] == Path.transfer {
                 self = .transfer(url.pathComponents[2])
+            } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.withdrawal {
+                self = .withdrawal
             } else {
                 self = .unknown(url)
             }

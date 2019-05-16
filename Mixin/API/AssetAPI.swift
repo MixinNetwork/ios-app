@@ -74,6 +74,11 @@ final class AssetAPI: BaseAPI {
         let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "trace_id": traceId]
         request(method: .post, url: url.payments, parameters: param, completion: completion)
     }
+
+    func payments(assetId: String, addressId: String, amount: String, traceId: String, completion: @escaping (APIResult<PaymentResponse>) -> Void) {
+        let param: [String : Any] = ["asset_id": assetId, "address_id": addressId, "amount": amount, "trace_id": traceId]
+        request(method: .post, url: url.payments, parameters: param, completion: completion)
+    }
     
     func snapshots(opponentId: String) -> APIResult<[Snapshot]> {
         return request(method: .get, url: url.snapshots(opponentId: opponentId))

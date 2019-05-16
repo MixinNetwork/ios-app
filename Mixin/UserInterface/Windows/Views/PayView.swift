@@ -28,7 +28,8 @@ class PayView: UIStackView {
     private var user: UserItem!
     private var trackId: String!
     private var asset: AssetItem!
-    private var address: Address!
+    private var address: Address?
+    private var addressRequest: AddressRequest?
     private var amount = ""
     private var memo = ""
     private var isWithdrawal = false
@@ -74,7 +75,7 @@ class PayView: UIStackView {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, amount: String, memo: String, trackId: String, amountUsd: String? = nil, superView: BottomSheetView) {
+    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, addressRequest: AddressRequest? = nil, amount: String, memo: String, trackId: String, amountUsd: String? = nil, superView: BottomSheetView) {
         self.asset = asset
         self.amount = amount
         self.memo = memo
@@ -89,6 +90,17 @@ class PayView: UIStackView {
         } else if let address = address {
             self.isWithdrawal = true
             self.address = address
+            avatarImageView.image = R.image.wallet.ic_transaction_external()
+            if asset.isAccount {
+                nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.accountName ?? "")
+                mixinIDLabel.text = address.accountTag?.toSimpleKey()
+            } else {
+                nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label ?? "")
+                mixinIDLabel.text = address.publicKey?.toSimpleKey()
+            }
+        } else if let address = addressRequest {
+            self.isWithdrawal = true
+            self.addressRequest = address
             avatarImageView.image = R.image.wallet.ic_transaction_external()
             if asset.isAccount {
                 nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.accountName ?? "")
@@ -233,6 +245,19 @@ extension PayView: PinFieldDelegate {
         transferAction(pin: pin)
     }
 
+    private func failedHandler(error: APIError) {
+        processing = false
+        superView?.dismissPopupControllerAnimated()
+        guard error.status != NSURLErrorCancelled else {
+            return
+        }
+        if (superView as? UrlWindow)?.fromWeb ?? false {
+            showHud(style: .error, text: error.localizedDescription)
+        } else {
+            UIApplication.currentActivity()?.alert(error.localizedDescription, message: nil)
+        }
+    }
+
     private func transferAction(pin: String) {
         guard !processing else {
             return
@@ -250,7 +275,9 @@ extension PayView: PinFieldDelegate {
             switch result {
             case let .success(snapshot):
                 if weakSelf.isWithdrawal {
-                    WalletUserDefault.shared.lastWithdrawalAddress[assetId] = weakSelf.address.addressId
+                    if let addressId = weakSelf.address?.addressId {
+                        WalletUserDefault.shared.lastWithdrawalAddress[assetId] = addressId
+                    }
                     ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                 } else {
                     WalletUserDefault.shared.defalutTransferAssetId = assetId
@@ -264,16 +291,7 @@ extension PayView: PinFieldDelegate {
                 weakSelf.playSuccessSound()
                 weakSelf.delayDismissWindow()
             case let .failure(error):
-                weakSelf.processing = false
-                weakSelf.superView?.dismissPopupControllerAnimated()
-                guard error.status != NSURLErrorCancelled else {
-                    return
-                }
-                if (weakSelf.superView as? UrlWindow)?.fromWeb ?? false {
-                    showHud(style: .error, text: error.localizedDescription)
-                } else {
-                    UIApplication.currentActivity()?.alert(error.localizedDescription, message: nil)
-                }
+                weakSelf.failedHandler(error: error)
             }
         }
 
@@ -284,7 +302,27 @@ extension PayView: PinFieldDelegate {
             generalizedAmount = amount
         }
         if isWithdrawal {
-            WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+            if let address = self.address {
+                WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
+            } else {
+                self.addressRequest?.pin = pin
+                if let addressRequest = self.addressRequest {
+                    WithdrawalAPI.shared.save(address: addressRequest) { [weak self](result) in
+                        guard let weakSelf = self else {
+                            return
+                        }
+
+                        switch result {
+                        case let .success(address):
+                            weakSelf.address = address
+                            AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
+                            WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: weakSelf.trackId, pin: pin, memo: weakSelf.memo), completion: completion)
+                        case let .failure(error):
+                            weakSelf.failedHandler(error: error)
+                        }
+                    }
+                }
+            }
         } else {
             CommonUserDefault.shared.hasPerformedTransfer = true
             AssetAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)

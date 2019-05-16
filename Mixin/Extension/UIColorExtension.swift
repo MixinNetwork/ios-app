@@ -11,7 +11,7 @@ extension UIColor {
     static let messageKeywordHighlight = UIColor(rgbValue: 0xC4EF6E)
     static let selectedLinkBackground = UIColor.black.withAlphaComponent(0.1)
     static let systemTint = UIColor(rgbValue: 0x007AFF)
-    static let cameraSendBlue = UIColor(rgbValue: 0x0a5ffe)
+    static let cameraSendBlue = UIColor(displayP3RgbValue: 0x3D75E3)
     static let selection = UIColor(rgbValue: 0xEDEEEE)
     static let accessoryText = UIColor(rgbValue: 0xBBBEC3)
     static let darkText = UIColor(displayP3RgbValue: 0x333333)

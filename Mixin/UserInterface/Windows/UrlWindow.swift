@@ -311,6 +311,15 @@ extension UrlWindow {
                 return
             }
 
+            var address: Address?
+            if asset.isAccount {
+                if let accountTag = addressRequest.accountTag, let accountName = addressRequest.accountName {
+                    address = AddressDAO.shared.getAddress(assetId: asset.assetId, accountTag: accountTag, accountName: accountName)
+                }
+            } else if let publicKey = addressRequest.publicKey {
+                address = AddressDAO.shared.getAddress(assetId: asset.assetId, publicKey: publicKey)
+            }
+
             DispatchQueue.main.async {
                 guard let weakSelf = self, weakSelf.isShowing else {
                     return
@@ -326,7 +335,11 @@ extension UrlWindow {
                 weakSelf.payView.snp.makeConstraints({ (make) in
                     make.edges.equalToSuperview()
                 })
-                weakSelf.payView.render(asset: asset, addressRequest: addressRequest, amount: amount, memo: memo, trackId: traceId, superView: weakSelf)
+                if let address = address {
+                    weakSelf.payView.render(asset: asset, address: address, amount: amount, memo: memo, trackId: traceId, fromWebWithdrawal: true, superView: weakSelf)
+                } else {
+                    weakSelf.payView.render(asset: asset, addressRequest: addressRequest, amount: amount, memo: memo, trackId: traceId, fromWebWithdrawal: true, superView: weakSelf)
+                }
                 weakSelf.successHandler()
             }
         }

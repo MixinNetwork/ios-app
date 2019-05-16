@@ -504,6 +504,12 @@ public class Localized {
         return String(format: LocalizedString("address_edit_title", comment: "Edit %@ Address"), symbol)
     }
     public static let ADDRESS_FORMAT_ERROR = LocalizedString("address_format_error", comment: "Invalid address format.")
+    public static func ADDRESS_AUTO_ADD(label: String, publicKey: String, symbol: String) -> String {
+        return String(format: LocalizedString("address_auto_add", comment: "Label \"%@\" and Address \"%@\" have been automatically added to the %@ address book."), label, publicKey, symbol)
+    }
+    public static func ADDRESS_AUTO_ADD_ACCOUNT(accountName: String, accountTag: String, symbol: String) -> String {
+        return String(format: LocalizedString("address_auto_add_account", comment: "Account Name \"%@\" and Account Tag \"%@\" have been automatically added to the %@ address book."), accountName, accountTag, symbol)
+    }
     
     // Transfer
     public static let TRANSFER_TITLE_TO = LocalizedString("transfer_title_to", comment: "Transfer to")

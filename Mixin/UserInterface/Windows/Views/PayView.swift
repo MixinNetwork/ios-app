@@ -33,6 +33,7 @@ class PayView: UIStackView {
     private var amount = ""
     private var memo = ""
     private var isWithdrawal = false
+    private var fromWebWithdrawal = false
     private(set) var processing = false
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
@@ -75,12 +76,13 @@ class PayView: UIStackView {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, addressRequest: AddressRequest? = nil, amount: String, memo: String, trackId: String, amountUsd: String? = nil, superView: BottomSheetView) {
+    func render(asset: AssetItem, user: UserItem? = nil, address: Address? = nil, addressRequest: AddressRequest? = nil, amount: String, memo: String, trackId: String, fromWebWithdrawal: Bool = false, amountUsd: String? = nil, superView: BottomSheetView) {
         self.asset = asset
         self.amount = amount
         self.memo = memo
         self.trackId = trackId
         self.superView = superView
+        self.fromWebWithdrawal = fromWebWithdrawal
         if let user = user {
             self.isWithdrawal = false
             self.user = user
@@ -258,6 +260,17 @@ extension PayView: PinFieldDelegate {
         }
     }
 
+    private func failedHandler(errorMsg: String) {
+        processing = false
+        superView?.dismissPopupControllerAnimated()
+
+        if (superView as? UrlWindow)?.fromWeb ?? false {
+            showHud(style: .error, text: errorMsg)
+        } else {
+            UIApplication.currentActivity()?.alert(errorMsg, message: nil)
+        }
+    }
+
     private func transferAction(pin: String) {
         guard !processing else {
             return
@@ -290,6 +303,9 @@ extension PayView: PinFieldDelegate {
                 weakSelf.paySuccessImageView.isHidden = false
                 weakSelf.playSuccessSound()
                 weakSelf.delayDismissWindow()
+                if let address = weakSelf.addressRequest {
+                    weakSelf.tipAddAddress(address: address)
+                }
             case let .failure(error):
                 weakSelf.failedHandler(error: error)
             }
@@ -302,30 +318,62 @@ extension PayView: PinFieldDelegate {
             generalizedAmount = amount
         }
         if isWithdrawal {
-            if let address = self.address {
-                WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
-            } else {
-                self.addressRequest?.pin = pin
-                if let addressRequest = self.addressRequest {
-                    WithdrawalAPI.shared.save(address: addressRequest) { [weak self](result) in
-                        guard let weakSelf = self else {
-                            return
-                        }
-
-                        switch result {
-                        case let .success(address):
-                            weakSelf.address = address
-                            AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
-                            WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: weakSelf.trackId, pin: pin, memo: weakSelf.memo), completion: completion)
-                        case let .failure(error):
-                            weakSelf.failedHandler(error: error)
-                        }
+            if fromWebWithdrawal {
+                checkAddressAndPayments(pin: pin, trackId: trackId, amount: generalizedAmount) { [weak self](address) in
+                    guard let weakSelf = self else {
+                        return
                     }
+                     WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: weakSelf.trackId, pin: pin, memo: weakSelf.memo), completion: completion)
                 }
+            } else if let address = self.address {
+                WithdrawalAPI.shared.withdrawal(withdrawal: WithdrawalRequest(addressId: address.addressId, amount: generalizedAmount, traceId: trackId, pin: pin, memo: memo), completion: completion)
             }
         } else {
             CommonUserDefault.shared.hasPerformedTransfer = true
             AssetAPI.shared.transfer(assetId: assetId, opponentId: user.userId, amount: generalizedAmount, memo: memo, pin: pin, traceId: trackId, completion: completion)
+        }
+    }
+
+    private func checkAddressAndPayments(pin: String, trackId: String, amount: String, block: @escaping (Address) -> Void) {
+        let assetId = asset.assetId
+        let checkPayments = { [weak self](address: Address) in
+            AssetAPI.shared.payments(assetId: assetId, addressId: address.addressId, amount: amount, traceId: trackId) { (result) in
+                guard let weakSelf = self else {
+                    return
+                }
+                switch result {
+                case let .success(payment):
+                    guard payment.status != PaymentStatus.paid.rawValue else {
+                        weakSelf.failedHandler(errorMsg: Localized.TRANSFER_PAID)
+                        return
+                    }
+                    block(address)
+                case let .failure(error):
+                    weakSelf.failedHandler(error: error)
+                }
+            }
+        }
+
+        if let address = self.address {
+            checkPayments(address)
+        } else {
+            self.addressRequest?.pin = pin
+            if let addressRequest = self.addressRequest {
+                WithdrawalAPI.shared.save(address: addressRequest) { [weak self](result) in
+                    guard let weakSelf = self else {
+                        return
+                    }
+
+                    switch result {
+                    case let .success(address):
+                        weakSelf.address = address
+                        AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
+                        checkPayments(address)
+                    case let .failure(error):
+                        weakSelf.failedHandler(error: error)
+                    }
+                }
+            }
         }
     }
 
@@ -377,5 +425,12 @@ extension PayView: PinFieldDelegate {
         }
         AudioServicesPlaySystemSound(soundId)
     }
-    
+
+    private func tipAddAddress(address: AddressRequest) {
+        if asset.isAccount {
+            UIApplication.currentActivity()?.alert(Localized.ADDRESS_AUTO_ADD_ACCOUNT(accountName: address.accountName ?? "", accountTag: address.accountTag ?? "", symbol: asset.symbol))
+        } else {
+            UIApplication.currentActivity()?.alert(Localized.ADDRESS_AUTO_ADD(label: address.label ?? "", publicKey: address.publicKey ?? "", symbol: asset.symbol))
+        }
+    }
 }

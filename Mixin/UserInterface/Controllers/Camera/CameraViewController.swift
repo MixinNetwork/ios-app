@@ -118,7 +118,12 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             weakSelf.savePhoto(photo: photo)
         }
     }
-
+    
+    @IBAction func albumAction(_ sender: Any) {
+        let vc = PhotoAssetPickerNavigationController.instance(pickerDelegate: self)
+        present(vc, animated: true, completion: nil)
+    }
+    
     private func savePhoto(photo: UIImage) {
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAsset(from: photo)
@@ -655,6 +660,15 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
         }) { (_) in
             self.qrcodeView.isHidden = true
         }
+    }
+    
+}
+
+extension CameraViewController: PhotoAssetPickerDelegate {
+    
+    func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
+        let vc = AssetSendViewController.instance(asset: asset, dataSource: nil)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }

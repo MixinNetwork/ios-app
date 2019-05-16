@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_0" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,19 +15,19 @@
             <objects>
                 <viewController storyboardIdentifier="camera" hidesBottomBarWhenPushed="YES" id="7EY-8T-xnR" customClass="CameraViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pLM-9e-9z0">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LBJ-RT-mbD" customClass="PreviewView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Lks-aY-qYz">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5sm-8G-Krj" userLabel="Navigation View">
-                                <rect key="frame" x="0.0" y="20" width="320" height="56"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="56"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qa4-MC-Qq2" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
@@ -37,7 +37,7 @@
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="ipB-C4-qfY">
-                                        <rect key="frame" x="204" y="0.0" width="112" height="56"/>
+                                        <rect key="frame" x="315" y="0.0" width="56" height="56"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0l7-uH-Dsx" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
@@ -47,16 +47,6 @@
                                                 <state key="normal" image="ic_camera_flash_off"/>
                                                 <connections>
                                                     <action selector="changeFlashAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="RWb-f6-HBQ"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jHd-gi-a9Q" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="56" y="0.0" width="56" height="56"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="56" id="ySe-jF-sE0"/>
-                                                </constraints>
-                                                <state key="normal" image="ic_camera_swap"/>
-                                                <connections>
-                                                    <action selector="changeCameraAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="PSK-Qs-2Da"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -74,7 +64,7 @@
                                 </constraints>
                             </view>
                             <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WmQ-ju-XH1">
-                                <rect key="frame" x="135.5" y="38" width="49.5" height="20"/>
+                                <rect key="frame" x="163" y="38" width="49.5" height="20"/>
                                 <subviews>
                                     <view clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="98N-CS-DAD">
                                         <rect key="frame" x="0.0" y="6" width="8" height="8"/>
@@ -107,7 +97,7 @@
                                 </constraints>
                             </view>
                             <view hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="37" placeholderIntrinsicHeight="37" translatesAutoresizingMaskIntoConstraints="NO" id="o5Y-dL-Imf" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="141.5" y="275.5" width="37" height="37"/>
+                                <rect key="frame" x="169" y="325" width="37" height="37"/>
                                 <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
@@ -115,18 +105,52 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8L-Tp-H0W" customClass="RecordButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="124" y="466" width="72" height="72"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pg6-RD-lOy">
+                                <rect key="frame" x="15" y="565" width="345" height="72"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="krH-9Y-Y6Z">
+                                        <rect key="frame" x="0.0" y="14" width="44" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="M3J-8U-Sne"/>
+                                            <constraint firstAttribute="width" constant="44" id="vm7-eQ-s0g"/>
+                                        </constraints>
+                                        <state key="normal" image="ic_camera_album"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8L-Tp-H0W" customClass="RecordButton" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="136.5" y="0.0" width="72" height="72"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="72" id="5yf-C4-x4H"/>
+                                            <constraint firstAttribute="height" constant="72" id="bCd-Tj-eXg"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="takeAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="lgb-bU-qbR"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jHd-gi-a9Q" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="301" y="14" width="44" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="TX6-Iq-thX"/>
+                                            <constraint firstAttribute="width" constant="44" id="ySe-jF-sE0"/>
+                                        </constraints>
+                                        <state key="normal" image="ic_camera_switch"/>
+                                        <connections>
+                                            <action selector="changeCameraAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="PSK-Qs-2Da"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="72" id="5yf-C4-x4H"/>
-                                    <constraint firstAttribute="height" constant="72" id="bCd-Tj-eXg"/>
+                                    <constraint firstItem="jHd-gi-a9Q" firstAttribute="centerY" secondItem="pg6-RD-lOy" secondAttribute="centerY" id="IYP-AI-mqf"/>
+                                    <constraint firstAttribute="bottom" secondItem="B8L-Tp-H0W" secondAttribute="bottom" id="NL3-Lp-agd"/>
+                                    <constraint firstAttribute="trailing" secondItem="jHd-gi-a9Q" secondAttribute="trailing" id="TmS-63-iS2"/>
+                                    <constraint firstItem="B8L-Tp-H0W" firstAttribute="centerX" secondItem="pg6-RD-lOy" secondAttribute="centerX" id="gmt-ca-jyY"/>
+                                    <constraint firstItem="krH-9Y-Y6Z" firstAttribute="centerY" secondItem="pg6-RD-lOy" secondAttribute="centerY" id="kzH-ul-JLC"/>
+                                    <constraint firstItem="krH-9Y-Y6Z" firstAttribute="leading" secondItem="pg6-RD-lOy" secondAttribute="leading" id="oay-1X-w7R"/>
+                                    <constraint firstItem="B8L-Tp-H0W" firstAttribute="top" secondItem="pg6-RD-lOy" secondAttribute="top" id="vkZ-Jl-k61"/>
                                 </constraints>
-                                <connections>
-                                    <action selector="takeAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="lgb-bU-qbR"/>
-                                </connections>
-                            </button>
+                            </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hft-XM-7mq" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="240" y="488" width="80" height="80"/>
+                                <rect key="frame" x="295" y="587" width="80" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="WYo-rf-f86"/>
                                     <constraint firstAttribute="height" constant="80" id="cYi-vo-pLe"/>
@@ -137,7 +161,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9hJ-zq-Afw" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="488" width="72" height="80"/>
+                                <rect key="frame" x="0.0" y="587" width="72" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="72" id="dWU-1v-lgg"/>
                                     <constraint firstAttribute="height" constant="80" id="oWm-3t-XTG"/>
@@ -148,10 +172,10 @@
                                 </connections>
                             </button>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WNM-S5-JoA">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="2X6-GY-egt">
-                                        <rect key="frame" x="30" y="157.5" width="260" height="193.5"/>
+                                        <rect key="frame" x="57.5" y="207" width="260" height="193.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code Camera" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VMD-0x-hnr">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="29"/>
@@ -202,9 +226,9 @@
                                 </constraints>
                             </view>
                             <visualEffectView hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ene-l2-qnH">
-                                <rect key="frame" x="12" y="-66" width="296" height="64"/>
+                                <rect key="frame" x="12" y="-66" width="351" height="64"/>
                                 <view key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="2OZ-eV-Kbr">
-                                    <rect key="frame" x="0.0" y="0.0" width="296" height="64"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="351" height="64"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_notification_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="WcN-1e-q3G">
@@ -220,7 +244,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search Web in Safari" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FOK-LK-ThD">
-                                            <rect key="frame" x="10" y="34" width="276" height="18"/>
+                                            <rect key="frame" x="10" y="34" width="331" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -268,12 +292,13 @@
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="9hJ-zq-Afw" secondAttribute="bottom" id="caf-qy-Pe9"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="bottom" secondItem="LBJ-RT-mbD" secondAttribute="bottom" id="egT-Tv-W4L"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="Hft-XM-7mq" secondAttribute="bottom" id="g6Y-Dj-hpg"/>
+                            <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="pg6-RD-lOy" secondAttribute="bottom" constant="30" id="iup-fH-kbn"/>
                             <constraint firstAttribute="bottom" secondItem="LBJ-RT-mbD" secondAttribute="bottom" id="iy5-DL-r54"/>
-                            <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="B8L-Tp-H0W" secondAttribute="bottom" constant="30" id="lBe-yt-pwA"/>
+                            <constraint firstItem="pg6-RD-lOy" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" constant="15" id="jsF-pL-ioH"/>
                             <constraint firstItem="o5Y-dL-Imf" firstAttribute="centerX" secondItem="ADJ-U9-E6n" secondAttribute="centerX" id="rYb-Gb-qvj"/>
                             <constraint firstItem="9hJ-zq-Afw" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="t5V-Le-5Wv"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="LBJ-RT-mbD" secondAttribute="trailing" id="uiw-uA-lt7"/>
-                            <constraint firstItem="B8L-Tp-H0W" firstAttribute="centerX" secondItem="ADJ-U9-E6n" secondAttribute="centerX" id="wsJ-tW-neu"/>
+                            <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="pg6-RD-lOy" secondAttribute="trailing" constant="15" id="xE9-AC-j5i"/>
                             <constraint firstItem="WNM-S5-JoA" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="zO7-IP-0Vx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ADJ-U9-E6n"/>
@@ -281,9 +306,9 @@
                     <navigationItem key="navigationItem" id="vj5-Iu-0pX"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="albumButton" destination="krH-9Y-Y6Z" id="CFH-ft-IBS"/>
                         <outlet property="backButton" destination="qa4-MC-Qq2" id="UxB-8P-p5x"/>
                         <outlet property="cameraFlashButton" destination="0l7-uH-Dsx" id="b8d-ae-gLD"/>
-                        <outlet property="cameraSwapButton" destination="jHd-gi-a9Q" id="kSL-4U-uWZ"/>
                         <outlet property="loadingView" destination="o5Y-dL-Imf" id="EUb-EZ-MAk"/>
                         <outlet property="previewView" destination="LBJ-RT-mbD" id="fOG-82-anz"/>
                         <outlet property="qrcodeContentLabel" destination="FOK-LK-ThD" id="f5F-eX-lmk"/>
@@ -294,6 +319,7 @@
                         <outlet property="saveButton" destination="9hJ-zq-Afw" id="grt-U5-Jdp"/>
                         <outlet property="sendButton" destination="Hft-XM-7mq" id="tox-WQ-Ivj"/>
                         <outlet property="snapshotImageView" destination="Lks-aY-qYz" id="yyp-b9-zGn"/>
+                        <outlet property="switchCameraButton" destination="jHd-gi-a9Q" id="kSL-4U-uWZ"/>
                         <outlet property="takeButton" destination="B8L-Tp-H0W" id="ndP-jI-JWK"/>
                         <outlet property="timeLabel" destination="30s-ZG-fbq" id="TCh-vU-OIR"/>
                         <outlet property="timeView" destination="WmQ-ju-XH1" id="6v9-g3-p5w"/>
@@ -306,10 +332,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_camera_flash_off" width="44" height="44"/>
+        <image name="ic_camera_album" width="22" height="19"/>
+        <image name="ic_camera_flash_off" width="28" height="28"/>
         <image name="ic_camera_save" width="44" height="44"/>
         <image name="ic_camera_send" width="36" height="36"/>
-        <image name="ic_camera_swap" width="44" height="44"/>
+        <image name="ic_camera_switch" width="24" height="18"/>
         <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_notification_qrcode" width="18" height="18"/>
     </resources>

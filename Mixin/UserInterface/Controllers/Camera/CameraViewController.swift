@@ -20,7 +20,8 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var takeButton: RecordButton!
     @IBOutlet weak var saveButton: BouncingButton!
     @IBOutlet weak var backButton: BouncingButton!
-    @IBOutlet weak var cameraSwapButton: BouncingButton!
+    @IBOutlet weak var albumButton: UIButton!
+    @IBOutlet weak var switchCameraButton: BouncingButton!
     @IBOutlet weak var cameraFlashButton: BouncingButton!
     @IBOutlet weak var snapshotImageView: UIImageView!
     @IBOutlet weak var qrcodeContentLabel: UILabel!
@@ -147,11 +148,11 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         guard let deviceInput = self.videoDeviceInput else {
             return
         }
-        cameraSwapButton.isEnabled = false
+        switchCameraButton.isEnabled = false
         sessionQueue.async {
             defer {
                 DispatchQueue.main.async {
-                    self.cameraSwapButton.isEnabled = true
+                    self.switchCameraButton.isEnabled = true
                 }
             }
             let preferredPosition: AVCaptureDevice.Position
@@ -473,17 +474,20 @@ extension CameraViewController {
     }
 
     private func displaySnapshotView(show: Bool) {
-        cameraSwapButton.isHidden = show
+        switchCameraButton.isHidden = show
         cameraFlashButton.isHidden = show
         saveButton.isHidden = !show
+        albumButton.isHidden = show
         
+        let shutterAnimationStartFrame = takeButton.convert(takeButton.bounds, to: view)
+        let shutterAnimationEndFrame = sendButton.convert(sendButton.bounds, to: view)
         if show {
             takeButton.isHidden = true
             view.addSubview(shutterAnimationView)
-            shutterAnimationView.frame = takeButton.frame
+            shutterAnimationView.frame = shutterAnimationStartFrame
             shutterAnimationView.transformToSend()
             UIView.animate(withDuration: ShutterAnimationView.animationDuration, animations: {
-                self.shutterAnimationView.frame = self.sendButton.frame
+                self.shutterAnimationView.frame = shutterAnimationEndFrame
             }, completion: { (finished) in
                 self.sendButton.isHidden = false
                 self.shutterAnimationView.removeFromSuperview()
@@ -496,7 +500,7 @@ extension CameraViewController {
             shutterAnimationView.frame = sendButton.frame
             shutterAnimationView.transformToShutter()
             UIView.animate(withDuration: ShutterAnimationView.animationDuration, animations: {
-                self.shutterAnimationView.frame = self.takeButton.frame
+                self.shutterAnimationView.frame = shutterAnimationStartFrame
             }, completion: { (finished) in
                 self.takeButton.isHidden = false
                 self.shutterAnimationView.removeFromSuperview()
@@ -527,7 +531,7 @@ extension CameraViewController {
                 if self.flashOn {
                     deviceInput.device.torchMode = .on
                     DispatchQueue.main.async {
-                        self.cameraFlashButton.setImage(#imageLiteral(resourceName: "ic_camera_flash"), for: .normal)
+                        self.cameraFlashButton.setImage(#imageLiteral(resourceName: "ic_camera_flash_on"), for: .normal)
                     }
                 } else {
                     deviceInput.device.torchMode = .off

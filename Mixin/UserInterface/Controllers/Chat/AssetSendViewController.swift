@@ -171,61 +171,12 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     }
                 }
             }
-        } else if let image = photoImageView.image, let dataSource = dataSource {
-            var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: dataSource.conversationId, userId: AccountAPI.shared.accountUserId)
-            message.mediaStatus = MediaStatus.PENDING.rawValue
-
-            DispatchQueue.global().async { [weak self] in
-                if let assetUrl = self?.animateURL {
-                    guard FileManager.default.fileSize(assetUrl.path) > 0 else {
-                        DispatchQueue.main.async {
-                            self?.sendButton.isBusy = false
-                            self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
-                        }
-                        return
-                    }
-                    let fileExtension = assetUrl.pathExtension.lowercased()
-                    let filename = "\(message.messageId).\(fileExtension)"
-                    let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
-                    do {
-                        try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
-
-                        message.thumbImage = image.base64Thumbnail()
-                        message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                        message.mediaWidth = Int(image.size.width)
-                        message.mediaHeight = Int(image.size.height)
-                        message.mediaMimeType = FileManager.default.mimeType(ext: fileExtension)
-                        message.mediaUrl = filename
-                    } catch {
-                        DispatchQueue.main.async {
-                            self?.sendButton.isBusy = false
-                            self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
-                        }
-                        return
-                    }
-                } else {
-                    let filename = "\(message.messageId).\(ExtensionName.jpeg)"
-                    let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
-                    let targetPhoto = image.scaleForUpload()
-                    if targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
-                        message.thumbImage = targetPhoto.base64Thumbnail()
-                        message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                        message.mediaWidth = Int(targetPhoto.size.width)
-                        message.mediaHeight = Int(targetPhoto.size.height)
-                        message.mediaMimeType = "image/jpeg"
-                        message.mediaUrl = filename
-                    } else {
-                        DispatchQueue.main.async {
-                            self?.sendButton.isBusy = false
-                            self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
-                        }
-                        return
-                    }
-                }
-                SendMessageService.shared.sendMessage(message: message, ownerUser: dataSource.ownerUser, isGroupMessage: dataSource.category == .group)
-                DispatchQueue.main.async {
-                    self?.navigationController?.popViewController(animated: true)
-                }
+        } else if let image = photoImageView.image {
+            if let dataSource = dataSource {
+                send(image: image, to: dataSource)
+            } else {
+                let vc = MessageReceiverViewController.instance(content: .photo(image))
+                navigationController?.pushViewController(vc, animated: true)
             }
         }
     }
@@ -242,7 +193,65 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         vc.dataSource = dataSource
         return vc
     }
-
+    
+    private func send(image: UIImage, to dataSource: ConversationDataSource) {
+        var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: dataSource.conversationId, userId: AccountAPI.shared.accountUserId)
+        message.mediaStatus = MediaStatus.PENDING.rawValue
+        
+        DispatchQueue.global().async { [weak self] in
+            if let assetUrl = self?.animateURL {
+                guard FileManager.default.fileSize(assetUrl.path) > 0 else {
+                    DispatchQueue.main.async {
+                        self?.sendButton.isBusy = false
+                        self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
+                    }
+                    return
+                }
+                let fileExtension = assetUrl.pathExtension.lowercased()
+                let filename = "\(message.messageId).\(fileExtension)"
+                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                do {
+                    try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
+                    
+                    message.thumbImage = image.base64Thumbnail()
+                    message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+                    message.mediaWidth = Int(image.size.width)
+                    message.mediaHeight = Int(image.size.height)
+                    message.mediaMimeType = FileManager.default.mimeType(ext: fileExtension)
+                    message.mediaUrl = filename
+                } catch {
+                    DispatchQueue.main.async {
+                        self?.sendButton.isBusy = false
+                        self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
+                    }
+                    return
+                }
+            } else {
+                let filename = "\(message.messageId).\(ExtensionName.jpeg)"
+                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetPhoto = image.scaleForUpload()
+                if targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
+                    message.thumbImage = targetPhoto.base64Thumbnail()
+                    message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+                    message.mediaWidth = Int(targetPhoto.size.width)
+                    message.mediaHeight = Int(targetPhoto.size.height)
+                    message.mediaMimeType = "image/jpeg"
+                    message.mediaUrl = filename
+                } else {
+                    DispatchQueue.main.async {
+                        self?.sendButton.isBusy = false
+                        self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
+                    }
+                    return
+                }
+            }
+            SendMessageService.shared.sendMessage(message: message, ownerUser: dataSource.ownerUser, isGroupMessage: dataSource.category == .group)
+            DispatchQueue.main.async {
+                self?.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+    
 }
 
 extension AssetSendViewController {

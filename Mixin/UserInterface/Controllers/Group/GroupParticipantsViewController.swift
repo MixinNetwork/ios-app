@@ -4,10 +4,13 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     
     private var myRole = ""
     private var conversation: ConversationItem!
-    private var makingAdminUserIds = Set<String>()
-    private var makingAdminCells = [String: GroupParticipantCell]() // Key is user id
     
     private lazy var userWindow = UserWindow.instance()
+    private lazy var responseHandler: (APIResult<ConversationResponse>) -> Void = { result in
+        if case let .failure(error) = result {
+            showHud(style: .error, text: error.localizedDescription)
+        }
+    }
     
     private var hasAdminPrivileges: Bool {
         return myRole == ParticipantRole.ADMIN.rawValue
@@ -49,17 +52,12 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
         queue.addOperation(op)
     }
     
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let userId = user(at: indexPath).userId
-        if makingAdminUserIds.contains(userId), let cell = cell as? GroupParticipantCell {
-            makingAdminCells[userId] = cell
-            cell.startLoading()
-        }
-    }
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchBoxView.textField.resignFirstResponder()
         tableView.deselectRow(at: indexPath, animated: true)
+        guard let cell = tableView.cellForRow(at: indexPath) as? GroupParticipantCell, !cell.activityIndicator.isAnimating else {
+            return
+        }
         let user = self.user(at: indexPath)
         guard user.userId != AccountAPI.shared.accountUserId else {
             return
@@ -189,37 +187,17 @@ extension GroupParticipantsViewController {
     }
     
     private func makeAdmin(userId: String) {
-        makingAdminUserIds.insert(userId)
-        if let cell = cell(for: userId) {
-            cell.startLoading()
-            makingAdminCells[userId] = cell
-        }
-        ConversationAPI.shared.adminParticipant(conversationId: conversation.conversationId, userId: userId) { [weak self] (result) in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
-            }
-            if let weakSelf = self {
-                weakSelf.makingAdminUserIds.remove(userId)
-                if let cell = weakSelf.makingAdminCells[userId] {
-                    cell.stopLoading()
-                }
-            }
-        }
+        cell(for: userId)?.startLoading()
+        ConversationAPI.shared.adminParticipant(conversationId: conversation.conversationId,
+                                                userId: userId,
+                                                completion: responseHandler)
     }
     
     private func remove(userId: String) {
         cell(for: userId)?.startLoading()
-        ConversationAPI.shared.removeParticipant(conversationId: conversation.conversationId, userId: userId) { (result) in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
-            }
-        }
+        ConversationAPI.shared.removeParticipant(conversationId: conversation.conversationId,
+                                                 userId: userId,
+                                                 completion: responseHandler)
     }
     
     private func cell(for userId: String) -> GroupParticipantCell? {

@@ -98,12 +98,7 @@ class ReceiveMessageService: MixinService {
                         ReceiveMessageService.shared.processBadMessage(data: data)
                         continue
                     }
-                    if data.isSessionMessage {
-                        if !AccountUserDefault.shared.isDesktopLoggedIn && !data.category.hasPrefix("SYSTEM_") {
-                            ReceiveMessageService.shared.processBadMessage(data: data)
-                            continue
-                        }
-                    } else if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
+                    if MessageDAO.shared.isExist(messageId: data.messageId) || MessageHistoryDAO.shared.isExist(messageId: data.messageId) {
                         ReceiveMessageService.shared.processBadMessage(data: data)
                         continue
                     }

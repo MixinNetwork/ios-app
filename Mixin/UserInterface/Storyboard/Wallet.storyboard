@@ -1347,7 +1347,7 @@
                                                                     <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="uZy-dO-hDL">
                                                                         <rect key="frame" x="42" y="0.0" width="308" height="32"/>
                                                                         <subviews>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWj-mt-cR6">
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Ether" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWj-mt-cR6">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="308" height="16.666666666666668"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -1579,12 +1579,12 @@
                         <outlet property="continueWrapperView" destination="DnA-iJ-ZZt" id="Afl-Hl-smf"/>
                         <outlet property="memoTextField" destination="Teg-Ls-XtU" id="O1M-H0-eEw"/>
                         <outlet property="memoView" destination="BeX-wN-FHz" id="R0V-mX-FJM"/>
+                        <outlet property="nameLabel" destination="hWj-mt-cR6" id="Vzg-t0-jak"/>
                         <outlet property="opponentImageView" destination="0iq-4M-Kbs" id="m2F-PU-LyB"/>
                         <outlet property="opponentImageViewWidthConstraint" destination="U0O-MM-GZ9" id="g8e-Tj-gdR"/>
                         <outlet property="scrollView" destination="jqX-Er-b77" id="Wj3-1z-xd6"/>
                         <outlet property="switchAmountButton" destination="qOt-U1-LPb" id="xSj-LY-LaI"/>
                         <outlet property="switchAssetButton" destination="qRn-bb-fSw" id="jJQ-Yc-Sqd"/>
-                        <outlet property="symbolLabel" destination="hWj-mt-cR6" id="Vzg-t0-jak"/>
                         <outlet property="symbolLeadingConstraint" destination="HlX-lu-rbz" id="3Ne-5X-5uv"/>
                         <outlet property="transactionFeeHintLabel" destination="t5g-rG-wY1" id="oHV-RU-qRT"/>
                     </connections>

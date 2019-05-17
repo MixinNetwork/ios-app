@@ -1328,7 +1328,7 @@
                                             <outlet property="assetIconView" destination="T2q-eb-yMQ" id="kSt-Xq-6H7"/>
                                             <outlet property="balanceLabel" destination="bas-6r-4iW" id="Xdx-fk-F3b"/>
                                             <outlet property="checkmarkView" destination="8jx-Wh-TTi" id="Y0i-oF-dfi"/>
-                                            <outlet property="symbolLabel" destination="rOl-aX-ddQ" id="8Pb-JX-3vh"/>
+                                            <outlet property="nameLabel" destination="rOl-aX-ddQ" id="8Pb-JX-3vh"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

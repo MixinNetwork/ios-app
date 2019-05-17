@@ -82,6 +82,7 @@ class TransferTypeViewController: UIViewController {
         lastKeyword = keyword
         searchResults = assets.filter({ (asset) -> Bool in
             asset.symbol.lowercased().contains(keyword)
+                || asset.name.lowercased().contains(keyword)
         })
         tableView.reloadData()
     }

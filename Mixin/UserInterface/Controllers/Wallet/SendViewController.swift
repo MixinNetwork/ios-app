@@ -10,7 +10,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var opponentImageView: AvatarImageView!
     @IBOutlet weak var assetIconView: AssetIconView!
-    @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var amountTextField: UITextField!
     @IBOutlet weak var amountExchangeLabel: UILabel!
@@ -221,10 +221,10 @@ class SendViewController: KeyboardBasedLayoutViewController {
         }
 
         switchAmountButton.isHidden = asset.priceBtc.doubleValue <= 0
-        symbolLabel.text = asset.name
+        nameLabel.text = asset.name
         let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
             ?? asset.localizedBalance
-        balanceLabel.text = balance + " " + Localized.TRANSFER_BALANCE
+        balanceLabel.text = balance + " " + asset.symbol
         assetIconView.setIcon(asset: asset)
         
         if let address = self.targetAddress {

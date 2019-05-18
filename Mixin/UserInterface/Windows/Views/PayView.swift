@@ -288,8 +288,12 @@ extension PayView: PinFieldDelegate {
             switch result {
             case let .success(snapshot):
                 if weakSelf.isWithdrawal {
-                    if let addressId = weakSelf.address?.addressId {
-                        WalletUserDefault.shared.lastWithdrawalAddress[assetId] = addressId
+                    if let address = weakSelf.address {
+                        WalletUserDefault.shared.lastWithdrawalAddress[assetId] = address.addressId
+                        if weakSelf.addressRequest != nil {
+                            AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
+                            weakSelf.tipAddAddress(asset: weakSelf.asset, address: address)
+                        }
                     }
                     ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                 } else {
@@ -303,9 +307,6 @@ extension PayView: PinFieldDelegate {
                 weakSelf.paySuccessImageView.isHidden = false
                 weakSelf.playSuccessSound()
                 weakSelf.delayDismissWindow()
-                if let address = weakSelf.addressRequest {
-                    weakSelf.tipAddAddress(address: address)
-                }
             case let .failure(error):
                 weakSelf.failedHandler(error: error)
             }
@@ -367,7 +368,6 @@ extension PayView: PinFieldDelegate {
                     switch result {
                     case let .success(address):
                         weakSelf.address = address
-                        AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
                         checkPayments(address)
                     case let .failure(error):
                         weakSelf.failedHandler(error: error)
@@ -387,6 +387,9 @@ extension PayView: PinFieldDelegate {
             weakSelf.superView?.dismissPopupControllerAnimated()
             
             guard !((weakSelf.superView as? UrlWindow)?.fromWeb ?? false) else {
+                return
+            }
+            guard !weakSelf.fromWebWithdrawal else {
                 return
             }
             guard let navigation = UIApplication.rootNavigationController() else {
@@ -426,11 +429,13 @@ extension PayView: PinFieldDelegate {
         AudioServicesPlaySystemSound(soundId)
     }
 
-    private func tipAddAddress(address: AddressRequest) {
-        if asset.isAccount {
-            UIApplication.currentActivity()?.alert(Localized.ADDRESS_AUTO_ADD_ACCOUNT(accountName: address.accountName ?? "", accountTag: address.accountTag ?? "", symbol: asset.symbol))
-        } else {
-            UIApplication.currentActivity()?.alert(Localized.ADDRESS_AUTO_ADD(label: address.label ?? "", publicKey: address.publicKey ?? "", symbol: asset.symbol))
+    private func tipAddAddress(asset: AssetItem, address: Address) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            if asset.isAccount {
+                UIApplication.currentActivity()?.alert(Localized.ADDRESS_AUTO_ADD_ACCOUNT(accountName: address.accountName ?? "", accountTag: address.accountTag ?? "", symbol: asset.symbol), actionTitle: R.string.localizable.dialog_button_got_it())
+            } else {
+                UIApplication.currentActivity()?.alert(Localized.ADDRESS_AUTO_ADD(label: address.label ?? "", publicKey: address.publicKey ?? "", symbol: asset.symbol), actionTitle: R.string.localizable.dialog_button_got_it())
+            }
         }
     }
 }

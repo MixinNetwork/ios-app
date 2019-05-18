@@ -39,6 +39,8 @@ class UrlWindow: BottomSheetView {
             return checkCodesUrl(code, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case .pay:
             return checkPayUrl(url: url, fromWeb: fromWeb)
+        case .withdrawal:
+            return checkWithdrawal(url: url, fromWeb: fromWeb)
         case let .users(id):
             return checkUsersUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case let .transfer(id):
@@ -297,6 +299,63 @@ extension UrlWindow {
 
 extension UrlWindow {
 
+    func presentPopupControllerAnimated(query: Dictionary<String, String>, assetId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
+        self.fromWeb = fromWeb
+        presentPopupControllerAnimated()
+
+        DispatchQueue.global().async { [weak self] in
+            guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
+                DispatchQueue.main.async {
+                    self?.failedHandler(R.string.localizable.address_asset_not_found())
+                }
+                return
+            }
+
+            var addressRequest: AddressRequest?
+            var address: Address?
+
+            if asset.isAccount {
+                guard let accountName = query["account_name"], let accountTag = query["account_tag"], !accountName.isEmpty, !accountTag.isEmpty else {
+                    return
+                }
+                addressRequest = AddressRequest(assetId: assetId, publicKey: nil, label: nil, pin: "", accountName: accountName, accountTag: accountTag)
+                address = AddressDAO.shared.getAddress(assetId: asset.assetId, accountName: accountName, accountTag: accountTag)
+            } else {
+                guard let publicKey = query["public_key"], var label = query["label"], !publicKey.isEmpty, !label.isEmpty else {
+                    return
+                }
+                if let urlDecodeLabel = label.removingPercentEncoding {
+                    label = urlDecodeLabel
+                }
+                addressRequest = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: nil, accountTag: nil)
+                address = AddressDAO.shared.getAddress(assetId: asset.assetId, publicKey: publicKey)
+            }
+
+            DispatchQueue.main.async {
+                guard let weakSelf = self, weakSelf.isShowing else {
+                    return
+                }
+
+                if PayWindow.shared.isShowing {
+                    PayWindow.shared.removeFromSuperview()
+                }
+
+                weakSelf.interceptDismiss = true
+
+                weakSelf.containerView.addSubview(weakSelf.payView)
+                weakSelf.payView.snp.makeConstraints({ (make) in
+                    make.edges.equalToSuperview()
+                })
+                if let address = address {
+                    weakSelf.payView.render(asset: asset, address: address, amount: amount, memo: memo, trackId: traceId, fromWebWithdrawal: true, superView: weakSelf)
+                } else if let addressRequest = addressRequest {
+                    weakSelf.payView.render(asset: asset, addressRequest: addressRequest, amount: amount, memo: memo, trackId: traceId, fromWebWithdrawal: true, superView: weakSelf)
+                }
+                weakSelf.successHandler()
+            }
+        }
+    }
+
     func presentPopupControllerAnimated(assetId: String, opponentId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
@@ -349,6 +408,30 @@ extension UrlWindow {
             memo = urlDecodeMemo
         }
         UrlWindow.instance().presentPopupControllerAnimated(assetId: assetId, opponentId: recipientId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
+
+        return true
+    }
+
+    class func checkWithdrawal(url: URL, fromWeb: Bool = false) -> Bool {
+        guard AccountAPI.shared.account?.has_pin ?? false else {
+            UIApplication.rootNavigationController()?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            return true
+        }
+        guard let query = url.getKeyVals() else {
+            return false
+        }
+        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"] else {
+            return false
+        }
+        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !amount.isEmpty else {
+            return false
+        }
+        var memo = query["memo"]
+        if let urlDecodeMemo = memo?.removingPercentEncoding {
+            memo = urlDecodeMemo
+        }
+
+        UrlWindow.instance().presentPopupControllerAnimated(query: query, assetId: assetId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
 
         return true
     }

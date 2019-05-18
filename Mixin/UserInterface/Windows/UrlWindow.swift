@@ -299,24 +299,35 @@ extension UrlWindow {
 
 extension UrlWindow {
 
-    func presentPopupControllerAnimated(addressRequest: AddressRequest, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
+    func presentPopupControllerAnimated(query: Dictionary<String, String>, assetId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
 
         DispatchQueue.global().async { [weak self] in
-            guard let asset = AssetDAO.shared.getAsset(assetId: addressRequest.assetId) else {
+            guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
                 DispatchQueue.main.async {
                     self?.failedHandler(R.string.localizable.address_asset_not_found())
                 }
                 return
             }
 
+            var addressRequest: AddressRequest?
             var address: Address?
+
             if asset.isAccount {
-                if let accountTag = addressRequest.accountTag, let accountName = addressRequest.accountName {
-                    address = AddressDAO.shared.getAddress(assetId: asset.assetId, accountTag: accountTag, accountName: accountName)
+                guard let accountName = query["account_name"], let accountTag = query["account_tag"], !accountName.isEmpty, !accountTag.isEmpty else {
+                    return
                 }
-            } else if let publicKey = addressRequest.publicKey {
+                addressRequest = AddressRequest(assetId: assetId, publicKey: nil, label: nil, pin: "", accountName: accountName, accountTag: accountTag)
+                address = AddressDAO.shared.getAddress(assetId: asset.assetId, accountName: accountName, accountTag: accountTag)
+            } else {
+                guard let publicKey = query["public_key"], var label = query["label"], !publicKey.isEmpty, !label.isEmpty else {
+                    return
+                }
+                if let urlDecodeLabel = label.removingPercentEncoding {
+                    label = urlDecodeLabel
+                }
+                addressRequest = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: nil, accountTag: nil)
                 address = AddressDAO.shared.getAddress(assetId: asset.assetId, publicKey: publicKey)
             }
 
@@ -337,7 +348,7 @@ extension UrlWindow {
                 })
                 if let address = address {
                     weakSelf.payView.render(asset: asset, address: address, amount: amount, memo: memo, trackId: traceId, fromWebWithdrawal: true, superView: weakSelf)
-                } else {
+                } else if let addressRequest = addressRequest {
                     weakSelf.payView.render(asset: asset, addressRequest: addressRequest, amount: amount, memo: memo, trackId: traceId, fromWebWithdrawal: true, superView: weakSelf)
                 }
                 weakSelf.successHandler()
@@ -420,20 +431,7 @@ extension UrlWindow {
             memo = urlDecodeMemo
         }
 
-        var request: AddressRequest!
-        
-        if let publicKey = query["public_key"], var label = query["label"], !publicKey.isEmpty, !label.isEmpty {
-            if let urlDecodeLabel = label.removingPercentEncoding {
-                label = urlDecodeLabel
-            }
-            request = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: nil, accountTag: nil)
-        } else if let accountName = query["account_name"], let accountTag = query["account_tag"], !accountName.isEmpty, !accountTag.isEmpty {
-            request = AddressRequest(assetId: assetId, publicKey: nil, label: nil, pin: "", accountName: accountName, accountTag: accountTag)
-        } else {
-            return false
-        }
-
-        UrlWindow.instance().presentPopupControllerAnimated(addressRequest: request, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
+        UrlWindow.instance().presentPopupControllerAnimated(query: query, assetId: assetId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
 
         return true
     }

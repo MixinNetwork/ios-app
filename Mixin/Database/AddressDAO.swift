@@ -13,7 +13,7 @@ final class AddressDAO {
         return MixinDatabase.shared.getCodable(condition: Address.Properties.assetId == assetId && Address.Properties.publicKey == publicKey, inTransaction: false)
     }
 
-    func getAddress(assetId: String, accountTag: String, accountName: String) -> Address? {
+    func getAddress(assetId: String, accountName: String, accountTag: String) -> Address? {
         return MixinDatabase.shared.getCodable(condition: Address.Properties.assetId == assetId && Address.Properties.accountTag == accountTag && Address.Properties.accountName == accountName, inTransaction: false)
     }
 

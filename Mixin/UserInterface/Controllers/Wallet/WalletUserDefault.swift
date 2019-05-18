@@ -16,9 +16,6 @@ class WalletUserDefault {
     private var keyHiddenAssets: String {
         return "hidden_assets_\(AccountAPI.shared.accountIdentityNumber)"
     }
-    private var keyWithdrawalAddresses: String {
-        return "withdrawal_addresses_\(AccountAPI.shared.accountIdentityNumber)"
-    }
     private var keyIsBiometricPay: String {
         return "is_biometric_pay_\(AccountAPI.shared.accountIdentityNumber)"
     }
@@ -97,16 +94,6 @@ class WalletUserDefault {
         set {
             session.set(newValue, forKey: keyHiddenAssets)
             NotificationCenter.default.postOnMain(name: .HiddenAssetsDidChange)
-        }
-    }
-
-    var lastWithdrawalAddress: [String: String] {
-        get {
-            return session.dictionary(forKey: keyWithdrawalAddresses) as? [String: String] ?? [:]
-        }
-        set {
-            session.set(newValue, forKey: keyWithdrawalAddresses)
-            NotificationCenter.default.afterPostOnMain(name: .DefaultAddressDidChange)
         }
     }
 

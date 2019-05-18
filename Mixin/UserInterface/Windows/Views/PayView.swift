@@ -289,7 +289,6 @@ extension PayView: PinFieldDelegate {
             case let .success(snapshot):
                 if weakSelf.isWithdrawal {
                     if let address = weakSelf.address {
-                        WalletUserDefault.shared.lastWithdrawalAddress[assetId] = address.addressId
                         if weakSelf.addressRequest != nil {
                             AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
                             weakSelf.tipAddAddress(asset: weakSelf.asset, address: address)

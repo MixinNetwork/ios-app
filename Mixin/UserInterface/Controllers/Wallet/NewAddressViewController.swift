@@ -119,9 +119,6 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             case let .success(address):
                 AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
                 if let weakSelf = self {
-                    if weakSelf.address == nil {
-                        WalletUserDefault.shared.lastWithdrawalAddress[assetId] = address.addressId
-                    }
                     weakSelf.successCallback?(address)
                     showHud(style: .notification, text: Localized.TOAST_SAVED)
                     weakSelf.navigationController?.popViewController(animated: true)

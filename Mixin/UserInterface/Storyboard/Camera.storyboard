@@ -228,61 +228,16 @@
                                     <constraint firstItem="2X6-GY-egt" firstAttribute="centerY" secondItem="WNM-S5-JoA" secondAttribute="centerY" constant="-30" id="xuv-EY-AKt"/>
                                 </constraints>
                             </view>
-                            <visualEffectView hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ene-l2-qnH">
-                                <rect key="frame" x="12" y="-66" width="351" height="64"/>
-                                <view key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="2OZ-eV-Kbr">
-                                    <rect key="frame" x="0.0" y="0.0" width="351" height="64"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_notification_qrcode" translatesAutoresizingMaskIntoConstraints="NO" id="WcN-1e-q3G">
-                                            <rect key="frame" x="8" y="8" width="18" height="18"/>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TEXT QR CODE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1O2-fn-vXH">
-                                            <rect key="frame" x="34" y="9.5" width="88.5" height="14.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="camera_qrcode_title"/>
-                                            </userDefinedRuntimeAttributes>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search Web in Safari" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FOK-LK-ThD">
-                                            <rect key="frame" x="10" y="34" width="331" height="18"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="FOK-LK-ThD" firstAttribute="leading" secondItem="2OZ-eV-Kbr" secondAttribute="leading" constant="10" id="0vD-0S-IlM"/>
-                                        <constraint firstItem="WcN-1e-q3G" firstAttribute="leading" secondItem="2OZ-eV-Kbr" secondAttribute="leading" constant="8" id="4t3-cr-gKg"/>
-                                        <constraint firstItem="1O2-fn-vXH" firstAttribute="leading" secondItem="WcN-1e-q3G" secondAttribute="trailing" constant="8" id="7XG-m1-T7a"/>
-                                        <constraint firstAttribute="trailing" secondItem="FOK-LK-ThD" secondAttribute="trailing" constant="10" id="P0T-Jc-fEr"/>
-                                        <constraint firstAttribute="bottom" secondItem="FOK-LK-ThD" secondAttribute="bottom" constant="12" id="dF5-l4-cJp"/>
-                                        <constraint firstItem="1O2-fn-vXH" firstAttribute="centerY" secondItem="WcN-1e-q3G" secondAttribute="centerY" id="m6N-VW-7W7"/>
-                                        <constraint firstItem="FOK-LK-ThD" firstAttribute="top" secondItem="WcN-1e-q3G" secondAttribute="bottom" constant="8" id="teZ-yV-nnY"/>
-                                        <constraint firstItem="WcN-1e-q3G" firstAttribute="top" secondItem="2OZ-eV-Kbr" secondAttribute="top" constant="8" id="vol-Os-cX7"/>
-                                    </constraints>
-                                </view>
-                                <blurEffect style="extraLight"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="LBJ-RT-mbD" firstAttribute="top" secondItem="pLM-9e-9z0" secondAttribute="top" id="0ZW-LT-9fS"/>
-                            <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="Ene-l2-qnH" secondAttribute="trailing" constant="12" id="2WF-8z-EBL"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="leading" secondItem="LBJ-RT-mbD" secondAttribute="leading" id="4PU-8s-ypb"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="5sm-8G-Krj" secondAttribute="trailing" id="7PC-Qa-UVF"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="Hft-XM-7mq" secondAttribute="trailing" id="FfG-Ec-0v7"/>
                             <constraint firstAttribute="top" secondItem="WNM-S5-JoA" secondAttribute="top" id="GGQ-QU-1EY"/>
                             <constraint firstAttribute="bottom" secondItem="WNM-S5-JoA" secondAttribute="bottom" id="Lt7-Ck-FwU"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="top" secondItem="LBJ-RT-mbD" secondAttribute="top" id="MEx-aV-YLO"/>
-                            <constraint firstItem="Ene-l2-qnH" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" constant="12" id="OLk-hz-DBM"/>
                             <constraint firstItem="5sm-8G-Krj" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="Ogw-Vy-yTn"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="WNM-S5-JoA" secondAttribute="trailing" id="SId-qr-ESJ"/>
                             <constraint firstItem="LBJ-RT-mbD" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="W89-ez-v1g"/>
@@ -290,7 +245,6 @@
                             <constraint firstItem="5sm-8G-Krj" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" id="aVK-Ir-3VC"/>
                             <constraint firstItem="WmQ-ju-XH1" firstAttribute="centerY" secondItem="5sm-8G-Krj" secondAttribute="centerY" id="adt-op-H7l"/>
                             <constraint firstItem="o5Y-dL-Imf" firstAttribute="centerY" secondItem="ADJ-U9-E6n" secondAttribute="centerY" id="bmo-jI-9FY"/>
-                            <constraint firstItem="Ene-l2-qnH" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" constant="-86" id="bqz-Ml-LT4"/>
                             <constraint firstItem="WmQ-ju-XH1" firstAttribute="centerX" secondItem="5sm-8G-Krj" secondAttribute="centerX" id="cDv-XC-X0w"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="bottom" secondItem="9hJ-zq-Afw" secondAttribute="bottom" id="caf-qy-Pe9"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="bottom" secondItem="LBJ-RT-mbD" secondAttribute="bottom" id="egT-Tv-W4L"/>
@@ -314,10 +268,7 @@
                         <outlet property="cameraFlashButton" destination="0l7-uH-Dsx" id="b8d-ae-gLD"/>
                         <outlet property="loadingView" destination="o5Y-dL-Imf" id="EUb-EZ-MAk"/>
                         <outlet property="previewView" destination="LBJ-RT-mbD" id="fOG-82-anz"/>
-                        <outlet property="qrcodeContentLabel" destination="FOK-LK-ThD" id="f5F-eX-lmk"/>
-                        <outlet property="qrcodeNotificationTopConstraint" destination="bqz-Ml-LT4" id="q7e-av-bV4"/>
                         <outlet property="qrcodeTipsView" destination="WNM-S5-JoA" id="Jtv-zA-4Cs"/>
-                        <outlet property="qrcodeView" destination="Ene-l2-qnH" id="Sjc-ny-tmn"/>
                         <outlet property="recordingRedDotView" destination="98N-CS-DAD" id="cxX-Ik-fTW"/>
                         <outlet property="saveButton" destination="9hJ-zq-Afw" id="grt-U5-Jdp"/>
                         <outlet property="sendButton" destination="Hft-XM-7mq" id="tox-WQ-Ivj"/>
@@ -341,6 +292,5 @@
         <image name="ic_camera_send" width="60" height="60"/>
         <image name="ic_camera_switch" width="24" height="18"/>
         <image name="ic_close_shadow" width="44" height="44"/>
-        <image name="ic_notification_qrcode" width="18" height="18"/>
     </resources>
 </document>

@@ -507,7 +507,7 @@ extension CameraViewController {
                 self.takeButton.isHidden = false
                 self.shutterAnimationView.removeFromSuperview()
             })
-            backButton.setImage(#imageLiteral(resourceName: "ic_close_shadow"), for: .normal)
+            backButton.setImage(R.image.ic_camera_close(), for: .normal)
         }
     }
     

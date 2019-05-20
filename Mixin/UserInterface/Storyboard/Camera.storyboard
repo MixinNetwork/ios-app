@@ -31,7 +31,7 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qa4-MC-Qq2" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
-                                        <state key="normal" image="ic_close_shadow"/>
+                                        <state key="normal" image="ic_camera_close"/>
                                         <connections>
                                             <action selector="backAction:" destination="7EY-8T-xnR" eventType="touchUpInside" id="AM9-ZR-wwm"/>
                                         </connections>
@@ -286,11 +286,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_camera_album" width="22" height="19"/>
+        <image name="ic_camera_album" width="26" height="23"/>
+        <image name="ic_camera_close" width="20" height="20"/>
         <image name="ic_camera_flash_off" width="28" height="28"/>
-        <image name="ic_camera_save" width="44" height="44"/>
+        <image name="ic_camera_save" width="60" height="60"/>
         <image name="ic_camera_send" width="60" height="60"/>
-        <image name="ic_camera_switch" width="24" height="18"/>
-        <image name="ic_close_shadow" width="44" height="44"/>
+        <image name="ic_camera_switch" width="28" height="22"/>
     </resources>
 </document>

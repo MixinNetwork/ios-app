@@ -205,7 +205,7 @@ extension MessageItem {
     }
 
     func canRecall() -> Bool {
-        guard userId == AccountAPI.shared.accountUserId else {
+        guard userId == AccountAPI.shared.accountUserId, status != MessageStatus.SENDING.rawValue else {
             return false
         }
         guard category.hasSuffix("_TEXT") ||

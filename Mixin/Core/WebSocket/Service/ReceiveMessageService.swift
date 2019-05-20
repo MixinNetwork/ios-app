@@ -1,5 +1,4 @@
 import Foundation
-import Bugsnag
 import UIKit
 import SDWebImage
 import UserNotifications
@@ -295,7 +294,7 @@ class ReceiveMessageService: MixinService {
             }
             refreshKeys()
         case let .failure(error):
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
     }
     

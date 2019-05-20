@@ -1,6 +1,5 @@
 import Foundation
 import WCDBSwift
-import Bugsnag
 
 class SignalDatabase: BaseDatabase {
 
@@ -34,7 +33,7 @@ class SignalDatabase: BaseDatabase {
                 DatabaseUserDefault.shared.signalDatabaseVersion = SignalDatabase.databaseVersion
             })
         } catch {
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
     }
 

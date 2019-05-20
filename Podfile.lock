@@ -3,7 +3,10 @@ PODS:
   - AlignedCollectionViewFlowLayout (1.1.2)
   - Base64 (1.1.2)
   - Bugsnag (5.19.1)
+  - Crashlytics (3.12.0):
+    - Fabric (~> 1.9.0)
   - DeviceGuru (5.1.2)
+  - Fabric (1.9.0)
   - Firebase/Analytics (5.20.1):
     - Firebase/Core
   - Firebase/Core (5.20.1):
@@ -135,7 +138,9 @@ DEPENDENCIES:
   - Alamofire
   - AlignedCollectionViewFlowLayout
   - Bugsnag
+  - Crashlytics
   - DeviceGuru
+  - Fabric
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/MLVision
@@ -161,7 +166,9 @@ SPEC REPOS:
     - AlignedCollectionViewFlowLayout
     - Base64
     - Bugsnag
+    - Crashlytics
     - DeviceGuru
+    - Fabric
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -221,7 +228,9 @@ SPEC CHECKSUMS:
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   Bugsnag: 96c6dff50bd5ca461603a7aaf22b8406c4fb32ca
+  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
   DeviceGuru: 65a794c0c5b4f600453bcfaf94c78fea66ba577e
+  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   Firebase: 2f5235e62f141cb86181c3af0dfe4509706351ac
   FirebaseAnalytics: fd72a26bf8dac84cefba2f0864366f718555a5b0
   FirebaseCore: f1a9a8be1aee4bf71a2fc0f4096df6788bdfda61
@@ -256,6 +265,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 08062bbee80cf9d49ec02d89370c614916edd04b
+PODFILE CHECKSUM: 468dcfbca42663e61c3268d47816f773b40cd282
 
 COCOAPODS: 1.6.1

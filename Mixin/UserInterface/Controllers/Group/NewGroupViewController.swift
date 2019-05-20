@@ -1,5 +1,4 @@
 import UIKit
-import Bugsnag
 
 class NewGroupViewController: KeyboardBasedLayoutViewController {
     
@@ -113,7 +112,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
                 try data.write(to: imageUrl)
             }
         } catch {
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
     }
     

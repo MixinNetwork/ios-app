@@ -1,5 +1,4 @@
 import Foundation
-import Bugsnag
 import Zip
 import ImageIO
 
@@ -283,7 +282,7 @@ extension FileManager {
                 #if DEBUG
                     print("======FileManagerExtension...writeLog...error:\(error)")
                 #endif
-                Bugsnag.notifyError(error)
+                UIApplication.traceError(error)
             }
         }
     }

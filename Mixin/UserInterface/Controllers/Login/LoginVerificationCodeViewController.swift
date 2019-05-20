@@ -1,5 +1,4 @@
 import UIKit
-import Bugsnag
 
 class LoginVerificationCodeViewController: VerificationCodeViewController {
     
@@ -51,7 +50,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                         }
                     }
                 } else {
-                    Bugsnag.notifyError(error)
+                    UIApplication.traceError(error)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.resendButton.isBusy = false
                 }
@@ -121,7 +120,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                             weakSelf.verificationCodeField.showError()
                             showHud(style: .error, text: Localized.TEXT_INVALID_VERIFICATION_CODE)
                         } else {
-                            Bugsnag.notifyError(error)
+                            UIApplication.traceError(error)
                             weakSelf.alert(error.localizedDescription)
                         }
                     }

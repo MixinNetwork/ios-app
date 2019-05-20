@@ -3,7 +3,6 @@ import Alamofire
 import Goutils
 import DeviceGuru
 import UIKit
-import Bugsnag
 import JWT
 
 fileprivate let jsonContentKey = "jsonArray"
@@ -114,7 +113,7 @@ class BaseAPI {
         do {
             return BaseAPI.sharedSessionManager.request(try MixinRequest(url: BaseAPI.rootURLString + url, method: method, parameters: parameters, encoding: encoding))
         } catch {
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
             return BaseAPI.sharedSessionManager.request(BaseAPI.rootURLString + url, method: method, parameters: parameters, encoding: encoding, headers: nil)
         }
     }

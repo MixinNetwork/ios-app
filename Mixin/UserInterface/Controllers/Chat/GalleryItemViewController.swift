@@ -4,7 +4,6 @@ import YYImage
 import SnapKit
 import FirebaseMLCommon
 import FirebaseMLVision
-import Bugsnag
 
 class GalleryItemViewController: UIViewController {
     
@@ -379,7 +378,7 @@ extension GalleryItemViewController {
             }
             weakSelf.qrcodeDetector.detect(in: VisionImage(image: image), completion: { (features, error) in
                 if let err = error {
-                    Bugsnag.notifyError(err)
+                    UIApplication.traceError(err)
                     return
                 }
                 guard let qrcodeText = features?.first?.url?.url, let qrcodeUrl = URL(string: qrcodeText) else {

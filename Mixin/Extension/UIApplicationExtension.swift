@@ -3,6 +3,7 @@ import Bugsnag
 import UserNotifications
 import Firebase
 import SafariServices
+import Crashlytics
 
 extension UIApplication {
 
@@ -45,6 +46,11 @@ extension UIApplication {
             Bugsnag.notify(NSException(name: NSExceptionName(rawValue: category), reason: action, userInfo: nil))
         }
         #endif
+    }
+
+    static func traceError(_ error: Error) {
+        Bugsnag.notifyError(error)
+        Crashlytics.sharedInstance().recordError(error)
     }
 
     static func getTrackUserInfo() -> [AnyHashable: Any] {

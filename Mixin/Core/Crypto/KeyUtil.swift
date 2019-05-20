@@ -2,7 +2,6 @@ import Foundation
 import Security
 import UIKit
 import Goutils
-import Bugsnag
 
 class KeyUtil {
 
@@ -60,7 +59,7 @@ class KeyUtil {
         var error: NSError?
         defer {
             if let err = error  {
-                Bugsnag.notifyError(err)
+                UIApplication.traceError(err)
             }
         }
         return GoutilsRsaDecrypt(pinToken, sessionId, pkString, &error)

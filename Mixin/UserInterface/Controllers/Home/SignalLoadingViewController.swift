@@ -1,5 +1,4 @@
 import UIKit
-import Bugsnag
 
 class SignalLoadingViewController: UIViewController {
     
@@ -41,7 +40,7 @@ class SignalLoadingViewController: UIViewController {
                         Thread.sleep(forTimeInterval: 2)
                     }
                     Thread.sleep(forTimeInterval: 2)
-                    Bugsnag.notifyError(error)
+                    UIApplication.traceError(error)
                 }
             } while true
         }

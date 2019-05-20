@@ -1,5 +1,4 @@
 import Foundation
-import Bugsnag
 import Zip
 
 class RestoreJob: BaseJob {
@@ -65,7 +64,7 @@ class RestoreJob: BaseJob {
             #if DEBUG
             print(error)
             #endif
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
     }
     

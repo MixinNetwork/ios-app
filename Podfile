@@ -27,5 +27,7 @@ target 'Mixin' do
   pod 'GoogleWebRTC'
   pod 'AlignedCollectionViewFlowLayout'
   pod 'R.swift'
+  pod 'Fabric'
+  pod 'Crashlytics'
 
 end

@@ -432,7 +432,7 @@ class SendMessageService: MixinService {
                 return true
             } catch {
                 checkNetworkAndWebSocket()
-                Bugsnag.notifyError(error)
+                UIApplication.traceError(error)
             }
         } while true
     }

@@ -1,5 +1,4 @@
 import WCDBSwift
-import Bugsnag
 
 class BaseDatabase {
 
@@ -46,7 +45,7 @@ class BaseDatabase {
                 break
             default:
                 FileManager.default.writeLog(log: "[WCDB][ERROR]\(error.description)", newSection: true)
-                Bugsnag.notifyError(error)
+                UIApplication.traceError(error)
             }
             #if DEBUG
             print("[WCDB][ERROR]\(error.description)")
@@ -163,7 +162,7 @@ class BaseDatabase {
         do {
             return try callback(database)
         } catch {
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
         return []
     }
@@ -396,7 +395,7 @@ fileprivate extension Database {
             userInfo["callStack"] = Thread.callStackSymbols.first ?? ""
             UIApplication.trackError("BaseDatabase", action: "track sql error", userInfo: userInfo)
         } else {
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
     }
 }

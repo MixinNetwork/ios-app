@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import SDWebImage
-import Bugsnag
 
 class RefreshGroupIconJob: AsynchronousJob {
 
@@ -40,7 +39,7 @@ class RefreshGroupIconJob: AsynchronousJob {
                 }
             }
         } catch {
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
 
         finishJob()

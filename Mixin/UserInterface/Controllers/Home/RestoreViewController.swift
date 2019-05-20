@@ -1,6 +1,5 @@
 import Foundation
 import UIKit
-import Bugsnag
 import WCDBSwift
 import Zip
 
@@ -72,7 +71,7 @@ class RestoreViewController: UIViewController {
                     self.skipButton.isHidden = false
                     self.progressLabel.isHidden = true
                 }
-                Bugsnag.notifyError(error)
+                UIApplication.traceError(error)
             }
         }
     }
@@ -159,7 +158,7 @@ class RestoreViewController: UIViewController {
                 #if DEBUG
                 print(error)
                 #endif
-                Bugsnag.notifyError(error)
+                UIApplication.traceError(error)
             }
             try? FileManager.default.removeItem(at: localZip)
             totalProgress += 0.35

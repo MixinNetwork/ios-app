@@ -1,6 +1,5 @@
 import Foundation
 import UIKit
-import Bugsnag
 
 class AttachmentDownloadJob: UploadOrDownloadJob {
 
@@ -115,7 +114,7 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     override func taskFinished() {
         if let error = stream.streamError {
             try? FileManager.default.removeItem(at: fileUrl)
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .CANCELED, conversationId: message.conversationId)
         } else {
             MessageDAO.shared.updateMediaMessage(messageId: messageId, mediaUrl: fileName, status: .DONE, conversationId: message.conversationId)

@@ -6,6 +6,7 @@ import SDWebImage
 import YYImage
 import GiphyCoreSDK
 import PushKit
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -33,6 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CommonUserDefault.shared.updateFirstLaunchDateIfNeeded()
         if let account = AccountAPI.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
+            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
+            Crashlytics.sharedInstance().setUserName(account.full_name)
         }
         CommonUserDefault.shared.checkUpdateOrInstallVersion()
         NetworkManager.shared.startListening()

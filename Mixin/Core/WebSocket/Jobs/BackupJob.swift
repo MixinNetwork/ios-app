@@ -1,5 +1,4 @@
 import Foundation
-import Bugsnag
 import Zip
 import WCDBSwift
 
@@ -77,7 +76,7 @@ class BackupJob: BaseJob {
             #if DEBUG
             print(error)
             #endif
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
         NotificationCenter.default.postOnMain(name: .BackupDidChange)
     }

@@ -1,6 +1,5 @@
 import Foundation
 import UIKit
-import Bugsnag
 
 class SignalProtocol {
 
@@ -108,7 +107,7 @@ class SignalProtocol {
         do {
             cipher = try groupCipher.encrypt(content.data(using: .utf8)!).message
         } catch {
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
         let data = encodeMessageData(data: ComposeMessageData(keyType: CiphertextMessage.MessageType.senderKey.rawValue, cipher: cipher, resendMessageId: resendMessageId))
         return data

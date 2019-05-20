@@ -87,7 +87,7 @@ class LoginMobileNumberViewController: MobileNumberViewController {
                         report.addMetadata(["phone": ctx.mobileNumber], toTabWithName: "Track")
                         report.addMetadata(["phoneCountryCode": ctx.callingCode], toTabWithName: "Track")
                     })
-                    Bugsnag.notifyError(error)
+                    UIApplication.traceError(error)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.continueButton.isBusy = false
                 }

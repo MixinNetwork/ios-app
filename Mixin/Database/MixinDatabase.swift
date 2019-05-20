@@ -1,5 +1,4 @@
 import WCDBSwift
-import Bugsnag
 
 class MixinDatabase: BaseDatabase {
 
@@ -55,7 +54,7 @@ class MixinDatabase: BaseDatabase {
             #if DEBUG
                 print("======MixinDatabase...configure...error:\(error)")
             #endif
-            Bugsnag.notifyError(error)
+            UIApplication.traceError(error)
         }
     }
 

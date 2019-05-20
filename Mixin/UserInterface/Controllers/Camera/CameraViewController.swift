@@ -36,7 +36,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private let metadataOutput = AVCaptureMetadataOutput()
     private let session = AVCaptureSession()
     private let captureVideoOutput = AVCaptureMovieFileOutput()
-    private let notificationController = NotificationController()
     
     private var capturePhotoOutput = AVCapturePhotoOutput()
     private var videoDeviceInput: AVCaptureDeviceInput!
@@ -45,7 +44,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     private var didTakePhoto = false
     private var photoCaptureProcessor: PhotoCaptureProcessor?
     private var cameraPosition = AVCaptureDevice.Position.unspecified
-    private lazy var shutterAnimationView = ShutterAnimationView()
     private var flashOn = false
     private var detectedQRCodes = Set<String>()
     private var detectText = ""
@@ -54,6 +52,8 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         return AVAudioSession.sharedInstance().recordPermission == .granted
     }
 
+    private lazy var notificationController = NotificationController(delegate: self)
+    private lazy var shutterAnimationView = ShutterAnimationView()
     private lazy var videoDeviceDiscoverySession: AVCaptureDevice.DiscoverySession = {
         if #available(iOS 10.2, *) {
             return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaType.video, position: .unspecified)
@@ -64,7 +64,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        notificationController.delegate = self
         previewView.session = session
         sessionQueue.async {
             self.configureSession()

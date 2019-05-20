@@ -6,12 +6,9 @@ protocol NotificationControllerDelegate: class {
 
 class NotificationController: NSObject {
     
-    @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var subtitleLabel: UILabel!
-    
     weak var delegate: NotificationControllerDelegate?
     
-    private var view: UIView!
+    private var view: NotificationView!
     private var isPresenting = false
     
     private var presentingViewFrameY: CGFloat {
@@ -21,6 +18,12 @@ class NotificationController: NSObject {
     override init() {
         super.init()
         view = R.nib.notificationView(owner: self)!
+    }
+    
+    init(delegate: NotificationControllerDelegate) {
+        super.init()
+        view = R.nib.notificationView(owner: self)!
+        self.delegate = delegate
     }
     
     deinit {
@@ -99,7 +102,7 @@ class NotificationController: NSObject {
         guard let window = AppDelegate.current.window else {
             return
         }
-        subtitleLabel.text = text
+        view.subtitleLabel.text = text
         if isPresenting {
             UIView.animateKeyframes(withDuration: 0.6, delay: 0, options: .beginFromCurrentState, animations: {
                 UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5, animations: {

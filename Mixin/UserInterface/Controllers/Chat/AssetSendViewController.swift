@@ -26,11 +26,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private var seekToZero = false
     private var qrCodeString: String?
     
-    private lazy var notificationController: NotificationController = {
-        let controller = NotificationController()
-        controller.delegate = self
-        return controller
-    }()
+    private lazy var notificationController = NotificationController(delegate: self)
     private lazy var qrcodeDetector = Vision.vision().barcodeDetector(options: VisionBarcodeDetectorOptions(formats: .qrCode))
     private lazy var videoSettings: [String: Any] = [
         AVVideoCodecKey: AVVideoCodecH264,

@@ -35,32 +35,20 @@ class NotificationController: NSObject {
         })
     }
     
-    func present(text: String) {
-        guard let window = AppDelegate.current.window else {
-            return
-        }
-        subtitleLabel.text = text
-        if isPresenting {
-            UIView.animateKeyframes(withDuration: 0.6, delay: 0, options: .beginFromCurrentState, animations: {
-                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5, animations: {
-                    self.view.frame.origin.y = self.presentingViewFrameY + 10
-                })
-                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
-                    self.view.frame.origin.y = self.presentingViewFrameY
-                })
-            }, completion: nil)
-        } else {
-            isPresenting = true
-            view.frame = CGRect(x: window.compatibleSafeAreaInsets.left,
-                                y: -view.frame.height,
-                                width: window.bounds.width - window.compatibleSafeAreaInsets.horizontal,
-                                height: view.frame.height)
-            window.addSubview(view)
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 5, options: [], animations: {
-                self.view.frame.origin.y = self.presentingViewFrameY
-            }) { (_) in
-                
+    func present(urlString: String) {
+        if let url = MixinURL(string: urlString) {
+            switch url {
+            case .codes, .pay, .users, .transfer, .withdrawal, .address:
+                present(text: Localized.CAMERA_QRCODE_CODES)
+            case .send:
+                present(text: urlString)
+            case let .device(uuid, publicKey):
+                LoginConfirmWindow.instance(uuid: uuid, publicKey: publicKey).presentView()
+            case .unknown:
+                present(text: urlString)
             }
+        } else {
+            present(text: urlString)
         }
     }
     
@@ -104,6 +92,35 @@ class NotificationController: NSObject {
             }
         default:
             break
+        }
+    }
+    
+    private func present(text: String) {
+        guard let window = AppDelegate.current.window else {
+            return
+        }
+        subtitleLabel.text = text
+        if isPresenting {
+            UIView.animateKeyframes(withDuration: 0.6, delay: 0, options: .beginFromCurrentState, animations: {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5, animations: {
+                    self.view.frame.origin.y = self.presentingViewFrameY + 10
+                })
+                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
+                    self.view.frame.origin.y = self.presentingViewFrameY
+                })
+            }, completion: nil)
+        } else {
+            isPresenting = true
+            view.frame = CGRect(x: window.compatibleSafeAreaInsets.left,
+                                y: -view.frame.height,
+                                width: window.bounds.width - window.compatibleSafeAreaInsets.horizontal,
+                                height: view.frame.height)
+            window.addSubview(view)
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 5, options: [], animations: {
+                self.view.frame.origin.y = self.presentingViewFrameY
+            }) { (_) in
+                
+            }
         }
     }
     

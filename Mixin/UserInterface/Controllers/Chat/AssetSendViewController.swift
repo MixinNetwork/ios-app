@@ -2,6 +2,7 @@ import UIKit
 import WebKit
 import Photos
 import YYImage
+import FirebaseMLVision
 
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
@@ -10,7 +11,9 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var sendButton: StateResponsiveButton!
     @IBOutlet weak var dismissButton: BouncingButton!
-
+    
+    var detectsQrCode = false
+    
     private weak var dataSource: ConversationDataSource?
 
     private let rateKey = "rate"
@@ -21,7 +24,14 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private var videoAsset: AVAsset?
     private var isObservingRate = false
     private var seekToZero = false
-
+    private var qrCodeString: String?
+    
+    private lazy var notificationController: NotificationController = {
+        let controller = NotificationController()
+        controller.delegate = self
+        return controller
+    }()
+    private lazy var qrcodeDetector = Vision.vision().barcodeDetector(options: VisionBarcodeDetectorOptions(formats: .qrCode))
     private lazy var videoSettings: [String: Any] = [
         AVVideoCodecKey: AVVideoCodecH264,
         AVVideoWidthKey: 1280,
@@ -46,6 +56,11 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         super.viewDidLoad()
         if let image = self.image {
             photoImageView.image = image
+            if detectsQrCode {
+                DispatchQueue.global().async { [weak self] in
+                    self?.detectQrCode(image: image)
+                }
+            }
         } else if let asset = self.videoAsset {
             DispatchQueue.global().async { [weak self] in
                 let thumbnail = UIImage(withFirstFrameOfVideoAtAsset: asset)
@@ -73,7 +88,12 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                             do {
                                 try data?.write(to: tempUrl)
                                 self?.animateURL = tempUrl
-                                self?.photoImageView.sd_setImage(with: tempUrl)
+                                self?.photoImageView.sd_setImage(with: tempUrl, completed: { (image, _, _, _) in
+                                    guard let image = image, let weakSelf = self, weakSelf.detectsQrCode else {
+                                        return
+                                    }
+                                    weakSelf.detectQrCode(image: image)
+                                })
                             } catch {
                                 self?.requestAssetImage(asset: asset)
                             }
@@ -85,18 +105,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             }
         }
     }
-
-    private func requestAssetImage(asset: PHAsset) {
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.version = .current
-        requestOptions.isSynchronous = true
-        requestOptions.deliveryMode = .highQualityFormat
-        requestOptions.isNetworkAccessAllowed = true
-        PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self](image, _) in
-            self?.photoImageView.image = image
-        })
-    }
-
+    
     @IBAction func playAction(_ sender: Any) {
         if seekToZero {
             seekToZero = false
@@ -104,7 +113,43 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         }
         videoView.play()
     }
-
+    
+    private func requestAssetImage(asset: PHAsset) {
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.version = .current
+        requestOptions.isSynchronous = true
+        requestOptions.deliveryMode = .highQualityFormat
+        requestOptions.isNetworkAccessAllowed = true
+        PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self] (image, _) in
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.photoImageView.image = image
+            if let image = image, weakSelf.detectsQrCode {
+                DispatchQueue.global().async {
+                    self?.detectQrCode(image: image)
+                }
+            }
+        })
+    }
+    
+    private func detectQrCode(image: UIImage) {
+        let image = VisionImage(image: image)
+        qrcodeDetector.detect(in: image) { [weak self] (features, error) in
+            guard let weakSelf = self else {
+                return
+            }
+            guard error == nil else {
+                return
+            }
+            guard let string = features?.first?.rawValue else {
+                return
+            }
+            weakSelf.qrCodeString = string
+            weakSelf.notificationController.present(urlString: string)
+        }
+    }
+    
     private func loadAsset(asset: AVAsset, thumbnail: UIImage?) {
         self.sendButton.activityIndicator.tintColor = .white
         self.videoAsset = asset
@@ -185,7 +230,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         navigationController?.popViewController(animated: true)
     }
 
-    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> UIViewController {
+    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> AssetSendViewController {
        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "send_asset") as! AssetSendViewController
         vc.image = image
         vc.asset = asset
@@ -263,4 +308,17 @@ extension AssetSendViewController {
     @objc func playerItemDidReachEnd(_ notification: Notification) {
         seekToZero = true
     }
+}
+
+extension AssetSendViewController: NotificationControllerDelegate {
+    
+    func notificationControllerDidSelectNotification(_ controller: NotificationController) {
+        guard let string = qrCodeString, let url = URL(string: string) else {
+            return
+        }
+        if !UrlWindow.checkUrl(url: url) {
+            RecognizeWindow.instance().presentWindow(text: string)
+        }
+    }
+    
 }

@@ -573,21 +573,7 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
         }
 
         detectText = urlString
-
-        if let mixinURL = MixinURL(string: urlString) {
-            switch mixinURL {
-            case .codes, .pay, .users, .transfer, .withdrawal, .address:
-                notificationController.present(text: Localized.CAMERA_QRCODE_CODES)
-            case .send:
-                notificationController.present(text: urlString)
-            case let .device(uuid, publicKey):
-                LoginConfirmWindow.instance(uuid: uuid, publicKey: publicKey).presentView()
-            case .unknown:
-                notificationController.present(text: urlString)
-            }
-        } else {
-            notificationController.present(text: urlString)
-        }
+        notificationController.present(urlString: urlString)
     }
     
 }
@@ -596,6 +582,7 @@ extension CameraViewController: PhotoAssetPickerDelegate {
     
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
         let vc = AssetSendViewController.instance(asset: asset, dataSource: nil)
+        vc.detectsQrCode = true
         navigationController?.pushViewController(vc, animated: true)
     }
     

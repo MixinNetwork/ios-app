@@ -147,10 +147,16 @@ extension RecentAppsViewController: UICollectionViewDataSource {
 extension RecentAppsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let parent = parent as? SearchViewController else {
+            return
+        }
         let user = users[indexPath.row]
         let vc = ConversationViewController.instance(ownerUser: user)
-        (parent as? SearchViewController)?.searchTextField.resignFirstResponder()
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+        parent.searchTextField.resignFirstResponder()
+        parent.homeNavigationController?.pushViewController(vc, animated: true)
+        vc.transitionCoordinator?.animate(alongsideTransition: nil, completion: { (_) in
+            parent.homeViewController?.hideSearch()
+        })
     }
     
 }

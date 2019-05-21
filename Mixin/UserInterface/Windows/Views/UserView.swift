@@ -495,6 +495,9 @@ class UserView: CornerView {
 extension UserView: CollapsingLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        guard !openUrlOutsideApplication(url) else {
+            return
+        }
         dismissAction(self)
         if !UrlWindow.checkUrl(url: url) {
             WebWindow.instance(conversationId: conversationId).presentPopupControllerAnimated(url: url)

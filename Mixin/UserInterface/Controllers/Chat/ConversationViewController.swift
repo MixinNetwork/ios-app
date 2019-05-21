@@ -941,6 +941,9 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
 extension ConversationViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        guard !openUrlOutsideApplication(url) else {
+            return
+        }
         open(url: url)
     }
     

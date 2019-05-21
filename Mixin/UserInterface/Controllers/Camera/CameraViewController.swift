@@ -116,8 +116,12 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     }
     
     @IBAction func albumAction(_ sender: Any) {
-        let vc = PhotoAssetPickerNavigationController.instance(pickerDelegate: self)
-        present(vc, animated: true, completion: nil)
+        PHPhotoLibrary.checkAuthorization { (granted) in
+            if granted {
+                let vc = PhotoAssetPickerNavigationController.instance(pickerDelegate: self)
+                self.present(vc, animated: true, completion: nil)
+            }
+        }
     }
     
     private func savePhoto(photo: UIImage) {

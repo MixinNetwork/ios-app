@@ -1155,7 +1155,7 @@
                                     <constraint firstAttribute="height" constant="60" id="iGA-1f-Au3"/>
                                     <constraint firstAttribute="width" constant="60" id="v1S-bd-b3i"/>
                                 </constraints>
-                                <state key="normal" image="ic_play"/>
+                                <state key="normal" image="ic_preview_play"/>
                                 <connections>
                                     <action selector="playAction:" destination="iRr-jh-RO2" eventType="touchUpInside" id="BZF-Xo-j7S"/>
                                     <action selector="playAction:" destination="n44-eU-obg" eventType="touchUpInside" id="hsh-M1-wN0"/>
@@ -1167,7 +1167,7 @@
                                     <constraint firstAttribute="width" constant="56" id="D1m-1k-Fxy"/>
                                     <constraint firstAttribute="height" constant="56" id="ObS-eK-Nnd"/>
                                 </constraints>
-                                <state key="normal" image="ic_close_shadow"/>
+                                <state key="normal" image="ic_camera_close"/>
                                 <connections>
                                     <action selector="closeAction:" destination="n44-eU-obg" eventType="touchUpInside" id="qAV-r2-qXG"/>
                                 </connections>
@@ -2091,27 +2091,27 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_photo_bottom_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="n9G-1i-W0G">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="98.000000000000028" height="98.000000000000028"/>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z8T-7O-x04">
-                                                                    <rect key="frame" x="10" y="74" width="78" height="16"/>
+                                                                    <rect key="frame" x="10" y="75.5" width="78" height="14.5"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JQ2-yd-f9u">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="16"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YFJ-6z-9up">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="16"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
                                                                             <subviews>
                                                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="Conversation/ic_video" translatesAutoresizingMaskIntoConstraints="NO" id="qAR-Lc-IyN">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
+                                                                                    <rect key="frame" x="0.0" y="2.5" width="14" height="10"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 </imageView>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="1010:01" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E1e-SE-IRb">
-                                                                                    <rect key="frame" x="16" y="1" width="62" height="14.5"/>
+                                                                                    <rect key="frame" x="14" y="0.0" width="64" height="14.5"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2311,10 +2311,12 @@
         <image name="chat_video_mask_header" width="375" height="76"/>
         <image name="ic_announcement" width="44" height="44"/>
         <image name="ic_bottom" width="44" height="44"/>
-        <image name="ic_camera_send" width="36" height="36"/>
+        <image name="ic_camera_close" width="20" height="20"/>
+        <image name="ic_camera_send" width="60" height="60"/>
         <image name="ic_chat_bg" width="375" height="667"/>
         <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_play" width="38" height="38"/>
+        <image name="ic_preview_play" width="82" height="82"/>
         <image name="ic_sticker_frame" width="325" height="325"/>
         <image name="ic_sticker_normal" width="20" height="20"/>
         <image name="ic_title_back" width="9" height="17"/>

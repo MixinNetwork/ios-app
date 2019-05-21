@@ -164,9 +164,9 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9hJ-zq-Afw" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="587" width="72" height="80"/>
+                                <rect key="frame" x="0.0" y="587" width="80" height="80"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="72" id="dWU-1v-lgg"/>
+                                    <constraint firstAttribute="width" constant="80" id="dWU-1v-lgg"/>
                                     <constraint firstAttribute="height" constant="80" id="oWm-3t-XTG"/>
                                 </constraints>
                                 <state key="normal" image="ic_camera_save"/>

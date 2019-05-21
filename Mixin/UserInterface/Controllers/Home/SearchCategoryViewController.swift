@@ -61,11 +61,11 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         case .user, .conversationsByName, .conversationsByMessage:
             tableView.register(R.nib.peerCell)
         }
-        let headerView = SearchHeaderView()
+        let headerFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 36)
+        let headerView = SearchHeaderView(frame: headerFrame)
         headerView.label.text = category.title
         headerView.button.isHidden = true
         headerView.isFirstSection = true
-        headerView.frame.size = CGSize(width: tableView.bounds.width, height: 36)
         tableView.tableHeaderView = headerView
         tableView.dataSource = self
         tableView.delegate = self

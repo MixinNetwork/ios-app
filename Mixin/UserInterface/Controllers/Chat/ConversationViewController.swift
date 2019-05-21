@@ -5,6 +5,8 @@ import Photos
 
 class ConversationViewController: UIViewController {
     
+    private static let iTunesAppUrlRegex = try? NSRegularExpression(pattern: "^https://itunes\\.apple\\.com/.*app.*id[0-9]", options: .caseInsensitive)
+    
     static var positions = [String: Position]()
     
     @IBOutlet weak var galleryWrapperView: UIView!
@@ -941,7 +943,13 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
 extension ConversationViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
-        open(url: url)
+        let absoluteString = url.absoluteString
+        let fullRange = NSRange(location: 0, length: (absoluteString as NSString).length)
+        if UIApplication.shared.canOpenURL(url), let regex = ConversationViewController.iTunesAppUrlRegex, regex.firstMatch(in: absoluteString, options: [], range: fullRange) != nil {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            open(url: url)
+        }
     }
     
     func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {

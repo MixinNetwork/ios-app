@@ -404,7 +404,7 @@
 "transfer_title" = "Transfer";
 "transfer_title_to" = "Transfer to";
 "transfer_title_to_receiver" = "to %@";
-"transfer_balance" = "BALANCE";
+"transfer_balance" = "Balance";
 "transfer_transactions" = "TRANSACTIONS";
 "transfer_transfer_type" = "Transfer Type";
 "transfer_transfer_amount" = "Transfer Amount";

@@ -118,7 +118,7 @@ class PayView: UIStackView {
         memoLabel.isHidden = memo.isEmpty
         memoLabel.text = memo
 
-        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
+        let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol))
         if let amountUsd = amountUsd {
             amountLabel.text = amountUsd
             amountExchangeLabel.text = amountToken

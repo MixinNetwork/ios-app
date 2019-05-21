@@ -30,6 +30,8 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var recordingRedDotView: UIView!
     @IBOutlet weak var timeLabel: UILabel!
     
+    @IBOutlet weak var navigationOverridesStatusBarConstraint: NSLayoutConstraint!
+    
     weak var delegate: CameraViewControllerDelegate?
     
     private let sessionQueue = DispatchQueue(label: "one.mixin.messenger.queue.camera")
@@ -88,7 +90,17 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         session.stopRunning()
         loadingView.stopAnimating()
     }
-
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        if view.safeAreaInsets.top > 24 {
+            navigationOverridesStatusBarConstraint.priority = .defaultLow
+        } else {
+            navigationOverridesStatusBarConstraint.priority = .defaultHigh
+        }
+    }
+    
     @IBAction func hideTipsAction(_ sender: Any) {
         CommonUserDefault.shared.isCameraQRCodeTips = true
         qrcodeTipsView.isHidden = true

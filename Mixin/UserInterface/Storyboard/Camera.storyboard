@@ -27,7 +27,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5sm-8G-Krj" userLabel="Navigation View">
-                                <rect key="frame" x="0.0" y="20" width="375" height="56"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qa4-MC-Qq2" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
@@ -64,7 +64,7 @@
                                 </constraints>
                             </view>
                             <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WmQ-ju-XH1">
-                                <rect key="frame" x="163" y="38" width="49.5" height="20"/>
+                                <rect key="frame" x="163" y="18" width="49.5" height="20"/>
                                 <subviews>
                                     <view clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="98N-CS-DAD">
                                         <rect key="frame" x="0.0" y="6" width="8" height="8"/>
@@ -234,6 +234,7 @@
                             <constraint firstItem="LBJ-RT-mbD" firstAttribute="top" secondItem="pLM-9e-9z0" secondAttribute="top" id="0ZW-LT-9fS"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="leading" secondItem="LBJ-RT-mbD" secondAttribute="leading" id="4PU-8s-ypb"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="5sm-8G-Krj" secondAttribute="trailing" id="7PC-Qa-UVF"/>
+                            <constraint firstItem="5sm-8G-Krj" firstAttribute="top" secondItem="pLM-9e-9z0" secondAttribute="top" priority="750" id="9Ac-h9-fyK"/>
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="Hft-XM-7mq" secondAttribute="trailing" id="FfG-Ec-0v7"/>
                             <constraint firstAttribute="top" secondItem="WNM-S5-JoA" secondAttribute="top" id="GGQ-QU-1EY"/>
                             <constraint firstAttribute="bottom" secondItem="WNM-S5-JoA" secondAttribute="bottom" id="Lt7-Ck-FwU"/>
@@ -242,7 +243,7 @@
                             <constraint firstItem="ADJ-U9-E6n" firstAttribute="trailing" secondItem="WNM-S5-JoA" secondAttribute="trailing" id="SId-qr-ESJ"/>
                             <constraint firstItem="LBJ-RT-mbD" firstAttribute="leading" secondItem="ADJ-U9-E6n" secondAttribute="leading" id="W89-ez-v1g"/>
                             <constraint firstItem="Lks-aY-qYz" firstAttribute="trailing" secondItem="LBJ-RT-mbD" secondAttribute="trailing" id="ZJy-mI-7RA"/>
-                            <constraint firstItem="5sm-8G-Krj" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" id="aVK-Ir-3VC"/>
+                            <constraint firstItem="5sm-8G-Krj" firstAttribute="top" secondItem="ADJ-U9-E6n" secondAttribute="top" priority="500" id="aVK-Ir-3VC"/>
                             <constraint firstItem="WmQ-ju-XH1" firstAttribute="centerY" secondItem="5sm-8G-Krj" secondAttribute="centerY" id="adt-op-H7l"/>
                             <constraint firstItem="o5Y-dL-Imf" firstAttribute="centerY" secondItem="ADJ-U9-E6n" secondAttribute="centerY" id="bmo-jI-9FY"/>
                             <constraint firstItem="WmQ-ju-XH1" firstAttribute="centerX" secondItem="5sm-8G-Krj" secondAttribute="centerX" id="cDv-XC-X0w"/>
@@ -267,6 +268,7 @@
                         <outlet property="backButton" destination="qa4-MC-Qq2" id="UxB-8P-p5x"/>
                         <outlet property="cameraFlashButton" destination="0l7-uH-Dsx" id="b8d-ae-gLD"/>
                         <outlet property="loadingView" destination="o5Y-dL-Imf" id="EUb-EZ-MAk"/>
+                        <outlet property="navigationOverridesStatusBarConstraint" destination="9Ac-h9-fyK" id="5Ph-yv-gn5"/>
                         <outlet property="previewView" destination="LBJ-RT-mbD" id="fOG-82-anz"/>
                         <outlet property="qrcodeTipsView" destination="WNM-S5-JoA" id="Jtv-zA-4Cs"/>
                         <outlet property="recordingRedDotView" destination="98N-CS-DAD" id="cxX-Ik-fTW"/>

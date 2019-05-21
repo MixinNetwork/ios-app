@@ -51,7 +51,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         queue.maxConcurrentOperationCount = 1
         navigationItem.title = " "
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
-        cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
+        cancelButton.addTarget(homeViewController, action: #selector(HomeViewController.hideSearch), for: .touchUpInside)
         searchTextField.text = inheritedKeyword?.raw
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
@@ -61,11 +61,11 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         case .user, .conversationsByName, .conversationsByMessage:
             tableView.register(R.nib.peerCell)
         }
-        let headerView = SearchHeaderView()
+        let headerFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 36)
+        let headerView = SearchHeaderView(frame: headerFrame)
         headerView.label.text = category.title
         headerView.button.isHidden = true
         headerView.isFirstSection = true
-        headerView.frame.size = CGSize(width: tableView.bounds.width, height: 36)
         tableView.tableHeaderView = headerView
         tableView.dataSource = self
         tableView.delegate = self
@@ -130,10 +130,6 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
             }
         }
         queue.addOperation(op)
-    }
-    
-    @objc func cancelAction() {
-        navigationController?.popViewController(animated: true)
     }
     
 }

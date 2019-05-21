@@ -12,9 +12,12 @@ extension SearchableViewController where Self: UIViewController {
         return Keyword(raw: searchTextField.text)
     }
     
+    var homeViewController: HomeViewController? {
+        return parent?.parent as? HomeViewController
+    }
+    
     var homeNavigationController: UINavigationController? {
-        assert(parent?.parent is HomeViewController)
-        return parent?.parent?.navigationController
+        return homeViewController?.navigationController
     }
     
     var searchNavigationController: SearchNavigationViewController? {

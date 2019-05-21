@@ -435,6 +435,13 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lR2-7f-hUd">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="276"/>
                                         <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4iV-8w-DBb" customClass="BottomShadowView" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="256" width="375" height="20"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="20" id="dIg-SY-cMU"/>
+                                                </constraints>
+                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yi5-ew-n4K" customClass="InfiniteTopView" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="256"/>
                                                 <subviews>
@@ -497,13 +504,6 @@
                                                     <constraint firstItem="eAo-ZX-i9D" firstAttribute="top" secondItem="yi5-ew-n4K" secondAttribute="top" constant="18" id="Cun-Pa-gN8"/>
                                                     <constraint firstItem="eAo-ZX-i9D" firstAttribute="leading" secondItem="yi5-ew-n4K" secondAttribute="leading" id="S4S-fX-3iw"/>
                                                     <constraint firstAttribute="trailing" secondItem="eAo-ZX-i9D" secondAttribute="trailing" id="eOW-rj-wZO"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4iV-8w-DBb" customClass="BottomShadowView" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="256" width="375" height="20"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="20" id="dIg-SY-cMU"/>
                                                 </constraints>
                                             </view>
                                         </subviews>

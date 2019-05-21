@@ -51,7 +51,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         queue.maxConcurrentOperationCount = 1
         navigationItem.title = " "
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
-        cancelButton.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
+        cancelButton.addTarget(homeViewController, action: #selector(HomeViewController.hideSearch), for: .touchUpInside)
         searchTextField.text = inheritedKeyword?.raw
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
@@ -130,10 +130,6 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
             }
         }
         queue.addOperation(op)
-    }
-    
-    @objc func cancelAction() {
-        navigationController?.popViewController(animated: true)
     }
     
 }

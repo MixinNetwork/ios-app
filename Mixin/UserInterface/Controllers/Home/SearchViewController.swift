@@ -152,6 +152,10 @@ class SearchViewController: UIViewController, SearchableViewController {
         conversationsByMessage = []
         tableView.reloadData()
         lastKeyword = nil
+        if let navigationController = navigationController as? SearchNavigationViewController {
+            navigationController.viewControllers.removeAll(where: { $0 != self })
+            navigationController.searchNavigationBar.layoutSearchBoxView(insets: navigationSearchBoxInsets)
+        }
     }
     
     func willHide() {

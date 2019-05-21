@@ -308,6 +308,9 @@ extension GroupView {
 extension GroupView: CollapsingLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        guard !openUrlOutsideApplication(url) else {
+            return
+        }
         superView?.dismissPopupControllerAnimated()
         if !UrlWindow.checkUrl(url: url) {
             WebWindow.instance(conversationId: "").presentPopupControllerAnimated(url: url)

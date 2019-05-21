@@ -18,7 +18,7 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
         return options
     }()
     private var collection: PHAssetCollection?
-    private var assets: PHFetchResult<PHAsset>!
+    private var assets = PHFetchResult<PHAsset>()
     private var isFilterCustomSticker = false
     
     private lazy var itemSize: CGSize = {
@@ -32,18 +32,32 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.rightButton.isEnabled = true
-        if let collection = collection {
-            let options = PHFetchOptions()
-            if isFilterCustomSticker {
-                options.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
-            }
-            assets = PHAsset.fetchAssets(in: collection, options: options)
-        } else {
-            assets = PHFetchResult<PHAsset>()
-        }
         container?.titleLabel.text = collection?.localizedTitle
-        collectionView?.reloadData()
-        PHPhotoLibrary.shared().register(self)
+        let collection = self.collection
+        let isFilterCustomSticker = self.isFilterCustomSticker
+        DispatchQueue.global().async { [weak self] in
+            let assets: PHFetchResult<PHAsset>
+            if let collection = collection {
+                let options = PHFetchOptions()
+                if isFilterCustomSticker {
+                    options.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+                }
+                assets = PHAsset.fetchAssets(in: collection, options: options)
+            } else {
+                assets = PHFetchResult<PHAsset>()
+            }
+            guard let weakSelf = self else {
+                return
+            }
+            PHPhotoLibrary.shared().register(weakSelf)
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.assets = assets
+                weakSelf.collectionView?.reloadData()
+            }
+        }
     }
     
     deinit {

@@ -325,7 +325,7 @@
 "wallet_send_memo" = "Memo (Optional)";
 "wallet_button_add_address" = "Tap to add address";
 "wallet_hint_transaction_fee" = "A transaction fee of %@ is required for withdrawing %@.";
-"wallet_password_address_tips" = "Confirm PIN to protect your address security.";
+"wallet_password_address_tips" = "Save by PIN";
 "wallet_withdrawal_asset" = "%@ Withdrawal";
 "wallet_withdrawal_pay_password" = "Withdrawal with PIN";
 "wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";
@@ -395,10 +395,10 @@
 "address_new_placeholder_address" = "Address";
 "address_new_title" = "New %@ Address";
 "address_edit_title" = "Edit %@ Address";
+"address_delete_title" = "Delete %@ Address";
 "address_format_error" = "Invalid address format.";
 "address_asset_not_found" = "Asset not found.";
 "address_auto_add" = "Label \"%@\" and Address \"%@\" have been automatically added to the %@ address book.";
-"address_auto_add_account" = "Account Name \"%@\" and Account Tag \"%@\" have been automatically added to the %@ address book.";
 
 // Transfer
 "transfer_title" = "Transfer";

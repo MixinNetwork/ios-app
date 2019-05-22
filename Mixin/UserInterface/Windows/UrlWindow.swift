@@ -22,6 +22,7 @@ class UrlWindow: BottomSheetView {
     private lazy var loginView = LoginView.instance()
     private lazy var payView = PayView.instance()
     private lazy var userView = UserView.instance()
+    private lazy var addressView = AddressView.instance()
 
     private(set) var fromWeb = false
     private var showLoginView = false
@@ -41,6 +42,8 @@ class UrlWindow: BottomSheetView {
             return checkPayUrl(url: url, fromWeb: fromWeb)
         case .withdrawal:
             return checkWithdrawal(url: url, fromWeb: fromWeb)
+        case .address:
+            return checkAddress(url: url, fromWeb: fromWeb)
         case let .users(id):
             return checkUsersUrl(id, fromWeb: fromWeb, clearNavigationStack: clearNavigationStack)
         case let .transfer(id):
@@ -299,7 +302,7 @@ extension UrlWindow {
 
 extension UrlWindow {
 
-    func presentPopupControllerAnimated(query: Dictionary<String, String>, assetId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
+    func presentPopupControllerAnimated(query: Dictionary<String, String>, assetId: String, fromWeb: Bool = false) {
         self.fromWeb = fromWeb
         presentPopupControllerAnimated()
 
@@ -330,6 +333,56 @@ extension UrlWindow {
                 addressRequest = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: nil, accountTag: nil)
                 address = AddressDAO.shared.getAddress(assetId: asset.assetId, publicKey: publicKey)
             }
+            let addressAction: AddressView.action
+            if let action = query["action"]?.lowercased(), "delete" == action {
+                addressAction = .delete
+            } else {
+                addressAction = address == nil ? .update : .add
+            }
+
+            DispatchQueue.main.async {
+                guard let weakSelf = self, weakSelf.isShowing else {
+                    return
+                }
+
+                weakSelf.interceptDismiss = true
+
+                weakSelf.containerView.addSubview(weakSelf.addressView)
+                weakSelf.addressView.snp.makeConstraints({ (make) in
+                    make.edges.equalToSuperview()
+                })
+                if let address = address {
+                    weakSelf.addressView.render(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil, superView: weakSelf)
+                }
+                weakSelf.successHandler()
+            }
+        }
+    }
+
+    func presentPopupControllerAnimated(addressId: String, assetId: String, amount: String, traceId: String, memo: String, fromWeb: Bool = false) {
+        self.fromWeb = fromWeb
+        presentPopupControllerAnimated()
+
+        DispatchQueue.global().async { [weak self] in
+            guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
+                DispatchQueue.main.async {
+                    self?.failedHandler(R.string.localizable.address_asset_not_found())
+                }
+                return
+            }
+            var address = AddressDAO.shared.getAddress(addressId: addressId)
+            if address == nil {
+                switch WithdrawalAPI.shared.address(addressId: addressId) {
+                case let .success(remoteAddress):
+                    AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
+                    address = remoteAddress
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        self?.failedHandler(error.localizedDescription)
+                    }
+                    return
+                }
+            }
 
             DispatchQueue.main.async {
                 guard let weakSelf = self, weakSelf.isShowing else {
@@ -348,8 +401,6 @@ extension UrlWindow {
                 })
                 if let address = address {
                     weakSelf.payView.render(asset: asset, address: address, amount: amount, memo: memo, trackId: traceId, fromWebWithdrawal: true, superView: weakSelf)
-                } else if let addressRequest = addressRequest {
-                    weakSelf.payView.render(asset: asset, addressRequest: addressRequest, amount: amount, memo: memo, trackId: traceId, fromWebWithdrawal: true, superView: weakSelf)
                 }
                 weakSelf.successHandler()
             }
@@ -412,6 +463,23 @@ extension UrlWindow {
         return true
     }
 
+    class func checkAddress(url: URL, fromWeb: Bool = false) -> Bool {
+        guard AccountAPI.shared.account?.has_pin ?? false else {
+            UIApplication.rootNavigationController()?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            return true
+        }
+        guard let query = url.getKeyVals() else {
+            return false
+        }
+        guard let assetId = query["asset"], !assetId.isEmpty, UUID(uuidString: assetId) != nil else {
+            return false
+        }
+
+        UrlWindow.instance().presentPopupControllerAnimated(query: query, assetId: assetId, fromWeb: fromWeb)
+
+        return true
+    }
+
     class func checkWithdrawal(url: URL, fromWeb: Bool = false) -> Bool {
         guard AccountAPI.shared.account?.has_pin ?? false else {
             UIApplication.rootNavigationController()?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
@@ -420,10 +488,10 @@ extension UrlWindow {
         guard let query = url.getKeyVals() else {
             return false
         }
-        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"] else {
+        guard let assetId = query["asset"], let amount = query["amount"], let traceId = query["trace"], let addressId = query["address"] else {
             return false
         }
-        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !amount.isEmpty else {
+        guard !assetId.isEmpty && UUID(uuidString: assetId) != nil && !traceId.isEmpty && UUID(uuidString: traceId) != nil && !addressId.isEmpty && UUID(uuidString: addressId) != nil && !amount.isEmpty else {
             return false
         }
         var memo = query["memo"]
@@ -431,7 +499,7 @@ extension UrlWindow {
             memo = urlDecodeMemo
         }
 
-        UrlWindow.instance().presentPopupControllerAnimated(query: query, assetId: assetId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
+        UrlWindow.instance().presentPopupControllerAnimated(addressId: addressId, assetId: assetId, amount: amount, traceId: traceId, memo: memo ?? "", fromWeb: fromWeb)
 
         return true
     }

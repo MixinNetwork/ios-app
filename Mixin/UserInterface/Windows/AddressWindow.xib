@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="thf-n2-mR4" customClass="AddressWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZsH-uO-Bqf" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="475" width="414" height="434"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nhe-LD-t6g">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="387"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="387" placeholder="YES" id="2As-Ui-qcK"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="nhe-LD-t6g" firstAttribute="leading" secondItem="ZsH-uO-Bqf" secondAttribute="leading" id="AQ7-z6-1Tw"/>
+                        <constraint firstItem="nhe-LD-t6g" firstAttribute="top" secondItem="ZsH-uO-Bqf" secondAttribute="top" id="B60-rq-A8a"/>
+                        <constraint firstAttribute="trailing" secondItem="nhe-LD-t6g" secondAttribute="trailing" id="R3f-25-PUm"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="ZsH-uO-Bqf" secondAttribute="trailing" id="4tp-x1-EdP"/>
+                <constraint firstItem="GW1-Ee-o5J" firstAttribute="bottom" secondItem="nhe-LD-t6g" secondAttribute="bottom" id="QOX-4E-neX"/>
+                <constraint firstAttribute="bottom" secondItem="ZsH-uO-Bqf" secondAttribute="bottom" constant="-13" id="UxT-jm-Ozu"/>
+                <constraint firstItem="ZsH-uO-Bqf" firstAttribute="leading" secondItem="thf-n2-mR4" secondAttribute="leading" id="awO-JO-2sp"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="GW1-Ee-o5J"/>
+            <connections>
+                <outlet property="containerView" destination="nhe-LD-t6g" id="DFP-ou-wuT"/>
+                <outlet property="contentBottomConstraint" destination="QOX-4E-neX" id="vIa-NB-aKt"/>
+                <outlet property="popupView" destination="ZsH-uO-Bqf" id="NLm-aH-XUW"/>
+            </connections>
+            <point key="canvasLocation" x="82.5" y="63.5"/>
+        </view>
+    </objects>
+</document>

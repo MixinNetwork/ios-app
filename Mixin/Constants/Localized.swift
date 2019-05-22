@@ -397,7 +397,6 @@ public class Localized {
     public static func WALLET_HINT_TRANSACTION_FEE(feeRepresentation: String, name: String) -> String {
         return String(format: LocalizedString("wallet_hint_transaction_fee", comment: "A transaction fee of %@ is required for withdrawing %@."), feeRepresentation, name)
     }
-    public static let WALLET_PASSWORD_ADDRESS_TIPS = LocalizedString("wallet_password_address_tips", comment: "Confirm PIN to protect your address security.")
     public static func WALLET_WITHDRAWAL_ASSET(assetName: String) -> String {
         return String(format: LocalizedString("wallet_withdrawal_asset", comment: "%@ Withdrawal"), assetName)
     }
@@ -503,12 +502,12 @@ public class Localized {
     public static func ADDRESS_EDIT_TITLE(symbol: String) -> String {
         return String(format: LocalizedString("address_edit_title", comment: "Edit %@ Address"), symbol)
     }
+    public static func ADDRESS_DELETE_TITLE(symbol: String) -> String {
+        return String(format: LocalizedString("address_delete_title", comment: "Delete %@ Address"), symbol)
+    }
     public static let ADDRESS_FORMAT_ERROR = LocalizedString("address_format_error", comment: "Invalid address format.")
     public static func ADDRESS_AUTO_ADD(label: String, publicKey: String, symbol: String) -> String {
         return String(format: LocalizedString("address_auto_add", comment: "Label \"%@\" and Address \"%@\" have been automatically added to the %@ address book."), label, publicKey, symbol)
-    }
-    public static func ADDRESS_AUTO_ADD_ACCOUNT(accountName: String, accountTag: String, symbol: String) -> String {
-        return String(format: LocalizedString("address_auto_add_account", comment: "Account Name \"%@\" and Account Tag \"%@\" have been automatically added to the %@ address book."), accountName, accountTag, symbol)
     }
     
     // Transfer

@@ -98,39 +98,23 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
             return
         }
         shouldLayoutWithKeyboard = false
-        let validator = PinValidationViewController.instance(onSuccess: { (pin) in
-            self.saveAddressAction(pin: pin)
-        })
-        present(validator, animated: true, completion: nil)
-    }
-
-    private func saveAddressAction(pin: String) {
-        addressTextView.isUserInteractionEnabled = false
-        labelTextField.isEnabled = false
-        saveButton.isBusy = true
         let assetId = asset.assetId
         let publicKey: String? = asset.isAccount ? nil : addressValue
         let label: String? = asset.isAccount ? nil : self.labelValue
         let accountName: String? = asset.isAccount ? self.labelValue : nil
         let accountTag: String? = asset.isAccount ? addressValue : nil
-        let request = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: pin, accountName: accountName, accountTag: accountTag)
-        WithdrawalAPI.shared.save(address: request) { [weak self](result) in
-            switch result {
-            case let .success(address):
-                AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
-                if let weakSelf = self {
-                    weakSelf.successCallback?(address)
-                    showHud(style: .notification, text: Localized.TOAST_SAVED)
-                    weakSelf.navigationController?.popViewController(animated: true)
-                }
-            case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
-                self?.saveButton.isBusy = false
-                self?.addressTextView.isUserInteractionEnabled = true
-                self?.labelTextField.isEnabled = true
-                self?.addressTextView.becomeFirstResponder()
+        let requestAddress = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: accountName, accountTag: accountTag)
+        AddressWindow.instance().presentPopupControllerAnimated(action: address == nil ? .add : .update, asset: asset, addressRequest: requestAddress, address: nil, dismissCallback: { [weak self] (success) in
+            guard let weakSelf = self else {
+                return
             }
-        }
+            if success {
+                weakSelf.navigationController?.popViewController(animated: true)
+            } else {
+                weakSelf.shouldLayoutWithKeyboard = true
+                weakSelf.labelTextField.becomeFirstResponder()
+            }
+        })
     }
     
     class func instance(asset: AssetItem, address: Address? = nil, successCallback: ((Address) -> Void)? = nil) -> UIViewController {

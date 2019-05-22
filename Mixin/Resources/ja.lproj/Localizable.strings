@@ -319,7 +319,7 @@
 "wallet_send_memo" = "メモ（オプション）";
 "wallet_button_add_address" = "タップして住所を追加";
 "wallet_hint_transaction_fee" = "%@ を引き出すには、%@ の取引手数料が必要です。";
-"wallet_password_address_tips" = "あなたのアドレスを保護するためにPINを確認してください。";
+"wallet_password_address_tips" = "PINで保存";
 "wallet_withdrawal_asset" = "出金 %@ ";
 "wallet_withdrawal_pay_password" = "PINによる引き落とし";
 "wallet_withdrawal_reserve" = "%@ には最低 %@ の予約要件があります。";

@@ -120,6 +120,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op] in
+            usleep(300 * 1000)
             guard !op.isCancelled else {
                 return
             }
@@ -127,42 +128,19 @@ class SearchViewController: UIViewController, SearchableViewController {
             
             let assets = AssetDAO.shared.getAssets(keyword: trimmedKeyword, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
-            guard !op.isCancelled else {
-                return
-            }
-            DispatchQueue.main.sync {
-                self.assets = assets
-                self.users = []
-                self.conversationsByName = []
-                self.conversationsByMessage = []
-                self.tableView.reloadData()
-                self.lastKeyword = keyword
-            }
-            guard !op.isCancelled else {
-                return
-            }
-            
             let users = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: limit)
                 .map { UserSearchResult(user: $0, keyword: trimmedKeyword) }
-            guard !op.isCancelled else {
-                return
-            }
-            DispatchQueue.main.sync {
-                self.users = users
-                self.tableView.reloadSections(Section.user.indexSet, with: .fade)
-            }
-            guard !op.isCancelled else {
-                return
-            }
-            
             let conversationsByName = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: limit)
                 .map { ConversationSearchResult(conversation: $0, keyword: trimmedKeyword) }
             guard !op.isCancelled else {
                 return
             }
             DispatchQueue.main.sync {
+                self.assets = assets
+                self.users = users
                 self.conversationsByName = conversationsByName
-                self.tableView.reloadSections(Section.group.indexSet, with: .fade)
+                self.conversationsByMessage = []
+                self.tableView.reloadData()
             }
             guard !op.isCancelled else {
                 return
@@ -175,6 +153,7 @@ class SearchViewController: UIViewController, SearchableViewController {
             DispatchQueue.main.sync {
                 self.conversationsByMessage = conversationsByMessage
                 self.tableView.reloadSections(Section.conversation.indexSet, with: .fade)
+                self.lastKeyword = keyword
                 if !op.isCancelled {
                     self.navigationSearchBoxView.isBusy = false
                 }

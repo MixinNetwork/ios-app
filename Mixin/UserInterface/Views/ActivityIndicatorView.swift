@@ -45,10 +45,6 @@ class ActivityIndicatorView: UIView {
         return usesLargerStyle ? 37 : 20
     }
     
-    var indicatorLayerPosition: CGPoint {
-        return CGPoint(x: bounds.midX, y: bounds.midY)
-    }
-    
     private var indicatorLayer: CAShapeLayer?
     private var _isAnimating = false
     
@@ -78,7 +74,7 @@ class ActivityIndicatorView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        indicatorLayer?.position = indicatorLayerPosition
+        indicatorLayer?.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
     override func didMoveToWindow() {

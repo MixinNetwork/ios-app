@@ -1,67 +1,11 @@
 import UIKit
 
-class SearchTextField: UITextField {
-    
-    let textMargin: CGFloat = 16
-    
-    override func textRect(forBounds bounds: CGRect) -> CGRect {
-        let rect = super.textRect(forBounds: bounds)
-        return CGRect(x: rect.origin.x + textMargin,
-                      y: rect.origin.y,
-                      width: rect.width - textMargin,
-                      height: rect.height)
-    }
-    
-    override func editingRect(forBounds bounds: CGRect) -> CGRect {
-        let rect = super.editingRect(forBounds: bounds)
-        return CGRect(x: rect.origin.x + textMargin,
-                      y: rect.origin.y,
-                      width: rect.width - textMargin,
-                      height: rect.height)
-    }
-    
-}
-
-class SearchBoxActivityIndicator: ActivityIndicatorView {
-    
-    override var lineWidth: CGFloat {
-        return 2
-    }
-    
-    override var contentLength: CGFloat {
-        return 13
-    }
-    
-    override var indicatorLayerPosition: CGPoint {
-        return CGPoint(x: bounds.midX - 1, y: bounds.midY - 1)
-    }
-    
-}
-
 class SearchBoxView: UIView, XibDesignable {
     
-    @IBOutlet weak var textField: SearchTextField!
-    
-    var isBusy = false {
-        didSet {
-            if isBusy {
-                textField.leftView = activityIndicator
-                activityIndicator.startAnimating()
-            } else {
-                textField.leftView = magnifyingGlassImageView
-                activityIndicator.stopAnimating()
-            }
-        }
-    }
+    @IBOutlet weak var textField: SearchBoxTextField!
     
     private let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
-    private let magnifyingGlassImageView = UIImageView(image: R.image.wallet.ic_search())
-    
-    private lazy var activityIndicator: ActivityIndicatorView = {
-        let view = SearchBoxActivityIndicator(frame: CGRect(x: 0, y: 0, width: 17, height: 17))
-        view.tintColor = UIColor.indicatorGray
-        return view
-    }()
+    private let textFieldLeftView = SearchBoxLeftView(frame: CGRect(x: 0, y: 0, width: 17, height: 17))
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -71,6 +15,12 @@ class SearchBoxView: UIView, XibDesignable {
     override init(frame: CGRect) {
         super.init(frame: frame)
         prepare()
+    }
+    
+    var isBusy = false {
+        didSet {
+            textFieldLeftView.isBusy = isBusy
+        }
     }
     
     deinit {
@@ -93,7 +43,7 @@ class SearchBoxView: UIView, XibDesignable {
     
     private func prepare() {
         loadXib()
-        textField.leftView = magnifyingGlassImageView
+        textField.leftView = textFieldLeftView
         textField.leftViewMode = .always
         clearButton.addTarget(self, action: #selector(clear(_:)), for: .touchUpInside)
         let clearImage = UIImage(named: "Wallet/ic_clear")

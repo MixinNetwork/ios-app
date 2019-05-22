@@ -388,7 +388,8 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
         guard captureVideoOutput.connection(with: .video)?.isActive ?? false else {
             return
         }
-
+        albumButton.isHidden = true
+        switchCameraButton.isHidden = true
         captureVideoOutput.startRecording(to: URL.createTempUrl(fileExtension: "mov"), recordingDelegate: self)
     }
 
@@ -396,6 +397,8 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
         guard captureVideoOutput.isRecording else {
             return
         }
+        albumButton.isHidden = false
+        switchCameraButton.isHidden = false
         captureVideoOutput.stopRecording()
     }
 

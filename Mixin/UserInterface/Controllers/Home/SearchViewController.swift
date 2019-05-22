@@ -111,6 +111,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         guard keyword != lastKeyword else {
             return
         }
+        queue.cancelAllOperations()
         searchNumberRequest?.cancel()
         searchNumberRequest = nil
         showSearchResults()
@@ -123,11 +124,23 @@ class SearchViewController: UIViewController, SearchableViewController {
             let trimmedKeyword = keyword.trimmed
             let assets = AssetDAO.shared.getAssets(keyword: trimmedKeyword, limit: limit)
                 .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
+            guard !op.isCancelled else {
+                return
+            }
             let contacts = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: limit)
                 .map { UserSearchResult(user: $0, keyword: trimmedKeyword) }
+            guard !op.isCancelled else {
+                return
+            }
             let conversationsByName = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: limit)
                 .map { ConversationSearchResult(conversation: $0, keyword: trimmedKeyword) }
+            guard !op.isCancelled else {
+                return
+            }
             let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: limit)
+            guard !op.isCancelled else {
+                return
+            }
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
                     return

@@ -412,8 +412,10 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
             try? FileManager.default.removeItem(at: outputFileURL)
             return
         }
-
-        navigationController?.pushViewController(AssetSendViewController.instance(videoAsset: asset, dataSource: nil), animated: true)
+        
+        let vc = AssetSendViewController.instance(videoAsset: asset, dataSource: nil)
+        vc.showSaveButton = true
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     private func displayMainUI(_ display: Bool) {

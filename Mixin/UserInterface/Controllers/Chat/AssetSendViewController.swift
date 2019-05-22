@@ -9,10 +9,12 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     @IBOutlet weak var photoImageView: YYAnimatedImageView!
     @IBOutlet weak var videoView: GalleryVideoView!
     @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var sendButton: StateResponsiveButton!
     @IBOutlet weak var dismissButton: BouncingButton!
     
     var detectsQrCode = false
+    var showSaveButton = false
     
     private weak var dataSource: ConversationDataSource?
 
@@ -50,6 +52,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        saveButton.isHidden = !showSaveButton
         if let image = self.image {
             photoImageView.image = image
             if detectsQrCode {
@@ -108,6 +111,27 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             videoView.seek(to: .zero)
         }
         videoView.play()
+    }
+    
+    @IBAction func saveAction(_ sender: Any) {
+        guard let asset = videoAsset as? AVURLAsset else {
+            return
+        }
+        PHPhotoLibrary.checkAuthorization { (granted) in
+            if granted {
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: asset.url)
+                }, completionHandler: { (success, error) in
+                    DispatchQueue.main.async {
+                        if success {
+                            showHud(style: .notification, text: Localized.CAMERA_SAVE_VIDEO_SUCCESS)
+                        } else {
+                            showHud(style: .error, text: Localized.CAMERA_SAVE_VIDEO_FAILED)
+                        }
+                    }
+                })
+            }
+        }
     }
     
     private func requestAssetImage(asset: PHAsset) {
@@ -171,6 +195,9 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         }
         let isPlayingVideo = videoView.isPlaying()
         playButton.isHidden = isPlayingVideo
+        if showSaveButton {
+            saveButton.isHidden = isPlayingVideo
+        }
         sendButton.isHidden = isPlayingVideo
         dismissButton.isHidden = isPlayingVideo
         UIApplication.shared.isIdleTimerDisabled = isPlayingVideo

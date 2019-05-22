@@ -1149,6 +1149,17 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BRQ-E5-91Z">
+                                <rect key="frame" x="0.0" y="587" width="80" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="t9u-Ac-K6Z"/>
+                                    <constraint firstAttribute="height" constant="80" id="zVC-Fo-mnr"/>
+                                </constraints>
+                                <state key="normal" image="ic_camera_save"/>
+                                <connections>
+                                    <action selector="saveAction:" destination="n44-eU-obg" eventType="touchUpInside" id="iYy-te-NOB"/>
+                                </connections>
+                            </button>
                             <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6rr-f2-Hvq">
                                 <rect key="frame" x="157.5" y="313.5" width="60" height="60"/>
                                 <constraints>
@@ -1189,6 +1200,7 @@
                             <constraint firstAttribute="topMargin" secondItem="bGe-ej-l03" secondAttribute="top" id="405-Fd-Kiy"/>
                             <constraint firstItem="XN1-BM-KRB" firstAttribute="leading" secondItem="lUy-ch-ffm" secondAttribute="leading" id="4Ih-CM-R7r"/>
                             <constraint firstItem="Cjs-aV-wmR" firstAttribute="top" secondItem="lUy-ch-ffm" secondAttribute="top" id="889-VS-ZQC"/>
+                            <constraint firstItem="lUy-ch-ffm" firstAttribute="bottom" secondItem="BRQ-E5-91Z" secondAttribute="bottom" id="Ck3-k4-aIm"/>
                             <constraint firstItem="lUy-ch-ffm" firstAttribute="bottom" secondItem="bNa-vw-Bv3" secondAttribute="bottom" id="NFh-H3-8ew"/>
                             <constraint firstAttribute="trailing" secondItem="Cjs-aV-wmR" secondAttribute="trailing" id="RsO-Iy-EU7"/>
                             <constraint firstAttribute="bottom" secondItem="Cjs-aV-wmR" secondAttribute="bottom" id="SKs-Eh-URY"/>
@@ -1200,6 +1212,7 @@
                             <constraint firstItem="6rr-f2-Hvq" firstAttribute="centerX" secondItem="lUy-ch-ffm" secondAttribute="centerX" id="jGn-Xd-7ST"/>
                             <constraint firstItem="6rr-f2-Hvq" firstAttribute="centerY" secondItem="lUy-ch-ffm" secondAttribute="centerY" id="lTO-83-k9b"/>
                             <constraint firstAttribute="bottomMargin" secondItem="bGe-ej-l03" secondAttribute="bottom" id="nMo-A4-BLs"/>
+                            <constraint firstItem="BRQ-E5-91Z" firstAttribute="leading" secondItem="lUy-ch-ffm" secondAttribute="leading" id="s5p-rK-onr"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="lUy-ch-ffm"/>
                     </view>
@@ -1208,6 +1221,7 @@
                         <outlet property="dismissButton" destination="XN1-BM-KRB" id="jik-jh-myM"/>
                         <outlet property="photoImageView" destination="bGe-ej-l03" id="LOo-f8-kZk"/>
                         <outlet property="playButton" destination="6rr-f2-Hvq" id="BGg-j1-WFh"/>
+                        <outlet property="saveButton" destination="BRQ-E5-91Z" id="2pp-aa-sKo"/>
                         <outlet property="sendButton" destination="bNa-vw-Bv3" id="2eC-Cr-Xri"/>
                         <outlet property="videoView" destination="Cjs-aV-wmR" id="lfQ-nG-GgW"/>
                     </connections>
@@ -2091,27 +2105,27 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/bg_photo_bottom_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="n9G-1i-W0G">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="98.000000000000028" height="98.000000000000028"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="98" height="98"/>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z8T-7O-x04">
-                                                                    <rect key="frame" x="10" y="75.5" width="78" height="14.5"/>
+                                                                    <rect key="frame" x="10" y="74" width="78" height="16"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JQ2-yd-f9u">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="16"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YFJ-6z-9up">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="14.5"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="78" height="16"/>
                                                                             <subviews>
                                                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" image="Conversation/ic_video" translatesAutoresizingMaskIntoConstraints="NO" id="qAR-Lc-IyN">
-                                                                                    <rect key="frame" x="0.0" y="2.5" width="14" height="10"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 </imageView>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="1010:01" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E1e-SE-IRb">
-                                                                                    <rect key="frame" x="14" y="0.0" width="64" height="14.5"/>
+                                                                                    <rect key="frame" x="16" y="1" width="62" height="14.5"/>
                                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2312,6 +2326,7 @@
         <image name="ic_announcement" width="44" height="44"/>
         <image name="ic_bottom" width="44" height="44"/>
         <image name="ic_camera_close" width="20" height="20"/>
+        <image name="ic_camera_save" width="60" height="60"/>
         <image name="ic_camera_send" width="60" height="60"/>
         <image name="ic_chat_bg" width="375" height="667"/>
         <image name="ic_close_shadow" width="44" height="44"/>

@@ -328,11 +328,17 @@ class SendViewController: KeyboardBasedLayoutViewController {
     }
     
     private func showInputAccessoryView() {
-        balanceInputAccessoryView.balanceLabel.text = asset?.balance
-        if amountTextField.inputAccessoryView == nil {
-            amountTextField.inputAccessoryView = balanceInputAccessoryView
-            amountTextField.reloadInputViews()
+        guard amountTextField.inputAccessoryView == nil else {
+            return
         }
+        guard let asset = asset else {
+            return
+        }
+        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
+            ?? asset.localizedBalance
+        balanceInputAccessoryView.balanceLabel.text = balance
+        amountTextField.inputAccessoryView = balanceInputAccessoryView
+        amountTextField.reloadInputViews()
     }
     
     private func hideInputAccessoryView() {

@@ -107,6 +107,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         guard let keyword = self.keyword else {
             showRecentApps()
             lastKeyword = nil
+            queue.cancelAllOperations()
             navigationSearchBoxView.isBusy = false
             return
         }
@@ -116,7 +117,6 @@ class SearchViewController: UIViewController, SearchableViewController {
         queue.cancelAllOperations()
         searchNumberRequest?.cancel()
         searchNumberRequest = nil
-        showSearchResults()
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op] in
@@ -141,6 +141,7 @@ class SearchViewController: UIViewController, SearchableViewController {
                 self.conversationsByName = conversationsByName
                 self.conversationsByMessage = []
                 self.tableView.reloadData()
+                self.showSearchResults()
             }
             guard !op.isCancelled else {
                 return
@@ -152,9 +153,11 @@ class SearchViewController: UIViewController, SearchableViewController {
             }
             DispatchQueue.main.sync {
                 self.conversationsByMessage = conversationsByMessage
-                self.tableView.reloadSections(Section.conversation.indexSet, with: .fade)
-                self.lastKeyword = keyword
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadSections(Section.conversation.indexSet, with: .none)
+                }
                 if !op.isCancelled {
+                    self.lastKeyword = keyword
                     self.navigationSearchBoxView.isBusy = false
                 }
             }

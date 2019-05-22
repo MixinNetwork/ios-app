@@ -22,6 +22,22 @@ class SearchTextField: UITextField {
     
 }
 
+class SearchBoxActivityIndicator: ActivityIndicatorView {
+    
+    override var lineWidth: CGFloat {
+        return 2
+    }
+    
+    override var contentLength: CGFloat {
+        return 13
+    }
+    
+    override var indicatorLayerPosition: CGPoint {
+        return CGPoint(x: bounds.midX - 1, y: bounds.midY - 1)
+    }
+    
+}
+
 class SearchBoxView: UIView, XibDesignable {
     
     @IBOutlet weak var textField: SearchTextField!
@@ -42,8 +58,7 @@ class SearchBoxView: UIView, XibDesignable {
     private let magnifyingGlassImageView = UIImageView(image: R.image.wallet.ic_search())
     
     private lazy var activityIndicator: ActivityIndicatorView = {
-        let view = ActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
-        view.transform = CGAffineTransform(scaleX: 17 / 20, y: 17 / 20)
+        let view = SearchBoxActivityIndicator(frame: CGRect(x: 0, y: 0, width: 17, height: 17))
         view.tintColor = UIColor.indicatorGray
         return view
     }()

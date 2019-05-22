@@ -1,7 +1,7 @@
 import UIKit
 
 protocol SearchableViewController {
-    var searchTextField: UITextField { get }
+    var searchTextField: UITextField! { get }
     var wantsNavigationSearchBox: Bool { get }
     var navigationSearchBoxInsets: UIEdgeInsets { get }
 }
@@ -32,11 +32,11 @@ extension SearchableViewController where Self: UIViewController {
         return 54
     }
     
-    var navigationSearchBoxView: SearchBoxView {
-        return searchNavigationController!.searchNavigationBar.searchBoxView
+    var navigationSearchBoxView: SearchBoxView! {
+        return searchNavigationController?.searchNavigationBar.searchBoxView
     }
     
-    var searchTextField: UITextField {
+    var searchTextField: UITextField! {
         return navigationSearchBoxView.textField
     }
     

@@ -26,7 +26,27 @@ class SearchBoxView: UIView, XibDesignable {
     
     @IBOutlet weak var textField: SearchTextField!
     
-    let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
+    var isBusy = false {
+        didSet {
+            if isBusy {
+                textField.leftView = activityIndicator
+                activityIndicator.startAnimating()
+            } else {
+                textField.leftView = magnifyingGlassImageView
+                activityIndicator.stopAnimating()
+            }
+        }
+    }
+    
+    private let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
+    private let magnifyingGlassImageView = UIImageView(image: R.image.wallet.ic_search())
+    
+    private lazy var activityIndicator: ActivityIndicatorView = {
+        let view = ActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        view.transform = CGAffineTransform(scaleX: 17 / 20, y: 17 / 20)
+        view.tintColor = UIColor.indicatorGray
+        return view
+    }()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -58,8 +78,7 @@ class SearchBoxView: UIView, XibDesignable {
     
     private func prepare() {
         loadXib()
-        let magnifyingGlassImage = UIImage(named: "Wallet/ic_search")
-        textField.leftView = UIImageView(image: magnifyingGlassImage)
+        textField.leftView = magnifyingGlassImageView
         textField.leftViewMode = .always
         clearButton.addTarget(self, action: #selector(clear(_:)), for: .touchUpInside)
         let clearImage = UIImage(named: "Wallet/ic_clear")

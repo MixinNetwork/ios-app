@@ -75,11 +75,14 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        navigationSearchBoxView.isBusy = !queue.operations.isEmpty
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        searchTextField.text = lastKeyword?.raw
+        if queue.operations.isEmpty {
+            searchTextField.text = lastKeyword?.raw
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -94,6 +97,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
             models = []
             tableView.reloadData()
             lastKeyword = nil
+            navigationSearchBoxView.isBusy = false
             return
         }
         guard keyword != lastKeyword else {
@@ -127,9 +131,11 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
                 weakSelf.models = [models]
                 weakSelf.tableView.reloadData()
                 weakSelf.lastKeyword = keyword
+                weakSelf.navigationSearchBoxView.isBusy = false
             }
         }
         queue.addOperation(op)
+        navigationSearchBoxView.isBusy = true
     }
     
 }

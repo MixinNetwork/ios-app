@@ -40,6 +40,11 @@ class SendViewController: KeyboardBasedLayoutViewController {
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
     
     private lazy var tranceId = UUID().uuidString.lowercased()
+    private lazy var balanceInputAccessoryView: BalanceInputAccessoryView = {
+        let view = R.nib.balanceInputAccessoryView(owner: nil)!
+        view.button.addTarget(self, action: #selector(fillBalanceAction(_:)), for: .touchUpInside)
+        return view
+    }()
     private lazy var transactionLabelAttribute: [NSAttributedString.Key: Any] = {
         return [.font: transactionFeeHintLabel.font,
                 .foregroundColor: transactionFeeHintLabel.textColor]
@@ -121,6 +126,18 @@ class SendViewController: KeyboardBasedLayoutViewController {
             amountExchangeLabel.text = CurrencyFormatter.localizedString(from: assetAmount, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
         }
         
+        if isInputAssetAmount {
+            if amountTextField.text == asset.balance {
+                hideInputAccessoryView()
+            } else if amountText.count >= 4, asset.balance.doubleValue != 0, asset.balance.hasPrefix(amountText) {
+                showInputAccessoryView()
+            } else {
+                hideInputAccessoryView()
+            }
+        } else {
+            hideInputAccessoryView()
+        }
+        
         if let constant = amountTextField.attributedText?.size().width {
             symbolLeadingConstraint.constant = constant + 6
             amountSymbolLabel.isHidden = false
@@ -185,6 +202,11 @@ class SendViewController: KeyboardBasedLayoutViewController {
         isInputAssetAmount = !isInputAssetAmount
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"
         amountEditingChanged(amountTextField)
+    }
+    
+    @objc func fillBalanceAction(_ sender: Any) {
+        amountTextField.text = asset?.balance
+        amountEditingChanged(sender)
     }
     
     private func fetchAvailableAssets() {
@@ -303,6 +325,28 @@ class SendViewController: KeyboardBasedLayoutViewController {
                 weakSelf.displayFeeHint(loading: false)
             }
         }
+    }
+    
+    private func showInputAccessoryView() {
+        guard amountTextField.inputAccessoryView == nil else {
+            return
+        }
+        guard let asset = asset else {
+            return
+        }
+        let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)
+            ?? asset.localizedBalance
+        balanceInputAccessoryView.balanceLabel.text = balance
+        amountTextField.inputAccessoryView = balanceInputAccessoryView
+        amountTextField.reloadInputViews()
+    }
+    
+    private func hideInputAccessoryView() {
+        guard amountTextField.inputAccessoryView != nil else {
+            return
+        }
+        amountTextField.inputAccessoryView = nil
+        amountTextField.reloadInputViews()
     }
     
     class func instance(asset: AssetItem?, type: Opponent) -> UIViewController {

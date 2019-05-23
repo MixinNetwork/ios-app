@@ -129,6 +129,7 @@
 		7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */; };
 		7B4E30762295659200A03F6E /* SearchBoxTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E30752295659200A03F6E /* SearchBoxTextField.swift */; };
 		7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E3077229565C200A03F6E /* SearchBoxLeftView.swift */; };
+		7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */; };
 		7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */; };
 		7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */; };
 		7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */; };
@@ -792,6 +793,7 @@
 		7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalAPI.swift; sourceTree = "<group>"; };
 		7B4E30752295659200A03F6E /* SearchBoxTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxTextField.swift; sourceTree = "<group>"; };
 		7B4E3077229565C200A03F6E /* SearchBoxLeftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxLeftView.swift; sourceTree = "<group>"; };
+		7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPreviewMaskView.swift; sourceTree = "<group>"; };
 		7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterViewController.swift; sourceTree = "<group>"; };
 		7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueButtonViewController.swift; sourceTree = "<group>"; };
 		7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MobileNumberView.xib; sourceTree = "<group>"; };
@@ -2200,6 +2202,7 @@
 				7B59534A2267206D00D59DB4 /* OneSideShadowView.swift */,
 				7B59534C226720F700D59DB4 /* TopShadowView.swift */,
 				7B59534E2267215B00D59DB4 /* BottomShadowView.swift */,
+				7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3513,6 +3516,7 @@
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallView.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
+				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
 				7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */,
 				273FACB8205FB9A800513327 /* SessionStore.swift in Sources */,
 				DF8DA1AD1FD6820600425CEC /* RefreshConversationJob.swift in Sources */,

@@ -1149,6 +1149,10 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QLf-gU-hIn" customClass="MediaPreviewMaskView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
+                            </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BRQ-E5-91Z">
                                 <rect key="frame" x="0.0" y="587" width="80" height="80"/>
                                 <constraints>
@@ -1197,14 +1201,18 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="QLf-gU-hIn" firstAttribute="top" secondItem="c1c-dh-zvp" secondAttribute="top" id="1PR-S4-3pk"/>
                             <constraint firstAttribute="topMargin" secondItem="bGe-ej-l03" secondAttribute="top" id="405-Fd-Kiy"/>
                             <constraint firstItem="XN1-BM-KRB" firstAttribute="leading" secondItem="lUy-ch-ffm" secondAttribute="leading" id="4Ih-CM-R7r"/>
                             <constraint firstItem="Cjs-aV-wmR" firstAttribute="top" secondItem="lUy-ch-ffm" secondAttribute="top" id="889-VS-ZQC"/>
                             <constraint firstItem="lUy-ch-ffm" firstAttribute="bottom" secondItem="BRQ-E5-91Z" secondAttribute="bottom" id="Ck3-k4-aIm"/>
+                            <constraint firstItem="QLf-gU-hIn" firstAttribute="leading" secondItem="lUy-ch-ffm" secondAttribute="leading" id="CmO-iq-ICr"/>
+                            <constraint firstItem="QLf-gU-hIn" firstAttribute="bottom" secondItem="lUy-ch-ffm" secondAttribute="bottom" id="FrO-Hj-sk0"/>
                             <constraint firstItem="lUy-ch-ffm" firstAttribute="bottom" secondItem="bNa-vw-Bv3" secondAttribute="bottom" id="NFh-H3-8ew"/>
                             <constraint firstAttribute="trailing" secondItem="Cjs-aV-wmR" secondAttribute="trailing" id="RsO-Iy-EU7"/>
                             <constraint firstAttribute="bottom" secondItem="Cjs-aV-wmR" secondAttribute="bottom" id="SKs-Eh-URY"/>
                             <constraint firstItem="bGe-ej-l03" firstAttribute="leading" secondItem="lUy-ch-ffm" secondAttribute="leading" id="VSy-JU-3af"/>
+                            <constraint firstItem="QLf-gU-hIn" firstAttribute="trailing" secondItem="lUy-ch-ffm" secondAttribute="trailing" id="Z0c-7J-wFA"/>
                             <constraint firstItem="lUy-ch-ffm" firstAttribute="trailing" secondItem="bNa-vw-Bv3" secondAttribute="trailing" id="bat-fk-PbS"/>
                             <constraint firstItem="Cjs-aV-wmR" firstAttribute="leading" secondItem="lUy-ch-ffm" secondAttribute="leading" id="c4r-Y6-LVb"/>
                             <constraint firstItem="XN1-BM-KRB" firstAttribute="top" secondItem="lUy-ch-ffm" secondAttribute="top" id="c9a-fY-orc"/>

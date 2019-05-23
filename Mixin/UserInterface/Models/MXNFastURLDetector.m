@@ -17,23 +17,29 @@
     }
     NSString *string = attributedString.string;
     BOOL maybeContainsURL = NO;
-    int dotSequence = 0;
-    unichar lastChar = 0;
+    int sequenceCount = 0; // Sequence of "://"
     SEL selector = @selector(characterAtIndex:);
     unichar (*characterAtIndexImp)(id, SEL, NSUInteger) = (unichar (*)(id, SEL, NSUInteger))[string methodForSelector:selector];
-    for (NSUInteger i = 0; i < string.length - 1; i++) {
+    unichar lastChar = characterAtIndexImp(string, selector, 0);
+    for (NSUInteger i = 1; i < string.length - 1; i++) {
         unichar c = characterAtIndexImp(string, selector, i);
-        if (c == '.') {
-            if (dotSequence == 0 && lastChar != ' ') {
-                dotSequence++;
+        if (c == ':') {
+            if (sequenceCount == 0 && lastChar != ' ') {
+                sequenceCount++;
             } else {
-                dotSequence = 0;
+                sequenceCount = 0;
             }
-        } else if (c != ' ' && lastChar == '.' && dotSequence == 1) {
+        } else if (c == '/') {
+            if (sequenceCount == 1 || sequenceCount == 2) {
+                sequenceCount++;
+            } else {
+                sequenceCount = 0;
+            }
+        } else if (c != ' ' && sequenceCount == 3) {
             maybeContainsURL = YES;
             break;
         } else {
-            dotSequence = 0;
+            sequenceCount = 0;
         }
         lastChar = c;
     }

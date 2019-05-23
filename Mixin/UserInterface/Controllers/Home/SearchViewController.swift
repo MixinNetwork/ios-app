@@ -120,7 +120,7 @@ class SearchViewController: UIViewController, SearchableViewController {
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op] in
-            usleep(300 * 1000)
+            usleep(200 * 1000)
             guard !op.isCancelled else {
                 return
             }

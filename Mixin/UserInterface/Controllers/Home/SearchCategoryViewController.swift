@@ -102,7 +102,7 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         let category = self.category
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
-            usleep(300 * 1000)
+            usleep(200 * 1000)
             guard !op.isCancelled, self != nil else {
                 return
             }

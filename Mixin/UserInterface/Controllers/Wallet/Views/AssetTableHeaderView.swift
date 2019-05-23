@@ -39,6 +39,7 @@ class AssetTableHeaderView: InfiniteTopView {
                 usdValueLabel.text = nil
             }
         }
+        depositButton.isBusy = !(asset.isAccount || asset.isAddress)
         let attributedAmount = attributedString(amount: amount, symbol: asset.symbol)
         amountTextView.attributedText = attributedAmount
         

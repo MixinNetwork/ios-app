@@ -83,6 +83,7 @@
 "toast_copied" = "Copied";
 "toast_added" = "Added";
 "toast_saved" = "Saved";
+"toast_deleted" = "Deleted";
 "toast_logined" = "Logined";
 "toast_authorized" = "Authorized";
 "toast_changed" = "Changed";
@@ -398,7 +399,7 @@
 "address_delete_title" = "Delete %@ Address";
 "address_format_error" = "Invalid address format.";
 "address_asset_not_found" = "Asset not found.";
-"address_auto_add" = "Label \"%@\" and Address \"%@\" have been automatically added to the %@ address book.";
+"address_not_found" = "Address not found.";
 
 // Transfer
 "transfer_title" = "Transfer";

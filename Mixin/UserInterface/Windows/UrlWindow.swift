@@ -317,27 +317,48 @@ extension UrlWindow {
             var addressRequest: AddressRequest?
             var address: Address?
 
-            if asset.isAccount {
-                guard let accountName = query["account_name"], let accountTag = query["account_tag"], !accountName.isEmpty, !accountTag.isEmpty else {
-                    return
-                }
-                addressRequest = AddressRequest(assetId: assetId, publicKey: nil, label: nil, pin: "", accountName: accountName, accountTag: accountTag)
-                address = AddressDAO.shared.getAddress(assetId: asset.assetId, accountName: accountName, accountTag: accountTag)
-            } else {
-                guard let publicKey = query["public_key"], var label = query["label"], !publicKey.isEmpty, !label.isEmpty else {
-                    return
-                }
-                if let urlDecodeLabel = label.removingPercentEncoding {
-                    label = urlDecodeLabel
-                }
-                addressRequest = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: nil, accountTag: nil)
-                address = AddressDAO.shared.getAddress(assetId: asset.assetId, publicKey: publicKey)
-            }
             let addressAction: AddressView.action
             if let action = query["action"]?.lowercased(), "delete" == action {
+                guard let addressId = query["address"], !addressId.isEmpty && UUID(uuidString: addressId) != nil else {
+                    return
+                }
+
                 addressAction = .delete
+                address = AddressDAO.shared.getAddress(addressId: addressId)
+                if address == nil {
+                    switch WithdrawalAPI.shared.address(addressId: addressId) {
+                    case let .success(remoteAddress):
+                        AddressDAO.shared.insertOrUpdateAddress(addresses: [remoteAddress])
+                        address = remoteAddress
+                    case let .failure(error):
+                        DispatchQueue.main.async {
+                            if error.code == 404 {
+                                self?.failedHandler(R.string.localizable.address_not_found())
+                            } else {
+                                self?.failedHandler(error.localizedDescription)
+                            }
+                        }
+                        return
+                    }
+                }
             } else {
-                addressAction = address == nil ? .update : .add
+                if asset.isAccount {
+                    guard let accountName = query["account_name"], let accountTag = query["account_tag"], !accountName.isEmpty, !accountTag.isEmpty else {
+                        return
+                    }
+                    addressRequest = AddressRequest(assetId: assetId, publicKey: nil, label: nil, pin: "", accountName: accountName, accountTag: accountTag)
+                    address = AddressDAO.shared.getAddress(assetId: asset.assetId, accountName: accountName, accountTag: accountTag)
+                } else {
+                    guard let publicKey = query["public_key"], var label = query["label"], !publicKey.isEmpty, !label.isEmpty else {
+                        return
+                    }
+                    if let urlDecodeLabel = label.removingPercentEncoding {
+                        label = urlDecodeLabel
+                    }
+                    addressRequest = AddressRequest(assetId: assetId, publicKey: publicKey, label: label, pin: "", accountName: nil, accountTag: nil)
+                    address = AddressDAO.shared.getAddress(assetId: asset.assetId, publicKey: publicKey)
+                }
+                addressAction = address == nil ? .add : .update
             }
 
             DispatchQueue.main.async {
@@ -345,15 +366,11 @@ extension UrlWindow {
                     return
                 }
 
-                weakSelf.interceptDismiss = true
-
                 weakSelf.containerView.addSubview(weakSelf.addressView)
                 weakSelf.addressView.snp.makeConstraints({ (make) in
                     make.edges.equalToSuperview()
                 })
-                if let address = address {
-                    weakSelf.addressView.render(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil, superView: weakSelf)
-                }
+                weakSelf.addressView.render(action: addressAction, asset: asset, addressRequest: addressRequest, address: address, dismissCallback: nil, superView: weakSelf)
                 weakSelf.successHandler()
             }
         }
@@ -378,7 +395,11 @@ extension UrlWindow {
                     address = remoteAddress
                 case let .failure(error):
                     DispatchQueue.main.async {
-                        self?.failedHandler(error.localizedDescription)
+                        if error.code == 404 {
+                            self?.failedHandler(R.string.localizable.address_not_found())
+                        } else {
+                            self?.failedHandler(error.localizedDescription)
+                        }
                     }
                     return
                 }

@@ -115,7 +115,7 @@ extension AddressView: PinFieldDelegate {
                     self?.pinField.resignFirstResponder()
                     AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
-                    showHud(style: .notification, text: Localized.TOAST_SAVED)
+                    showHud(style: .notification, text: R.string.localizable.toast_deleted())
                 case let .failure(error):
                     showHud(style: .error, text: error.localizedDescription)
                     self?.superView?.dismissPopupControllerAnimated()
@@ -181,9 +181,8 @@ extension AddressView {
         UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
             UIView.setAnimationCurve(.overdamped)
             superView.contentBottomConstraint.constant = 0
-            superView.layoutIfNeeded()
             superView.alpha = 0
-            self.layoutIfNeeded()
+            superView.layoutIfNeeded()
         }, completion: { (_) in
             superView.isShowing = false
             superView.removeFromSuperview()

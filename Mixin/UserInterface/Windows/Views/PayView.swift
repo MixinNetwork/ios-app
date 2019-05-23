@@ -94,10 +94,10 @@ class PayView: UIStackView {
             avatarImageView.image = R.image.wallet.ic_transaction_external()
             if asset.isAccount {
                 nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.accountName ?? "")
-                mixinIDLabel.text = fromWebWithdrawal ? address.accountTag : address.accountTag?.toSimpleKey()
+                mixinIDLabel.text = address.accountTag?.toSimpleKey()
             } else {
                 nameLabel.text = Localized.PAY_WITHDRAWAL_TITLE(label: address.label ?? "")
-                mixinIDLabel.text = fromWebWithdrawal ? address.publicKey : address.publicKey?.toSimpleKey()
+                mixinIDLabel.text = address.publicKey?.toSimpleKey()
             }
         }
         preparePayView(show: true)

@@ -83,6 +83,7 @@
 "toast_copied" = "已复制";
 "toast_added" = "已添加";
 "toast_saved" = "已保存";
+"toast_deleted" = "已删除";
 "toast_logined" = "已登录";
 "toast_authorized" = "已授权";
 "toast_changed" = "已修改";
@@ -400,7 +401,7 @@
 "address_delete_title" = "删除 %@ 地址";
 "address_format_error" = "地址格式错误";
 "address_asset_not_found" = "找不到该资产.";
-"address_auto_add" = "标签\"%@\"和地址\"%@\"已自动添加至 %@ 地址簿";
+"address_not_found" = "找不到该地址";
 
 // Transfer
 "transfer_title" = "转账";

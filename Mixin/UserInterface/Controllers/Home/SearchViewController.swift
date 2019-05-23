@@ -26,24 +26,25 @@ class SearchViewController: UIViewController, SearchableViewController {
     private var users = [SearchResult]()
     private var conversationsByName = [SearchResult]()
     private var conversationsByMessage = [SearchResult]()
-    private var lastKeyword: Keyword?
+    private var lastKeyword: String?
     private var recentAppsViewController: RecentAppsViewController?
     private var searchNumberRequest: Request?
+    private var lastSearchFieldText: String?
     
     private lazy var userWindow = UserWindow.instance()
     
     private var keywordMaybeIdOrPhone: Bool {
-        guard let trimmedKeyword = self.keyword?.trimmed else {
+        guard let keyword = trimmedLowercaseKeyword else {
             return false
         }
-        guard trimmedKeyword.count >= 4 else {
+        guard keyword.count >= 4 else {
             return false
         }
-        guard idOrPhoneCharacterSet.isSuperset(of: trimmedKeyword) else {
+        guard idOrPhoneCharacterSet.isSuperset(of: keyword) else {
             return false
         }
-        if trimmedKeyword.contains("+") {
-            return (try? phoneNumberKit.parse(trimmedKeyword)) != nil
+        if keyword.contains("+") {
+            return (try? phoneNumberKit.parse(keyword)) != nil
         } else {
             return true
         }
@@ -90,60 +91,82 @@ class SearchViewController: UIViewController, SearchableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        searchTextField.text = lastKeyword?.raw
+        navigationSearchBoxView.isBusy = !queue.operations.isEmpty
+        if let text = lastSearchFieldText {
+            searchTextField.text = text
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        lastSearchFieldText = searchTextField.text
     }
     
     @IBAction func searchAction(_ sender: Any) {
-        guard let keyword = self.keyword else {
+        guard let keyword = trimmedLowercaseKeyword else {
             showRecentApps()
             lastKeyword = nil
+            queue.cancelAllOperations()
+            navigationSearchBoxView.isBusy = false
             return
         }
         guard keyword != lastKeyword else {
             return
         }
+        queue.cancelAllOperations()
         searchNumberRequest?.cancel()
         searchNumberRequest = nil
-        showSearchResults()
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
         let op = BlockOperation()
-        op.addExecutionBlock { [unowned op, weak self] in
-            guard self != nil, !op.isCancelled else {
+        op.addExecutionBlock { [unowned op] in
+            usleep(200 * 1000)
+            guard !op.isCancelled else {
                 return
             }
-            let trimmedKeyword = keyword.trimmed
-            let assets = AssetDAO.shared.getAssets(keyword: trimmedKeyword, limit: limit)
-                .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
-            let contacts = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: limit)
-                .map { UserSearchResult(user: $0, keyword: trimmedKeyword) }
-            let conversationsByName = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: limit)
-                .map { ConversationSearchResult(conversation: $0, keyword: trimmedKeyword) }
-            let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: limit)
+            
+            let assets = AssetDAO.shared.getAssets(keyword: keyword, limit: limit)
+                .map { AssetSearchResult(asset: $0, keyword: keyword) }
+            let users = UserDAO.shared.getUsers(keyword: keyword, limit: limit)
+                .map { UserSearchResult(user: $0, keyword: keyword) }
+            let conversationsByName = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: keyword, limit: limit)
+                .map { ConversationSearchResult(conversation: $0, keyword: keyword) }
+            guard !op.isCancelled else {
+                return
+            }
             DispatchQueue.main.sync {
-                guard let weakSelf = self, !op.isCancelled else {
-                    return
+                self.assets = assets
+                self.users = users
+                self.conversationsByName = conversationsByName
+                self.conversationsByMessage = []
+                self.tableView.reloadData()
+                self.showSearchResults()
+            }
+            guard !op.isCancelled else {
+                return
+            }
+            
+            let conversationsByMessage = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: limit)
+            guard !op.isCancelled else {
+                return
+            }
+            DispatchQueue.main.sync {
+                self.conversationsByMessage = conversationsByMessage
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadSections(Section.conversation.indexSet, with: .none)
                 }
-                weakSelf.assets = assets
-                weakSelf.users = contacts
-                weakSelf.conversationsByName = conversationsByName
-                weakSelf.conversationsByMessage = conversationsByMessage
-                weakSelf.tableView.reloadData()
-                weakSelf.lastKeyword = keyword
+                if !op.isCancelled {
+                    self.lastKeyword = keyword
+                    self.navigationSearchBoxView.isBusy = false
+                }
             }
         }
         queue.addOperation(op)
+        navigationSearchBoxView.isBusy = true
     }
     
     func prepareForReuse() {
+        queue.cancelAllOperations()
         searchTextField.text = nil
         showRecentApps()
         assets = []
@@ -156,6 +179,7 @@ class SearchViewController: UIViewController, SearchableViewController {
             navigationController.viewControllers.removeAll(where: { $0 != self })
             navigationController.searchNavigationBar.layoutSearchBoxView(insets: navigationSearchBoxInsets)
         }
+        navigationSearchBoxView.isBusy = false
     }
     
     func willHide() {
@@ -296,11 +320,11 @@ extension SearchViewController: UITableViewDelegate {
         case .asset:
             pushAssetViewController(asset: assets[indexPath.row].asset)
         case .user:
-            pushViewController(keyword: keyword, result: users[indexPath.row])
+            pushViewController(keyword: trimmedLowercaseKeyword, result: users[indexPath.row])
         case .group:
-            pushViewController(keyword: keyword, result: conversationsByName[indexPath.row])
+            pushViewController(keyword: trimmedLowercaseKeyword, result: conversationsByName[indexPath.row])
         case .conversation:
-            pushViewController(keyword: keyword, result: conversationsByMessage[indexPath.row])
+            pushViewController(keyword: trimmedLowercaseKeyword, result: conversationsByMessage[indexPath.row])
         }
     }
     
@@ -325,7 +349,6 @@ extension SearchViewController: SearchHeaderViewDelegate {
         case .conversation:
             vc.category = .conversationsByMessage
         }
-        vc.inheritedKeyword = keyword
         searchTextField.resignFirstResponder()
         searchNavigationController?.pushViewController(vc, animated: true)
     }
@@ -360,6 +383,11 @@ extension SearchViewController {
                 return R.string.localizable.search_section_title_conversation_by_message()
             }
         }
+        
+        var indexSet: IndexSet {
+            return IndexSet(integer: rawValue)
+        }
+        
     }
     
     private func showSearchResults() {
@@ -413,12 +441,12 @@ extension SearchViewController {
     }
     
     private func searchNumber() {
-        guard let keyword = self.keyword else {
+        guard let keyword = trimmedLowercaseKeyword else {
             return
         }
         searchNumberRequest?.cancel()
         searchNumberCell?.isBusy = true
-        searchNumberRequest = UserAPI.shared.search(keyword: keyword.trimmed) { [weak self] (result) in
+        searchNumberRequest = UserAPI.shared.search(keyword: keyword) { [weak self] (result) in
             guard let weakSelf = self, weakSelf.searchNumberRequest != nil else {
                 return
             }

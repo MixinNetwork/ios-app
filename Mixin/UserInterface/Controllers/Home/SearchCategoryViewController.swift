@@ -27,7 +27,6 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     let cancelButton = SearchCancelButton()
     
     var category = Category.asset
-    var inheritedKeyword: Keyword?
     
     var wantsNavigationSearchBox: Bool {
         return true
@@ -39,7 +38,8 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     
     private let queue = OperationQueue()
     
-    private var lastKeyword: Keyword?
+    private var lastKeyword: String?
+    private var lastSearchFieldText: String?
     private var models = [[Any]]()
     
     deinit {
@@ -52,7 +52,6 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         navigationItem.title = " "
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
         cancelButton.addTarget(homeViewController, action: #selector(HomeViewController.hideSearch), for: .touchUpInside)
-        searchTextField.text = inheritedKeyword?.raw
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
         switch category {
@@ -75,25 +74,26 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        searchTextField.text = lastKeyword?.raw
+        navigationSearchBoxView.isBusy = !queue.operations.isEmpty
+        if let text = lastSearchFieldText {
+            searchTextField.text = text
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         searchTextField.resignFirstResponder()
         searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        lastSearchFieldText = searchTextField.text
     }
     
     @objc func searchAction(_ sender: Any) {
         queue.cancelAllOperations()
-        guard let keyword = self.keyword else {
+        guard let keyword = trimmedLowercaseKeyword else {
             models = []
             tableView.reloadData()
             lastKeyword = nil
+            navigationSearchBoxView.isBusy = false
             return
         }
         guard keyword != lastKeyword else {
@@ -102,20 +102,23 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
         let category = self.category
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
-            let trimmedKeyword = keyword.trimmed
+            usleep(200 * 1000)
+            guard !op.isCancelled, self != nil else {
+                return
+            }
             let models: [Any]
             switch category {
             case .asset:
-                models = AssetDAO.shared.getAssets(keyword: trimmedKeyword, limit: nil)
-                    .map { AssetSearchResult(asset: $0, keyword: trimmedKeyword) }
+                models = AssetDAO.shared.getAssets(keyword: keyword, limit: nil)
+                    .map { AssetSearchResult(asset: $0, keyword: keyword) }
             case .user:
-                models = UserDAO.shared.getUsers(keyword: trimmedKeyword, limit: nil)
-                    .map { UserSearchResult(user: $0, keyword: trimmedKeyword) }
+                models = UserDAO.shared.getUsers(keyword: keyword, limit: nil)
+                    .map { UserSearchResult(user: $0, keyword: keyword) }
             case .conversationsByName:
-                models = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: trimmedKeyword, limit: nil)
-                    .map { ConversationSearchResult(conversation: $0, keyword: trimmedKeyword) }
+                models = ConversationDAO.shared.getGroupOrStrangerConversation(withNameLike: keyword, limit: nil)
+                    .map { ConversationSearchResult(conversation: $0, keyword: keyword) }
             case .conversationsByMessage:
-                models = ConversationDAO.shared.getConversation(withMessageLike: trimmedKeyword, limit: nil)
+                models = ConversationDAO.shared.getConversation(withMessageLike: keyword, limit: nil)
             }
             guard !op.isCancelled, self != nil else {
                 return
@@ -127,9 +130,11 @@ class SearchCategoryViewController: UIViewController, SearchableViewController {
                 weakSelf.models = [models]
                 weakSelf.tableView.reloadData()
                 weakSelf.lastKeyword = keyword
+                weakSelf.navigationSearchBoxView.isBusy = false
             }
         }
         queue.addOperation(op)
+        navigationSearchBoxView.isBusy = true
     }
     
 }
@@ -185,7 +190,7 @@ extension SearchCategoryViewController: UITableViewDelegate {
             let asset = (model as! AssetSearchResult).asset
             pushAssetViewController(asset: asset)
         case .user, .conversationsByName, .conversationsByMessage:
-            pushViewController(keyword: keyword, result: model as! SearchResult)
+            pushViewController(keyword: trimmedLowercaseKeyword, result: model as! SearchResult)
         }
     }
     

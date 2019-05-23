@@ -1,32 +1,11 @@
 import UIKit
 
-class SearchTextField: UITextField {
-    
-    let textMargin: CGFloat = 16
-    
-    override func textRect(forBounds bounds: CGRect) -> CGRect {
-        let rect = super.textRect(forBounds: bounds)
-        return CGRect(x: rect.origin.x + textMargin,
-                      y: rect.origin.y,
-                      width: rect.width - textMargin,
-                      height: rect.height)
-    }
-    
-    override func editingRect(forBounds bounds: CGRect) -> CGRect {
-        let rect = super.editingRect(forBounds: bounds)
-        return CGRect(x: rect.origin.x + textMargin,
-                      y: rect.origin.y,
-                      width: rect.width - textMargin,
-                      height: rect.height)
-    }
-    
-}
-
 class SearchBoxView: UIView, XibDesignable {
     
-    @IBOutlet weak var textField: SearchTextField!
+    @IBOutlet weak var textField: SearchBoxTextField!
     
-    let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
+    private let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
+    private let textFieldLeftView = SearchBoxLeftView(frame: CGRect(x: 0, y: 0, width: 17, height: 17))
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -36,6 +15,12 @@ class SearchBoxView: UIView, XibDesignable {
     override init(frame: CGRect) {
         super.init(frame: frame)
         prepare()
+    }
+    
+    var isBusy = false {
+        didSet {
+            textFieldLeftView.isBusy = isBusy
+        }
     }
     
     deinit {
@@ -58,8 +43,7 @@ class SearchBoxView: UIView, XibDesignable {
     
     private func prepare() {
         loadXib()
-        let magnifyingGlassImage = UIImage(named: "Wallet/ic_search")
-        textField.leftView = UIImageView(image: magnifyingGlassImage)
+        textField.leftView = textFieldLeftView
         textField.leftViewMode = .always
         clearButton.addTarget(self, action: #selector(clear(_:)), for: .touchUpInside)
         let clearImage = UIImage(named: "Wallet/ic_clear")

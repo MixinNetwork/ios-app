@@ -37,12 +37,16 @@ class ActivityIndicatorView: UIView {
         }
     }
     
-    private var indicatorLayer: CAShapeLayer?
-    private var _isAnimating = false
+    var lineWidth: CGFloat {
+        return usesLargerStyle ? 3 : 2
+    }
     
-    private var contentLength: CGFloat {
+    var contentLength: CGFloat {
         return usesLargerStyle ? 37 : 20
     }
+    
+    private var indicatorLayer: CAShapeLayer?
+    private var _isAnimating = false
     
     override var intrinsicContentSize: CGSize {
         return CGSize(width: contentLength, height: contentLength)
@@ -131,7 +135,7 @@ class ActivityIndicatorView: UIView {
         indicatorLayer.backgroundColor = UIColor.clear.cgColor
         indicatorLayer.strokeColor = tintColor.cgColor
         indicatorLayer.fillColor = UIColor.clear.cgColor
-        indicatorLayer.lineWidth = usesLargerStyle ? 3 : 2
+        indicatorLayer.lineWidth = lineWidth
         indicatorLayer.lineCap = .round
         indicatorLayer.strokeStart = 0
         indicatorLayer.strokeEnd = 0.8

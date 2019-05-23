@@ -49,7 +49,7 @@ enum MixinURL {
             } else if url.host == Host.withdrawal {
                 self = .withdrawal
             } else if url.host == Host.address {
-                self = .withdrawal
+                self = .address
             } else {
                 self = .unknown(url)
             }

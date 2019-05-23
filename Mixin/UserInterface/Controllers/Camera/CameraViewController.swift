@@ -605,7 +605,7 @@ extension CameraViewController: AVCaptureMetadataOutputObjectsDelegate {
 
         if let mixinURL = MixinURL(string: urlString) {
             switch mixinURL {
-            case .codes, .pay, .users, .transfer, .withdrawal:
+            case .codes, .pay, .users, .transfer, .withdrawal, .address:
                 showNotification(text: Localized.CAMERA_QRCODE_CODES)
             case .send:
                 showNotification(text: urlString)

@@ -21,6 +21,10 @@ class WithdrawalAPI: BaseAPI {
         }
     }
 
+    func address(addressId: String) -> APIResult<Address> {
+        return request(method: .get, url: url.address(addressId: addressId))
+    }
+
     func address(addressId: String, completion: @escaping (APIResult<Address>) -> Void) {
         request(method: .get, url: url.address(addressId: addressId), completion: completion)
     }

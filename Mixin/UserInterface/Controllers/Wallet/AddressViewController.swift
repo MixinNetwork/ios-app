@@ -150,13 +150,10 @@ extension AddressViewController {
         if searchBoxView.textField.isFirstResponder {
             searchBoxView.textField.resignFirstResponder()
         }
-        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: Localized.MENU_DELETE, style: .destructive, handler: { [weak self](action) in
-            self?.deleteAction(indexPath: indexPath)
-        }))
-        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-        present(alc, animated: true, completion: nil)
+        let address = addresses[indexPath.row]
         tableView.setEditing(false, animated: true)
+        
+        AddressWindow.instance().presentPopupControllerAnimated(action: .delete, asset: asset, addressRequest: nil, address: address, dismissCallback: nil)
     }
     
     private func tableViewCommitEditAction(action: UITableViewRowAction, indexPath: IndexPath) {
@@ -166,13 +163,6 @@ extension AddressViewController {
         tableView.setEditing(false, animated: true)
         let vc = NewAddressViewController.instance(asset: asset, address: addresses[indexPath.row])
         UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
-    }
-    
-    private func deleteAction(indexPath: IndexPath) {
-        let validator = PinValidationViewController.instance(tips: Localized.WALLET_PASSWORD_ADDRESS_TIPS, onSuccess: { (pin) in
-            self.deleteAddress(at: indexPath, pin: pin)
-        })
-        present(validator, animated: true, completion: nil)
     }
     
     private func deleteAddress(at indexPath: IndexPath, pin: String) {

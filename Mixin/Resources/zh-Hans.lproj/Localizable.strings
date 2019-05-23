@@ -83,6 +83,7 @@
 "toast_copied" = "已复制";
 "toast_added" = "已添加";
 "toast_saved" = "已保存";
+"toast_deleted" = "已删除";
 "toast_logined" = "已登录";
 "toast_authorized" = "已授权";
 "toast_changed" = "已修改";
@@ -327,7 +328,7 @@
 "wallet_send_memo" = "备注 (可选)";
 "wallet_button_add_address" = "点击添加地址";
 "wallet_hint_transaction_fee" = "需要 %@ 作为 %@ 提现手续费。";
-"wallet_password_address_tips" = "确认钱包密码保护地址簿安全";
+"wallet_password_address_tips" = "通过密码修改";
 "wallet_withdrawal_asset" = "%@ 提现";
 "wallet_withdrawal_pay_password" = "通过密码提现";
 "wallet_withdrawal_reserve" = " %@ 要求账号至少保留 %@。";
@@ -397,10 +398,10 @@
 "address_new_placeholder_address" = "地址";
 "address_new_title" = "增加 %@ 地址";
 "address_edit_title" = "修改 %@ 地址";
+"address_delete_title" = "删除 %@ 地址";
 "address_format_error" = "地址格式错误";
 "address_asset_not_found" = "找不到该资产.";
-"address_auto_add" = "标签\"%@\"和地址\"%@\"已自动添加至 %@ 地址簿";
-"address_auto_add_account" = "账号名\"%@\"和备注（Memo)\"%@\"已自动添加至 %@ 地址簿";
+"address_not_found" = "找不到该地址";
 
 // Transfer
 "transfer_title" = "转账";

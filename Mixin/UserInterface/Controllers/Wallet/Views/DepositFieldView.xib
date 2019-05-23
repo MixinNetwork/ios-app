@@ -173,6 +173,7 @@
                             </userDefinedRuntimeAttributes>
                         </constraint>
                         <constraint firstAttribute="height" priority="750" constant="228" id="Sib-iX-NSq"/>
+                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Sfa-Qc-uEt" secondAttribute="bottom" constant="20" id="X74-4I-PO4"/>
                         <constraint firstItem="GGQ-e5-PNg" firstAttribute="leading" secondItem="zIa-ex-QbW" secondAttribute="leading" constant="35" id="a1t-iN-6u9" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">

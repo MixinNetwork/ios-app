@@ -9,10 +9,10 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     
     let iconView = NavigationAvatarIconView()
     
-    var inheritedKeyword: Keyword?
-    var lastKeyword: Keyword?
+    var inheritedKeyword: String?
+    var lastKeyword: String?
     
-    var searchTextField: UITextField {
+    var searchTextField: UITextField! {
         return searchBoxView.textField
     }
     
@@ -51,7 +51,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         rightButton.width = 44
         navigationItem.title = " "
         navigationItem.rightBarButtonItem = rightButton
-        searchTextField.text = inheritedKeyword?.raw
+        searchTextField.text = inheritedKeyword
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
         tableView.register(R.nib.peerCell)
@@ -101,10 +101,11 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         queue.operations
             .filter({ $0 != loadConversationOp })
             .forEach({ $0.cancel() })
-        guard let keyword = self.keyword else {
+        guard let keyword = trimmedLowercaseKeyword else {
             messages = []
             tableView.reloadData()
             lastKeyword = nil
+            searchBoxView.isBusy = false
             return
         }
         guard keyword != lastKeyword else {
@@ -120,13 +121,13 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         userWindow.updateUser(user: user).presentView()
     }
     
-    private func reloadMessages(keyword: Keyword) {
+    private func reloadMessages(keyword: String) {
         let conversationId = self.conversationId
         let limit = self.messageCountPerPage
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
             let messages = MessageDAO.shared.getMessages(conversationId: conversationId,
-                                                         contentLike: keyword.trimmed,
+                                                         contentLike: keyword,
                                                          belowCreatedAt: nil,
                                                          limit: limit)
             guard !op.isCancelled else {
@@ -141,9 +142,11 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
                 weakSelf.tableView.reloadData()
                 weakSelf.tableView.setContentOffset(.zero, animated: false)
                 weakSelf.lastKeyword = keyword
+                weakSelf.searchBoxView.isBusy = false
             }
         }
         op.addDependency(loadConversationOp)
+        searchBoxView.isBusy = true
         queue.addOperation(op)
     }
     
@@ -188,7 +191,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard let location = messages.last?.last?.createdAt else {
             return
         }
-        guard let keyword = self.keyword else {
+        guard let keyword = trimmedLowercaseKeyword else {
             return
         }
         let conversationId = self.conversationId
@@ -196,7 +199,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
             let messages = MessageDAO.shared.getMessages(conversationId: conversationId,
-                                                         contentLike: keyword.trimmed,
+                                                         contentLike: keyword,
                                                          belowCreatedAt: location,
                                                          limit: limit)
             guard !op.isCancelled else {
@@ -221,7 +224,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard let conversation = conversation else {
             return
         }
-        guard let keyword = self.keyword?.trimmed else {
+        guard let keyword = trimmedLowercaseKeyword else {
             return
         }
         let messageId = messages[indexPath.section][indexPath.row].messageId

@@ -32,6 +32,9 @@
         } else if (c != ' ' && lastChar == '.' && dotSequence == 1) {
             maybeContainsURL = YES;
             break;
+        } else if (c == ':' && i + 2 < string.length - 1 && characterAtIndexImp(string, selector, i + 1) == '/' && characterAtIndexImp(string, selector, i + 2) == '/') {
+            maybeContainsURL = YES;
+            break;
         } else {
             dotSequence = 0;
         }

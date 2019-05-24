@@ -167,7 +167,6 @@ class SearchViewController: UIViewController, SearchableViewController {
     
     func prepareForReuse() {
         queue.cancelAllOperations()
-        searchTextField.text = nil
         showRecentApps()
         assets = []
         users = []
@@ -179,6 +178,8 @@ class SearchViewController: UIViewController, SearchableViewController {
             navigationController.viewControllers.removeAll(where: { $0 != self })
             navigationController.searchNavigationBar.layoutSearchBoxView(insets: navigationSearchBoxInsets)
         }
+        lastSearchFieldText = nil
+        searchTextField.text = nil
         navigationSearchBoxView.isBusy = false
     }
     

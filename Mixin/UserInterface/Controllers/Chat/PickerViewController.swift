@@ -2,8 +2,15 @@ import UIKit
 import Photos
 import MobileCoreServices
 
-class PickerViewController: UICollectionViewController, MixinNavigationAnimating {
-
+class PickerViewController: UIViewController, MixinNavigationAnimating {
+    
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var activityIndicator: ActivityIndicatorView!
+    
+    @IBOutlet weak var showActivityIndicatorWrapperConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideActivityIndicatorWrapperConstraint: NSLayoutConstraint!
+    @IBOutlet weak var safeAreaTopPlaceholderHeightConstraint: NSLayoutConstraint!
+    
     private var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
         options.deliveryMode = .opportunistic
@@ -18,7 +25,7 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
         return options
     }()
     private var collection: PHAssetCollection?
-    private var assets: PHFetchResult<PHAsset>!
+    private var assets = PHFetchResult<PHAsset>()
     private var isFilterCustomSticker = false
     
     private lazy var itemSize: CGSize = {
@@ -32,18 +39,35 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
     override func viewDidLoad() {
         super.viewDidLoad()
         container?.rightButton.isEnabled = true
-        if let collection = collection {
-            let options = PHFetchOptions()
-            if isFilterCustomSticker {
-                options.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
-            }
-            assets = PHAsset.fetchAssets(in: collection, options: options)
-        } else {
-            assets = PHFetchResult<PHAsset>()
-        }
         container?.titleLabel.text = collection?.localizedTitle
-        collectionView?.reloadData()
-        PHPhotoLibrary.shared().register(self)
+        let collection = self.collection
+        let isFilterCustomSticker = self.isFilterCustomSticker
+        DispatchQueue.global().async { [weak self] in
+            let assets: PHFetchResult<PHAsset>
+            if let collection = collection {
+                let options = PHFetchOptions()
+                if isFilterCustomSticker {
+                    options.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+                }
+                assets = PHAsset.fetchAssets(in: collection, options: options)
+            } else {
+                assets = PHFetchResult<PHAsset>()
+            }
+            guard let weakSelf = self else {
+                return
+            }
+            PHPhotoLibrary.shared().register(weakSelf)
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.stopAcitivityIndicator()
+                weakSelf.assets = assets
+                weakSelf.collectionView?.reloadData()
+                weakSelf.view.setNeedsLayout()
+                weakSelf.view.layoutIfNeeded()
+            }
+        }
     }
     
     deinit {
@@ -63,7 +87,7 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
     }
     
     class func instance(collection: PHAssetCollection? = nil, isFilterCustomSticker: Bool, scrollToOffset: CGPoint) -> UIViewController {
-        let vc = Storyboard.photo.instantiateViewController(withIdentifier: "picker") as! PickerViewController
+        let vc = R.storyboard.photo.picker()!
         if let collection = collection {
             vc.collection = collection
         } else {
@@ -73,7 +97,16 @@ class PickerViewController: UICollectionViewController, MixinNavigationAnimating
         vc.isFilterCustomSticker = isFilterCustomSticker
         return vc
     }
-
+    
+    private func stopAcitivityIndicator() {
+        activityIndicator.stopAnimating()
+        showActivityIndicatorWrapperConstraint.priority = .defaultLow
+        hideActivityIndicatorWrapperConstraint.priority = .defaultHigh
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
 }
 
 extension PickerViewController: ContainerViewControllerDelegate {
@@ -92,18 +125,14 @@ extension PickerViewController: ContainerViewControllerDelegate {
     
 }
 
-extension PickerViewController: UICollectionViewDelegateFlowLayout {
-
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension PickerViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return assets.count
     }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return itemSize
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell_identifier_picker", for: indexPath) as! PickerCell
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.picker, for: indexPath)!
         let asset = assets[indexPath.row]
         cell.localIdentifier = asset.localIdentifier
         let targetSize = CGSize(width: cell.thumbImageView.frame.size.width * 2, height: cell.thumbImageView.frame.size.height * 2)
@@ -132,10 +161,22 @@ extension PickerViewController: UICollectionViewDelegateFlowLayout {
         }
         return cell
     }
+    
+}
 
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+extension PickerViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         navigationController?.dismiss(animated: true, completion: nil)
         (navigationController as? PhotoAssetPickerNavigationController)?.pickerDelegate?.pickerController(self, contentOffset: collectionView.contentOffset, didFinishPickingMediaWithAsset: assets[indexPath.row])
+    }
+    
+}
+
+extension PickerViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return itemSize
     }
     
 }

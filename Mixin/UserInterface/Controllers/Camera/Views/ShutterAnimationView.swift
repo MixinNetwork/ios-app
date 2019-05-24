@@ -3,13 +3,17 @@ import UIKit
 class ShutterAnimationView: UIView {
     
     static let shutterSize = CGSize(width: 72, height: 72)
-    static let sendSize = #imageLiteral(resourceName: "ic_camera_send").size
-    static let shutterLineWidth: CGFloat = 3
+    static let sendSize = CGSize(width: 44, height: 44)
+    static let shutterLineWidth: CGFloat = 7
     static let animationDuration: TimeInterval = 0.3
-
+    
     private let shutterLayer = CAShapeLayer()
-    private let sendLayer = CALayer()
-    private let shutterPath = UIBezierPath(ovalIn: CGRect(origin: .zero, size: shutterSize).insetBy(dx: shutterLineWidth, dy: shutterLineWidth)).cgPath
+    private let sendImageView = UIImageView(image: R.image.ic_camera_send())
+    private let shutterPath: CGPath = {
+        let frame = CGRect(origin: .zero, size: shutterSize)
+            .insetBy(dx: shutterLineWidth / 2, dy: shutterLineWidth / 2)
+        return UIBezierPath(ovalIn: frame).cgPath
+    }()
     private let sendPath = UIBezierPath(ovalIn: CGRect(x: (shutterSize.width - sendSize.width / 2) / 2,
                                                        y: (shutterSize.height - sendSize.height / 2) / 2,
                                                        width: sendSize.width / 2,
@@ -34,10 +38,7 @@ class ShutterAnimationView: UIView {
                                     y: (bounds.height - ShutterAnimationView.shutterSize.height) / 2,
                                     width: ShutterAnimationView.shutterSize.width,
                                     height: ShutterAnimationView.shutterSize.height)
-        sendLayer.frame = CGRect(x: (bounds.width - ShutterAnimationView.sendSize.width) / 2,
-                                 y: (bounds.height - ShutterAnimationView.sendSize.height) / 2,
-                                 width: ShutterAnimationView.sendSize.width,
-                                 height: ShutterAnimationView.sendSize.height)
+        sendImageView.frame = bounds
     }
     
     func transformToSend() {
@@ -47,8 +48,7 @@ class ShutterAnimationView: UIView {
         shutterLayer.fillColor = shutterFillColor
         shutterLayer.lineWidth = ShutterAnimationView.shutterLineWidth
         shutterLayer.opacity = 1
-        sendLayer.removeAllAnimations()
-        sendLayer.opacity = 0
+        sendImageView.alpha = 0
 
         let duration = ShutterAnimationView.animationDuration
         let pathAnimation = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.path))
@@ -67,17 +67,14 @@ class ShutterAnimationView: UIView {
         
         let shutterAlphaAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
         shutterAlphaAnimation.toValue = 0
-        let sendAlphaAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
-        sendAlphaAnimation.toValue = 1
-        let alphaAnimations = [shutterAlphaAnimation, sendAlphaAnimation]
-        for anim in alphaAnimations {
-            anim.beginTime = CACurrentMediaTime() + duration * 0.7
-            anim.duration = duration * 0.3
-            anim.fillMode = .both
-            anim.isRemovedOnCompletion = false
-        }
+        shutterAlphaAnimation.beginTime = CACurrentMediaTime() + duration * 0.7
+        shutterAlphaAnimation.duration = duration * 0.3
+        shutterAlphaAnimation.fillMode = .both
+        shutterAlphaAnimation.isRemovedOnCompletion = false
         shutterLayer.add(shutterAlphaAnimation, forKey: shutterAlphaAnimation.keyPath)
-        sendLayer.add(sendAlphaAnimation, forKey: sendAlphaAnimation.keyPath)
+        UIView.animate(withDuration: duration * 0.3, delay: duration * 0.7, options: [], animations: {
+            self.sendImageView.alpha = 1
+        }, completion: nil)
     }
     
     func transformToShutter() {
@@ -86,22 +83,18 @@ class ShutterAnimationView: UIView {
         shutterLayer.strokeColor = sendColor
         shutterLayer.lineWidth = ShutterAnimationView.sendSize.width / 2
         shutterLayer.opacity = 0
-        sendLayer.removeAllAnimations()
-        sendLayer.opacity = 1
+        sendImageView.alpha = 1
         
         let duration = ShutterAnimationView.animationDuration
         let shutterAlphaAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
         shutterAlphaAnimation.toValue = 1
-        let sendAlphaAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
-        sendAlphaAnimation.toValue = 0
-        let alphaAnimations = [shutterAlphaAnimation, sendAlphaAnimation]
-        for anim in alphaAnimations {
-            anim.duration = duration * 0.3
-            anim.fillMode = .both
-            anim.isRemovedOnCompletion = false
-        }
+        shutterAlphaAnimation.duration = duration * 0.3
+        shutterAlphaAnimation.fillMode = .both
+        shutterAlphaAnimation.isRemovedOnCompletion = false
         shutterLayer.add(shutterAlphaAnimation, forKey: shutterAlphaAnimation.keyPath)
-        sendLayer.add(sendAlphaAnimation, forKey: sendAlphaAnimation.keyPath)
+        UIView.animate(withDuration: duration * 0.3) {
+            self.sendImageView.alpha = 0
+        }
         
         let pathAnimation = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.path))
         pathAnimation.toValue = shutterPath
@@ -126,9 +119,9 @@ class ShutterAnimationView: UIView {
         shutterLayer.lineWidth = ShutterAnimationView.shutterLineWidth
         shutterLayer.masksToBounds = true
         layer.addSublayer(shutterLayer)
-        sendLayer.contents = #imageLiteral(resourceName: "ic_camera_send").cgImage
-        sendLayer.opacity = 0
-        layer.addSublayer(sendLayer)
+        sendImageView.contentMode = .center
+        sendImageView.alpha = 0
+        addSubview(sendImageView)
     }
     
 }

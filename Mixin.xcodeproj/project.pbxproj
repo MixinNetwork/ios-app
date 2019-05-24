@@ -129,6 +129,7 @@
 		7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */; };
 		7B4E30762295659200A03F6E /* SearchBoxTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E30752295659200A03F6E /* SearchBoxTextField.swift */; };
 		7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E3077229565C200A03F6E /* SearchBoxLeftView.swift */; };
+		7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */; };
 		7B4F5ACD224CBA4A00A8392D /* AssetFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */; };
 		7B51DDAA223A33F3008ACDBB /* ContinueButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */; };
 		7B51DDAE223A3818008ACDBB /* MobileNumberView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */; };
@@ -265,6 +266,9 @@
 		7BADC842204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BADC841204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift */; };
 		7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAE1B43223B51E9004F2D16 /* ChangeNumberContext.swift */; };
 		7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */; };
+		7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB06F44228EA7720048C2D6 /* NotificationView.xib */; };
+		7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB06F46228EA78F0048C2D6 /* NotificationController.swift */; };
+		7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB06F48228ED8650048C2D6 /* NotificationView.swift */; };
 		7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB12FA62192C8DB009BEECF /* BarChartView.swift */; };
 		7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */; };
 		7BB3855021E74DA60070FF8F /* JSONCoderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3854F21E74DA60070FF8F /* JSONCoderExtension.swift */; };
@@ -789,6 +793,7 @@
 		7B4D112D205BDAD50074BF60 /* WithdrawalAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalAPI.swift; sourceTree = "<group>"; };
 		7B4E30752295659200A03F6E /* SearchBoxTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxTextField.swift; sourceTree = "<group>"; };
 		7B4E3077229565C200A03F6E /* SearchBoxLeftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxLeftView.swift; sourceTree = "<group>"; };
+		7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPreviewMaskView.swift; sourceTree = "<group>"; };
 		7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterViewController.swift; sourceTree = "<group>"; };
 		7B51DDA9223A33F3008ACDBB /* ContinueButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueButtonViewController.swift; sourceTree = "<group>"; };
 		7B51DDAD223A3818008ACDBB /* MobileNumberView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MobileNumberView.xib; sourceTree = "<group>"; };
@@ -925,6 +930,9 @@
 		7BADC841204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7BAE1B43223B51E9004F2D16 /* ChangeNumberContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeNumberContext.swift; sourceTree = "<group>"; };
 		7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingViewModel.swift; sourceTree = "<group>"; };
+		7BB06F44228EA7720048C2D6 /* NotificationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationView.xib; sourceTree = "<group>"; };
+		7BB06F46228EA78F0048C2D6 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		7BB06F48228ED8650048C2D6 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		7BB12FA62192C8DB009BEECF /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
 		7BB20A8B207B5F0C007ACFEE /* ContactMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB3854F21E74DA60070FF8F /* JSONCoderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONCoderExtension.swift; sourceTree = "<group>"; };
@@ -2194,6 +2202,7 @@
 				7B59534A2267206D00D59DB4 /* OneSideShadowView.swift */,
 				7B59534C226720F700D59DB4 /* TopShadowView.swift */,
 				7B59534E2267215B00D59DB4 /* BottomShadowView.swift */,
+				7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2311,6 +2320,9 @@
 				DF768568200687010055F3FF /* PreviewView.swift */,
 				7BF5374820076BB500257D6C /* ShutterAnimationView.swift */,
 				DF84777720DA5A1200DE5163 /* RecordButton.swift */,
+				7BB06F44228EA7720048C2D6 /* NotificationView.xib */,
+				7BB06F48228ED8650048C2D6 /* NotificationView.swift */,
+				7BB06F46228EA78F0048C2D6 /* NotificationController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2775,6 +2787,7 @@
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
+				7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */,
 				7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
@@ -3057,6 +3070,7 @@
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,
+				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
 				7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */,
 				273FACC0205FB9A800513327 /* SessionCipher.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
@@ -3212,6 +3226,7 @@
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
 				273FACB6205FB9A800513327 /* Signal.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
+				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,
 				273FACC8205FB9A800513327 /* PreKeyStoreWrapper.swift in Sources */,
 				7BBF395E205A624F00390712 /* Fee.swift in Sources */,
 				DF2A24521FC8744A003A8C1E /* ParticipantDAO.swift in Sources */,
@@ -3501,6 +3516,7 @@
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,
 				7B7E7146217D89790052C7DD /* CallView.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
+				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
 				7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */,
 				273FACB8205FB9A800513327 /* SessionStore.swift in Sources */,
 				DF8DA1AD1FD6820600425CEC /* RefreshConversationJob.swift in Sources */,

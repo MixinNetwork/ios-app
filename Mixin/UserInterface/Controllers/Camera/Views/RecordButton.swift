@@ -1,7 +1,7 @@
 import UIKit
 
 class RecordButton: UIButton {
-    private let borderWidth: CGFloat = 6.0
+    private let borderWidth: CGFloat = 7
     private let maxDuration: Double = 15 * 1000
 
     private lazy var centerPoint: CGPoint = { return CGPoint(x: self.bounds.width / 2, y: self.bounds.width / 2) }()

@@ -2,15 +2,20 @@ import UIKit
 import WebKit
 import Photos
 import YYImage
+import FirebaseMLVision
 
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
     @IBOutlet weak var photoImageView: YYAnimatedImageView!
     @IBOutlet weak var videoView: GalleryVideoView!
     @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var sendButton: StateResponsiveButton!
     @IBOutlet weak var dismissButton: BouncingButton!
-
+    
+    var detectsQrCode = false
+    var showSaveButton = false
+    
     private weak var dataSource: ConversationDataSource?
 
     private let rateKey = "rate"
@@ -21,7 +26,10 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     private var videoAsset: AVAsset?
     private var isObservingRate = false
     private var seekToZero = false
-
+    private var qrCodeString: String?
+    
+    private lazy var notificationController = NotificationController(delegate: self)
+    private lazy var qrcodeDetector = Vision.vision().barcodeDetector(options: VisionBarcodeDetectorOptions(formats: .qrCode))
     private lazy var videoSettings: [String: Any] = [
         AVVideoCodecKey: AVVideoCodecH264,
         AVVideoWidthKey: 1280,
@@ -44,8 +52,14 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        saveButton.isHidden = !showSaveButton
         if let image = self.image {
             photoImageView.image = image
+            if detectsQrCode {
+                DispatchQueue.global().async { [weak self] in
+                    self?.detectQrCode(image: image)
+                }
+            }
         } else if let asset = self.videoAsset {
             DispatchQueue.global().async { [weak self] in
                 let thumbnail = UIImage(withFirstFrameOfVideoAtAsset: asset)
@@ -73,7 +87,12 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                             do {
                                 try data?.write(to: tempUrl)
                                 self?.animateURL = tempUrl
-                                self?.photoImageView.sd_setImage(with: tempUrl)
+                                self?.photoImageView.sd_setImage(with: tempUrl, completed: { (image, _, _, _) in
+                                    guard let image = image, let weakSelf = self, weakSelf.detectsQrCode else {
+                                        return
+                                    }
+                                    weakSelf.detectQrCode(image: image)
+                                })
                             } catch {
                                 self?.requestAssetImage(asset: asset)
                             }
@@ -85,18 +104,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             }
         }
     }
-
-    private func requestAssetImage(asset: PHAsset) {
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.version = .current
-        requestOptions.isSynchronous = true
-        requestOptions.deliveryMode = .highQualityFormat
-        requestOptions.isNetworkAccessAllowed = true
-        PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self](image, _) in
-            self?.photoImageView.image = image
-        })
-    }
-
+    
     @IBAction func playAction(_ sender: Any) {
         if seekToZero {
             seekToZero = false
@@ -104,7 +112,64 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         }
         videoView.play()
     }
-
+    
+    @IBAction func saveAction(_ sender: Any) {
+        guard let asset = videoAsset as? AVURLAsset else {
+            return
+        }
+        PHPhotoLibrary.checkAuthorization { (granted) in
+            if granted {
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: asset.url)
+                }, completionHandler: { (success, error) in
+                    DispatchQueue.main.async {
+                        if success {
+                            showHud(style: .notification, text: Localized.CAMERA_SAVE_VIDEO_SUCCESS)
+                        } else {
+                            showHud(style: .error, text: Localized.CAMERA_SAVE_VIDEO_FAILED)
+                        }
+                    }
+                })
+            }
+        }
+    }
+    
+    private func requestAssetImage(asset: PHAsset) {
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.version = .current
+        requestOptions.isSynchronous = true
+        requestOptions.deliveryMode = .highQualityFormat
+        requestOptions.isNetworkAccessAllowed = true
+        PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: requestOptions, resultHandler: { [weak self] (image, _) in
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.photoImageView.image = image
+            if let image = image, weakSelf.detectsQrCode {
+                DispatchQueue.global().async {
+                    self?.detectQrCode(image: image)
+                }
+            }
+        })
+    }
+    
+    private func detectQrCode(image: UIImage) {
+        let image = VisionImage(image: image)
+        qrcodeDetector.detect(in: image) { [weak self] (features, error) in
+            guard let weakSelf = self else {
+                return
+            }
+            guard error == nil else {
+                return
+            }
+            guard let string = features?.first?.rawValue else {
+                return
+            }
+            weakSelf.qrCodeString = string
+            weakSelf.notificationController.present(urlString: string)
+        }
+    }
+    
     private func loadAsset(asset: AVAsset, thumbnail: UIImage?) {
         self.sendButton.activityIndicator.tintColor = .white
         self.videoAsset = asset
@@ -130,6 +195,9 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         }
         let isPlayingVideo = videoView.isPlaying()
         playButton.isHidden = isPlayingVideo
+        if showSaveButton {
+            saveButton.isHidden = isPlayingVideo
+        }
         sendButton.isHidden = isPlayingVideo
         dismissButton.isHidden = isPlayingVideo
         UIApplication.shared.isIdleTimerDisabled = isPlayingVideo
@@ -171,61 +239,12 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     }
                 }
             }
-        } else if let image = photoImageView.image, let dataSource = dataSource {
-            var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: dataSource.conversationId, userId: AccountAPI.shared.accountUserId)
-            message.mediaStatus = MediaStatus.PENDING.rawValue
-
-            DispatchQueue.global().async { [weak self] in
-                if let assetUrl = self?.animateURL {
-                    guard FileManager.default.fileSize(assetUrl.path) > 0 else {
-                        DispatchQueue.main.async {
-                            self?.sendButton.isBusy = false
-                            self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
-                        }
-                        return
-                    }
-                    let fileExtension = assetUrl.pathExtension.lowercased()
-                    let filename = "\(message.messageId).\(fileExtension)"
-                    let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
-                    do {
-                        try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
-
-                        message.thumbImage = image.base64Thumbnail()
-                        message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                        message.mediaWidth = Int(image.size.width)
-                        message.mediaHeight = Int(image.size.height)
-                        message.mediaMimeType = FileManager.default.mimeType(ext: fileExtension)
-                        message.mediaUrl = filename
-                    } catch {
-                        DispatchQueue.main.async {
-                            self?.sendButton.isBusy = false
-                            self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
-                        }
-                        return
-                    }
-                } else {
-                    let filename = "\(message.messageId).\(ExtensionName.jpeg)"
-                    let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
-                    let targetPhoto = image.scaleForUpload()
-                    if targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
-                        message.thumbImage = targetPhoto.base64Thumbnail()
-                        message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                        message.mediaWidth = Int(targetPhoto.size.width)
-                        message.mediaHeight = Int(targetPhoto.size.height)
-                        message.mediaMimeType = "image/jpeg"
-                        message.mediaUrl = filename
-                    } else {
-                        DispatchQueue.main.async {
-                            self?.sendButton.isBusy = false
-                            self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
-                        }
-                        return
-                    }
-                }
-                SendMessageService.shared.sendMessage(message: message, ownerUser: dataSource.ownerUser, isGroupMessage: dataSource.category == .group)
-                DispatchQueue.main.async {
-                    self?.navigationController?.popViewController(animated: true)
-                }
+        } else if let image = photoImageView.image {
+            if let dataSource = dataSource {
+                send(image: image, to: dataSource)
+            } else {
+                let vc = MessageReceiverViewController.instance(content: .photo(image))
+                navigationController?.pushViewController(vc, animated: true)
             }
         }
     }
@@ -234,7 +253,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         navigationController?.popViewController(animated: true)
     }
 
-    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> UIViewController {
+    class func instance(image: UIImage? = nil, asset: PHAsset? = nil, videoAsset: AVAsset? = nil, dataSource: ConversationDataSource?) -> AssetSendViewController {
        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "send_asset") as! AssetSendViewController
         vc.image = image
         vc.asset = asset
@@ -242,7 +261,65 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
         vc.dataSource = dataSource
         return vc
     }
-
+    
+    private func send(image: UIImage, to dataSource: ConversationDataSource) {
+        var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue, conversationId: dataSource.conversationId, userId: AccountAPI.shared.accountUserId)
+        message.mediaStatus = MediaStatus.PENDING.rawValue
+        
+        DispatchQueue.global().async { [weak self] in
+            if let assetUrl = self?.animateURL {
+                guard FileManager.default.fileSize(assetUrl.path) > 0 else {
+                    DispatchQueue.main.async {
+                        self?.sendButton.isBusy = false
+                        self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
+                    }
+                    return
+                }
+                let fileExtension = assetUrl.pathExtension.lowercased()
+                let filename = "\(message.messageId).\(fileExtension)"
+                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                do {
+                    try FileManager.default.copyItem(at: assetUrl, to: targetUrl)
+                    
+                    message.thumbImage = image.base64Thumbnail()
+                    message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+                    message.mediaWidth = Int(image.size.width)
+                    message.mediaHeight = Int(image.size.height)
+                    message.mediaMimeType = FileManager.default.mimeType(ext: fileExtension)
+                    message.mediaUrl = filename
+                } catch {
+                    DispatchQueue.main.async {
+                        self?.sendButton.isBusy = false
+                        self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
+                    }
+                    return
+                }
+            } else {
+                let filename = "\(message.messageId).\(ExtensionName.jpeg)"
+                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+                let targetPhoto = image.scaleForUpload()
+                if targetPhoto.saveToFile(path: targetUrl), FileManager.default.fileSize(targetUrl.path) > 0 {
+                    message.thumbImage = targetPhoto.base64Thumbnail()
+                    message.mediaSize = FileManager.default.fileSize(targetUrl.path)
+                    message.mediaWidth = Int(targetPhoto.size.width)
+                    message.mediaHeight = Int(targetPhoto.size.height)
+                    message.mediaMimeType = "image/jpeg"
+                    message.mediaUrl = filename
+                } else {
+                    DispatchQueue.main.async {
+                        self?.sendButton.isBusy = false
+                        self?.alert(Localized.CHAT_SEND_PHOTO_FAILED)
+                    }
+                    return
+                }
+            }
+            SendMessageService.shared.sendMessage(message: message, ownerUser: dataSource.ownerUser, isGroupMessage: dataSource.category == .group)
+            DispatchQueue.main.async {
+                self?.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+    
 }
 
 extension AssetSendViewController {
@@ -254,4 +331,17 @@ extension AssetSendViewController {
     @objc func playerItemDidReachEnd(_ notification: Notification) {
         seekToZero = true
     }
+}
+
+extension AssetSendViewController: NotificationControllerDelegate {
+    
+    func notificationControllerDidSelectNotification(_ controller: NotificationController) {
+        guard let string = qrCodeString, let url = URL(string: string) else {
+            return
+        }
+        if !UrlWindow.checkUrl(url: url) {
+            RecognizeWindow.instance().presentWindow(text: string)
+        }
+    }
+    
 }

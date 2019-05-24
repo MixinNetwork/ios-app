@@ -112,7 +112,7 @@ extension UIImage {
     
     func base64Thumbnail() -> String {
         let scaledImage: UIImage
-        let maxLength: CGFloat = 64
+        let maxLength: CGFloat = 32
         if max(size.width, size.height) > maxLength {
             var targetSize = size.rect(fittingSize: CGSize(width: maxLength, height: maxLength)).size
             targetSize = CGSize(width: max(1, targetSize.width),

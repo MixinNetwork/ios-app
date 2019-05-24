@@ -36,6 +36,15 @@ final class AssetDAO {
             NotificationCenter.default.afterPostOnMain(name: .AssetsDidChange)
         }
     }
+
+    func saveAsset(asset: Asset) -> AssetItem? {
+        var assetItem: AssetItem?
+        MixinDatabase.shared.transaction { (db) in
+            try db.insertOrReplace(objects: asset, intoTable: Asset.tableName)
+            assetItem = try db.prepareSelectSQL(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [asset.assetId]).allObjects().first
+        }
+        return assetItem
+    }
     
     func getAssets(keyword: String, limit: Int?) -> [AssetItem] {
         let keyword = "%\(keyword)%"

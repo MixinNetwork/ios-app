@@ -307,10 +307,34 @@ extension UrlWindow {
         presentPopupControllerAnimated()
 
         DispatchQueue.global().async { [weak self] in
-            guard let asset = AssetDAO.shared.getAsset(assetId: assetId) else {
+            guard var asset = AssetDAO.shared.getAsset(assetId: assetId) else {
                 DispatchQueue.main.async {
                     self?.failedHandler(R.string.localizable.address_asset_not_found())
                 }
+                return
+            }
+
+            while !(asset.isAccount || asset.isAddress) && self?.isShowing ?? false {
+                switch AssetAPI.shared.asset(assetId: asset.assetId) {
+                case let .success(remoteAsset):
+                    guard remoteAsset.isAccount || remoteAsset.isAddress else {
+                        Thread.sleep(forTimeInterval: 2)
+                        continue
+                    }
+                    guard let localAsset = AssetDAO.shared.saveAsset(asset: remoteAsset) else {
+                        return
+                    }
+                    asset = localAsset
+                    break
+                case let .failure(error):
+                    DispatchQueue.main.async {
+                        self?.failedHandler(error.localizedDescription)
+                    }
+                    return
+                }
+            }
+
+            guard self?.isShowing ?? false else {
                 return
             }
 

@@ -34,7 +34,7 @@ class CryptoUserDefault {
 
     var statusOffset: Int64 {
         get {
-            return session.object(forKey: keyStatusOffset) as? Int64 ?? Date().nanosecond()
+            return (session.object(forKey: keyStatusOffset) as? Int64) ?? CommonUserDefault.shared.lastUpdateOrInstallTime.toUTCDate().nanosecond()
         }
         set {
             session.set(newValue, forKey: keyStatusOffset)

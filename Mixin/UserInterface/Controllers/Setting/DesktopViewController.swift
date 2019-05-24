@@ -48,6 +48,7 @@ class DesktopViewController: UITableViewController {
             }
         } else {
             let vc = CameraViewController.instance()
+            vc.scanQrCodeOnly = true
             navigationController?.pushViewController(vc, animated: true)
         }
     }

@@ -82,6 +82,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBAction func scanAddressAction(_ sender: Any) {
         let vc = CameraViewController.instance()
         vc.delegate = self
+        vc.scanQrCodeOnly = true
         navigationController?.pushViewController(vc, animated: true)
         qrCodeScanningDestination = addressTextView
     }
@@ -89,6 +90,7 @@ class NewAddressViewController: KeyboardBasedLayoutViewController {
     @IBAction func scanAccountNameAction(_ sender: Any) {
         let vc = CameraViewController.instance()
         vc.delegate = self
+        vc.scanQrCodeOnly = true
         navigationController?.pushViewController(vc, animated: true)
         qrCodeScanningDestination = labelTextField
     }

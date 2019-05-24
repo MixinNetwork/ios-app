@@ -34,6 +34,8 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
     
     weak var delegate: CameraViewControllerDelegate?
     
+    var scanQrCodeOnly = false
+    
     private let sessionQueue = DispatchQueue(label: "one.mixin.messenger.queue.camera")
     private let metadataOutput = AVCaptureMetadataOutput()
     private let session = AVCaptureSession()
@@ -75,6 +77,13 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             qrcodeTipsView.isHidden = false
         }
         prepareRecord()
+        if scanQrCodeOnly {
+            sendButton.isHidden = true
+            takeButton.isHidden = true
+            saveButton.isHidden = true
+            albumButton.isHidden = true
+            switchCameraButton.isHidden = true
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

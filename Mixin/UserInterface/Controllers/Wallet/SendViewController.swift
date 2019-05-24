@@ -241,7 +241,14 @@ class SendViewController: KeyboardBasedLayoutViewController {
         guard let asset = self.asset else {
             return
         }
-
+        if case .address = opponent! {
+            if asset.assetId == "23dfb5a5-5d7b-48b6-905f-3970e3176e27" {
+                memoTextField.placeholder = R.string.localizable.wallet_send_tag()
+            } else {
+                memoTextField.placeholder = R.string.localizable.wallet_send_memo()
+            }
+        }
+        
         switchAmountButton.isHidden = asset.priceBtc.doubleValue <= 0
         nameLabel.text = asset.name
         let balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never)

@@ -2,64 +2,64 @@ PODS:
   - Alamofire (4.8.2)
   - AlignedCollectionViewFlowLayout (1.1.2)
   - Base64 (1.1.2)
-  - Bugsnag (5.19.1)
-  - Crashlytics (3.12.0):
-    - Fabric (~> 1.9.0)
-  - DeviceGuru (5.1.2)
-  - Fabric (1.9.0)
-  - Firebase/Analytics (5.20.1):
+  - Bugsnag (5.22.1)
+  - Crashlytics (3.13.1):
+    - Fabric (~> 1.10.1)
+  - DeviceGuru (5.1.4)
+  - Fabric (1.10.1)
+  - Firebase/Analytics (6.1.0):
     - Firebase/Core
-  - Firebase/Core (5.20.1):
+  - Firebase/Core (6.1.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.8.0)
-  - Firebase/CoreOnly (5.20.1):
-    - FirebaseCore (= 5.4.1)
-  - Firebase/MLVision (5.20.1):
+    - FirebaseAnalytics (= 6.0.1)
+  - Firebase/CoreOnly (6.1.0):
+    - FirebaseCore (= 6.0.1)
+  - Firebase/MLVision (6.1.0):
     - Firebase/CoreOnly
-    - FirebaseMLVision (= 0.15.0)
-  - Firebase/MLVisionBarcodeModel (5.20.1):
+    - FirebaseMLVision (~> 0.16.0)
+  - Firebase/MLVisionBarcodeModel (6.1.0):
     - Firebase/CoreOnly
-    - FirebaseMLVisionBarcodeModel (= 0.15.0)
-  - FirebaseAnalytics (5.8.0):
-    - FirebaseCore (~> 5.4)
-    - FirebaseInstanceID (~> 3.8)
-    - GoogleAppMeasurement (= 5.8.0)
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
+    - FirebaseMLVisionBarcodeModel (~> 0.16.0)
+  - FirebaseAnalytics (6.0.1):
+    - FirebaseCore (~> 6.0)
+    - FirebaseInstanceID (~> 4.1)
+    - GoogleAppMeasurement (= 6.0.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (~> 0.3)
-  - FirebaseCore (5.4.1):
-    - GoogleUtilities/Environment (~> 5.2)
-    - GoogleUtilities/Logger (~> 5.2)
-  - FirebaseInstanceID (3.8.1):
-    - FirebaseCore (~> 5.2)
-    - GoogleUtilities/Environment (~> 5.2)
-    - GoogleUtilities/UserDefaults (~> 5.2)
-  - FirebaseMLCommon (0.15.0):
-    - FirebaseCore (~> 5.4)
-    - FirebaseInstanceID (~> 3.8)
-    - GoogleUtilities/UserDefaults (~> 5.3)
+  - FirebaseCore (6.0.1):
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/Logger (~> 6.0)
+  - FirebaseInstanceID (4.1.0):
+    - FirebaseCore (~> 6.0)
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/UserDefaults (~> 6.0)
+  - FirebaseMLCommon (0.16.0):
+    - FirebaseCore (~> 6.0)
+    - FirebaseInstanceID (~> 4.0)
+    - GoogleUtilities/UserDefaults (~> 6.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseMLVision (0.15.0):
-    - FirebaseCore (~> 5.4)
-    - FirebaseMLCommon (~> 0.15)
+  - FirebaseMLVision (0.16.0):
+    - FirebaseCore (~> 6.0)
+    - FirebaseMLCommon (~> 0.16)
     - GoogleAPIClientForREST/Core (~> 1.3)
     - GoogleAPIClientForREST/Vision (~> 1.3)
     - GoogleMobileVision/Detector (~> 1.4)
-  - FirebaseMLVisionBarcodeModel (0.15.0):
+  - FirebaseMLVisionBarcodeModel (0.16.0):
     - GoogleMobileVision/BarcodeDetector (~> 1.4)
-  - GiphyCoreSDK (1.4.1)
-  - GoogleAPIClientForREST/Core (1.3.8):
+  - GiphyCoreSDK (1.4.2)
+  - GoogleAPIClientForREST/Core (1.3.9):
     - GTMSessionFetcher (>= 1.1.7)
-  - GoogleAPIClientForREST/Vision (1.3.8):
+  - GoogleAPIClientForREST/Vision (1.3.9):
     - GoogleAPIClientForREST/Core
     - GTMSessionFetcher (>= 1.1.7)
-  - GoogleAppMeasurement (5.8.0):
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
+  - GoogleAppMeasurement (6.0.1):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (~> 0.3)
   - GoogleMobileVision/BarcodeDetector (1.6.0):
     - GoogleMobileVision/Detector (~> 1.6)
@@ -68,35 +68,35 @@ PODS:
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.1)
-  - GoogleToolboxForMac/Defines (2.2.0)
-  - GoogleToolboxForMac/Logger (2.2.0):
-    - GoogleToolboxForMac/Defines (= 2.2.0)
-  - "GoogleToolboxForMac/NSData+zlib (2.2.0)":
-    - GoogleToolboxForMac/Defines (= 2.2.0)
-  - GoogleUtilities/AppDelegateSwizzler (5.5.0):
+  - GoogleToolboxForMac/Defines (2.2.1)
+  - GoogleToolboxForMac/Logger (2.2.1):
+    - GoogleToolboxForMac/Defines (= 2.2.1)
+  - "GoogleToolboxForMac/NSData+zlib (2.2.1)":
+    - GoogleToolboxForMac/Defines (= 2.2.1)
+  - GoogleUtilities/AppDelegateSwizzler (6.1.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (5.5.0)
-  - GoogleUtilities/Logger (5.5.0):
+  - GoogleUtilities/Environment (6.1.0)
+  - GoogleUtilities/Logger (6.1.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (5.5.0):
+  - GoogleUtilities/MethodSwizzler (6.1.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (5.5.0):
+  - GoogleUtilities/Network (6.1.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (5.5.0)"
-  - GoogleUtilities/Reachability (5.5.0):
+  - "GoogleUtilities/NSData+zlib (6.1.0)"
+  - GoogleUtilities/Reachability (6.1.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (5.5.0):
+  - GoogleUtilities/UserDefaults (6.1.0):
     - GoogleUtilities/Logger
-  - GoogleWebRTC (1.1.27299)
-  - GTMSessionFetcher (1.2.1):
-    - GTMSessionFetcher/Full (= 1.2.1)
-  - GTMSessionFetcher/Core (1.2.1)
-  - GTMSessionFetcher/Full (1.2.1):
-    - GTMSessionFetcher/Core (= 1.2.1)
+  - GoogleWebRTC (1.1.27828)
+  - GTMSessionFetcher (1.2.2):
+    - GTMSessionFetcher/Full (= 1.2.2)
+  - GTMSessionFetcher/Core (1.2.2)
+  - GTMSessionFetcher/Full (1.2.2):
+    - GTMSessionFetcher/Core (= 1.2.2)
   - GzipSwift (5.0.0)
   - JWT (3.0.0-beta.11):
     - Base64 (~> 1.1.2)
@@ -116,12 +116,12 @@ PODS:
     - R.swift.Library (~> 5.0.0)
   - R.swift.Library (5.0.1)
   - RSKImageCropper (2.2.1)
-  - SDWebImage/Core (5.0.0-beta6)
-  - SDWebImageYYPlugin/YYImage (0.1.2):
-    - SDWebImage/Core (>= 5.0.0-beta4)
+  - SDWebImage/Core (5.0.3)
+  - SDWebImageYYPlugin/YYImage (0.2.1):
+    - SDWebImage/Core (~> 5.0)
     - YYImage/Core
   - SignalProtocolC (2.3.1)
-  - SnapKit (4.2.0)
+  - SnapKit (5.0.0)
   - SocketRocket (0.5.1)
   - SQLiteRepairKit (1.2.2):
     - WCDBOptimizedSQLCipher (~> 1.2.0)
@@ -227,25 +227,25 @@ SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
-  Bugsnag: 96c6dff50bd5ca461603a7aaf22b8406c4fb32ca
-  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
-  DeviceGuru: 65a794c0c5b4f600453bcfaf94c78fea66ba577e
-  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
-  Firebase: 2f5235e62f141cb86181c3af0dfe4509706351ac
-  FirebaseAnalytics: fd72a26bf8dac84cefba2f0864366f718555a5b0
-  FirebaseCore: f1a9a8be1aee4bf71a2fc0f4096df6788bdfda61
-  FirebaseInstanceID: a122b0c258720cf250551bb2bedf48c699f80d90
-  FirebaseMLCommon: 192c49ec584f1fb559747f1da8052441158b04d7
-  FirebaseMLVision: 257d9f1eaac1565f4dac67adf8b76805fa2a9a80
-  FirebaseMLVisionBarcodeModel: cd84fe257bc02ac93beffc9b9d650d935977a5b1
-  GiphyCoreSDK: 147a492c2477e9ddb20f8dd3a4489e3ea3c05e38
-  GoogleAPIClientForREST: 5447a194eae517986cafe6421a5330b80b820591
-  GoogleAppMeasurement: 1624046ab1bcc5e170061a56ef5679000b079c8e
+  Bugsnag: 699634c49b03f3fdf04a8ad6ab6470e9bcc3834b
+  Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
+  DeviceGuru: 76fbfd16d5241bc292730cd38190d52a3b8820fc
+  Fabric: f6f21452846788bb44595d73e9909d79d328e617
+  Firebase: 8d77bb33624ae9b62d745d82ec023de5f70f7e4f
+  FirebaseAnalytics: 629301c2b9925f3537d4093a17a72751ae5b7084
+  FirebaseCore: 66bdef3b310a026880e2a5bc8aa586ab62ce4543
+  FirebaseInstanceID: 27bed93a59b6685f5c3e0c028a878a764fd75c33
+  FirebaseMLCommon: d430756ba2a16bac8fefc81ea416e7f822f052fd
+  FirebaseMLVision: 35d0a720334b141d70a55e7e817c1cac23f32285
+  FirebaseMLVisionBarcodeModel: 2abf9867e2c9914726c4d0a6936aaf8b75eb7d46
+  GiphyCoreSDK: 1a89e03e55dc6b636b9d40fde76107867dbb9da5
+  GoogleAPIClientForREST: 44c7b678cbab11d26a47eab7309d6179b1a61f0c
+  GoogleAppMeasurement: 51d8d9ea48f0ca44484d29cfbdef976fbd4fc336
   GoogleMobileVision: 31cfb4319fd0c03d80105680abd9eae9da5e3b47
-  GoogleToolboxForMac: ff31605b7d66400dcec09bed5861689aebadda4d
-  GoogleUtilities: 6481e6318c5fcabaaa8513ef8120f329055d7c10
-  GoogleWebRTC: 893a5f2f3635437ec3b05ef240993d5713307804
-  GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
+  GoogleToolboxForMac: b3553629623a3b1bff17f555e736cd5a6d95ad55
+  GoogleUtilities: 84df567c76ca84f67b7bb40e769fdd4acc746a10
+  GoogleWebRTC: 55e46bee9ac2a4961542e9571bea589b64493f45
+  GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
   GzipSwift: 5592f4d62b641e04d06443ba471f8ed76b1363e4
   JWT: 05028b9624591bba9681bb57df2c5f95fa258bad
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
@@ -254,10 +254,10 @@ SPEC CHECKSUMS:
   R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
   R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
   RSKImageCropper: 98296ad26b41753f796b6898d015509598f13d97
-  SDWebImage: 2840a50a41156efccf460df67218b32029177897
-  SDWebImageYYPlugin: fe39bcaa2ed2cbdd0181c096069be5561166158b
+  SDWebImage: d4f87d7d36c8a4d9f9459dc282e0caa057fdf935
+  SDWebImageYYPlugin: aa90aee687988821ac83260c443f2e05f2eb20f6
   SignalProtocolC: d46237ab35954a8d1213faabf4baa783591c49ab
-  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+  SnapKit: fd22d10eb9aff484d79a8724eab922c1ddf89bcf
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SQLiteRepairKit: 35aaae5a8838adb85f5b1eb4d796055be6060a4b
   WCDB.swift: 05d509d7a0e60fb6e11c34eb7e4027c0fab5849f
@@ -267,4 +267,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 468dcfbca42663e61c3268d47816f773b40cd282
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.7.0

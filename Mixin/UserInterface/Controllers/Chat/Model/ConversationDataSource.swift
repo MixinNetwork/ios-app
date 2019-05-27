@@ -8,14 +8,6 @@ class ConversationDataSource {
     
     static let didAddMessageOutOfBoundsNotification = Notification.Name("one.mixin.ios.conversation.datasource.add.message.outside.visible.bounds")
     
-    private static let videoRequestOptions: PHVideoRequestOptions = {
-        let options = PHVideoRequestOptions()
-        options.isNetworkAccessAllowed = false
-        options.version = .current
-        options.deliveryMode = .fastFormat
-        return options
-    }()
-    
     let queue = DispatchQueue(label: "one.mixin.ios.conversation.datasource")
     
     var ownerUser: UserItem?

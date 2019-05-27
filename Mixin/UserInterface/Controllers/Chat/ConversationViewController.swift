@@ -700,13 +700,8 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                 guard let weakSelf = self else {
                     return
                 }
-                if let (didRemoveRow, didRemoveSection) = weakSelf.dataSource?.removeViewModel(at: indexPath) {
-                    if didRemoveSection {
-                        weakSelf.tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
-                    } else if didRemoveRow {
-                        weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
-                    }
-                }
+                _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
+                weakSelf.tableView.reloadData()
                 weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
             }
         }

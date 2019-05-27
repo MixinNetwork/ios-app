@@ -448,7 +448,7 @@ extension ConversationDataSource {
                 if let style = self.viewModels[date]?[indexPath.row].style {
                     let viewModel = self.viewModel(withMessage: message, style: style, fits: self.layoutSize.width)
                     self.viewModels[date]?[indexPath.row] = viewModel
-                    tableView.reloadRows(at: [indexPath], with: .automatic)
+                    tableView.reloadData()
                 }
             }
         }

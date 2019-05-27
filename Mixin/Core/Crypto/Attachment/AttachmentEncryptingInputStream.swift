@@ -48,7 +48,7 @@ class AttachmentEncryptingInputStream: InputStream {
     }
     
     public override init?(url: URL) {
-        guard case let fileSize?? = try? url.resourceValues(forKeys: Set([.fileSizeKey])).fileSize, let stream = InputStream(url: url) else {
+        guard let fileSize = try? url.resourceValues(forKeys: Set([.fileSizeKey])).fileSize, let stream = InputStream(url: url) else {
             return nil
         }
         plainDataSize = fileSize
@@ -87,15 +87,15 @@ class AttachmentEncryptingInputStream: InputStream {
         }
         while outputBuffer.isEmpty && inputStream.hasBytesAvailable {
             var inputBuffer = Data(count: len)
-            inputBuffer.count = inputBuffer.withUnsafeMutableBytes {
-                inputStream.read($0, maxLength: len)
+            inputBuffer.count = inputBuffer.withUnsafeMutableUInt8Pointer {
+                inputStream.read($0!, maxLength: len)
             }
             if outputBuffer.count == 0 {
                 // withUnsafeMutableBytes crashes for zero-counted Data
                 outputBuffer.count = inputBuffer.count
             }
             var outputSize = outputBuffer.count
-            var status = outputBuffer.withUnsafeMutableBytes {
+            var status = outputBuffer.withUnsafeMutableUInt8Pointer {
                 CCCryptorUpdate(cryptor, (inputBuffer as NSData).bytes, inputBuffer.count, $0, outputSize, &outputSize)
             }
             if status == .success {
@@ -103,14 +103,14 @@ class AttachmentEncryptingInputStream: InputStream {
             } else if status == .bufferTooSmall {
                 outputSize = CCCryptorGetOutputLength(cryptor, inputBuffer.count, false)
                 outputBuffer.count = outputSize
-                status = outputBuffer.withUnsafeMutableBytes {
+                status = outputBuffer.withUnsafeMutableUInt8Pointer {
                     CCCryptorUpdate(cryptor, (inputBuffer as NSData).bytes, inputBuffer.count, $0, outputSize, &outputSize)
                 }
             }
             if status == .success {
-                outputBuffer.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Void in
-                    CCHmacUpdate(&hmacContext, bytes, outputSize)
-                    CC_SHA256_Update(&digestContext, bytes, CC_LONG(outputSize))
+                outputBuffer.withUnsafeBytes {
+                    CCHmacUpdate(&hmacContext, $0.baseAddress, outputSize)
+                    CC_SHA256_Update(&digestContext, $0.baseAddress, CC_LONG(outputSize))
                 }
             } else {
                 error = AttachmentCryptographyError.encryptorUpdate(status)
@@ -149,15 +149,15 @@ extension AttachmentEncryptingInputStream {
             cryptor = try CCCryptorRef(operation: .encrypt, algorithm: .aes128, options: .pkcs7Padding, key: encryptionKey, iv: iv)
             
             hmacKey.withUnsafeBytes {
-                CCHmacInit(&hmacContext, .sha256, $0, hmacKey.count)
+                CCHmacInit(&hmacContext, .sha256, $0.baseAddress, hmacKey.count)
             }
             iv.withUnsafeBytes {
-                CCHmacUpdate(&hmacContext, $0, iv.count)
+                CCHmacUpdate(&hmacContext, $0.baseAddress, iv.count)
             }
             
             CC_SHA256_Init(&digestContext)
-            _ = iv.withUnsafeBytes {
-                CC_SHA256_Update(&digestContext, $0, CC_LONG(iv.count))
+            iv.withUnsafeBytes {
+                _ = CC_SHA256_Update(&digestContext, $0.baseAddress, CC_LONG(iv.count))
             }
             
             key = encryptionKey + hmacKey
@@ -173,7 +173,7 @@ extension AttachmentEncryptingInputStream {
     private func finalizeEncryption() {
         var outputSize = CCCryptorGetOutputLength(cryptor, 0, true)
         outputBuffer = Data(count: outputSize)
-        let status = outputBuffer.withUnsafeMutableBytes {
+        let status = outputBuffer.withUnsafeMutableUInt8Pointer {
             CCCryptorFinal(cryptor, $0, outputSize, &outputSize)
         }
         outputBuffer.count = outputSize
@@ -182,20 +182,20 @@ extension AttachmentEncryptingInputStream {
             return
         }
         outputBuffer.withUnsafeBytes {
-            CCHmacUpdate(&hmacContext, $0, outputSize)
+            CCHmacUpdate(&hmacContext, $0.baseAddress, outputSize)
         }
         var hmac = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
-        hmac.withUnsafeMutableBytes {
+        hmac.withUnsafeMutableUInt8Pointer {
             CCHmacFinal(&hmacContext, $0)
         }
         hmac = hmac[0..<AttachmentCryptography.Length.hmac]
         outputBuffer.append(hmac)
         outputSize = outputBuffer.count
         _ = outputBuffer.withUnsafeBytes {
-            CC_SHA256_Update(&digestContext, $0, CC_LONG(outputSize))
+            CC_SHA256_Update(&digestContext, $0.baseAddress, CC_LONG(outputSize))
         }
         var digest = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
-        _ = digest.withUnsafeMutableBytes {
+        _ = digest.withUnsafeMutableUInt8Pointer {
             CC_SHA256_Final($0, &digestContext)
         }
         self.digest = digest

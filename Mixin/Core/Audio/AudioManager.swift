@@ -181,6 +181,8 @@ class AudioManager {
             }
         case .unknown, .oldDeviceUnavailable, .wakeFromSleep, .noSuitableRouteForCategory:
             pause()
+        @unknown default:
+            pause()
         }
     }
     

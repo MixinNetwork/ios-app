@@ -741,6 +741,10 @@ extension ConversationInputViewController {
             DispatchQueue.main.async {
                 self.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
             }
+        @unknown default:
+            DispatchQueue.main.async {
+                self.alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
+            }
         }
     }
     

@@ -179,7 +179,7 @@ extension LoginView: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let scope = scopes[indexPath.row]
-        guard let idx = selectedScopes.index(of: scope.scope.rawValue) else {
+        guard let idx = selectedScopes.firstIndex(of: scope.scope.rawValue) else {
             return
         }
 

@@ -6,7 +6,7 @@
 
 FOUNDATION_EXTERN const NSErrorDomain MXNOggOpusErrorDomain;
 
-typedef NS_ENUM(NSUInteger, MXNOggOpusErrorCode) {
+typedef NS_CLOSED_ENUM(NSUInteger, MXNOggOpusErrorCode) {
     MXNOggOpusErrorCodeCreateEncoder,
     MXNOggOpusErrorCodeSetBitrate,
     MXNOggOpusErrorCodeEncodingFailed,

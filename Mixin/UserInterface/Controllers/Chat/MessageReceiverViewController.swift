@@ -107,7 +107,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let receiver = messageReceiver(at: indexPath)
-        if let idx = selections.index(of: receiver) {
+        if let idx = selections.firstIndex(of: receiver) {
             selections.remove(at: idx)
         }
         if !isSearching {

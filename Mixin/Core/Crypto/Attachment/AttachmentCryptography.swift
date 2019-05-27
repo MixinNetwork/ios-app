@@ -18,7 +18,7 @@ struct AttachmentCryptography {
         var data = Data(count: length)
         var status: OSStatus = errSecSuccess
         data.withUnsafeMutableBytes {
-            status = SecRandomCopyBytes(kSecRandomDefault, length, $0)
+            status = SecRandomCopyBytes(kSecRandomDefault, length, $0.baseAddress!)
         }
         if status == errSecSuccess {
             return data

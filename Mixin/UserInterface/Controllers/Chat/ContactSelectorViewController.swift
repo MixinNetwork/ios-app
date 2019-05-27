@@ -44,7 +44,7 @@ class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCel
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let userId = user(at: indexPath).userId
-        if let idx = selections.index(of: userId) {
+        if let idx = selections.firstIndex(of: userId) {
             selections.remove(at: idx)
         }
         if tableView.indexPathForSelectedRow == nil {

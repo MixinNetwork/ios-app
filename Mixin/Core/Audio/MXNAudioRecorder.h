@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXTERN const NSErrorDomain MXNAudioRecorderErrorDomain;
 
-typedef NS_ENUM(NSUInteger, MXNAudioRecorderErrorCode) {
+typedef NS_CLOSED_ENUM(NSUInteger, MXNAudioRecorderErrorCode) {
     MXNAudioRecorderErrorCodeAudioQueueNewInput,
     MXNAudioRecorderErrorCodeAudioQueueGetStreamDescription,
     MXNAudioRecorderErrorCodeAudioQueueAllocateBuffer,

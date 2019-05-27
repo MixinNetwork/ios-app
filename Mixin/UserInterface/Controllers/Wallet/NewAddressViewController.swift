@@ -175,7 +175,7 @@ extension NewAddressViewController {
             return nil
         }
         
-        let endIndex = str.index(of: "?") ?? str.endIndex
+        let endIndex = str.firstIndex(of: "?") ?? str.endIndex
         let accountIdentifier = str[str.index(str.startIndex, offsetBy: 9)..<endIndex]
         
         guard let address = accountIdentifier.lowercased().base36to16() else {

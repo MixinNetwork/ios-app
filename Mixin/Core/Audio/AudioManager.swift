@@ -118,6 +118,8 @@ class AudioManager {
             }
         case .unknown, .oldDeviceUnavailable, .wakeFromSleep, .noSuitableRouteForCategory:
             stop(deactivateAudioSession: true)
+        @unknown default:
+            stop(deactivateAudioSession: true)
         }
     }
     

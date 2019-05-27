@@ -33,7 +33,10 @@ class FileSendViewController: UIViewController, MixinNavigationAnimating {
 extension FileSendViewController: ContainerViewControllerDelegate {
 
     func barRightButtonTappedAction() {
-        dataSource?.sendMessage(type: .SIGNAL_DATA, value: documentUrl)
+        guard let url = documentUrl else {
+            return
+        }
+        dataSource?.sendMessage(type: .SIGNAL_DATA, value: url)
         navigationController?.popViewController(animated: true)
     }
 

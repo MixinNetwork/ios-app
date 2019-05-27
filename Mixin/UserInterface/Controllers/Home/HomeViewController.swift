@@ -81,6 +81,8 @@ class HomeViewController: UIViewController {
                     UNUserNotificationCenter.current().registerForRemoteNotifications()
                 case .denied:
                     break
+                @unknown default:
+                    break
                 }
             }
         }
@@ -127,6 +129,8 @@ class HomeViewController: UIViewController {
                 }
             })
         case .denied, .restricted:
+            alertSettings(Localized.PERMISSION_DENIED_CAMERA)
+        @unknown default:
             alertSettings(Localized.PERMISSION_DENIED_CAMERA)
         }
     }
@@ -350,7 +354,7 @@ extension HomeViewController {
             conversation.pinTime = nil
             ConversationDAO.shared.updateConversationPinTime(conversationId: conversation.conversationId, pinTime: nil)
             conversations.remove(at: indexPath.row)
-            destinationIndex = conversations.index(where: { $0.pinTime == nil && $0.createdAt < conversation.createdAt }) ?? conversations.count
+            destinationIndex = conversations.firstIndex(where: { $0.pinTime == nil && $0.createdAt < conversation.createdAt }) ?? conversations.count
         }
         conversations.insert(conversation, at: destinationIndex)
         let destinationIndexPath = IndexPath(row: destinationIndex, section: 0)

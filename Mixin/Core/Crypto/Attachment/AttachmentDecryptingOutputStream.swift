@@ -67,14 +67,14 @@ class AttachmentDecryptingOutputStream: OutputStream {
             inputBuffer = inputBuffer[ivEndIndex...]
             
             hmacKey.withUnsafeBytes {
-                CCHmacInit(&hmacContext, .sha256, $0, hmacKey.count)
+                CCHmacInit(&hmacContext, .sha256, $0.baseAddress, hmacKey.count)
             }
             iv.withUnsafeBytes {
-                CCHmacUpdate(&hmacContext, $0, iv.count)
+                CCHmacUpdate(&hmacContext, $0.baseAddress, iv.count)
             }
             CC_SHA256_Init(&digestContext)
             _ = iv.withUnsafeBytes {
-                CC_SHA256_Update(&digestContext, $0, CC_LONG(iv.count))
+                CC_SHA256_Update(&digestContext, $0.baseAddress, CC_LONG(iv.count))
             }
             
             self.iv = iv
@@ -94,20 +94,20 @@ class AttachmentDecryptingOutputStream: OutputStream {
                 outputBuffer.count = outputSize
             }
             let bufferToDecrypt = inputBuffer[..<inputBuffer.endIndex.advanced(by: -AttachmentCryptography.Length.hmac)]
-            var status = outputBuffer.withUnsafeMutableBytes {
+            var status = outputBuffer.withUnsafeMutableUInt8Pointer {
                 CCCryptorUpdate(cryptor, (bufferToDecrypt as NSData).bytes, bufferToDecrypt.count, $0, outputSize, &outputSize)
             }
             if status == .bufferTooSmall {
                 outputSize = CCCryptorGetOutputLength(cryptor, bufferToDecrypt.count, false)
                 outputBuffer.count = outputSize
-                status = outputBuffer.withUnsafeMutableBytes {
+                status = outputBuffer.withUnsafeMutableUInt8Pointer {
                     CCCryptorUpdate(cryptor, (bufferToDecrypt as NSData).bytes, bufferToDecrypt.count, $0, outputSize, &outputSize)
                 }
             }
             if status == .success {
-                bufferToDecrypt.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) -> Void in
-                    CCHmacUpdate(&hmacContext, bytes, bufferToDecrypt.count)
-                    CC_SHA256_Update(&digestContext, bytes, CC_LONG(bufferToDecrypt.count))
+                bufferToDecrypt.withUnsafeBytes {
+                    CCHmacUpdate(&hmacContext, $0.baseAddress, bufferToDecrypt.count)
+                    CC_SHA256_Update(&digestContext, $0.baseAddress, CC_LONG(bufferToDecrypt.count))
                 }
                 outputBuffer.count = outputSize
                 handle.write(outputBuffer)
@@ -134,7 +134,7 @@ class AttachmentDecryptingOutputStream: OutputStream {
             outputBuffer.count = outputSize
         }
         outputBuffer.count = outputSize
-        let status = outputBuffer.withUnsafeMutableBytes {
+        let status = outputBuffer.withUnsafeMutableUInt8Pointer {
             CCCryptorFinal(cryptor, $0, outputSize, &outputSize)
         }
         guard status == .success else {
@@ -145,16 +145,16 @@ class AttachmentDecryptingOutputStream: OutputStream {
         handle.write(outputBuffer)
         
         var ourHMAC = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
-        ourHMAC.withUnsafeMutableBytes {
+        ourHMAC.withUnsafeMutableUInt8Pointer {
             CCHmacFinal(&hmacContext, $0)
         }
         let hmac = Data(inputBuffer) // Avoiding Swift 4.0.3 Data Slice bug
         if hmac.isEqualToDataInConstantTime(ourHMAC) {
             _ = hmac.withUnsafeBytes {
-                CC_SHA256_Update(&digestContext, $0, CC_LONG(hmac.count))
+                CC_SHA256_Update(&digestContext, $0.baseAddress, CC_LONG(hmac.count))
             }
             var ourDigest = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
-            _ = ourDigest.withUnsafeMutableBytes {
+            _ = ourDigest.withUnsafeMutableUInt8Pointer {
                 CC_SHA256_Final($0, &digestContext)
             }
             if !digest.isEqualToDataInConstantTime(ourDigest) {

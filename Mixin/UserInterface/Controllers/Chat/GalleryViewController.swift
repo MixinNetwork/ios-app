@@ -125,6 +125,8 @@ class GalleryViewController: UIViewController {
             }
         case .possible, .failed:
             break
+        @unknown default:
+            break
         }
     }
     
@@ -520,7 +522,7 @@ extension GalleryViewController {
                 pageItems.append(afterAfter)
             }
         }
-        if let loadedIndex = pageItems.index(of: item) {
+        if let loadedIndex = pageItems.firstIndex(of: item) {
             // Reuse loaded page
             pages.swapAt(0, loadedIndex)
             layoutPages()
@@ -585,10 +587,10 @@ extension GalleryViewController {
                 return
             }
             DispatchQueue.main.sync {
-                if let index = self?.items.index(where: { $0.messageId == message.messageId }) {
+                if let index = self?.items.firstIndex(where: { $0.messageId == message.messageId }) {
                     self?.items[index] = item
                 }
-                if let index = self?.pages.index(where: { $0.item?.messageId == message.messageId }) {
+                if let index = self?.pages.firstIndex(where: { $0.item?.messageId == message.messageId }) {
                     self?.pages[index].item = item
                 }
             }
@@ -603,7 +605,7 @@ extension GalleryViewController {
     }
     
     private func updateMediaStatus(messageId: String, mediaStatus: MediaStatus) {
-        guard let index = items.index(where: { $0.messageId == messageId }) else {
+        guard let index = items.firstIndex(where: { $0.messageId == messageId }) else {
             return
         }
         items[index].mediaStatus = mediaStatus

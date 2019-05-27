@@ -734,6 +734,8 @@ extension ConversationInputViewController {
             PHPhotoLibrary.requestAuthorization(handlePhotoAuthorizationStatus)
         case .denied, .restricted:
             alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
+        @unknown default:
+            alertSettings(Localized.PERMISSION_DENIED_PHOTO_LIBRARY)
         }
     }
     

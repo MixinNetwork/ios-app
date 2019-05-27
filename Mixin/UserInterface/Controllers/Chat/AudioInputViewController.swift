@@ -107,6 +107,8 @@ class AudioInputViewController: UIViewController, ConversationAccessible {
             cancelAction(sender)
         case .possible, .failed:
             break
+        @unknown default:
+            break
         }
     }
     
@@ -183,6 +185,8 @@ extension AudioInputViewController {
             startRecording()
         case .undetermined:
             AVAudioSession.sharedInstance().requestRecordPermission({ (_) in })
+        @unknown default:
+            alertSettings(Localized.PERMISSION_DENIED_MICROPHONE)
         }
     }
     

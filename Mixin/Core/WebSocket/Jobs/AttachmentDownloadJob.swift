@@ -135,8 +135,8 @@ extension AttachmentDownloadJob: URLSessionDataDelegate {
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        _ = data.withUnsafeBytes {
-            stream.write($0, maxLength: data.count)
+        data.withUnsafeUInt8Pointer {
+            _ = stream.write($0!, maxLength: data.count)
         }
         if let contentLength = contentLength {
             downloadedContentLength += Double(data.count)

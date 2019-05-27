@@ -79,7 +79,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                     }
                 }
             } else {
-                if let filename = PHAssetResource.assetResources(for: asset).first?.originalFilename.lowercased(), let startIndex = filename.index(of: "."), startIndex < filename.endIndex {
+                if let filename = PHAssetResource.assetResources(for: asset).first?.originalFilename.lowercased(), let startIndex = filename.firstIndex(of: "."), startIndex < filename.endIndex {
                     let fileExtension = String(filename[startIndex..<filename.endIndex])
                     if fileExtension.hasSuffix(".webp") || fileExtension.hasSuffix(".gif") {
                         PHImageManager.default().requestImageData(for: asset, options: nil, resultHandler: { [weak self](data, _, _, _) in

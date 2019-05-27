@@ -97,7 +97,7 @@ public final class SignalStore {
 
     deinit {
         unregisterDelegates()
-        self.instanceId.deallocate(capacity: 1)
+        self.instanceId.deallocate()
         signal_protocol_store_context_destroy(storeContext)
     }
 }

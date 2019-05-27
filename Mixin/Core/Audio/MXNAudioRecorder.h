@@ -4,13 +4,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, MXNAudioRecorderProgress) {
+typedef NS_CLOSED_ENUM(NSUInteger, MXNAudioRecorderProgress) {
     MXNAudioRecorderProgressWaitingForActivation,
     MXNAudioRecorderProgressStarted,
     MXNAudioRecorderProgressInterrupted
 };
 
-typedef NS_ENUM(NSUInteger, MXNAudioRecorderCompletion) {
+typedef NS_CLOSED_ENUM(NSUInteger, MXNAudioRecorderCompletion) {
     MXNAudioRecorderCompletionFailed,
     MXNAudioRecorderCompletionFinished,
     MXNAudioRecorderCompletionCancelled
@@ -18,7 +18,7 @@ typedef NS_ENUM(NSUInteger, MXNAudioRecorderCompletion) {
 
 FOUNDATION_EXTERN const NSErrorDomain MXNAudioRecorderErrorDomain;
 
-typedef NS_ENUM(NSUInteger, MXNAudioRecorderErrorCode) {
+typedef NS_CLOSED_ENUM(NSUInteger, MXNAudioRecorderErrorCode) {
     MXNAudioRecorderErrorCodeAudioQueueNewInput,
     MXNAudioRecorderErrorCodeAudioQueueGetStreamDescription,
     MXNAudioRecorderErrorCodeAudioQueueAllocateBuffer,

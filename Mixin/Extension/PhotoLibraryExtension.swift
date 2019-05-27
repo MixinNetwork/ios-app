@@ -22,9 +22,13 @@ extension PHPhotoLibrary {
                     block(true)
                 case .denied, .notDetermined, .restricted:
                     block(false)
+                @unknown default:
+                    block(false)
                 }
             }
         case .denied, .restricted:
+            block(false)
+        @unknown default:
             block(false)
         }
     }

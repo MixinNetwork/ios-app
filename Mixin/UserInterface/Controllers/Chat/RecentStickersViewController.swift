@@ -20,7 +20,7 @@ class RecentStickersViewController: StickersViewController {
         guard let sticker = notification.object as? Sticker else {
             return
         }
-        if let index = stickers.index(where: { $0.stickerId == sticker.stickerId }) {
+        if let index = stickers.firstIndex(where: { $0.stickerId == sticker.stickerId }) {
             collectionView.performBatchUpdates({
                 stickers.remove(at: index)
                 stickers.insert(sticker, at: 0)

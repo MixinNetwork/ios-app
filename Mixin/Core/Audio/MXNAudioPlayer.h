@@ -5,7 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXTERN const NSErrorDomain MXNAudioPlayerErrorDomain;
 
-typedef NS_ENUM(NSUInteger, MXNAudioPlayerErrorCode) {
+typedef NS_CLOSED_ENUM(NSUInteger, MXNAudioPlayerErrorCode) {
     MXNAudioPlayerErrorCodeNewOutput,
     MXNAudioPlayerErrorCodeAllocateBuffers,
     MXNAudioPlayerErrorCodeAddPropertyListener,

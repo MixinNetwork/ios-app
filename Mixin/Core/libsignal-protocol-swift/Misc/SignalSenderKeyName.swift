@@ -71,7 +71,7 @@ public final class SignalSenderKeyName {
         // groupPointer.deallocate(capacity: groupId.utf8.count)
         // TODO
         // signalAddress.deallocate()
-        address.deallocate(capacity: 1)
+        address.deallocate()
     }
 }
 
@@ -90,10 +90,11 @@ extension SignalSenderKeyName: Equatable {
 }
 
 extension SignalSenderKeyName: Hashable {
-
+    
     /// The hash of the sender key name
-    public var hashValue: Int {
-        return groupId.hashValue &+ sender.hashValue
+    public func hash(into hasher: inout Hasher) {
+        let value = groupId.hashValue &+ sender.hashValue
+        hasher.combine(value)
     }
-
+    
 }

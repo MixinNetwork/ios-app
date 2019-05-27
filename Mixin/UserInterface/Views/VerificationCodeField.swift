@@ -244,6 +244,8 @@ extension VerificationCodeField: UITextInput {
             return self.position(from: position, offset: offset)
         case .up, .down:
             return position
+        @unknown default:
+            return nil
         }
     }
     
@@ -280,6 +282,8 @@ extension VerificationCodeField: UITextInput {
             return TextPosition(value: str.endIndex)
         case .left, .up:
             return TextPosition(value: str.startIndex)
+        @unknown default:
+            return nil
         }
     }
     
@@ -294,6 +298,8 @@ extension VerificationCodeField: UITextInput {
             return TextRange(start: TextPosition(value: text.startIndex), end: position)
         case .up, .down:
             return TextRange(start: position, end: position)
+        @unknown default:
+            return nil
         }
     }
     

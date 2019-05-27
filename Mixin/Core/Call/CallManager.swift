@@ -78,6 +78,8 @@ class CallManager {
             alertNoMicrophonePermission()
         case .granted:
             call(opponentUser: opponentUser)
+        @unknown default:
+            alertNoMicrophonePermission()
         }
     }
     
@@ -241,6 +243,8 @@ extension CallManager {
             self.completeCurrentCall(isUserInitiated: false)
             self.alertNoMicrophonePermission()
         case .granted:
+            try handleIncomingCall(data: data, reportIncomingCallToInterface: true)
+        @unknown default:
             try handleIncomingCall(data: data, reportIncomingCallToInterface: true)
         }
     }

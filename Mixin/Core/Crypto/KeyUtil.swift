@@ -52,7 +52,7 @@ class KeyUtil {
         guard cryptStatus == CCCryptorStatus(kCCSuccess) else {
             return nil
         }
-        return Data(bytes: iv + dataOut.prefix(numBytesEncrypted)).base64EncodedString()
+        return Data(iv + dataOut.prefix(numBytesEncrypted)).base64EncodedString()
     }
 
     static func rsaDecrypt(pkString: String, sessionId: String, pinToken: String) -> String {

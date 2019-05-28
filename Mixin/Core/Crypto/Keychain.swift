@@ -17,7 +17,7 @@ class Keychain {
         let query: [CFString: Any] = [kSecAttrService: authenticationService,
                                       kSecClass: kSecClassGenericPassword,
                                       kSecAttrAccount: key,
-                                      kSecReturnData: kCFBooleanTrue,
+                                      kSecReturnData: kCFBooleanTrue!,
                                       kSecMatchLimit: kSecMatchLimitOne,
                                       kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]
 
@@ -160,7 +160,7 @@ extension Keychain {
                            kSecAttrKeyType: secKeyType,
                            kSecAttrKeySizeInBits: secKeySize,
                            kSecAttrLabel: secLabel,
-                           kSecReturnRef: kCFBooleanTrue,
+                           kSecReturnRef: kCFBooleanTrue!,
                            kSecUseOperationPrompt: prompt ] as CFDictionary
         var privateKey: AnyObject?
         guard SecItemCopyMatching(parameters, &privateKey) == errSecSuccess else {
@@ -175,7 +175,7 @@ extension Keychain {
         }
 
         let privateKeyParams: [CFString: Any] = [kSecAttrAccessControl: aclObject,
-                                                 kSecAttrIsPermanent: kCFBooleanTrue ]
+                                                 kSecAttrIsPermanent: kCFBooleanTrue!]
 
         let parameters = [ kSecAttrTokenID: kSecAttrTokenIDSecureEnclave,
                            kSecAttrKeyType: secKeyType,

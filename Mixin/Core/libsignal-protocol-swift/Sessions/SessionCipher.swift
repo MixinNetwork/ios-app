@@ -60,7 +60,7 @@ public final class SessionCipher {
 
         var ciphertext: OpaquePointer? = nil
 
-        let result = message.withUnsafeBytes { mPtr in
+        let result = message.withUnsafeUInt8Pointer { mPtr in
             withUnsafeMutablePointer(to: &ciphertext) { cPtr in
                 session_cipher_encrypt(cipher, mPtr, message.count, cPtr)
             }
@@ -135,7 +135,7 @@ public final class SessionCipher {
         defer { session_cipher_free(cipher) }
 
         var messagePtr: OpaquePointer? = nil
-        var result = message.withUnsafeBytes { mPtr in
+        var result = message.withUnsafeUInt8Pointer { mPtr in
             withUnsafeMutablePointer(to: &messagePtr) {
                 pre_key_signal_message_deserialize($0, mPtr, message.count, Signal.context)
             }
@@ -182,7 +182,7 @@ public final class SessionCipher {
         defer { session_cipher_free(cipher) }
 
         var messagePtr: OpaquePointer? = nil
-        var result = message.withUnsafeBytes { mPtr in
+        var result = message.withUnsafeUInt8Pointer { mPtr in
             withUnsafeMutablePointer(to: &messagePtr) {
                 signal_message_deserialize($0, mPtr, message.count, Signal.context)
             }

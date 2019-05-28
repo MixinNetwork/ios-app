@@ -56,7 +56,7 @@ public final class GroupCipher {
 
         // Encrypt message
         var encryptedMessage: OpaquePointer? = nil
-        result = message.withUnsafeBytes { mPtr in
+        result = message.withUnsafeUInt8Pointer { mPtr in
             withUnsafeMutablePointer(to: &encryptedMessage) {
                 group_cipher_encrypt(cipher, mPtr, message.count, $0)
             }
@@ -119,7 +119,7 @@ public final class GroupCipher {
 
         // Deserialize message
         var senderKeyMessage: OpaquePointer? = nil
-        result = message.withUnsafeBytes { mPtr in
+        result = message.withUnsafeUInt8Pointer { mPtr in
             withUnsafeMutablePointer(to: &senderKeyMessage) {
                 sender_key_message_deserialize($0, mPtr, message.count, Signal.context)
             }

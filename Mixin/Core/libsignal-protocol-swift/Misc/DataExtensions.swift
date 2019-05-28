@@ -45,7 +45,7 @@ extension Data {
         let buffer = signal_buffer_alloc(count)!
         let ptr = signal_buffer_data(buffer)!
         // Copy data
-        self.withUnsafeBytes { ptr.assign(from: $0, count: self.count) }
+        self.withUnsafeUInt8Pointer { ptr.assign(from: $0!, count: self.count) }
         return buffer
     }
 

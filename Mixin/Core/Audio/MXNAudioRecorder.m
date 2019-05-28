@@ -90,7 +90,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
             return;
         }
 
-        if (_vibratesAtBeginning) {
+        if (self->_vibratesAtBeginning) {
             AudioServicesPlaySystemSound(1519);
         }
         

@@ -37,6 +37,7 @@ class WebWindow: BottomSheetView {
         config.preferences = WKPreferences()
         config.preferences.minimumFontSize = 12
         config.preferences.javaScriptEnabled = true
+        config.allowsInlineMediaPlayback = true
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController.add(self, name: MessageHandlerName.mixinContext)
         config.userContentController.addUserScript(disableImageSelectionScript)

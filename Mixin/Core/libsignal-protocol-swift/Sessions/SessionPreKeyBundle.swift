@@ -83,7 +83,7 @@ public struct SessionPreKeyBundle {
         defer { signal_type_unref(identityKeyPtr) }
 
         var bundlePtr: OpaquePointer? = nil
-        let result = signature.withUnsafeBytes { ptr in
+        let result = signature.withUnsafeUInt8Pointer { ptr in
             withUnsafeMutablePointer(to: &bundlePtr) { bPtr in
                 session_pre_key_bundle_create( bPtr, registrationId, deviceId, preKeyId, preKeyPtr, signedPreKeyId, signedPreKeyPtr, ptr, signature.count, identityKeyPtr)
             }

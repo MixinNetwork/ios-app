@@ -147,8 +147,8 @@ fileprivate struct MD5State {
     @inline(__always) @discardableResult
     private mutating func feedFullChunks(in message: Data) -> Int {
         let chunkCount = message.count / MD5State.chunkSize
-        message.withUnsafeBytes { (pointer: UnsafePointer<UInt32>) -> Void in
-            var cursor = pointer
+        message.withUnsafeBytes { (buffer) -> Void in
+            var cursor = buffer.bindMemory(to: UInt32.self).baseAddress!
             for _ in 0 ..< chunkCount {
                 feed(chunkPointer: &cursor)
             }

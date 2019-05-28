@@ -28,7 +28,7 @@ public struct SessionPreKey {
      */
     public init(from data: Data) throws {
         var preKey: OpaquePointer? = nil
-        let result = data.withUnsafeBytes { dPtr in
+        let result = data.withUnsafeUInt8Pointer { dPtr in
             withUnsafeMutablePointer(to: &preKey) {
                 session_pre_key_deserialize($0, dPtr, data.count, Signal.context)
             }

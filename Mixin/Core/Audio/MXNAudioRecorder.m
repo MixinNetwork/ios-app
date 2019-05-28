@@ -59,7 +59,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 - (void)recordForDuration:(NSTimeInterval)duration {
     if ([AVAudioSession sharedInstance].secondaryAudioShouldBeSilencedHint) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_delegate audioRecorderIsWaitingForActivation:self];
+            [self->_delegate audioRecorderIsWaitingForActivation:self];
         });
     }
     __weak MXNAudioRecorder *weakSelf = self;
@@ -77,7 +77,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
                                       error:&error];
         if (!success) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                [_delegate audioRecorder:self didFailRecordingWithError:error];
+                [self->_delegate audioRecorder:self didFailRecordingWithError:error];
             });
             return;
         }
@@ -85,12 +85,12 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
         if (!success) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                [_delegate audioRecorder:self didFailRecordingWithError:error];
+                [self->_delegate audioRecorder:self didFailRecordingWithError:error];
             });
             return;
         }
 
-        if (_vibratesAtBeginning) {
+        if (self->_vibratesAtBeginning) {
             AudioServicesPlaySystemSound(1519);
         }
         
@@ -112,12 +112,12 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         success = [self performRecording:&error];
         if (success) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                [_delegate audioRecorderDidStartRecording:self];
+                [self->_delegate audioRecorderDidStartRecording:self];
             });
         } else {
             [strongSelf deactivateAudioSessionAndRemoveObservers];
             dispatch_sync(dispatch_get_main_queue(), ^{
-                [_delegate audioRecorder:self didFailRecordingWithError:error];
+                [self->_delegate audioRecorder:self didFailRecordingWithError:error];
             });
         }
     });
@@ -133,7 +133,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         MXNAudioMetadata *metadata = [MXNAudioMetadata metadataWithDuration:duration waveform:waveform];
         [self cleanUp];
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [_delegate audioRecorder:self didFinishRecordingWithMetadata:metadata];
+            [self->_delegate audioRecorder:self didFinishRecordingWithMetadata:metadata];
         });
     });
 }
@@ -146,7 +146,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         [self cleanUp];
         [self->_writer removeFile];
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [_delegate audioRecorderDidCancelRecording:self];
+            [self->_delegate audioRecorderDidCancelRecording:self];
         });
     });
 }
@@ -171,7 +171,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
                                      userInfo:nil];
     _recording = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [_delegate audioRecorder:self didFailRecordingWithError:error];
+        [self->_delegate audioRecorder:self didFailRecordingWithError:error];
     });
 }
 

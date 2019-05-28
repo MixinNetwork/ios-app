@@ -283,6 +283,18 @@ class ConversationDataSource {
             }
             self.viewModels[date] = nil
         }
+        if let viewModels = self.viewModels[date] {
+            let indexBeforeDeletedMessage = indexPath.row - 1
+            let indexAfterDeletedMessage = indexPath.row
+            if indexBeforeDeletedMessage >= 0 {
+                let style = self.style(forIndex: indexBeforeDeletedMessage, viewModels: viewModels)
+                self.viewModels[date]?[indexBeforeDeletedMessage].style = style
+            }
+            if indexAfterDeletedMessage < viewModels.count {
+                let style = self.style(forIndex: indexAfterDeletedMessage, viewModels: viewModels)
+                self.viewModels[date]?[indexAfterDeletedMessage].style = style
+            }
+        }
         return (didRemoveRow, didRemoveSection)
     }
     
@@ -796,35 +808,47 @@ extension ConversationDataSource {
         return viewModel
     }
     
-    private func style(forIndex index: Int, messages: [MessageItem]) -> MessageViewModel.Style {
-        let message = messages[index]
-        let isFirstMessage = (index == 0)
-        let isLastMessage = (index == messages.count - 1)
+    private func style(forIndex index: Int, isFirstMessage: Bool, isLastMessage: Bool, messageAtIndex: (Int) -> MessageItem) -> MessageViewModel.Style {
+        let message = messageAtIndex(index)
         var style: MessageViewModel.Style = []
         if message.userId != me.user_id {
             style = .received
         }
         if isLastMessage
-            || messages[index + 1].userId != message.userId
-            || messages[index + 1].isExtensionMessage
-            || messages[index + 1].isSystemMessage {
+            || messageAtIndex(index + 1).userId != message.userId
+            || messageAtIndex(index + 1).isExtensionMessage
+            || messageAtIndex(index + 1).isSystemMessage {
             style.insert(.tail)
         }
         if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
             style.insert(.bottomSeparator)
         } else if !isLastMessage && (message.isSystemMessage
-            || messages[index + 1].userId != message.userId
-            || messages[index + 1].isSystemMessage
-            || messages[index + 1].isExtensionMessage) {
+            || messageAtIndex(index + 1).userId != message.userId
+            || messageAtIndex(index + 1).isSystemMessage
+            || messageAtIndex(index + 1).isExtensionMessage) {
             style.insert(.bottomSeparator)
         }
         if message.isRepresentativeMessage(conversation: conversation) {
             if (isFirstMessage && !message.isExtensionMessage && !message.isSystemMessage)
-                || (!isFirstMessage && (messages[index - 1].userId != message.userId || messages[index - 1].isExtensionMessage || messages[index - 1].isSystemMessage)) {
+                || (!isFirstMessage && (messageAtIndex(index - 1).userId != message.userId || messageAtIndex(index - 1).isExtensionMessage || messageAtIndex(index - 1).isSystemMessage)) {
                 style.insert(.fullname)
             }
         }
         return style
+    }
+    
+    private func style(forIndex index: Int, messages: [MessageItem]) -> MessageViewModel.Style {
+        return style(forIndex: index,
+                     isFirstMessage: index == 0,
+                     isLastMessage: index == messages.count - 1,
+                     messageAtIndex: { messages[$0] })
+    }
+    
+    private func style(forIndex index: Int, viewModels: [MessageViewModel]) -> MessageViewModel.Style {
+        return style(forIndex: index,
+                     isFirstMessage: index == 0,
+                     isLastMessage: index == viewModels.count - 1,
+                     messageAtIndex: { viewModels[$0].message })
     }
     
     private func addMessageAndDisplay(message: MessageItem) {

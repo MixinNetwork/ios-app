@@ -202,7 +202,7 @@ extension UIImage {
                     return nil
                 }
             } else {
-                let colorIndex = participant.userIdentityNumber.integerValue % 24 + 1
+                let colorIndex = participant.userId.positiveHashCode() % 24 + 1
                 if let image = UIImage(named: "color\(colorIndex)"), let firstLetter = participant.userFullName.first {
                     let text = String([firstLetter]).uppercased()
                     let textSize = CGSize(width: relativeTextSize[index].width * image.size.width,

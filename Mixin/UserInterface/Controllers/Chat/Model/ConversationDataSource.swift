@@ -37,7 +37,6 @@ class ConversationDataSource {
     private var canInsertUnreadHint = true
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
-    private var pendingChanges = [ConversationChange]()
     private var tableViewContentInset: UIEdgeInsets {
         return performSynchronouslyOnMainThread {
             self.tableView?.contentInset ?? .zero
@@ -326,14 +325,6 @@ extension ConversationDataSource {
         guard let change = sender.object as? ConversationChange, change.conversationId == conversationId else {
             return
         }
-        if didInitializedData {
-            perform(change: change)
-        } else {
-            pendingChanges.append(change)
-        }
-    }
-    
-    private func perform(change: ConversationChange) {
         switch change.action {
         case .reload:
             highlight = nil
@@ -357,7 +348,7 @@ extension ConversationDataSource {
             updateMediaProgress(messageId: messageId, progress: progress)
         case .recallMessage(let messageId):
             updateMessage(messageId: messageId)
-        default:
+        case .updateConversation, .startedUpdateConversation:
             break
         }
     }
@@ -709,10 +700,6 @@ extension ConversationDataSource {
             ConversationViewController.positions[self.conversationId] = nil
             SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
             self.didInitializedData = true
-            for change in self.pendingChanges {
-                self.perform(change: change)
-            }
-            self.pendingChanges = []
             completion?()
         }
     }

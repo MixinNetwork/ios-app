@@ -78,11 +78,14 @@ class PhotoInputViewController: UIViewController {
     }
     
     func dismissPreviewIfNeeded() {
-        guard isViewLoaded, previewWrapperHeightConstraint.constant > 0 else {
+        guard isViewLoaded else {
             return
         }
-        previewWrapperHeightConstraint.constant = 0
-        gridViewController.removeAllSelections(animated: true)
+        previewViewController.stopVideoPreviewIfNeeded()
+        if previewWrapperHeightConstraint.constant > 0 {
+            previewWrapperHeightConstraint.constant = 0
+            gridViewController.removeAllSelections(animated: true)
+        }
     }
     
     private func reloadGrid(at indexPath: IndexPath) {

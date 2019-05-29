@@ -2343,20 +2343,61 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="239"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="55I-zr-MlK">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="55I-zr-MlK">
                                 <rect key="frame" x="20" y="20" width="335" height="213"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3Fs-0Z-fFc">
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="213"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IMZ-xZ-nCr">
+                                        <rect key="frame" x="293" y="171" width="32" height="32"/>
+                                        <subviews>
+                                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Vo-dq-IoY">
+                                                <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="6O7-S2-nus">
+                                                    <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                </view>
+                                                <blurEffect style="dark"/>
+                                            </visualEffectView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Ra-rB-r3K">
+                                                <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                                                <state key="normal" image="ic_change_content_mode"/>
+                                                <connections>
+                                                    <action selector="changeContentModeAction:" destination="lA6-Lu-PN4" eventType="touchUpInside" id="09O-od-zYn"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="2Vo-dq-IoY" firstAttribute="top" secondItem="IMZ-xZ-nCr" secondAttribute="top" id="2wP-9x-9hO"/>
+                                            <constraint firstAttribute="width" constant="32" id="3Un-iT-weV"/>
+                                            <constraint firstItem="9Ra-rB-r3K" firstAttribute="top" secondItem="IMZ-xZ-nCr" secondAttribute="top" id="49u-ze-9fR"/>
+                                            <constraint firstAttribute="trailing" secondItem="9Ra-rB-r3K" secondAttribute="trailing" id="9on-oD-gFD"/>
+                                            <constraint firstItem="2Vo-dq-IoY" firstAttribute="leading" secondItem="IMZ-xZ-nCr" secondAttribute="leading" id="Ubz-Wa-Pod"/>
+                                            <constraint firstAttribute="trailing" secondItem="2Vo-dq-IoY" secondAttribute="trailing" id="YNf-yb-wDQ"/>
+                                            <constraint firstAttribute="width" secondItem="IMZ-xZ-nCr" secondAttribute="height" multiplier="1:1" id="dVR-H2-ySj"/>
+                                            <constraint firstItem="9Ra-rB-r3K" firstAttribute="leading" secondItem="IMZ-xZ-nCr" secondAttribute="leading" id="gp6-Kb-bas"/>
+                                            <constraint firstAttribute="bottom" secondItem="9Ra-rB-r3K" secondAttribute="bottom" id="ooN-o9-lje"/>
+                                            <constraint firstAttribute="bottom" secondItem="2Vo-dq-IoY" secondAttribute="bottom" id="yDa-GX-f9A"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="3Fs-0Z-fFc" secondAttribute="bottom" id="38J-Fh-XBA"/>
                                     <constraint firstItem="3Fs-0Z-fFc" firstAttribute="leading" secondItem="55I-zr-MlK" secondAttribute="leading" id="XzM-SI-o1b"/>
                                     <constraint firstAttribute="trailing" secondItem="3Fs-0Z-fFc" secondAttribute="trailing" id="Zch-Lm-l5j"/>
+                                    <constraint firstAttribute="trailing" secondItem="IMZ-xZ-nCr" secondAttribute="trailing" constant="10" id="rfy-FJ-4lN"/>
+                                    <constraint firstAttribute="bottom" secondItem="IMZ-xZ-nCr" secondAttribute="bottom" constant="10" id="wae-jR-ejZ"/>
                                     <constraint firstItem="3Fs-0Z-fFc" firstAttribute="top" secondItem="55I-zr-MlK" secondAttribute="top" id="zd2-sP-ZCV"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2370,6 +2411,9 @@
                     </view>
                     <size key="freeformSize" width="375" height="239"/>
                     <connections>
+                        <outlet property="changeContentModeWrapperView" destination="IMZ-xZ-nCr" id="beH-6S-gTe"/>
+                        <outlet property="changeContentModeWrapperWidthConstraint" destination="3Un-iT-weV" id="rWE-zO-aFz"/>
+                        <outlet property="contentView" destination="55I-zr-MlK" id="ZZq-87-Nbk"/>
                         <outlet property="imageView" destination="3Fs-0Z-fFc" id="eUc-da-ZRc"/>
                     </connections>
                 </viewController>
@@ -2404,6 +2448,7 @@
         <image name="ic_camera_close" width="20" height="20"/>
         <image name="ic_camera_save" width="60" height="60"/>
         <image name="ic_camera_send" width="60" height="60"/>
+        <image name="ic_change_content_mode" width="14" height="14"/>
         <image name="ic_chat_bg" width="375" height="667"/>
         <image name="ic_close_shadow" width="44" height="44"/>
         <image name="ic_play" width="38" height="38"/>

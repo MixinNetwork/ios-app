@@ -357,6 +357,7 @@ extension ConversationDataSource {
         guard !loadedMessageIds.contains(message.messageId) else {
             return
         }
+        loadedMessageIds.insert(message.messageId)
         let messageIsSentByMe = message.userId == me.user_id
         if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue {
             SendMessageService.shared.sendReadMessage(conversationId: message.conversationId, messageId: message.messageId)
@@ -839,7 +840,6 @@ extension ConversationDataSource {
     }
     
     private func addMessageAndDisplay(message: MessageItem) {
-        loadedMessageIds.insert(message.messageId)
         let messageIsSentByMe = message.userId == me.user_id
         let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
         let lastIndexPathBeforeInsertion = lastIndexPath

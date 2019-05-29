@@ -137,7 +137,9 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        // TODO: Send it out
+        if let asset = asset(at: indexPath) {
+            dataSource?.send(asset: asset)
+        }
         return true
     }
     

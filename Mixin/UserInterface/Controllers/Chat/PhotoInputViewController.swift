@@ -23,9 +23,22 @@ class PhotoInputViewController: UIViewController {
     private var sortedSmartAlbums: [PHAssetCollection]?
     private var userCollections: PHFetchResult<PHCollection>?
     private var gridViewController: PhotoInputGridViewController!
+    private var previewViewController: MediaPreviewViewController!
+    
+    @IBOutlet weak var previewWrapperHeightConstraint: NSLayoutConstraint!
     
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let vc = segue.destination as? PhotoInputGridViewController {
+            vc.fetchResult = allPhotos
+            gridViewController = vc
+        } else if let vc = segue.destination as? MediaPreviewViewController {
+            previewViewController = vc
+        }
     }
     
     override func viewDidLoad() {
@@ -59,12 +72,17 @@ class PhotoInputViewController: UIViewController {
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        if let vc = segue.destination as? PhotoInputGridViewController {
-            vc.fetchResult = allPhotos
-            gridViewController = vc
+    func preview(asset: PHAsset) {
+        previewWrapperHeightConstraint.constant = 276
+        previewViewController.load(asset: asset)
+    }
+    
+    func dismissPreviewIfNeeded() {
+        guard isViewLoaded, previewWrapperHeightConstraint.constant > 0 else {
+            return
         }
+        previewWrapperHeightConstraint.constant = 0
+        gridViewController.removeAllSelections(animated: true)
     }
     
     private func reloadGrid(at indexPath: IndexPath) {

@@ -356,8 +356,10 @@ class ConversationInputViewController: UIViewController {
         let heightValue: CGFloat
         switch height {
         case .minimized:
+            photoViewController.dismissPreviewIfNeeded()
             heightValue = minimizedHeight
         case .regular:
+            photoViewController.dismissPreviewIfNeeded()
             heightValue = regularHeight
         case .maximized:
             heightValue = maximizedHeight
@@ -370,6 +372,17 @@ class ConversationInputViewController: UIViewController {
             textView.resignFirstResponder()
         } else if height != .minimized {
             dismissCustomInput(minimize: true)
+        }
+    }
+    
+    func preview(asset: PHAsset) {
+        self.photoViewController.preview(asset: asset)
+        if self.preferredContentHeight < self.maximizedHeight {
+            self.setPreferredContentHeight(self.maximizedHeight, animated: true)
+        } else {
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
         }
     }
     

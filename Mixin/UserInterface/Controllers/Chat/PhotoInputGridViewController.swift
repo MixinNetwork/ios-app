@@ -126,25 +126,25 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
         updateCachedAssets()
     }
     
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        removeAllSelections()
-    }
-    
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if firstCellIsCamera && indexPath.item == 0 {
             conversationViewController?.imagePickerController.presentCamera()
             return false
         } else {
-            removeAllSelections()
+            removeAllSelections(animated: true)
             return true
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        if let asset = asset(at: indexPath) {
-            dataSource?.send(asset: asset)
-        }
+        // TODO: Send it out
         return true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let asset = asset(at: indexPath) {
+            conversationInputViewController?.preview(asset: asset)
+        }
     }
     
 }
@@ -266,9 +266,9 @@ extension PhotoInputGridViewController {
         return allLayoutAttributes.map { $0.indexPath }
     }
     
-    private func removeAllSelections() {
+    func removeAllSelections(animated: Bool) {
         collectionView.indexPathsForSelectedItems?.forEach({ (indexPath) in
-            collectionView.deselectItem(at: indexPath, animated: false)
+            collectionView.deselectItem(at: indexPath, animated: animated)
         })
     }
     

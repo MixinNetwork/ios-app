@@ -24,6 +24,7 @@ class PhotoInputViewController: UIViewController {
     private var userCollections: PHFetchResult<PHCollection>?
     private var gridViewController: PhotoInputGridViewController!
     private var previewViewController: MediaPreviewViewController!
+    private var needsReload = false
     
     @IBOutlet weak var previewWrapperHeightConstraint: NSLayoutConstraint!
     
@@ -46,29 +47,13 @@ class PhotoInputViewController: UIViewController {
         albumsCollectionLayout.estimatedItemSize = CGSize(width: 110, height: 60)
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
-        let fetchOption = self.creationDateDescendingFetchOptions
-        DispatchQueue.global().async { [weak self] in
-            let allPhotos = PHAsset.fetchAssets(with: fetchOption)
-            let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
-            let sortedSmartAlbums = sortedAssetCollections(from: smartAlbums)
-            let userCollections = PHCollectionList.fetchTopLevelUserCollections(with: nil)
-            guard let weakSelf = self else {
-                return
-            }
-            PHPhotoLibrary.shared().register(weakSelf)
-            DispatchQueue.main.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.allPhotos = allPhotos
-                weakSelf.smartAlbums = smartAlbums
-                weakSelf.sortedSmartAlbums = sortedSmartAlbums
-                weakSelf.userCollections = userCollections
-                weakSelf.albumsCollectionView.reloadData()
-                let firstItem = IndexPath(item: 0, section: 0)
-                weakSelf.albumsCollectionView.selectItem(at: firstItem, animated: false, scrollPosition: .left)
-                weakSelf.reloadGrid(at: firstItem)
-            }
+        reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if needsReload {
+            reloadData()
         }
     }
     
@@ -104,6 +89,33 @@ class PhotoInputViewController: UIViewController {
                 gridViewController.fetchResult = PHAsset.fetchAssets(in: collection, options: creationDateDescendingFetchOptions)
             } else {
                 gridViewController.fetchResult = nil
+            }
+        }
+    }
+    
+    private func reloadData() {
+        let fetchOption = self.creationDateDescendingFetchOptions
+        DispatchQueue.global().async { [weak self] in
+            let allPhotos = PHAsset.fetchAssets(with: fetchOption)
+            let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
+            let sortedSmartAlbums = sortedAssetCollections(from: smartAlbums)
+            let userCollections = PHCollectionList.fetchTopLevelUserCollections(with: nil)
+            guard let weakSelf = self else {
+                return
+            }
+            PHPhotoLibrary.shared().register(weakSelf)
+            DispatchQueue.main.async {
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.allPhotos = allPhotos
+                weakSelf.smartAlbums = smartAlbums
+                weakSelf.sortedSmartAlbums = sortedSmartAlbums
+                weakSelf.userCollections = userCollections
+                weakSelf.albumsCollectionView.reloadData()
+                let firstItem = IndexPath(item: 0, section: 0)
+                weakSelf.albumsCollectionView.selectItem(at: firstItem, animated: false, scrollPosition: .left)
+                weakSelf.reloadGrid(at: firstItem)
             }
         }
     }
@@ -162,16 +174,7 @@ extension PhotoInputViewController: PHPhotoLibraryChangeObserver {
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         DispatchQueue.main.sync {
-            if let allPhotos = self.allPhotos, let changeDetails = changeInstance.changeDetails(for: allPhotos) {
-                self.allPhotos = changeDetails.fetchResultAfterChanges
-            }
-            if let smartAlbums = self.smartAlbums, let changeDetails = changeInstance.changeDetails(for: smartAlbums) {
-                self.smartAlbums = changeDetails.fetchResultAfterChanges
-                self.sortedSmartAlbums = sortedAssetCollections(from: smartAlbums)
-            }
-            if let userCollections = self.userCollections, let changeDetails = changeInstance.changeDetails(for: userCollections) {
-                self.userCollections = changeDetails.fetchResultAfterChanges
-            }
+            needsReload = true
         }
     }
     

@@ -7,7 +7,11 @@ class ImageAssetRequestJob: AssetRequestJob {
     
     override func main() {
         super.main()
-        guard !isCancelled, AccountAPI.shared.didLogin, let asset = asset else {
+        guard !isCancelled, AccountAPI.shared.didLogin else {
+            return
+        }
+        guard let asset = asset else {
+            MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .EXPIRED, conversationId: message.conversationId)
             return
         }
         let options = PHImageRequestOptions()

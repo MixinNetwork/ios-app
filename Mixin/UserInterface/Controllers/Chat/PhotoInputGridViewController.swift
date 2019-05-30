@@ -33,16 +33,11 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     private var previousPreheatRect = CGRect.zero
     private var availableWidth: CGFloat = 0
     
-    deinit {
-        PHPhotoLibrary.shared().unregisterChangeObserver(self)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = true
-        PHPhotoLibrary.shared().register(self)
     }
     
     override func viewWillLayoutSubviews() {
@@ -145,45 +140,6 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let asset = asset(at: indexPath) {
             conversationInputViewController?.preview(asset: asset)
-        }
-    }
-    
-}
-
-extension PhotoInputGridViewController: PHPhotoLibraryChangeObserver {
-    
-    func photoLibraryDidChange(_ changeInstance: PHChange) {
-        guard let fetchResult = fetchResult, let changes = changeInstance.changeDetails(for: fetchResult) else {
-            return
-        }
-        DispatchQueue.main.sync {
-            if changes.hasIncrementalChanges {
-                collectionView.performBatchUpdates({
-                    let cameraCellFactor = self.firstCellIsCamera ? 1 : 0
-                    
-                    self.fetchResult = changes.fetchResultAfterChanges
-                    if let removed = changes.removedIndexes, !removed.isEmpty {
-                        let indexPaths = removed.map({ IndexPath(item: $0 + cameraCellFactor, section: 0) })
-                        collectionView.deleteItems(at: indexPaths)
-                    }
-                    if let inserted = changes.insertedIndexes, !inserted.isEmpty {
-                        let indexPaths = inserted.map({ IndexPath(item: $0 + cameraCellFactor, section: 0) })
-                        collectionView.insertItems(at: indexPaths)
-                    }
-                    changes.enumerateMoves({ (from, to) in
-                        self.collectionView.moveItem(at: IndexPath(item: from + cameraCellFactor, section: 0),
-                                                     to: IndexPath(item: to + cameraCellFactor, section: 0))
-                    })
-                    if let changed = changes.changedIndexes, !changed.isEmpty {
-                        let indexPaths = changed.map({ IndexPath(item: $0 + cameraCellFactor, section: 0) })
-                        collectionView.reloadItems(at: indexPaths)
-                    }
-                })
-            } else {
-                self.fetchResult = changes.fetchResultAfterChanges
-                collectionView.reloadData()
-            }
-            resetCachedAssets()
         }
     }
     

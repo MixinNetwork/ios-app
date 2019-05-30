@@ -268,9 +268,12 @@ extension PhotoInputGridViewController {
     }
     
     func removeAllSelections(animated: Bool) {
-        collectionView.indexPathsForSelectedItems?.forEach({ (indexPath) in
+        collectionView.indexPathsForSelectedItems?.forEach { (indexPath) in
             collectionView.deselectItem(at: indexPath, animated: animated)
-        })
+        }
+        collectionView.indexPathsForVisibleItems.forEach { (indexPath) in
+            (collectionView.cellForItem(at: indexPath) as? PhotoInputGridCell)?.isSelected = false
+        }
     }
     
     private func asset(at indexPath: IndexPath) -> PHAsset? {

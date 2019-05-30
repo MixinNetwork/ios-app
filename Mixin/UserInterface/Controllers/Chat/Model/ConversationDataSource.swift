@@ -8,14 +8,6 @@ class ConversationDataSource {
     
     static let didAddMessageOutOfBoundsNotification = Notification.Name("one.mixin.ios.conversation.datasource.add.message.outside.visible.bounds")
     
-    private static let videoRequestOptions: PHVideoRequestOptions = {
-        let options = PHVideoRequestOptions()
-        options.isNetworkAccessAllowed = false
-        options.version = .current
-        options.deliveryMode = .fastFormat
-        return options
-    }()
-    
     let queue = DispatchQueue(label: "one.mixin.ios.conversation.datasource")
     
     var ownerUser: UserItem?
@@ -45,7 +37,6 @@ class ConversationDataSource {
     private var canInsertUnreadHint = true
     private var messageProcessingIsCancelled = false
     private var didInitializedData = false
-    private var pendingChanges = [ConversationChange]()
     private var tableViewContentInset: UIEdgeInsets {
         return performSynchronouslyOnMainThread {
             self.tableView?.contentInset ?? .zero
@@ -291,6 +282,18 @@ class ConversationDataSource {
             }
             self.viewModels[date] = nil
         }
+        if let viewModels = self.viewModels[date] {
+            let indexBeforeDeletedMessage = indexPath.row - 1
+            let indexAfterDeletedMessage = indexPath.row
+            if indexBeforeDeletedMessage >= 0 {
+                let style = self.style(forIndex: indexBeforeDeletedMessage, viewModels: viewModels)
+                self.viewModels[date]?[indexBeforeDeletedMessage].style = style
+            }
+            if indexAfterDeletedMessage < viewModels.count {
+                let style = self.style(forIndex: indexAfterDeletedMessage, viewModels: viewModels)
+                self.viewModels[date]?[indexAfterDeletedMessage].style = style
+            }
+        }
         return (didRemoveRow, didRemoveSection)
     }
     
@@ -322,14 +325,6 @@ extension ConversationDataSource {
         guard let change = sender.object as? ConversationChange, change.conversationId == conversationId else {
             return
         }
-        if didInitializedData {
-            perform(change: change)
-        } else {
-            pendingChanges.append(change)
-        }
-    }
-    
-    private func perform(change: ConversationChange) {
         switch change.action {
         case .reload:
             highlight = nil
@@ -353,7 +348,7 @@ extension ConversationDataSource {
             updateMediaProgress(messageId: messageId, progress: progress)
         case .recallMessage(let messageId):
             updateMessage(messageId: messageId)
-        default:
+        case .updateConversation, .startedUpdateConversation:
             break
         }
     }
@@ -362,6 +357,7 @@ extension ConversationDataSource {
         guard !loadedMessageIds.contains(message.messageId) else {
             return
         }
+        loadedMessageIds.insert(message.messageId)
         let messageIsSentByMe = message.userId == me.user_id
         if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue {
             SendMessageService.shared.sendReadMessage(conversationId: message.conversationId, messageId: message.messageId)
@@ -705,10 +701,6 @@ extension ConversationDataSource {
             ConversationViewController.positions[self.conversationId] = nil
             SendMessageService.shared.sendReadMessages(conversationId: self.conversationId)
             self.didInitializedData = true
-            for change in self.pendingChanges {
-                self.perform(change: change)
-            }
-            self.pendingChanges = []
             completion?()
         }
     }
@@ -804,39 +796,50 @@ extension ConversationDataSource {
         return viewModel
     }
     
-    private func style(forIndex index: Int, messages: [MessageItem]) -> MessageViewModel.Style {
-        let message = messages[index]
-        let isFirstMessage = (index == 0)
-        let isLastMessage = (index == messages.count - 1)
+    private func style(forIndex index: Int, isFirstMessage: Bool, isLastMessage: Bool, messageAtIndex: (Int) -> MessageItem) -> MessageViewModel.Style {
+        let message = messageAtIndex(index)
         var style: MessageViewModel.Style = []
         if message.userId != me.user_id {
             style = .received
         }
         if isLastMessage
-            || messages[index + 1].userId != message.userId
-            || messages[index + 1].isExtensionMessage
-            || messages[index + 1].isSystemMessage {
+            || messageAtIndex(index + 1).userId != message.userId
+            || messageAtIndex(index + 1).isExtensionMessage
+            || messageAtIndex(index + 1).isSystemMessage {
             style.insert(.tail)
         }
         if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
             style.insert(.bottomSeparator)
         } else if !isLastMessage && (message.isSystemMessage
-            || messages[index + 1].userId != message.userId
-            || messages[index + 1].isSystemMessage
-            || messages[index + 1].isExtensionMessage) {
+            || messageAtIndex(index + 1).userId != message.userId
+            || messageAtIndex(index + 1).isSystemMessage
+            || messageAtIndex(index + 1).isExtensionMessage) {
             style.insert(.bottomSeparator)
         }
         if message.isRepresentativeMessage(conversation: conversation) {
             if (isFirstMessage && !message.isExtensionMessage && !message.isSystemMessage)
-                || (!isFirstMessage && (messages[index - 1].userId != message.userId || messages[index - 1].isExtensionMessage || messages[index - 1].isSystemMessage)) {
+                || (!isFirstMessage && (messageAtIndex(index - 1).userId != message.userId || messageAtIndex(index - 1).isExtensionMessage || messageAtIndex(index - 1).isSystemMessage)) {
                 style.insert(.fullname)
             }
         }
         return style
     }
     
+    private func style(forIndex index: Int, messages: [MessageItem]) -> MessageViewModel.Style {
+        return style(forIndex: index,
+                     isFirstMessage: index == 0,
+                     isLastMessage: index == messages.count - 1,
+                     messageAtIndex: { messages[$0] })
+    }
+    
+    private func style(forIndex index: Int, viewModels: [MessageViewModel]) -> MessageViewModel.Style {
+        return style(forIndex: index,
+                     isFirstMessage: index == 0,
+                     isLastMessage: index == viewModels.count - 1,
+                     messageAtIndex: { viewModels[$0].message })
+    }
+    
     private func addMessageAndDisplay(message: MessageItem) {
-        loadedMessageIds.insert(message.messageId)
         let messageIsSentByMe = message.userId == me.user_id
         let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
         let lastIndexPathBeforeInsertion = lastIndexPath

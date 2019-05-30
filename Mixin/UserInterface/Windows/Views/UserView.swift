@@ -210,6 +210,9 @@ class UserView: CornerView {
         default:
             break
         }
+        alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_CLEAR, style: .destructive, handler: { (action) in
+            self.clearChatAction()
+        }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
     }
@@ -448,6 +451,16 @@ class UserView: CornerView {
             showHud(style: .error, text: error.localizedDescription)
         }
         completion?()
+    }
+    
+    private func clearChatAction() {
+        let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: user.userId)
+        DispatchQueue.global().async {
+            MessageDAO.shared.clearChat(conversationId: conversationId)
+            DispatchQueue.main.async {
+                showHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
+            }
+        }
     }
     
     @IBAction func sendAction(_ sender: Any) {

@@ -84,6 +84,10 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         }
     }
     
+    func sectionIsEmpty(_ section: Int) -> Bool {
+        return self.tableView(tableView, numberOfRowsInSection: section) == 0
+    }
+    
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 0
@@ -109,7 +113,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard !isSearching, !sectionTitles.isEmpty else {
+        guard !isSearching, !sectionTitles.isEmpty, !sectionIsEmpty(section) else {
             return nil
         }
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseId) as! PeerHeaderView
@@ -121,7 +125,7 @@ class PeerViewController<ModelType, CellType: PeerCell, SearchResultType: Search
         if isSearching {
             return .leastNormalMagnitude
         } else if !sectionTitles.isEmpty {
-            return 36
+            return sectionIsEmpty(section) ? .leastNormalMagnitude : 36
         } else {
             return .leastNormalMagnitude
         }

@@ -22,11 +22,10 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     private let interitemSpacing: CGFloat = 0
     private let columnCount: CGFloat = 3
     private let imageManager = PHCachingImageManager()
-    private let utiCheckingImageRequestOptions: PHImageRequestOptions = {
+    private lazy var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
-        options.deliveryMode = .fastFormat
-        options.resizeMode = .fast
-        options.isSynchronous = true
+        options.version = .current
+        options.isNetworkAccessAllowed = true
         return options
     }()
     
@@ -92,7 +91,7 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
             cell.identifier = asset.localIdentifier
             cell.imageView.contentMode = .scaleAspectFill
             cell.imageView.backgroundColor = .white
-            imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil) { [weak cell] (image, _) in
+            imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: imageRequestOptions) { [weak cell] (image, _) in
                 guard let cell = cell, cell.identifier == asset.localIdentifier else {
                     return
                 }

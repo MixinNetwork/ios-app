@@ -2350,12 +2350,22 @@
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="213"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
+                                    <view hidden="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="42" placeholderIntrinsicHeight="42" translatesAutoresizingMaskIntoConstraints="NO" id="y3P-sN-XXV" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="146.5" y="85.5" width="42" height="42"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="3Fs-0Z-fFc" secondAttribute="bottom" id="38J-Fh-XBA"/>
+                                    <constraint firstItem="y3P-sN-XXV" firstAttribute="centerY" secondItem="55I-zr-MlK" secondAttribute="centerY" id="6Ht-s8-muj"/>
                                     <constraint firstItem="3Fs-0Z-fFc" firstAttribute="leading" secondItem="55I-zr-MlK" secondAttribute="leading" id="XzM-SI-o1b"/>
                                     <constraint firstAttribute="trailing" secondItem="3Fs-0Z-fFc" secondAttribute="trailing" id="Zch-Lm-l5j"/>
+                                    <constraint firstItem="y3P-sN-XXV" firstAttribute="centerX" secondItem="55I-zr-MlK" secondAttribute="centerX" id="rhm-vZ-Ucl"/>
                                     <constraint firstItem="3Fs-0Z-fFc" firstAttribute="top" secondItem="55I-zr-MlK" secondAttribute="top" id="zd2-sP-ZCV"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -2376,6 +2386,7 @@
                     </view>
                     <size key="freeformSize" width="375" height="239"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="y3P-sN-XXV" id="p5u-Qo-rWL"/>
                         <outlet property="contentView" destination="55I-zr-MlK" id="ZZq-87-Nbk"/>
                         <outlet property="imageView" destination="3Fs-0Z-fFc" id="eUc-da-ZRc"/>
                     </connections>

@@ -18,6 +18,7 @@ class ImageAssetRequestJob: AssetRequestJob {
         let targetSize = CGSize(width: CGFloat(message.mediaWidth ?? 1920),
                                 height: CGFloat(message.mediaHeight ?? 1920))
         PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFit, options: options) { (image, info) in
+            // FIXME: Perform on background queue
             guard let image = image, !self.isCancelled else {
                 return
             }
@@ -27,6 +28,9 @@ class ImageAssetRequestJob: AssetRequestJob {
             let mediaSize = FileManager.default.fileSize(url.path)
             self.message.mediaUrl = filename
             self.message.mediaSize = mediaSize
+            if self.message.thumbImage == nil {
+                self.message.thumbImage = image.base64Thumbnail()
+            }
             MixinDatabase.shared.insertOrReplace(objects: [self.message])
             let change = ConversationChange(conversationId: self.message.conversationId, action: .updateMessage(messageId: self.message.messageId))
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)

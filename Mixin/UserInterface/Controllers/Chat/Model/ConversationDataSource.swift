@@ -9,15 +9,6 @@ class ConversationDataSource {
     
     static let didAddMessageOutOfBoundsNotification = Notification.Name("one.mixin.ios.conversation.datasource.add.message.outside.visible.bounds")
     
-    private static let thumbnailRequestOptions: PHImageRequestOptions = {
-        let options = PHImageRequestOptions()
-        options.deliveryMode = .fastFormat
-        options.resizeMode = .fast
-        options.isNetworkAccessAllowed = false
-        options.isSynchronous = true
-        return options
-    }()
-    
     let queue = DispatchQueue(label: "one.mixin.ios.conversation.datasource")
     
     var ownerUser: UserItem?
@@ -28,7 +19,16 @@ class ConversationDataSource {
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
     private let me = AccountAPI.shared.account!
-
+    
+    private lazy var thumbnailRequestOptions: PHImageRequestOptions = {
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .fastFormat
+        options.resizeMode = .fast
+        options.isNetworkAccessAllowed = false
+        options.isSynchronous = true
+        return options
+    }()
+    
     private(set) var conversation: ConversationItem {
         didSet {
             category = conversation.category == ConversationCategory.CONTACT.rawValue ? .contact : .group
@@ -616,14 +616,14 @@ extension ConversationDataSource {
             message.mediaDuration = Int64(asset.duration * 1000)
         }
         let thumbnailSize = CGSize(width: 64, height: 64)
-        PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: ConversationDataSource.thumbnailRequestOptions) { (image, info) in
+        PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: thumbnailRequestOptions) { (image, info) in
             if let image = image {
                 message.thumbImage = image.base64Thumbnail()
-                if assetMediaTypeIsImage {
-                    message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.jpeg.rawValue)
-                } else {
-                    message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.mp4.rawValue)
-                }
+            }
+            if assetMediaTypeIsImage {
+                message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.jpeg.rawValue)
+            } else {
+                message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.mp4.rawValue)
             }
         }
         SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: self.category == .group)

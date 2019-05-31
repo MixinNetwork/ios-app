@@ -1,3 +1,7 @@
+install! 'cocoapods',
+:generate_multiple_pod_projects => true,
+:incremental_installation => true
+
 platform :ios, '10.0'
 source 'https://github.com/CocoaPods/Specs.git'
 

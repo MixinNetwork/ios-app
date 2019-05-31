@@ -210,9 +210,11 @@ class UserView: CornerView {
         default:
             break
         }
-        alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_CLEAR, style: .destructive, handler: { (action) in
-            self.clearChatAction()
-        }))
+        if !isMe {
+            alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_CLEAR, style: .destructive, handler: { (action) in
+                self.clearChatAction()
+            }))
+        }
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
     }

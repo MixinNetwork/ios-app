@@ -128,7 +128,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
         op.addExecutionBlock { [unowned op, weak self] in
             let messages = MessageDAO.shared.getMessages(conversationId: conversationId,
                                                          contentLike: keyword,
-                                                         belowCreatedAt: nil,
+                                                         belowMessageId: nil,
                                                          limit: limit)
             guard !op.isCancelled else {
                 return
@@ -188,7 +188,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         guard indexPath.row >= messageCountPerPage - loadMoreMessageThreshold else {
             return
         }
-        guard let location = messages.last?.last?.createdAt else {
+        guard let location = messages.last?.last?.messageId else {
             return
         }
         guard let keyword = trimmedLowercaseKeyword else {
@@ -200,7 +200,7 @@ extension SearchConversationViewController: UITableViewDelegate {
         op.addExecutionBlock { [unowned op, weak self] in
             let messages = MessageDAO.shared.getMessages(conversationId: conversationId,
                                                          contentLike: keyword,
-                                                         belowCreatedAt: location,
+                                                         belowMessageId: location,
                                                          limit: limit)
             guard !op.isCancelled else {
                 return

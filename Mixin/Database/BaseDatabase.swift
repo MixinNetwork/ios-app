@@ -96,7 +96,12 @@ class BaseDatabase {
             return result
         }
     }
-
+    
+    func getRowId(tableName: String, condition: Condition) -> Int64 {
+        let sql = "SELECT ROWID FROM \(tableName) WHERE \(condition.asExpression())"
+        return try! database.prepareSelectSQL(sql: sql, values: []).getValue().int64Value
+    }
+    
     func getDictionary(key: ColumnResult, value: ColumnResult, tableName: String, condition: Condition? = nil) -> [String: String] {
         let rows = try! database.tryGetRows(on: [key, value], fromTable: tableName, where: condition)
         var result = [String: String]()

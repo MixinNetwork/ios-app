@@ -30,10 +30,6 @@ final class MessageDAO {
         ORDER BY created_at DESC
         LIMIT 1
     """
-    static let sqlQueryUpdateConversationRead = """
-        UPDATE messages SET status = 'READ'
-        WHERE conversation_id = ? AND status == 'DELIVERED' AND user_id != ? AND created_at <= ?
-    """
     static let sqlQueryFullMessage = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,

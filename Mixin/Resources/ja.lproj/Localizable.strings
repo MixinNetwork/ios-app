@@ -293,7 +293,7 @@
 "wallet_title_withdrawal" = "出金";
 "wallet_title_add_asset" = "資産を追加";
 "wallet_already_had_the_asset" = "すでに持っています";
-"wallet_transfer_out" = "振込をする";
+"wallet_transfer_out" = "送金";
 "wallet_symbol_other" = "別の";
 "wallet_password_verify_title" = "旧PIN";
 "wallet_password_too_many_requests" = "5回以上試しました。少なくとも24時間待ってからもう一度試してください。";
@@ -302,9 +302,9 @@
 "wallet_set_password_success" = "ウォレットのPINを正しく設定する";
 "wallet_snapshot_from" = " %@ から";
 "wallet_snapshot_to" = " %@ まで";
-"wallet_caption_send" = "振込をする";
-"wallet_caption_receive" = "預金";
-"wallet_deposit" = "預金";
+"wallet_caption_send" = "送金";
+"wallet_caption_receive" = "受取";
+"wallet_deposit" = "受取";
 "wallet_deposit_confirmations" = "入金は少なくとも %@ ブロックの確認後に到着します。";
 "wallet_no_transaction" = "取引なし";
 "wallet_address" = "住所";
@@ -372,7 +372,7 @@
 "transaction_sender" = "送信者";
 "transaction_receiver" = "受信者";
 "transaction_transaction_hash" = "取引　Hash";
-"transaction_type_deposit" = "預金";
+"transaction_type_deposit" = "受取";
 "transaction_type_transfer" = "振込";
 "transaction_type_withdrawal" = "出金";
 "transaction_type_fee" = "費用";
@@ -526,7 +526,7 @@
 "notification_content_file" = "[ファイル]";
 "notification_content_sticker" = "[ステッカー]";
 "notification_content_contact" = "[連絡先]";
-"notification_content_deposit" = "[預金]";
+"notification_content_deposit" = "[受取]";
 "notification_content_fee" = "[費用]";
 "notification_content_withdrawal" = "[出金]";
 "notification_content_rebate" = "[割引]";

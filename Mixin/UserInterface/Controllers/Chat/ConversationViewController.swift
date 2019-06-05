@@ -226,7 +226,7 @@ class ConversationViewController: UIViewController {
         if let dataSource = dataSource, dataSource.category == .group {
             groupWindow.bounds.size.width = view.bounds.width
             groupWindow.updateGroup(conversation: dataSource.conversation).presentView()
-        } else if let user = ownerUser {
+        } else if let user = ownerUser, user.isCreatedByMessenger {
             userWindow.bounds.size.width = view.bounds.width
             userWindow.updateUser(user: user).presentView()
         }
@@ -418,7 +418,7 @@ class ConversationViewController: UIViewController {
                         return
                     }
                     UserWindow.instance().updateUser(user: UserItem.createUser(from: account)).presentView()
-                } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
+                } else if let user = UserDAO.shared.getUser(userId: shareUserId), user.isCreatedByMessenger {
                     UserWindow.instance().updateUser(user: user).presentView()
                 }
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {

@@ -178,7 +178,7 @@ extension UrlWindow {
                 }
             }
             DispatchQueue.main.async {
-                guard let weakSelf = self, weakSelf.isShowing, let user = user else {
+                guard let weakSelf = self, weakSelf.isShowing, let user = user, user.isCreatedByMessenger else {
                     return
                 }
                 if transfer {
@@ -197,6 +197,9 @@ extension UrlWindow {
     }
 
     private func presentUser(user: UserItem, clearNavigationStack: Bool, refreshUser: Bool = true) {
+        guard user.isCreatedByMessenger else {
+            return
+        }
         containerView.addSubview(userView)
         userView.snp.makeConstraints({ (make) in
             make.edges.equalToSuperview()

@@ -100,7 +100,7 @@ extension TransactionViewController: UITableViewDelegate {
             return
         }
         DispatchQueue.global().async {
-            guard let user = UserDAO.shared.getUser(userId: userId), user.identityNumber != "0" else {
+            guard let user = UserDAO.shared.getUser(userId: userId), user.isCreatedByMessenger else {
                 return
             }
             DispatchQueue.main.async {

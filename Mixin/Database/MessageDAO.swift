@@ -94,12 +94,17 @@ final class MessageDAO {
     static let sqlSearchMessageContent = """
     SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
     FROM messages m
-    LEFT JOIN users u ON (m.user_id = u.user_id)
-    WHERE ((conversation_id = ?) AND (((m.category LIKE '%_TEXT') AND (m.content LIKE ?)) OR ((m.category LIKE '%_DATA') AND (m.name LIKE ?)))
+    LEFT JOIN users u ON m.user_id = u.user_id
+    WHERE conversation_id = ? AND (
+        (m.category LIKE '%_TEXT' AND m.content LIKE ?) OR (m.category LIKE '%_DATA' AND m.name LIKE ?)
+    )
     """
     static let sqlQueryGalleryItem = """
     SELECT * FROM messages
-    WHERE (((((conversation_id = ?) AND ((((category = 'SIGNAL_IMAGE') OR (category = 'PLAIN_IMAGE')) OR (category = 'SIGNAL_VIDEO')) OR (category = 'PLAIN_VIDEO'))) AND (status != 'FAILED')) AND (NOT ((user_id = ?) AND (media_status != 'DONE'))))
+    WHERE conversation_id = ?
+        AND (category LIKE '%_IMAGE' OR category LIKE '%_VIDEO')
+        AND status != 'FAILED'
+        AND (NOT (user_id = ? AND media_status != 'DONE'))
     """
     func getMediaUrls(likeCategory category: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.mediaUrl.asColumnResult(),
@@ -367,9 +372,9 @@ final class MessageDAO {
                                                       condition: Message.Properties.messageId == location.messageId)
             var sql = MessageDAO.sqlQueryGalleryItem
             if count > 0 {
-                sql += " AND (ROWID > \(rowId))) ORDER BY created_at ASC LIMIT \(count)"
+                sql += " AND ROWID > \(rowId) ORDER BY created_at ASC LIMIT \(count)"
             } else {
-                sql += " AND (ROWID < \(rowId))) ORDER BY created_at DESC LIMIT \(-count)"
+                sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
             }
             messages = MixinDatabase.shared.getCodables(sql: sql, values: [conversationId, AccountAPI.shared.accountUserId], inTransaction: false)
         }

@@ -99,8 +99,11 @@ final class MessageDAO {
         (m.category LIKE '%_TEXT' AND m.content LIKE ?) OR (m.category LIKE '%_DATA' AND m.name LIKE ?)
     )
     """
+    
     static let sqlQueryGalleryItem = """
-    SELECT * FROM messages
+    SELECT m.id, m.category, m.media_url, m.media_mime_type, m.media_width,
+           m.media_height, m.media_status, m.thumb_image, m.created_at
+    FROM messages m
     WHERE conversation_id = ?
         AND (category LIKE '%_IMAGE' OR category LIKE '%_VIDEO')
         AND status != 'FAILED'
@@ -366,7 +369,7 @@ final class MessageDAO {
     
     func getGalleryItems(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
         assert(count != 0)
-        var messages: [Message]!
+        var items = [GalleryItem]()
         MixinDatabase.shared.transaction { (db) in
             let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
                                                       condition: Message.Properties.messageId == location.messageId)
@@ -376,9 +379,30 @@ final class MessageDAO {
             } else {
                 sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
             }
-            messages = MixinDatabase.shared.getCodables(sql: sql, values: [conversationId, AccountAPI.shared.accountUserId], inTransaction: false)
+            
+            let stmt = StatementSelectSQL(sql: sql)
+            let cs = try MixinDatabase.shared.database.prepare(stmt)
+            
+            let bindingCounter = Counter(value: 0)
+            cs.bind(conversationId, toIndex: bindingCounter.advancedValue)
+            cs.bind(AccountAPI.shared.accountUserId, toIndex: bindingCounter.advancedValue)
+            
+            while try cs.step() {
+                let counter = Counter(value: -1)
+                let item = GalleryItem(messageId: cs.value(atIndex: counter.advancedValue) ?? "",
+                                       category: cs.value(atIndex: counter.advancedValue) ?? "",
+                                       mediaUrl: cs.value(atIndex: counter.advancedValue),
+                                       mediaMimeType: cs.value(atIndex: counter.advancedValue),
+                                       mediaWidth: cs.value(atIndex: counter.advancedValue),
+                                       mediaHeight: cs.value(atIndex: counter.advancedValue),
+                                       mediaStatus: cs.value(atIndex: counter.advancedValue),
+                                       thumbImage: cs.value(atIndex: counter.advancedValue),
+                                       createdAt: cs.value(atIndex: counter.advancedValue) ?? "")
+                if let item = item {
+                    items.append(item)
+                }
+            }
         }
-        let items = messages.compactMap(GalleryItem.init)
         if count > 0 {
             return items
         } else {

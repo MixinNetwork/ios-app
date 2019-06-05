@@ -23,13 +23,6 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     private let interitemSpacing: CGFloat = 0
     private let columnCount: CGFloat = 3
     private let imageManager = PHCachingImageManager()
-    private let utiCheckingImageRequestOptions: PHImageRequestOptions = {
-        let options = PHImageRequestOptions()
-        options.deliveryMode = .fastFormat
-        options.resizeMode = .fast
-        options.isSynchronous = true
-        return options
-    }()
     
     private var thumbnailSize = CGSize.zero
     private var previousPreheatRect = CGRect.zero
@@ -154,29 +147,29 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
 extension PhotoInputGridViewController: PHPhotoLibraryChangeObserver {
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
-        guard let fetchResult = fetchResult, let changes = changeInstance.changeDetails(for: fetchResult) else {
+        guard let oldFetchResult = fetchResult, let changes = changeInstance.changeDetails(for: oldFetchResult) else {
             return
         }
         DispatchQueue.main.sync {
             if changes.hasIncrementalChanges {
                 collectionView.performBatchUpdates({
-                    let cameraCellFactor = self.firstCellIsCamera ? 1 : 0
-                    
-                    self.fetchResult = changes.fetchResultAfterChanges
+                    let newFetchResult = changes.fetchResultAfterChanges
+                    self.fetchResult = newFetchResult
+                    let newCount = newFetchResult.count
                     if let removed = changes.removedIndexes, !removed.isEmpty {
-                        let indexPaths = removed.map({ IndexPath(item: $0 + cameraCellFactor, section: 0) })
+                        let indexPaths = removed.map { indexPath(fetchResultCount: oldFetchResult.count, index: $0) }
                         collectionView.deleteItems(at: indexPaths)
                     }
                     if let inserted = changes.insertedIndexes, !inserted.isEmpty {
-                        let indexPaths = inserted.map({ IndexPath(item: $0 + cameraCellFactor, section: 0) })
+                        let indexPaths = inserted.map { indexPath(fetchResultCount: newCount, index: $0) }
                         collectionView.insertItems(at: indexPaths)
                     }
                     changes.enumerateMoves({ (from, to) in
-                        self.collectionView.moveItem(at: IndexPath(item: from + cameraCellFactor, section: 0),
-                                                     to: IndexPath(item: to + cameraCellFactor, section: 0))
+                        self.collectionView.moveItem(at: self.indexPath(fetchResultCount: newCount, index: from),
+                                                     to: self.indexPath(fetchResultCount: newCount, index: to))
                     })
                     if let changed = changes.changedIndexes, !changed.isEmpty {
-                        let indexPaths = changed.map({ IndexPath(item: $0 + cameraCellFactor, section: 0) })
+                        let indexPaths = changed.map { indexPath(fetchResultCount: newCount, index: $0) }
                         collectionView.reloadItems(at: indexPaths)
                     }
                 })
@@ -264,8 +257,9 @@ extension PhotoInputGridViewController {
     }
     
     private func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
-        let allLayoutAttributes = collectionViewLayout.layoutAttributesForElements(in: rect)!
-        return allLayoutAttributes.map { $0.indexPath }
+        return collectionViewLayout
+            .layoutAttributesForElements(in: rect)?
+            .map { $0.indexPath } ?? []
     }
     
     private func removeAllSelections() {
@@ -275,14 +269,31 @@ extension PhotoInputGridViewController {
     }
     
     private func asset(at indexPath: IndexPath) -> PHAsset? {
+        guard let fetchResult = fetchResult else {
+            return nil
+        }
+        guard let index = fetchResultIndex(count: fetchResult.count, indexPath: indexPath) else {
+            return nil
+        }
+        let asset = fetchResult.object(at: index)
+        return asset
+    }
+    
+    private func indexPath(fetchResultCount: Int, index: Int) -> IndexPath {
+        let cameraCellFactor = firstCellIsCamera ? 1 : 0
+        let item = fetchResultCount - 1 + cameraCellFactor - index
+        return IndexPath(item: item, section: 0)
+    }
+    
+    private func fetchResultIndex(count: Int, indexPath: IndexPath) -> Int? {
         if firstCellIsCamera {
             if indexPath.row == 0 && indexPath.item == 0 {
                 return nil
             } else {
-                return fetchResult?.object(at: indexPath.item - 1)
+                return count - 1 - (indexPath.item - 1)
             }
         } else {
-            return fetchResult?.object(at: indexPath.item)
+            return count - 1 - indexPath.item
         }
     }
     

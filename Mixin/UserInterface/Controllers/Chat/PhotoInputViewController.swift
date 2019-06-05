@@ -13,11 +13,6 @@ class PhotoInputViewController: UIViewController {
     @IBOutlet weak var albumsCollectionLayout: UICollectionViewFlowLayout!
     
     private let cellReuseId = "album"
-    private let creationDateDescendingFetchOptions: PHFetchOptions = {
-        let options = PHFetchOptions()
-        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        return options
-    }()
     
     private var allPhotos: PHFetchResult<PHAsset>?
     private var smartAlbums: PHFetchResult<PHAssetCollection>?
@@ -34,9 +29,13 @@ class PhotoInputViewController: UIViewController {
         albumsCollectionLayout.estimatedItemSize = CGSize(width: 110, height: 60)
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
-        let fetchOption = self.creationDateDescendingFetchOptions
         DispatchQueue.global().async { [weak self] in
-            let allPhotos = PHAsset.fetchAssets(with: fetchOption)
+            let allPhotos: PHFetchResult<PHAsset>?
+            if let collection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil).firstObject {
+                allPhotos = PHAsset.fetchAssets(in: collection, options: nil)
+            } else {
+                allPhotos = nil
+            }
             let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
             let sortedSmartAlbums = sortedAssetCollections(from: smartAlbums)
             let userCollections = PHCollectionList.fetchTopLevelUserCollections(with: nil)
@@ -76,12 +75,12 @@ class PhotoInputViewController: UIViewController {
         case .smartAlbums:
             gridViewController.firstCellIsCamera = false
             if let collection = sortedSmartAlbums?[indexPath.row] {
-                gridViewController.fetchResult = PHAsset.fetchAssets(in: collection, options: creationDateDescendingFetchOptions)
+                gridViewController.fetchResult = PHAsset.fetchAssets(in: collection, options: nil)
             }
         case .userCollections:
             gridViewController.firstCellIsCamera = false
             if let collection = userCollections?[indexPath.row] as? PHAssetCollection {
-                gridViewController.fetchResult = PHAsset.fetchAssets(in: collection, options: creationDateDescendingFetchOptions)
+                gridViewController.fetchResult = PHAsset.fetchAssets(in: collection, options: nil)
             } else {
                 gridViewController.fetchResult = nil
             }

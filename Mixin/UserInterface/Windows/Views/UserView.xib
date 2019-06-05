@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -214,6 +214,7 @@
                 </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <gestureRecognizers/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="mMh-Qj-bOy" secondAttribute="trailing" id="3hc-nm-UzL"/>
                 <constraint firstItem="h4w-MA-ie4" firstAttribute="top" secondItem="Iu9-go-9Om" secondAttribute="top" id="4oV-PO-zP6"/>
@@ -259,6 +260,7 @@
                 <outlet property="fullnameLabel" destination="1Xo-ZO-T44" id="ArF-Jv-5ue"/>
                 <outlet property="hideRelationWrapperDescriptionTopConstraint" destination="Vdn-7g-YgG" id="9cQ-o4-ucZ"/>
                 <outlet property="idLabel" destination="CTg-iC-2aR" id="joZ-a6-ogY"/>
+                <outlet property="longPressRecognizer" destination="zjc-Tp-PPC" id="tuM-12-8vw"/>
                 <outlet property="moreButton" destination="i6u-Sj-8sl" id="AWS-rm-Jak"/>
                 <outlet property="openAppButton" destination="aFr-aK-zbi" id="WKE-03-P1i"/>
                 <outlet property="qrcodeButton" destination="Lrk-mU-vas" id="OWV-Zj-bkU"/>
@@ -268,9 +270,16 @@
                 <outlet property="transferButton" destination="fEf-ht-1u9" id="XVS-cc-KAO"/>
                 <outlet property="unblockButton" destination="v5r-q1-qfh" id="xvN-bh-ft6"/>
                 <outlet property="verifiedImageView" destination="t4Y-mk-GVy" id="fOx-eB-sZh"/>
+                <outletCollection property="gestureRecognizers" destination="zjc-Tp-PPC" appends="YES" id="GtX-9n-6hk"/>
             </connections>
             <point key="canvasLocation" x="160.80000000000001" y="-113.79310344827587"/>
         </view>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="zjc-Tp-PPC">
+            <connections>
+                <action selector="longPressAction:" destination="VIH-5N-txF" id="kbM-A6-MRM"/>
+                <outlet property="delegate" destination="VIH-5N-txF" id="Vtw-3E-2br"/>
+            </connections>
+        </pongPressGestureRecognizer>
     </objects>
     <resources>
         <image name="ic_dialog_close" width="26" height="26"/>

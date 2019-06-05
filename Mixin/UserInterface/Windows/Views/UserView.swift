@@ -5,7 +5,9 @@ import RSKImageCropper
 import Photos
 
 class UserView: CornerView {
-
+    
+    @IBOutlet weak var longPressRecognizer: UILongPressGestureRecognizer!
+    
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
@@ -45,10 +47,23 @@ class UserView: CornerView {
     }()
     private lazy var avatarPicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: UIApplication.currentActivity()!, delegate: self)
     private lazy var qrcodeWindow = QrcodeWindow.instance()
-
+    private lazy var menuDismissResponder = MenuDismissResponder()
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         descriptionLabel.delegate = self
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        return action == #selector(copy(_:))
+    }
+    
+    override func copy(_ sender: Any?) {
+        UIPasteboard.general.string = user.identityNumber
     }
     
     @objc func alertInputChangedAction(_ sender: Any) {
@@ -151,7 +166,18 @@ class UserView: CornerView {
             openAppButton.isHidden = !user.isBot
         }
     }
-
+    
+    @IBAction func longPressAction(_ recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        becomeFirstResponder()
+        let menu = UIMenuController.shared
+        menu.setTargetRect(idLabel.convert(idLabel.bounds, to: self), in: self)
+        menu.setMenuVisible(true, animated: true)
+        AppDelegate.current.window?.addSubview(menuDismissResponder)
+    }
+    
     @IBAction func dismissAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
     }
@@ -538,6 +564,26 @@ extension UserView {
         
     }
     
+    class MenuDismissResponder: UIButton {
+        
+        convenience init() {
+            let frame = AppDelegate.current.window!.bounds
+            self.init(frame: frame)
+            backgroundColor = .clear
+            addTarget(self, action: #selector(dismissMenu), for: .touchUpInside)
+            NotificationCenter.default.addObserver(self, selector: #selector(removeFromSuperview), name: UIMenuController.didHideMenuNotification, object: nil)
+        }
+        
+        deinit {
+            NotificationCenter.default.removeObserver(self)
+        }
+        
+        @objc func dismissMenu() {
+            UIMenuController.shared.setMenuVisible(false, animated: true)
+        }
+        
+    }
+    
 }
 
 extension UserView: ImagePickerControllerDelegate {
@@ -571,4 +617,21 @@ extension UserView: ImagePickerControllerDelegate {
         })
     }
 
+}
+
+extension UserView: UIGestureRecognizerDelegate {
+    
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer == longPressRecognizer else {
+            return true
+        }
+        let location = gestureRecognizer.location(in: self)
+        let area = idLabel.convert(idLabel.bounds, to: self).insetBy(dx: -8, dy: -8)
+        return area.contains(location)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
 }

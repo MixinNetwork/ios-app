@@ -47,6 +47,9 @@ class ImageUploadJob: AttachmentUploadJob {
             let mediaSize = FileManager.default.fileSize(url.path)
             self.message.mediaUrl = filename
             self.message.mediaSize = mediaSize
+            if self.message.thumbImage == nil {
+                self.message.thumbImage = image.base64Thumbnail()
+            }
             MixinDatabase.shared.insertOrReplace(objects: [self.message])
             let change = ConversationChange(conversationId: self.message.conversationId, action: .updateMessage(messageId: self.message.messageId))
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)

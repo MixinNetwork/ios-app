@@ -170,7 +170,7 @@ class ReceiveMessageService: MixinService {
                             guard let quoteMessageId = message.quoteMessageId else {
                                 continue
                             }
-                            guard let quoteMessage: MessageItem = try database.prepareSelectSQL(sql: MessageDAO.sqlQueryQuoteMessageById, values: [quoteMessageId]).allObjects().first, let data = try? JSONEncoder().encode(quoteMessage) else {
+                            guard let quoteMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryQuoteMessageById, values: [quoteMessageId]).allObjects().first, let data = try? JSONEncoder().encode(quoteMessage) else {
                                 continue
                             }
                             try database.update(table: Message.tableName, on: [Message.Properties.quoteContent], with: [data], where: Message.Properties.messageId == message.messageId)
@@ -204,7 +204,7 @@ class ReceiveMessageService: MixinService {
     }
 
     private func parseBlazeMessage(data: BlazeMessageData) -> (Message, Job?)? {
-        var plainText = data.data
+        let plainText = data.data
         var message: Message
         switch data.category {
         case MessageCategory.PLAIN_TEXT.rawValue:
@@ -212,7 +212,6 @@ class ReceiveMessageService: MixinService {
                 return nil
             }
             message = Message.createMessage(textMessage: content, data: data)
-            plainText = content
         case MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_VIDEO.rawValue:
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return nil

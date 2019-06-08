@@ -60,6 +60,7 @@ final class ConversationDAO {
     SELECT DISTINCT c.conversation_id FROM conversations c
     INNER JOIN users u ON u.user_id = c.owner_id AND u.app_id IS NOT NULL
     INNER JOIN messages_blaze mb ON mb.conversation_id = c.conversation_id
+    WHERE c.category = 'CONTACT'
     """
 
     func updateUnseenMessageCount(database: Database, conversationId: String) throws {

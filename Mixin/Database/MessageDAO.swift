@@ -93,7 +93,7 @@ final class MessageDAO {
     static let sqlQueryNeedSyncShareUsers = """
     SELECT DISTINCT user_id FROM (
         SELECT m.shared_user_id as user_id, u.identity_number FROM messages m
-        LEFT JOIN users u ON m.user_id = u.user_id
+        LEFT JOIN users u ON m.shared_user_id = u.user_id
         WHERE m.conversation_id = ? AND m.created_at >= ? AND m.shared_user_id IS NOT NULL)
     WHERE identity_number IS NULL
     """

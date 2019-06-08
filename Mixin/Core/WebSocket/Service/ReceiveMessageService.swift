@@ -192,7 +192,10 @@ class ReceiveMessageService: MixinService {
                         ReceiveMessageService.shared.syncUsers(userIds: syncUserIds)
                     }
 
-                    NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
+
+                    let change = ConversationChange(conversationId: conversationId,
+                                                    action: .reload)
+                    NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
                     SendMessageService.shared.processMessages()
 
                     if blazeMessageDatas.count >= pageCount {

@@ -93,7 +93,8 @@ final class MediaPreviewViewController: UIViewController {
         }
         loadViewIfNeeded()
         activityIndicator.startAnimating()
-        lastRequestId = PHImageManager.default().requestImage(for: asset, targetSize: imageView.bounds.size, contentMode: .aspectFill, options: imageRequestOptions) { [weak self] (image, info) in
+        let targetSize = imageView.bounds.size * UIScreen.main.scale
+        lastRequestId = PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: imageRequestOptions) { [weak self] (image, info) in
             guard let weakSelf = self, let image = image else {
                 return
             }

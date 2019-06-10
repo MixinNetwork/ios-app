@@ -42,37 +42,49 @@ struct GalleryItem: Equatable {
     let shouldLayoutAsArticle: Bool
     var mediaStatus: MediaStatus?
     
-    init?(message: GalleryItemRepresentable) {
-        if GalleryItem.imageCategories.contains(message.category) {
-            category = .image
-            if let mediaUrl = message.mediaUrl {
-                url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
+    init?(messageId: String, category: String, mediaUrl: String?, mediaMimeType: String?, mediaWidth: Int?, mediaHeight: Int?, mediaStatus: String?, thumbImage: String?, createdAt: String) {
+        if GalleryItem.imageCategories.contains(category) {
+            self.category = .image
+            if let mediaUrl = mediaUrl {
+                self.url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
             } else {
-                url = nil
+                self.url = nil
             }
-        } else if GalleryItem.videoCategories.contains(message.category) {
-            category = .video
-            if let mediaUrl = message.mediaUrl {
-                url = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl)
+        } else if GalleryItem.videoCategories.contains(category) {
+            self.category = .video
+            if let mediaUrl = mediaUrl {
+                self.url = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl)
             } else {
-                url = nil
+                self.url = nil
             }
         } else {
             return nil
         }
-        mediaMimeType = message.mediaMimeType
-        messageId = message.messageId
-        let width = max(1, message.mediaWidth ?? 1)
-        let height = max(1, message.mediaHeight ?? 1)
-        size = CGSize(width: width, height: height)
-        if let thumbImage = message.thumbImage, let data = Data(base64Encoded: thumbImage) {
-            thumbnail = UIImage(data: data)
+        self.mediaMimeType = mediaMimeType
+        self.messageId = messageId
+        let width = max(1, mediaWidth ?? 1)
+        let height = max(1, mediaHeight ?? 1)
+        self.size = CGSize(width: width, height: height)
+        if let thumbImage = thumbImage, let data = Data(base64Encoded: thumbImage) {
+            self.thumbnail = UIImage(data: data)
         } else {
-            thumbnail = nil
+            self.thumbnail = nil
         }
-        createdAt = message.createdAt
-        shouldLayoutAsArticle = GalleryItem.shouldLayoutImageOfRatioAsAriticle(size)
-        mediaStatus = MediaStatus(rawValue: message.mediaStatus ?? "")
+        self.createdAt = createdAt
+        self.shouldLayoutAsArticle = GalleryItem.shouldLayoutImageOfRatioAsAriticle(size)
+        self.mediaStatus = MediaStatus(rawValue: mediaStatus ?? "")
+    }
+    
+    init?(message m: GalleryItemRepresentable) {
+        self.init(messageId: m.messageId,
+                  category: m.category,
+                  mediaUrl: m.mediaUrl,
+                  mediaMimeType: m.mediaMimeType,
+                  mediaWidth: m.mediaWidth,
+                  mediaHeight: m.mediaHeight,
+                  mediaStatus: m.mediaStatus,
+                  thumbImage: m.thumbImage,
+                  createdAt: m.createdAt)
     }
     
     static func ==(lhs: GalleryItem, rhs: GalleryItem) -> Bool {

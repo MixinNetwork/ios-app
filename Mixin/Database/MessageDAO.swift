@@ -30,10 +30,6 @@ final class MessageDAO {
         ORDER BY created_at DESC
         LIMIT 1
     """
-    static let sqlQueryUpdateConversationRead = """
-        UPDATE messages SET status = 'READ'
-        WHERE conversation_id = ? AND status == 'DELIVERED' AND user_id != ? AND created_at <= ?
-    """
     static let sqlQueryFullMessage = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
@@ -62,15 +58,15 @@ final class MessageDAO {
     ORDER BY m.created_at DESC
     LIMIT ?
     """
-    static let sqlQueryFullMessageBeforeCreatedAt = """
+    static let sqlQueryFullMessageBeforeRowId = """
     \(sqlQueryFullMessage)
-    WHERE m.conversation_id = ? AND m.created_at < ?
+    WHERE m.conversation_id = ? AND m.ROWID < ?
     ORDER BY m.created_at DESC
     LIMIT ?
     """
-    static let sqlQueryFullMessageAfterCreatedAt = """
+    static let sqlQueryFullMessageAfterRowId = """
     \(sqlQueryFullMessage)
-    WHERE m.conversation_id = ? AND m.created_at > ?
+    WHERE m.conversation_id = ? AND m.ROWID > ?
     LIMIT ?
     """
     static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
@@ -95,7 +91,24 @@ final class MessageDAO {
         WHERE a.album_id = messages.album_id AND s.name = messages.name
     ) WHERE category LIKE '%_STICKER' AND ifnull(sticker_id, '') = ''
     """
+    static let sqlSearchMessageContent = """
+    SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
+    FROM messages m
+    LEFT JOIN users u ON m.user_id = u.user_id
+    WHERE conversation_id = ? AND (
+        (m.category LIKE '%_TEXT' AND m.content LIKE ?) OR (m.category LIKE '%_DATA' AND m.name LIKE ?)
+    )
+    """
     
+    static let sqlQueryGalleryItem = """
+    SELECT m.id, m.category, m.media_url, m.media_mime_type, m.media_width,
+           m.media_height, m.media_status, m.thumb_image, m.created_at
+    FROM messages m
+    WHERE conversation_id = ?
+        AND (category LIKE '%_IMAGE' OR category LIKE '%_VIDEO')
+        AND status != 'FAILED'
+        AND (NOT (user_id = ? AND media_status != 'DONE'))
+    """
     func getMediaUrls(likeCategory category: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.mediaUrl.asColumnResult(),
                                                     tableName: Message.tableName,
@@ -269,15 +282,29 @@ final class MessageDAO {
     }
     
     func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
-        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeCreatedAt, values: [conversationId, location.createdAt, count], inTransaction: false)
+        var messages: [MessageItem]!
+        MixinDatabase.shared.transaction { (db) in
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
+            messages = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeRowId,
+                                                        values: [conversationId, rowId, count],
+                                                        inTransaction: false)
+        }
         return messages.reversed()
     }
     
     func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterCreatedAt,
-                                                values: [conversationId, location.createdAt, count], inTransaction: false)
+        var messages: [MessageItem]!
+        MixinDatabase.shared.transaction { (db) in
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
+            messages = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterRowId,
+                                                        values: [conversationId, rowId, count],
+                                                        inTransaction: false)
+        }
+        return messages
     }
-
+    
     func getFirstNMessages(conversationId: String, count: Int) -> [MessageItem] {
         return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFirstNMessages, values: [conversationId, count], inTransaction: false)
     }
@@ -287,68 +314,49 @@ final class MessageDAO {
         return messages.reversed()
     }
     
-    func getMessages(conversationId: String, contentLike keyword: String, belowCreatedAt location: String?, limit: Int?) -> [MessageSearchResult] {
-        let properties = [
-            Message.Properties.messageId.in(table: Message.tableName),
-            Message.Properties.category.in(table: Message.tableName),
-            Message.Properties.content.in(table: Message.tableName),
-            Message.Properties.createdAt.in(table: Message.tableName),
-            User.Properties.userId.in(table: User.tableName),
-            User.Properties.fullName.in(table: User.tableName),
-            User.Properties.avatarUrl.in(table: User.tableName),
-            User.Properties.isVerified.in(table: User.tableName),
-            User.Properties.appId.in(table: User.tableName)
-        ]
-        let joinedTable = JoinClause(with: Message.tableName)
-            .join(User.tableName, with: .left)
-            .on(Message.Properties.userId.in(table: Message.tableName)
-                == User.Properties.userId.in(table: User.tableName))
-        
-        let keywordReplacement = "%\(keyword)%"
-        let textMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_TEXT")
-            && Message.Properties.content.in(table: Message.tableName).like(keywordReplacement)
-        let dataMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_DATA")
-            && Message.Properties.name.in(table: Message.tableName).like(keywordReplacement)
-        let matchesKeyword = textMessageContainsKeyword || dataMessageContainsKeyword
-        var condition = Message.Properties.conversationId == conversationId && matchesKeyword
-        if let location = location {
-            condition = condition && Message.Properties.createdAt.in(table: Message.tableName) < location
-        }
-        
-        var stmt = StatementSelect()
-            .select(properties)
-            .from(joinedTable)
-            .where(condition)
-            .order(by: [Message.Properties.createdAt.in(table: Message.tableName).asOrder(by: .descending)])
-        
-        if let limit = limit {
-            stmt = stmt.limit(limit)
-        }
-        
-        return MixinDatabase.shared.getCodables(callback: { (db) -> [MessageSearchResult] in
-            var items = [MessageSearchResult]()
-            let cs = try db.prepare(stmt)
-            while try cs.step() {
-                var i = -1
-                var autoIncrement: Int {
-                    i += 1
-                    return i
-                }
-                let item = MessageSearchResult(conversationId: conversationId,
-                                               messageId: cs.value(atIndex: autoIncrement) ?? "",
-                                               category: cs.value(atIndex: autoIncrement) ?? "",
-                                               content: cs.value(atIndex: autoIncrement) ?? "",
-                                               createdAt: cs.value(atIndex: autoIncrement) ?? "",
-                                               userId: cs.value(atIndex: autoIncrement) ?? "",
-                                               fullname: cs.value(atIndex: autoIncrement) ?? "",
-                                               avatarUrl: cs.value(atIndex: autoIncrement) ?? "",
-                                               isVerified: cs.value(atIndex: autoIncrement) ?? false,
-                                               appId: cs.value(atIndex: autoIncrement) ?? "",
-                                               keyword: keyword)
-                items.append(item)
+    func getMessages(conversationId: String, contentLike keyword: String, belowMessageId location: String?, limit: Int?) -> [MessageSearchResult] {
+        var results = [MessageSearchResult]()
+        MixinDatabase.shared.transaction { (db) in
+            var sql: String!
+            if let location = location {
+                let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                          condition: Message.Properties.messageId == location)
+                sql = MessageDAO.sqlSearchMessageContent + " AND m.ROWID < \(rowId)"
+            } else {
+                sql = MessageDAO.sqlSearchMessageContent
             }
-            return items
-        })
+            if let limit = limit {
+                sql += " ORDER BY m.created_at DESC LIMIT \(limit)"
+            } else {
+                sql += " ORDER BY m.created_at DESC"
+            }
+
+            let stmt = StatementSelectSQL(sql: sql)
+            let cs = try MixinDatabase.shared.database.prepare(stmt)
+            
+            let bindingCounter = Counter(value: 0)
+            let wildcardedKeyword = "%\(keyword)%"
+            cs.bind(conversationId, toIndex: bindingCounter.advancedValue)
+            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
+            cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
+            
+            while try cs.step() {
+                let counter = Counter(value: -1)
+                let result = MessageSearchResult(conversationId: conversationId,
+                                                 messageId: cs.value(atIndex: counter.advancedValue) ?? "",
+                                                 category: cs.value(atIndex: counter.advancedValue) ?? "",
+                                                 content: cs.value(atIndex: counter.advancedValue) ?? "",
+                                                 createdAt: cs.value(atIndex: counter.advancedValue) ?? "",
+                                                 userId: cs.value(atIndex: counter.advancedValue) ?? "",
+                                                 fullname: cs.value(atIndex: counter.advancedValue) ?? "",
+                                                 avatarUrl: cs.value(atIndex: counter.advancedValue) ?? "",
+                                                 isVerified: cs.value(atIndex: counter.advancedValue) ?? false,
+                                                 appId: cs.value(atIndex: counter.advancedValue) ?? "",
+                                                 keyword: keyword)
+                results.append(result)
+            }
+        }
+        return results
     }
     
     func getUnreadMessagesCount(conversationId: String) -> Int {
@@ -362,35 +370,47 @@ final class MessageDAO {
     
     func getGalleryItems(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
         assert(count != 0)
-        let messages: [Message]
-        let isGalleryItem = Message.Properties.category == MessageCategory.SIGNAL_IMAGE.rawValue
-            || Message.Properties.category == MessageCategory.PLAIN_IMAGE.rawValue
-            || Message.Properties.category == MessageCategory.SIGNAL_VIDEO.rawValue
-            || Message.Properties.category == MessageCategory.PLAIN_VIDEO.rawValue
-        if count > 0 {
-            let condition = Message.Properties.conversationId == conversationId
-                && isGalleryItem
-                && Message.Properties.status != MessageStatus.FAILED.rawValue
-                && !(Message.Properties.userId == AccountAPI.shared.accountUserId && Message.Properties.mediaStatus != MediaStatus.DONE.rawValue)
-                && Message.Properties.createdAt > location.createdAt
-            messages = MixinDatabase.shared.getCodables(condition: condition,
-                                                        orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)],
-                                                        limit: count,
-                                                        inTransaction: false)
-        } else {
-            let condition = Message.Properties.conversationId == conversationId
-                && isGalleryItem
-                && Message.Properties.status != MessageStatus.FAILED.rawValue
-                && !(Message.Properties.userId == AccountAPI.shared.accountUserId && Message.Properties.mediaStatus != MediaStatus.DONE.rawValue)
-                && Message.Properties.createdAt < location.createdAt
-            messages = MixinDatabase.shared.getCodables(condition: condition,
-                                                        orderBy: [Message.Properties.createdAt.asOrder(by: .descending)],
-                                                        limit: -count,
-                                                        inTransaction: false).reversed()
+        var items = [GalleryItem]()
+        MixinDatabase.shared.transaction { (db) in
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location.messageId)
+            var sql = MessageDAO.sqlQueryGalleryItem
+            if count > 0 {
+                sql += " AND ROWID > \(rowId) ORDER BY created_at ASC LIMIT \(count)"
+            } else {
+                sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
+            }
+            
+            let stmt = StatementSelectSQL(sql: sql)
+            let cs = try MixinDatabase.shared.database.prepare(stmt)
+            
+            let bindingCounter = Counter(value: 0)
+            cs.bind(conversationId, toIndex: bindingCounter.advancedValue)
+            cs.bind(AccountAPI.shared.accountUserId, toIndex: bindingCounter.advancedValue)
+            
+            while try cs.step() {
+                let counter = Counter(value: -1)
+                let item = GalleryItem(messageId: cs.value(atIndex: counter.advancedValue) ?? "",
+                                       category: cs.value(atIndex: counter.advancedValue) ?? "",
+                                       mediaUrl: cs.value(atIndex: counter.advancedValue),
+                                       mediaMimeType: cs.value(atIndex: counter.advancedValue),
+                                       mediaWidth: cs.value(atIndex: counter.advancedValue),
+                                       mediaHeight: cs.value(atIndex: counter.advancedValue),
+                                       mediaStatus: cs.value(atIndex: counter.advancedValue),
+                                       thumbImage: cs.value(atIndex: counter.advancedValue),
+                                       createdAt: cs.value(atIndex: counter.advancedValue) ?? "")
+                if let item = item {
+                    items.append(item)
+                }
+            }
         }
-        return messages.compactMap(GalleryItem.init)
+        if count > 0 {
+            return items
+        } else {
+            return items.reversed()
+        }
     }
-
+    
     func insertMessage(message: Message, messageSource: String) {
         var message = message
         if let quoteMessageId = message.quoteMessageId, let quoteContent = getQuoteMessage(messageId: quoteMessageId) {

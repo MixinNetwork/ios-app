@@ -178,9 +178,6 @@ extension GroupParticipantsViewController {
     }
     
     private func showInfo(user: UserItem) {
-        guard user.isCreatedByMessenger else {
-            return
-        }
         userWindow.updateUser(user: user).presentView()
     }
     

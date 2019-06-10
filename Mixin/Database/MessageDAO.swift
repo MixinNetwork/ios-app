@@ -321,15 +321,16 @@ final class MessageDAO {
             if let location = location {
                 let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
                                                           condition: Message.Properties.messageId == location)
-                sql = MessageDAO.sqlSearchMessageContent + " AND m.ROWID < \(rowId)) "
+                sql = MessageDAO.sqlSearchMessageContent + " AND m.ROWID < \(rowId)"
             } else {
-                sql = MessageDAO.sqlSearchMessageContent + ") "
+                sql = MessageDAO.sqlSearchMessageContent
             }
             if let limit = limit {
-                sql += "ORDER BY m.created_at DESC LIMIT \(limit)"
+                sql += " ORDER BY m.created_at DESC LIMIT \(limit)"
             } else {
-                sql += "ORDER BY m.created_at DESC"
+                sql += " ORDER BY m.created_at DESC"
             }
+
             let stmt = StatementSelectSQL(sql: sql)
             let cs = try MixinDatabase.shared.database.prepare(stmt)
             

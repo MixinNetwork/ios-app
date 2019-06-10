@@ -61,7 +61,7 @@ class CryptoUserDefault {
 
     var iterator: UInt64 {
         get {
-            return (session.object(forKey: keyEncryptIterator) as? UInt64) ?? 1
+            return min((session.object(forKey: keyEncryptIterator) as? UInt64) ?? 1, 1)
         }
         set {
             session.set(newValue, forKey: keyEncryptIterator)

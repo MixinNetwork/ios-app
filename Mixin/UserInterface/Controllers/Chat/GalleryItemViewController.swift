@@ -34,7 +34,6 @@ class GalleryItemViewController: UIViewController {
     
     private(set) var urlFromQRCode: URL?
     
-    private var videoControlPanelEdgesConstraint: Constraint!
     private var sliderObserver: Any?
     private var timeLabelObserver: Any?
     private var isSeeking = false
@@ -86,10 +85,6 @@ class GalleryItemViewController: UIViewController {
         scrollView.addSubview(imageView)
         scrollView.delegate = self
         tapRecognizer.delegate = self
-        videoControlPanelView.translatesAutoresizingMaskIntoConstraints = false
-        videoControlPanelView.snp.makeConstraints { (make) in
-            videoControlPanelEdgesConstraint = make.edges.equalToSuperview().constraint
-        }
         mediaStatusView.translatesAutoresizingMaskIntoConstraints = false
         mediaStatusView.snp.makeConstraints { (make) in
             make.center.equalTo(videoControlPanelView)

@@ -10,7 +10,7 @@ class UserView: CornerView {
     
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var fullnameLabel: UILabel!
-    @IBOutlet weak var idLabel: UILabel!
+    @IBOutlet weak var idLabel: IdentityNumberLabel!
     @IBOutlet weak var relationWrapperView: UIView!
     @IBOutlet weak var unblockButton: BusyButton!
     @IBOutlet weak var addContactButton: BusyButton!
@@ -34,6 +34,8 @@ class UserView: CornerView {
     private var isMe = false
     private var appCreator: UserItem?
     private var relationship = ""
+    private var menuDismissResponder: MenuDismissResponder?
+    
     private var conversationId: String {
         return ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: user.userId)
     }
@@ -47,15 +49,19 @@ class UserView: CornerView {
     }()
     private lazy var avatarPicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: UIApplication.currentActivity()!, delegate: self)
     private lazy var qrcodeWindow = QrcodeWindow.instance()
-    private lazy var menuDismissResponder = MenuDismissResponder()
     
     override var canBecomeFirstResponder: Bool {
         return true
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         descriptionLabel.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
     }
     
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -72,13 +78,18 @@ class UserView: CornerView {
         }
         editAliasNameController.actions[1].isEnabled = !text.isEmpty
     }
+    
+    @objc func willHideMenu(_ notification: Notification) {
+        menuDismissResponder?.removeFromSuperview()
+        idLabel.highlightIdentityNumber = false
+    }
 
     func updateUser(user: UserItem, animated: Bool = false, refreshUser: Bool = true, superView: BottomSheetView?) {
         self.superView = superView
         self.user = user
         avatarImageView.setImage(with: user)
         fullnameLabel.text = user.fullName
-        idLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
+        idLabel.identityNumber = user.identityNumber
         verifiedImageView.isHidden = !user.isVerified
         isMe = user.userId == AccountAPI.shared.accountUserId
 
@@ -172,10 +183,20 @@ class UserView: CornerView {
             return
         }
         becomeFirstResponder()
-        let menu = UIMenuController.shared
-        menu.setTargetRect(idLabel.convert(idLabel.bounds, to: self), in: self)
-        menu.setMenuVisible(true, animated: true)
-        AppDelegate.current.window?.addSubview(menuDismissResponder)
+        idLabel.highlightIdentityNumber = true
+        if let highlightedRect = idLabel.highlightedRect {
+            let menu = UIMenuController.shared
+            menu.setTargetRect(highlightedRect, in: idLabel)
+            menu.setMenuVisible(true, animated: true)
+            let menuDismissResponder: MenuDismissResponder
+            if let responder = self.menuDismissResponder {
+                menuDismissResponder = responder
+            } else {
+                menuDismissResponder = MenuDismissResponder()
+                self.menuDismissResponder = menuDismissResponder
+            }
+            AppDelegate.current.window?.addSubview(menuDismissResponder)
+        }
     }
     
     @IBAction func dismissAction(_ sender: Any) {
@@ -571,11 +592,6 @@ extension UserView {
             self.init(frame: frame)
             backgroundColor = .clear
             addTarget(self, action: #selector(dismissMenu), for: .touchUpInside)
-            NotificationCenter.default.addObserver(self, selector: #selector(removeFromSuperview), name: UIMenuController.didHideMenuNotification, object: nil)
-        }
-        
-        deinit {
-            NotificationCenter.default.removeObserver(self)
         }
         
         @objc func dismissMenu() {

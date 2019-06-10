@@ -346,6 +346,7 @@
 		7BF374A72063951F008A166B /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A52063951E008A166B /* GalleryViewController.swift */; };
 		7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A62063951E008A166B /* GalleryItemViewController.swift */; };
 		7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */; };
+		7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */; };
 		7BF4047B2048F008004C54E4 /* ChangeNumberNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */; };
 		7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */; };
 		7BF49DD320C3DBAC00A8510E /* ReCaptchaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */; };
@@ -1024,6 +1025,7 @@
 		7BF374A52063951E008A166B /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		7BF374A62063951E008A166B /* GalleryItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryItemViewController.swift; sourceTree = "<group>"; };
 		7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetHeaderView.swift; sourceTree = "<group>"; };
+		7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityNumberLabel.swift; sourceTree = "<group>"; };
 		7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberNavigationController.swift; sourceTree = "<group>"; };
 		7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPinViewController.swift; sourceTree = "<group>"; };
 		7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCaptchaManager.swift; sourceTree = "<group>"; };
@@ -1998,6 +2000,7 @@
 		DF53BB6620233647002BF028 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */,
 				DF53BB6720233657002BF028 /* MixinWebView.swift */,
 				7BD69C421FF2753E00758D7C /* GroupView.swift */,
 				7BD69C441FF2755D00758D7C /* GroupView.xib */,
@@ -3043,6 +3046,7 @@
 				DF2209301FFFE96500D470EF /* SessionRequest.swift in Sources */,
 				DFB6C69420E4BF0A008345AF /* StickerResponse.swift in Sources */,
 				DF1148471FED45E200023CAF /* AssetAPI.swift in Sources */,
+				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* AnimatedImageCollectionViewCell.swift in Sources */,
 				7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */,
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,

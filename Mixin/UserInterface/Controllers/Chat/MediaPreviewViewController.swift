@@ -120,26 +120,27 @@ final class MediaPreviewViewController: UIViewController {
     }
     
     private func play(item: AVPlayerItem) {
-        let playerView: PlayerView
+        let playerLayer: AVPlayerLayer
         if let view = self.playerView {
-            playerView = view
+            playerLayer = view.layer
         } else {
-            playerView = PlayerView(frame: contentView.bounds)
+            let playerView = PlayerView(frame: contentView.bounds)
             playerView.backgroundColor = .clear
             contentView.insertSubview(playerView, belowSubview: imageView)
             playerView.snp.makeConstraints({ (make) in
                 make.edges.equalToSuperview()
             })
             self.playerView = playerView
+            playerLayer = playerView.layer
         }
         
         let player: AVPlayer
-        if let currentPlayer = playerView.layer.player, currentPlayer.currentItem == item {
+        if let currentPlayer = playerLayer.player, currentPlayer.currentItem == item {
             player = currentPlayer
             player.seek(to: .zero)
         } else {
             player = AVPlayer(playerItem: item)
-            playerView.layer.player = player
+            playerLayer.player = player
             playerObservation?.invalidate()
             playerObservation = player.observe(\.timeControlStatus) { [weak self] (player, change) in
                 guard let weakSelf = self else {

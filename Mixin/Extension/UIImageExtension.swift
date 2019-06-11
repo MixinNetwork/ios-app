@@ -110,9 +110,8 @@ extension UIImage {
         return newImage!
     }
     
-    func base64Thumbnail() -> String {
+    func base64Thumbnail(maxLength: CGFloat = 48) -> String {
         let scaledImage: UIImage
-        let maxLength: CGFloat = 32
         if max(size.width, size.height) > maxLength {
             var targetSize = size.rect(fittingSize: CGSize(width: maxLength, height: maxLength)).size
             targetSize = CGSize(width: max(1, targetSize.width),
@@ -130,7 +129,7 @@ extension UIImage {
         }
         return scaledImage.base64 ?? ""
     }
-
+    
     func scaleForUpload() -> UIImage {
         let maxShortSideLength: CGFloat = 1440
         guard min(size.width, size.height) >= maxShortSideLength else {

@@ -1,12 +1,14 @@
 import UIKit
 import Photos
 import AVKit
+import YYImage
+import CoreServices
 
 final class MediaPreviewViewController: UIViewController {
     
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: YYAnimatedImageView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     @IBOutlet weak var playButton: UIButton!
     
@@ -36,6 +38,11 @@ final class MediaPreviewViewController: UIViewController {
         options.progressHandler = nil
         return options
     }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        imageView.autoPlayAnimatedImage = true
+    }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -103,6 +110,12 @@ final class MediaPreviewViewController: UIViewController {
             weakSelf.lastAssetIdentifier = asset.localIdentifier
             weakSelf.activityIndicator.stopAnimating()
             weakSelf.playButton.isHidden = asset.mediaType != .video
+            if let uti = info?["PHImageFileUTIKey"] as? String, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
+                if let id = weakSelf.lastRequestId {
+                    PHImageManager.default().cancelImageRequest(id)
+                }
+                weakSelf.loadAnimatedImage(asset: asset)
+            }
         }
     }
     
@@ -147,6 +160,18 @@ final class MediaPreviewViewController: UIViewController {
         }
         
         player.play()
+    }
+    
+    private func loadAnimatedImage(asset: PHAsset) {
+        lastRequestId = PHImageManager.default().requestImageData(for: asset, options: imageRequestOptions, resultHandler: { [weak self] (data, uti, orientation, info) in
+            guard let uti = uti, UTTypeConformsTo(uti as CFString, kUTTypeGIF) else {
+                return
+            }
+            guard let data = data, let image = YYImage(data: data) else {
+                return
+            }
+            self?.imageView.image = image
+        })
     }
     
     private final class PlayerView: UIView {

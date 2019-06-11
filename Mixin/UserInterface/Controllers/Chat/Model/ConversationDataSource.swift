@@ -592,19 +592,6 @@ extension ConversationDataSource {
     }
     
     func send(asset: PHAsset) {
-        
-        func size(for asset: PHAsset) -> (width: Int, height: Int) {
-            let maxShortSideLength = 1440
-            guard min(asset.pixelWidth, asset.pixelHeight) >= maxShortSideLength else {
-                return (asset.pixelWidth, asset.pixelHeight)
-            }
-            let maxLongSideLength: Double = 1920
-            let scale = Double(asset.pixelWidth) / Double(asset.pixelHeight)
-            let targetWidth = Int(scale > 1 ? maxLongSideLength : maxLongSideLength * scale)
-            let targetHeight = Int(scale > 1 ? maxLongSideLength / scale : maxLongSideLength)
-            return (targetWidth, targetHeight)
-        }
-        
         assert(asset.mediaType == .image || asset.mediaType == .video)
         let assetMediaTypeIsImage = asset.mediaType == .image
         let category: MessageCategory = assetMediaTypeIsImage ? .SIGNAL_IMAGE : .SIGNAL_VIDEO
@@ -613,22 +600,21 @@ extension ConversationDataSource {
                                             userId: AccountAPI.shared.accountUserId)
         message.mediaStatus = MediaStatus.PENDING.rawValue
         message.mediaLocalIdentifier = asset.localIdentifier
-        let mediaSize = size(for: asset)
-        message.mediaWidth = mediaSize.width
-        message.mediaHeight = mediaSize.height
+        message.mediaWidth = asset.pixelWidth
+        message.mediaHeight = asset.pixelHeight
         if asset.mediaType == .video {
             message.mediaDuration = Int64(asset.duration * 1000)
         }
-        let thumbnailSize = CGSize(width: 64, height: 64)
+        let thumbnailSize = CGSize(width: 48, height: 48)
         PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: thumbnailRequestOptions) { (image, info) in
             if let image = image {
                 message.thumbImage = image.base64Thumbnail()
             }
-            if assetMediaTypeIsImage {
-                message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.jpeg.rawValue)
-            } else {
-                message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.mp4.rawValue)
-            }
+        }
+        if assetMediaTypeIsImage {
+            message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.jpeg.rawValue)
+        } else {
+            message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.mp4.rawValue)
         }
         SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: self.category == .group)
     }

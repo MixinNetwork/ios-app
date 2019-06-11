@@ -23,7 +23,7 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoMessageViewModel {
             updateOperationButtonAndExpiredHintLabel()
-            if let mediaUrl = viewModel.message.mediaUrl, !mediaUrl.isEmpty {
+            if let mediaUrl = viewModel.message.mediaUrl, !mediaUrl.isEmpty, !mediaUrl.hasPrefix("http") {
                 let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
                 contentImageView.setImage(with: url, ratio: viewModel.aspectRatio)
             } else {

@@ -1,6 +1,7 @@
 import Foundation
 import Photos
 import CoreServices
+import Alamofire
 
 class ImageUploadJob: AttachmentUploadJob {
     
@@ -12,7 +13,8 @@ class ImageUploadJob: AttachmentUploadJob {
         guard !isCancelled, AccountAPI.shared.didLogin else {
             return false
         }
-        if message.mediaUrl != nil {
+        if let mediaUrl = message.mediaUrl {
+            downloadRemoteMediaIfNeeded(url: mediaUrl)
             return super.execute()
         } else if let localIdentifier = message.mediaLocalIdentifier {
             updateMessageMediaUrl(with: localIdentifier)
@@ -26,13 +28,46 @@ class ImageUploadJob: AttachmentUploadJob {
         }
     }
     
+    private func downloadRemoteMediaIfNeeded(url: String) {
+        guard url.hasPrefix("http"), let url = URL(string: url) else {
+            return
+        }
+        let filename = message.messageId + ExtensionName.gif.withDot
+        let fileUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
+        
+        var success = false
+        let sema = DispatchSemaphore(value: 0)
+        Alamofire.download(url, to: { (_, _) in
+            (fileUrl, [.removePreviousFile, .createIntermediateDirectories])
+        }).response(completionHandler: { (response) in
+            success = response.error == nil
+            sema.signal()
+        })
+        sema.wait()
+        
+        guard !isCancelled && success else {
+            try? FileManager.default.removeItem(at: fileUrl)
+            return
+        }
+        if message.thumbImage == nil {
+            let image = UIImage(contentsOfFile: fileUrl.path)
+            message.thumbImage = image?.base64Thumbnail() ?? ""
+        }
+        
+        guard !isCancelled else {
+            try? FileManager.default.removeItem(at: fileUrl)
+            return
+        }
+        updateMediaUrlAndPostNotification(filename: filename, url: url)
+    }
+    
     private func updateMessageMediaUrl(with mediaLocalIdentifier: String) {
         guard let asset = PHAsset.fetchAssets(withLocalIdentifiers: [mediaLocalIdentifier], options: nil).firstObject else {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .EXPIRED, conversationId: message.conversationId)
             return
         }
         
-        let filename = self.message.messageId + ExtensionName.jpeg.withDot
+        let filename = message.messageId + ExtensionName.jpeg.withDot
         let url = MixinFile.url(ofChatDirectory: .photos, filename: filename)
         
         let uti: CFString
@@ -70,21 +105,15 @@ class ImageUploadJob: AttachmentUploadJob {
         }
         do {
             try data.write(to: url)
-            message.mediaUrl = filename
-            message.mediaSize = FileManager.default.fileSize(url.path)
             if message.thumbImage == nil {
                 let thumbnail = image ?? UIImage(data: data)
                 message.thumbImage = thumbnail?.base64Thumbnail() ?? ""
             }
-            
             guard !isCancelled else {
                 try? FileManager.default.removeItem(at: url)
                 return
             }
-            MixinDatabase.shared.insertOrReplace(objects: [message])
-            let change = ConversationChange(conversationId: message.conversationId, action: .updateMessage(messageId: message.messageId))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
-            message.mediaUrl = filename
+            updateMediaUrlAndPostNotification(filename: filename, url: url)
         } catch {
             UIApplication.traceError(error)
         }
@@ -100,6 +129,14 @@ class ImageUploadJob: AttachmentUploadJob {
         let width = Int(scale > 1 ? maxLongSideLength : maxLongSideLength * scale)
         let height = Int(scale > 1 ? maxLongSideLength / scale : maxLongSideLength)
         return CGSize(width: width, height: height)
+    }
+    
+    private func updateMediaUrlAndPostNotification(filename: String, url: URL) {
+        message.mediaUrl = filename
+        message.mediaSize = FileManager.default.fileSize(url.path)
+        MixinDatabase.shared.insertOrReplace(objects: [message])
+        let change = ConversationChange(conversationId: message.conversationId, action: .updateMessage(messageId: message.messageId))
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     
 }

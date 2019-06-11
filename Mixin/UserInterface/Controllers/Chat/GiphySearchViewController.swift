@@ -14,7 +14,7 @@ class GiphySearchViewController: UIViewController {
     private let limit = 24
     
     private var status = Status.loading
-    private var urls = [GiphyImageURL]()
+    private var images = [GiphyImage]()
     private var isLoadingMore = false
     private var animated: Bool = false {
         didSet {
@@ -35,10 +35,10 @@ class GiphySearchViewController: UIViewController {
         guard let weakSelf = self, let data = response?.data else {
             return
         }
-        let urls = data.compactMap(GiphyImageURL.init)
+        let images = data.compactMap(GiphyImage.init)
         DispatchQueue.main.async {
-            weakSelf.status = urls.isEmpty ? .noResult : .loading
-            weakSelf.urls = urls
+            weakSelf.status = images.isEmpty ? .noResult : .loading
+            weakSelf.images = images
             weakSelf.collectionView.reloadData()
         }
     }
@@ -47,15 +47,15 @@ class GiphySearchViewController: UIViewController {
         guard let weakSelf = self, let data = response?.data else {
             return
         }
-        let urls = data.compactMap(GiphyImageURL.init)
+        let images = data.compactMap(GiphyImage.init)
         DispatchQueue.main.async {
-            if urls.isEmpty {
+            if images.isEmpty {
                 weakSelf.status = .noMoreResult
                 weakSelf.collectionView.reloadData()
             } else {
-                let indexPaths = (weakSelf.urls.count..<(weakSelf.urls.count + urls.count))
+                let indexPaths = (weakSelf.images.count..<(weakSelf.images.count + images.count))
                     .map({ IndexPath(row: $0, section: 0) })
-                weakSelf.urls.append(contentsOf: urls)
+                weakSelf.images.append(contentsOf: images)
                 weakSelf.collectionView.insertItems(at: indexPaths)
             }
         }
@@ -130,13 +130,13 @@ extension GiphySearchViewController: UITextFieldDelegate {
 extension GiphySearchViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return urls.count
+        return images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseId.cell, for: indexPath) as! AnimatedImageCollectionViewCell
         cell.imageView.contentMode = .scaleAspectFill
-        let url = urls[indexPath.row].preview
+        let url = images[indexPath.row].previewUrl
         cell.imageView.sd_setImage(with: url, completed: nil)
         return cell
     }
@@ -150,8 +150,9 @@ extension GiphySearchViewController: UICollectionViewDataSource {
 extension GiphySearchViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let url = urls[indexPath.row].fullsized
-        dataSource?.sendGif(at: url)
+        let image = images[indexPath.row]
+        let cell = collectionView.cellForItem(at: indexPath) as? AnimatedImageCollectionViewCell
+        dataSource?.send(image: image, thumbnail: cell?.imageView.image)
         dismissAction(collectionView)
     }
     
@@ -174,13 +175,13 @@ extension GiphySearchViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
-        guard !urls.isEmpty && elementKind == UICollectionView.elementKindSectionFooter && lastGiphyOperation == nil else {
+        guard !images.isEmpty && elementKind == UICollectionView.elementKindSectionFooter && lastGiphyOperation == nil else {
             return
         }
         if let keyword = keywordTextField.text, !keyword.isEmpty {
-            lastGiphyOperation = GiphyCore.shared.search(keyword, offset: urls.count, limit: limit, lang: .current, completionHandler: loadMoreHandler)
+            lastGiphyOperation = GiphyCore.shared.search(keyword, offset: images.count, limit: limit, lang: .current, completionHandler: loadMoreHandler)
         } else {
-            lastGiphyOperation = GiphyCore.shared.trending(offset: urls.count, limit: limit, completionHandler: loadMoreHandler)
+            lastGiphyOperation = GiphyCore.shared.trending(offset: images.count, limit: limit, completionHandler: loadMoreHandler)
         }
     }
     
@@ -227,7 +228,7 @@ extension GiphySearchViewController {
     private func prepareCollectionViewForReuse() {
         status = .loading
         collectionView.setContentOffset(.zero, animated: false)
-        urls = []
+        images = []
         collectionView.reloadData()
     }
     

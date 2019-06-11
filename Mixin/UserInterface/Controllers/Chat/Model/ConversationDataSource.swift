@@ -557,38 +557,19 @@ extension ConversationDataSource {
         }
     }
     
-    func sendGif(at url: URL) {
-        let ownerUser = self.ownerUser
-        let categoryIsGroup = category == .group
+    func send(image: GiphyImage, thumbnail: UIImage?) {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: conversationId,
                                             userId: AccountAPI.shared.accountUserId)
         message.mediaStatus = MediaStatus.PENDING.rawValue
-        let context = SDWebImagePrefetcher.shared.context ?? [.animatedImageClass: YYImage.self]
-        SDWebImageManager.shared.loadImage(with: url, options: .highPriority, context: context, progress: nil) { (image, _, _, _, _, _) in
-            guard let image = image as? YYImage, let data = image.animatedImageData else {
-                showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
-                return
-            }
-            DispatchQueue.global().async {
-                let filename = message.messageId + ExtensionName.gif.withDot
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
-                do {
-                    try data.write(to: targetUrl)
-                    if FileManager.default.fileSize(targetUrl.path) > 0 {
-                        message.thumbImage = image.base64Thumbnail()
-                        message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                        message.mediaWidth = Int(image.size.width)
-                        message.mediaHeight = Int(image.size.height)
-                        message.mediaMimeType = "image/gif"
-                        message.mediaUrl = filename
-                    }
-                } catch {
-                    showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
-                }
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: categoryIsGroup)
-            }
+        message.mediaUrl = image.fullsizedUrl.absoluteString
+        message.mediaWidth = image.size.width
+        message.mediaHeight = image.size.height
+        if let thumbnail = thumbnail {
+            message.thumbImage = thumbnail.base64Thumbnail()
         }
+        message.mediaMimeType = "image/gif"
+        SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: category == .group)
     }
     
     func send(asset: PHAsset) {

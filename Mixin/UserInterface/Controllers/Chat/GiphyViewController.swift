@@ -3,7 +3,7 @@ import GiphyCoreSDK
 
 class GiphyViewController: StickersCollectionViewController, ConversationInputAccessible {
     
-    var urls = [GiphyImageURL]()
+    var images = [GiphyImage]()
     
     private let footerReuseId = "footer"
     private let loadingIndicator = ActivityIndicatorView()
@@ -22,7 +22,7 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
     }
     
     override var isEmpty: Bool {
-        return urls.isEmpty
+        return images.isEmpty
     }
     
     override func viewDidLoad() {
@@ -43,17 +43,17 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
             guard let weakSelf = self, let data = response?.data, error == nil else {
                 return
             }
-            let urls = data.compactMap(GiphyImageURL.init)
+            let images = data.compactMap(GiphyImage.init)
             DispatchQueue.main.async {
                 weakSelf.loadingIndicator.stopAnimating()
-                weakSelf.urls = urls
+                weakSelf.images = images
                 weakSelf.collectionView.reloadData()
             }
         }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return urls.count + 1
+        return images.count + 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -63,7 +63,7 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
             cell.imageView.image = UIImage(named: "ic_giphy_search")
         } else {
             cell.imageView.contentMode = .scaleAspectFill
-            let url = urls[indexPath.row - 1].preview
+            let url = images[indexPath.row - 1].previewUrl
             cell.imageView.sd_setImage(with: url, completed: nil)
         }
         return cell
@@ -79,8 +79,9 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
             }
             present(vc, animated: true, completion: nil)
         } else {
-            let url = urls[indexPath.row - 1].fullsized
-            dataSource?.sendGif(at: url)
+            let image = images[indexPath.row - 1]
+            let cell = collectionView.cellForItem(at: indexPath) as? AnimatedImageCollectionViewCell
+            dataSource?.send(image: image, thumbnail: cell?.imageView.image)
         }
     }
     
@@ -93,7 +94,7 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
 extension GiphyViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return urls.isEmpty ? .zero : CGSize(width: collectionView.bounds.width, height: 60)
+        return images.isEmpty ? .zero : CGSize(width: collectionView.bounds.width, height: 60)
     }
     
 }

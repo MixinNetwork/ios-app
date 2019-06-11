@@ -93,7 +93,7 @@
 		7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */; };
 		7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */; };
 		7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA17201196F80023B28D /* DataMessageCell.swift */; };
-		7B29044E21F5C8AA00556488 /* GiphyImageURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B29044D21F5C8AA00556488 /* GiphyImageURL.swift */; };
+		7B29044E21F5C8AA00556488 /* GiphyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B29044D21F5C8AA00556488 /* GiphyImage.swift */; };
 		7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */; };
 		7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */; };
 		7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */; };
@@ -762,7 +762,7 @@
 		7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMessageViewModel.swift; sourceTree = "<group>"; };
 		7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageViewModel.swift; sourceTree = "<group>"; };
 		7B28FA17201196F80023B28D /* DataMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageCell.swift; sourceTree = "<group>"; };
-		7B29044D21F5C8AA00556488 /* GiphyImageURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImageURL.swift; sourceTree = "<group>"; };
+		7B29044D21F5C8AA00556488 /* GiphyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImage.swift; sourceTree = "<group>"; };
 		7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXNFastURLDetector.h; sourceTree = "<group>"; };
 		7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXNFastURLDetector.m; sourceTree = "<group>"; };
 		7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
@@ -1576,7 +1576,7 @@
 				7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */,
 				7B8ED47F21198EC20039946B /* StickerInputModelController.swift */,
 				7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */,
-				7B29044D21F5C8AA00556488 /* GiphyImageURL.swift */,
+				7B29044D21F5C8AA00556488 /* GiphyImage.swift */,
 				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
 				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
 			);
@@ -3098,7 +3098,7 @@
 				DF191194208F104800BD415D /* Job.swift in Sources */,
 				DF8CED021FC6790400E40064 /* MessageAPI.swift in Sources */,
 				DF17B51720526050006447C2 /* SnapshotItem.swift in Sources */,
-				7B29044E21F5C8AA00556488 /* GiphyImageURL.swift in Sources */,
+				7B29044E21F5C8AA00556488 /* GiphyImage.swift in Sources */,
 				DF5D9F3B1F9C9A400036D5FD /* AccountAPI.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				DF8DA19A1FD562E200425CEC /* AttachmentResponse.swift in Sources */,

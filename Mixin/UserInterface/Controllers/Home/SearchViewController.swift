@@ -456,9 +456,12 @@ extension SearchViewController {
             switch result {
             case let .success(user):
                 UserDAO.shared.updateUsers(users: [user])
-                weakSelf.userWindow
-                    .updateUser(user: UserItem.createUser(from: user), refreshUser: false)
-                    .presentView()
+                let userItem = UserItem.createUser(from: user)
+                if userItem.isCreatedByMessenger {
+                    weakSelf.userWindow
+                        .updateUser(user: userItem, refreshUser: false)
+                        .presentView()
+                }
             case let .failure(error):
                 let text = error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription
                 showHud(style: .error, text: text)

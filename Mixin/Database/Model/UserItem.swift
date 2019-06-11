@@ -61,6 +61,10 @@ struct UserItem: BaseCodable {
         return appCreatorId == AccountAPI.shared.accountUserId
     }
     
+    var isCreatedByMessenger: Bool {
+        return identityNumber != "0"
+    }
+    
     func matches(lowercasedKeyword keyword: String) -> Bool {
         return fullName.lowercased().contains(keyword)
             || identityNumber.contains(keyword)

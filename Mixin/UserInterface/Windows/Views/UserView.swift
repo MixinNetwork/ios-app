@@ -5,10 +5,12 @@ import RSKImageCropper
 import Photos
 
 class UserView: CornerView {
-
+    
+    @IBOutlet weak var longPressRecognizer: UILongPressGestureRecognizer!
+    
     @IBOutlet weak var avatarImageView: AvatarImageView!
     @IBOutlet weak var fullnameLabel: UILabel!
-    @IBOutlet weak var idLabel: UILabel!
+    @IBOutlet weak var idLabel: IdentityNumberLabel!
     @IBOutlet weak var relationWrapperView: UIView!
     @IBOutlet weak var unblockButton: BusyButton!
     @IBOutlet weak var addContactButton: BusyButton!
@@ -32,6 +34,8 @@ class UserView: CornerView {
     private var isMe = false
     private var appCreator: UserItem?
     private var relationship = ""
+    private var menuDismissResponder: MenuDismissResponder?
+    
     private var conversationId: String {
         return ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: user.userId)
     }
@@ -45,10 +49,27 @@ class UserView: CornerView {
     }()
     private lazy var avatarPicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: UIApplication.currentActivity()!, delegate: self)
     private lazy var qrcodeWindow = QrcodeWindow.instance()
-
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         descriptionLabel.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(willHideMenu(_:)), name: UIMenuController.willHideMenuNotification, object: nil)
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        return action == #selector(copy(_:))
+    }
+    
+    override func copy(_ sender: Any?) {
+        UIPasteboard.general.string = user.identityNumber
     }
     
     @objc func alertInputChangedAction(_ sender: Any) {
@@ -57,13 +78,18 @@ class UserView: CornerView {
         }
         editAliasNameController.actions[1].isEnabled = !text.isEmpty
     }
+    
+    @objc func willHideMenu(_ notification: Notification) {
+        menuDismissResponder?.removeFromSuperview()
+        idLabel.highlightIdentityNumber = false
+    }
 
     func updateUser(user: UserItem, animated: Bool = false, refreshUser: Bool = true, superView: BottomSheetView?) {
         self.superView = superView
         self.user = user
         avatarImageView.setImage(with: user)
         fullnameLabel.text = user.fullName
-        idLabel.text = Localized.PROFILE_MIXIN_ID(id: user.identityNumber)
+        idLabel.identityNumber = user.identityNumber
         verifiedImageView.isHidden = !user.isVerified
         isMe = user.userId == AccountAPI.shared.accountUserId
 
@@ -151,7 +177,28 @@ class UserView: CornerView {
             openAppButton.isHidden = !user.isBot
         }
     }
-
+    
+    @IBAction func longPressAction(_ recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        becomeFirstResponder()
+        idLabel.highlightIdentityNumber = true
+        if let highlightedRect = idLabel.highlightedRect {
+            let menu = UIMenuController.shared
+            menu.setTargetRect(highlightedRect, in: idLabel)
+            menu.setMenuVisible(true, animated: true)
+            let menuDismissResponder: MenuDismissResponder
+            if let responder = self.menuDismissResponder {
+                menuDismissResponder = responder
+            } else {
+                menuDismissResponder = MenuDismissResponder()
+                self.menuDismissResponder = menuDismissResponder
+            }
+            AppDelegate.current.window?.addSubview(menuDismissResponder)
+        }
+    }
+    
     @IBAction func dismissAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
     }
@@ -538,6 +585,21 @@ extension UserView {
         
     }
     
+    class MenuDismissResponder: UIButton {
+        
+        convenience init() {
+            let frame = AppDelegate.current.window!.bounds
+            self.init(frame: frame)
+            backgroundColor = .clear
+            addTarget(self, action: #selector(dismissMenu), for: .touchUpInside)
+        }
+        
+        @objc func dismissMenu() {
+            UIMenuController.shared.setMenuVisible(false, animated: true)
+        }
+        
+    }
+    
 }
 
 extension UserView: ImagePickerControllerDelegate {
@@ -571,4 +633,21 @@ extension UserView: ImagePickerControllerDelegate {
         })
     }
 
+}
+
+extension UserView: UIGestureRecognizerDelegate {
+    
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer == longPressRecognizer else {
+            return true
+        }
+        let location = gestureRecognizer.location(in: self)
+        let area = idLabel.convert(idLabel.bounds, to: self).insetBy(dx: -8, dy: -8)
+        return area.contains(location)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
 }

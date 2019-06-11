@@ -115,7 +115,7 @@ class SearchConversationViewController: UIViewController, SearchableViewControll
     }
     
     @objc func profileAction() {
-        guard let user = user else {
+        guard let user = user, user.isCreatedByMessenger else {
             return
         }
         userWindow.updateUser(user: user).presentView()

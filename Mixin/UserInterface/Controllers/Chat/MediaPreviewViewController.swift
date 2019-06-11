@@ -13,13 +13,14 @@ final class MediaPreviewViewController: UIViewController {
     @IBOutlet weak var playButton: UIButton!
     
     @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var minimalImageViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var normalImageViewWidthConstraint: NSLayoutConstraint!
     
     var dataSource: ConversationDataSource?
     
     private var lastRequestId: PHImageRequestID?
     private var lastAssetIdentifier: String?
     private var asset: PHAsset?
-    
     private var playerView: PlayerView?
     private var playerObservation: NSKeyValueObservation?
     
@@ -105,11 +106,22 @@ final class MediaPreviewViewController: UIViewController {
             guard let weakSelf = self, let image = image else {
                 return
             }
+            let useMinimalImageViewSize = asset.mediaType == .image
+                && CGFloat(asset.pixelWidth * 3) < targetSize.width
+                && CGFloat(asset.pixelHeight * 3) < targetSize.height
+            if useMinimalImageViewSize {
+                weakSelf.minimalImageViewWidthConstraint.priority = .almostRequired
+                weakSelf.normalImageViewWidthConstraint.priority = .almostInexist
+            } else {
+                weakSelf.minimalImageViewWidthConstraint.priority = .almostInexist
+                weakSelf.normalImageViewWidthConstraint.priority = .almostRequired
+            }
             weakSelf.imageView.image = image
             weakSelf.lastRequestId = nil
             weakSelf.lastAssetIdentifier = asset.localIdentifier
             weakSelf.activityIndicator.stopAnimating()
             weakSelf.playButton.isHidden = asset.mediaType != .video
+            weakSelf.view.layoutIfNeeded()
             if let uti = info?["PHImageFileUTIKey"] as? String, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
                 if let id = weakSelf.lastRequestId {
                     PHImageManager.default().cancelImageRequest(id)

@@ -593,6 +593,20 @@ class ConversationViewController: UIViewController {
         window.presentPopupControllerAnimated(url: url)
     }
     
+    func handleMessageRecalling(messageId: String) {
+        guard isViewLoaded else {
+            return
+        }
+        if messageId == previewDocumentMessageId {
+            previewDocumentController?.dismissPreview(animated: true)
+            previewDocumentController?.dismissMenu(animated: true)
+            previewDocumentController = nil
+            previewDocumentMessageId = nil
+        } else {
+            galleryViewController.handleMessageRecalling(messageId: messageId)
+        }
+    }
+    
     // MARK: - Class func
     class func instance(conversation: ConversationItem, highlight: ConversationDataSource.Highlight? = nil) -> ConversationViewController {
         let vc = Storyboard.chat.instantiateViewController(withIdentifier: "conversation") as! ConversationViewController
@@ -1250,17 +1264,6 @@ extension ConversationViewController {
             rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
         }
         return rect
-    }
-    
-    func handleMessageRecalling(messageId: String) {
-        if messageId == previewDocumentMessageId {
-            previewDocumentController?.dismissPreview(animated: true)
-            previewDocumentController?.dismissMenu(animated: true)
-            previewDocumentController = nil
-            previewDocumentMessageId = nil
-        } else {
-            galleryViewController.handleMessageRecalling(messageId: messageId)
-        }
     }
     
 }

@@ -10,6 +10,8 @@ class PrivacyViewController: UITableViewController {
     @IBOutlet weak var blockLabel: UILabel!
     @IBOutlet weak var emergencyLabel: UILabel!
 
+    private lazy var userWindow = UserWindow.instance()
+
     class func instance() -> UIViewController {
         let vc = Storyboard.setting.instantiateViewController(withIdentifier: "privacy") as! PrivacyViewController
         let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_PRIVACY_AND_SECURITY)
@@ -52,13 +54,53 @@ class PrivacyViewController: UITableViewController {
             vc = AuthorizationsViewController.instance()
         default:
             if CommonUserDefault.shared.isEmergencyTips {
-                
+                let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                alc.addAction(UIAlertAction(title: R.string.localizable.emergency_view(), style: .default, handler: {(_) in
+                    self.viewEmergencyAction()
+                }))
+                alc.addAction(UIAlertAction(title: R.string.localizable.emergency_change(), style: .default, handler: {(_) in
+                    self.changeEmergencyAction()
+                }))
+                alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+                self.present(alc, animated: true, completion: nil)
             } else {
-
+                EmergencyWindow.instance().presentPopupControllerAnimated()
             }
             return
         }
         navigationController?.pushViewController(vc, animated: true)
+    }
+
+    private func viewEmergencyAction() {
+        let emergencyUserId = ""
+        DispatchQueue.global().async { [weak self] in
+            var emergencyUser = UserDAO.shared.getUser(userId: emergencyUserId)
+            if emergencyUser == nil {
+                switch UserAPI.shared.showUser(userId: emergencyUserId) {
+                case let .success(user):
+                    UserDAO.shared.updateUsers(users: [user])
+                    emergencyUser = UserItem.createUser(from: user)
+                case let .failure(error):
+                    showHud(style: .error, text: error.localizedDescription)
+                    return
+                }
+
+            }
+
+            DispatchQueue.main.async {
+                guard let weakSelf = self, let user = emergencyUser else {
+                    return
+                }
+
+                weakSelf.userWindow.updateUser(user: user)
+                weakSelf.userWindow.presentView()
+            }
+
+        }
+    }
+
+    private func changeEmergencyAction() {
+
     }
 
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

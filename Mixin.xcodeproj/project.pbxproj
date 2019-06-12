@@ -579,6 +579,8 @@
 		DF9E66E7205C0A7E00F1A0B9 /* AddressRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */; };
 		DF9E66ED205C16AD00F1A0B9 /* WithdrawalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */; };
 		DFA063D222B0D0E80031E151 /* PrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */; };
+		DFA063D622B11D1D0031E151 /* EmergencyWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA063D522B11D1D0031E151 /* EmergencyWindow.swift */; };
+		DFA063D822B11D2C0031E151 /* EmergencyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFA063D722B11D2C0031E151 /* EmergencyWindow.xib */; };
 		DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA4573A200AED2D001E10FA /* CommonUserDefault.swift */; };
 		DFA586B21FE3B1E00078BC2C /* AsynchronousJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA586B11FE3B1E00078BC2C /* AsynchronousJob.swift */; };
 		DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B58D1FADC88D00549728 /* Group.storyboard */; };
@@ -1280,6 +1282,8 @@
 		DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRequest.swift; sourceTree = "<group>"; };
 		DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalRequest.swift; sourceTree = "<group>"; };
 		DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewController.swift; sourceTree = "<group>"; };
+		DFA063D522B11D1D0031E151 /* EmergencyWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyWindow.swift; sourceTree = "<group>"; };
+		DFA063D722B11D2C0031E151 /* EmergencyWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmergencyWindow.xib; sourceTree = "<group>"; };
 		DFA4573A200AED2D001E10FA /* CommonUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUserDefault.swift; sourceTree = "<group>"; };
 		DFA586B11FE3B1E00078BC2C /* AsynchronousJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsynchronousJob.swift; sourceTree = "<group>"; };
 		DFA5B58D1FADC88D00549728 /* Group.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Group.storyboard; sourceTree = "<group>"; };
@@ -1894,6 +1898,8 @@
 				DF43304622648B4E006D971D /* AssetInfoWindow.xib */,
 				DF114B0B2020B56E00EA8F9C /* WebWindow.swift */,
 				DF114B0D2020B85600EA8F9C /* WebWindow.xib */,
+				DFA063D522B11D1D0031E151 /* EmergencyWindow.swift */,
+				DFA063D722B11D2C0031E151 /* EmergencyWindow.xib */,
 				DF8CECD61FC2EE4200E40064 /* PayWindow.swift */,
 				DF8CECE61FC317BF00E40064 /* PayWindow.xib */,
 				DF6ABB152295049E00A012B2 /* AddressWindow.swift */,
@@ -2787,6 +2793,7 @@
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
+				DFA063D822B11D2C0031E151 /* EmergencyWindow.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				DF8EF6AD203055DD00E99CE8 /* UrlWindow.xib in Resources */,
@@ -3261,6 +3268,7 @@
 				7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */,
 				7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
+				DFA063D622B11D1D0031E151 /* EmergencyWindow.swift in Sources */,
 				DF114B0A20206D3300EA8F9C /* App.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
 				7BD69C431FF2753E00758D7C /* GroupView.swift in Sources */,

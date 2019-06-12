@@ -578,6 +578,7 @@
 		DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */; };
 		DF9E66E7205C0A7E00F1A0B9 /* AddressRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */; };
 		DF9E66ED205C16AD00F1A0B9 /* WithdrawalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */; };
+		DFA063D222B0D0E80031E151 /* PrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */; };
 		DFA4573B200AED2D001E10FA /* CommonUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA4573A200AED2D001E10FA /* CommonUserDefault.swift */; };
 		DFA586B21FE3B1E00078BC2C /* AsynchronousJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA586B11FE3B1E00078BC2C /* AsynchronousJob.swift */; };
 		DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B58D1FADC88D00549728 /* Group.storyboard */; };
@@ -1278,6 +1279,7 @@
 		DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenAssetViewController.swift; sourceTree = "<group>"; };
 		DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRequest.swift; sourceTree = "<group>"; };
 		DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalRequest.swift; sourceTree = "<group>"; };
+		DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewController.swift; sourceTree = "<group>"; };
 		DFA4573A200AED2D001E10FA /* CommonUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUserDefault.swift; sourceTree = "<group>"; };
 		DFA586B11FE3B1E00078BC2C /* AsynchronousJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsynchronousJob.swift; sourceTree = "<group>"; };
 		DFA5B58D1FADC88D00549728 /* Group.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Group.storyboard; sourceTree = "<group>"; };
@@ -2615,6 +2617,7 @@
 				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
+				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -3101,6 +3104,7 @@
 				DFF353061FEE6A3400058453 /* RefreshAssetsJob.swift in Sources */,
 				DFD294351FA6EC0D00FADAAD /* ContactViewController.swift in Sources */,
 				DF016B292096BD0700B8FFDE /* UserWindow.swift in Sources */,
+				DFA063D222B0D0E80031E151 /* PrivacyViewController.swift in Sources */,
 				273FACAF205FB9A800513327 /* DataExtensions.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
 				27B84EE51FCDA34A0081DD12 /* MD5Digest.swift in Sources */,

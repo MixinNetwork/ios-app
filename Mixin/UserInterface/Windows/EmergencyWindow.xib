@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="rjA-4z-hNi" customClass="EmergencyWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cu6-mx-oTQ">
+                    <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ahl-6y-7PX" userLabel="Background Filler">
+                            <rect key="frame" x="0.0" y="57" width="414" height="13"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JRh-HY-tHy">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="BHZ-by-gj4"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="13"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fMe-6O-hBL">
+                            <rect key="frame" x="0.0" y="70" width="414" height="782"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Emergency Contact" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BRs-kN-WS8">
+                                    <rect key="frame" x="123.5" y="0.0" width="167" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_emergency_contact"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bd5-rc-ZIy">
+                                    <rect key="frame" x="30" y="39" width="354" height="50.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="emergency_tip1"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UrQ-cu-bih">
+                                    <rect key="frame" x="30" y="436.5" width="354" height="67"/>
+                                    <string key="text">Please rest assured that even if your mobile phone number is lost and you cannot retrieve it, your assets stored in the wallet are still safe. Read our Emergency Contact to learn more.</string>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="emergency_tip2"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_emergency" translatesAutoresizingMaskIntoConstraints="NO" id="umy-Na-pwl">
+                                    <rect key="frame" x="30" y="113.5" width="354" height="295"/>
+                                    <color key="backgroundColor" red="0.97254901960784312" green="0.98431372549019602" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="umy-Na-pwl" secondAttribute="height" multiplier="1.2:1" id="UdW-US-J8v"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We won’t spam your contact." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ea9-mI-J6S">
+                                    <rect key="frame" x="30" y="513.5" width="354" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" red="0.72156862749999995" green="0.74117647060000003" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="emergency_tip3"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstItem="ea9-mI-J6S" firstAttribute="top" secondItem="UrQ-cu-bih" secondAttribute="bottom" constant="10" id="49v-eW-FWi"/>
+                                <constraint firstItem="BRs-kN-WS8" firstAttribute="top" secondItem="fMe-6O-hBL" secondAttribute="top" id="4Fi-b5-7xW"/>
+                                <constraint firstAttribute="trailing" secondItem="bd5-rc-ZIy" secondAttribute="trailing" constant="30" id="4fl-Ie-TxI"/>
+                                <constraint firstItem="bd5-rc-ZIy" firstAttribute="leading" secondItem="fMe-6O-hBL" secondAttribute="leading" constant="30" id="6aR-gx-cyl"/>
+                                <constraint firstItem="UrQ-cu-bih" firstAttribute="leading" secondItem="fMe-6O-hBL" secondAttribute="leading" constant="30" id="AVC-z1-MHf"/>
+                                <constraint firstItem="bd5-rc-ZIy" firstAttribute="top" secondItem="BRs-kN-WS8" secondAttribute="bottom" constant="18" id="BgU-lW-JrO"/>
+                                <constraint firstItem="umy-Na-pwl" firstAttribute="leading" secondItem="fMe-6O-hBL" secondAttribute="leading" constant="30" id="E9T-rf-v9X"/>
+                                <constraint firstItem="ea9-mI-J6S" firstAttribute="leading" secondItem="fMe-6O-hBL" secondAttribute="leading" constant="30" id="ECr-Bs-iMG"/>
+                                <constraint firstItem="UrQ-cu-bih" firstAttribute="top" secondItem="umy-Na-pwl" secondAttribute="bottom" constant="28" id="ISi-oB-wTt"/>
+                                <constraint firstAttribute="trailing" secondItem="UrQ-cu-bih" secondAttribute="trailing" constant="30" id="J2L-mk-4W1"/>
+                                <constraint firstAttribute="trailing" secondItem="umy-Na-pwl" secondAttribute="trailing" constant="30" id="Mng-EZ-T4e"/>
+                                <constraint firstAttribute="trailing" secondItem="ea9-mI-J6S" secondAttribute="trailing" constant="30" id="dmL-rV-J3g"/>
+                                <constraint firstItem="BRs-kN-WS8" firstAttribute="centerX" secondItem="fMe-6O-hBL" secondAttribute="centerX" id="hRj-Py-iKK"/>
+                                <constraint firstItem="umy-Na-pwl" firstAttribute="top" secondItem="bd5-rc-ZIy" secondAttribute="bottom" constant="24" id="oTP-iU-rOn"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ycU-sc-Pj3" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="158" y="736" width="98" height="48"/>
+                            <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
+                            <state key="normal" title="Got it">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_got_it"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="nextAction:" destination="rjA-4z-hNi" eventType="touchUpInside" id="t2w-ec-lgo"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstItem="Ahl-6y-7PX" firstAttribute="leading" secondItem="cu6-mx-oTQ" secondAttribute="leading" id="34O-ln-rie"/>
+                        <constraint firstAttribute="trailing" secondItem="JRh-HY-tHy" secondAttribute="trailing" id="7le-Sq-iVy"/>
+                        <constraint firstAttribute="trailing" secondItem="Ahl-6y-7PX" secondAttribute="trailing" id="FRH-Si-HlM"/>
+                        <constraint firstItem="JRh-HY-tHy" firstAttribute="top" secondItem="cu6-mx-oTQ" secondAttribute="top" priority="750" id="Shm-fc-7LC"/>
+                        <constraint firstItem="Ahl-6y-7PX" firstAttribute="top" secondItem="JRh-HY-tHy" secondAttribute="bottom" constant="-13" id="TzD-2W-Fje"/>
+                        <constraint firstItem="JRh-HY-tHy" firstAttribute="leading" secondItem="cu6-mx-oTQ" secondAttribute="leading" id="VFw-s7-dur"/>
+                        <constraint firstItem="fMe-6O-hBL" firstAttribute="leading" secondItem="cu6-mx-oTQ" secondAttribute="leading" id="Vky-3n-tSe"/>
+                        <constraint firstAttribute="trailing" secondItem="fMe-6O-hBL" secondAttribute="trailing" id="aI8-C6-lA5"/>
+                        <constraint firstItem="ycU-sc-Pj3" firstAttribute="centerX" secondItem="cu6-mx-oTQ" secondAttribute="centerX" id="b4K-eX-WO6"/>
+                        <constraint firstItem="fMe-6O-hBL" firstAttribute="top" secondItem="JRh-HY-tHy" secondAttribute="bottom" id="iQL-0U-Shg"/>
+                        <constraint firstAttribute="bottom" secondItem="fMe-6O-hBL" secondAttribute="bottom" id="p6K-it-Y2m"/>
+                        <constraint firstItem="Ahl-6y-7PX" firstAttribute="bottom" secondItem="fMe-6O-hBL" secondAttribute="top" id="vhS-fe-dmC"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="K7I-cz-aZD" firstAttribute="trailing" secondItem="cu6-mx-oTQ" secondAttribute="trailing" id="adx-UQ-ZCc"/>
+                <constraint firstItem="JRh-HY-tHy" firstAttribute="top" relation="greaterThanOrEqual" secondItem="rjA-4z-hNi" secondAttribute="top" constant="20" id="buh-RE-ukT"/>
+                <constraint firstItem="K7I-cz-aZD" firstAttribute="bottom" secondItem="ycU-sc-Pj3" secondAttribute="bottom" constant="34" id="nBM-sr-uIn"/>
+                <constraint firstItem="K7I-cz-aZD" firstAttribute="top" secondItem="JRh-HY-tHy" secondAttribute="top" priority="750" id="njB-wR-ADq"/>
+                <constraint firstItem="cu6-mx-oTQ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="K7I-cz-aZD" secondAttribute="top" id="rdY-Wi-bKf"/>
+                <constraint firstItem="cu6-mx-oTQ" firstAttribute="leading" secondItem="K7I-cz-aZD" secondAttribute="leading" id="uyL-wJ-qbX"/>
+                <constraint firstAttribute="bottom" secondItem="cu6-mx-oTQ" secondAttribute="bottom" id="x6n-7K-DqH"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="K7I-cz-aZD"/>
+            <connections>
+                <outlet property="popupView" destination="cu6-mx-oTQ" id="B52-6J-JJ2"/>
+            </connections>
+            <point key="canvasLocation" x="24.800000000000001" y="51.724137931034484"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_emergency" width="274" height="171"/>
+    </resources>
+</document>

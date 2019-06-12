@@ -8,6 +8,7 @@ class SettingCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectedBackgroundView = UIView.createSelectedBackgroundView()
+        subtitleLabel.isHidden = true
     }
     
 }

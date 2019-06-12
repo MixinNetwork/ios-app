@@ -5,6 +5,7 @@ struct LoginContext {
     let mobileNumber: String
     let fullNumber: String
     var verificationId = ""
+    var hasEmergencyContact = true
     
     init(callingCode: String, mobileNumber: String, fullNumber: String) {
         self.callingCode = callingCode

@@ -72,6 +72,7 @@ final class LoginMobileNumberViewController: MobileNumberViewController {
                 ctx.verificationId = verification.id
                 let vc = LoginVerificationCodeViewController()
                 vc.context = ctx
+                ctx.hasEmergencyContact = verification.hasEmergencyContact
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
                 weakSelf.continueButton.isBusy = false
             case let .failure(error):

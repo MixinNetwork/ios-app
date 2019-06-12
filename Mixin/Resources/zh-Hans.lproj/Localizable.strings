@@ -505,6 +505,7 @@
 "setting_privacy_and_security" = "隐私和安全";
 "setting_privacy_and_security_title" = "隐私";
 "setting_privacy_and_security_summary" = "设置谁可以给你发消息或添加到群组";
+"setting_data_and_storage" = "数据和存储";
 "setting_blocked_user_count_suffix" = " 联系人";
 "setting_blocked_user_count_none" = "无";
 "setting_about" = "关于";
@@ -530,6 +531,7 @@
 "setting_storage_videos" = "视频";
 "setting_storage_audios" = "音频";
 "setting_storage_files" = "文件";
+"setting_emergency_contact" = "紧急联系人";
 "setting_logout" = "退出登录";
 "setting_notification_message_preview" = "显示消息内容";
 "setting_backup_title" = "聊天记录备份";

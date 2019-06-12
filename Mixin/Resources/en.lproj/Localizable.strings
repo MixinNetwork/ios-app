@@ -503,6 +503,7 @@
 "setting_privacy_and_security" = "Privacy and Security";
 "setting_privacy_and_security_title" = "PRIVACY";
 "setting_privacy_and_security_summary" = "Change who can add you to conversation and groups.";
+"setting_data_and_storage" = "Data and Storage Usage";
 "setting_blocked_user_count_suffix" = " contacts";
 "setting_blocked_user_count_none" = "None";
 "setting_about" = "About";
@@ -528,6 +529,7 @@
 "setting_storage_videos" = "Videos";
 "setting_storage_audios" = "Audios";
 "setting_storage_files" = "Files";
+"setting_emergency_contact" = "Emergency Contact";
 "setting_logout" = "Log Out";
 "setting_notification_message_preview" = "Message Preview";
 "setting_backup_title" = "Chat Backup";

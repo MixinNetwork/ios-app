@@ -497,6 +497,7 @@
 "setting_privacy_and_security" = "プライバシーとセキュリティ";
 "setting_privacy_and_security_title" = "プライバシー";
 "setting_privacy_and_security_summary" = "会話やグループにあなたを追加できるユーザーを変更します。";
+"setting_data_and_storage" = "データとストレージの使用";
 "setting_blocked_user_count_suffix" = "連絡先";
 "setting_blocked_user_count_none" = "無し";
 "setting_about" = "について";
@@ -518,6 +519,7 @@
 "setting_storage_videos" = "ビデオ";
 "setting_storage_audios" = "オーディオ";
 "setting_storage_files" = "ファイル";
+"setting_emergency_contact" = "緊急連絡";
 "setting_logout" = "ログアウト";
 "setting_notification_message_preview" = "メッセージプレビュー";
 "setting_backup_title" = "チャットバックアップ";

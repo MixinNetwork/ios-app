@@ -487,6 +487,13 @@
 "profile_toast_muted" = "Muted until %@";
 "profile_report_tips" = "Do you want to report and block this contact? your chat with this conversation will also be deleted.";
 
+// Emergency
+"emergency_view" = "View current emergency contact";
+"emergency_change" = "Change emergency contact";
+"emergency_tip1" = "The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
+"emergency_tip2" = "Please rest assured that even if your mobile phone number is lost and you cannot retrieve it, your assets stored in the wallet are still safe. Read our Emergency Contact to learn more.";
+"emergency_tip3" = "We won’t spam your contact.";
+
 // Setting
 "setting_title" = "Setting";
 "setting_notification" = "Notifications";

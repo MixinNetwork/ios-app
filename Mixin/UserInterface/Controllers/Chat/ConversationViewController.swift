@@ -1139,7 +1139,7 @@ extension ConversationViewController {
 
     private func updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: CGFloat, newHeight: CGFloat) {
         let diff = newHeight - oldHeight
-        if newHeight > conversationInputViewController.regularHeight {
+        if conversationInputViewController.isMaximizable && newHeight > conversationInputViewController.regularHeight {
             let top = navigationBarTopConstraint.constant + diff
             let maxTop = navigationBarView.frame.height
             let navigationBarTop = min(maxTop, max(0, top))

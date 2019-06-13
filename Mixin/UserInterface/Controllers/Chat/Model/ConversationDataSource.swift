@@ -601,9 +601,6 @@ extension ConversationDataSource {
         message.mediaLocalIdentifier = asset.localIdentifier
         message.mediaWidth = asset.pixelWidth
         message.mediaHeight = asset.pixelHeight
-        if asset.mediaType == .video {
-            message.mediaDuration = Int64(asset.duration * 1000)
-        }
         let thumbnailSize = CGSize(width: 48, height: 48)
         PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: thumbnailRequestOptions) { (image, info) in
             if let image = image {

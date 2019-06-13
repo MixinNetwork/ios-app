@@ -88,6 +88,7 @@ class VideoUploadJob: AttachmentUploadJob {
         thumbnail?.saveToFile(path: thumbnailUrl)
         let size = FileManager.default.fileSize(videoUrl.path)
         message.mediaUrl = videoFilename
+        message.mediaDuration = Int64(phAsset.duration * 1000)
         message.mediaSize = size
         message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.mp4.rawValue)
         MixinDatabase.shared.insertOrReplace(objects: [message])

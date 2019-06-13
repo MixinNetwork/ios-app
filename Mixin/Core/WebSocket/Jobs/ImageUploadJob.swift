@@ -67,9 +67,6 @@ class ImageUploadJob: AttachmentUploadJob {
             return
         }
         
-        let filename = message.messageId + ExtensionName.jpeg.withDot
-        let url = MixinFile.url(ofChatDirectory: .photos, filename: filename)
-        
         let uti: CFString
         if let id = asset.value(forKey: "uniformTypeIdentifier") as? String {
             uti = id as CFString
@@ -78,6 +75,16 @@ class ImageUploadJob: AttachmentUploadJob {
         } else {
             uti = kUTTypeJPEG
         }
+        
+        let fileExtension: String
+        if let tag = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassFilenameExtension)?.takeRetainedValue() {
+            fileExtension = tag as String
+        } else {
+            fileExtension = ExtensionName.jpeg.rawValue
+        }
+        message.mediaMimeType = FileManager.default.mimeType(ext: fileExtension)
+        let filename = message.messageId + "." + fileExtension
+        let url = MixinFile.url(ofChatDirectory: .photos, filename: filename)
         
         var image: UIImage?
         var imageData: Data?

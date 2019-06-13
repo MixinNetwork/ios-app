@@ -604,11 +604,6 @@ extension ConversationDataSource {
                 message.thumbImage = image.base64Thumbnail()
             }
         }
-        if assetMediaTypeIsImage {
-            message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.jpeg.rawValue)
-        } else {
-            message.mediaMimeType = FileManager.default.mimeType(ext: ExtensionName.mp4.rawValue)
-        }
         SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: self.category == .group)
     }
     

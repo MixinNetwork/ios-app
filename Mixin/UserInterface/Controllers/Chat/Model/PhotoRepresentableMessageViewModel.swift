@@ -13,6 +13,16 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
     var operationButtonStyle = NetworkOperationButton.Style.finished(showPlayIcon: false)
     var layoutPosition = PhotoMessageCell.VerticalPositioningImageView.Position.center
     
+    var mediaUrl: String? {
+        get {
+            return message.mediaUrl
+        }
+        set {
+            message.mediaUrl = newValue
+            upgradeThumbnailIfNeeded(mediaUrl: newValue)
+        }
+    }
+    
     override var contentMargin: Margin {
         return Margin(leading: 9, trailing: 5, top: 4, bottom: 6)
     }
@@ -65,5 +75,9 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         cellHeight = fullnameHeight + backgroundImageFrame.size.height + bottomSeparatorHeight
         super.didSetStyle()
     }
-
+    
+    func upgradeThumbnailIfNeeded(mediaUrl: String?) {
+        
+    }
+    
 }

@@ -90,7 +90,8 @@ class VideoUploadJob: AttachmentUploadJob {
         message.mediaUrl = videoFilename
         message.mediaSize = size
         MixinDatabase.shared.insertOrReplace(objects: [message])
-        let change = ConversationChange(conversationId: message.conversationId, action: .updateMessage(messageId: message.messageId))
+        let change = ConversationChange(conversationId: message.conversationId,
+                                        action: .updateMediaUrl(messageId: message.messageId, mediaUrl: videoFilename))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     

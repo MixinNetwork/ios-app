@@ -60,6 +60,10 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         }
     }
     
+    func reloadImage(viewModel: PhotoRepresentableMessageViewModel) {
+        
+    }
+    
     func statusSnapshot() -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(contentFrame.size, false, UIScreen.main.scale)
         if let context = UIGraphicsGetCurrentContext() {
@@ -161,8 +165,8 @@ extension PhotoRepresentableMessageCell {
             }
         }
         
-        func setImage(with url: URL, ratio: CGSize) {
-            imageView.sd_setImage(with: url, completed: nil)
+        func setImage(with url: URL, placeholder: UIImage?, ratio: CGSize) {
+            imageView.sd_setImage(with: url, placeholderImage: placeholder)
             aspectRatio = ratio
             setNeedsLayout()
         }

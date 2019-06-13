@@ -22,11 +22,15 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         addSubview(lengthLabel)
     }
     
+    override func reloadImage(viewModel: PhotoRepresentableMessageViewModel) {
+        contentImageView.image = viewModel.thumbnail
+    }
+    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? VideoMessageViewModel {
             updateOperationButtonAndExpiredHintLabel()
-            contentImageView.image = viewModel.thumbnail
+            reloadImage(viewModel: viewModel)
             if viewModel.duration != nil || viewModel.fileSize != nil {
                 lengthLabel.text = viewModel.duration ?? viewModel.fileSize
                 lengthLabel.sizeToFit()

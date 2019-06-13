@@ -356,6 +356,8 @@ extension ConversationDataSource {
             updateMediaProgress(messageId: messageId, progress: progress)
         case .updateDownloadProgress(let messageId, let progress):
             updateMediaProgress(messageId: messageId, progress: progress)
+        case .updateMediaUrl(let messageId, let mediaUrl):
+            updateMediaUrl(messageId: messageId, mediaUrl: mediaUrl)
         case .recallMessage(let messageId):
             updateMessage(messageId: messageId)
         case .updateConversation, .startedUpdateConversation:
@@ -427,6 +429,16 @@ extension ConversationDataSource {
         viewModel.progress = progress
         if let cell = tableView?.cellForRow(at: indexPath) as? AttachmentLoadingMessageCell {
             cell.updateProgress()
+        }
+    }
+    
+    private func updateMediaUrl(messageId: String, mediaUrl: String) {
+        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel else {
+            return
+        }
+        viewModel.mediaUrl = mediaUrl
+        if let cell = tableView?.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
+            cell.reloadImage(viewModel: viewModel)
         }
     }
     

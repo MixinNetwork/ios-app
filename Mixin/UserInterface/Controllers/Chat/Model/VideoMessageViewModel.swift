@@ -35,13 +35,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
         super.init(message: message, style: style, fits: layoutWidth)
-        if let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
-            let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
-            let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
-            if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
-                thumbnail = betterThumbnail
-            }
-        }
+        upgradeThumbnailIfNeeded(mediaUrl: message.mediaUrl)
         updateOperationButtonStyle()
         if style.contains(.received) {
             durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 16,
@@ -49,6 +43,17 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         } else {
             durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 10,
                                           y: contentFrame.origin.y + 8)
+        }
+    }
+    
+    override func upgradeThumbnailIfNeeded(mediaUrl: String?) {
+        guard let mediaUrl = mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first else {
+            return
+        }
+        let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
+        let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
+        if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
+            thumbnail = betterThumbnail
         }
     }
     
@@ -60,7 +65,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if shouldUpload {
             let msg = Message.createMessage(message: message)
             let job = VideoUploadJob(message: msg)
-                ConcurrentJobQueue.shared.addJob(job: job)
+            ConcurrentJobQueue.shared.addJob(job: job)
         } else {
             let job = VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
             FileJobQueue.shared.addJob(job: job)

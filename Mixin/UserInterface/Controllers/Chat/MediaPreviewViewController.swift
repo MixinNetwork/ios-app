@@ -25,6 +25,11 @@ final class MediaPreviewViewController: UIViewController {
     private var playerObservation: NSKeyValueObservation?
     private var seekToZeroBeforePlay = false
     
+    private lazy var videoThumbnailMaskLayer: CALayer = {
+        let layer = CALayer()
+        layer.backgroundColor = UIColor.white.cgColor
+        return layer
+    }()
     private lazy var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
         options.version = .current
@@ -177,7 +182,7 @@ final class MediaPreviewViewController: UIViewController {
     private func play(item: AVPlayerItem) {
         let playerView = PlayerView(frame: contentView.bounds)
         playerView.backgroundColor = .clear
-        contentView.insertSubview(playerView, belowSubview: imageView)
+        contentView.insertSubview(playerView, aboveSubview: imageView)
         playerView.snp.makeConstraints({ (make) in
             make.edges.equalToSuperview()
         })
@@ -192,10 +197,10 @@ final class MediaPreviewViewController: UIViewController {
             }
             switch player.timeControlStatus {
             case .playing:
-                weakSelf.imageView.isHidden = true
                 weakSelf.playButton.isHidden = true
                 weakSelf.pauseButton.isHidden = false
                 weakSelf.activityIndicator.stopAnimating()
+                weakSelf.updateVideoThumbnailMaskLayer()
             case .paused:
                 weakSelf.playButton.isHidden = false
                 weakSelf.pauseButton.isHidden = true
@@ -222,6 +227,21 @@ final class MediaPreviewViewController: UIViewController {
             }
             self?.imageView.image = image
         })
+    }
+    
+    private func updateVideoThumbnailMaskLayer() {
+        guard let playerLayer = playerView?.layer else {
+            imageView.layer.mask = nil
+            return
+        }
+        let videoRect = playerLayer.videoRect
+        let converted = playerLayer.convert(videoRect, to: imageView.layer)
+        guard converted != .zero else {
+            imageView.layer.mask = nil
+            return
+        }
+        videoThumbnailMaskLayer.frame = converted
+        imageView.layer.mask = videoThumbnailMaskLayer
     }
     
     private final class PlayerView: UIView {

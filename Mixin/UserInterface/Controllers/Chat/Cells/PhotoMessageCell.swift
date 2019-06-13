@@ -19,7 +19,7 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         operationButton.addTarget(self, action: #selector(networkOperationAction(_:)), for: .touchUpInside)
     }
     
-    override func reloadImage(viewModel: PhotoRepresentableMessageViewModel) {
+    override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
         if let mediaUrl = viewModel.message.mediaUrl, !mediaUrl.isEmpty, !mediaUrl.hasPrefix("http") {
             let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
             contentImageView.setImage(with: url, placeholder: viewModel.thumbnail, ratio: viewModel.aspectRatio)
@@ -31,7 +31,7 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoMessageViewModel {
-            reloadImage(viewModel: viewModel)
+            reloadMedia(viewModel: viewModel)
             updateOperationButtonAndExpiredHintLabel()
         }
     }

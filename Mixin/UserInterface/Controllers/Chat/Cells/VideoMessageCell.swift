@@ -19,26 +19,29 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         lengthLabel.layer.cornerRadius = 4
         lengthLabel.clipsToBounds = true
         lengthLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
-        addSubview(lengthLabel)
+        contentView.addSubview(lengthLabel)
     }
     
-    override func reloadImage(viewModel: PhotoRepresentableMessageViewModel) {
+    override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
         contentImageView.image = viewModel.thumbnail
+        if let viewModel = viewModel as? VideoMessageViewModel, viewModel.duration != nil || viewModel.fileSize != nil {
+            let length = viewModel.message.mediaStatus == MediaStatus.DONE.rawValue
+                ? (viewModel.duration ?? viewModel.fileSize)
+                : (viewModel.fileSize ?? viewModel.duration)
+            lengthLabel.text = length
+            lengthLabel.sizeToFit()
+            lengthLabel.frame.origin = viewModel.durationLabelOrigin
+            lengthLabel.isHidden = false
+        } else {
+            lengthLabel.isHidden = true
+        }
     }
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? VideoMessageViewModel {
             updateOperationButtonAndExpiredHintLabel()
-            reloadImage(viewModel: viewModel)
-            if viewModel.duration != nil || viewModel.fileSize != nil {
-                lengthLabel.text = viewModel.duration ?? viewModel.fileSize
-                lengthLabel.sizeToFit()
-                lengthLabel.frame.origin = viewModel.durationLabelOrigin
-                lengthLabel.isHidden = false
-            } else {
-                lengthLabel.isHidden = true
-            }
+            reloadMedia(viewModel: viewModel)
         }
     }
     

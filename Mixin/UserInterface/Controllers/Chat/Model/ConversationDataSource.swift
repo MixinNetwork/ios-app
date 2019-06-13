@@ -356,8 +356,8 @@ extension ConversationDataSource {
             updateMediaProgress(messageId: messageId, progress: progress)
         case .updateDownloadProgress(let messageId, let progress):
             updateMediaProgress(messageId: messageId, progress: progress)
-        case .updateMediaUrl(let messageId, let mediaUrl):
-            updateMediaUrl(messageId: messageId, mediaUrl: mediaUrl)
+        case .updateMediaContent(let messageId, let message):
+            updateMediaContent(messageId: messageId, message: message)
         case .recallMessage(let messageId):
             updateMessage(messageId: messageId)
         case .updateConversation, .startedUpdateConversation:
@@ -411,14 +411,18 @@ extension ConversationDataSource {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }) else {
             return
         }
-        if let viewModel = viewModel(for: indexPath) as? AttachmentLoadingViewModel {
+        let viewModel = self.viewModel(for: indexPath)
+        let cell = tableView?.cellForRow(at: indexPath)
+        if let viewModel = viewModel as? AttachmentLoadingViewModel {
             viewModel.mediaStatus = mediaStatus.rawValue
-            let cell = tableView?.cellForRow(at: indexPath)
             if let cell = cell as? (PhotoRepresentableMessageCell & AttachmentExpirationHintingMessageCell) {
                 cell.updateOperationButtonAndExpiredHintLabel()
             } else if let cell = cell as? AttachmentLoadingMessageCell {
                 cell.updateOperationButtonStyle()
             }
+        }
+        if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, let cell = cell as? PhotoRepresentableMessageCell {
+            cell.reloadMedia(viewModel: viewModel)
         }
     }
     
@@ -432,13 +436,15 @@ extension ConversationDataSource {
         }
     }
     
-    private func updateMediaUrl(messageId: String, mediaUrl: String) {
+    private func updateMediaContent(messageId: String, message: Message) {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel else {
             return
         }
-        viewModel.mediaUrl = mediaUrl
+        viewModel.update(mediaUrl: message.mediaUrl,
+                         mediaSize: message.mediaSize,
+                         mediaDuration: message.mediaDuration)
         if let cell = tableView?.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
-            cell.reloadImage(viewModel: viewModel)
+            cell.reloadMedia(viewModel: viewModel)
         }
     }
     

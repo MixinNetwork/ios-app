@@ -143,7 +143,7 @@ class ImageUploadJob: AttachmentUploadJob {
         message.mediaSize = FileManager.default.fileSize(url.path)
         MixinDatabase.shared.insertOrReplace(objects: [message])
         let change = ConversationChange(conversationId: message.conversationId,
-                                        action: .updateMediaUrl(messageId: message.messageId, mediaUrl: filename))
+                                        action: .updateMediaContent(messageId: message.messageId, message: message))
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
     

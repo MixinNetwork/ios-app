@@ -33,9 +33,8 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
         super.init(message: message, style: style, fits: layoutWidth)
-        upgradeThumbnailIfNeeded(mediaUrl: message.mediaUrl)
+        update(mediaUrl: message.mediaUrl, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration)
         updateOperationButtonStyle()
         if style.contains(.received) {
             durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 16,
@@ -46,14 +45,15 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         }
     }
     
-    override func upgradeThumbnailIfNeeded(mediaUrl: String?) {
-        guard let mediaUrl = mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first else {
-            return
-        }
-        let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
-        let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
-        if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
-            thumbnail = betterThumbnail
+    override func update(mediaUrl: String?, mediaSize: Int64?, mediaDuration: Int64?) {
+        super.update(mediaUrl: mediaUrl, mediaSize: mediaSize, mediaDuration: mediaDuration)
+        (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
+        if let mediaUrl = mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
+            let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
+            let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
+            if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
+                thumbnail = betterThumbnail
+            }
         }
     }
     
@@ -86,19 +86,17 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     }
     
     private static func durationAndFileSizeRepresentation(ofMessage message: MessageItem) -> (String?, String?) {
-        if message.mediaStatus == MediaStatus.DONE.rawValue {
-            var duration: String?
-            if let mediaDuration = message.mediaDuration {
-                duration = mediaDurationFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
-            }
-            return (duration, nil)
-        } else {
-            var fileSize: String?
-            if let mediaSize = message.mediaSize {
-                fileSize = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
-            }
-            return (nil, fileSize)
+        var duration: String?
+        if let mediaDuration = message.mediaDuration {
+            duration = mediaDurationFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
         }
+        
+        var fileSize: String?
+        if let mediaSize = message.mediaSize {
+            fileSize = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
+        }
+        
+        return (duration, fileSize)
     }
     
 }

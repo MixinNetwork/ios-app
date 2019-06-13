@@ -60,7 +60,7 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         }
     }
     
-    func reloadImage(viewModel: PhotoRepresentableMessageViewModel) {
+    func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
         
     }
     

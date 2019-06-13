@@ -11,6 +11,7 @@ final class MediaPreviewViewController: UIViewController {
     @IBOutlet weak var imageView: YYAnimatedImageView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var pauseButton: UIButton!
     
     @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var minimalImageViewWidthConstraint: NSLayoutConstraint!
@@ -19,10 +20,10 @@ final class MediaPreviewViewController: UIViewController {
     var dataSource: ConversationDataSource?
     
     private var lastRequestId: PHImageRequestID?
-    private var lastAssetIdentifier: String?
     private var asset: PHAsset?
     private var playerView: PlayerView?
     private var playerObservation: NSKeyValueObservation?
+    private var seekToZeroBeforePlay = false
     
     private lazy var imageRequestOptions: PHImageRequestOptions = {
         let options = PHImageRequestOptions()
@@ -39,6 +40,10 @@ final class MediaPreviewViewController: UIViewController {
         options.progressHandler = nil
         return options
     }()
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,16 +76,28 @@ final class MediaPreviewViewController: UIViewController {
             return
         }
         playButton.isHidden = true
-        activityIndicator.startAnimating()
-        lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: videoRequestOptions) { [weak self] (item, info) in
-            DispatchQueue.main.async {
-                guard let weakSelf = self, let item = item else {
-                    return
+        if let player = playerView?.layer.player {
+            if seekToZeroBeforePlay {
+                player.seek(to: .zero)
+                seekToZeroBeforePlay = false
+            }
+            player.rate = 1
+        } else {
+            activityIndicator.startAnimating()
+            lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: videoRequestOptions) { [weak self] (item, info) in
+                DispatchQueue.main.async {
+                    guard let weakSelf = self, let item = item else {
+                        return
+                    }
+                    weakSelf.lastRequestId = nil
+                    weakSelf.play(item: item)
                 }
-                weakSelf.lastRequestId = nil
-                weakSelf.play(item: item)
             }
         }
+    }
+    
+    @IBAction func pauseAction(_ sender: Any) {
+        playerView?.layer.player?.pause()
     }
     
     @IBAction func sendAction(_ sender: Any) {
@@ -96,9 +113,6 @@ final class MediaPreviewViewController: UIViewController {
     
     func load(asset: PHAsset) {
         self.asset = asset
-        guard asset.localIdentifier != lastAssetIdentifier else {
-            return
-        }
         loadViewIfNeeded()
         activityIndicator.startAnimating()
         let targetSize = imageView.bounds.size * UIScreen.main.scale
@@ -118,7 +132,6 @@ final class MediaPreviewViewController: UIViewController {
             }
             weakSelf.imageView.image = image
             weakSelf.lastRequestId = nil
-            weakSelf.lastAssetIdentifier = asset.localIdentifier
             weakSelf.activityIndicator.stopAnimating()
             weakSelf.playButton.isHidden = asset.mediaType != .video
             weakSelf.view.layoutIfNeeded()
@@ -131,46 +144,46 @@ final class MediaPreviewViewController: UIViewController {
         }
     }
     
-    private func play(item: AVPlayerItem) {
-        let playerLayer: AVPlayerLayer
-        if let view = self.playerView {
-            playerLayer = view.layer
-        } else {
-            let playerView = PlayerView(frame: contentView.bounds)
-            playerView.backgroundColor = .clear
-            contentView.insertSubview(playerView, belowSubview: imageView)
-            playerView.snp.makeConstraints({ (make) in
-                make.edges.equalToSuperview()
-            })
-            self.playerView = playerView
-            playerLayer = playerView.layer
+    @objc private func playerItemDidPlayToEndTime() {
+        DispatchQueue.main.async {
+            self.seekToZeroBeforePlay = true
         }
-        
-        let player: AVPlayer
-        if let currentPlayer = playerLayer.player, currentPlayer.currentItem == item {
-            player = currentPlayer
-            player.seek(to: .zero)
-        } else {
-            player = AVPlayer(playerItem: item)
-            playerLayer.player = player
-            playerObservation?.invalidate()
-            playerObservation = player.observe(\.timeControlStatus) { [weak self] (player, change) in
-                guard let weakSelf = self else {
-                    return
-                }
-                switch player.timeControlStatus {
-                case .playing:
-                    weakSelf.imageView.isHidden = true
-                    weakSelf.playButton.isHidden = true
-                    weakSelf.activityIndicator.stopAnimating()
-                case .paused:
-                    weakSelf.imageView.isHidden = false
-                    weakSelf.playButton.isHidden = false
-                default:
-                    break
-                }
+    }
+    
+    private func play(item: AVPlayerItem) {
+        let playerView = PlayerView(frame: contentView.bounds)
+        playerView.backgroundColor = .clear
+        contentView.insertSubview(playerView, belowSubview: imageView)
+        playerView.snp.makeConstraints({ (make) in
+            make.edges.equalToSuperview()
+        })
+        self.playerView = playerView
+
+        let player = AVPlayer(playerItem: item)
+        playerView.layer.player = player
+        playerObservation?.invalidate()
+        playerObservation = player.observe(\.timeControlStatus) { [weak self] (player, change) in
+            guard let weakSelf = self else {
+                return
+            }
+            switch player.timeControlStatus {
+            case .playing:
+                weakSelf.imageView.isHidden = true
+                weakSelf.playButton.isHidden = true
+                weakSelf.pauseButton.isHidden = false
+                weakSelf.activityIndicator.stopAnimating()
+            case .paused:
+                weakSelf.playButton.isHidden = false
+                weakSelf.pauseButton.isHidden = true
+            default:
+                break
             }
         }
+        let center = NotificationCenter.default
+        center.addObserver(self,
+                           selector: #selector(playerItemDidPlayToEndTime),
+                           name: Notification.Name.AVPlayerItemDidPlayToEndTime,
+                           object: item)
         
         player.play()
     }

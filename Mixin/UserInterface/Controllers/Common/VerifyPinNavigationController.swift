@@ -1,6 +1,6 @@
 import UIKit
 
-class ChangeNumberNavigationController: LoneBackButtonNavigationController {
+class VerifyPinNavigationController: LoneBackButtonNavigationController {
     
     let dismissButton = UIButton()
     
@@ -21,7 +21,7 @@ class ChangeNumberNavigationController: LoneBackButtonNavigationController {
     
     override func updateBackButtonAlpha(animated: Bool) {
         let backButtonAlpha: CGFloat
-        if viewControllers.last is ChangeNumberVerifyPinViewController {
+        if viewControllers.last is VerifyPinViewController {
             backButtonAlpha = 0
         } else {
             backButtonAlpha = 1

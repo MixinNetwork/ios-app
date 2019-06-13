@@ -143,6 +143,8 @@
 		7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */; };
 		7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281732265D7E30023616D /* RecentAppsViewController.swift */; };
 		7B5281762265F1730023616D /* RecentBotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281752265F1730023616D /* RecentBotCell.swift */; };
+		7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B54F94F22B22E2900908A9D /* VerifyPinView.xib */; };
+		7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95122B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift */; };
 		7B56DBD11FEFC5B900B50D82 /* PinField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B56DBD01FEFC5B900B50D82 /* PinField.swift */; };
 		7B58433F2175911D0053332F /* SnapKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B58433E2175911D0053332F /* SnapKitExtension.swift */; };
 		7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5843442175D3EC0053332F /* PendingDeposit.swift */; };
@@ -356,8 +358,8 @@
 		7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */; };
 		7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */; };
 		7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */; };
-		7BF4047B2048F008004C54E4 /* ChangeNumberNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */; };
-		7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */; };
+		7BF4047B2048F008004C54E4 /* VerifyPinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047A2048F008004C54E4 /* VerifyPinNavigationController.swift */; };
+		7BF4047D2048FA0E004C54E4 /* VerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047C2048FA0E004C54E4 /* VerifyPinViewController.swift */; };
 		7BF49DD320C3DBAC00A8510E /* ReCaptchaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */; };
 		7BF49E0920C4449100A8510E /* ReCaptcha.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7BF49E0820C4449100A8510E /* ReCaptcha.storyboard */; };
 		7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */; };
@@ -823,6 +825,8 @@
 		7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B5281732265D7E30023616D /* RecentAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentAppsViewController.swift; sourceTree = "<group>"; };
 		7B5281752265F1730023616D /* RecentBotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentBotCell.swift; sourceTree = "<group>"; };
+		7B54F94F22B22E2900908A9D /* VerifyPinView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerifyPinView.xib; sourceTree = "<group>"; };
+		7B54F95122B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPinViewController.swift; sourceTree = "<group>"; };
 		7B56DBD01FEFC5B900B50D82 /* PinField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinField.swift; sourceTree = "<group>"; };
 		7B58433E2175911D0053332F /* SnapKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapKitExtension.swift; sourceTree = "<group>"; };
 		7B5843442175D3EC0053332F /* PendingDeposit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingDeposit.swift; sourceTree = "<group>"; };
@@ -1050,8 +1054,8 @@
 		7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetHeaderView.swift; sourceTree = "<group>"; };
 		7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityNumberLabel.swift; sourceTree = "<group>"; };
 		7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadJob.swift; sourceTree = "<group>"; };
-		7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberNavigationController.swift; sourceTree = "<group>"; };
-		7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPinViewController.swift; sourceTree = "<group>"; };
+		7BF4047A2048F008004C54E4 /* VerifyPinNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPinNavigationController.swift; sourceTree = "<group>"; };
+		7BF4047C2048FA0E004C54E4 /* VerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPinViewController.swift; sourceTree = "<group>"; };
 		7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCaptchaManager.swift; sourceTree = "<group>"; };
 		7BF49E0820C4449100A8510E /* ReCaptcha.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ReCaptcha.storyboard; sourceTree = "<group>"; };
 		7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTransactionFooterView.xib; sourceTree = "<group>"; };
@@ -1744,6 +1748,9 @@
 				7B6E5502223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift */,
 				7BD639C82282B17B00B7B3A6 /* PeerViewController.swift */,
 				7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */,
+				7BF4047A2048F008004C54E4 /* VerifyPinNavigationController.swift */,
+				7B54F94F22B22E2900908A9D /* VerifyPinView.xib */,
+				7BF4047C2048FA0E004C54E4 /* VerifyPinViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2544,9 +2551,8 @@
 				7B5BABE21FB57B0300341FE6 /* ImagePickerController.swift */,
 				DF46B4041FA9B48500243A8B /* ContactsManager.swift */,
 				7BBC6EA71FA98D1A00DC130A /* AddPeopleViewController.swift */,
-				7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */,
+				7B54F95122B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift */,
 				7BADC83D204BD01D0016B0FC /* ChangeNumberViewController.swift */,
-				7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */,
 				7BADC83F204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift */,
 				7BADC841204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift */,
 			);
@@ -2791,6 +2797,7 @@
 				7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */,
 				DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */,
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
+				7B54F95022B22E2900908A9D /* VerifyPinView.xib in Resources */,
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
 				DFA063D822B11D2C0031E151 /* EmergencyWindow.xib in Resources */,
@@ -3130,6 +3137,7 @@
 				7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */,
 				DF1A9A7C1FF2245800A95188 /* NumberExtension.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
+				7B54F95222B22EA600908A9D /* ChangeNumberVerifyPinViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
 				DF191194208F104800BD415D /* Job.swift in Sources */,
@@ -3360,7 +3368,7 @@
 				7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */,
 				DFE63CA81FC6BED500D6E028 /* VerificationResponse.swift in Sources */,
 				7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */,
-				7BF4047B2048F008004C54E4 /* ChangeNumberNavigationController.swift in Sources */,
+				7BF4047B2048F008004C54E4 /* VerifyPinNavigationController.swift in Sources */,
 				DF503D2C1FECF12A00C008E7 /* PreKeyDAO.swift in Sources */,
 				DF05F0191FE90A1B00F98479 /* SignalKeyCount.swift in Sources */,
 				DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */,
@@ -3519,7 +3527,7 @@
 				DF503D361FECF86D00C008E7 /* SessionDAO.swift in Sources */,
 				DFDD89EB22C4D5F900128991 /* DepositTipWindow.swift in Sources */,
 				DF5D9F3D1F9CA3160036D5FD /* UserAPI.swift in Sources */,
-				7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift in Sources */,
+				7BF4047D2048FA0E004C54E4 /* VerifyPinViewController.swift in Sources */,
 				DFB37D9F1FF94864000875BD /* RotateSignedPreKeyJob.swift in Sources */,
 				7B81BF2822893F8B00266A77 /* GroupParticipantCell.swift in Sources */,
 				DF1070912048103000E20047 /* BlazeMessageDAO.swift in Sources */,

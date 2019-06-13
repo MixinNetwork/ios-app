@@ -4,15 +4,15 @@ import SnapKit
 class ChangeNumberViewController: UIViewController {
 
     static var lastKeyboardFrame = CGRect.zero
-
+    
     let bottomWrapperView = BottomWrapperView()
     let bottomWrapperViewInset = BottomWrapperView.defaultLayoutInset
 
     var bottomWrapperBottomConstraint: Constraint!
     var context = ChangeNumberContext()
     
-    var changeNumberNavigationController: ChangeNumberNavigationController? {
-        return (navigationController as? ChangeNumberNavigationController)
+    var changeNumberNavigationController: VerifyPinNavigationController? {
+        return (navigationController as? VerifyPinNavigationController)
     }
     
     override func viewDidLoad() {

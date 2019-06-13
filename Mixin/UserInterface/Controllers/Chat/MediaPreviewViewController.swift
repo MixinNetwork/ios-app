@@ -32,7 +32,15 @@ final class MediaPreviewViewController: UIViewController {
         options.isNetworkAccessAllowed = true
         return options
     }()
-    private lazy var videoRequestOptions: PHVideoRequestOptions = {
+    private lazy var offlineVideoRequestOptions: PHVideoRequestOptions = {
+        let options = PHVideoRequestOptions()
+        options.isNetworkAccessAllowed = false
+        options.version = .current
+        options.deliveryMode = .mediumQualityFormat
+        options.progressHandler = nil
+        return options
+    }()
+    private lazy var onlineVideoRequestOptions: PHVideoRequestOptions = {
         let options = PHVideoRequestOptions()
         options.isNetworkAccessAllowed = true
         options.version = .current
@@ -83,14 +91,17 @@ final class MediaPreviewViewController: UIViewController {
             }
             player.rate = 1
         } else {
-            activityIndicator.startAnimating()
-            lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: videoRequestOptions) { [weak self] (item, info) in
+            lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: offlineVideoRequestOptions) { [weak self] (item, info) in
+                let isCancelled = info?[PHImageCancelledKey] as? Bool ?? false
+                guard !isCancelled else {
+                    return
+                }
                 DispatchQueue.main.async {
-                    guard let weakSelf = self, let item = item else {
-                        return
+                    if let item = item {
+                        self?.play(item: item)
+                    } else {
+                        self?.requestRemoteVideoAssetAndPlay(asset: asset)
                     }
-                    weakSelf.lastRequestId = nil
-                    weakSelf.play(item: item)
                 }
             }
         }
@@ -147,6 +158,19 @@ final class MediaPreviewViewController: UIViewController {
     @objc private func playerItemDidPlayToEndTime() {
         DispatchQueue.main.async {
             self.seekToZeroBeforePlay = true
+        }
+    }
+    
+    private func requestRemoteVideoAssetAndPlay(asset: PHAsset) {
+        activityIndicator.startAnimating()
+        lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: onlineVideoRequestOptions) { [weak self] (item, info) in
+            let isCancelled = info?[PHImageCancelledKey] as? Bool ?? false
+            guard !isCancelled, let item = item else {
+                return
+            }
+            DispatchQueue.main.async {
+                self?.play(item: item)
+            }
         }
     }
     

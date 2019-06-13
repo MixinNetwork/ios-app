@@ -123,7 +123,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
                     while (viewControllers.count > 0 && viewControllers.last is WalletPasswordViewController) {
                         viewControllers.removeLast()
                     }
-                    let viewController = ChangeNumberNavigationController(rootViewController: R.storyboard.contact.verifyPin()!)
+                    let viewController = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
                     navigation.present(viewController, animated: true, completion: {
                         navigation.setViewControllers(viewControllers, animated: false)
                     })

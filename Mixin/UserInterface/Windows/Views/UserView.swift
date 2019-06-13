@@ -391,7 +391,7 @@ class UserView: CornerView {
     
     private func changeNumber() {
         if AccountAPI.shared.account?.has_pin ?? false {
-            let viewController = ChangeNumberNavigationController(rootViewController: R.storyboard.contact.verifyPin()!)
+            let viewController = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
             UIApplication.rootNavigationController()?.present(viewController, animated: true, completion: nil)
         } else {
             let viewController = WalletPasswordViewController.instance(dismissTarget: .changePhone)

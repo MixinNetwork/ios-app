@@ -93,7 +93,7 @@
 		7B28FA14201195E40023B28D /* StickerMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */; };
 		7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */; };
 		7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA17201196F80023B28D /* DataMessageCell.swift */; };
-		7B29044E21F5C8AA00556488 /* GiphyImageURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B29044D21F5C8AA00556488 /* GiphyImageURL.swift */; };
+		7B29044E21F5C8AA00556488 /* GiphyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B29044D21F5C8AA00556488 /* GiphyImage.swift */; };
 		7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */; };
 		7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */; };
 		7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */; };
@@ -333,6 +333,7 @@
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
 		7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6E16B218089F100C32EE5 /* GCDExtension.swift */; };
 		7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */; };
+		7BEBCE2D228185130037BF18 /* MediaPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEBCE2C228185130037BF18 /* MediaPreviewViewController.swift */; };
 		7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BEC4DF021A7D054003336F2 /* AssetCell.xib */; };
 		7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEDF9F720510CD300371266 /* ConversationDataSource.swift */; };
 		7BEE5351222D0E5C008D3911 /* ConversationExtensionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */; };
@@ -348,6 +349,7 @@
 		7BF374A82063951F008A166B /* GalleryItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF374A62063951E008A166B /* GalleryItemViewController.swift */; };
 		7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */; };
 		7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */; };
+		7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */; };
 		7BF4047B2048F008004C54E4 /* ChangeNumberNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */; };
 		7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */; };
 		7BF49DD320C3DBAC00A8510E /* ReCaptchaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */; };
@@ -760,7 +762,7 @@
 		7B28FA13201195E40023B28D /* StickerMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMessageViewModel.swift; sourceTree = "<group>"; };
 		7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageViewModel.swift; sourceTree = "<group>"; };
 		7B28FA17201196F80023B28D /* DataMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageCell.swift; sourceTree = "<group>"; };
-		7B29044D21F5C8AA00556488 /* GiphyImageURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImageURL.swift; sourceTree = "<group>"; };
+		7B29044D21F5C8AA00556488 /* GiphyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImage.swift; sourceTree = "<group>"; };
 		7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXNFastURLDetector.h; sourceTree = "<group>"; };
 		7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXNFastURLDetector.m; sourceTree = "<group>"; };
 		7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
@@ -1013,6 +1015,7 @@
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
 		7BE6E16B218089F100C32EE5 /* GCDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDExtension.swift; sourceTree = "<group>"; };
 		7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputViewController.swift; sourceTree = "<group>"; };
+		7BEBCE2C228185130037BF18 /* MediaPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPreviewViewController.swift; sourceTree = "<group>"; };
 		7BEC4DF021A7D054003336F2 /* AssetCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssetCell.xib; sourceTree = "<group>"; };
 		7BEDF9F720510CD300371266 /* ConversationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDataSource.swift; sourceTree = "<group>"; };
 		7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtensionCell.swift; sourceTree = "<group>"; };
@@ -1028,6 +1031,7 @@
 		7BF374A62063951E008A166B /* GalleryItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryItemViewController.swift; sourceTree = "<group>"; };
 		7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetHeaderView.swift; sourceTree = "<group>"; };
 		7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityNumberLabel.swift; sourceTree = "<group>"; };
+		7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadJob.swift; sourceTree = "<group>"; };
 		7BF4047A2048F008004C54E4 /* ChangeNumberNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberNavigationController.swift; sourceTree = "<group>"; };
 		7BF4047C2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerifyPinViewController.swift; sourceTree = "<group>"; };
 		7BF49DD220C3DBAC00A8510E /* ReCaptchaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCaptchaManager.swift; sourceTree = "<group>"; };
@@ -1572,7 +1576,7 @@
 				7B1ABB0D21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift */,
 				7B8ED47F21198EC20039946B /* StickerInputModelController.swift */,
 				7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */,
-				7B29044D21F5C8AA00556488 /* GiphyImageURL.swift */,
+				7B29044D21F5C8AA00556488 /* GiphyImage.swift */,
 				7BFE47E622845DE100FC4379 /* MessageReceiver.swift */,
 				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
 			);
@@ -1831,6 +1835,7 @@
 				7B93CAA4222963120053AE90 /* PhotoInputGridViewController.swift */,
 				7B6A4045228400AF0037C7E5 /* MessageReceiverViewController.swift */,
 				7BFD3457228589ED00524EA0 /* ContactSelectorViewController.swift */,
+				7BEBCE2C228185130037BF18 /* MediaPreviewViewController.swift */,
 				7BF374A52063951E008A166B /* GalleryViewController.swift */,
 				7BF374A62063951E008A166B /* GalleryItemViewController.swift */,
 				DFFDCF8320AD8A7A00B4956E /* FileSendViewController.swift */,
@@ -2395,6 +2400,7 @@
 				DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */,
 				DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */,
 				DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */,
+				7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */,
 				DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */,
 				DF3FF05A20123BD6000A0C0A /* FileDownloadJob.swift */,
 				7B6EC8FB20A91543009A7020 /* VideoUploadJob.swift */,
@@ -3092,7 +3098,7 @@
 				DF191194208F104800BD415D /* Job.swift in Sources */,
 				DF8CED021FC6790400E40064 /* MessageAPI.swift in Sources */,
 				DF17B51720526050006447C2 /* SnapshotItem.swift in Sources */,
-				7B29044E21F5C8AA00556488 /* GiphyImageURL.swift in Sources */,
+				7B29044E21F5C8AA00556488 /* GiphyImage.swift in Sources */,
 				DF5D9F3B1F9C9A400036D5FD /* AccountAPI.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				DF8DA19A1FD562E200425CEC /* AttachmentResponse.swift in Sources */,
@@ -3169,6 +3175,7 @@
 				DF05F0121FE5598300F98479 /* ExitConversationJob.swift in Sources */,
 				DFF70F622079FC4900A5FA8B /* AssetItem.swift in Sources */,
 				7BD639CA2282B17B00B7B3A6 /* PeerViewController.swift in Sources */,
+				7BEBCE2D228185130037BF18 /* MediaPreviewViewController.swift in Sources */,
 				7BF39FC9219AA8B000950F06 /* AssetHeaderView.swift in Sources */,
 				7BD7055F215BAEDE00639FA8 /* PeerTransactionsViewController.swift in Sources */,
 				7B402F88214692C300383687 /* BubbleLayer.swift in Sources */,
@@ -3231,6 +3238,7 @@
 				DF5D9F271F9C79E10036D5FD /* BundleExtension.swift in Sources */,
 				DF8DA1891FD4F5D700425CEC /* DictionaryExtension.swift in Sources */,
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
+				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				273FACB6205FB9A800513327 /* Signal.swift in Sources */,
 				7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,

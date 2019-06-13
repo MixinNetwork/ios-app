@@ -3,6 +3,7 @@ import AVKit
 import Photos
 import SDWebImage
 import YYImage
+import CoreServices
 
 class ConversationDataSource {
     
@@ -18,7 +19,16 @@ class ConversationDataSource {
     private let numberOfMessagesOnPaging = 100
     private let numberOfMessagesOnReloading = 35
     private let me = AccountAPI.shared.account!
-
+    
+    private lazy var thumbnailRequestOptions: PHImageRequestOptions = {
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .fastFormat
+        options.resizeMode = .fast
+        options.isNetworkAccessAllowed = false
+        options.isSynchronous = true
+        return options
+    }()
+    
     private(set) var conversation: ConversationItem {
         didSet {
             category = conversation.category == ConversationCategory.CONTACT.rawValue ? .contact : .group
@@ -346,6 +356,8 @@ extension ConversationDataSource {
             updateMediaProgress(messageId: messageId, progress: progress)
         case .updateDownloadProgress(let messageId, let progress):
             updateMediaProgress(messageId: messageId, progress: progress)
+        case .updateMediaContent(let messageId, let message):
+            updateMediaContent(messageId: messageId, message: message)
         case .recallMessage(let messageId):
             updateMessage(messageId: messageId)
         case .updateConversation, .startedUpdateConversation:
@@ -399,14 +411,18 @@ extension ConversationDataSource {
         guard let indexPath = indexPath(where: { $0.messageId == messageId }) else {
             return
         }
-        if let viewModel = viewModel(for: indexPath) as? AttachmentLoadingViewModel {
+        let viewModel = self.viewModel(for: indexPath)
+        let cell = tableView?.cellForRow(at: indexPath)
+        if let viewModel = viewModel as? AttachmentLoadingViewModel {
             viewModel.mediaStatus = mediaStatus.rawValue
-            let cell = tableView?.cellForRow(at: indexPath)
             if let cell = cell as? (PhotoRepresentableMessageCell & AttachmentExpirationHintingMessageCell) {
                 cell.updateOperationButtonAndExpiredHintLabel()
             } else if let cell = cell as? AttachmentLoadingMessageCell {
                 cell.updateOperationButtonStyle()
             }
+        }
+        if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, let cell = cell as? PhotoRepresentableMessageCell {
+            cell.reloadMedia(viewModel: viewModel)
         }
     }
     
@@ -417,6 +433,18 @@ extension ConversationDataSource {
         viewModel.progress = progress
         if let cell = tableView?.cellForRow(at: indexPath) as? AttachmentLoadingMessageCell {
             cell.updateProgress()
+        }
+    }
+    
+    private func updateMediaContent(messageId: String, message: Message) {
+        guard let indexPath = indexPath(where: { $0.messageId == messageId }), let viewModel = viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel else {
+            return
+        }
+        viewModel.update(mediaUrl: message.mediaUrl,
+                         mediaSize: message.mediaSize,
+                         mediaDuration: message.mediaDuration)
+        if let cell = tableView?.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
+            cell.reloadMedia(viewModel: viewModel)
         }
     }
     
@@ -547,38 +575,39 @@ extension ConversationDataSource {
         }
     }
     
-    func sendGif(at url: URL) {
-        let ownerUser = self.ownerUser
-        let categoryIsGroup = category == .group
+    func send(image: GiphyImage, thumbnail: UIImage?) {
         var message = Message.createMessage(category: MessageCategory.SIGNAL_IMAGE.rawValue,
                                             conversationId: conversationId,
                                             userId: AccountAPI.shared.accountUserId)
         message.mediaStatus = MediaStatus.PENDING.rawValue
-        let context = SDWebImagePrefetcher.shared.context ?? [.animatedImageClass: YYImage.self]
-        SDWebImageManager.shared.loadImage(with: url, options: .highPriority, context: context, progress: nil) { (image, _, _, _, _, _) in
-            guard let image = image as? YYImage, let data = image.animatedImageData else {
-                showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
-                return
-            }
-            DispatchQueue.global().async {
-                let filename = message.messageId + ExtensionName.gif.withDot
-                let targetUrl = MixinFile.url(ofChatDirectory: .photos, filename: filename)
-                do {
-                    try data.write(to: targetUrl)
-                    if FileManager.default.fileSize(targetUrl.path) > 0 {
-                        message.thumbImage = image.base64Thumbnail()
-                        message.mediaSize = FileManager.default.fileSize(targetUrl.path)
-                        message.mediaWidth = Int(image.size.width)
-                        message.mediaHeight = Int(image.size.height)
-                        message.mediaMimeType = "image/gif"
-                        message.mediaUrl = filename
-                    }
-                } catch {
-                    showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
-                }
-                SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: categoryIsGroup)
+        message.mediaUrl = image.fullsizedUrl.absoluteString
+        message.mediaWidth = image.size.width
+        message.mediaHeight = image.size.height
+        if let thumbnail = thumbnail {
+            message.thumbImage = thumbnail.base64Thumbnail()
+        }
+        message.mediaMimeType = "image/gif"
+        SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: category == .group)
+    }
+    
+    func send(asset: PHAsset) {
+        assert(asset.mediaType == .image || asset.mediaType == .video)
+        let assetMediaTypeIsImage = asset.mediaType == .image
+        let category: MessageCategory = assetMediaTypeIsImage ? .SIGNAL_IMAGE : .SIGNAL_VIDEO
+        var message = Message.createMessage(category: category.rawValue,
+                                            conversationId: conversationId,
+                                            userId: AccountAPI.shared.accountUserId)
+        message.mediaStatus = MediaStatus.PENDING.rawValue
+        message.mediaLocalIdentifier = asset.localIdentifier
+        message.mediaWidth = asset.pixelWidth
+        message.mediaHeight = asset.pixelHeight
+        let thumbnailSize = CGSize(width: 48, height: 48)
+        PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: thumbnailRequestOptions) { (image, info) in
+            if let image = image {
+                message.thumbImage = image.base64Thumbnail()
             }
         }
+        SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: self.category == .group)
     }
     
 }

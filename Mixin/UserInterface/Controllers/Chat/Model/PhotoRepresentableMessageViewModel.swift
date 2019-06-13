@@ -65,5 +65,11 @@ class PhotoRepresentableMessageViewModel: DetailInfoMessageViewModel {
         cellHeight = fullnameHeight + backgroundImageFrame.size.height + bottomSeparatorHeight
         super.didSetStyle()
     }
-
+    
+    func update(mediaUrl: String?, mediaSize: Int64?, mediaDuration: Int64?) {
+        message.mediaUrl = mediaUrl
+        message.mediaSize = mediaSize
+        message.mediaDuration = mediaDuration
+    }
+    
 }

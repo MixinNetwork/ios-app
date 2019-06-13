@@ -52,7 +52,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
         let job: UploadOrDownloadJob
-        if messageIsSentByMe {
+        if shouldUpload {
             job = AudioUploadJob(message: Message.createMessage(message: message))
         } else {
             job = AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
@@ -62,7 +62,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
         let jobId: String
-        if messageIsSentByMe {
+        if shouldUpload {
             jobId = AudioUploadJob.jobId(messageId: message.messageId)
         } else {
             jobId = AudioDownloadJob.jobId(messageId: message.messageId)

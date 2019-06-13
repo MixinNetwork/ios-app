@@ -6,7 +6,6 @@ class StickerInputViewController: UIViewController {
     
     private var pageViewController: UIPageViewController!
     private let modelController = StickerInputModelController()
-    private let albumCellReuseId = "album"
     private var officialAlbums = [Album]()
     private var currentIndex = NSNotFound
     private var pageScrollView: UIScrollView?
@@ -95,7 +94,7 @@ extension StickerInputViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: albumCellReuseId, for: indexPath) as! AlbumCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_album, for: indexPath)!
         switch indexPath.row {
         case 0:
             cell.imageView.image = #imageLiteral(resourceName: "ic_recent_stickers")

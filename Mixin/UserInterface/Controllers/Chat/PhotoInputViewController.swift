@@ -12,8 +12,6 @@ class PhotoInputViewController: UIViewController {
     @IBOutlet weak var albumsCollectionView: UICollectionView!
     @IBOutlet weak var albumsCollectionLayout: UICollectionViewFlowLayout!
     
-    private let cellReuseId = "album"
-    
     private var allPhotos: PHFetchResult<PHAsset>?
     private var smartAlbums: PHFetchResult<PHAssetCollection>?
     private var sortedSmartAlbums: [PHAssetCollection]?
@@ -111,7 +109,7 @@ extension PhotoInputViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! PhotoInputAlbumCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.photo_album, for: indexPath)!
         switch Section(rawValue: indexPath.section)! {
         case .allPhotos:
             cell.textLabel.text = Localized.ALL_PHOTOS

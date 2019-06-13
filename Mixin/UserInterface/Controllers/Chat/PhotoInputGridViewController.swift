@@ -19,10 +19,16 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     
     var firstCellIsCamera = true
     
-    private let cellReuseId = "grid"
     private let interitemSpacing: CGFloat = 0
     private let columnCount: CGFloat = 3
     private let imageManager = PHCachingImageManager()
+    
+    private lazy var imageRequestOptions: PHImageRequestOptions = {
+        let options = PHImageRequestOptions()
+        options.version = .current
+        options.isNetworkAccessAllowed = true
+        return options
+    }()
     
     private var thumbnailSize = CGSize.zero
     private var previousPreheatRect = CGRect.zero
@@ -75,7 +81,7 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! PhotoInputGridCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.photo_grid, for: indexPath)!
         if firstCellIsCamera && indexPath.item == 0 {
             cell.identifier = nil
             cell.imageView.contentMode = .center
@@ -86,7 +92,7 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
             cell.identifier = asset.localIdentifier
             cell.imageView.contentMode = .scaleAspectFill
             cell.imageView.backgroundColor = .white
-            imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: nil) { [weak cell] (image, _) in
+            imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: imageRequestOptions) { [weak cell] (image, _) in
                 guard let cell = cell, cell.identifier == asset.localIdentifier else {
                     return
                 }
@@ -120,26 +126,18 @@ extension PhotoInputGridViewController: UICollectionViewDelegate {
         updateCachedAssets()
     }
     
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        removeAllSelections()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         if firstCellIsCamera && indexPath.item == 0 {
             conversationViewController?.imagePickerController.presentCamera()
-            return false
-        } else {
-            removeAllSelections()
-            return true
+        } else if let asset = asset(at: indexPath) {
+            let vc = R.storyboard.chat.media_preview()!
+            vc.load(asset: asset)
+            vc.dataSource = dataSource
+            vc.transitioningDelegate = PopupPresentationManager.shared
+            vc.modalPresentationStyle = .custom
+            present(vc, animated: true, completion: nil)
         }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        if let asset = asset(at: indexPath) {
-            let vc = AssetSendViewController.instance(asset: asset, dataSource: dataSource)
-            navigationController?.pushViewController(vc, animated: true)
-        }
-        return true
     }
     
 }
@@ -260,12 +258,6 @@ extension PhotoInputGridViewController {
         return collectionViewLayout
             .layoutAttributesForElements(in: rect)?
             .map { $0.indexPath } ?? []
-    }
-    
-    private func removeAllSelections() {
-        collectionView.indexPathsForSelectedItems?.forEach({ (indexPath) in
-            collectionView.deselectItem(at: indexPath, animated: false)
-        })
     }
     
     private func asset(at indexPath: IndexPath) -> PHAsset? {

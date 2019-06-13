@@ -33,15 +33,8 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
-        (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
         super.init(message: message, style: style, fits: layoutWidth)
-        if let mediaUrl = message.mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
-            let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
-            let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
-            if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
-                thumbnail = betterThumbnail
-            }
-        }
+        update(mediaUrl: message.mediaUrl, mediaSize: message.mediaSize, mediaDuration: message.mediaDuration)
         updateOperationButtonStyle()
         if style.contains(.received) {
             durationLabelOrigin = CGPoint(x: contentFrame.origin.x + 16,
@@ -52,47 +45,58 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         }
     }
     
+    override func update(mediaUrl: String?, mediaSize: Int64?, mediaDuration: Int64?) {
+        super.update(mediaUrl: mediaUrl, mediaSize: mediaSize, mediaDuration: mediaDuration)
+        (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
+        if let mediaUrl = mediaUrl, let filename = mediaUrl.components(separatedBy: ".").first {
+            let betterThumbnailFilename = filename + ExtensionName.jpeg.withDot
+            let betterThumbnailURL = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
+            if let betterThumbnail = UIImage(contentsOfFile: betterThumbnailURL.path) {
+                thumbnail = betterThumbnail
+            }
+        }
+    }
+    
     func beginAttachmentLoading() {
         guard message.mediaStatus == MediaStatus.PENDING.rawValue || message.mediaStatus == MediaStatus.CANCELED.rawValue else {
             return
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
-        let job: UploadOrDownloadJob
-        if messageIsSentByMe {
-            job = VideoUploadJob(message: Message.createMessage(message: message))
+        if shouldUpload {
+            let msg = Message.createMessage(message: message)
+            let job = VideoUploadJob(message: msg)
+            ConcurrentJobQueue.shared.addJob(job: job)
         } else {
-            job = VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
+            let job = VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
+            FileJobQueue.shared.addJob(job: job)
         }
-        FileJobQueue.shared.addJob(job: job)
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
-        let jobId: String
-        if messageIsSentByMe {
-            jobId = VideoUploadJob.jobId(messageId: message.messageId)
+        if shouldUpload {
+            let id = VideoUploadJob.jobId(messageId: message.messageId)
+            ConcurrentJobQueue.shared.cancelJob(jobId: id)
         } else {
-            jobId = VideoDownloadJob.jobId(messageId: message.messageId)
+            let jobId = VideoDownloadJob.jobId(messageId: message.messageId)
+            FileJobQueue.shared.cancelJob(jobId: jobId)
         }
-        FileJobQueue.shared.cancelJob(jobId: jobId)
         if markMediaStatusCancelled {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
         }
     }
     
     private static func durationAndFileSizeRepresentation(ofMessage message: MessageItem) -> (String?, String?) {
-        if message.mediaStatus == MediaStatus.DONE.rawValue {
-            var duration: String?
-            if let mediaDuration = message.mediaDuration {
-                duration = mediaDurationFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
-            }
-            return (duration, nil)
-        } else {
-            var fileSize: String?
-            if let mediaSize = message.mediaSize {
-                fileSize = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
-            }
-            return (nil, fileSize)
+        var duration: String?
+        if let mediaDuration = message.mediaDuration {
+            duration = mediaDurationFormatter.string(from: TimeInterval(Double(mediaDuration) / millisecondsPerSecond))
         }
+        
+        var fileSize: String?
+        if let mediaSize = message.mediaSize {
+            fileSize = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: mediaSize)
+        }
+        
+        return (duration, fileSize)
     }
     
 }

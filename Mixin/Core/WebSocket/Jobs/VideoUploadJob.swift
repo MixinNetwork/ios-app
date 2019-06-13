@@ -69,9 +69,8 @@ class VideoUploadJob: AttachmentUploadJob {
         guard !isCancelled, let asset = avAsset else {
             return
         }
-        let filename = UUID().uuidString.lowercased()
+        let filename = message.messageId
         let videoFilename = filename + ExtensionName.mp4.withDot
-        let thumbnailFilename = filename + ExtensionName.jpeg.withDot
         let videoUrl = MixinFile.url(ofChatDirectory: .videos, filename: videoFilename)
         let exportSession = AssetExportSession(asset: asset, videoSettings: videoSettings, audioSettings: audioSettings, outputURL: videoUrl)
         exportSession.exportAsynchronously {
@@ -84,6 +83,7 @@ class VideoUploadJob: AttachmentUploadJob {
             return
         }
         let thumbnail = UIImage(withFirstFrameOfVideoAtAsset: asset)
+        let thumbnailFilename = filename + ExtensionName.jpeg.withDot
         let thumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: thumbnailFilename)
         thumbnail?.saveToFile(path: thumbnailUrl)
         let size = FileManager.default.fileSize(videoUrl.path)

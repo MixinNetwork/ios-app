@@ -53,13 +53,8 @@ class BaseDatabase {
         })
     }
 
-    func getStringValues(column: ColumnResultConvertible, tableName: String, isDistinct: Bool = false, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [String] {
-        let values: FundamentalColumn
-        if isDistinct {
-            values = try! database.tryGetDistinctColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-        } else {
-            values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-        }
+    func getStringValues(column: ColumnResultConvertible, tableName: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [String] {
+        let values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
         var result = [String]()
         for value in values {
             result.append(value.stringValue)
@@ -67,13 +62,8 @@ class BaseDatabase {
         return result
     }
 
-    func getInt32Values(column: ColumnResultConvertible, tableName: String, isDistinct: Bool = false, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [Int32] {
-        let values: FundamentalColumn
-        if isDistinct {
-            values = try! database.tryGetDistinctColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-        } else {
-            values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-        }
+    func getInt32Values(column: ColumnResultConvertible, tableName: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [Int32] {
+        let values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
         var result = [Int32]()
         for value in values {
             result.append(value.int32Value)
@@ -133,10 +123,7 @@ class BaseDatabase {
     }
     
     func scalar(on: ColumnResultConvertible, fromTable: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil) -> FundamentalValue? {
-        var result: FundamentalValue? = try! database.tryGetValue(on: on, fromTable: fromTable, where: condition, orderBy: orderList, limit: 1)
-        guard let value = result else {
-            return nil
-        }
+        let value = try! database.tryGetValue(on: on, fromTable: fromTable, where: condition, orderBy: orderList, limit: 1)
         return value.type == .null ? nil : value
     }
     

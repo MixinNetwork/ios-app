@@ -530,6 +530,7 @@ final class MessageDAO {
 extension MessageDAO {
 
     private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], messageId: String, conversationId: String, messageSource: String) {
+        var newMessage: MessageItem?
         MixinDatabase.shared.transaction { (database) in
             let updateStatment = try database.prepareUpdate(table: Message.tableName, on: keys).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
             try updateStatment.execute(with: values)
@@ -539,15 +540,17 @@ extension MessageDAO {
 
             try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
 
-            guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).allObjects().first else {
-                return
-            }
-            let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+            newMessage = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).allObjects().first
+        }
 
-            if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(newMessage.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 60 {
-                ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
-            }
+        guard let message = newMessage else {
+            return
+        }
+        let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        
+        if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(message.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 60 {
+            ConcurrentJobQueue.shared.sendNotifaction(message: message)
         }
     }
 

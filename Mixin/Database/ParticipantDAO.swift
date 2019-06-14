@@ -132,8 +132,8 @@ final class ParticipantDAO {
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Participant.tableName, where: Participant.Properties.conversationId == conversationId && Participant.Properties.userId == userId)
             try db.update(table: Conversation.tableName, on: [Conversation.Properties.status], with: [ConversationStatus.QUIT.rawValue], where: Conversation.Properties.conversationId == conversationId)
-            NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
         }
+        NotificationCenter.default.afterPostOnMain(name: .ParticipantDidChange, object: conversationId)
     }
 
     func participants(conversationId: String) -> [Participant] {

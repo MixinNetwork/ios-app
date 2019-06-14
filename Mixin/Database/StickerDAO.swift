@@ -53,9 +53,7 @@ final class StickerDAO {
         let lastUserAtProperty = Sticker.Properties.lastUseAt.asProperty().name
         let propertyList = Sticker.Properties.all.filter { $0.name != lastUserAtProperty }
 
-        MixinDatabase.shared.transaction { (database) in
-            try database.insertOrReplace(objects: Sticker.createSticker(from: sticker), on: propertyList, intoTable: Sticker.tableName)
-        }
+        MixinDatabase.shared.insertOrReplace(objects: [Sticker.createSticker(from: sticker)], on: propertyList)
     }
 
     func insertOrUpdateStickers(stickers: [StickerResponse], albumId: String) {
@@ -65,8 +63,8 @@ final class StickerDAO {
         MixinDatabase.shared.transaction { (database) in
             try database.insertOrReplace(objects: stickers.map { StickerRelationship(albumId: albumId, stickerId: $0.stickerId, createdAt: $0.createdAt) }, intoTable: StickerRelationship.tableName)
             try database.insertOrReplace(objects: stickers.map { Sticker.createSticker(from: $0) }, on: propertyList, intoTable: Sticker.tableName)
-            NotificationCenter.default.afterPostOnMain(name: .FavoriteStickersDidChange)
         }
+        NotificationCenter.default.afterPostOnMain(name: .FavoriteStickersDidChange)
     }
 
     func insertOrUpdateFavoriteSticker(sticker: StickerResponse) {

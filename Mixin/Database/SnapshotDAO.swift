@@ -86,11 +86,12 @@ final class SnapshotDAO {
     }
     
     func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit]) {
+        let snapshots = pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )})
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Snapshot.tableName,
                           where: Snapshot.Properties.assetId == assetId && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue)
-            if pendingDeposits.count > 0 {
-                try db.insert(objects: pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )}), intoTable: Snapshot.tableName)
+            if snapshots.count > 0 {
+                try db.insertOrReplace(objects: snapshots, intoTable: Snapshot.tableName)
             }
         }
     }

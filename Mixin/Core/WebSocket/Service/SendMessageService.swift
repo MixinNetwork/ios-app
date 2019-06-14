@@ -323,8 +323,8 @@ class SendMessageService: MixinService {
                     }
                     try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
                     try database.insert(objects: jobs, intoTable: Job.tableName)
-                    NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
                 })
+                NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange)
                 ConversationDAO.shared.showBadgeNumber()
                 SendMessageService.shared.processMessages()
             }

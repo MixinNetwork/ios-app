@@ -55,20 +55,12 @@ class BaseDatabase {
 
     func getStringValues(column: ColumnResultConvertible, tableName: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [String] {
         let values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-        var result = [String]()
-        for value in values {
-            result.append(value.stringValue)
-        }
-        return result
+        return values.map { $0.stringValue }
     }
 
     func getInt32Values(column: ColumnResultConvertible, tableName: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [Int32] {
         let values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-        var result = [Int32]()
-        for value in values {
-            result.append(value.int32Value)
-        }
-        return result
+        return values.map { $0.int32Value }
     }
     
     func getRowId(tableName: String, condition: Condition) -> Int64 {

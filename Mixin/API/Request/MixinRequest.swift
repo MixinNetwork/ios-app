@@ -4,7 +4,6 @@ import Goutils
 import DeviceGuru
 import UIKit
 import Bugsnag
-import JWT
 
 class MixinRequest {
 
@@ -58,25 +57,20 @@ class MixinRequest {
         if let body = request.httpBody, let content = String(data: body, encoding: .utf8), content.count > 0 {
             sig += content
         }
-        var claims: [AnyHashable: Any] = [:]
-        claims["uid"] = userId
-        claims["sid"] = sessionId
-        claims["iat"] = UInt64(Date().timeIntervalSince1970)
-        claims["exp"] = UInt64(Date().addingTimeInterval(60 * 30).timeIntervalSince1970)
-        claims["jti"] = UUID().uuidString.lowercased()
-        claims["sig"] = sig.sha256()
-        claims["scp"] = "FULL"
-
-        let token = KeyUtil.stripRsaPrivateKeyHeaders(authenticationToken)
-        let keyType = JWTCryptoKeyExtractor.privateKeyWithPEMBase64()
-        var holder: JWTAlgorithmRSFamilyDataHolder? = JWTAlgorithmRSFamilyDataHolder()
-        holder = holder?.keyExtractorType(keyType?.type)
-        holder = holder?.algorithmName("RS512") as? JWTAlgorithmRSFamilyDataHolder
-        holder = holder?.secret(token) as? JWTAlgorithmRSFamilyDataHolder
-        var builder = JWTEncodingBuilder.encodePayload(claims)
-        builder = builder?.addHolder(holder) as? JWTEncodingBuilder
-        let result = builder?.result?.successResult?.encoded
-        return result
+        
+        let pem = KeyUtil.stripRsaPrivateKeyHeaders(authenticationToken)
+        guard let key = KeyUtil.getPrivateKeyFromPem(pemString: pem) else {
+            return nil
+        }
+        
+        let claims = Jwt.Claims(uid: userId,
+                                sid: sessionId,
+                                iat: Date(),
+                                exp: Date().addingTimeInterval(60 * 30),
+                                jti: UUID().uuidString.lowercased(),
+                                sig: sig.sha256(),
+                                scp: "FULL")
+        return try? Jwt.signedToken(claims: claims, privateKey: key)
     }
 
     fileprivate static func getAuthenticationToken(request: URLRequest) -> String? {

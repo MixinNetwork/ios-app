@@ -29,9 +29,11 @@ final class SnapshotDAO {
                 }
             }
             
-            let types = filter.snapshotTypes.map({ $0.rawValue })
-            let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
-            condition = condition && typeConstraint
+            if filter != .all {
+                let types = filter.snapshotTypes.map({ $0.rawValue })
+                let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
+                condition = condition && typeConstraint
+            }
             
             stmt.where(condition)
             switch sort {
@@ -66,9 +68,11 @@ final class SnapshotDAO {
                 }
             }
             
-            let types = filter.snapshotTypes.map({ $0.rawValue })
-            let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
-            condition = condition && typeConstraint
+            if filter != .all {
+                let types = filter.snapshotTypes.map({ $0.rawValue })
+                let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
+                condition = condition && typeConstraint
+            }
             
             stmt.where(condition)
             switch sort {

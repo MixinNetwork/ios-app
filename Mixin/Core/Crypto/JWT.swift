@@ -12,10 +12,10 @@ enum Jwt {
         let scp: String
     }
     
-    enum JwtError: Error {
+    enum Error: Swift.Error {
         case signAlgorithmNotSupported
         case building
-        case sign(underlying: Error?)
+        case sign(underlying: Swift.Error?)
     }
     
     private static let jsonEncoder: JSONEncoder = {
@@ -33,17 +33,17 @@ enum Jwt {
     
     static func signedToken(claims: Claims, privateKey: SecKey) throws -> String {
         guard SecKeyIsAlgorithmSupported(privateKey, .sign, .rsaSignatureMessagePKCS1v15SHA512) else {
-            throw JwtError.signAlgorithmNotSupported
+            throw Error.signAlgorithmNotSupported
         }
         let base64EncodedClaims = try jsonEncoder.encode(claims).base64UrlEncodedString()
         let headerAndPayload = base64EncodedHeader + "." + base64EncodedClaims
         guard let dataToSign = headerAndPayload.data(using: .utf8) else {
-            throw JwtError.building
+            throw Error.building
         }
         var error: Unmanaged<CFError>? = nil
         guard let signature = SecKeyCreateSignature(privateKey, .rsaSignatureMessagePKCS1v15SHA512, dataToSign as CFData, &error) else {
             let retained = error?.takeRetainedValue()
-            throw JwtError.sign(underlying: retained)
+            throw Error.sign(underlying: retained)
         }
         let base64EncodedSignature = (signature as Data).base64UrlEncodedString()
         return headerAndPayload + "." + base64EncodedSignature

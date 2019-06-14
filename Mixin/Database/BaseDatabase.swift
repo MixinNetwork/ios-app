@@ -32,7 +32,7 @@ class BaseDatabase {
                 let millisecond = UInt64(cost) / NSEC_PER_MSEC
                 if millisecond > 100 {
                     sqls.forEach({ (arg) in
-                        print("[WCDB][Performance]SQL: \(arg.key) Count: \(arg.value)")
+                        print("[WCDB][Performance]SQL: \(arg.key)")
                     })
                     print("[WCDB][Performance]Total cost \(millisecond) ms")
                 }

@@ -361,7 +361,6 @@ class SendViewController: KeyboardBasedLayoutViewController {
         vc.opponent = type
         vc.asset = asset
         let container = ContainerViewController.instance(viewController: vc, title: "")
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     

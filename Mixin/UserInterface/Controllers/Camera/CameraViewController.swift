@@ -58,14 +58,10 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
 
     private lazy var notificationController = NotificationController(delegate: self)
     private lazy var shutterAnimationView = ShutterAnimationView()
-    private lazy var videoDeviceDiscoverySession: AVCaptureDevice.DiscoverySession = {
-        if #available(iOS 10.2, *) {
-            return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaType.video, position: .unspecified)
-        } else {
-            return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDuoCamera], mediaType: AVMediaType.video, position: .unspecified)
-        }
-    }()
-
+    private lazy var videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera],
+                                                                                    mediaType: AVMediaType.video,
+                                                                                    position: .unspecified)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         previewView.session = session
@@ -100,7 +96,6 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
         loadingView.stopAnimating()
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         if view.safeAreaInsets.top > 24 {
@@ -185,11 +180,7 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             switch deviceInput.device.position {
             case .unspecified, .front:
                 preferredPosition = .back
-                if #available(iOS 10.2, *) {
-                    preferredDeviceType = .builtInDualCamera
-                } else {
-                    preferredDeviceType = .builtInDuoCamera
-                }
+                preferredDeviceType = .builtInDualCamera
             case .back:
                 preferredPosition = .front
                 preferredDeviceType = .builtInWideAngleCamera
@@ -306,26 +297,21 @@ class PhotoCaptureProcessor: NSObject, AVCapturePhotoCaptureDelegate {
     init(completionHandler: @escaping () -> Void) {
         self.completionHandler = completionHandler
     }
-
-    func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto rawSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
-
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         defer {
             completionHandler()
         }
-
-        guard error == nil else {
+        guard let data = photo.fileDataRepresentation() else {
             return
         }
-        guard let sampleBuffer = rawSampleBuffer, let previewBuffer = previewPhotoSampleBuffer, let dataImage = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: sampleBuffer, previewPhotoSampleBuffer: previewBuffer) else {
-            return
-        }
-
-        if cameraPosition == .front, let dataProvider = CGDataProvider(data: dataImage as CFData), let cgImage = CGImage(jpegDataProviderSource: dataProvider, decode: nil, shouldInterpolate: true, intent: .defaultIntent) {
+        if cameraPosition == .front, let provider = CGDataProvider(data: data as CFData), let cgImage = CGImage(jpegDataProviderSource: provider, decode: nil, shouldInterpolate: true, intent: .defaultIntent) {
             self.photo = UIImage(cgImage: cgImage, scale: 1.0, orientation: .leftMirrored)
         } else {
-            self.photo = UIImage(data: dataImage)
+            self.photo = UIImage(data: data)
         }
     }
+    
 }
 
 extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
@@ -481,7 +467,7 @@ extension CameraViewController {
         }
 
         capturePhotoOutput = AVCapturePhotoOutput()
-        capturePhotoOutput.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey : AVVideoCodecJPEG])], completionHandler: nil)
+        capturePhotoOutput.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey : AVVideoCodecType.jpeg])], completionHandler: nil)
         if session.canAddOutput(capturePhotoOutput) {
             session.addOutput(capturePhotoOutput)
         }

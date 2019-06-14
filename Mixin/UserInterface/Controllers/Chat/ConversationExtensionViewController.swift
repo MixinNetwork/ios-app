@@ -32,7 +32,6 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
         collectionView.delegate = self
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateCollectionViewSectionInsetIfNeeded()
@@ -40,7 +39,7 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        let width = view.bounds.width - view.compatibleSafeAreaInsets.horizontal
+        let width = view.bounds.width - view.safeAreaInsets.horizontal
         if availableWidth != width {
             availableWidth = width
             let spacing = (width - itemCountPerLine * collectionViewLayout.itemSize.width) / (itemCountPerLine + 1)
@@ -51,7 +50,7 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
     }
     
     private func updateCollectionViewSectionInsetIfNeeded() {
-        if view.compatibleSafeAreaInsets.bottom < 20 {
+        if view.safeAreaInsets.bottom < 20 {
             collectionViewLayout.sectionInset.bottom = 20
         } else {
             collectionViewLayout.sectionInset.bottom = 0

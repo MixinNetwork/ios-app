@@ -59,7 +59,6 @@ class ClearStorageViewController: UITableViewController {
         let vc = Storyboard.setting.instantiateViewController(withIdentifier: "clear_storage") as! ClearStorageViewController
         vc.conversation = conversation
         let container = ContainerViewController.instance(viewController: vc, title: conversation.getConversationName())
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
 

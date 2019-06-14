@@ -13,7 +13,6 @@ class WalletSettingViewController: UITableViewController {
     class func instance() -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "wallet_setting") as! WalletSettingViewController
         let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_SETTING)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     

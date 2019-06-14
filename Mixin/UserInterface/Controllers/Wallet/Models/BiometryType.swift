@@ -21,7 +21,7 @@ enum BiometryType {
 private let context = LAContext()
 
 var biometryType: BiometryType {
-    guard #available(iOS 11.0, *), !UIDevice.isJailbreak else {
+    guard !UIDevice.isJailbreak else {
         return .none
     }
     guard AccountAPI.shared.account?.has_pin ?? false else {

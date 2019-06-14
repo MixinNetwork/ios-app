@@ -160,19 +160,16 @@ fileprivate let collectionSubtypeOrder: [PHAssetCollectionSubtype: Int] = {
         idx += 1
         return idx
     }
-    var order: [PHAssetCollectionSubtype: Int] = [
+    return [
         .smartAlbumFavorites: autoIncrement,
         .smartAlbumVideos: autoIncrement,
         .smartAlbumScreenshots: autoIncrement,
         .smartAlbumSelfPortraits: autoIncrement,
         .smartAlbumPanoramas: autoIncrement,
         .smartAlbumSlomoVideos: autoIncrement,
-        .smartAlbumTimelapses: autoIncrement
+        .smartAlbumTimelapses: autoIncrement,
+        .smartAlbumAnimated: autoIncrement
     ]
-    if #available(iOS 11.0, *) {
-        order[.smartAlbumAnimated] = autoIncrement
-    }
-    return order
 }()
 
 fileprivate func sortedAssetCollections(from: PHFetchResult<PHAssetCollection>) -> [PHAssetCollection] {

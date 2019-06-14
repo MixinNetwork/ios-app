@@ -199,7 +199,7 @@ extension AssetFilterViewController {
             + applyButtonTopConstraint.constant
             + applyButton.frame.height
             + applyButtonBottomConstraint.constant
-            + AppDelegate.current.window!.compatibleSafeAreaInsets.bottom
+            + AppDelegate.current.window!.safeAreaInsets.bottom
         view.layoutIfNeeded()
         collectionView.isScrollEnabled = collectionView.contentSize.height >= collectionView.frame.height
     }

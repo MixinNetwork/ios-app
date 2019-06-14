@@ -56,7 +56,6 @@ class GroupAnnouncementViewController: KeyboardBasedLayoutViewController {
         let vc = Storyboard.group.instantiateViewController(withIdentifier: "announcement") as! GroupAnnouncementViewController
         vc.conversation = conversation
         let container = ContainerViewController.instance(viewController: vc, title: Localized.GROUP_NAVIGATION_TITLE_ANNOUNCEMENT)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     

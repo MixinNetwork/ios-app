@@ -9,10 +9,6 @@ class BalanceInputAccessoryView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        if #available(iOS 11.0, *) { } else {
-            bounds.size.height += 8
-            contentBottomConstraint.constant = 8
-        }
         button.setBackgroundImage(UIColor(displayP3RgbValue: 0xD3D5DA).image, for: .normal)
         button.setBackgroundImage(UIColor(displayP3RgbValue: 0xEBEDEF).image, for: .highlighted)
     }

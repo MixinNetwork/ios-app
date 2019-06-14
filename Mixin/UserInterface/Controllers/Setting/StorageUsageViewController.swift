@@ -40,7 +40,6 @@ class StorageUsageViewController: UITableViewController {
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.storage()!
         let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_STORAGE_USAGE)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     

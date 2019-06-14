@@ -107,7 +107,6 @@ class HomeViewController: UIViewController {
         dragDownIndicator.center.x = tableView.frame.width / 2
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateCameraWrapperHeight()
@@ -304,9 +303,6 @@ extension HomeViewController: UIScrollViewDelegate {
 extension HomeViewController {
     
     private func updateCameraWrapperHeight() {
-        guard #available(iOS 11.0, *) else {
-            return
-        }
         cameraWrapperSafeAreaPlaceholderHeightConstraint.constant = view.safeAreaInsets.bottom
         cameraButtonWrapperView.layoutIfNeeded()
     }
@@ -445,9 +441,6 @@ extension HomeViewController {
     }
     
     private func requestAppStoreReviewIfNeeded() {
-        guard #available(iOS 10.3, *) else {
-            return
-        }
         let sevenDays: Double = 7 * 24 * 60 * 60
         let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
             && CommonUserDefault.shared.hasPerformedTransfer

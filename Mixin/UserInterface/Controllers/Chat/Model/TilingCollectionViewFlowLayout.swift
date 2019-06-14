@@ -28,9 +28,7 @@ class TilingCollectionViewFlowLayout: UICollectionViewFlowLayout {
         itemSize = CGSize(width: itemWidth, height: itemWidth / contentRatio)
         minimumLineSpacing = spacing
         minimumInteritemSpacing = spacing
-        if #available(iOS 11.0, *) {
-            sectionInsetReference = .fromSafeArea
-        }
+        sectionInsetReference = .fromSafeArea
     }
     
 }

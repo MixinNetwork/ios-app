@@ -4,7 +4,7 @@ import Photos
 class VideoUploadJob: AttachmentUploadJob {
     
     private lazy var videoSettings: [String: Any] = [
-        AVVideoCodecKey: AVVideoCodecH264,
+        AVVideoCodecKey: AVVideoCodecType.h264,
         AVVideoWidthKey: 1280,
         AVVideoHeightKey: 720,
         AVVideoCompressionPropertiesKey: [

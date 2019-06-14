@@ -72,9 +72,7 @@ class BackupViewController: UITableViewController {
     }
     
     override func viewSafeAreaInsetsDidChange() {
-        if #available(iOS 11.0, *) {
-            super.viewSafeAreaInsetsDidChange()
-        }
+        super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInsetBottom()
     }
     
@@ -130,7 +128,7 @@ class BackupViewController: UITableViewController {
     }
     
     private func updateTableViewContentInsetBottom() {
-        if view.compatibleSafeAreaInsets.bottom < 10 {
+        if view.safeAreaInsets.bottom < 10 {
             tableView.contentInset.bottom = 10
         } else {
             tableView.contentInset.bottom = 0

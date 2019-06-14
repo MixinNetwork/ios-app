@@ -54,7 +54,6 @@ class TransactionViewController: UIViewController {
         vc.asset = asset
         vc.snapshot = snapshot
         let container = ContainerViewController.instance(viewController: vc, title: Localized.TRANSACTION_TITLE)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     

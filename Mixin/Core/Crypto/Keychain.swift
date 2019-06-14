@@ -89,9 +89,6 @@ extension Keychain {
 
     @discardableResult
     func storePIN(pin: String) -> Bool {
-        guard #available(iOS 11.0, *) else {
-            return false
-        }
         let context = LAContext()
         var error: NSError?
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {

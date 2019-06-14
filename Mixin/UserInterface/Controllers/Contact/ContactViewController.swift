@@ -46,7 +46,6 @@ class ContactViewController: UITableViewController {
         
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInsetBottom()
@@ -100,7 +99,6 @@ class ContactViewController: UITableViewController {
     class func instance() -> UIViewController {
         let vc = Storyboard.contact.instantiateInitialViewController()!
         let container = ContainerViewController.instance(viewController: vc, title: Localized.CONTACT_TITLE)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     
@@ -308,7 +306,7 @@ extension ContactViewController: MFMessageComposeViewControllerDelegate {
 extension ContactViewController {
     
     private func updateTableViewContentInsetBottom() {
-        if view.compatibleSafeAreaInsets.bottom > 20 {
+        if view.safeAreaInsets.bottom > 20 {
             tableView.contentInset.bottom = 0
         } else {
             tableView.contentInset.bottom = 20

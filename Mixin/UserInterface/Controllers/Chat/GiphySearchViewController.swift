@@ -100,7 +100,6 @@ class GiphySearchViewController: UIViewController {
         onDisappear?()
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updatePreferredContentSizeHeight()
@@ -222,7 +221,7 @@ extension GiphySearchViewController {
         guard let window = AppDelegate.current.window else {
             return
         }
-        preferredContentSize.height = window.bounds.height - window.compatibleSafeAreaInsets.top - 56
+        preferredContentSize.height = window.bounds.height - window.safeAreaInsets.top - 56
     }
     
     private func prepareCollectionViewForReuse() {

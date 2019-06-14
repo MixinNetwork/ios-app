@@ -53,7 +53,6 @@ class TransferTypeViewController: UIViewController {
         keywordTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updatePreferredContentSizeHeight()
@@ -91,7 +90,7 @@ class TransferTypeViewController: UIViewController {
         guard let window = AppDelegate.current.window else {
             return
         }
-        preferredContentSize.height = window.bounds.height - window.compatibleSafeAreaInsets.top - 56
+        preferredContentSize.height = window.bounds.height - window.safeAreaInsets.top - 56
     }
     
 }

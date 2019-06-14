@@ -108,7 +108,7 @@ extension ImagePickerController: UIImagePickerControllerDelegate {
         
         if let image = info[.originalImage] as? UIImage {
             completion(image)
-        } else if let imageURL = info[.referenceURL] as? URL, let asset = PHAsset.fetchAssets(withALAssetURLs: [imageURL], options: nil).firstObject {
+        } else if let asset = info[.phAsset] as? PHAsset {
             PHImageManager.default().requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: nil, resultHandler: { (image, _) in
                 if let image = image {
                     completion(image)

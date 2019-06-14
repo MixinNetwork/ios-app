@@ -44,7 +44,7 @@ class ConversationInputViewController: UIViewController {
     var minimizedHeight: CGFloat {
         return quotePreviewWrapperHeightConstraint.constant
             + inputBarView.frame.height
-            + view.compatibleSafeAreaInsets.bottom
+            + view.safeAreaInsets.bottom
     }
     
     var regularHeight: CGFloat {
@@ -143,7 +143,7 @@ class ConversationInputViewController: UIViewController {
         textView.inputAccessoryView = interactiveDismissResponder
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         textView.delegate = self
-        lastSafeAreaInsetsBottom = view.compatibleSafeAreaInsets.bottom
+        lastSafeAreaInsetsBottom = view.safeAreaInsets.bottom
         setPreferredContentHeight(minimizedHeight, animated: false)
         if let draft = CommonUserDefault.shared.getConversationDraft(dataSource.conversationId), !draft.isEmpty {
             UIView.performWithoutAnimation {
@@ -170,10 +170,9 @@ class ConversationInputViewController: UIViewController {
         saveDraft()
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        let diff = view.compatibleSafeAreaInsets.bottom - lastSafeAreaInsetsBottom
+        let diff = view.safeAreaInsets.bottom - lastSafeAreaInsetsBottom
         if abs(diff) > 1 {
             setPreferredContentHeight(preferredContentHeight + diff, animated: false)
         }

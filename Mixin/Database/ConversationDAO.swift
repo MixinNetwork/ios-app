@@ -194,16 +194,18 @@ final class ConversationDAO {
             .join(User.tableName, with: .left)
             .on(Conversation.Properties.ownerId.in(table: Conversation.tableName)
                 == User.Properties.userId.in(table: User.tableName))
+        let messageIsDecrypted = Message.Properties.status.in(table: Message.tableName) != MessageStatus.FAILED.rawValue
         let textMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_TEXT")
             && Message.Properties.content.in(table: Message.tableName).like(keyword)
         let dataMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_DATA")
             && Message.Properties.name.in(table: Message.tableName).like(keyword)
+        let condition = messageIsDecrypted && (textMessageContainsKeyword || dataMessageContainsKeyword)
         let order = [Conversation.Properties.pinTime.in(table: Conversation.tableName).asOrder(by: .descending),
                      Conversation.Properties.lastMessageCreatedAt.in(table: Conversation.tableName).asOrder(by: .descending)]
         var stmt = StatementSelect()
             .select(properties)
             .from(joinClause)
-            .where(textMessageContainsKeyword || dataMessageContainsKeyword)
+            .where(condition)
             .group(by: Message.Properties.conversationId.in(table: Message.tableName))
             .order(by: order)
         if let limit = limit {

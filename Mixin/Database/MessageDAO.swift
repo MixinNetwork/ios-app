@@ -95,7 +95,7 @@ final class MessageDAO {
     SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
     FROM messages m
     LEFT JOIN users u ON m.user_id = u.user_id
-    WHERE conversation_id = ? AND (
+    WHERE conversation_id = ? AND m.status <> '\(MessageStatus.FAILED.rawValue)' AND (
         (m.category LIKE '%_TEXT' AND m.content LIKE ?) OR (m.category LIKE '%_DATA' AND m.name LIKE ?)
     )
     """

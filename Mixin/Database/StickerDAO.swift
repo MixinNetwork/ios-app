@@ -26,11 +26,11 @@ final class StickerDAO {
     static let shared = StickerDAO()
 
     func isExist(stickerId: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.stickerId == stickerId, inTransaction: false)
+        return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.stickerId == stickerId)
     }
 
     func getSticker(albumId: String, name: String) -> Sticker? {
-        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQuerySticker, values: [albumId, name], inTransaction: false).first
+        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQuerySticker, values: [albumId, name]).first
     }
 
     func getSticker(stickerId: String) -> Sticker? {
@@ -38,7 +38,7 @@ final class StickerDAO {
     }
 
     func getStickers(albumId: String) -> [Sticker] {
-        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQueryStickersByAlbum, values: [albumId], inTransaction: false)
+        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQueryStickersByAlbum, values: [albumId])
     }
 
     func getFavoriteStickers() -> [Sticker] {
@@ -46,7 +46,7 @@ final class StickerDAO {
     }
 
     func recentUsedStickers(limit: Int) -> [Sticker] {
-        return MixinDatabase.shared.getCodables(condition: Sticker.Properties.lastUseAt.isNotNull(), orderBy: [Sticker.Properties.lastUseAt.asOrder(by: .descending)], limit: limit, inTransaction: false)
+        return MixinDatabase.shared.getCodables(condition: Sticker.Properties.lastUseAt.isNotNull(), orderBy: [Sticker.Properties.lastUseAt.asOrder(by: .descending)], limit: limit)
     }
 
     func insertOrUpdateSticker(sticker: StickerResponse) {

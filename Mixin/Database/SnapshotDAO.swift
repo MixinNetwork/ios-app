@@ -122,7 +122,7 @@ extension SnapshotDAO {
                 == User.Properties.userId.in(table: User.tableName))
         var stmt = StatementSelect().select(columns).from(joinedTable)
         stmt = prepare(stmt)
-        let snapshots: [SnapshotItem] = MixinDatabase.shared.getCodables(statement: stmt, inTransaction: false)
+        let snapshots: [SnapshotItem] = MixinDatabase.shared.getCodables(statement: stmt)
         for snapshot in snapshots where snapshot.assetSymbol == nil {
             let job = RefreshAssetsJob(assetId: snapshot.assetId)
             ConcurrentJobQueue.shared.addJob(job: job)

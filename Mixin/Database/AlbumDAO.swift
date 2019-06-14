@@ -12,7 +12,7 @@ class AlbumDAO {
     static let shared = AlbumDAO()
 
     func getAlbum(stickerId: String) -> Album? {
-        return MixinDatabase.shared.getCodables(on: Album.Properties.all, sql: AlbumDAO.sqlQueryAlbumByStickerId, values: [stickerId], inTransaction: false).first
+        return MixinDatabase.shared.getCodables(on: Album.Properties.all, sql: AlbumDAO.sqlQueryAlbumByStickerId, values: [stickerId]).first
     }
 
     func getSelfAlbum() -> Album? {
@@ -24,7 +24,7 @@ class AlbumDAO {
     }
 
     func getAlbums() -> [Album] {
-        return MixinDatabase.shared.getCodables(condition: Album.Properties.category != AlbumCategory.PERSONAL.rawValue, orderBy: [Album.Properties.updatedAt.asOrder(by: .descending)], inTransaction: false)
+        return MixinDatabase.shared.getCodables(condition: Album.Properties.category != AlbumCategory.PERSONAL.rawValue, orderBy: [Album.Properties.updatedAt.asOrder(by: .descending)])
     }
 
     func getAblumsUpdateAt() -> [String: String] {

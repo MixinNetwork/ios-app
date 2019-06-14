@@ -88,7 +88,7 @@ final class ConversationDAO {
     }
 
     func getConversationIconUrl(conversationId: String) -> String? {
-        return MixinDatabase.shared.scalar(on: Conversation.Properties.iconUrl, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId, inTransaction: false)?.stringValue
+        return MixinDatabase.shared.scalar(on: Conversation.Properties.iconUrl, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)?.stringValue
     }
 
     func updateIconUrl(conversationId: String, iconUrl: String) {
@@ -96,15 +96,15 @@ final class ConversationDAO {
     }
     
     func getStartStatusConversations() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.START.rawValue, inTransaction: false)
+        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.START.rawValue)
     }
 
     func getProblemConversations() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.category == ConversationCategory.GROUP.rawValue && Conversation.Properties.status == ConversationStatus.SUCCESS.rawValue && Conversation.Properties.codeUrl.isNull(), inTransaction: false)
+        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.category == ConversationCategory.GROUP.rawValue && Conversation.Properties.status == ConversationStatus.SUCCESS.rawValue && Conversation.Properties.codeUrl.isNull())
     }
 
     func getQuitStatusConversations() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.QUIT.rawValue, inTransaction: false)
+        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.QUIT.rawValue)
     }
 
     func makeQuitConversation(conversationId: String) {
@@ -254,7 +254,7 @@ final class ConversationDAO {
     }
 
     func getOriginalConversation(conversationId: String) -> Conversation? {
-        return MixinDatabase.shared.getCodable(condition: Conversation.Properties.conversationId == conversationId, inTransaction: false)
+        return MixinDatabase.shared.getCodable(condition: Conversation.Properties.conversationId == conversationId)
     }
 
     func getConversationStatus(conversationId: String) -> Int? {
@@ -269,7 +269,7 @@ final class ConversationDAO {
     }
     
     func conversationList() -> [ConversationItem] {
-        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationList, inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationList)
     }
 
     func createPlaceConversation(conversationId: String, ownerId: String) {

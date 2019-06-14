@@ -18,11 +18,11 @@ final class AssetDAO {
     private static let sqlQueryById = "\(sqlQueryTable) WHERE a1.asset_id = ?"
 
     func getAsset(assetId: String) -> AssetItem? {
-        return MixinDatabase.shared.getCodables(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [assetId], inTransaction: false).first
+        return MixinDatabase.shared.getCodables(on: AssetItem.Properties.all, sql: AssetDAO.sqlQueryById, values: [assetId]).first
     }
 
     func isExist(assetId: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Asset.self, condition: Asset.Properties.assetId == assetId, inTransaction: false)
+        return MixinDatabase.shared.isExist(type: Asset.self, condition: Asset.Properties.assetId == assetId)
     }
 
     func insertOrUpdateAssets(assets: [Asset]) {
@@ -52,25 +52,25 @@ final class AssetDAO {
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword], inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword])
     }
     
     func getAssets() -> [AssetItem] {
-        return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQuery, inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQuery)
     }
 
     func getDefaultTransferAsset() -> AssetItem? {
         if let assetId = WalletUserDefault.shared.defalutTransferAssetId, let asset = getAsset(assetId: assetId), asset.balance.doubleValue > 0 {
             return asset
         }
-        if let availableAsset: AssetItem = MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailable, inTransaction: false).first {
+        if let availableAsset: AssetItem = MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailable).first {
             return availableAsset
         }
         return nil
     }
 
     func getAvailableAssets() -> [AssetItem] {
-        return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailableList, inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: AssetDAO.sqlQueryAvailableList)
     }
 
 }

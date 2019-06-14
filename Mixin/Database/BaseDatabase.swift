@@ -53,48 +53,32 @@ class BaseDatabase {
         })
     }
 
-    func getStringValues(column: ColumnResultConvertible, tableName: String, isDistinct: Bool = false, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, inTransaction: Bool = true) -> [String] {
-        if inTransaction {
-            var result = [String]()
-            try! database.runTransaction {
-                result = self.getStringValues(column: column, tableName: tableName, isDistinct: isDistinct, condition: condition, orderBy: orderList, limit: limit, inTransaction: false)
-            }
-            return result
+    func getStringValues(column: ColumnResultConvertible, tableName: String, isDistinct: Bool = false, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [String] {
+        let values: FundamentalColumn
+        if isDistinct {
+            values = try! database.tryGetDistinctColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
         } else {
-            let values: FundamentalColumn
-            if isDistinct {
-                values = try! database.tryGetDistinctColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-            } else {
-                values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-            }
-            var result = [String]()
-            for value in values {
-                result.append(value.stringValue)
-            }
-            return result
+            values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
         }
+        var result = [String]()
+        for value in values {
+            result.append(value.stringValue)
+        }
+        return result
     }
 
-    func getInt32Values(column: ColumnResultConvertible, tableName: String, isDistinct: Bool = false, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, inTransaction: Bool = true) -> [Int32] {
-        if inTransaction {
-            var result = [Int32]()
-            try! database.runTransaction {
-                result = self.getInt32Values(column: column, tableName: tableName, isDistinct: isDistinct, condition: condition, orderBy: orderList, limit: limit, inTransaction: false)
-            }
-            return result
+    func getInt32Values(column: ColumnResultConvertible, tableName: String, isDistinct: Bool = false, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [Int32] {
+        let values: FundamentalColumn
+        if isDistinct {
+            values = try! database.tryGetDistinctColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
         } else {
-            let values: FundamentalColumn
-            if isDistinct {
-                values = try! database.tryGetDistinctColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-            } else {
-                values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
-            }
-            var result = [Int32]()
-            for value in values {
-                result.append(value.int32Value)
-            }
-            return result
+            values = try! database.tryGetColumn(on: column, fromTable: tableName, where: condition, orderBy: orderList, limit: limit)
         }
+        var result = [Int32]()
+        for value in values {
+            result.append(value.int32Value)
+        }
+        return result
     }
     
     func getRowId(tableName: String, condition: Condition) -> Int64 {
@@ -114,55 +98,23 @@ class BaseDatabase {
     func isTableEmpty<T: BaseCodable>(type: T.Type) throws -> Bool {
         return try database.getValue(on: T.Properties.all[0], fromTable: T.tableName, limit: 1).type == .null
     }
-
-    func isExist<T: BaseCodable>(type: T.Type, condition: Condition, inTransaction: Bool = true) -> Bool {
-        if inTransaction {
-            var result = false
-            try! database.runTransaction {
-                result = try! database.getValue(on: type.Properties.all[0].asColumn(), fromTable: type.tableName, where: condition).type != .null
-            }
-            return result
-        } else {
-            return try! database.tryGetValue(on: type.Properties.all[0].asColumn(), fromTable: type.tableName, where: condition).type != .null
-        }
+    
+    func isExist<T: BaseCodable>(type: T.Type, condition: Condition) -> Bool {
+        return try! database.tryGetValue(on: type.Properties.all[0].asColumn(), fromTable: type.tableName, where: condition).type != .null
     }
-
-    func getCodables<T: TableCodable>(on propertyConvertibleList: [PropertyConvertible] = T.Properties.all, sql: String, values: [ColumnEncodable] = [], inTransaction: Bool = true) -> [T] {
-        if inTransaction {
-            var result = [T]()
-            try! database.runTransaction {
-                result = try database.prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values).allObjects()
-            }
-            return result
-        } else {
-            return try! database.execQuery(on: propertyConvertibleList, sql: sql, values: values).allObjects()
-        }
+    
+    func getCodables<T: TableCodable>(on propertyConvertibleList: [PropertyConvertible] = T.Properties.all, sql: String, values: [ColumnEncodable] = []) -> [T] {
+        return try! database.execQuery(on: propertyConvertibleList, sql: sql, values: values).allObjects()
     }
-
-    func getCodables<T: BaseCodable>(condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, inTransaction: Bool = true) -> [T] {
-        if inTransaction {
-            var result = [T]()
-            try! database.runTransaction {
-                result = try database.getObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList, limit: limit)
-            }
-            return result
-        } else {
-            return try! database.tryGetObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList, limit: limit)
-        }
+    
+    func getCodables<T: BaseCodable>(condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil) -> [T] {
+        return try! database.tryGetObjects(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList, limit: limit)
     }
-
-    func getCodables<T: Codable>(on propertyConvertibleList: [PropertyConvertible] = [], fromTable: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, inTransaction: Bool = true, callback: (FundamentalRowXColumn) -> [T]) -> [T] {
-        if inTransaction {
-            var result = [T]()
-            try! database.runTransaction {
-                result = callback(try database.getRows(on: propertyConvertibleList, fromTable: fromTable, where: condition, orderBy: orderList, limit: limit))
-            }
-            return result
-        } else {
-            return callback(try! database.tryGetRows(on: propertyConvertibleList, fromTable: fromTable, where: condition, orderBy: orderList, limit: limit))
-        }
+    
+    func getCodables<T: Codable>(on propertyConvertibleList: [PropertyConvertible] = [], fromTable: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, callback: (FundamentalRowXColumn) -> [T]) -> [T] {
+        return callback(try! database.tryGetRows(on: propertyConvertibleList, fromTable: fromTable, where: condition, orderBy: orderList, limit: limit))
     }
-
+    
     func getCodables<T>(callback: (Database) throws -> [T]) -> [T] {
         do {
             return try callback(database)
@@ -172,61 +124,30 @@ class BaseDatabase {
         return []
     }
     
-    func getCodables<T: TableDecodable>(statement: StatementSelect, inTransaction: Bool = true) -> [T] {
-        if inTransaction {
-            var result = [T]()
-            try! database.runTransaction {
-                result = try database.getObjects(on: T.Properties.all, stmt: statement)
-            }
-            return result
-        } else {
-            return try! database.getObjects(on: T.Properties.all, stmt: statement)
-        }
+    func getCodables<T: TableDecodable>(statement: StatementSelect) -> [T] {
+        return try! database.getObjects(on: T.Properties.all, stmt: statement)
     }
     
-    func getCodable<T: BaseCodable>(condition: Condition, orderBy orderList: [OrderBy]? = nil, inTransaction: Bool = true) -> T? {
-        if inTransaction {
-            var result: T?
-            try! database.runTransaction {
-                result = try database.getObject(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList)
-            }
-            return result
-        } else {
-            return try! database.tryGetObject(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList)
-        }
+    func getCodable<T: BaseCodable>(condition: Condition, orderBy orderList: [OrderBy]? = nil) -> T? {
+        return try! database.tryGetObject(on: T.Properties.all, fromTable: T.tableName, where: condition, orderBy: orderList)
     }
-
-    func scalar(on: ColumnResultConvertible, fromTable: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, inTransaction: Bool = true) -> FundamentalValue? {
-        var result: FundamentalValue?
-        if inTransaction {
-            try! database.runTransaction {
-                result = try database.getValue(on: on, fromTable: fromTable, where: condition, orderBy: orderList, limit: 1)
-            }
-        } else {
-            result = try! database.tryGetValue(on: on, fromTable: fromTable, where: condition, orderBy: orderList, limit: 1)
-        }
+    
+    func scalar(on: ColumnResultConvertible, fromTable: String, condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil) -> FundamentalValue? {
+        var result: FundamentalValue? = try! database.tryGetValue(on: on, fromTable: fromTable, where: condition, orderBy: orderList, limit: 1)
         guard let value = result else {
             return nil
         }
         return value.type == .null ? nil : value
     }
-
+    
     func scalar(sql: String, values: [ColumnEncodable] = []) -> FundamentalValue {
         return try! database.prepareSelectSQL(sql: sql, values: values).getValue()
     }
-
-    func getCount(on: ColumnResultConvertible, fromTable: String, condition: Condition? = nil, inTransaction: Bool = true) -> Int {
-        if inTransaction {
-            var result = 0
-            try! database.runTransaction {
-                result = Int(try database.getValue(on: on, fromTable: fromTable, where: condition).int32Value)
-            }
-            return result
-        } else {
-            return Int(try! database.tryGetValue(on: on, fromTable: fromTable, where: condition).int32Value)
-        }
+    
+    func getCount(on: ColumnResultConvertible, fromTable: String, condition: Condition? = nil) -> Int {
+        return Int(try! database.tryGetValue(on: on, fromTable: fromTable, where: condition).int32Value)
     }
-
+    
     @discardableResult
     func transaction(callback: (Database) throws -> Void) -> Bool {
         try! database.runTransaction {

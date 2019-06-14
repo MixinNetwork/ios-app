@@ -252,14 +252,14 @@ class SendMessageService: MixinService {
                 return
             }
             DispatchQueue.global().async {
-                let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)], inTransaction: false)
+                let messageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.userId != AccountAPI.shared.accountUserId, orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
                 var position = 0
                 let pageCount = AccountUserDefault.shared.isDesktopLoggedIn ? 1000 : 2000
                 while messageIds.count > 0 && position < messageIds.count {
                     let nextPosition = position + pageCount > messageIds.count ? messageIds.count : position + pageCount
                     let ids = Array(messageIds[position..<nextPosition])
                     var jobs = [Job]()
-                    guard let lastMessageId = ids.last, let lastCreatedAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt.asColumnResult(), fromTable: Message.tableName, condition: Message.Properties.messageId == lastMessageId, inTransaction: false)?.stringValue
+                    guard let lastMessageId = ids.last, let lastCreatedAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt.asColumnResult(), fromTable: Message.tableName, condition: Message.Properties.messageId == lastMessageId)?.stringValue
                         else {
                             return
                     }

@@ -48,7 +48,7 @@ final class ParticipantDAO {
     }
 
     func getGroupIconParticipants(conversationId: String) -> [ParticipantUser] {
-        return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryGroupIconParticipants, values: [conversationId], inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: ParticipantDAO.sqlQueryGroupIconParticipants, values: [conversationId])
     }
 
     func getParticipants(conversationId: String) -> [UserItem] {
@@ -64,7 +64,7 @@ final class ParticipantDAO {
     func userId(_ userId: String, isParticipantOfConversationId conversationId: String) -> Bool {
         let condition = Participant.Properties.conversationId == conversationId
             && Participant.Properties.userId == userId
-        return MixinDatabase.shared.isExist(type: Participant.self, condition: condition, inTransaction: false)
+        return MixinDatabase.shared.isExist(type: Participant.self, condition: condition)
     }
     
     func updateParticipantStatus(userId: String, status: ParticipantStatus) {
@@ -91,7 +91,7 @@ final class ParticipantDAO {
     }
 
     func getSyncParticipantIds() -> [String] {
-        return Array(Set<String>(MixinDatabase.shared.getStringValues(column: Participant.Properties.userId.asColumnResult(), tableName: Participant.tableName, condition: Participant.Properties.status == ParticipantStatus.START.rawValue, inTransaction: false)))
+        return Array(Set<String>(MixinDatabase.shared.getStringValues(column: Participant.Properties.userId.asColumnResult(), tableName: Participant.tableName, condition: Participant.Properties.status == ParticipantStatus.START.rawValue)))
     }
 
     func getNotSentKeyParticipants(conversationId: String, accountId: String) -> [Participant] {

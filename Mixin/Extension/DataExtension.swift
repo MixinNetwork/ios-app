@@ -37,5 +37,13 @@ extension Data {
         return isEqual
     }
     
+    func base64UrlEncodedString() -> String {
+        var str = base64EncodedString()
+        str = str.replacingOccurrences(of: "+", with: "-")
+        str = str.replacingOccurrences(of: "/", with: "_")
+        str = str.replacingOccurrences(of: "=", with: "")
+        return str
+    }
+    
 }
 

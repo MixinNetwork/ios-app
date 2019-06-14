@@ -95,7 +95,7 @@ final class MessageDAO {
     SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id
     FROM messages m
     LEFT JOIN users u ON m.user_id = u.user_id
-    WHERE conversation_id = ? AND (
+    WHERE conversation_id = ? AND m.status <> '\(MessageStatus.FAILED.rawValue)' AND (
         (m.category LIKE '%_TEXT' AND m.content LIKE ?) OR (m.category LIKE '%_DATA' AND m.name LIKE ?)
     )
     """
@@ -112,8 +112,7 @@ final class MessageDAO {
     func getMediaUrls(likeCategory category: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.mediaUrl.asColumnResult(),
                                                     tableName: Message.tableName,
-                                                    condition: Message.Properties.category.like("%\(category)"),
-                                                    inTransaction: false)
+                                                    condition: Message.Properties.category.like("%\(category)"))
     }
 
     func deleteMessages(conversationId: String, category: String) {
@@ -121,7 +120,7 @@ final class MessageDAO {
     }
 
     func findFailedMessages(conversationId: String, userId: String) -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000, inTransaction: false)
+        return MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == userId && Message.Properties.status == MessageStatus.FAILED.rawValue, orderBy: [Message.Properties.createdAt.asOrder(by: .descending)], limit: 1000)
     }
 
     func clearChat(conversationId: String, autoNotification: Bool = true) {
@@ -210,7 +209,7 @@ final class MessageDAO {
     }
 
     func getFullMessage(messageId: String) -> MessageItem? {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageById, values: [messageId], inTransaction: false).first
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).first
     }
 
     func getMessage(messageId: String) -> Message? {
@@ -218,7 +217,7 @@ final class MessageDAO {
     }
 
     func getPendingMessages() -> [Message] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryPendingMessages, values: [AccountAPI.shared.accountUserId], inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryPendingMessages, values: [AccountAPI.shared.accountUserId])
     }
     
     func firstUnreadMessage(conversationId: String) -> Message? {
@@ -226,8 +225,7 @@ final class MessageDAO {
             return nil
         }
         let myLastMessage: Message? = MixinDatabase.shared.getCodable(condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == AccountAPI.shared.accountUserId,
-                                                                      orderBy: [Message.Properties.createdAt.asOrder(by: .descending)],
-                                                                      inTransaction: false)
+                                                                      orderBy: [Message.Properties.createdAt.asOrder(by: .descending)])
         let lastReadCondition: Condition
         if let myLastMessage = myLastMessage {
             lastReadCondition = Message.Properties.conversationId == conversationId
@@ -242,8 +240,7 @@ final class MessageDAO {
                 && Message.Properties.userId != AccountAPI.shared.accountUserId
         }
         let lastReadMessage: Message? = MixinDatabase.shared.getCodable(condition: lastReadCondition,
-                                                                        orderBy: [Message.Properties.createdAt.asOrder(by: .descending)],
-                                                                        inTransaction: false)
+                                                                        orderBy: [Message.Properties.createdAt.asOrder(by: .descending)])
         let firstUnreadCondition: Condition
         if let lastReadMessage = lastReadMessage {
             firstUnreadCondition = Message.Properties.conversationId == conversationId
@@ -261,8 +258,7 @@ final class MessageDAO {
                 && Message.Properties.userId != AccountAPI.shared.accountUserId
         }
         return MixinDatabase.shared.getCodable(condition: firstUnreadCondition,
-                                               orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)],
-                                               inTransaction: false)
+                                               orderBy: [Message.Properties.createdAt.asOrder(by: .ascending)])
     }
     
     typealias MessagesResult = (messages: [MessageItem], didReachBegin: Bool, didReachEnd: Bool)
@@ -282,55 +278,48 @@ final class MessageDAO {
     }
     
     func getMessages(conversationId: String, aboveMessage location: MessageItem, count: Int) -> [MessageItem] {
-        var messages: [MessageItem]!
-        MixinDatabase.shared.transaction { (db) in
-            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                      condition: Message.Properties.messageId == location.messageId)
-            messages = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeRowId,
-                                                        values: [conversationId, rowId, count],
-                                                        inTransaction: false)
-        }
+        let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                  condition: Message.Properties.messageId == location.messageId)
+        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageBeforeRowId,
+                                                                       values: [conversationId, rowId, count])
         return messages.reversed()
     }
     
     func getMessages(conversationId: String, belowMessage location: MessageItem, count: Int) -> [MessageItem] {
-        var messages: [MessageItem]!
-        MixinDatabase.shared.transaction { (db) in
-            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                      condition: Message.Properties.messageId == location.messageId)
-            messages = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterRowId,
-                                                        values: [conversationId, rowId, count],
-                                                        inTransaction: false)
-        }
+        let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                  condition: Message.Properties.messageId == location.messageId)
+        let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterRowId,
+                                                                       values: [conversationId, rowId, count])
         return messages
     }
     
     func getFirstNMessages(conversationId: String, count: Int) -> [MessageItem] {
-        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFirstNMessages, values: [conversationId, count], inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFirstNMessages, values: [conversationId, count])
     }
     
     func getLastNMessages(conversationId: String, count: Int) -> [MessageItem] {
-        let messages: [MessageItem] =  MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values: [conversationId, count], inTransaction: false)
+        let messages: [MessageItem] =  MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryLastNMessages, values: [conversationId, count])
         return messages.reversed()
     }
     
     func getMessages(conversationId: String, contentLike keyword: String, belowMessageId location: String?, limit: Int?) -> [MessageSearchResult] {
         var results = [MessageSearchResult]()
-        MixinDatabase.shared.transaction { (db) in
-            var sql: String!
-            if let location = location {
-                let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                          condition: Message.Properties.messageId == location)
-                sql = MessageDAO.sqlSearchMessageContent + " AND m.ROWID < \(rowId)"
-            } else {
-                sql = MessageDAO.sqlSearchMessageContent
-            }
-            if let limit = limit {
-                sql += " ORDER BY m.created_at DESC LIMIT \(limit)"
-            } else {
-                sql += " ORDER BY m.created_at DESC"
-            }
-
+        
+        var sql: String!
+        if let location = location {
+            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                      condition: Message.Properties.messageId == location)
+            sql = MessageDAO.sqlSearchMessageContent + " AND m.ROWID < \(rowId)"
+        } else {
+            sql = MessageDAO.sqlSearchMessageContent
+        }
+        if let limit = limit {
+            sql += " ORDER BY m.created_at DESC LIMIT \(limit)"
+        } else {
+            sql += " ORDER BY m.created_at DESC"
+        }
+        
+        do {
             let stmt = StatementSelectSQL(sql: sql)
             let cs = try MixinDatabase.shared.database.prepare(stmt)
             
@@ -355,7 +344,10 @@ final class MessageDAO {
                                                  keyword: keyword)
                 results.append(result)
             }
+        } catch {
+            UIApplication.traceError(error)
         }
+        
         return results
     }
     
@@ -365,22 +357,23 @@ final class MessageDAO {
         }
         return MixinDatabase.shared.getCount(on: Message.Properties.messageId.count(),
                                              fromTable: Message.tableName,
-                                             condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt, inTransaction: false)
+                                             condition: Message.Properties.conversationId == conversationId && Message.Properties.createdAt >= firstUnreadMessage.createdAt)
     }
     
     func getGalleryItems(conversationId: String, location: GalleryItem, count: Int) -> [GalleryItem] {
         assert(count != 0)
         var items = [GalleryItem]()
-        MixinDatabase.shared.transaction { (db) in
-            let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
-                                                      condition: Message.Properties.messageId == location.messageId)
-            var sql = MessageDAO.sqlQueryGalleryItem
-            if count > 0 {
-                sql += " AND ROWID > \(rowId) ORDER BY created_at ASC LIMIT \(count)"
-            } else {
-                sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
-            }
-            
+        let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                  condition: Message.Properties.messageId == location.messageId)
+        
+        var sql = MessageDAO.sqlQueryGalleryItem
+        if count > 0 {
+            sql += " AND ROWID > \(rowId) ORDER BY created_at ASC LIMIT \(count)"
+        } else {
+            sql += " AND ROWID < \(rowId) ORDER BY created_at DESC LIMIT \(-count)"
+        }
+        
+        do {
             let stmt = StatementSelectSQL(sql: sql)
             let cs = try MixinDatabase.shared.database.prepare(stmt)
             
@@ -403,7 +396,10 @@ final class MessageDAO {
                     items.append(item)
                 }
             }
+        } catch {
+            UIApplication.traceError(error)
         }
+        
         if count > 0 {
             return items
         } else {
@@ -508,22 +504,22 @@ final class MessageDAO {
     func hasSentMessage(toUserId userId: String) -> Bool {
         let myId = AccountAPI.shared.accountUserId
         let conversationId = ConversationDAO.shared.makeConversationId(userId: myId, ownerUserId: userId)
-        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == myId, inTransaction: false)
+        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.conversationId == conversationId && Message.Properties.userId == myId)
     }
     
     func hasUnreadMessage(conversationId: String) -> Bool {
         let condition: Condition = Message.Properties.conversationId == conversationId
             && Message.Properties.status == MessageStatus.DELIVERED.rawValue
             && Message.Properties.userId != AccountAPI.shared.accountUserId
-        return MixinDatabase.shared.isExist(type: Message.self, condition: condition, inTransaction: false)
+        return MixinDatabase.shared.isExist(type: Message.self, condition: condition)
     }
     
     func hasMessage(id: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id, inTransaction: false)
+        return MixinDatabase.shared.isExist(type: Message.self, condition: Message.Properties.messageId == id)
     }
 
     func getQuoteMessage(messageId: String?) -> Data? {
-        guard let quoteMessageId = messageId, let quoteMessage: MessageItem = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [quoteMessageId], inTransaction: false).first else {
+        guard let quoteMessageId = messageId, let quoteMessage: MessageItem = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryQuoteMessageById, values: [quoteMessageId]).first else {
             return nil
         }
         return try? JSONEncoder().encode(quoteMessage)
@@ -534,6 +530,7 @@ final class MessageDAO {
 extension MessageDAO {
 
     private func updateRedecryptMessage(keys: [PropertyConvertible], values: [ColumnEncodable?], messageId: String, conversationId: String, messageSource: String) {
+        var newMessage: MessageItem?
         MixinDatabase.shared.transaction { (database) in
             let updateStatment = try database.prepareUpdate(table: Message.tableName, on: keys).where(Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue)
             try updateStatment.execute(with: values)
@@ -543,15 +540,17 @@ extension MessageDAO {
 
             try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
 
-            guard let newMessage: MessageItem = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).allObjects().first else {
-                return
-            }
-            let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
-            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+            newMessage = try database.prepareSelectSQL(on: MessageItem.Properties.all, sql: MessageDAO.sqlQueryFullMessageById, values: [messageId]).allObjects().first
+        }
 
-            if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(newMessage.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 60 {
-                ConcurrentJobQueue.shared.sendNotifaction(message: newMessage)
-            }
+        guard let message = newMessage else {
+            return
+        }
+        let change = ConversationChange(conversationId: conversationId, action: .updateMessage(messageId: messageId))
+        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        
+        if messageSource != BlazeMessageAction.listPendingMessages.rawValue || abs(message.createdAt.toUTCDate().timeIntervalSince1970 - Date().timeIntervalSince1970) < 60 {
+            ConcurrentJobQueue.shared.sendNotifaction(message: message)
         }
     }
 

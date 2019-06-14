@@ -6,7 +6,7 @@ final class SnapshotDAO {
     
     private let createdAt = Snapshot.Properties.createdAt.in(table: Snapshot.tableName)
     
-    func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, limit: Int) -> [SnapshotItem] {
+    func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement
@@ -28,6 +28,13 @@ final class SnapshotDAO {
                     condition = condition && isBelowLocation
                 }
             }
+            
+            if filter != .all {
+                let types = filter.snapshotTypes.map({ $0.rawValue })
+                let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
+                condition = condition && typeConstraint
+            }
+            
             stmt.where(condition)
             switch sort {
             case .createdAt:
@@ -40,7 +47,7 @@ final class SnapshotDAO {
         }
     }
     
-    func getSnapshots(opponentId: String, below location: SnapshotItem? = nil, sort: Snapshot.Sort, limit: Int) -> [SnapshotItem] {
+    func getSnapshots(opponentId: String, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement
@@ -60,6 +67,13 @@ final class SnapshotDAO {
                     condition = condition && isBelowLocation
                 }
             }
+            
+            if filter != .all {
+                let types = filter.snapshotTypes.map({ $0.rawValue })
+                let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
+                condition = condition && typeConstraint
+            }
+            
             stmt.where(condition)
             switch sort {
             case .createdAt:
@@ -86,11 +100,12 @@ final class SnapshotDAO {
     }
     
     func replacePendingDeposits(assetId: String, pendingDeposits: [PendingDeposit]) {
+        let snapshots = pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )})
         MixinDatabase.shared.transaction { (db) in
             try db.delete(fromTable: Snapshot.tableName,
                           where: Snapshot.Properties.assetId == assetId && Snapshot.Properties.type == SnapshotType.pendingDeposit.rawValue)
-            if pendingDeposits.count > 0 {
-                try db.insert(objects: pendingDeposits.map({ $0.makeSnapshot(assetId: assetId )}), intoTable: Snapshot.tableName)
+            if snapshots.count > 0 {
+                try db.insertOrReplace(objects: snapshots, intoTable: Snapshot.tableName)
             }
         }
     }
@@ -122,7 +137,7 @@ extension SnapshotDAO {
                 == User.Properties.userId.in(table: User.tableName))
         var stmt = StatementSelect().select(columns).from(joinedTable)
         stmt = prepare(stmt)
-        let snapshots: [SnapshotItem] = MixinDatabase.shared.getCodables(statement: stmt, inTransaction: false)
+        let snapshots: [SnapshotItem] = MixinDatabase.shared.getCodables(statement: stmt)
         for snapshot in snapshots where snapshot.assetSymbol == nil {
             let job = RefreshAssetsJob(assetId: snapshot.assetId)
             ConcurrentJobQueue.shared.addJob(job: job)

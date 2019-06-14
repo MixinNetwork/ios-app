@@ -899,7 +899,7 @@
         <scene sceneID="Wmp-9a-ZV7">
             <objects>
                 <tableViewController storyboardIdentifier="snapshot" automaticallyAdjustsScrollViewInsets="NO" id="p7I-cR-tJj" customClass="AllTransactionsViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="62" estimatedRowHeight="62" sectionHeaderHeight="28" sectionFooterHeight="28" id="D0f-r1-DN4">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="62" estimatedRowHeight="62" sectionHeaderHeight="28" sectionFooterHeight="28" id="D0f-r1-DN4">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

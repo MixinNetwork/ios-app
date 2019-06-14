@@ -15,13 +15,13 @@ final class AppDAO {
     """
 
     func getConversationBots(conversationId: String) -> [App] {
-        return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryApps, values: [conversationId], inTransaction: false).filter({ (app) -> Bool in
+        return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryApps, values: [conversationId]).filter({ (app) -> Bool in
             return app.capabilites?.contains(ConversationCategory.GROUP.rawValue) ?? false
         })
     }
 
     func getApp(ofUserId userId: String) -> App? {
-        return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryAppsByUser, values: [userId], inTransaction: false).first
+        return MixinDatabase.shared.getCodables(sql: AppDAO.sqlQueryAppsByUser, values: [userId]).first
     }
     
 }

@@ -88,7 +88,7 @@ final class ConversationDAO {
     }
 
     func getConversationIconUrl(conversationId: String) -> String? {
-        return MixinDatabase.shared.scalar(on: Conversation.Properties.iconUrl, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId, inTransaction: false)?.stringValue
+        return MixinDatabase.shared.scalar(on: Conversation.Properties.iconUrl, fromTable: Conversation.tableName, condition: Conversation.Properties.conversationId == conversationId)?.stringValue
     }
 
     func updateIconUrl(conversationId: String, iconUrl: String) {
@@ -96,15 +96,15 @@ final class ConversationDAO {
     }
     
     func getStartStatusConversations() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.START.rawValue, inTransaction: false)
+        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.START.rawValue)
     }
 
     func getProblemConversations() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.category == ConversationCategory.GROUP.rawValue && Conversation.Properties.status == ConversationStatus.SUCCESS.rawValue && Conversation.Properties.codeUrl.isNull(), inTransaction: false)
+        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.category == ConversationCategory.GROUP.rawValue && Conversation.Properties.status == ConversationStatus.SUCCESS.rawValue && Conversation.Properties.codeUrl.isNull())
     }
 
     func getQuitStatusConversations() -> [String] {
-        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.QUIT.rawValue, inTransaction: false)
+        return MixinDatabase.shared.getStringValues(column: Conversation.Properties.conversationId, tableName: Conversation.tableName, condition: Conversation.Properties.status == ConversationStatus.QUIT.rawValue)
     }
 
     func makeQuitConversation(conversationId: String) {
@@ -194,16 +194,18 @@ final class ConversationDAO {
             .join(User.tableName, with: .left)
             .on(Conversation.Properties.ownerId.in(table: Conversation.tableName)
                 == User.Properties.userId.in(table: User.tableName))
+        let messageIsDecrypted = Message.Properties.status.in(table: Message.tableName) != MessageStatus.FAILED.rawValue
         let textMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_TEXT")
             && Message.Properties.content.in(table: Message.tableName).like(keyword)
         let dataMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_DATA")
             && Message.Properties.name.in(table: Message.tableName).like(keyword)
+        let condition = messageIsDecrypted && (textMessageContainsKeyword || dataMessageContainsKeyword)
         let order = [Conversation.Properties.pinTime.in(table: Conversation.tableName).asOrder(by: .descending),
                      Conversation.Properties.lastMessageCreatedAt.in(table: Conversation.tableName).asOrder(by: .descending)]
         var stmt = StatementSelect()
             .select(properties)
             .from(joinClause)
-            .where(textMessageContainsKeyword || dataMessageContainsKeyword)
+            .where(condition)
             .group(by: Message.Properties.conversationId.in(table: Message.tableName))
             .order(by: order)
         if let limit = limit {
@@ -254,7 +256,7 @@ final class ConversationDAO {
     }
 
     func getOriginalConversation(conversationId: String) -> Conversation? {
-        return MixinDatabase.shared.getCodable(condition: Conversation.Properties.conversationId == conversationId, inTransaction: false)
+        return MixinDatabase.shared.getCodable(condition: Conversation.Properties.conversationId == conversationId)
     }
 
     func getConversationStatus(conversationId: String) -> Int? {
@@ -269,7 +271,7 @@ final class ConversationDAO {
     }
     
     func conversationList() -> [ConversationItem] {
-        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationList, inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: ConversationDAO.sqlQueryConversationList)
     }
 
     func createPlaceConversation(conversationId: String, ownerId: String) {
@@ -284,14 +286,13 @@ final class ConversationDAO {
     }
 
     func createConversation(conversationId: String, name: String, members: [GroupUser]) -> Bool {
+        let createdAt = Date().toUTCString()
+        let conversation = Conversation(conversationId: conversationId, ownerId: AccountAPI.shared.accountUserId, category: ConversationCategory.GROUP.rawValue, name: name, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: createdAt, lastReadMessageId: nil, unseenMessageCount: 0, status: ConversationStatus.START.rawValue, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil)
+        var participants = members.map { Participant(conversationId: conversationId, userId: $0.userId, role: "", status: ParticipantStatus.SUCCESS.rawValue, createdAt: createdAt) }
+        participants.append(Participant(conversationId: conversationId, userId: AccountAPI.shared.accountUserId, role: ParticipantRole.OWNER.rawValue, status: ParticipantStatus.SUCCESS.rawValue, createdAt: createdAt))
+
         return MixinDatabase.shared.transaction { (db) in
-            let createdAt = Date().toUTCString()
-            
-            let conversation = Conversation(conversationId: conversationId, ownerId: AccountAPI.shared.accountUserId, category: ConversationCategory.GROUP.rawValue, name: name, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: createdAt, lastReadMessageId: nil, unseenMessageCount: 0, status: ConversationStatus.START.rawValue, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil)
             try db.insert(objects: conversation, intoTable: Conversation.tableName)
-            
-            var participants = members.map { Participant(conversationId: conversationId, userId: $0.userId, role: "", status: ParticipantStatus.SUCCESS.rawValue, createdAt: createdAt) }
-            participants.append(Participant(conversationId: conversationId, userId: AccountAPI.shared.accountUserId, role: ParticipantRole.OWNER.rawValue, status: ParticipantStatus.SUCCESS.rawValue, createdAt: createdAt))
             try db.insertOrReplace(objects: participants, intoTable: Participant.tableName)
         }
     }

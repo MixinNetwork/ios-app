@@ -33,15 +33,15 @@ final class UserDAO {
     }
 
     func getBlockUsers() -> [UserItem] {
-        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryBlockedUsers, inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryBlockedUsers)
     }
 
     func getUser(userId: String) -> UserItem? {
-        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserById, values: [userId], inTransaction: false).first
+        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserById, values: [userId]).first
     }
 
     func getUser(identityNumber: String) -> UserItem? {
-        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByIdentityNumber, values: [identityNumber], inTransaction: false).first
+        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByIdentityNumber, values: [identityNumber]).first
     }
     
     func getUsers(keyword: String, limit: Int?) -> [UserItem] {
@@ -50,21 +50,17 @@ final class UserDAO {
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword, keyword], inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword, keyword])
     }
     
     func getUsers(ofAppIds ids: [String]) -> [UserItem] {
-        var users = [UserItem]()
-        MixinDatabase.shared.transaction { (db) in
-            users = ids.compactMap {
-                MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByAppId, values: [$0], inTransaction: false).first
-            }
+        return ids.compactMap {
+            MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryUserByAppId, values: [$0]).first
         }
-        return users
     }
     
     func contacts() -> [UserItem] {
-        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryContacts, inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: UserDAO.sqlQueryContacts)
     }
 
     func updateAccount(account: Account) {

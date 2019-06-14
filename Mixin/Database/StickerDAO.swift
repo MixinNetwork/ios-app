@@ -26,11 +26,11 @@ final class StickerDAO {
     static let shared = StickerDAO()
 
     func isExist(stickerId: String) -> Bool {
-        return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.stickerId == stickerId, inTransaction: false)
+        return MixinDatabase.shared.isExist(type: Sticker.self, condition: Sticker.Properties.stickerId == stickerId)
     }
 
     func getSticker(albumId: String, name: String) -> Sticker? {
-        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQuerySticker, values: [albumId, name], inTransaction: false).first
+        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQuerySticker, values: [albumId, name]).first
     }
 
     func getSticker(stickerId: String) -> Sticker? {
@@ -38,7 +38,7 @@ final class StickerDAO {
     }
 
     func getStickers(albumId: String) -> [Sticker] {
-        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQueryStickersByAlbum, values: [albumId], inTransaction: false)
+        return MixinDatabase.shared.getCodables(on: Sticker.Properties.all, sql: StickerDAO.sqlQueryStickersByAlbum, values: [albumId])
     }
 
     func getFavoriteStickers() -> [Sticker] {
@@ -46,16 +46,14 @@ final class StickerDAO {
     }
 
     func recentUsedStickers(limit: Int) -> [Sticker] {
-        return MixinDatabase.shared.getCodables(condition: Sticker.Properties.lastUseAt.isNotNull(), orderBy: [Sticker.Properties.lastUseAt.asOrder(by: .descending)], limit: limit, inTransaction: false)
+        return MixinDatabase.shared.getCodables(condition: Sticker.Properties.lastUseAt.isNotNull(), orderBy: [Sticker.Properties.lastUseAt.asOrder(by: .descending)], limit: limit)
     }
 
     func insertOrUpdateSticker(sticker: StickerResponse) {
         let lastUserAtProperty = Sticker.Properties.lastUseAt.asProperty().name
         let propertyList = Sticker.Properties.all.filter { $0.name != lastUserAtProperty }
 
-        MixinDatabase.shared.transaction { (database) in
-            try database.insertOrReplace(objects: Sticker.createSticker(from: sticker), on: propertyList, intoTable: Sticker.tableName)
-        }
+        MixinDatabase.shared.insertOrReplace(objects: [Sticker.createSticker(from: sticker)], on: propertyList)
     }
 
     func insertOrUpdateStickers(stickers: [StickerResponse], albumId: String) {
@@ -65,8 +63,8 @@ final class StickerDAO {
         MixinDatabase.shared.transaction { (database) in
             try database.insertOrReplace(objects: stickers.map { StickerRelationship(albumId: albumId, stickerId: $0.stickerId, createdAt: $0.createdAt) }, intoTable: StickerRelationship.tableName)
             try database.insertOrReplace(objects: stickers.map { Sticker.createSticker(from: $0) }, on: propertyList, intoTable: Sticker.tableName)
-            NotificationCenter.default.afterPostOnMain(name: .FavoriteStickersDidChange)
         }
+        NotificationCenter.default.afterPostOnMain(name: .FavoriteStickersDidChange)
     }
 
     func insertOrUpdateFavoriteSticker(sticker: StickerResponse) {

@@ -15,7 +15,7 @@ final class TopAssetsDAO {
     """
     
     func getAssets() -> [AssetItem] {
-        return MixinDatabase.shared.getCodables(sql: sqlQueryAssets, inTransaction: false)
+        return MixinDatabase.shared.getCodables(sql: sqlQueryAssets)
     }
     
     func replaceAssets(_ assets: [Asset]) {

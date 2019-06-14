@@ -23,7 +23,7 @@ class SessionDAO: SignalDAO {
     }
 
     func getSubDevices(address: String) -> [Int32] {
-        return SignalDatabase.shared.getInt32Values(column: Session.Properties.device.asColumnResult(), tableName: Session.tableName, condition: Session.Properties.address == address && Session.Properties.device != 1, inTransaction: false)
+        return SignalDatabase.shared.getInt32Values(column: Session.Properties.device.asColumnResult(), tableName: Session.tableName, condition: Session.Properties.address == address && Session.Properties.device != 1)
     }
 
 }

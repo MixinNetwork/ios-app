@@ -6,7 +6,7 @@ final class SnapshotDAO {
     
     private let createdAt = Snapshot.Properties.createdAt.in(table: Snapshot.tableName)
     
-    func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, limit: Int) -> [SnapshotItem] {
+    func getSnapshots(assetId: String? = nil, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement
@@ -28,6 +28,11 @@ final class SnapshotDAO {
                     condition = condition && isBelowLocation
                 }
             }
+            
+            let types = filter.snapshotTypes.map({ $0.rawValue })
+            let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
+            condition = condition && typeConstraint
+            
             stmt.where(condition)
             switch sort {
             case .createdAt:
@@ -40,7 +45,7 @@ final class SnapshotDAO {
         }
     }
     
-    func getSnapshots(opponentId: String, below location: SnapshotItem? = nil, sort: Snapshot.Sort, limit: Int) -> [SnapshotItem] {
+    func getSnapshots(opponentId: String, below location: SnapshotItem? = nil, sort: Snapshot.Sort, filter: Snapshot.Filter, limit: Int) -> [SnapshotItem] {
         let amount = Snapshot.Properties.amount.in(table: Snapshot.tableName)
         return getSnapshotsAndRefreshCorrespondingAssetIfNeeded { (statement) -> (StatementSelect) in
             var stmt = statement
@@ -60,6 +65,11 @@ final class SnapshotDAO {
                     condition = condition && isBelowLocation
                 }
             }
+            
+            let types = filter.snapshotTypes.map({ $0.rawValue })
+            let typeConstraint = Snapshot.Properties.type.in(table: Snapshot.tableName).in(types)
+            condition = condition && typeConstraint
+            
             stmt.where(condition)
             switch sort {
             case .createdAt:

@@ -44,11 +44,11 @@ class SnapshotDataSource {
             let items: [SnapshotItem]
             switch category {
             case .user(let id):
-                items = SnapshotDAO.shared.getSnapshots(opponentId: id, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
+                items = SnapshotDAO.shared.getSnapshots(opponentId: id, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .asset(let id):
-                items = SnapshotDAO.shared.getSnapshots(assetId: id, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
+                items = SnapshotDAO.shared.getSnapshots(assetId: id, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .all:
-                items = SnapshotDAO.shared.getSnapshots(sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
+                items = SnapshotDAO.shared.getSnapshots(sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
             }
             SnapshotDataSource.refreshUserIfNeeded(items)
             let (titles, snapshots) = SnapshotDataSource.categorizedItems(items, sort: sort, filter: filter)
@@ -106,11 +106,11 @@ class SnapshotDataSource {
             let newItems: [SnapshotItem]
             switch category {
             case .user(let id):
-                newItems = SnapshotDAO.shared.getSnapshots(opponentId: id, below: lastSnapshot, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
+                newItems = SnapshotDAO.shared.getSnapshots(opponentId: id, below: lastSnapshot, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .asset(let id):
-                newItems = SnapshotDAO.shared.getSnapshots(assetId: id, below: lastSnapshot, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
+                newItems = SnapshotDAO.shared.getSnapshots(assetId: id, below: lastSnapshot, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
             case .all:
-                newItems = SnapshotDAO.shared.getSnapshots(below: lastSnapshot, sort: sort, limit: SnapshotDataSource.numberOfItemsPerPage)
+                newItems = SnapshotDAO.shared.getSnapshots(below: lastSnapshot, sort: sort, filter: filter, limit: SnapshotDataSource.numberOfItemsPerPage)
             }
             SnapshotDataSource.refreshUserIfNeeded(newItems)
             let items = oldItems + newItems

@@ -39,6 +39,7 @@
 "menu_delete" = "デリート";
 "no_result" = "検索結果はありません";
 "all_photos" = "すべての写真";
+"title_help" = "お手伝い";
 
 "connection_hint_connecting" = "接続中";
 "connection_hint_progress" = "同期中 %@%%";
@@ -94,8 +95,10 @@
 // Login
 "navigation_title_select_country" = "国を選択";
 "navigation_title_enter_mobile_number" = "電話番号を入力してください";
-"navigation_title_enter_verification_code" = " %@ に送られてきた4桁のコードを入力してください。";
+"navigation_title_enter_verification_code" = " %@ に送られてきた4桁のコードを入力してください";
 "navigation_title_enter_name" = "お名前は何ですか？";
+"navigation_title_enter_emergency_contact_id" = "緊急連絡先のMixin IDを入力してください";
+"navigation_title_enter_emergency_contact_verification_code" = "Mixin ID：%@ に送られてきた4桁のコードを入力してください";
 "landing_welcome_title" = "Mixin へようこそ";
 "text_intro" = "引き続きがあなたは%@及び%@を同意すると意味します";
 "text_mobile_number_privacy" = "私たちはあなたの電話番号を公に表示することはありません。";
@@ -106,6 +109,9 @@
 "button_title_privacy_policy" = "個人情報保護方針";
 "button_title_resend_code" = "コードを再送信";
 "button_title_resend_code_pending" = "%@ でコードを再送信";
+"button_title_help" = "お手伝いしましょうか？";
+"button_title_cant_receive_code" = "コードが送られて来ない";
+"button_title_phone_number_lost" = "携帯電話を紛失した";
 "header_title_current_selected" = "現在選択されている";
 "header_title_current_location" = "現在位置";
 "placeholder_search_bar" = "国を検索します";
@@ -519,7 +525,9 @@
 "setting_storage_videos" = "ビデオ";
 "setting_storage_audios" = "オーディオ";
 "setting_storage_files" = "ファイル";
-"setting_emergency_contact" = "緊急連絡";
+"setting_emergency_contact" = "緊急連絡先";
+"setting_title_select_emergency_contact" = "緊急連絡先を選択";
+"setting_change_emergency_contact_success" = "緊急連絡先を変更しました";
 "setting_logout" = "ログアウト";
 "setting_notification_message_preview" = "メッセージプレビュー";
 "setting_backup_title" = "チャットバックアップ";

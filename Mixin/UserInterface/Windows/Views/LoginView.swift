@@ -86,7 +86,7 @@ class LoginView: UIView {
             case let .success(response):
                 UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -108,7 +108,7 @@ class LoginView: UIView {
             switch result {
             case let .success(response):
                 weakSelf.loginSuccess = true
-                showHud(style: .notification, text: Localized.TOAST_AUTHORIZED)
+                showAutoHiddenHud(style: .notification, text: Localized.TOAST_AUTHORIZED)
                 weakSelf.superView?.dismissPopupControllerAnimated()
                 if UIApplication.rootNavigationController()?.viewControllers.last is CameraViewController {
                     UIApplication.rootNavigationController()?.popViewController(animated: true)
@@ -116,7 +116,7 @@ class LoginView: UIView {
                 UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error):
                 weakSelf.authorizeButton.isBusy = false
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         })
     }

@@ -35,7 +35,7 @@ class UsernameViewController: ContinueButtonViewController {
                 AppDelegate.current.window?.rootViewController = makeInitialViewController()
             case let .failure(error):
                 UIApplication.traceError(error)
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }

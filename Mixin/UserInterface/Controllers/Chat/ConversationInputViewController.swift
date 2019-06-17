@@ -211,7 +211,7 @@ class ConversationInputViewController: UIViewController {
             case .success(let userResponse):
                 UserDAO.shared.updateUsers(users: [userResponse], sendNotificationAfterFinished: true)
             case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }

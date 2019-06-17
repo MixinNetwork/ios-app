@@ -114,15 +114,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
                     }
                 case let .failure(error):
                     DispatchQueue.main.sync {
-                        weakSelf.isBusy = false
-                        if error.code == 20113 {
-                            weakSelf.verificationCodeField.clear()
-                            weakSelf.verificationCodeField.showError()
-                            showAutoHiddenHud(style: .error, text: Localized.TEXT_INVALID_VERIFICATION_CODE)
-                        } else {
-                            UIApplication.traceError(error)
-                            weakSelf.alert(error.localizedDescription)
-                        }
+                        weakSelf.handleVerificationCodeError(error)
                     }
                 }
             }

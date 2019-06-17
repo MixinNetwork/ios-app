@@ -2,6 +2,7 @@ import Foundation
 
 struct EmergencySessionRequest: Codable {
     
+    let purpose = "SESSION"
     let code: String?
     let sessionSecret: String?
     let platform = "iOS"
@@ -11,6 +12,7 @@ struct EmergencySessionRequest: Codable {
     let registrationId: Int?
     
     enum CodingKeys: String, CodingKey {
+        case purpose
         case code
         case sessionSecret = "session_secret"
         case platform

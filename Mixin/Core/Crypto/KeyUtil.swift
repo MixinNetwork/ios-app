@@ -75,8 +75,9 @@ class KeyUtil {
             kSecAttrKeySizeInBits: 1024 ]
         return SecKeyCreateWithData(keyData as CFData, parameters as CFDictionary, nil)
     }
-
-    static func generateRSAKeyPair(keySize: Int = 1024) -> (privateKeyPem: String, publicKey: String)? {
+    
+    typealias RSAKeyPair = (privateKeyPem: String, publicKey: String)
+    static func generateRSAKeyPair(keySize: Int = 1024) -> RSAKeyPair? {
         var publicKey, privateKey: SecKey?
         let pubKeyAttrs: [CFString: Any] = [kSecAttrIsPermanent: NSNumber(value: true), kSecAttrApplicationTag: "one.mixin.messenger.publickey".data(using: .utf8)!]
         let privKeyAttrs: [CFString: Any] = [kSecAttrIsPermanent: NSNumber(value: true), kSecAttrApplicationTag: "one.mixin.messenger.privatekey".data(using: .utf8)!]

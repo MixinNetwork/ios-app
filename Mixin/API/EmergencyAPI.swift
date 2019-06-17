@@ -6,6 +6,7 @@ final class EmergencyAPI: BaseAPI {
     
     private enum Url {
         static let create = "emergency_verifications"
+        static let show = "emergency_contact"
         static func verify(id: String) -> String {
             return "emergency_verifications/" + id
         }
@@ -36,6 +37,7 @@ final class EmergencyAPI: BaseAPI {
                 url: Url.create,
                 parameters: req.toParameters(),
                 encoding: EncodableParameterEncoding<EmergencyRequest>(),
+                checkLogin: false,
                 completion: completion)
     }
     
@@ -60,7 +62,12 @@ final class EmergencyAPI: BaseAPI {
                 url: Url.verify(id: id),
                 parameters: req.toParameters(),
                 encoding: EncodableParameterEncoding<EmergencySessionRequest>(),
+                checkLogin: false,
                 completion: completion)
+    }
+    
+    func show(completion: @escaping (APIResult<User>) -> Void) {
+        request(method: .get, url: Url.show, completion: completion)
     }
     
 }

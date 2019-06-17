@@ -12,7 +12,7 @@ func makeInitialViewController() -> UIViewController {
             return ClockSkewViewController.instance()
         }
     } else if AccountAPI.shared.account?.full_name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true {
-        return R.storyboard.login.username()!
+        return UsernameViewController()
     } else if AccountUserDefault.shared.hasRestoreChat {
         return RestoreViewController.instance()
     } else if !CryptoUserDefault.shared.isLoaded {

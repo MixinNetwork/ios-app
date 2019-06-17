@@ -56,16 +56,16 @@ class LoginMobileNumberViewController: MobileNumberViewController {
         var ctx = LoginContext(callingCode: country.callingCode,
                                mobileNumber: mobileNumber,
                                fullNumber: fullNumber(withSpacing: false))
-        self.request = AccountAPI.shared.sendCode(to: fullNumber(withSpacing: false), reCaptchaToken: token, purpose: .session) { [weak self] (result) in
+        self.request = AccountAPI.shared.sendCode(to: ctx.fullNumber, reCaptchaToken: token, purpose: .session) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }
             switch result {
             case let .success(verification):
                 ctx.verificationId = verification.id
+                ctx.hasEmergencyContact = verification.hasEmergencyContact
                 let vc = PhoneNumberLoginVerificationCodeViewController()
                 vc.context = ctx
-                ctx.hasEmergencyContact = verification.hasEmergencyContact
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
                 weakSelf.continueButton.isBusy = false
             case let .failure(error):

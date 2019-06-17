@@ -97,6 +97,9 @@ public class Localized {
     public static func NAVIGATION_TITLE_ENTER_VERIFICATION_CODE(mobileNumber: String) -> String {
         return String(format: LocalizedString("navigation_title_enter_verification_code", comment: "Enter the 4-digit code sent to you at %@"), mobileNumber)
     }
+    public static func NAVIGATION_TITLE_ENTER_EMERGENCY_CONTACT_VERIFICATION_CODE(id: String) -> String {
+        return String(format: LocalizedString("navigation_title_enter_emergency_contact_verification_code", comment: "Enter the 4-digit code sent to Mixin ID %@"), id)
+    }
     public static let TEXT_INTRO = LocalizedString("text_intro", comment: "A messenger that transfers all crypto currencies with end to end encryption. Tap \"%@\" to accept %@ and %@")
     public static let TEXT_CONFIRM_SEND_CODE = LocalizedString("text_confirm_send_code", comment: "Please confirm the phone number %@")
     public static let TEXT_INVALID_VERIFICATION_CODE = LocalizedString("text_invalid_verification_code", comment: "The code is incorrect.")

@@ -5,6 +5,8 @@ class CountDownButton: StateResponsiveButton {
     @IBInspectable var normalTitle: String = ""
     @IBInspectable var pendingTitleTemplate: String = ""
     
+    var onCountDownFinished: (() -> Void)?
+    
     private var timer: Timer?
     private var countDown: Int = -1
     private var countDownInterval: TimeInterval = 1
@@ -67,6 +69,7 @@ class CountDownButton: StateResponsiveButton {
             isEnabled = true
             timer?.invalidate()
             timer = nil
+            onCountDownFinished?()
         }
         UIView.performWithoutAnimation {
             setTitle(title, for: .normal)

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -128,85 +128,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bm0-8k-S9h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-79" y="-1041"/>
-        </scene>
-        <!--Username View Controller-->
-        <scene sceneID="64c-7u-zfZ">
-            <objects>
-                <viewController storyboardIdentifier="username" id="5DL-n6-h8O" customClass="UsernameViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ejr-fa-KTq">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="wla-kN-L5Z">
-                                <rect key="frame" x="20" y="84" width="335" height="115.5"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What's your name?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8lq-hU-7cg">
-                                        <rect key="frame" x="0.0" y="0.0" width="335" height="21.5"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="navigation_title_enter_name"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </label>
-                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ywe-He-zY9">
-                                        <rect key="frame" x="0.0" y="61.5" width="335" height="54"/>
-                                        <subviews>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Z77-PF-kpw">
-                                                <rect key="frame" x="18" y="0.0" width="299" height="54"/>
-                                                <nil key="textColor"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="done" textContentType="name"/>
-                                                <connections>
-                                                    <action selector="updateContinueButtonStatusAction:" destination="5DL-n6-h8O" eventType="editingChanged" id="FqK-uX-D3k"/>
-                                                </connections>
-                                            </textField>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstItem="Z77-PF-kpw" firstAttribute="top" secondItem="ywe-He-zY9" secondAttribute="top" id="Cjy-H7-bJX"/>
-                                            <constraint firstItem="Z77-PF-kpw" firstAttribute="leading" secondItem="ywe-He-zY9" secondAttribute="leading" constant="18" id="GO3-yb-IMu"/>
-                                            <constraint firstAttribute="height" constant="54" id="fdm-Os-q2R" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                                        <real key="value" value="40"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </constraint>
-                                            <constraint firstAttribute="bottom" secondItem="Z77-PF-kpw" secondAttribute="bottom" id="iFL-5k-TKg"/>
-                                            <constraint firstAttribute="trailing" secondItem="Z77-PF-kpw" secondAttribute="trailing" constant="18" id="ri3-5K-XkH"/>
-                                        </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="4"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
-                                </subviews>
-                            </stackView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="wla-kN-L5Z" firstAttribute="leading" secondItem="ejr-fa-KTq" secondAttribute="leading" constant="20" id="C5D-AW-8er"/>
-                            <constraint firstAttribute="trailing" secondItem="wla-kN-L5Z" secondAttribute="trailing" constant="20" id="LVa-ue-pLo"/>
-                            <constraint firstItem="wla-kN-L5Z" firstAttribute="top" secondItem="j5y-Go-WmX" secondAttribute="top" constant="64" id="gTr-3f-Daz" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
-                                        <real key="value" value="20"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </constraint>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="j5y-Go-WmX"/>
-                    </view>
-                    <connections>
-                        <outlet property="contentStackView" destination="wla-kN-L5Z" id="4Dc-mc-Zsg"/>
-                        <outlet property="textField" destination="Z77-PF-kpw" id="t0x-ig-bQ5"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="sE6-Yy-xpI" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="719" y="-1041"/>
         </scene>
     </scenes>
     <resources>

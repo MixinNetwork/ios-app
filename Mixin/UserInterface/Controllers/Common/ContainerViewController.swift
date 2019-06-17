@@ -123,7 +123,7 @@ class ContainerViewController: UIViewController {
         delegate.barLeftButtonTappedAction()
     }
 
-    class func instance(viewController: UIViewController, title: String) -> UIViewController {
+    class func instance(viewController: UIViewController, title: String) -> ContainerViewController {
         let vc = Storyboard.common.instantiateInitialViewController() as! ContainerViewController
         vc.viewController = viewController
         vc.delegate = viewController as? ContainerViewControllerDelegate

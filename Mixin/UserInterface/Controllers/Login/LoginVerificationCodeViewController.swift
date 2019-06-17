@@ -37,6 +37,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             switch result {
             case let .success(verification):
                 weakSelf.context.verificationId = verification.id
+                weakSelf.context.hasEmergencyContact = verification.hasEmergencyContact
                 weakSelf.resendButton.isBusy = false
                 weakSelf.resendButton.beginCountDown(weakSelf.resendInterval)
             case let .failure(error):
@@ -66,59 +67,65 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             return
         }
         let code = verificationCodeField.text
-        let registerationId = Int(SignalProtocol.shared.getRegistrationId())
-        let request = AccountRequest.createAccountRequest(verificationCode: code, registrationId: registerationId, pin: nil, sessionSecret: keyPair.publicKey)
+        let registrationId = Int(SignalProtocol.shared.getRegistrationId())
+        login(code: code, registrationId: registrationId, keyPair: keyPair)
+    }
+    
+    func login(code: String, registrationId: Int, keyPair: KeyUtil.RSAKeyPair) {
+        let request = AccountRequest.createAccountRequest(verificationCode: code, registrationId: registrationId, pin: nil, sessionSecret: keyPair.publicKey)
         AccountAPI.shared.login(verificationId: context.verificationId, accountRequest: request, completion: { [weak self] (result) in
             DispatchQueue.global().async {
-                guard let weakSelf = self else {
-                    return
-                }
-                switch result {
-                case let .success(account):
-                    AccountUserDefault.shared.storePinToken(pinToken: KeyUtil.rsaDecrypt(pkString: keyPair.privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token))
-                    AccountUserDefault.shared.storeToken(token: keyPair.privateKeyPem)
-                    AccountAPI.shared.account = account
-                    
-                    let sema = DispatchSemaphore(value: 0)
-                    var backupExist = false
-                    DispatchQueue.main.sync {
-                        let voipToken = UIApplication.appDelegate().voipToken
-                        if !voipToken.isEmpty {
-                            AccountAPI.shared.updateSession(deviceToken: "", voip_token: voipToken)
-                        }
-                        weakSelf.backupAvailabilityQuery.fileExist(callback: { (exist) in
-                            backupExist = exist
-                            sema.signal()
-                        })
-                    }
-                    sema.wait()
-                    if CommonUserDefault.shared.hasForceLogout || !backupExist {
-                        CommonUserDefault.shared.hasForceLogout = false
-                        MixinDatabase.shared.configure(reset: true)
-                        UserDAO.shared.updateAccount(account: account)
-                        DispatchQueue.main.sync {
-                            if account.full_name.isEmpty {
-                                let vc = R.storyboard.login.username()!
-                                weakSelf.navigationController?.pushViewController(vc, animated: true)
-                            } else {
-                                ContactAPI.shared.syncContacts()
-                                AppDelegate.current.window?.rootViewController = makeInitialViewController()
-                            }
-                        }
-                    } else {
-                        DispatchQueue.main.sync {
-                            AccountUserDefault.shared.hasRestoreChat = true
-                            AccountUserDefault.shared.hasRestoreFilesAndVideos = true
-                            AppDelegate.current.window?.rootViewController = makeInitialViewController()
-                        }
-                    }
-                case let .failure(error):
-                    DispatchQueue.main.sync {
-                        weakSelf.handleVerificationCodeError(error)
-                    }
-                }
+                self?.handleLoginResult(result, privateKeyPem: keyPair.privateKeyPem)
             }
         })
+    }
+    
+    func handleLoginResult(_ result: APIResult<Account>, privateKeyPem: String) {
+        switch result {
+        case let .success(account):
+            let pinToken = KeyUtil.rsaDecrypt(pkString: privateKeyPem, sessionId: account.session_id, pinToken: account.pin_token)
+            AccountUserDefault.shared.storePinToken(pinToken: pinToken)
+            AccountUserDefault.shared.storeToken(token: privateKeyPem)
+            AccountAPI.shared.account = account
+            
+            let sema = DispatchSemaphore(value: 0)
+            var backupExist = false
+            DispatchQueue.main.sync {
+                let voipToken = UIApplication.appDelegate().voipToken
+                if !voipToken.isEmpty {
+                    AccountAPI.shared.updateSession(deviceToken: "", voip_token: voipToken)
+                }
+                self.backupAvailabilityQuery.fileExist(callback: { (exist) in
+                    backupExist = exist
+                    sema.signal()
+                })
+            }
+            sema.wait()
+            if CommonUserDefault.shared.hasForceLogout || !backupExist {
+                CommonUserDefault.shared.hasForceLogout = false
+                MixinDatabase.shared.configure(reset: true)
+                UserDAO.shared.updateAccount(account: account)
+                DispatchQueue.main.sync {
+                    if account.full_name.isEmpty {
+                        let vc = UsernameViewController()
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    } else {
+                        ContactAPI.shared.syncContacts()
+                        AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                    }
+                }
+            } else {
+                DispatchQueue.main.sync {
+                    AccountUserDefault.shared.hasRestoreChat = true
+                    AccountUserDefault.shared.hasRestoreFilesAndVideos = true
+                    AppDelegate.current.window?.rootViewController = makeInitialViewController()
+                }
+            }
+        case let .failure(error):
+            DispatchQueue.main.sync {
+                self.handleVerificationCodeError(error)
+            }
+        }
     }
     
 }

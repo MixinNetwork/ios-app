@@ -22,7 +22,7 @@ class LoginConfirmWindow: BottomSheetView {
 
     func loginSuccessAction() {
         dismissView()
-        showHud(style: .notification, text: Localized.TOAST_LOGINED)
+        showAutoHiddenHud(style: .notification, text: Localized.TOAST_LOGINED)
 
         if let viewController = UIApplication.rootNavigationController()?.viewControllers.first(where: { ($0 as? ContainerViewController)?.viewController is DesktopViewController }), let desktopVC =  (viewController as? ContainerViewController)?.viewController as? DesktopViewController {
             desktopVC.layoutForIsLoading(false)

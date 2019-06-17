@@ -35,9 +35,9 @@ extension PHPhotoLibrary {
         }, completionHandler: { (success, error) in
             DispatchQueue.main.async {
                 if success {
-                    showHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
+                    showAutoHiddenHud(style: .notification, text: Localized.CAMERA_SAVE_PHOTO_SUCCESS)
                 } else {
-                    showHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
+                    showAutoHiddenHud(style: .error, text: Localized.CAMERA_SAVE_PHOTO_FAILED)
                 }
             }
         })

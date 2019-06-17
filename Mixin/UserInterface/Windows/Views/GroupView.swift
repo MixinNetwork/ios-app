@@ -169,7 +169,7 @@ class GroupView: CornerView {
                 weakSelf.saveConversation(conversation: response)
             case let .failure(error):
                 weakSelf.joinButton.isBusy = false
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -229,7 +229,7 @@ extension GroupView {
         DispatchQueue.global().async {
             MessageDAO.shared.clearChat(conversationId: conversationId)
             DispatchQueue.main.async {
-                showHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
+                showAutoHiddenHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
             }
         }
     }
@@ -278,9 +278,9 @@ extension GroupView {
                 } else {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
-                showHud(style: .notification, text: toastMessage)
+                showAutoHiddenHud(style: .notification, text: toastMessage)
             case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -295,7 +295,7 @@ extension GroupView {
             case .success:
                 weakSelf.conversation.name = weakSelf.newName
             case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }

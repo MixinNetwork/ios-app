@@ -206,7 +206,7 @@ extension AddMemberViewController: ContainerViewControllerDelegate {
                 case .success:
                     weakSelf.navigationController?.popViewController(animated: true)
                 case let .failure(error):
-                    showHud(style: .error, text: error.localizedDescription)
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             })
         } else {

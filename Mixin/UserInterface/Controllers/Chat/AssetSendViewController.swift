@@ -125,9 +125,9 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
                 }, completionHandler: { (success, error) in
                     DispatchQueue.main.async {
                         if success {
-                            showHud(style: .notification, text: Localized.CAMERA_SAVE_VIDEO_SUCCESS)
+                            showAutoHiddenHud(style: .notification, text: Localized.CAMERA_SAVE_VIDEO_SUCCESS)
                         } else {
-                            showHud(style: .error, text: Localized.CAMERA_SAVE_VIDEO_FAILED)
+                            showAutoHiddenHud(style: .error, text: Localized.CAMERA_SAVE_VIDEO_FAILED)
                         }
                     }
                 })

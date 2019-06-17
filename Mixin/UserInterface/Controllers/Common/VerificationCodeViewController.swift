@@ -64,4 +64,16 @@ class VerificationCodeViewController: ContinueButtonViewController {
         
     }
     
+    func handleVerificationCodeError(_ error: APIError) {
+        isBusy = false
+        if error.code == 20113 {
+            verificationCodeField.clear()
+            verificationCodeField.showError()
+            showAutoHiddenHud(style: .error, text: Localized.TEXT_INVALID_VERIFICATION_CODE)
+        } else {
+            UIApplication.traceError(error)
+            alert(error.localizedDescription)
+        }
+    }
+    
 }

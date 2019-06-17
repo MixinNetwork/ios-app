@@ -43,6 +43,7 @@
 "no_result" = "No result";
 "title_loading" = "Loading...";
 "all_photos" = "All Photos";
+"title_help" = "Help";
 
 "connection_hint_connecting" = "Connecting";
 "connection_hint_progress" = "Syncing %@%%";
@@ -99,6 +100,8 @@
 "navigation_title_enter_mobile_number" = "Enter your phone number";
 "navigation_title_enter_verification_code" = "Enter the 4-digit code sent to you at %@";
 "navigation_title_enter_name" = "What's your name?";
+"navigation_title_enter_emergency_contact_id" = "Enter your emergency contact's Mixin ID";
+"navigation_title_enter_emergency_contact_verification_code" = "Enter the 4-digit code sent to Mixin ID %@";
 "landing_welcome_title" = "Welcome to Mixin";
 "text_intro" = "By proceeding, you agree to the %@ and %@.";
 "text_mobile_number_privacy" = "We will never display your phone number publicly";
@@ -109,6 +112,9 @@
 "button_title_privacy_policy" = "Privacy Policy";
 "button_title_resend_code" = "Resend code";
 "button_title_resend_code_pending" = "Resend code in %@";
+"button_title_help" = "Need help?";
+"button_title_cant_receive_code" = "Can't receive the code";
+"button_title_phone_number_lost" = "Lost your mobile number";
 "header_title_current_selected" = "Current Selected";
 "header_title_current_location" = "Current Location";
 "placeholder_search_bar" = "Search for a country";
@@ -536,6 +542,8 @@
 "setting_storage_audios" = "Audios";
 "setting_storage_files" = "Files";
 "setting_emergency_contact" = "Emergency Contact";
+"setting_title_select_emergency_contact" = "Select Emergency Contact";
+"setting_change_emergency_contact_success" = "Successfully changed emergency contact";
 "setting_logout" = "Log Out";
 "setting_notification_message_preview" = "Message Preview";
 "setting_backup_title" = "Chat Backup";

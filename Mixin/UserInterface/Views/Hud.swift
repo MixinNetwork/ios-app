@@ -9,9 +9,7 @@ func showAutoHiddenHud(style: Hud.Style, text: String) {
     }
     let hud = Hud()
     hud.show(style: style, text: text, on: AppDelegate.current.window!)
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-        hud.hide()
-    }
+    hud.scheduleAutoHidden()
 }
 
 final class Hud: NSObject {
@@ -54,6 +52,15 @@ final class Hud: NSObject {
         label.text = text
     }
     
+    func scheduleAutoHidden() {
+        guard isShowing else {
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.hide()
+        }
+    }
+    
     func show(style: Style, text: String, on view: UIView) {
         guard !isShowing else {
             return
@@ -78,6 +85,9 @@ final class Hud: NSObject {
     }
     
     func hide() {
+        guard isShowing else {
+            return
+        }
         UIView.animate(withDuration: 0.2, animations: {
             self.hudView.alpha = 0
         }, completion: { (_) in

@@ -98,11 +98,21 @@ class PrivacyViewController: UITableViewController {
 
         }
     }
-
+    
     private func changeEmergencyAction() {
-
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        if account.has_pin {
+            let vc = EmergencyContactVerifyPinViewController()
+            let navigationController = VerifyPinNavigationController(rootViewController: vc)
+            present(navigationController, animated: true, completion: nil)
+        } else {
+            let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact)
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
-
+    
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
         if section == 0 {

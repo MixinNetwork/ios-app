@@ -177,7 +177,7 @@ extension AddAssetViewController: ContainerViewControllerDelegate {
             AssetDAO.shared.insertOrUpdateAssets(assets: assets)
             DispatchQueue.main.async {
                 navigationController?.popViewController(animated: true)
-                showHud(style: .notification, text: Localized.TOAST_SAVED)
+                showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
             }
         }
     }
@@ -228,7 +228,7 @@ extension AddAssetViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if isSearching {
             if searchResults[indexPath.row].forceSelected {
-                showHud(style: .warning, text: Localized.WALLET_ALREADY_HAD_THE_ASSET)
+                showAutoHiddenHud(style: .warning, text: Localized.WALLET_ALREADY_HAD_THE_ASSET)
                 return nil
             } else {
                 return indexPath

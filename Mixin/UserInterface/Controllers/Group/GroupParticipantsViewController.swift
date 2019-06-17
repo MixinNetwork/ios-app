@@ -8,7 +8,7 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     private lazy var userWindow = UserWindow.instance()
     private lazy var responseHandler: (APIResult<ConversationResponse>) -> Void = { result in
         if case let .failure(error) = result {
-            showHud(style: .error, text: error.localizedDescription)
+            showAutoHiddenHud(style: .error, text: error.localizedDescription)
         }
     }
     

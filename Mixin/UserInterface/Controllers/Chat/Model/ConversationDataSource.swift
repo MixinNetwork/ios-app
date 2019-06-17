@@ -501,7 +501,7 @@ extension ConversationDataSource {
         } else if type == .SIGNAL_DATA, let url = value as? URL {
             queue.async {
                 guard FileManager.default.fileSize(url.path) > 0 else {
-                    showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 let fileExtension = url.pathExtension.lowercased()
@@ -509,7 +509,7 @@ extension ConversationDataSource {
                 do {
                     try FileManager.default.copyItem(at: url, to: targetUrl)
                 } catch {
-                    showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 message.name = url.lastPathComponent
@@ -523,7 +523,7 @@ extension ConversationDataSource {
             queue.async {
                 let asset = AVAsset(url: url)
                 guard asset.duration.isValid, let videoTrack = asset.tracks(withMediaType: .video).first else {
-                    showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
@@ -531,7 +531,7 @@ extension ConversationDataSource {
                     thumbnail.saveToFile(path: thumbnailURL)
                     message.thumbImage = thumbnail.base64Thumbnail()
                 } else {
-                    showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 message.mediaDuration = Int64(asset.duration.seconds * millisecondsPerSecond)
@@ -547,7 +547,7 @@ extension ConversationDataSource {
         } else if type == .SIGNAL_AUDIO, let value = value as? (tempUrl: URL, metadata: MXNAudioMetadata) {
             queue.async {
                 guard FileManager.default.fileSize(value.tempUrl.path) > 0 else {
-                    showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                     return
                 }
                 let url = MixinFile.url(ofChatDirectory: .audios, filename: message.messageId + ExtensionName.ogg.withDot)
@@ -561,7 +561,7 @@ extension ConversationDataSource {
                     message.mediaDuration = Int64(value.metadata.duration)
                     SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: isGroupMessage)
                 } catch {
-                    showHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
+                    showAutoHiddenHud(style: .error, text: Localized.TOAST_OPERATION_FAILED)
                 }
             }
         } else if type == .SIGNAL_STICKER, let sticker = value as? Sticker {

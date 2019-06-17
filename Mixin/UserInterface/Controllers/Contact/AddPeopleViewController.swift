@@ -68,7 +68,7 @@ class AddPeopleViewController: KeyboardBasedLayoutViewController {
                 UserDAO.shared.updateUsers(users: [user])
                 weakSelf.userWindow.updateUser(user: UserItem.createUser(from: user), refreshUser: false).presentView()
             case let .failure(error):
-                showHud(style: .error, text: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription)
             }
         }
     }

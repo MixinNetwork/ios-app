@@ -42,7 +42,7 @@ class DesktopViewController: UITableViewController {
                 case .success:
                     weakSelf.updateLabels(isDesktopLoggedIn: false)
                 case let .failure(error):
-                    showHud(style: .error, text: error.localizedDescription)
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
         } else {

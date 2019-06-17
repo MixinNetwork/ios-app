@@ -61,7 +61,7 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
                 if !NetworkManager.shared.isReachable {
                     weakSelf.saveOfflineConversation()
                 } else {
-                    showHud(style: .error, text: error.localizedDescription)
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                     weakSelf.createButton.isBusy = false
                 }
             }

@@ -239,7 +239,7 @@ extension PayView: PinFieldDelegate {
         }
         UIApplication.traceError(error)
         if (superView as? UrlWindow)?.fromWeb ?? false {
-            showHud(style: .error, text: error.localizedDescription)
+            showAutoHiddenHud(style: .error, text: error.localizedDescription)
         } else {
             UIApplication.currentActivity()?.alert(error.localizedDescription, message: nil)
         }
@@ -250,7 +250,7 @@ extension PayView: PinFieldDelegate {
         superView?.dismissPopupControllerAnimated()
 
         if (superView as? UrlWindow)?.fromWeb ?? false {
-            showHud(style: .error, text: errorMsg)
+            showAutoHiddenHud(style: .error, text: errorMsg)
         } else {
             UIApplication.currentActivity()?.alert(errorMsg, message: nil)
         }

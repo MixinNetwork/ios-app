@@ -81,7 +81,7 @@ class PrivacyViewController: UITableViewController {
                     UserDAO.shared.updateUsers(users: [user])
                     emergencyUser = UserItem.createUser(from: user)
                 case let .failure(error):
-                    showHud(style: .error, text: error.localizedDescription)
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                     return
                 }
 

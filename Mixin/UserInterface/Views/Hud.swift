@@ -1,102 +1,89 @@
 import UIKit
 
-func showHud(style: Hud.Style, text: String) {
-    if Thread.isMainThread {
-        Hud.show(style: style, text: text, on: AppDelegate.current.window!)
-    } else {
+func showAutoHiddenHud(style: Hud.Style, text: String) {
+    guard Thread.isMainThread else {
         DispatchQueue.main.async {
-            Hud.show(style: style, text: text, on: AppDelegate.current.window!)
+            showAutoHiddenHud(style: style, text: text)
         }
+        return
+    }
+    let hud = Hud()
+    hud.show(style: style, text: text, on: AppDelegate.current.window!)
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+        hud.hide()
     }
 }
 
-class Hud {
+final class Hud: NSObject {
     
     enum Style {
         case notification
         case warning
         case error
+        case busy
     }
     
-    class View: UIVisualEffectView {
-        
-        let imageView = UIImageView()
-        let label = UILabel()
-        
-        required init?(coder aDecoder: NSCoder) {
-            super.init(coder: aDecoder)
-            prepare()
+    var containerView: UIView!
+    
+    @IBOutlet weak var hudView: UIVisualEffectView!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var activityIndicator: ActivityIndicatorView!
+    @IBOutlet weak var label: UILabel!
+    
+    private var isViewLoaded = false
+    private var isShowing = false
+    
+    func set(style: Style, text: String) {
+        switch style {
+        case .notification:
+            imageView.image = R.image.ic_hud_notification()
+            imageView.isHidden = false
+            activityIndicator.stopAnimating()
+        case .warning:
+            imageView.image = R.image.ic_hud_warning()
+            imageView.isHidden = false
+            activityIndicator.stopAnimating()
+        case .error:
+            imageView.image = R.image.ic_hud_error()
+            imageView.isHidden = false
+            activityIndicator.stopAnimating()
+        case .busy:
+            imageView.isHidden = true
+            activityIndicator.startAnimating()
         }
-        
-        override init(effect: UIVisualEffect?) {
-            super.init(effect: effect)
-            prepare()
-        }
-        
-        func render(style: Style, text: String) {
-            switch style {
-            case .notification:
-                imageView.image = UIImage(named: "ic_hud_notification")
-            case .warning:
-                imageView.image = UIImage(named: "ic_hud_warning")
-            case .error:
-                imageView.image = UIImage(named: "ic_hud_error")
-            }
-            label.text = text
-        }
-        
-        private func prepare() {
-            label.font = .systemFont(ofSize: 15)
-            label.textColor = .white
-            label.textAlignment = .center
-            label.numberOfLines = 0
-            contentView.addSubview(imageView)
-            contentView.addSubview(label)
-            imageView.snp.makeConstraints { (make) in
-                make.width.height.equalTo(30)
-                make.top.equalToSuperview().offset(30)
-                make.centerX.equalToSuperview()
-            }
-            label.snp.makeConstraints { (make) in
-                make.top.equalTo(imageView.snp.bottom).offset(12)
-                make.leading.equalToSuperview().offset(16)
-                make.trailing.equalToSuperview().offset(-16)
-                make.bottom.equalToSuperview().offset(-20)
-            }
-            layer.cornerRadius = 8
-            clipsToBounds = true
-        }
-        
+        label.text = text
     }
     
-    static func show(style: Style, text: String, on view: UIView) {
-        let container = UIView(frame: view.bounds)
-        container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(container)
-        let hudView = View(effect: UIBlurEffect(style: .dark))
-        hudView.render(style: style, text: text)
+    func show(style: Style, text: String, on view: UIView) {
+        guard !isShowing else {
+            return
+        }
+        isShowing = true
+        
+        if !isViewLoaded {
+            containerView = R.nib.hudView(owner: self)
+            containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            isViewLoaded = true
+        }
+        
         hudView.alpha = 0
-        container.addSubview(hudView)
-        hudView.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
-            make.width.lessThanOrEqualTo(view.snp.width).multipliedBy(0.5)
-            make.height.lessThanOrEqualTo(view.snp.height).multipliedBy(0.5)
-            make.width.greaterThanOrEqualTo(130)
-            make.height.greaterThanOrEqualTo(100)
-        }
-        UIView.animate(withDuration: 0.2) {
-            hudView.alpha = 1
-        }
+        set(style: style, text: text)
+        
+        containerView.frame = view.bounds
+        view.addSubview(containerView)
+        
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .beginFromCurrentState, animations: {
-            hudView.alpha = 1
+            self.hudView.alpha = 1
         }, completion: nil)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            UIView.animate(withDuration: 0.2, animations: {
-                hudView.alpha = 0
-            }, completion: { (_) in
-                container.removeFromSuperview()
-            })
-        }
+    }
+    
+    func hide() {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.hudView.alpha = 0
+        }, completion: { (_) in
+            self.containerView.removeFromSuperview()
+            self.isShowing = false
+        })
     }
     
 }

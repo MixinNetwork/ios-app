@@ -10,16 +10,23 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
         super.viewDidLoad()
         helpButton.setTitle(R.string.localizable.button_title_help(), for: .normal)
         helpButton.setTitleColor(UIColor(displayP3RgbValue: 0xF67070), for: .normal)
+        helpButton.titleLabel?.font = .systemFont(ofSize: 14)
+        helpButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         helpButton.addTarget(self, action: #selector(helpAction), for: .touchUpInside)
         helpButton.isHidden = true
+        helpButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(helpButton)
-        helpButton.bottomAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        helpButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        helpButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         helpButtonBottomConstraint = helpButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
         helpButtonBottomConstraint.isActive = true
+        resendButton.onCountDownFinished = { [weak helpButton] in
+            helpButton?.isHidden = false
+        }
     }
     
     override func layout(for keyboardFrame: CGRect) {
-        helpButtonBottomConstraint.constant = keyboardFrame.height
+        helpButtonBottomConstraint.constant = -keyboardFrame.height - 28
     }
     
     @objc func helpAction() {
@@ -30,6 +37,7 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
         if context.hasEmergencyContact {
             alert.addAction(UIAlertAction(title: R.string.localizable.button_title_phone_number_lost(), style: .destructive, handler: { (_) in
                 let vc = EmergencyContactIdVerificationViewController()
+                vc.context = self.context
                 self.navigationController?.pushViewController(vc, animated: true)
             }))
         }

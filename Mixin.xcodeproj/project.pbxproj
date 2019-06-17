@@ -100,6 +100,9 @@
 		7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */; };
 		7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */; };
 		7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */; };
+		7B2D174C22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2D174B22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift */; };
+		7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */; };
+		7B2D175022B11A8600AE3DD8 /* LoginInfoInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B2D174E22B11A8600AE3DD8 /* LoginInfoInputView.xib */; };
 		7B2E3E481FA07F2E00DDDDEB /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B2E3E471FA07F2E00DDDDEB /* Login.storyboard */; };
 		7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E4A1FA07F4500DDDDEB /* SelectCountryViewController.swift */; };
 		7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */; };
@@ -349,6 +352,7 @@
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
 		7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6E16B218089F100C32EE5 /* GCDExtension.swift */; };
 		7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */; };
+		7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEB5D9E22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift */; };
 		7BEBCE2D228185130037BF18 /* MediaPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEBCE2C228185130037BF18 /* MediaPreviewViewController.swift */; };
 		7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BEC4DF021A7D054003336F2 /* AssetCell.xib */; };
 		7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEDF9F720510CD300371266 /* ConversationDataSource.swift */; };
@@ -792,6 +796,9 @@
 		7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXNFastURLDetector.m; sourceTree = "<group>"; };
 		7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
 		7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TurnServer.swift; sourceTree = "<group>"; };
+		7B2D174B22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactIdVerificationViewController.swift; sourceTree = "<group>"; };
+		7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInfoInputViewController.swift; sourceTree = "<group>"; };
+		7B2D174E22B11A8600AE3DD8 /* LoginInfoInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginInfoInputView.xib; sourceTree = "<group>"; };
 		7B2E3E471FA07F2E00DDDDEB /* Login.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		7B2E3E4A1FA07F4500DDDDEB /* SelectCountryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCountryViewController.swift; sourceTree = "<group>"; };
 		7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HairlineLayoutConstraint.swift; sourceTree = "<group>"; };
@@ -1052,6 +1059,7 @@
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
 		7BE6E16B218089F100C32EE5 /* GCDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDExtension.swift; sourceTree = "<group>"; };
 		7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputViewController.swift; sourceTree = "<group>"; };
+		7BEB5D9E22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactLoginVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7BEBCE2C228185130037BF18 /* MediaPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPreviewViewController.swift; sourceTree = "<group>"; };
 		7BEC4DF021A7D054003336F2 /* AssetCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AssetCell.xib; sourceTree = "<group>"; };
 		7BEDF9F720510CD300371266 /* ConversationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDataSource.swift; sourceTree = "<group>"; };
@@ -1650,9 +1658,13 @@
 				7B2E3E4E1FA07F7B00DDDDEB /* Views */,
 				7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */,
 				7B2E3E4A1FA07F4500DDDDEB /* SelectCountryViewController.swift */,
+				7B2D174E22B11A8600AE3DD8 /* LoginInfoInputView.xib */,
+				7B2D174D22B11A8600AE3DD8 /* LoginInfoInputViewController.swift */,
 				7B51DDB1223A408A008ACDBB /* LoginMobileNumberViewController.swift */,
 				7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */,
 				7B280DED22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift */,
+				7B2D174B22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift */,
+				7BEB5D9E22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift */,
 				7BC681A91FA1DD5600BAB85F /* UsernameViewController.swift */,
 			);
 			path = Login;
@@ -2839,6 +2851,7 @@
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				7BD69C451FF2755D00758D7C /* GroupView.xib in Resources */,
 				7BBD8A3320C1D51C00DF2735 /* recaptcha.html in Resources */,
+				7B2D175022B11A8600AE3DD8 /* LoginInfoInputView.xib in Resources */,
 				7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */,
 				7BDBDE7022365017006220DF /* SettingCell.xib in Resources */,
 				7B45A51C2189F28E0008F894 /* call.caf in Resources */,
@@ -3381,6 +3394,7 @@
 				DF233CE12202F5BE005F2FD1 /* UserSession.swift in Sources */,
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,
+				7BEB5D9F22B79F5500B8B10E /* EmergencyContactLoginVerificationCodeViewController.swift in Sources */,
 				7B59535122672D3500D59DB4 /* SearchNumberCell.swift in Sources */,
 				7BEE5353222E21D7008D3911 /* KeyboardHeight.swift in Sources */,
 				7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */,
@@ -3479,6 +3493,7 @@
 				7B4E30762295659200A03F6E /* SearchBoxTextField.swift in Sources */,
 				7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */,
 				7BD7534C2182CD7A00BAC172 /* CallMessageViewModel.swift in Sources */,
+				7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */,
 				7BD150E22160C1560019FD5B /* GiphyCoreSDKExtension.swift in Sources */,
 				DF1ED8D920BBECFF003E10E8 /* AlbumViewController.swift in Sources */,
 				7B40A89920B84BF500CEA42E /* NumberStringLocalizable.swift in Sources */,
@@ -3490,6 +3505,7 @@
 				DF8CECF21FC4256D00E40064 /* BlockUserCell.swift in Sources */,
 				DF03C85D1FF2BE6500C1ED6B /* MessageHistoryDAO.swift in Sources */,
 				7BD7534E2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift in Sources */,
+				7B2D174C22B117DF00AE3DD8 /* EmergencyContactIdVerificationViewController.swift in Sources */,
 				27D6E8D22045473300BA678A /* TransferMessage.swift in Sources */,
 				7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */,
 				7B84358920D8DC2E00237242 /* QuoteTextMessageCell.swift in Sources */,

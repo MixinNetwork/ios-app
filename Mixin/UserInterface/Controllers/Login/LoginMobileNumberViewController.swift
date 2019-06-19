@@ -4,7 +4,7 @@ import Alamofire
 
 class LoginMobileNumberViewController: MobileNumberViewController {
     
-    let introTextView = UITextView()
+    let introTextView = IntroTextView()
     private var request: Request?
     
     private let intro: NSAttributedString = {
@@ -37,6 +37,8 @@ class LoginMobileNumberViewController: MobileNumberViewController {
         super.viewDidLoad()
         introTextView.isScrollEnabled = false
         introTextView.attributedText = intro
+        introTextView.isEditable = false
+        introTextView.isSelectable = true
         contentStackView.addArrangedSubview(introTextView)
     }
     

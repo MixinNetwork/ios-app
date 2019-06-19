@@ -79,7 +79,7 @@ class WalletSettingViewController: UITableViewController {
     }
 
     private func setNewPinInterval(interval: Double) {
-        let validator = PinValidationViewController.instance(tips: Localized.WALLET_PIN_PAY_INTERVAL_CONFIRM, onSuccess: { (_) in
+        let validator = PinValidationViewController(tips: Localized.WALLET_PIN_PAY_INTERVAL_CONFIRM, onSuccess: { (_) in
             WalletUserDefault.shared.pinInterval = interval
         })
         present(validator, animated: true, completion: nil)
@@ -126,7 +126,7 @@ class WalletSettingViewController: UITableViewController {
                 tips = Localized.WALLET_PIN_FACE_ID_PROMPT
                 prompt = Localized.WALLET_STORE_ENCRYPTED_PIN(biometricType: Localized.WALLET_FACE_ID)
             }
-            let validator = PinValidationViewController.instance(tips: tips, onSuccess: { (pin) in
+            let validator = PinValidationViewController(tips: tips, onSuccess: { (pin) in
                 guard Keychain.shared.storePIN(pin: pin, prompt: prompt) else {
                     self.biometricsPaySwitch.isOn = false
                     return

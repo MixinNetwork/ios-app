@@ -32,7 +32,8 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
     @objc func helpAction() {
         let alert = UIAlertController(title: R.string.localizable.title_help(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.button_title_cant_receive_code(), style: .default, handler: { (_) in
-            
+            let url = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360024114492")!
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }))
         if context.hasEmergencyContact {
             alert.addAction(UIAlertAction(title: R.string.localizable.button_title_phone_number_lost(), style: .destructive, handler: { (_) in

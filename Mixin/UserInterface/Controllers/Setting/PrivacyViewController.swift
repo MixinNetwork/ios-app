@@ -53,7 +53,10 @@ class PrivacyViewController: UITableViewController {
                 alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
                 self.present(alc, animated: true, completion: nil)
             } else {
-                EmergencyWindow.instance().presentPopupControllerAnimated()
+                let vc = R.storyboard.setting.emergency_tips()!
+                vc.transitioningDelegate = PopupPresentationManager.shared
+                vc.modalPresentationStyle = .custom
+                present(vc, animated: true, completion: nil)
             }
             return
         }

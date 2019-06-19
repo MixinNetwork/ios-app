@@ -26,6 +26,7 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
     }
     
     override func layout(for keyboardFrame: CGRect) {
+        super.layout(for: keyboardFrame)
         helpButtonBottomConstraint.constant = -keyboardFrame.height - 28
     }
     

@@ -1,6 +1,7 @@
 import Foundation
 
 struct Account: Encodable {
+    
     let user_id: String
     let session_id: String
     let type: String
@@ -18,6 +19,7 @@ struct Account: Encodable {
     let receive_message_source: String
     let accept_conversation_source: String
     let has_pin: Bool
+    let has_emergency_contact: Bool
     let pin_token: String
     
     init(withAccount old: Account, receiveMessageSource: ReceiveMessageSource) {
@@ -39,6 +41,7 @@ struct Account: Encodable {
         self.has_pin = old.has_pin
         self.code_url = old.code_url
         self.pin_token = old.pin_token
+        self.has_emergency_contact = old.has_emergency_contact
     }
     
     init(withAccount old: Account, acceptConversationSource: AcceptConversationSource) {
@@ -60,6 +63,7 @@ struct Account: Encodable {
         self.has_pin = old.has_pin
         self.code_url = old.code_url
         self.pin_token = old.pin_token
+        self.has_emergency_contact = old.has_emergency_contact
     }
     
     init(withAccount old: Account, phone: String) {
@@ -81,6 +85,7 @@ struct Account: Encodable {
         self.has_pin = old.has_pin
         self.code_url = old.code_url
         self.pin_token = old.pin_token
+        self.has_emergency_contact = old.has_emergency_contact
     }
     
 }
@@ -105,6 +110,7 @@ extension Account: Decodable {
         receive_message_source = container.getString(key: .receive_message_source)
         accept_conversation_source = container.getString(key: .accept_conversation_source)
         has_pin = container.getBool(key: .has_pin)
+        has_emergency_contact = container.getBool(key: .has_emergency_contact)
         code_url = container.getString(key: .code_url)
         pin_token = container.getString(key: .pin_token)
     }

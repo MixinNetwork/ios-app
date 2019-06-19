@@ -463,6 +463,7 @@
 "profile_mute_duration_1year" = "1年";
 "profile_unmute" = "消音を解除";
 "profile_mute" = "消音";
+"profile_report" = "報告";
 "profile_toast_unmuted" = "消音解除しました";
 "profile_toast_muted" = " %@ まで消音しました";
 

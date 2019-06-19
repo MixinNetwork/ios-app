@@ -257,6 +257,9 @@ class UserView: CornerView {
         default:
             break
         }
+        alc.addAction(UIAlertAction(title: R.string.localizable.profile_report(), style: .destructive, handler: { (action) in
+            self.reportAction()
+        }))
         if !isMe {
             alc.addAction(UIAlertAction(title: Localized.GROUP_MENU_CLEAR, style: .destructive, handler: { (action) in
                 self.clearChatAction()
@@ -264,6 +267,39 @@ class UserView: CornerView {
         }
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
+    }
+
+    private func reportAction() {
+        let alc = UIAlertController(title: R.string.localizable.profile_report_tips(), message: nil, preferredStyle: .alert)
+        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
+        alc.addAction(UIAlertAction(title: R.string.localizable.profile_report(), style: .destructive, handler: { (_) in
+            self.reportContactAction()
+        }))
+        UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
+    }
+
+    private func reportContactAction() {
+        showLoading()
+        let blocked = user.relationship == Relationship.BLOCKING.rawValue
+        let userId = user.userId
+        let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: user.userId)
+
+        DispatchQueue.global().async {
+            if !blocked {
+                switch UserAPI.shared.blockUser(userId: userId) {
+                case let .success(user):
+                    UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+                case .failure:
+                    break
+                }
+            }
+            ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversationId)
+            MixinFile.cleanAllChatDirectories()
+            NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
+            DispatchQueue.main.async {
+                UIApplication.rootNavigationController()?.backToHome()
+            }
+        }
     }
 
     @IBAction func previewAvatarAction(_ sender: Any) {

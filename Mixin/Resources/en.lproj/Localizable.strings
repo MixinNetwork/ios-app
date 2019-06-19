@@ -477,8 +477,10 @@
 "profile_mute_duration_1year" = "1 year";
 "profile_unmute" = "Unmute";
 "profile_mute" = "Mute";
+"profile_report" = "Report";
 "profile_toast_unmuted" = "Unmuted";
 "profile_toast_muted" = "Muted until %@";
+"profile_report_tips" = "Do you want to report and block this contact? your chat with this conversation will also be deleted.";
 
 // Setting
 "setting_title" = "Setting";

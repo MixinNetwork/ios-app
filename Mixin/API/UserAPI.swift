@@ -70,6 +70,11 @@ final class UserAPI: BaseAPI {
         request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)
     }
 
+    func blockUser(userId: String) -> APIResult<UserResponse> {
+        let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
+        return request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>())
+    }
+
     func unblockUser(userId: String, completion: @escaping (APIResult<UserResponse>) -> Void) {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .UNBLOCK)
         request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>(), completion: completion)

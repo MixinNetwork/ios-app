@@ -2,7 +2,7 @@ import UIKit
 
 class EmergencyContactSelectorViewController: UserItemPeerViewController<PeerCell> {
     
-    private var pin: String!
+    private var pin = ""
     
     private lazy var hud = Hud()
     
@@ -32,15 +32,12 @@ class EmergencyContactSelectorViewController: UserItemPeerViewController<PeerCel
         let hud = self.hud
         hud.show(style: .busy, text: "", on: navigationController.view)
         let identityNumber = user(at: indexPath).identityNumber
-        EmergencyAPI.shared.createContact(identityNumber: identityNumber, pin: pin) { [weak self] (result) in
-            print(result)
+        EmergencyAPI.shared.createContact(identityNumber: identityNumber) { [weak self] (result) in
             switch result {
             case .success(let response):
                 hud.hide()
                 if let weakSelf = self {
-                    let vc = CreateEmergencyContactVerificationCodeViewController()
-                    vc.identityNumber = identityNumber
-                    vc.id = response.id
+                    let vc = CreateEmergencyContactVerificationCodeViewController(pin: weakSelf.pin, verificationId: response.id, identityNumber: identityNumber)
                     weakSelf.navigationController?.pushViewController(vc, animated: true)
                 }
             case .failure(let error):

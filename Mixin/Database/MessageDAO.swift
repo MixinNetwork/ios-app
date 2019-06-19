@@ -67,6 +67,7 @@ final class MessageDAO {
     static let sqlQueryFullMessageAfterRowId = """
     \(sqlQueryFullMessage)
     WHERE m.conversation_id = ? AND m.ROWID > ?
+    ORDER BY m.created_at ASC
     LIMIT ?
     """
     static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"

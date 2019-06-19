@@ -53,9 +53,6 @@ class CommonUserDefault {
     private var keyRecallTips: String {
         return "default_recall_tips_\(AccountAPI.shared.accountIdentityNumber)"
     }
-    private var keyEmergencyTips: String {
-        return "default_emergency_tips_\(AccountAPI.shared.accountIdentityNumber)"
-    }
     
     enum BackupCategory: String {
         case daily
@@ -65,16 +62,7 @@ class CommonUserDefault {
     }
     
     private let session = UserDefaults(suiteName: SuiteName.common)!
-
-    var isEmergencyTips: Bool {
-        get {
-            return session.bool(forKey: keyEmergencyTips)
-        }
-        set {
-            session.set(newValue, forKey: keyEmergencyTips)
-        }
-    }
-
+    
     var isRecallTips: Bool {
         get {
             return session.bool(forKey: keyRecallTips)

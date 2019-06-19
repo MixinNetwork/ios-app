@@ -2,8 +2,16 @@ import UIKit
 
 class CreateEmergencyContactVerificationCodeViewController: VerificationCodeViewController {
     
-    var identityNumber = ""
-    var id = ""
+    private var pin = ""
+    private var verificationId = ""
+    private var identityNumber = ""
+    
+    convenience init(pin: String, verificationId: String, identityNumber: String) {
+        self.init()
+        self.pin = pin
+        self.verificationId = verificationId
+        self.identityNumber = identityNumber
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +34,7 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
     
     private func verify() {
         isBusy = true
-        EmergencyAPI.shared.verifyContact(id: id, code: verificationCodeField.text) { [weak self] (result) in
+        EmergencyAPI.shared.verifyContact(pin: pin, id: verificationId, code: verificationCodeField.text) { [weak self] (result) in
             guard let weakSelf = self else {
                 return
             }

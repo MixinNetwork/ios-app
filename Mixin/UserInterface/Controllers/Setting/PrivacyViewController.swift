@@ -83,27 +83,8 @@ class PrivacyViewController: UITableViewController {
     }
     
     private func viewEmergencyAction() {
-        let emergencyUserId = ""
-        DispatchQueue.global().async { [weak self] in
-            var emergencyUser = UserDAO.shared.getUser(userId: emergencyUserId)
-            if emergencyUser == nil {
-                switch UserAPI.shared.showUser(userId: emergencyUserId) {
-                case let .success(user):
-                    UserDAO.shared.updateUsers(users: [user])
-                    emergencyUser = UserItem.createUser(from: user)
-                case let .failure(error):
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                    return
-                }
-            }
-            DispatchQueue.main.async {
-                guard let weakSelf = self, let user = emergencyUser else {
-                    return
-                }
-                weakSelf.userWindow.updateUser(user: user)
-                weakSelf.userWindow.presentView()
-            }
-        }
+        let validator = ShowEmergencyContactValidationViewController()
+        present(validator, animated: true, completion: nil)
     }
     
     private func changeEmergencyAction() {

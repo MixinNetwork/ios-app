@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PinValidationViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="descriptionLabel" destination="aKk-YI-evv" id="8Wq-hD-szG"/>
+                <outlet property="limitationHintView" destination="wQB-vk-cAS" id="x36-eV-uzI"/>
+                <outlet property="loadingIndicator" destination="RxG-TB-FaI" id="gfY-dT-kGj"/>
+                <outlet property="numberPadView" destination="YtT-Bw-bo1" id="4sX-GH-gmk"/>
+                <outlet property="numberPadViewBottomConstraint" destination="mJf-wV-aGc" id="g6y-L8-eNI"/>
+                <outlet property="pinField" destination="zM2-CK-lez" id="sAM-4E-Boj"/>
+                <outlet property="view" destination="jqr-Lo-whB" id="4Rd-se-8Ly"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="jqr-Lo-whB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BaG-Ng-fDo" customClass="TopRoundedView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="299" width="375" height="368"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your Wallet PIN" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BeR-hQ-9OV">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="oI2-HX-M4T"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_verify_title"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tgg-8p-q44">
+                            <rect key="frame" x="0.0" y="70" width="375" height="170"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dO2-94-bDN">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="170"/>
+                                    <subviews>
+                                        <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zM2-CK-lez" customClass="PinField" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="101.5" y="50" width="172" height="10"/>
+                                            <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="172" id="1jk-JP-MuJ"/>
+                                                <constraint firstAttribute="height" constant="10" id="aoE-W2-lhp"/>
+                                            </constraints>
+                                            <connections>
+                                                <action selector="pinEditingChangedAction:" destination="-1" eventType="editingChanged" id="N3y-R1-FUf"/>
+                                            </connections>
+                                        </view>
+                                        <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RxG-TB-FaI" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="175.5" y="43" width="24" height="24"/>
+                                            <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="Dno-C4-Ys0"/>
+                                                <constraint firstAttribute="width" constant="24" id="Ttr-dO-mMF"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="You'll be asked for it periodically to help you remember it." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKk-YI-evv" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="30" y="90" width="315" height="33.5"/>
+                                            <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
+                                            <color key="textColor" red="0.73333333329999995" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_pin_remember_description"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
+                                                    <real key="value" value="20"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstItem="aKk-YI-evv" firstAttribute="top" secondItem="zM2-CK-lez" secondAttribute="bottom" constant="30" id="Fe1-C9-7Ow"/>
+                                        <constraint firstItem="RxG-TB-FaI" firstAttribute="centerX" secondItem="dO2-94-bDN" secondAttribute="centerX" id="Gkx-OJ-ieC"/>
+                                        <constraint firstItem="zM2-CK-lez" firstAttribute="centerX" secondItem="dO2-94-bDN" secondAttribute="centerX" id="Td4-2E-q9k"/>
+                                        <constraint firstItem="aKk-YI-evv" firstAttribute="leading" secondItem="dO2-94-bDN" secondAttribute="leading" constant="30" id="Xck-kt-AXz"/>
+                                        <constraint firstAttribute="trailing" secondItem="aKk-YI-evv" secondAttribute="trailing" constant="30" id="ZJl-XE-1kw"/>
+                                        <constraint firstItem="RxG-TB-FaI" firstAttribute="centerY" secondItem="zM2-CK-lez" secondAttribute="centerY" id="cYE-vX-2z6"/>
+                                        <constraint firstItem="zM2-CK-lez" firstAttribute="top" secondItem="dO2-94-bDN" secondAttribute="top" constant="50" id="ciF-dO-vgq"/>
+                                    </constraints>
+                                </view>
+                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wQB-vk-cAS">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="170"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="You have tried more than 5 times, please wait at least 24 hours to try again." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xKG-nW-kNh" customClass="LineHeightLabel" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="30" y="26" width="315" height="38.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.93333333330000001" green="0.20000000000000001" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_password_too_many_requests"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
+                                                    <real key="value" value="28"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOR-gR-Mjb">
+                                            <rect key="frame" x="148.5" y="86" width="78" height="44"/>
+                                            <inset key="contentEdgeInsets" minX="20" minY="13" maxX="20" maxY="13"/>
+                                            <state key="normal" title="Got It"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_got_it"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="acW-Ih-LqB"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstItem="xKG-nW-kNh" firstAttribute="top" secondItem="wQB-vk-cAS" secondAttribute="top" constant="26" id="9pf-gj-Mk0"/>
+                                        <constraint firstItem="MOR-gR-Mjb" firstAttribute="centerX" secondItem="wQB-vk-cAS" secondAttribute="centerX" id="Nhg-AX-iM6"/>
+                                        <constraint firstItem="xKG-nW-kNh" firstAttribute="leading" secondItem="wQB-vk-cAS" secondAttribute="leading" constant="30" id="R9w-nq-ZX2"/>
+                                        <constraint firstAttribute="trailing" secondItem="xKG-nW-kNh" secondAttribute="trailing" constant="30" id="SMA-Ji-IGa"/>
+                                        <constraint firstAttribute="bottom" secondItem="MOR-gR-Mjb" secondAttribute="bottom" constant="40" id="b2j-XK-ha4"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="dO2-94-bDN" firstAttribute="top" secondItem="Tgg-8p-q44" secondAttribute="top" id="Ia6-DQ-ud7"/>
+                                <constraint firstAttribute="trailing" secondItem="wQB-vk-cAS" secondAttribute="trailing" id="NVk-DP-ruZ"/>
+                                <constraint firstAttribute="trailing" secondItem="dO2-94-bDN" secondAttribute="trailing" id="Qt8-LN-yVk"/>
+                                <constraint firstAttribute="height" constant="170" id="T1c-Aw-9AT"/>
+                                <constraint firstItem="wQB-vk-cAS" firstAttribute="top" secondItem="Tgg-8p-q44" secondAttribute="top" id="UUs-jw-r7K"/>
+                                <constraint firstItem="wQB-vk-cAS" firstAttribute="leading" secondItem="Tgg-8p-q44" secondAttribute="leading" id="ZeL-1m-cFC"/>
+                                <constraint firstAttribute="bottom" secondItem="wQB-vk-cAS" secondAttribute="bottom" id="fDC-lX-dkY"/>
+                                <constraint firstAttribute="bottom" secondItem="dO2-94-bDN" secondAttribute="bottom" id="fop-Oo-zNm"/>
+                                <constraint firstItem="dO2-94-bDN" firstAttribute="leading" secondItem="Tgg-8p-q44" secondAttribute="leading" id="sXZ-qT-aQM"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="Tgg-8p-q44" firstAttribute="leading" secondItem="BaG-Ng-fDo" secondAttribute="leading" id="61C-nT-6Sr"/>
+                        <constraint firstAttribute="trailing" secondItem="BeR-hQ-9OV" secondAttribute="trailing" id="G7Q-4t-vwa"/>
+                        <constraint firstItem="BeR-hQ-9OV" firstAttribute="leading" secondItem="BaG-Ng-fDo" secondAttribute="leading" id="IEa-dV-hkB"/>
+                        <constraint firstItem="BeR-hQ-9OV" firstAttribute="top" secondItem="BaG-Ng-fDo" secondAttribute="top" id="Xer-3Q-5Ft"/>
+                        <constraint firstItem="Tgg-8p-q44" firstAttribute="top" secondItem="BeR-hQ-9OV" secondAttribute="bottom" id="XkR-5u-Ek0"/>
+                        <constraint firstAttribute="trailing" secondItem="Tgg-8p-q44" secondAttribute="trailing" id="bdK-iz-pSY"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="128" translatesAutoresizingMaskIntoConstraints="NO" id="YtT-Bw-bo1" customClass="NumberPadView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="539" width="375" height="128"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="YtT-Bw-bo1" secondAttribute="trailing" id="Gjv-Hy-OQo"/>
+                <constraint firstItem="BaG-Ng-fDo" firstAttribute="leading" secondItem="jqr-Lo-whB" secondAttribute="leading" id="TPj-6N-2Aq"/>
+                <constraint firstAttribute="trailing" secondItem="BaG-Ng-fDo" secondAttribute="trailing" id="Zwv-Oj-wPn"/>
+                <constraint firstAttribute="bottom" secondItem="BaG-Ng-fDo" secondAttribute="bottom" id="lVd-0j-ruO"/>
+                <constraint firstItem="YtT-Bw-bo1" firstAttribute="bottom" secondItem="jqr-Lo-whB" secondAttribute="bottom" id="mJf-wV-aGc"/>
+                <constraint firstItem="oT6-Rh-8fB" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Tgg-8p-q44" secondAttribute="bottom" id="mgE-aA-uQt"/>
+                <constraint firstItem="YtT-Bw-bo1" firstAttribute="top" secondItem="Tgg-8p-q44" secondAttribute="bottom" priority="250" id="rkw-Jg-BAW"/>
+                <constraint firstItem="YtT-Bw-bo1" firstAttribute="leading" secondItem="jqr-Lo-whB" secondAttribute="leading" id="yVi-k3-eBM"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="oT6-Rh-8fB"/>
+        </view>
+    </objects>
+</document>

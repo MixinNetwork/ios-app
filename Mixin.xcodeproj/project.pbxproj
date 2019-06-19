@@ -113,6 +113,7 @@
 		7B2E3E581FA0815B00DDDDEB /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */; };
 		7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */; };
 		7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BA922B9EAFE00C16652 /* IntroTextView.swift */; };
+		7B311BAC22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */; };
 		7B33000C223A8CB900A1016E /* LoneBackButtonNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */; };
 		7B331B6D21B10349000370E9 /* LoadMoreSnapshotsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */; };
 		7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B35AF73228A948A00E8101D /* UserSearchResult.swift */; };
@@ -297,6 +298,7 @@
 		7BB3855A21E77C380070FF8F /* ProvisioningAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855921E77C380070FF8F /* ProvisioningAPI.swift */; };
 		7BB3855C21E77D0D0070FF8F /* ProvisioningCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855B21E77D0D0070FF8F /* ProvisioningCodeResponse.swift */; };
 		7BB3856021E77F1D0070FF8F /* ProvisioningResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855F21E77F1D0070FF8F /* ProvisioningResponse.swift */; };
+		7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB6111922BA4179000E758C /* PinValidationView.xib */; };
 		7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
 		7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */; };
@@ -807,6 +809,7 @@
 		7B2E3E561FA0815B00DDDDEB /* LoginNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
 		7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginContinueButton.swift; sourceTree = "<group>"; };
 		7B311BA922B9EAFE00C16652 /* IntroTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroTextView.swift; sourceTree = "<group>"; };
+		7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowEmergencyContactValidationViewController.swift; sourceTree = "<group>"; };
 		7B33000B223A8CB900A1016E /* LoneBackButtonNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoneBackButtonNavigationController.swift; sourceTree = "<group>"; };
 		7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreSnapshotsJob.swift; sourceTree = "<group>"; };
 		7B35AF73228A948A00E8101D /* UserSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchResult.swift; sourceTree = "<group>"; };
@@ -991,6 +994,7 @@
 		7BB3855921E77C380070FF8F /* ProvisioningAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningAPI.swift; sourceTree = "<group>"; };
 		7BB3855B21E77D0D0070FF8F /* ProvisioningCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningCodeResponse.swift; sourceTree = "<group>"; };
 		7BB3855F21E77F1D0070FF8F /* ProvisioningResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisioningResponse.swift; sourceTree = "<group>"; };
+		7BB6111922BA4179000E758C /* PinValidationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinValidationView.xib; sourceTree = "<group>"; };
 		7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCancelButton.swift; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB788B1216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorFooterView.xib; sourceTree = "<group>"; };
@@ -1779,6 +1783,8 @@
 				7BF4047A2048F008004C54E4 /* VerifyPinNavigationController.swift */,
 				7B54F94F22B22E2900908A9D /* VerifyPinView.xib */,
 				7BF4047C2048FA0E004C54E4 /* VerifyPinViewController.swift */,
+				7BB6111922BA4179000E758C /* PinValidationView.xib */,
+				7B955339224380B200CE95E6 /* PinValidationViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2553,7 +2559,6 @@
 				DFF353181FEEC83100058453 /* WalletUserDefault.swift */,
 				DF0649602110724F00E91CD6 /* WalletSettingViewController.swift */,
 				7BD7055E215BAEDE00639FA8 /* PeerTransactionsViewController.swift */,
-				7B955339224380B200CE95E6 /* PinValidationViewController.swift */,
 				7B4F5ACC224CBA4A00A8392D /* AssetFilterViewController.swift */,
 			);
 			path = Wallet;
@@ -2658,6 +2663,7 @@
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
 				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
+				7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */,
 				7B54F95822B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift */,
 				7B54F95322B23A5600908A9D /* EmergencyContactSelectorViewController.swift */,
 				7B54F95A22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift */,
@@ -2843,6 +2849,7 @@
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
 				7B63C48F21A4333A0044C4BF /* DepositFieldView.xib in Resources */,
 				DF06D927222FC82200FE7FBC /* LoginConfirmWindow.xib in Resources */,
+				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
 				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				DF121F331FA1C778000F701D /* ConversationCell.xib in Resources */,
@@ -3461,6 +3468,7 @@
 				DF7A40292086EF2F0073E43C /* APIError.swift in Sources */,
 				DFCC433E206B53A5006F50BE /* AccountRequest.swift in Sources */,
 				DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */,
+				7B311BAC22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift in Sources */,
 				DF6175C3222398BB00624609 /* MixinURL.swift in Sources */,
 				7B331B6D21B10349000370E9 /* LoadMoreSnapshotsJob.swift in Sources */,
 				7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */,

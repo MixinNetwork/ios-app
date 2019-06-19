@@ -68,7 +68,8 @@ final class EmergencyAPI: BaseAPI {
     
     func show(pin: String, completion: @escaping (APIResult<User>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
-            request(method: .get, url: Url.show, completion: completion)
+            let param = ["pin": encryptedPin]
+            request(method: .post, url: Url.show, parameters: param, completion: completion)
         }
     }
     

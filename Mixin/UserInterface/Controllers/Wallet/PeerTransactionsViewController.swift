@@ -1,7 +1,11 @@
 import UIKit
 
 class PeerTransactionsViewController: AllTransactionsViewController {
-
+    
+    override var showFilters: Bool {
+        return false
+    }
+    
     class func instance(opponentId: String) -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "peer_transaction") as! PeerTransactionsViewController
         vc.dataSource = SnapshotDataSource(category: .user(id: opponentId))
@@ -9,5 +13,5 @@ class PeerTransactionsViewController: AllTransactionsViewController {
         container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
-
+    
 }

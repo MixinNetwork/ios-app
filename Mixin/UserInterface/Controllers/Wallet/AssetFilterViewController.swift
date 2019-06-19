@@ -15,6 +15,14 @@ class AssetFilterViewController: UIViewController {
     @IBOutlet weak var applyButtonTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var applyButtonBottomConstraint: NSLayoutConstraint!
     
+    var showFilters = true {
+        didSet {
+            if isViewLoaded {
+                collectionView.reloadData()
+            }
+        }
+    }
+    
     weak var delegate: AssetFilterViewControllerDelegate?
     
     private(set) var sort = Snapshot.Sort.createdAt
@@ -25,25 +33,35 @@ class AssetFilterViewController: UIViewController {
     
     private let cellReuseId = "condition"
     private let headerReuseId = "header"
-    private let headers = [
-        Localized.TRANSACTIONS_FILTER_SORT_BY,
-        Localized.TRANSACTIONS_FILTER_FILTER_BY
-    ]
-    private let titles = [
-        [Localized.TRANSACTIONS_FILTER_SORT_BY_TIME,
-         Localized.TRANSACTIONS_FILTER_SORT_BY_AMOUNT],
-        [Localized.TRANSACTIONS_FILTER_FILTER_BY_ALL,
-         Localized.TRANSACTION_TYPE_TRANSFER,
-         Localized.TRANSACTION_TYPE_DEPOSIT,
-         Localized.TRANSACTION_TYPE_WITHDRAWAL,
-         Localized.TRANSACTION_TYPE_FEE,
-         Localized.TRANSACTION_TYPE_REBATE]
-    ]
+    private var headers: [String] {
+        if showFilters {
+            return [Localized.TRANSACTIONS_FILTER_SORT_BY,
+                    Localized.TRANSACTIONS_FILTER_FILTER_BY]
+        } else {
+            return [Localized.TRANSACTIONS_FILTER_SORT_BY]
+        }
+    }
+    private var titles: [[String]] {
+        let sortTitles = [Localized.TRANSACTIONS_FILTER_SORT_BY_TIME,
+                          Localized.TRANSACTIONS_FILTER_SORT_BY_AMOUNT]
+        let filterTitles = [Localized.TRANSACTIONS_FILTER_FILTER_BY_ALL,
+                            Localized.TRANSACTION_TYPE_TRANSFER,
+                            Localized.TRANSACTION_TYPE_DEPOSIT,
+                            Localized.TRANSACTION_TYPE_WITHDRAWAL,
+                            Localized.TRANSACTION_TYPE_FEE,
+                            Localized.TRANSACTION_TYPE_REBATE]
+        if showFilters {
+            return [sortTitles, filterTitles]
+        } else {
+            return [sortTitles]
+        }
+    }
     
-    class func instance() -> AssetFilterViewController {
+    class func instance(showFilters: Bool) -> AssetFilterViewController {
         let vc = R.storyboard.wallet.asset_filter()!
         vc.transitioningDelegate = PopupPresentationManager.shared
         vc.modalPresentationStyle = .custom
+        vc.showFilters = showFilters
         return vc
     }
     
@@ -157,19 +175,21 @@ extension AssetFilterViewController {
         case .amount:
             collectionView.selectItem(at: IndexPath(item: 1, section: 0), animated: false, scrollPosition: .top)
         }
-        switch filter {
-        case .all:
-            collectionView.selectItem(at: IndexPath(item: 0, section: 1), animated: false, scrollPosition: .top)
-        case .transfer:
-            collectionView.selectItem(at: IndexPath(item: 1, section: 1), animated: false, scrollPosition: .top)
-        case .deposit:
-            collectionView.selectItem(at: IndexPath(item: 2, section: 1), animated: false, scrollPosition: .top)
-        case .withdrawal:
-            collectionView.selectItem(at: IndexPath(item: 3, section: 1), animated: false, scrollPosition: .top)
-        case .fee:
-            collectionView.selectItem(at: IndexPath(item: 4, section: 1), animated: false, scrollPosition: .top)
-        case .rebate:
-            collectionView.selectItem(at: IndexPath(item: 5, section: 1), animated: false, scrollPosition: .top)
+        if showFilters {
+            switch filter {
+            case .all:
+                collectionView.selectItem(at: IndexPath(item: 0, section: 1), animated: false, scrollPosition: .top)
+            case .transfer:
+                collectionView.selectItem(at: IndexPath(item: 1, section: 1), animated: false, scrollPosition: .top)
+            case .deposit:
+                collectionView.selectItem(at: IndexPath(item: 2, section: 1), animated: false, scrollPosition: .top)
+            case .withdrawal:
+                collectionView.selectItem(at: IndexPath(item: 3, section: 1), animated: false, scrollPosition: .top)
+            case .fee:
+                collectionView.selectItem(at: IndexPath(item: 4, section: 1), animated: false, scrollPosition: .top)
+            case .rebate:
+                collectionView.selectItem(at: IndexPath(item: 5, section: 1), animated: false, scrollPosition: .top)
+            }
         }
     }
     

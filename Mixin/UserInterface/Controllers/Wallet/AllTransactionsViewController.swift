@@ -6,10 +6,15 @@ class AllTransactionsViewController: UITableViewController {
         static let header = "header"
     }
     
-    internal var dataSource: SnapshotDataSource!
+    var dataSource: SnapshotDataSource!
+    
+    var showFilters: Bool {
+        return true
+    }
+    
     private let loadNextPageThreshold = 20
     
-    private lazy var filterController = AssetFilterViewController.instance()
+    private lazy var filterController = AssetFilterViewController.instance(showFilters: showFilters)
     
     override func viewDidLoad() {
         super.viewDidLoad()

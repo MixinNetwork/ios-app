@@ -15,7 +15,7 @@ class AssetViewController: UIViewController {
     private var snapshotDataSource: SnapshotDataSource!
     
     private lazy var noTransactionFooterView = Bundle.main.loadNibNamed("NoTransactionFooterView", owner: self, options: nil)?.first as! UIView
-    private lazy var filterController = AssetFilterViewController.instance()
+    private lazy var filterController = AssetFilterViewController.instance(showFilters: true)
     
     override func viewDidLoad() {
         super.viewDidLoad()

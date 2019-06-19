@@ -495,6 +495,7 @@
 "emergency_change" = "緊急連絡先を変更";
 "emergency_tip1" = "The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
 "emergency_tip2" = "Please rest assured that even if your mobile phone number is lost and you cannot retrieve it, your assets stored in the wallet are still safe. Read our Emergency Contact to learn more.";
+"emergency_tip2_link" = "Emergency Contact";
 "emergency_tip3" = "We won’t spam your contact.";
 "emergency_pin_protection_hint" = "緊急連絡先はPINで保護されています";
 

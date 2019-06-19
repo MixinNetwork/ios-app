@@ -564,6 +564,7 @@
 "emergency_tip1" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号";
 "emergency_tip2" = "请放心，即使您的手机号丢失无法找回钱包资产也很安全，请牢记您的支付密码，阅读紧急联系人了解更多";
 "emergency_tip3" = "我们不会给你的紧急联系人发送垃圾信息";
+"emergency_pin_protection_hint" = "紧急联系人经 PIN 加密保护";
 
 // Notifications
 "notification_reply" = "回复";

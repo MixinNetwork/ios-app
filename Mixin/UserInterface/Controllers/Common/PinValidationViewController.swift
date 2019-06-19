@@ -13,22 +13,21 @@ class PinValidationViewController: UIViewController {
     
     @IBOutlet weak var numberPadViewBottomConstraint: NSLayoutConstraint!
     
-    private let presentationManager = PinValidationPresentationManager()
+    let presentationManager = PinValidationPresentationManager()
     
     private var onSuccess: SuccessCallback?
     private var onFailed: FailedCallback?
     
-    class func instance(tips: String? = nil, onSuccess: SuccessCallback? = nil, onFailed: FailedCallback? = nil) -> PinValidationViewController {
-        let vc = R.storyboard.wallet.pin_validation()!
+    convenience init(tips: String? = nil, onSuccess: SuccessCallback? = nil, onFailed: FailedCallback? = nil) {
+        self.init(nib: R.nib.pinValidationView)
         if let tips = tips {
-            vc.loadViewIfNeeded()
-            vc.descriptionLabel.text = tips
+            loadViewIfNeeded()
+            descriptionLabel.text = tips
         }
-        vc.onSuccess = onSuccess
-        vc.onFailed = onFailed
-        vc.transitioningDelegate = vc.presentationManager
-        vc.modalPresentationStyle = .custom
-        return vc
+        self.onSuccess = onSuccess
+        self.onFailed = onFailed
+        transitioningDelegate = presentationManager
+        modalPresentationStyle = .custom
     }
     
     override func viewDidLoad() {
@@ -43,7 +42,15 @@ class PinValidationViewController: UIViewController {
         loadingIndicator.startAnimating()
         pinField.isHidden = true
         pinField.receivesInput = false
-        let pin = pinField.text
+        validate(pin: pinField.text)
+    }
+    
+    @IBAction func dismissAction(_ sender: Any) {
+        onFailed?()
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func validate(pin: String) {
         AccountAPI.shared.verify(pin: pin) { (result) in
             self.loadingIndicator.stopAnimating()
             switch result {
@@ -55,32 +62,27 @@ class PinValidationViewController: UIViewController {
                 self.onSuccess?(pin)
                 self.dismiss(animated: true, completion: nil)
             case let .failure(error):
-                UIApplication.traceError(error)
-                self.pinField.clear()
-                self.pinField.receivesInput = true
-                if error.code == 429 {
-                    self.limitationHintView.isHidden = false
-                    self.hideNumberPadView()
-                } else {
-                    self.pinField.isHidden = false
-                    self.descriptionLabel.textColor = UIColor.red
-                    self.descriptionLabel.text = error.localizedDescription
-                }
+                self.handle(error: error)
             }
         }
     }
     
-    @IBAction func dismissAction(_ sender: Any) {
-        onFailed?()
-        dismiss(animated: true, completion: nil)
-    }
-    
-    private func hideNumberPadView() {
-        numberPadViewBottomConstraint.constant = numberPadView.frame.height
-        UIView.animate(withDuration: 0.5, animations: {
-            UIView.setAnimationCurve(.overdamped)
-            self.view.layoutIfNeeded()
-        })
+    func handle(error: APIError) {
+        UIApplication.traceError(error)
+        pinField.clear()
+        pinField.receivesInput = true
+        if error.code == 429 {
+            limitationHintView.isHidden = false
+            numberPadViewBottomConstraint.constant = numberPadView.frame.height
+            UIView.animate(withDuration: 0.5, animations: {
+                UIView.setAnimationCurve(.overdamped)
+                self.view.layoutIfNeeded()
+            })
+        } else {
+            pinField.isHidden = false
+            descriptionLabel.textColor = UIColor.red
+            descriptionLabel.text = error.localizedDescription
+        }
     }
     
 }

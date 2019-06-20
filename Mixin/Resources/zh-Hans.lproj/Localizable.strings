@@ -109,6 +109,7 @@
 "text_mobile_number_privacy" = "我们不会公开你的手机号码";
 "text_confirm_send_code" = "确认你的手机号码 %@";
 "text_invalid_verification_code" = "验证码不正确。";
+"text_invalid_emergency_id" = "紧急联系人不正确。";
 "button_title_agree_and_continue" = "同意并继续";
 "button_title_terms_of_service" = "服务条款";
 "button_title_privacy_policy" = "隐私政策";
@@ -116,7 +117,7 @@
 "button_title_resend_code_pending" = "%@ 后重新发送验证码";
 "button_title_help" = "需要帮助？";
 "button_title_cant_receive_code" = "没有收到验证码";
-"button_title_phone_number_lost" = "手机号码丢失";
+"button_title_phone_number_lost" = "手机号码丢失了？";
 "header_title_current_selected" = "当前选择";
 "header_title_current_location" = "当前位置";
 "placeholder_search_bar" = "搜索国家";
@@ -564,7 +565,7 @@
 "emergency_view" = "查看紧急联系人";
 "emergency_change" = "修改紧急联系人";
 "emergency_tip1" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号";
-"emergency_tip2" = "请放心，即使您的手机号丢失无法找回钱包资产也很安全，请牢记您的支付密码，阅读紧急联系人了解更多";
+"emergency_tip2" = "请放心，即使您的手机号丢失且无法找回，钱包里的资产也很安全，请确保您的支付密码安全，阅读紧急联系人了解更多";
 "emergency_tip2_link" = "紧急联系人";
 "emergency_tip3" = "我们不会给你的紧急联系人发送垃圾信息";
 "emergency_pin_protection_hint" = "紧急联系人经 PIN 加密保护";

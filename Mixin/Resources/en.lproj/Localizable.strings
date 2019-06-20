@@ -109,6 +109,7 @@
 "text_mobile_number_privacy" = "We will never display your phone number publicly";
 "text_confirm_send_code" = "Please confirm the phone number %@";
 "text_invalid_verification_code" = "The code is incorrect.";
+"text_invalid_emergency_id" = "Invalid emergency contact.";
 "button_title_agree_and_continue" = "Agree & Continue";
 "button_title_terms_of_service" = "Terms of Service";
 "button_title_privacy_policy" = "Privacy Policy";
@@ -116,7 +117,7 @@
 "button_title_resend_code_pending" = "Resend code in %@";
 "button_title_help" = "Need help?";
 "button_title_cant_receive_code" = "Can't receive the code";
-"button_title_phone_number_lost" = "Lost your mobile number";
+"button_title_phone_number_lost" = "Lost your mobile number?";
 "header_title_current_selected" = "Current Selected";
 "header_title_current_location" = "Current Location";
 "placeholder_search_bar" = "Search for a country";

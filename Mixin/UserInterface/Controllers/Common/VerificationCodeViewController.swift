@@ -69,7 +69,7 @@ class VerificationCodeViewController: ContinueButtonViewController {
         if error.code == 20113 {
             verificationCodeField.clear()
             verificationCodeField.showError()
-            showAutoHiddenHud(style: .error, text: Localized.TEXT_INVALID_VERIFICATION_CODE)
+            alert(Localized.TEXT_INVALID_VERIFICATION_CODE)
         } else {
             UIApplication.traceError(error)
             alert(error.localizedDescription)

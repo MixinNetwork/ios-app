@@ -79,7 +79,7 @@ extension SettingViewController: UITableViewDelegate {
             default:
                 vc = StorageUsageViewController.instance()
             }
-        case 2:
+        case 1:
             vc = DesktopViewController.instance()
         default:
             vc = AboutViewController.instance()

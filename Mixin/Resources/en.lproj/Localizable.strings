@@ -503,6 +503,7 @@
 "emergency_tip3" = "We won’t spam your contact.";
 "emergency_pin_protection_hint" = "Your emergency contact is protected by PIN";
 "emergency_change_number_tip" = "Do you want to change your mobile number now?";
+"emergency_enabled" = "Enabled";
 
 // Setting
 "setting_title" = "Setting";

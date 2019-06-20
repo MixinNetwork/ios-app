@@ -38,6 +38,7 @@
 "action_delete_me" = "在我的设备上删除";
 "action_delete_everyone" = "在所有人设备上删除";
 "action_learn_more" = "了解更多";
+"action_later" = "稍后";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "no_result" = "未找到相关内容";
@@ -563,6 +564,7 @@
 "emergency_tip2_link" = "紧急联系人";
 "emergency_tip3" = "我们不会给你的紧急联系人发送垃圾信息";
 "emergency_pin_protection_hint" = "紧急联系人经 PIN 加密保护";
+"emergency_change_number_tip" = "立即更换手机号？";
 
 // Notifications
 "notification_reply" = "回复";

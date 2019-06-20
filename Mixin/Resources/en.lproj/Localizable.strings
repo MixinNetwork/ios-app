@@ -38,6 +38,7 @@
 "action_delete_me" = "Delete for Me";
 "action_delete_everyone" = "Delete for Everyone";
 "action_learn_more" = "Learn More";
+"action_later" = "Later";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "no_result" = "No result";
@@ -501,6 +502,7 @@
 "emergency_tip2_link" = "Emergency Contact";
 "emergency_tip3" = "We won’t spam your contact.";
 "emergency_pin_protection_hint" = "Your emergency contact is protected by PIN";
+"emergency_change_number_tip" = "Do you want to change your mobile number now?";
 
 // Setting
 "setting_title" = "Setting";

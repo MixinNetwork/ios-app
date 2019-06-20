@@ -25,7 +25,7 @@ final class EmergencyAPI: BaseAPI {
                 completion: completion)
     }
     
-    func verifyContact(pin: String, id: String, code: String, completion: @escaping (APIResult<EmptyResponse>) -> Void) {
+    func verifyContact(pin: String, id: String, code: String, completion: @escaping (APIResult<Account>) -> Void) {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let req = EmergencyRequest(phone: nil,
                                        identityNumber: nil,

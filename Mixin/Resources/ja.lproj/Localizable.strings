@@ -109,7 +109,7 @@
 "button_title_privacy_policy" = "個人情報保護方針";
 "button_title_resend_code" = "コードを再送信";
 "button_title_resend_code_pending" = "%@ でコードを再送信";
-"button_title_help" = "お手伝いしましょうか？";
+"button_title_help" = "お手伝いしましょうか";
 "button_title_cant_receive_code" = "コードが送られて来ない";
 "button_title_phone_number_lost" = "携帯電話を紛失した";
 "header_title_current_selected" = "現在選択されている";
@@ -499,6 +499,7 @@
 "emergency_tip3" = "We won’t spam your contact.";
 "emergency_pin_protection_hint" = "緊急連絡先はPINで保護されています";
 "emergency_change_number_tip" = "携帯番号を変更したいんですか";
+"emergency_enabled" = "有効";
 
 // Setting
 "setting_title" = "設定";

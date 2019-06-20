@@ -26,7 +26,9 @@ class PrivacyViewController: UITableViewController {
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
         NotificationCenter.default.addObserver(self, selector: #selector(updateBlockedUserCell), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateEmergencyLabel), name: .AccountDidChange, object: nil)
         updateBlockedUserCell()
+        updateEmergencyLabel()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -83,6 +85,13 @@ class PrivacyViewController: UITableViewController {
                 self?.blockLabel.text = blocked.count > 0 ? "\(blocked.count)" + Localized.SETTING_BLOCKED_USER_COUNT_SUFFIX : Localized.SETTING_BLOCKED_USER_COUNT_NONE
             }
         }
+    }
+    
+    @objc func updateEmergencyLabel() {
+        guard let account = AccountAPI.shared.account else {
+            return
+        }
+        emergencyLabel.text = account.has_emergency_contact ? R.string.localizable.emergency_enabled() : nil
     }
     
     private func viewEmergencyAction() {

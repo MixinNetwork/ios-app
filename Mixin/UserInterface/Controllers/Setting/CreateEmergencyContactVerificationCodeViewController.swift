@@ -39,7 +39,8 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
                 return
             }
             switch result {
-            case .success(_):
+            case .success:
+                AccountAPI.shared.account?.has_emergency_contact = true
                 weakSelf.showSuccessAlert()
             case .failure(let error):
                 weakSelf.handleVerificationCodeError(error)

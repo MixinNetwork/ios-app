@@ -19,7 +19,7 @@ struct Account: Encodable {
     let receive_message_source: String
     let accept_conversation_source: String
     let has_pin: Bool
-    let has_emergency_contact: Bool
+    var has_emergency_contact: Bool
     let pin_token: String
     
     init(withAccount old: Account, receiveMessageSource: ReceiveMessageSource) {

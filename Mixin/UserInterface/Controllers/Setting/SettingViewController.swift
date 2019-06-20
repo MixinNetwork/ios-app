@@ -28,9 +28,6 @@ class SettingViewController: UIViewController {
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.estimatedSectionFooterHeight = 10
-        tableView.sectionFooterHeight = UITableView.automaticDimension
-        
     }
     
     class func instance() -> UIViewController {
@@ -89,6 +86,12 @@ extension SettingViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseId.footer) as! SeparatorShadowFooterView
+        view.shadowView.hasLowerShadow = section != numberOfSections(in: tableView) - 1
+        return view
     }
     
 }

@@ -14,11 +14,14 @@ class ShowEmergencyContactValidationViewController: PinValidationViewController 
     }
     
     override func validate(pin: String) {
-        EmergencyAPI.shared.show(pin: pin) { (result) in
-            self.loadingIndicator.stopAnimating()
+        EmergencyAPI.shared.show(pin: pin) { [weak self](result) in
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.loadingIndicator.stopAnimating()
             switch result {
             case .success(let user):
-                self.dismiss(animated: true, completion: {
+                weakSelf.dismiss(animated: true, completion: {
                     let userWindow = UserWindow.instance()
                     let item = UserItem.createUser(userId: user.userId,
                                                    fullName: user.fullName ?? "",
@@ -29,7 +32,7 @@ class ShowEmergencyContactValidationViewController: PinValidationViewController 
                     userWindow.presentView()
                 })
             case .failure(let error):
-                self.handle(error: error)
+                weakSelf.handle(error: error)
             }
         }
     }

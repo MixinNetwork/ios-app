@@ -63,7 +63,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Allow Mixin to use your camera</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Allow Mixin to access your contacts</string>
+	<string>Allow Mixin to access your address book to help you find your friends.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow Mixin to authorize payment via Face ID</string>
 	<key>NSMicrophoneUsageDescription</key>

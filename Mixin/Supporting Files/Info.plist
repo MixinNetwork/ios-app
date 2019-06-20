@@ -61,15 +61,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow Mixin to use your camera to take photo and share to your friends.</string>
+	<string>Mixin uses the camera to set profile photo, and send photo to your contact in chat.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Allow Mixin to access your address book to help you find your friends.</string>
+	<string>Mixin syncs your address book to Mixin servers to help you connect with other Mixin users.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Allow Mixin to authorize payment via Face ID.</string>
+	<string>Mixin uses Face ID to authorize payment</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow Mixin to access your microphone to record audio and share to your friends.</string>
+	<string>Mixin uses your microphone to record voice messages to share with your contacts.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow Mixin to access your photos and share to your friends.</string>
+	<string>Mixin uses the photo library to set profile photo, and send photo to your contact in chat.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>voip</string>

@@ -61,15 +61,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow Mixin to use your camera</string>
+	<string>Allow Mixin to use your camera to take photo and share to your friends.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Allow Mixin to access your address book to help you find your friends.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Allow Mixin to authorize payment via Face ID</string>
+	<string>Allow Mixin to authorize payment via Face ID.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow Mixin to access your microphone</string>
+	<string>Allow Mixin to access your microphone to record audio and share to your friends.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow Mixin to access your photos</string>
+	<string>Allow Mixin to access your photos and share to your friends.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>voip</string>

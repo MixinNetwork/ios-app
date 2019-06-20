@@ -36,6 +36,7 @@
 "action_delete_me" = "自分用に削除";
 "action_delete_everyone" = "全員分を削除";
 "action_learn_more" = "もっと知りたい";
+"action_later" = "後で";
 "menu_delete" = "デリート";
 "no_result" = "検索結果はありません";
 "all_photos" = "すべての写真";
@@ -497,6 +498,7 @@
 "emergency_tip2_link" = "Emergency Contact";
 "emergency_tip3" = "We won’t spam your contact.";
 "emergency_pin_protection_hint" = "緊急連絡先はPINで保護されています";
+"emergency_change_number_tip" = "携帯番号を変更したいんですか";
 
 // Setting
 "setting_title" = "設定";

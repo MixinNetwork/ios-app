@@ -6,6 +6,7 @@ import UserNotifications
 class HomeViewController: UIViewController {
     
     static var hasTriedToRequestReview = false
+    static var showChangePhoneNumberTips = false
     
     @IBOutlet weak var navigationBarView: UIView!
     @IBOutlet weak var searchContainerView: UIView!
@@ -102,6 +103,16 @@ class HomeViewController: UIViewController {
         #if RELEASE
         requestAppStoreReviewIfNeeded()
         #endif
+        if HomeViewController.showChangePhoneNumberTips {
+            HomeViewController.showChangePhoneNumberTips = false
+            let alert = UIAlertController(title: R.string.localizable.emergency_change_number_tip(), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.action_later(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_change(), style: .default, handler: { (_) in
+                let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
+                self.present(vc, animated: true, completion: nil)
+            }))
+            present(alert, animated: true, completion: nil)
+        }
     }
     
     override func viewWillLayoutSubviews() {

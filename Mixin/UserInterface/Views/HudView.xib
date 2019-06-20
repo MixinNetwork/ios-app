@@ -31,14 +31,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="beD-Qx-oOz">
                                 <rect key="frame" x="50" y="30" width="30" height="30"/>
                                 <subviews>
-                                    <view hidden="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="37" placeholderIntrinsicHeight="37" translatesAutoresizingMaskIntoConstraints="NO" id="RSY-WQ-csY" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="-3.5" y="-3.5" width="37" height="37"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="l9V-RZ-2q0">
                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -46,11 +38,9 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="RSY-WQ-csY" firstAttribute="centerX" secondItem="beD-Qx-oOz" secondAttribute="centerX" id="7b9-BD-RAH"/>
                                     <constraint firstItem="l9V-RZ-2q0" firstAttribute="leading" secondItem="beD-Qx-oOz" secondAttribute="leading" id="9tS-nM-Q6R"/>
                                     <constraint firstAttribute="bottom" secondItem="l9V-RZ-2q0" secondAttribute="bottom" id="Esd-4i-Ak3"/>
                                     <constraint firstAttribute="width" constant="30" id="SO0-Wp-yvM"/>
-                                    <constraint firstItem="RSY-WQ-csY" firstAttribute="centerY" secondItem="beD-Qx-oOz" secondAttribute="centerY" id="ffC-Gs-tVf"/>
                                     <constraint firstAttribute="trailing" secondItem="l9V-RZ-2q0" secondAttribute="trailing" id="ird-NU-WtA"/>
                                     <constraint firstItem="l9V-RZ-2q0" firstAttribute="top" secondItem="beD-Qx-oOz" secondAttribute="top" id="ohk-HH-H8S"/>
                                     <constraint firstAttribute="height" constant="30" id="oiI-Qk-tF8"/>
@@ -62,11 +52,21 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="37" placeholderIntrinsicHeight="37" translatesAutoresizingMaskIntoConstraints="NO" id="RSY-WQ-csY" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="46" y="36" width="37" height="37"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <constraints>
                             <constraint firstItem="ndB-z1-yQA" firstAttribute="top" secondItem="beD-Qx-oOz" secondAttribute="bottom" constant="12" id="2N2-L8-9bQ"/>
                             <constraint firstAttribute="trailing" secondItem="ndB-z1-yQA" secondAttribute="trailing" constant="16" id="BPn-bB-sny"/>
+                            <constraint firstItem="RSY-WQ-csY" firstAttribute="centerX" secondItem="SKL-57-8ix" secondAttribute="centerX" id="PP8-fD-VVR"/>
                             <constraint firstItem="beD-Qx-oOz" firstAttribute="centerX" secondItem="SKL-57-8ix" secondAttribute="centerX" id="QFl-B5-xe8"/>
+                            <constraint firstItem="RSY-WQ-csY" firstAttribute="centerY" secondItem="SKL-57-8ix" secondAttribute="centerY" id="UFZ-fw-udx"/>
                             <constraint firstItem="ndB-z1-yQA" firstAttribute="leading" secondItem="SKL-57-8ix" secondAttribute="leading" constant="16" id="gGU-Bc-7Er"/>
                             <constraint firstAttribute="bottom" secondItem="ndB-z1-yQA" secondAttribute="bottom" constant="20" id="stG-3K-xe7"/>
                             <constraint firstItem="beD-Qx-oOz" firstAttribute="top" secondItem="SKL-57-8ix" secondAttribute="top" constant="30" id="wDL-Jh-8UI"/>

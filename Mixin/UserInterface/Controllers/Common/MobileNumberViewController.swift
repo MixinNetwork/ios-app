@@ -74,6 +74,13 @@ extension MobileNumberViewController: UITextFieldDelegate {
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if !continueButton.isHidden {
+            continueAction(textField)
+        }
+        return false
+    }
+    
 }
 
 extension MobileNumberViewController: SelectCountryViewControllerDelegate {

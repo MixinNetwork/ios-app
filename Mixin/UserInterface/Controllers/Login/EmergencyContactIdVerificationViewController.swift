@@ -53,4 +53,11 @@ extension EmergencyContactIdVerificationViewController: UITextFieldDelegate {
         return string.isEmpty || string.isNumeric
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if !continueButton.isHidden {
+            continueAction(textField)
+        }
+        return false
+    }
+    
 }

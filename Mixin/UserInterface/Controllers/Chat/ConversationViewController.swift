@@ -1225,7 +1225,7 @@ extension ConversationViewController {
     }
     
     private func updateNavigationBarHeightAndTableViewTopInset() {
-        titleViewTopConstraint.constant = view.safeAreaInsets.top
+        titleViewTopConstraint.constant = max(20, view.safeAreaInsets.top)
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
     }
     

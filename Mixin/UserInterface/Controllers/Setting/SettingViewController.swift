@@ -3,7 +3,6 @@ import UIKit
 class SettingViewController: UIViewController {
     
     enum ReuseId {
-        static let cell = "setting"
         static let footer = "footer"
     }
     
@@ -22,8 +21,7 @@ class SettingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UINib(nibName: "SettingCell", bundle: .main),
-                           forCellReuseIdentifier: ReuseId.cell)
+        tableView.register(R.nib.settingCell)
         tableView.register(SeparatorShadowFooterView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
         tableView.dataSource = self
@@ -44,7 +42,7 @@ extension SettingViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ReuseId.cell, for: indexPath) as! SettingCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.setting, for: indexPath)!
         cell.titleLabel.text = titles[indexPath.section][indexPath.row]
         return cell
     }
@@ -74,7 +72,7 @@ extension SettingViewController: UITableViewDelegate {
                 }
                 vc = BackupViewController.instance()
             default:
-                vc = StorageUsageViewController.instance()
+                vc = DataStorageUsageViewController.instance()
             }
         case 1:
             vc = DesktopViewController.instance()

@@ -514,7 +514,6 @@
 "setting_header_conversation_source" = "グループチャットに私を追加できるのは誰ですか";
 "setting_source_everybody" = "みんな";
 "setting_source_contacts" = "私の連絡先";
-"setting_storage_usage" = "ストレージ使用量";
 "setting_storage_photos" = "写真";
 "setting_storage_videos" = "ビデオ";
 "setting_storage_audios" = "オーディオ";
@@ -538,6 +537,10 @@
 "setting_backup_tips" = "チャット履歴をiCloudにバックアップします。 iPhoneを紛失した場合や新しいiPhoneに切り替えた場合は、Mixin Messengerをインストールしたときにチャット履歴を復元できます。 バックアップしたメッセージは、iCloudにいる間はMixin Messengerのエンドツーエンドの暗号化によって保護されません。";
 "setting_backup_auto_tips" = "Wi-Fi経由でのみiCloudに自動的にバックアップします。";
 "setting_backup_last" = "最後のバックアップは %@ 、合計サイズは %@ です。";
+"setting_auto_download_never" = "オフ";
+"setting_auto_download_wifi" = "WLAN";
+"setting_auto_download_wifi_cellular" = "WLANとモバイルデータ通信";
+"setting_auto_download_hint" = "オーディオメッセージは常に自動でダウンロードされます";
 
 // Notifications
 "notification_reply" = "返信";

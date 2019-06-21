@@ -6,6 +6,7 @@ protocol AttachmentLoadingViewModel: class {
     var operationButtonStyle: NetworkOperationButton.Style { get set }
     var shouldUpload: Bool { get } // false if should download
     var automaticallyLoadsAttachment: Bool { get }
+    var automaticallyCancelAttachmentLoading: Bool { get }
     var mediaStatus: String? { get set }
     var sizeRepresentation: String { get }
     func beginAttachmentLoading()

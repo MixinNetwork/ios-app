@@ -863,7 +863,7 @@ extension ConversationViewController: UITableViewDelegate {
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
         }
-        if let viewModel = viewModel as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
+        if let viewModel = viewModel as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment, !viewModel.automaticallyCancelAttachmentLoading {
             viewModel.cancelAttachmentLoading(markMediaStatusCancelled: false)
         }
         if viewModel.message.messageId == quotingMessageId, let lastVisibleIndexPath = tableView.indexPathsForVisibleRows?.last, lastVisibleIndexPath.section > indexPath.section || (lastVisibleIndexPath.section == indexPath.section && lastVisibleIndexPath.row > indexPath.row) {

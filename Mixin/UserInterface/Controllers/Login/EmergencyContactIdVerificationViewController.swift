@@ -12,6 +12,13 @@ class EmergencyContactIdVerificationViewController: LoginInfoInputViewController
         textField.delegate = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !textField.isFirstResponder {
+            textField.becomeFirstResponder()
+        }
+    }
+    
     override func continueAction(_ sender: Any) {
         continueButton.isBusy = true
         var context = self.context!

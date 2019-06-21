@@ -401,7 +401,6 @@ class ConversationViewController: UIViewController {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
                 conversationInputViewController.dismiss()
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
-                AudioManager.shared.stop(deactivateAudioSession: true)
                 view.bringSubviewToFront(galleryWrapperView)
                 if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, case let .relativeOffset(offset) = viewModel.layoutPosition {
                     galleryViewController.show(item: item, offset: offset)

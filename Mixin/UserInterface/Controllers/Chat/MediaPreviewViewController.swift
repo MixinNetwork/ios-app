@@ -88,6 +88,7 @@ final class MediaPreviewViewController: UIViewController {
         guard let asset = self.asset else {
             return
         }
+        AudioManager.shared.stop(deactivateAudioSession: false)
         playButton.isHidden = true
         if let player = playerView?.layer.player {
             if seekToZeroBeforePlay {

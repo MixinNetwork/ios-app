@@ -1141,6 +1141,7 @@ extension ConversationViewController {
             let navigationBarTop = min(maxTop, max(0, top))
             navigationBarTopConstraint.constant = navigationBarTop
             tableView.contentInset.top = max(view.safeAreaInsets.top, navigationBarView.frame.height - navigationBarTop)
+            tableView.scrollIndicatorInsets.top = tableView.contentInset.top
             if !statusBarHidden {
                 UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
                     self.statusBarHidden = true
@@ -1149,6 +1150,7 @@ extension ConversationViewController {
         } else {
             navigationBarTopConstraint.constant = 0
             tableView.contentInset.top = navigationBarView.frame.height
+            tableView.scrollIndicatorInsets.top = tableView.contentInset.top
             if statusBarHidden {
                 UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
                     self.statusBarHidden = false
@@ -1225,8 +1227,9 @@ extension ConversationViewController {
     }
     
     private func updateNavigationBarHeightAndTableViewTopInset() {
-        titleViewTopConstraint.constant = view.safeAreaInsets.top
+        titleViewTopConstraint.constant = max(20, view.safeAreaInsets.top)
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
+        tableView.scrollIndicatorInsets.top = tableView.contentInset.top
     }
     
     private func blinkCellBackground(at indexPath: IndexPath) {

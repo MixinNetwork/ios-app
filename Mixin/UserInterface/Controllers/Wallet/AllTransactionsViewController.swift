@@ -35,7 +35,6 @@ class AllTransactionsViewController: UITableViewController {
         updateTableViewContentInset()
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
@@ -45,7 +44,6 @@ class AllTransactionsViewController: UITableViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "snapshot") as! AllTransactionsViewController
         vc.dataSource = SnapshotDataSource(category: .all)
         let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_ALL_TRANSACTIONS_TITLE)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     
@@ -101,7 +99,7 @@ extension AllTransactionsViewController {
     }
     
     private func updateTableViewContentInset() {
-        if view.compatibleSafeAreaInsets.bottom < 1 {
+        if view.safeAreaInsets.bottom < 1 {
             tableView.contentInset.bottom = 10
         } else {
             tableView.contentInset.bottom = 0

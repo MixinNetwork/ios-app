@@ -19,15 +19,11 @@ class NumberPadView: UIView, XibDesignable {
     }
     
     private var bottomSafeAreaInset: CGFloat {
-        if #available(iOS 11.0, *) {
-            var bottom = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
-            if bottom > 0 {
-                bottom += 41
-            }
-            return bottom
-        } else {
-            return 0
+        var bottom = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
+        if bottom > 0 {
+            bottom += 41
         }
+        return bottom
     }
     
     override var intrinsicContentSize: CGSize {

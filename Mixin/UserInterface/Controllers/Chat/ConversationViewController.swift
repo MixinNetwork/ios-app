@@ -39,9 +39,7 @@ class ConversationViewController: UIViewController {
     }
     var homeIndicatorAutoHidden = false {
         didSet {
-            if #available(iOS 11.0, *) {
-                setNeedsUpdateOfHomeIndicatorAutoHidden()
-            }
+            setNeedsUpdateOfHomeIndicatorAutoHidden()
         }
     }
     
@@ -155,7 +153,6 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
     }
     
-    @available(iOS 11.0, *)
     override var prefersHomeIndicatorAutoHidden: Bool {
         return homeIndicatorAutoHidden
     }
@@ -991,7 +988,6 @@ extension ConversationViewController: ImagePickerControllerDelegate {
 // MARK: - UIDocumentPickerDelegate
 extension ConversationViewController: UIDocumentPickerDelegate {
     
-    @available(iOS 11.0, *)
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard urls.count > 0 else {
             return
@@ -1144,8 +1140,7 @@ extension ConversationViewController {
             let maxTop = navigationBarView.frame.height
             let navigationBarTop = min(maxTop, max(0, top))
             navigationBarTopConstraint.constant = navigationBarTop
-            tableView.contentInset.top = max(view.compatibleSafeAreaInsets.top,
-                                             navigationBarView.frame.height - navigationBarTop)
+            tableView.contentInset.top = max(view.safeAreaInsets.top, navigationBarView.frame.height - navigationBarTop)
             if !statusBarHidden {
                 UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
                     self.statusBarHidden = true
@@ -1230,9 +1225,6 @@ extension ConversationViewController {
     }
     
     private func updateNavigationBarHeightAndTableViewTopInset() {
-        guard #available(iOS 11.0, *) else {
-            return
-        }
         titleViewTopConstraint.constant = view.safeAreaInsets.top
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
     }

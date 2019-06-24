@@ -49,7 +49,7 @@ class PhotoInputGridViewController: UIViewController, ConversationAccessible, Co
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         let width = view.bounds.width
-            - view.compatibleSafeAreaInsets.horizontal
+            - view.safeAreaInsets.horizontal
             - collectionViewLayout.sectionInset.horizontal
         if availableWidth != width {
             availableWidth = width

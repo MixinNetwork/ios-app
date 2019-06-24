@@ -45,7 +45,6 @@ class WalletViewController: UIViewController {
         fetchRemoteAssets()
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
@@ -138,7 +137,7 @@ extension WalletViewController {
     }
     
     private func updateTableViewContentInset() {
-        if view.compatibleSafeAreaInsets.bottom < 1 {
+        if view.safeAreaInsets.bottom < 1 {
             tableView.contentInset.bottom = 10
         } else {
             tableView.contentInset.bottom = 0

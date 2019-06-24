@@ -215,9 +215,6 @@ extension MessageReceiverViewController {
     
     // Copy media file in case of deletion or recalling
     static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
-        guard #available(iOS 10.3, *) else {
-            return message.mediaUrl
-        }
         guard let mimeType = message.mediaMimeType, let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: message.category), let mediaUrl = message.mediaUrl else {
             return message.mediaUrl
         }

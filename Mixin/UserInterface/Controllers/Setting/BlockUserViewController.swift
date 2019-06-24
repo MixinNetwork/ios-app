@@ -40,7 +40,6 @@ class BlockUserViewController: UIViewController {
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.block()!
         let container = ContainerViewController.instance(viewController: vc, title: Localized.SETTING_BLOCKED)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     

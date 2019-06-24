@@ -45,7 +45,6 @@ class AssetViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
@@ -98,7 +97,6 @@ class AssetViewController: UIViewController {
         vc.asset = asset
         vc.snapshotDataSource = SnapshotDataSource(category: .asset(id: asset.assetId))
         let container = ContainerViewController.instance(viewController: vc, title: asset.name)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     
@@ -224,7 +222,7 @@ extension AssetViewController: SnapshotCellDelegate {
 extension AssetViewController {
     
     private func updateTableViewContentInset() {
-        if view.compatibleSafeAreaInsets.bottom < 1 {
+        if view.safeAreaInsets.bottom < 1 {
             tableView.contentInset.bottom = 10
         } else {
             tableView.contentInset.bottom = 0
@@ -254,17 +252,9 @@ extension AssetViewController {
     private func updateTableHeaderFooterView() {
         if snapshotDataSource.snapshots.isEmpty {
             tableHeaderView.transactionsHeaderView.isHidden = false
-            noTransactionFooterView.frame.size.height = {
-                if #available(iOS 11.0, *) {
-                    return tableView.frame.height
-                        - tableView.contentSize.height
-                        - tableView.adjustedContentInset.vertical
-                } else {
-                    return tableView.frame.height
-                        - tableView.contentSize.height
-                        - tableView.contentInset.vertical
-                }
-            }()
+            noTransactionFooterView.frame.size.height = tableView.frame.height
+                - tableView.contentSize.height
+                - tableView.adjustedContentInset.vertical
             tableView.tableFooterView = noTransactionFooterView
         } else {
             tableHeaderView.transactionsHeaderView.isHidden = false

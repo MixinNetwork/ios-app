@@ -12,7 +12,7 @@ class NotificationController: NSObject {
     private var isPresenting = false
     
     private var presentingViewFrameY: CGFloat {
-        return AppDelegate.current.window?.compatibleSafeAreaInsets.top ?? 0
+        return AppDelegate.current.window?.safeAreaInsets.top ?? 0
     }
     
     override init() {
@@ -114,9 +114,9 @@ class NotificationController: NSObject {
             }, completion: nil)
         } else {
             isPresenting = true
-            view.frame = CGRect(x: window.compatibleSafeAreaInsets.left,
+            view.frame = CGRect(x: window.safeAreaInsets.left,
                                 y: -view.frame.height,
-                                width: window.bounds.width - window.compatibleSafeAreaInsets.horizontal,
+                                width: window.bounds.width - window.safeAreaInsets.horizontal,
                                 height: view.frame.height)
             window.addSubview(view)
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 5, options: [], animations: {

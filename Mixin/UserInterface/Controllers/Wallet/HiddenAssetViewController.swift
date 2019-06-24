@@ -37,7 +37,6 @@ class HiddenAssetViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateTableViewContentInset()
@@ -67,12 +66,11 @@ class HiddenAssetViewController: UIViewController {
     class func instance() -> UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "hidden_assets")
         let container = ContainerViewController.instance(viewController: vc, title: Localized.WALLET_MENU_SHOW_HIDDEN_ASSETS)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     
     private func updateTableViewContentInset() {
-        if view.compatibleSafeAreaInsets.bottom < 1 {
+        if view.safeAreaInsets.bottom < 1 {
             tableView.contentInset.bottom = 10
         } else {
             tableView.contentInset.bottom = 0

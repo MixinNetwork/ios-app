@@ -68,7 +68,6 @@ class AddressViewController: UIViewController {
         let vc = Storyboard.wallet.instantiateViewController(withIdentifier: "address_list") as! AddressViewController
         vc.asset = asset
         let container = ContainerViewController.instance(viewController: vc, title: Localized.ADDRESS_LIST_TITLE)
-        container.automaticallyAdjustsScrollViewInsets = false
         return container
     }
     

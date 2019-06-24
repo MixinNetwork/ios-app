@@ -272,11 +272,7 @@ extension GalleryItemViewController: UIScrollViewDelegate {
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         let visibleSize: CGSize
-        if #available(iOS 11.0, *) {
-            visibleSize = scrollView.frame.inset(by: scrollView.adjustedContentInset).size
-        } else {
-            visibleSize = scrollView.frame.size
-        }
+        visibleSize = scrollView.frame.inset(by: scrollView.adjustedContentInset).size
         if scrollView.contentSize.width < visibleSize.width {
             imageView.center.x = visibleSize.width / 2
         } else {

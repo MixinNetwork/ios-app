@@ -37,10 +37,6 @@ class PayView: UIStackView {
     private var soundId: SystemSoundID = 0
     private var isAutoFillPIN = false
     private var isAllowBiometricPay: Bool {
-        guard #available(iOS 11.0, *) else {
-            return false
-        }
-
         guard WalletUserDefault.shared.isBiometricPay else {
             return false
         }

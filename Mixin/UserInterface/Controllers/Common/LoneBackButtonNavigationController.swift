@@ -15,13 +15,8 @@ class LoneBackButtonNavigationController: UINavigationController {
         view.addSubview(backButton)
         backButton.snp.makeConstraints { (make) in
             make.width.height.equalTo(44)
-            if #available(iOS 11.0, *) {
-                make.top.equalTo(self.view.safeAreaLayoutGuide.snp.topMargin)
-                make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leadingMargin).offset(10)
-            } else {
-                make.top.equalTo(self.topLayoutGuide.snp.bottom)
-                make.leading.equalTo(self.view.snp.leading).offset(10)
-            }
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.topMargin)
+            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leadingMargin).offset(10)
         }
     }
     

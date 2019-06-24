@@ -335,6 +335,12 @@ class ConversationInputViewController: UIViewController {
             unblockButton.isBusy = false
         }
         appButton.isHidden = !user.isBot
+        DispatchQueue.global().async { [weak self] in
+            let app = AppDAO.shared.getApp(ofUserId: user.userId)
+            DispatchQueue.main.sync {
+                self?.opponentApp = app
+            }
+        }
     }
     
     func dismissCustomInput(minimize: Bool) {

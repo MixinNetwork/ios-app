@@ -346,7 +346,7 @@ extension PayView: PinFieldDelegate {
             guard !weakSelf.fromWebWithdrawal else {
                 return
             }
-            guard let navigation = UIApplication.rootNavigationController() else {
+            guard let navigation = UIApplication.homeNavigationController else {
                 return
             }
             var viewControllers = navigation.viewControllers

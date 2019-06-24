@@ -181,7 +181,7 @@ class GroupView: CornerView {
     @IBAction func showParticipantsAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
         let vc = GroupParticipantsViewController.instance(conversation: conversation)
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
     }
     
     private func saveConversation(conversation: ConversationResponse) {
@@ -216,7 +216,7 @@ class GroupView: CornerView {
 extension GroupView {
     
     private func editAnnouncementAction() {
-        UIApplication.rootNavigationController()?.pushViewController(GroupAnnouncementViewController.instance(conversation: conversation), animated: true)
+        UIApplication.homeNavigationController?.pushViewController(GroupAnnouncementViewController.instance(conversation: conversation), animated: true)
     }
 
     private func editGroupNameAction() {
@@ -240,7 +240,7 @@ extension GroupView {
             ConversationDAO.shared.makeQuitConversation(conversationId: conversationId)
             NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: nil)
             DispatchQueue.main.async {
-                UIApplication.rootNavigationController()?.backToHome()
+                UIApplication.homeNavigationController?.backToHome()
             }
         }
     }

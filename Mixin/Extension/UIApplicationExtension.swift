@@ -10,20 +10,20 @@ extension UIApplication {
     class func appDelegate() -> AppDelegate  {
         return UIApplication.shared.delegate as! AppDelegate
     }
-
-    static func rootNavigationController() -> UINavigationController? {
-        return UIApplication.shared.keyWindow?.rootViewController as? UINavigationController
+    
+    static var homeNavigationController: HomeNavigationController? {
+        return UIApplication.shared.keyWindow?.rootViewController as? HomeNavigationController
     }
-
+    
     static func currentActivity() -> UIViewController? {
-        return rootNavigationController()?.visibleViewController
+        return homeNavigationController?.visibleViewController
     }
 
     static func currentConversationId() -> String? {
         guard UIApplication.shared.applicationState == .active else {
             return nil
         }
-        guard let lastVC = rootNavigationController()?.viewControllers.last, let chatVC = lastVC as? ConversationViewController else {
+        guard let lastVC = homeNavigationController?.viewControllers.last, let chatVC = lastVC as? ConversationViewController else {
             return nil
         }
         return chatVC.dataSource?.conversationId
@@ -81,7 +81,7 @@ extension UIApplication {
 
     public func openURL(url: URL) {
         if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
-            UIApplication.rootNavigationController()?.present(SFSafariViewController(url: url), animated: true, completion: nil)
+            UIApplication.homeNavigationController?.present(SFSafariViewController(url: url), animated: true, completion: nil)
         } else if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {

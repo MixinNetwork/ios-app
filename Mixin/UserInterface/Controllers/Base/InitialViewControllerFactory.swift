@@ -18,8 +18,8 @@ func makeInitialViewController() -> UIViewController {
     } else if !CryptoUserDefault.shared.isLoaded {
         return SignalLoadingViewController.instance()
     } else {
-        let navigationController = MixinNavigationController.instance()
-        navigationController.setViewControllers([R.storyboard.home.home()!], animated: false)
+        let home = R.storyboard.home.home()!
+        let navigationController = HomeNavigationController(rootViewController: home)
         return navigationController
     }
 }

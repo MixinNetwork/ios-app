@@ -72,7 +72,7 @@ class WebWindow: BottomSheetView {
     }
     
     override func didMoveToSuperview() {
-        guard let navigationController = UIApplication.rootNavigationController() else {
+        guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
         navigationController.interactivePopGestureRecognizer?.isEnabled = superview == nil

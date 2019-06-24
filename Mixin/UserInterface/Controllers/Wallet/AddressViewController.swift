@@ -61,7 +61,7 @@ class AddressViewController: UIViewController {
     
     @IBAction func newAddressAction() {
         let vc = NewAddressViewController.instance(asset: asset)
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
     }
     
     class func instance(asset: AssetItem) -> UIViewController {
@@ -161,7 +161,7 @@ extension AddressViewController {
         }
         tableView.setEditing(false, animated: true)
         let vc = NewAddressViewController.instance(asset: asset, address: addresses[indexPath.row])
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
     }
     
     private func deleteAddress(at indexPath: IndexPath, pin: String) {

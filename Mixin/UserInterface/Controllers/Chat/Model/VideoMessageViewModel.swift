@@ -14,6 +14,10 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         return false
     }
     
+    var automaticallyCancelAttachmentLoading: Bool {
+        return true
+    }
+    
     var showPlayIconAfterFinished: Bool {
         return true
     }

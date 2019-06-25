@@ -15,6 +15,10 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         return true
     }
     
+    var automaticallyCancelAttachmentLoading: Bool {
+        return false
+    }
+    
     var mediaStatus: String? {
         get {
             return message.mediaStatus

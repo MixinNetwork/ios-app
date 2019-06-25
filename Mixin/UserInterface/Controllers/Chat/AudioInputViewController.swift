@@ -104,7 +104,9 @@ class AudioInputViewController: UIViewController, ConversationAccessible {
                 finishAction(sender)
             }
         case .cancelled:
-            cancelAction(sender)
+            if !isLocked {
+                cancelAction(sender)
+            }
         case .possible, .failed:
             break
         }

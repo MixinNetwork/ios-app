@@ -14,6 +14,10 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         return false
     }
     
+    var automaticallyCancelAttachmentLoading: Bool {
+        return true
+    }
+    
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         super.init(message: message, style: style, fits: layoutWidth)
         updateOperationButtonStyle()

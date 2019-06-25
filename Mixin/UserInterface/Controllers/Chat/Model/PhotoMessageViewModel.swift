@@ -8,6 +8,10 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         return mediaStatus == MediaStatus.PENDING.rawValue && !shouldUpload
     }
     
+    var automaticallyCancelAttachmentLoading: Bool {
+        return true
+    }
+    
     var showPlayIconAfterFinished: Bool {
         return false
     }

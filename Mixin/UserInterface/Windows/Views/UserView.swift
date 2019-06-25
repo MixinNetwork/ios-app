@@ -145,7 +145,7 @@ class UserView: CornerView {
             
             if refreshUser {
                 UserAPI.shared.showUser(userId: user.userId) { [weak self](result) in
-                    self?.handlerUpdateUser(result)
+                    self?.handlerUpdateUser(result, showError: false)
                 }
             }
             
@@ -527,13 +527,15 @@ class UserView: CornerView {
         })
     }
 
-    private func handlerUpdateUser(_ result: APIResult<UserResponse>, notifyContact: Bool = false, completion: (() -> Void)? = nil) {
+    private func handlerUpdateUser(_ result: APIResult<UserResponse>, showError: Bool = true, notifyContact: Bool = false, completion: (() -> Void)? = nil) {
         switch result {
         case let .success(user):
             UserDAO.shared.updateUsers(users: [user], notifyContact: notifyContact)
             updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false, superView: superView)
         case let .failure(error):
-            showHud(style: .error, text: error.localizedDescription)
+            if showError {
+                showHud(style: .error, text: error.localizedDescription)
+            }
         }
         completion?()
     }

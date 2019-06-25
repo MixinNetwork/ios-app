@@ -274,17 +274,17 @@ extension WebWindow {
         }))
 
         qrcodeDetector.detect(in: VisionImage(image: image), completion: { (features, error) in
-            if error == nil, let qrcodeText = features?.first?.url?.url, let qrcodeUrl = URL(string: qrcodeText) {
+            if error == nil, let string = features?.first?.rawValue {
                 alc.addAction(UIAlertAction(title: Localized.SCAN_QR_CODE, style: .default, handler: { (_) in
-                    if !UrlWindow.checkUrl(url: qrcodeUrl, clearNavigationStack: false) {
-                        showHud(style: .error, text: Localized.NOT_MIXIN_QR_CODE)
+                    if let url = URL(string: string), UrlWindow.checkUrl(url: url, clearNavigationStack: false) {
+                        
+                    } else {
+                        RecognizeWindow.instance().presentWindow(text: string)
                     }
                 }))
             }
-
             alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
             UIApplication.currentActivity()?.present(alc, animated: true, completion: nil)
-
         })
     }
     

@@ -99,6 +99,7 @@
 		7B29044E21F5C8AA00556488 /* GiphyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B29044D21F5C8AA00556488 /* GiphyImage.swift */; };
 		7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */; };
 		7B2A116722C2497000AD029C /* ViewEmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */; };
+		7B2A116122C20F5F00AD029C /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116022C20F5F00AD029C /* PlayerView.swift */; };
 		7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */; };
 		7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */; };
 		7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */; };
@@ -802,6 +803,7 @@
 		7B29044D21F5C8AA00556488 /* GiphyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImage.swift; sourceTree = "<group>"; };
 		7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactViewController.swift; sourceTree = "<group>"; };
 		7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewEmergencyContactViewController.swift; sourceTree = "<group>"; };
+		7B2A116022C20F5F00AD029C /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXNFastURLDetector.h; sourceTree = "<group>"; };
 		7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXNFastURLDetector.m; sourceTree = "<group>"; };
 		7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
@@ -1663,6 +1665,7 @@
 				7BFE47DC228432A600FC4379 /* PeerInfoView.xib */,
 				7BFE47DE228432C800FC4379 /* PeerInfoView.swift */,
 				7BFE47E42284530200FC4379 /* PeerHeaderView.swift */,
+				7B2A116022C20F5F00AD029C /* PlayerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3321,6 +3324,7 @@
 				7BAB5D4020C5213C009F4EE6 /* AudioDownloadJob.swift in Sources */,
 				DFF3B68A20E25CB500DC82D9 /* Album.swift in Sources */,
 				7BADC842204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift in Sources */,
+				7B2A116122C20F5F00AD029C /* PlayerView.swift in Sources */,
 				7BB3855821E770BE0070FF8F /* ProvisionMessage.swift in Sources */,
 				DFD87C851FD9881900BBCFFC /* FileManagerExtension.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,

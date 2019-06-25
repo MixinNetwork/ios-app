@@ -1,6 +1,5 @@
 import UIKit
 import Photos
-import AVKit
 import YYImage
 import CoreServices
 
@@ -243,18 +242,6 @@ final class MediaPreviewViewController: UIViewController {
         }
         videoThumbnailMaskLayer.frame = converted
         imageView.layer.mask = videoThumbnailMaskLayer
-    }
-    
-    private final class PlayerView: UIView {
-        
-        override static var layerClass: AnyClass {
-            return AVPlayerLayer.self
-        }
-        
-        override var layer: AVPlayerLayer {
-            return super.layer as! AVPlayerLayer
-        }
-        
     }
     
 }

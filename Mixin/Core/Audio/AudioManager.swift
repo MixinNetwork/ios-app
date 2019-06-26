@@ -68,6 +68,11 @@ class AudioManager {
                     center.removeObserver(self)
                     return
                 }
+                if let nextNode = self.node(nextTo: node), nextNode.message.mediaStatus != MediaStatus.DONE.rawValue {
+                    let job = AudioDownloadJob(messageId: nextNode.message.messageId,
+                                               mediaMimeType: nextNode.message.mediaMimeType)
+                    AudioJobQueue.shared.addJob(job: job)
+                }
             }
         }
     }

@@ -500,15 +500,14 @@
 "profile_report_tips" = "Do you want to report and block this contact? your chat with this conversation will also be deleted.";
 
 // Emergency
-"emergency_view" = "View current emergency contact";
+"emergency_view" = "View emergency contact";
 "emergency_change" = "Change emergency contact";
-"emergency_tip1" = "The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
-"emergency_tip2" = "Please rest assured that even if your mobile phone number is lost and you cannot retrieve it, your assets stored in the wallet are still safe. Read our Emergency Contact to learn more.";
-"emergency_tip2_link" = "Emergency Contact";
-"emergency_tip3" = "We won’t spam your contact.";
+"emergency_tip_before" = "The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
+"emergency_tip_after" = "When you lose your mobile number, please contact your emergency contact by phone or other means to get the Mixin ID and verification code. Read our Emergency Contact to learn more.";
+"emergency_tip_link" = "Emergency Contact";
 "emergency_pin_protection_hint" = "Your emergency contact is protected by PIN";
 "emergency_change_number_tip" = "Do you want to change your mobile number now?";
-"emergency_enabled" = "Enabled";
+"enable_emergency_contact" = "Enable Emergency Contact";
 
 // Setting
 "setting_title" = "Setting";

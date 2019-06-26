@@ -97,6 +97,8 @@
 		7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */; };
 		7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA17201196F80023B28D /* DataMessageCell.swift */; };
 		7B29044E21F5C8AA00556488 /* GiphyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B29044D21F5C8AA00556488 /* GiphyImage.swift */; };
+		7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */; };
+		7B2A116722C2497000AD029C /* ViewEmergencyContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */; };
 		7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */; };
 		7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */; };
 		7B2BB2CD2187FEBB00E02296 /* TurnServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB2CC2187FEBB00E02296 /* TurnServer.swift */; };
@@ -793,6 +795,8 @@
 		7B28FA15201196DD0023B28D /* DataMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageViewModel.swift; sourceTree = "<group>"; };
 		7B28FA17201196F80023B28D /* DataMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMessageCell.swift; sourceTree = "<group>"; };
 		7B29044D21F5C8AA00556488 /* GiphyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyImage.swift; sourceTree = "<group>"; };
+		7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactViewController.swift; sourceTree = "<group>"; };
+		7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewEmergencyContactViewController.swift; sourceTree = "<group>"; };
 		7B2AFEE020FE022C00C747BB /* MXNFastURLDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MXNFastURLDetector.h; sourceTree = "<group>"; };
 		7B2AFEE120FE022C00C747BB /* MXNFastURLDetector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MXNFastURLDetector.m; sourceTree = "<group>"; };
 		7B2BB2CA2187FD3B00E02296 /* CallAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallAPI.swift; sourceTree = "<group>"; };
@@ -2659,11 +2663,13 @@
 				7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */,
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
 				DFA063D122B0D0E70031E151 /* PrivacyViewController.swift */,
+				7B2A116222C2269800AD029C /* EmergencyContactViewController.swift */,
 				7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */,
 				7B311BAB22BA287700C16652 /* ShowEmergencyContactValidationViewController.swift */,
 				7B54F95822B243EA00908A9D /* EmergencyContactVerifyPinViewController.swift */,
 				7B54F95322B23A5600908A9D /* EmergencyContactSelectorViewController.swift */,
 				7B54F95A22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift */,
+				7B2A116622C2497000AD029C /* ViewEmergencyContactViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -3443,6 +3449,7 @@
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
 				273FACAD205FB9A800513327 /* KeyPair.swift in Sources */,
 				7B54F95B22B24A5600908A9D /* CreateEmergencyContactVerificationCodeViewController.swift in Sources */,
+				7B2A116322C2269800AD029C /* EmergencyContactViewController.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
 				DF6ABB162295049E00A012B2 /* AddressWindow.swift in Sources */,
 				7B287A3420EA5770007278A3 /* AssetExportSession.swift in Sources */,
@@ -3638,6 +3645,7 @@
 				7BFA9B702229810A00C88625 /* PhotoInputGridCell.swift in Sources */,
 				273FACB8205FB9A800513327 /* SessionStore.swift in Sources */,
 				DF8DA1AD1FD6820600425CEC /* RefreshConversationJob.swift in Sources */,
+				7B2A116722C2497000AD029C /* ViewEmergencyContactViewController.swift in Sources */,
 				7B9F810C222EA3690012BFDD /* PopupPresentationManager.swift in Sources */,
 				7B07923A21AF96F500316BD2 /* SnapshotDataSource.swift in Sources */,
 				DFA586B21FE3B1E00078BC2C /* AsynchronousJob.swift in Sources */,

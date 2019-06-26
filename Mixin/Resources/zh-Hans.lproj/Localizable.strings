@@ -564,13 +564,12 @@
 // Emergency
 "emergency_view" = "查看紧急联系人";
 "emergency_change" = "修改紧急联系人";
-"emergency_tip1" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号";
-"emergency_tip2" = "请放心，即使您的手机号丢失且无法找回，钱包里的资产也很安全，请确保您的支付密码安全，阅读紧急联系人了解更多";
-"emergency_tip2_link" = "紧急联系人";
-"emergency_tip3" = "我们不会给你的紧急联系人发送垃圾信息";
+"emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
+"emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人取得 Mixin ID 与验证码。阅读紧急联系人了解更多。";
+"emergency_tip_link" = "紧急联系人";
 "emergency_pin_protection_hint" = "紧急联系人经 PIN 加密保护";
 "emergency_change_number_tip" = "立即更换手机号？";
-"emergency_enabled" = "已启用";
+"enable_emergency_contact" = "启用紧急联系人";
 
 // Notifications
 "notification_reply" = "回复";

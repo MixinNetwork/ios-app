@@ -495,11 +495,6 @@ class SendMessageService: MixinService {
                 default:
                     break
                 }
-
-                if let conversationId = job.conversationId, let userId = job.userId {
-                    FileManager.default.writeLog(conversationId: conversationId, log: "[SendMessageService][\(job.action)]...ended...userId:\(userId)...runCount:\(job.runCount)...orderId:\(job.orderId ?? 0)...priority:\(job.priority)")
-                }
-
                 return true
             } catch {
                 checkNetworkAndWebSocket()

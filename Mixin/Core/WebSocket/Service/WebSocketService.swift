@@ -132,7 +132,6 @@ extension WebSocketService: SRWebSocketDelegate {
         if let responseServerTime = CFHTTPMessageCopyHeaderFieldValue(webSocket.receivedHTTPHeaders, "x-server-time" as CFString)?.takeRetainedValue() as String?, let serverTime = Double(responseServerTime), serverTime > 0 {
             let clientTime = Date().timeIntervalSince1970
             if abs(serverTime / 1000000000 - clientTime) > 300 {
-                FileManager.default.writeLog(log: "WebSocketService...webSocketDidOpen...clock skew...serverTime:\(serverTime / 1000000000)...clientTime:\(clientTime)...requestHeaderTime:\(requestHeaderTime)")
                 if clientTime - requestHeaderTime > 60 {
                     WebSocketService.shared.reconnect(didClose: false)
                 } else {

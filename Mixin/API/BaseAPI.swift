@@ -132,9 +132,6 @@ class BaseAPI {
                     case 401:
                         if let responseServerTime = response.response?.allHeaderFields["x-server-time"] as? String, let serverTime = Double(responseServerTime), serverTime > 0 {
                             let clientTime = Date().timeIntervalSince1970
-
-                            FileManager.default.writeLog(log: "BaseAPI...async request...clock skew...serverTime:\(serverTime / 1000000000)...clientTime:\(clientTime)...requestTime:\(requestTime)...retry:\(retry)")
-
                             if clientTime - requestTime.timeIntervalSince1970 > 60 {
                                 self.request(method: method, url: url, parameters: parameters, encoding: encoding, checkLogin: checkLogin, retry: true, completion: completion)
                                 return
@@ -238,9 +235,6 @@ extension BaseAPI {
         if !result.isSuccess, case let .failure(error) = result, error.code == 401 {
             if let serverTime = Double(responseServerTime), serverTime > 0 {
                 let clientTime = Date().timeIntervalSince1970
-
-                FileManager.default.writeLog(log: "BaseAPI...sync request...clock skew...serverTime:\(serverTime / 1000000000)...clientTime:\(clientTime)...retry:\(retry)")
-
                 if clientTime - requestTime.timeIntervalSince1970 > 60 {
                     return syncRequest(method: method, url: url, parameters: parameters, encoding: encoding, retry: true)
                 } else {

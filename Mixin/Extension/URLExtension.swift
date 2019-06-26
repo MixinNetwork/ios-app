@@ -5,7 +5,8 @@ extension URL {
     static let terms = URL(string: "https://mixin.one/pages/terms")!
     static let privacy = URL(string: "https://mixin.one/pages/privacy")!
     static let aboutEncryption = URL(string: "https://mixin.one/pages/1000007")!
-
+    static let emergencyContact = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360029154692")!
+    
     func getKeyVals() -> Dictionary<String, String>? {
         var results = [String: String]()
         if let components = URLComponents(url: self, resolvingAgainstBaseURL: true), let queryItems = components.queryItems {

@@ -135,7 +135,11 @@ class AudioManager {
     }
     
     private func isPlayingChanged() {
-        guard !player.isPlaying else {
+        let isPlaying = player.isPlaying
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = isPlaying
+        }
+        guard !isPlaying else {
             return
         }
         guard let messageId = playingNode?.message.messageId else {

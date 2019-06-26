@@ -223,12 +223,13 @@ class ConversationDataSource {
         let conversationId = self.conversationId
         let requiredCount = self.numberOfMessagesOnPaging
         let layoutWidth = self.layoutSize.width
+        var didLoadLatestMessage = false
         queue.async {
             guard !self.messageProcessingIsCancelled, let lastDate = self.dates.last, let location = self.viewModels[lastDate]?.last?.message else {
                 return
             }
             var messages = MessageDAO.shared.getMessages(conversationId: conversationId, belowMessage: location, count: requiredCount)
-            self.didLoadLatestMessage = messages.count < requiredCount
+            didLoadLatestMessage = messages.count < requiredCount
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
             if self.canInsertUnreadHint, let firstUnreadMessageId = self.firstUnreadMessageId, let index = messages.index(where: { $0.messageId == firstUnreadMessageId }) {
@@ -272,6 +273,7 @@ class ConversationDataSource {
                 if !viewModels.isEmpty {
                     tableView.reloadData()
                 }
+                self.didLoadLatestMessage = didLoadLatestMessage
                 self.isLoadingBelow = false
             }
         }

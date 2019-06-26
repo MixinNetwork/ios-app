@@ -371,7 +371,6 @@ extension ConversationDataSource {
         guard !loadedMessageIds.contains(message.messageId) else {
             return
         }
-        loadedMessageIds.insert(message.messageId)
         let messageIsSentByMe = message.userId == me.user_id
         if !messageIsSentByMe && message.status == MessageStatus.DELIVERED.rawValue {
             SendMessageService.shared.sendReadMessage(conversationId: message.conversationId, messageId: message.messageId)
@@ -390,6 +389,7 @@ extension ConversationDataSource {
                 NotificationCenter.default.postOnMain(name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: 1)
             }
         } else {
+            loadedMessageIds.insert(message.messageId)
             queue.async {
                 guard !self.messageProcessingIsCancelled else {
                     return

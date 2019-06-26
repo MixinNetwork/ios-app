@@ -14,6 +14,8 @@ class ShowEmergencyContactValidationViewController: PinValidationViewController 
     }
     
     override func validate(pin: String) {
+        weak var navigationController = (presentingViewController as? UINavigationController)
+            ?? presentingViewController?.navigationController
         EmergencyAPI.shared.show(pin: pin) { [weak self](result) in
             guard let weakSelf = self else {
                 return
@@ -22,14 +24,8 @@ class ShowEmergencyContactValidationViewController: PinValidationViewController 
             switch result {
             case .success(let user):
                 weakSelf.dismiss(animated: true, completion: {
-                    let userWindow = UserWindow.instance()
-                    let item = UserItem.createUser(userId: user.userId,
-                                                   fullName: user.fullName ?? "",
-                                                   identityNumber: user.identityNumber,
-                                                   avatarUrl: user.avatarUrl ?? "",
-                                                   appId: user.appId)
-                    userWindow.updateUser(user: item)
-                    userWindow.presentView()
+                    let vc = ViewEmergencyContactViewController.instance(user: user)
+                    navigationController?.pushViewController(vc, animated: true)
                 })
             case .failure(let error):
                 weakSelf.handle(error: error)

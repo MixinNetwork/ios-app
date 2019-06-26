@@ -1,6 +1,6 @@
 import UIKit
 
-class PrivacyViewController: UITableViewController {
+final class PrivacyViewController: UITableViewController {
     
     @IBOutlet weak var blockLabel: UILabel!
     @IBOutlet weak var emergencyLabel: UILabel!
@@ -26,9 +26,7 @@ class PrivacyViewController: UITableViewController {
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
         NotificationCenter.default.addObserver(self, selector: #selector(updateBlockedUserCell), name: .UserDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateEmergencyLabel), name: .AccountDidChange, object: nil)
         updateBlockedUserCell()
-        updateEmergencyLabel()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -44,23 +42,7 @@ class PrivacyViewController: UITableViewController {
         case 1:
             vc = AuthorizationsViewController.instance()
         default:
-            if let account = AccountAPI.shared.account, account.has_emergency_contact {
-                let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                alc.addAction(UIAlertAction(title: R.string.localizable.emergency_view(), style: .default, handler: {(_) in
-                    self.viewEmergencyAction()
-                }))
-                alc.addAction(UIAlertAction(title: R.string.localizable.emergency_change(), style: .default, handler: {(_) in
-                    self.changeEmergencyAction()
-                }))
-                alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
-                self.present(alc, animated: true, completion: nil)
-            } else {
-                let vc = R.storyboard.setting.emergency_tips()!
-                vc.transitioningDelegate = PopupPresentationManager.shared
-                vc.modalPresentationStyle = .custom
-                present(vc, animated: true, completion: nil)
-            }
-            return
+            vc = EmergencyContactViewController.instance()
         }
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -84,32 +66,6 @@ class PrivacyViewController: UITableViewController {
             DispatchQueue.main.async { [weak self] in
                 self?.blockLabel.text = blocked.count > 0 ? "\(blocked.count)" + Localized.SETTING_BLOCKED_USER_COUNT_SUFFIX : Localized.SETTING_BLOCKED_USER_COUNT_NONE
             }
-        }
-    }
-    
-    @objc func updateEmergencyLabel() {
-        guard let account = AccountAPI.shared.account else {
-            return
-        }
-        emergencyLabel.text = account.has_emergency_contact ? R.string.localizable.emergency_enabled() : nil
-    }
-    
-    private func viewEmergencyAction() {
-        let validator = ShowEmergencyContactValidationViewController()
-        present(validator, animated: true, completion: nil)
-    }
-    
-    private func changeEmergencyAction() {
-        guard let account = AccountAPI.shared.account else {
-            return
-        }
-        if account.has_pin {
-            let vc = EmergencyContactVerifyPinViewController()
-            let navigationController = VerifyPinNavigationController(rootViewController: vc)
-            present(navigationController, animated: true, completion: nil)
-        } else {
-            let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact)
-            navigationController?.pushViewController(vc, animated: true)
         }
     }
     

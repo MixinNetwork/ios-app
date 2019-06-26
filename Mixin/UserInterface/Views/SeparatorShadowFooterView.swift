@@ -28,6 +28,17 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
         }
     }
     
+    var attributedText: NSAttributedString? {
+        get {
+            return label.attributedText
+        }
+        set {
+            label.attributedText = newValue
+            label.isHidden = newValue == nil
+            cachedSize = nil
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         prepare()

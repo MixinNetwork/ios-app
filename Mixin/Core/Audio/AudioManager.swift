@@ -163,7 +163,7 @@ class AudioManager {
         guard let nextMessage = MessageDAO.shared.getMessages(conversationId: node.message.conversationId, belowMessage: node.message, count: 1).first else {
             return nil
         }
-        guard nextMessage.category.hasSuffix("_AUDIO"), nextMessage.userId == node.message.userId else {
+        guard nextMessage.category.hasSuffix("_AUDIO") else {
             return nil
         }
         guard let filename = nextMessage.mediaUrl else {

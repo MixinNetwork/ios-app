@@ -338,7 +338,7 @@ class ReceiveMessageService: MixinService {
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
             SendMessageService.shared.sendSessionMessage(message: message, representativeId: dataUserId, data: plainText)
             let job = AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
-            ConcurrentJobQueue.shared.addJob(job: job)
+            AudioJobQueue.shared.addJob(job: job)
         } else if data.category.hasSuffix("_STICKER") {
             guard let transferStickerData = parseSticker(plainText) else {
                 return

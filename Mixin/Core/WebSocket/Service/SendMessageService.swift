@@ -29,11 +29,14 @@ class SendMessageService: MixinService {
                         FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
                     }
                 } else if message.category.hasSuffix("_AUDIO") {
+                    let job: UploadOrDownloadJob
                     if message.userId == AccountAPI.shared.accountUserId {
-                        FileJobQueue.shared.addJob(job: AudioUploadJob(message: message))
+                        job = AudioUploadJob(message: message)
                     } else {
-                        FileJobQueue.shared.addJob(job: AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
+                        job = AudioDownloadJob(messageId: message.messageId,
+                                               mediaMimeType: message.mediaMimeType)
                     }
+                    AudioJobQueue.shared.addJob(job: job)
                 }
             }
 
@@ -105,7 +108,7 @@ class SendMessageService: MixinService {
         } else if msg.category.hasSuffix("_DATA") {
             FileJobQueue.shared.addJob(job: FileUploadJob(message: msg))
         } else if msg.category.hasSuffix("_AUDIO") {
-            FileJobQueue.shared.addJob(job: AudioUploadJob(message: msg))
+            AudioJobQueue.shared.addJob(job: AudioUploadJob(message: msg))
         } else if message.category.hasPrefix("WEBRTC_"), let recipient = ownerUser {
             SendMessageService.shared.sendWebRTCMessage(message: message, recipientId: recipient.userId)
         }

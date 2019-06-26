@@ -120,6 +120,7 @@
 		7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40207D215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift */; };
 		7B402F88214692C300383687 /* BubbleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B402F87214692C200383687 /* BubbleLayer.swift */; };
 		7B40A89920B84BF500CEA42E /* NumberStringLocalizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */; };
+		7B42DAD022C3952E007C53F0 /* AudioJobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B42DACF22C3952E007C53F0 /* AudioJobQueue.swift */; };
 		7B4375C32170CA6900846DC5 /* AssetFilterConditionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */; };
 		7B45A51C2189F28E0008F894 /* call.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7B45A51B2189F28A0008F894 /* call.caf */; };
 		7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */; };
@@ -790,6 +791,7 @@
 		7B40207D215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentExpirationHintingMessageCell.swift; sourceTree = "<group>"; };
 		7B402F87214692C200383687 /* BubbleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleLayer.swift; sourceTree = "<group>"; };
 		7B40A89820B84BF500CEA42E /* NumberStringLocalizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberStringLocalizable.swift; sourceTree = "<group>"; };
+		7B42DACF22C3952E007C53F0 /* AudioJobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioJobQueue.swift; sourceTree = "<group>"; };
 		7B4375C22170CA6900846DC5 /* AssetFilterConditionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetFilterConditionCell.swift; sourceTree = "<group>"; };
 		7B45A51B2189F28A0008F894 /* call.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = call.caf; sourceTree = "<group>"; };
 		7B492F972252159B00C05A45 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
@@ -1921,6 +1923,7 @@
 				DFA606302013AA4F0006EEE4 /* FileJobQueue.swift */,
 				DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */,
 				DF6ED3ED1FE37D0400E958A3 /* ConcurrentJobQueue.swift */,
+				7B42DACF22C3952E007C53F0 /* AudioJobQueue.swift */,
 			);
 			path = Queue;
 			sourceTree = "<group>";
@@ -3428,6 +3431,7 @@
 				DFF3B68E20E3599E00DC82D9 /* PrintLog.swift in Sources */,
 				DF17B50C2052433B006447C2 /* MessageItem.swift in Sources */,
 				7B2AFEE220FE022C00C747BB /* MXNFastURLDetector.m in Sources */,
+				7B42DAD022C3952E007C53F0 /* AudioJobQueue.swift in Sources */,
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				DF754CB81FBC7F1200F2F2E5 /* WalletPasswordViewController.swift in Sources */,
 				DF3FF0572011EBA3000A0C0A /* UploadOrDownloadJob.swift in Sources */,

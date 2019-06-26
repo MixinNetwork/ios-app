@@ -61,7 +61,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         } else {
             job = AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
-        ConcurrentJobQueue.shared.addJob(job: job)
+        AudioJobQueue.shared.addJob(job: job)
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {
@@ -71,7 +71,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         } else {
             jobId = AudioDownloadJob.jobId(messageId: message.messageId)
         }
-        ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
+        AudioJobQueue.shared.cancelJob(jobId: jobId)
         if markMediaStatusCancelled {
             MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .CANCELED, conversationId: message.conversationId)
         }

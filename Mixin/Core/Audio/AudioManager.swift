@@ -9,6 +9,7 @@ class AudioManager {
     }
     
     static let shared = AudioManager()
+    static let willPlayNextNodeNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_next")
     
     let player = MXNAudioPlayer.shared()
     
@@ -160,6 +161,7 @@ class AudioManager {
         }
         if let node = playingNode, let nextNode = self.node(nextTo: node) {
             performSynchronouslyOnMainThread {
+                NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: node.message.messageId)
                 playOrStop(node: nextNode)
             }
         } else {

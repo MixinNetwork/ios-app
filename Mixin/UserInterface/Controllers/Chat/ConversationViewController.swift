@@ -151,6 +151,7 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNodeNotification, object: nil)
     }
     
     override var prefersHomeIndicatorAutoHidden: Bool {
@@ -522,6 +523,24 @@ class ConversationViewController: UIViewController {
             return
         }
         unreadBadgeValue += count
+    }
+    
+    @objc func audioManagerWillPlayNextNode(_ notification: Notification) {
+        guard let messageId = notification.object as? String else {
+            return
+        }
+        for cell in tableView.visibleCells.reversed() {
+            guard let indexPath = tableView.indexPath(for: cell) else {
+                continue
+            }
+            guard let viewModel = dataSource.viewModel(for: indexPath) else {
+                continue
+            }
+            if viewModel.message.messageId == messageId {
+                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+                break
+            }
+        }
     }
     
     // MARK: - Interface

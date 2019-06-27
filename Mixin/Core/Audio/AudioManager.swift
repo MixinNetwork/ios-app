@@ -172,10 +172,7 @@ class AudioManager {
     }
     
     private func node(nextTo node: Node) -> Node? {
-        guard let nextMessage = MessageDAO.shared.getMessages(conversationId: node.message.conversationId, belowMessage: node.message, count: 1).first else {
-            return nil
-        }
-        guard nextMessage.category.hasSuffix("_AUDIO") else {
+        guard let nextMessage = MessageDAO.shared.getFirstAudioMessage(conversationId: node.message.conversationId, belowMessage: node.message) else {
             return nil
         }
         guard let filename = nextMessage.mediaUrl else {

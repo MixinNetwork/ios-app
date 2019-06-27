@@ -927,7 +927,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3jx-1E-qdc">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="569"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="626.33333333333337"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tB5-S1-fay" customClass="DepositFieldView" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="248"/>
@@ -944,23 +944,36 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iWR-ea-wTp">
-                                                <rect key="frame" x="0.0" y="496" width="414" height="73"/>
+                                                <rect key="frame" x="0.0" y="495.99999999999994" width="414" height="130.33333333333331"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aFl-kr-gDX">
-                                                        <rect key="frame" x="30" y="15" width="354" height="43"/>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <string key="text">Notice: Both an Account Memo and an AccountName are required to successfully deposit your EOS to Mixin, deposit will arrive after at least 126 block confirmations.</string>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                        <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="r9y-CN-8yf">
+                                                        <rect key="frame" x="30" y="14.999999999999993" width="354" height="100.33333333333331"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aFl-kr-gDX">
+                                                                <rect key="frame" x="0.0" y="0.0" width="354" height="100.33333333333333"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <string key="text">This address supports all base on EOS tokens, such as EOS, IQ, BLACK, KARMA, etc.Deposit will arrive after at least 126 block confirmations. </string>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEy-2R-8To">
+                                                                <rect key="frame" x="0.0" y="0.0" width="354" height="0.0"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <string key="text">Notice: Both an Account Memo and an AccountName are required to successfully deposit your EOS to Mixin, deposit will arrive after at least 126 block confirmations.</string>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                <color key="textColor" red="0.96470588235294119" green="0.4392156862745098" blue="0.4392156862745098" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="aFl-kr-gDX" firstAttribute="top" secondItem="iWR-ea-wTp" secondAttribute="top" constant="15" id="H74-UT-zxD"/>
-                                                    <constraint firstItem="aFl-kr-gDX" firstAttribute="leading" secondItem="iWR-ea-wTp" secondAttribute="leading" constant="30" id="JJ7-yV-jNA"/>
-                                                    <constraint firstAttribute="trailing" secondItem="aFl-kr-gDX" secondAttribute="trailing" constant="30" id="JhG-b6-kJF"/>
-                                                    <constraint firstAttribute="bottom" secondItem="aFl-kr-gDX" secondAttribute="bottom" constant="15" id="Oz8-ak-68Z"/>
+                                                    <constraint firstAttribute="bottom" secondItem="r9y-CN-8yf" secondAttribute="bottom" constant="15" id="2Cd-nU-H4z"/>
+                                                    <constraint firstAttribute="trailing" secondItem="r9y-CN-8yf" secondAttribute="trailing" constant="30" id="T0c-nX-NqM"/>
+                                                    <constraint firstItem="r9y-CN-8yf" firstAttribute="top" secondItem="iWR-ea-wTp" secondAttribute="top" constant="15" id="YFM-nq-xp8"/>
+                                                    <constraint firstItem="r9y-CN-8yf" firstAttribute="leading" secondItem="iWR-ea-wTp" secondAttribute="leading" constant="30" id="xwv-dK-6hA"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
@@ -990,6 +1003,7 @@
                         <outlet property="lowerDepositFieldView" destination="za9-iG-3NZ" id="N0l-9T-KMR"/>
                         <outlet property="scrollView" destination="QBi-Sl-cc1" id="1x6-kd-RUM"/>
                         <outlet property="upperDepositFieldView" destination="tB5-S1-fay" id="s4i-CM-PVg"/>
+                        <outlet property="warningLabel" destination="zEy-2R-8To" id="cNw-sJ-9qw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6TB-tL-GxM" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -310,7 +310,7 @@
 "wallet_address" = "住所";
 "wallet_account_name" = "アカウント名";
 "wallet_account_memo" = "アカウントメモ";
-"wallet_deposit_account_notice" = " 注意：アカウントメモとアカウント名の両方が、あなたの %@ をMixinに正常に入金するために必要とされ、入金は少なくとも %@ ブロックの確認の後に到着します。";
+"wallet_deposit_account_notice" = " 注意：アカウントメモとアカウント名の両方が、あなたの %@ をMixinに正常に入金するために必要とされ。";
 "wallet_menu_show_hidden_assets" = "隠し資産";
 "wallet_menu_show_asset" = "資産を表示";
 "wallet_menu_hide_asset" = "資産を隠す";

@@ -6,13 +6,10 @@ class DepositViewController: UIViewController {
     @IBOutlet weak var upperDepositFieldView: DepositFieldView!
     @IBOutlet weak var lowerDepositFieldView: DepositFieldView!
     @IBOutlet weak var hintLabel: UILabel!
+    @IBOutlet weak var warningLabel: UILabel!
     
     private var asset: AssetItem!
     private lazy var depositWindow = QrcodeWindow.instance()
-
-    private static let depositRemindEnable = 0
-    private static let depositRemindAllowDisable = 1
-    private static let depositRemindDisabled = -1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,28 +35,6 @@ class DepositViewController: UIViewController {
             lowerDepositFieldView.chainImageView.sd_setImage(with: chainIconUrl, completed: nil)
             lowerDepositFieldView.shadowView.hasLowerShadow = false
             lowerDepositFieldView.delegate = self
-
-            let notice = Localized.WALLET_DEPOSIT_ACCOUNT_NOTICE(symbol: asset.symbol, confirmations: asset.confirmations)
-            hintLabel.text = notice
-
-            if WalletUserDefault.shared.depositRemind != DepositViewController.depositRemindDisabled {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                    guard let weakself = self else {
-                        return
-                    }
-
-                    let alc = UIAlertController(title: "", message: notice, preferredStyle: .alert)
-                    if WalletUserDefault.shared.depositRemind == DepositViewController.depositRemindAllowDisable {
-                        alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_NO_REMIND, style: .default, handler: { (_) in
-                            WalletUserDefault.shared.depositRemind = DepositViewController.depositRemindDisabled
-                        }))
-                    }
-                    alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_OK, style: .default, handler: { (_) in
-                        WalletUserDefault.shared.depositRemind = DepositViewController.depositRemindAllowDisable
-                    }))
-                    weakself.present(alc, animated: true, completion: nil)
-                }
-            }
         } else if let publicKey = asset.publicKey, !publicKey.isEmpty {
             upperDepositFieldView.titleLabel.text = Localized.WALLET_ADDRESS
             upperDepositFieldView.contentLabel.text = publicKey
@@ -71,9 +46,26 @@ class DepositViewController: UIViewController {
             upperDepositFieldView.delegate = self
             
             lowerDepositFieldView.isHidden = true
-            hintLabel.text = Localized.WALLET_DEPOSIT_CONFIRMATIONS(confirmations: asset.confirmations)
         } else {
             scrollView.isHidden = true
+        }
+
+        hintLabel.text = asset.depositTips
+        if asset.isAccount {
+            warningLabel.text = R.string.localizable.wallet_deposit_account_notice(asset.symbol)
+            warningLabel.isHidden = false
+        } else {
+            warningLabel.isHidden = true
+        }
+
+        if !WalletUserDefault.shared.depositTipRemind.contains(asset.chainId) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                guard let weakself = self else {
+                    return
+                }
+
+                DepositTipWindow.instance().render(asset: weakself.asset).presentPopupControllerAnimated()
+            }
         }
     }
     

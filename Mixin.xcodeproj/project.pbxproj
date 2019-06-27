@@ -609,6 +609,8 @@
 		DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */; };
 		DFD995A0207C9D6100621FFA /* AccountUserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD9959F207C9D6100621FFA /* AccountUserDefault.swift */; };
 		DFDC7E431FAC8D50003233EE /* ContactAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDC7E421FAC8D50003233EE /* ContactAPI.swift */; };
+		DFDD89E922C4B8E600128991 /* DepositTipWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */; };
+		DFDD89EB22C4D5F900128991 /* DepositTipWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDD89EA22C4D5F900128991 /* DepositTipWindow.swift */; };
 		DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE1F9801FAB40A800537D43 /* CornerButton.swift */; };
 		DFE1F9831FAB51DA00537D43 /* Common.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFE1F9821FAB51DA00537D43 /* Common.storyboard */; };
 		DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */; };
@@ -1302,6 +1304,8 @@
 		DFD93F1D2111C0030013401A /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 		DFD9959F207C9D6100621FFA /* AccountUserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountUserDefault.swift; sourceTree = "<group>"; };
 		DFDC7E421FAC8D50003233EE /* ContactAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAPI.swift; sourceTree = "<group>"; };
+		DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositTipWindow.xib; sourceTree = "<group>"; };
+		DFDD89EA22C4D5F900128991 /* DepositTipWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositTipWindow.swift; sourceTree = "<group>"; };
 		DFE1F9801FAB40A800537D43 /* CornerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerButton.swift; sourceTree = "<group>"; };
 		DFE1F9821FAB51DA00537D43 /* Common.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Common.storyboard; sourceTree = "<group>"; };
 		DFE1F9841FAB52CE00537D43 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
@@ -1894,6 +1898,8 @@
 				DF3F6D6820EF2618006D0CBC /* QrcodeWindow.xib */,
 				DF06D928222FC83200FE7FBC /* LoginConfirmWindow.swift */,
 				DF06D926222FC82200FE7FBC /* LoginConfirmWindow.xib */,
+				DFDD89EA22C4D5F900128991 /* DepositTipWindow.swift */,
+				DFDD89E822C4B8E600128991 /* DepositTipWindow.xib */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -2789,6 +2795,7 @@
 				DF2A0D952295721200CA0280 /* AddressView.xib in Resources */,
 				7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
+				DFDD89E922C4B8E600128991 /* DepositTipWindow.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
 				DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */,
 				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,
@@ -3478,6 +3485,7 @@
 				7BADC83E204BD01D0016B0FC /* ChangeNumberViewController.swift in Sources */,
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
 				DF503D361FECF86D00C008E7 /* SessionDAO.swift in Sources */,
+				DFDD89EB22C4D5F900128991 /* DepositTipWindow.swift in Sources */,
 				DF5D9F3D1F9CA3160036D5FD /* UserAPI.swift in Sources */,
 				7BF4047D2048FA0E004C54E4 /* ChangeNumberVerifyPinViewController.swift in Sources */,
 				DFB37D9F1FF94864000875BD /* RotateSignedPreKeyJob.swift in Sources */,

@@ -396,8 +396,13 @@ class ConversationViewController: UIViewController {
                 }
             } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue, let filename = message.mediaUrl {
                 let url = MixinFile.url(ofChatDirectory: .audios, filename: filename)
-                let node = AudioManager.Node(message: message, path: url.path)
-                AudioManager.shared.playOrStop(node: node)
+                if AudioManager.shared.playingNode?.message.messageId == message.messageId {
+                    (cell as? AudioMessageCell)?.isPlaying = false
+                    AudioManager.shared.stop(deactivateAudioSession: true)
+                } else {
+                    let node = AudioManager.Node(message: message, path: url.path)
+                    AudioManager.shared.play(node: node)
+                }
             } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue, let item = GalleryItem(message: message) {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
                 conversationInputViewController.dismiss()

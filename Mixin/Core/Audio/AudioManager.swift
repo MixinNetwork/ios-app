@@ -30,50 +30,44 @@ class AudioManager {
         isPlayingObservation?.invalidate()
     }
     
-    func playOrStop(node: Node) {
+    func play(node: Node) {
         let key = node.message.messageId as NSString
-        if playingNode?.message.messageId == node.message.messageId {
-            cells.object(forKey: key)?.isPlaying = false
-            stop(deactivateAudioSession: true)
-        } else {
-            if let cells = cells.objectEnumerator()?.allObjects as? [AudioMessageCell] {
-                cells.forEach {
-                    $0.isPlaying = false
-                }
-            }
-            cells.object(forKey: key)?.isPlaying = true
-            queue.async {
-                let center = NotificationCenter.default
-                do {
-                    let session = AVAudioSession.sharedInstance()
-                    try session.setCategory(.playback, mode: .default, options: [])
-                    try session.setActive(true, options: [])
-                    center.addObserver(self,
-                                       selector: #selector(AudioManager.audioSessionInterruption(_:)),
-                                       name: AVAudioSession.interruptionNotification,
-                                       object: nil)
-                    center.addObserver(self,
-                                       selector: #selector(AudioManager.audioSessionRouteChange(_:)),
-                                       name: AVAudioSession.routeChangeNotification,
-                                       object: nil)
-                    center.addObserver(self,
-                                       selector: #selector(AudioManager.audioSessionMediaServicesWereReset(_:)),
-                                       name: AVAudioSession.mediaServicesWereResetNotification,
-                                       object: nil)
-                    self.playingNode = nil
-                    try self.player.loadFile(atPath: node.path)
-                    self.player.play()
-                    self.playingNode = node
-                } catch {
-                    self.cells.object(forKey: key)?.isPlaying = false
-                    center.removeObserver(self)
-                    return
-                }
+        (cells.objectEnumerator()?.allObjects as? [AudioMessageCell])?.forEach {
+            $0.isPlaying = false
+        }
+        cells.object(forKey: key)?.isPlaying = true
+        queue.async {
+            let center = NotificationCenter.default
+            do {
+                let session = AVAudioSession.sharedInstance()
+                try session.setCategory(.playback, mode: .default, options: [])
+                try session.setActive(true, options: [])
+                
+                center.addObserver(self,
+                                   selector: #selector(AudioManager.audioSessionInterruption(_:)),
+                                   name: AVAudioSession.interruptionNotification,
+                                   object: nil)
+                center.addObserver(self,
+                                   selector: #selector(AudioManager.audioSessionRouteChange(_:)),
+                                   name: AVAudioSession.routeChangeNotification,
+                                   object: nil)
+                center.addObserver(self,
+                                   selector: #selector(AudioManager.audioSessionMediaServicesWereReset(_:)),
+                                   name: AVAudioSession.mediaServicesWereResetNotification,
+                                   object: nil)
+                
+                self.playingNode = nil
+                try self.player.loadFile(atPath: node.path)
+                self.player.play()
+                self.playingNode = node
                 if let nextNode = self.node(nextTo: node), nextNode.message.mediaStatus != MediaStatus.DONE.rawValue {
                     let job = AudioDownloadJob(messageId: nextNode.message.messageId,
                                                mediaMimeType: nextNode.message.mediaMimeType)
                     AudioJobQueue.shared.addJob(job: job)
                 }
+            } catch {
+                self.cells.object(forKey: key)?.isPlaying = false
+                center.removeObserver(self)
             }
         }
     }
@@ -162,7 +156,7 @@ class AudioManager {
         if let node = playingNode, let nextNode = self.node(nextTo: node) {
             performSynchronouslyOnMainThread {
                 NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: nextNode.message.messageId)
-                playOrStop(node: nextNode)
+                play(node: nextNode)
             }
         } else {
             updateCellsAndPlayingNodeForStopping()

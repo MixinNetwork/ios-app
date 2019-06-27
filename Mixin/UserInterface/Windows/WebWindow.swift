@@ -12,6 +12,7 @@ class WebWindow: BottomSheetView {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webViewWrapperView: UIView!
+    @IBOutlet weak var loadingIndicator: AppLoadingIndicatorView!
     @IBOutlet weak var longPressGestureRecognizer: UILongPressGestureRecognizer!
     @IBOutlet weak var edgePanGestureRecognizer: WebViewScreenEdgePanGestureRecognizer!
     
@@ -55,7 +56,7 @@ class WebWindow: BottomSheetView {
         super.awakeFromNib()
         layoutIfNeeded()
         windowBackgroundColor = UIColor.black.withAlphaComponent(0.3)
-        webViewWrapperView.addSubview(webView)
+        webViewWrapperView.insertSubview(webView, at: 0)
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
@@ -228,7 +229,15 @@ extension WebWindow: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         decisionHandler(.allow)
     }
-
+    
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        guard !loadingIndicator.isHidden else {
+            return
+        }
+        loadingIndicator.stopAnimating()
+        loadingIndicator.isHidden = true
+    }
+    
 }
 
 extension WebWindow: WKUIDelegate {

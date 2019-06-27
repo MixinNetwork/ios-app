@@ -161,7 +161,7 @@ class AudioManager {
         }
         if let node = playingNode, let nextNode = self.node(nextTo: node) {
             performSynchronouslyOnMainThread {
-                NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: node.message.messageId)
+                NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: nextNode.message.messageId)
                 playOrStop(node: nextNode)
             }
         } else {

@@ -526,20 +526,29 @@ class ConversationViewController: UIViewController {
     }
     
     @objc func audioManagerWillPlayNextNode(_ notification: Notification) {
+        guard !tableView.isTracking else {
+            return
+        }
         guard let messageId = notification.object as? String else {
             return
         }
-        for cell in tableView.visibleCells.reversed() {
-            guard let indexPath = tableView.indexPath(for: cell) else {
-                continue
-            }
+        guard let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows else {
+            return
+        }
+        for indexPath in indexPathsForVisibleRows {
             guard let viewModel = dataSource.viewModel(for: indexPath) else {
                 continue
             }
-            if viewModel.message.messageId == messageId {
-                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-                break
+            guard viewModel.message.messageId == messageId else {
+                continue
             }
+            let cellFrame = tableView.convert(tableView.rectForRow(at: indexPath), to: view)
+            let cellIntersectsContentInset = cellFrame.minY < navigationBarView.frame.height
+                || cellFrame.maxY > view.bounds.height - inputWrapperView.frame.height
+            if cellIntersectsContentInset {
+                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+            }
+            break
         }
     }
     

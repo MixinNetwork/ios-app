@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -92,6 +92,12 @@
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="okA-Lg-ndE">
                             <rect key="frame" x="0.0" y="70" width="375" height="577"/>
+                            <subviews>
+                                <view contentMode="center" placeholderIntrinsicWidth="46" placeholderIntrinsicHeight="54" translatesAutoresizingMaskIntoConstraints="NO" id="MmM-ZS-qfP" customClass="AppLoadingIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="164.5" y="216.5" width="46" height="54"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
+                            </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                             <connections>
@@ -124,12 +130,15 @@
                 <constraint firstItem="nW9-LR-ccq" firstAttribute="leading" secondItem="7b3-bB-hYw" secondAttribute="leading" id="U8I-Jb-vPC"/>
                 <constraint firstItem="7b3-bB-hYw" firstAttribute="trailing" secondItem="nW9-LR-ccq" secondAttribute="trailing" id="XEr-Ea-5fd"/>
                 <constraint firstAttribute="bottom" secondItem="nW9-LR-ccq" secondAttribute="bottom" id="XGa-BT-pi4"/>
+                <constraint firstItem="MmM-ZS-qfP" firstAttribute="centerX" secondItem="Qmy-MR-oXV" secondAttribute="centerX" id="ogO-Ul-uSz"/>
+                <constraint firstItem="MmM-ZS-qfP" firstAttribute="centerY" secondItem="Qmy-MR-oXV" secondAttribute="centerY" id="pAn-ME-cwT"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="7b3-bB-hYw"/>
             <connections>
                 <outlet property="dismissButton" destination="uvk-a8-USK" id="HYf-br-IUr"/>
                 <outlet property="edgePanGestureRecognizer" destination="riN-2F-VvJ" id="qAW-7n-zlL"/>
                 <outlet property="iconImageView" destination="qk7-V2-agQ" id="a6e-Mz-l16"/>
+                <outlet property="loadingIndicator" destination="MmM-ZS-qfP" id="Hi3-1G-C3Y"/>
                 <outlet property="longPressGestureRecognizer" destination="rul-Ns-81m" id="zQa-W8-Oxf"/>
                 <outlet property="popupView" destination="nW9-LR-ccq" id="S6i-Pw-tuJ"/>
                 <outlet property="titleHeightConstraint" destination="Ewj-cl-Uzr" id="sAH-Xt-fdE"/>
@@ -158,6 +167,6 @@
         </screenEdgePanGestureRecognizer>
     </objects>
     <resources>
-        <image name="ic_dialog_close" width="16" height="16"/>
+        <image name="ic_dialog_close" width="26" height="26"/>
     </resources>
 </document>

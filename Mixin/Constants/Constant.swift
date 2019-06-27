@@ -178,12 +178,11 @@ struct MixinFile {
         }
     }
 
-    static func url(ofChatDirectory directory: ChatDirectory, messageId: String, mimeType: String) -> URL {
+    static func url(ofChatDirectory directory: ChatDirectory, messageId: String, fileExtension: String) -> URL {
         let url = rootDirectory.appendingPathComponent("Chat").appendingPathComponent(directory.rawValue)
         if !FileManager.default.fileExists(atPath: url.path) {
             try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
         }
-        let fileExtension = FileManager.default.pathExtension(mimeType: mimeType).lowercased()
         return url.appendingPathComponent("\(messageId).\(fileExtension)")
     }
     

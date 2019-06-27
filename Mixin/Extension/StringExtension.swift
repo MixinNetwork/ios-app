@@ -59,6 +59,13 @@ extension String {
         return String(self[..<endIndex])
     }
 
+    func pathExtension() -> String? {
+        guard let idx = self.lastIndex(of: ".") else {
+            return nil
+        }
+        return String(self[idx..<endIndex])
+    }
+
     func toUTCDate() -> Date {
         return DateFormatter.iso8601Full.date(from: self) ?? Date()
     }

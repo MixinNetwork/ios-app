@@ -3,10 +3,6 @@ import Bugsnag
 
 class FileDownloadJob: AttachmentDownloadJob {
 
-    override var fileName: String {
-        return "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ""))"
-    }
-    
     override var fileUrl: URL {
         return MixinFile.url(ofChatDirectory: .files, filename: fileName)
     }

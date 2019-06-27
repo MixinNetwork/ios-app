@@ -215,7 +215,7 @@ extension MessageReceiverViewController {
     
     // Copy media file in case of deletion or recalling
     static func mediaUrl(from message: MessageItem, with newMessageId: String) -> String? {
-        guard let mimeType = message.mediaMimeType, let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: message.category), let mediaUrl = message.mediaUrl else {
+        guard let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: message.category), let mediaUrl = message.mediaUrl else {
             return message.mediaUrl
         }
         
@@ -224,7 +224,7 @@ extension MessageReceiverViewController {
             return message.mediaUrl
         }
         
-        let toUrl = MixinFile.url(ofChatDirectory: chatDirectory, messageId: newMessageId, mimeType: mimeType)
+        let toUrl = MixinFile.url(ofChatDirectory: chatDirectory, messageId: newMessageId, fileExtension: fromUrl.pathExtension)
         try? FileManager.default.copyItem(at: fromUrl, to: toUrl)
         if message.category.hasSuffix("_VIDEO") {
             let fromThumbnailUrl = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl.substring(endChar: ".") + ExtensionName.jpeg.withDot)

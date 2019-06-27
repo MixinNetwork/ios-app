@@ -19,10 +19,6 @@ extension FileManager {
         }
     }
 
-    func fileName(_ path: String) -> String {
-        return URL(fileURLWithPath: path).lastPathComponent
-    }
-
     func compare(path1: String, path2: String) -> Bool {
         return fileSize(path1) == fileSize(path2) && contentsEqual(atPath: path1, andPath: path2)
     }
@@ -91,9 +87,9 @@ extension FileManager {
         return FileManager.mimeTypes[ext.lowercased()] ?? FileManager.defaultMimeType
     }
 
-    func pathExtension(mimeType: String) -> String {
+    func pathExtension(mimeType: String) -> String? {
         guard !mimeType.isEmpty else {
-            return "FILE"
+            return nil
         }
         for (key, value) in FileManager.mimeTypes {
             guard value == mimeType else {
@@ -105,7 +101,7 @@ extension FileManager {
             }
             return result
         }
-        return "FILE"
+        return nil
     }
 
     private static let defaultMimeType = "application/octet-stream"

@@ -10,7 +10,24 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
     private var mediaMimeType: String?
 
     internal var fileName: String {
-        return "\(message.messageId).\(FileManager.default.pathExtension(mimeType: message.mediaMimeType?.lowercased() ?? ExtensionName.jpeg.rawValue))"
+        var pathExtension = message.name?.pathExtension()?.lowercased()
+
+        if pathExtension == nil {
+            if let mimeType = message.mediaMimeType?.lowercased(), let ext = FileManager.default.pathExtension(mimeType: mimeType)?.lowercased() {
+                pathExtension = ".\(ext)"
+            }
+        }
+
+        if pathExtension == nil {
+            if message.category.hasSuffix("_VIDEO") {
+                pathExtension = ExtensionName.mp4.withDot
+            } else if message.category.hasSuffix("_IMAGE") {
+                pathExtension = ExtensionName.jpeg.withDot
+            } else if message.category.hasSuffix("_AUDIO") {
+                pathExtension = ExtensionName.ogg.withDot
+            }
+        }
+        return "\(message.messageId)\(pathExtension ?? "")"
     }
     
     internal var fileUrl: URL {

@@ -16,7 +16,7 @@ class WebSocketService: NSObject {
     private(set) var client: SRWebSocket?
     private(set) var connected = false
 
-    private var transactions = [String: SendJobTransaction]()
+    private var transactions = SafeDictionary<String, SendJobTransaction>()
     private var recoverJobs = false
     private let websocketDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket")
     private let sendDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.websocket.send")

@@ -573,6 +573,7 @@
 		DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6BB2034737F00E99CE8 /* payment_success.caf */; };
 		DF92A51D20A5BBAF00427B80 /* ResendMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */; };
 		DF92A51F20A5BDAD00427B80 /* ResendMessageDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92A51E20A5BDAD00427B80 /* ResendMessageDAO.swift */; };
+		DF9C9C6522C5E8720090873E /* SafeDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9C9C6422C5E8720090873E /* SafeDictionary.swift */; };
 		DF9E66E5205B9AF300F1A0B9 /* HiddenAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */; };
 		DF9E66E7205C0A7E00F1A0B9 /* AddressRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */; };
 		DF9E66ED205C16AD00F1A0B9 /* WithdrawalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */; };
@@ -1271,6 +1272,7 @@
 		DF8EF6BB2034737F00E99CE8 /* payment_success.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = payment_success.caf; sourceTree = "<group>"; };
 		DF92A51C20A5BBAF00427B80 /* ResendMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendMessage.swift; sourceTree = "<group>"; };
 		DF92A51E20A5BDAD00427B80 /* ResendMessageDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendMessageDAO.swift; sourceTree = "<group>"; };
+		DF9C9C6422C5E8720090873E /* SafeDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeDictionary.swift; sourceTree = "<group>"; };
 		DF9E66E4205B9AF300F1A0B9 /* HiddenAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenAssetViewController.swift; sourceTree = "<group>"; };
 		DF9E66E6205C0A7E00F1A0B9 /* AddressRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRequest.swift; sourceTree = "<group>"; };
 		DF9E66EC205C16AD00F1A0B9 /* WithdrawalRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawalRequest.swift; sourceTree = "<group>"; };
@@ -2116,6 +2118,7 @@
 				DF81413120C51D5E00E89DE8 /* PhotoLibraryExtension.swift */,
 				7BD150E12160C1560019FD5B /* GiphyCoreSDKExtension.swift */,
 				7B58433E2175911D0053332F /* SnapKitExtension.swift */,
+				DF9C9C6422C5E8720090873E /* SafeDictionary.swift */,
 				7BE6E16B218089F100C32EE5 /* GCDExtension.swift */,
 				7BB3854F21E74DA60070FF8F /* JSONCoderExtension.swift */,
 			);
@@ -3220,6 +3223,7 @@
 				DF5D9F391F9C998F0036D5FD /* Account.swift in Sources */,
 				DF7FB63A22801B4E00F4782F /* TransferRecallData.swift in Sources */,
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
+				DF9C9C6522C5E8720090873E /* SafeDictionary.swift in Sources */,
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */,
 				DF92A51D20A5BBAF00427B80 /* ResendMessage.swift in Sources */,

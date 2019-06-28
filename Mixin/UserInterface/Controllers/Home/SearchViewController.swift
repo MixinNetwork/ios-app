@@ -91,10 +91,11 @@ class SearchViewController: UIViewController, SearchableViewController {
             navigationSearchBoxView.isBusy = false
             return
         }
+        queue.cancelAllOperations()
         guard keyword != lastKeyword else {
+            navigationSearchBoxView.isBusy = false
             return
         }
-        queue.cancelAllOperations()
         searchNumberRequest?.cancel()
         searchNumberRequest = nil
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
@@ -122,6 +123,7 @@ class SearchViewController: UIViewController, SearchableViewController {
                 self.conversationsByMessage = []
                 self.tableView.reloadData()
                 self.showSearchResults()
+                self.lastKeyword = keyword
             }
             guard !op.isCancelled else {
                 return
@@ -137,7 +139,6 @@ class SearchViewController: UIViewController, SearchableViewController {
                     self.tableView.reloadSections(Section.conversation.indexSet, with: .none)
                 }
                 if !op.isCancelled {
-                    self.lastKeyword = keyword
                     self.navigationSearchBoxView.isBusy = false
                 }
             }

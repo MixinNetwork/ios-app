@@ -6,6 +6,6 @@
 
 #import "setup.h"
 #import "MXNAudioRecorder.h"
-#import "MXNAudioPlayer.h"
+#import "MXNOggOpusReader.h"
 #import "MXNFastURLDetector.h"
 #import "MXNProvisionCryptor.h"

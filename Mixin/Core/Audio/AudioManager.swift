@@ -8,39 +8,39 @@ class AudioManager {
         let path: String
     }
     
+    struct WeakReference<T: AnyObject> {
+        weak var object: T?
+    }
+    
     static let shared = AudioManager()
     static let willPlayNextNodeNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_next")
     static let conversationIdUserInfoKey = "conversation_id"
     static let messageIdUserInfoKey = "message_id"
     
-    let player = MXNAudioPlayer.shared()
-    
+    private(set) var player: AudioPlayer?
     private(set) var playingNode: Node?
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.audio_manager")
+    private let queueSpecificKey = DispatchSpecificKey<Void>()
     
-    private var cells = NSMapTable<NSString, AudioMessageCell>(keyOptions: .strongMemory, valueOptions: .weakMemory)
-    private var isPlayingObservation: NSKeyValueObservation?
+    private var cells = [String: WeakReference<AudioMessageCell>]()
     
     init() {
-        isPlayingObservation = player.observe(\.isPlaying) { [weak self] (player, change) in
-            self?.isPlayingChanged()
-        }
-    }
-    
-    deinit {
-        isPlayingObservation?.invalidate()
+        queue.setSpecific(key: queueSpecificKey, value: ())
     }
     
     func play(node: Node) {
-        let key = node.message.messageId as NSString
-        (cells.objectEnumerator()?.allObjects as? [AudioMessageCell])?.forEach {
-            $0.isPlaying = false
+        if let playingMessageId = playingNode?.message.messageId {
+            cells[playingMessageId]?.object?.isPlaying = false
         }
-        cells.object(forKey: key)?.isPlaying = true
+        cells[node.message.messageId]?.object?.isPlaying = true
         queue.async {
             let center = NotificationCenter.default
             do {
+                self.playingNode = nil
+                self.player?.stop()
+                self.player = nil
+                
                 let session = AVAudioSession.sharedInstance()
                 try session.setCategory(.playback, mode: .default, options: [])
                 try session.setActive(true, options: [])
@@ -58,29 +58,40 @@ class AudioManager {
                                    name: AVAudioSession.mediaServicesWereResetNotification,
                                    object: nil)
                 
-                self.playingNode = nil
-                try self.player.loadFile(atPath: node.path)
-                self.player.play()
                 self.playingNode = node
+                self.player = try AudioPlayer(path: node.path)
+                self.player!.onStatusChanged = self.playerStatusChanged
+                self.player!.play()
+                
                 if let nextNode = self.node(nextTo: node), nextNode.message.mediaStatus != MediaStatus.DONE.rawValue {
                     let job = AudioDownloadJob(messageId: nextNode.message.messageId,
                                                mediaMimeType: nextNode.message.mediaMimeType)
                     AudioJobQueue.shared.addJob(job: job)
                 }
             } catch {
-                self.cells.object(forKey: key)?.isPlaying = false
+                DispatchQueue.main.sync {
+                    self.cells[node.message.messageId]?.object?.isPlaying = false
+                }
                 center.removeObserver(self)
             }
         }
     }
     
     func stop(deactivateAudioSession: Bool) {
+        guard let player = player else {
+            return
+        }
         queue.async {
-            guard self.player.isPlaying else {
+            guard player.status == .playing else {
                 return
             }
-            self.updateCellsAndPlayingNodeForStopping()
-            self.player.stop()
+            if let playingNode = self.playingNode {
+                DispatchQueue.main.sync {
+                    self.cells[playingNode.message.messageId]?.object?.isPlaying = false
+                }
+                self.playingNode = nil
+            }
+            player.stop()
             NotificationCenter.default.removeObserver(self)
             if deactivateAudioSession {
                 try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
@@ -89,16 +100,12 @@ class AudioManager {
     }
     
     func register(cell: AudioMessageCell, forMessageId messageId: String) {
-        cells.setObject(cell, forKey: messageId as NSString)
+        cells[messageId] = WeakReference(object: cell)
         cell.isPlaying = messageId == playingNode?.message.messageId
     }
     
     func unregister(cell: AudioMessageCell, forMessageId messageId: String) {
-        let key = messageId as NSString
-        guard self.cells.object(forKey: key) == cell else {
-            return
-        }
-        cells.removeObject(forKey: key)
+        cells[messageId] = nil
     }
     
     @objc func audioSessionInterruption(_ notification: Notification) {
@@ -129,39 +136,42 @@ class AudioManager {
     }
     
     @objc func audioSessionMediaServicesWereReset(_ notification: Notification) {
-        player.dispose()
+        player?.dispose()
+        player = nil
     }
     
-    private func updateCellsAndPlayingNodeForStopping() {
-        performSynchronouslyOnMainThread {
-            if let messageId = self.playingNode?.message.messageId {
-                self.cells.object(forKey: messageId as NSString)?.isPlaying = false
+    private func playerStatusChanged(player: AudioPlayer) {
+        
+        func handleStatusChange() {
+            DispatchQueue.main.async {
+                UIApplication.shared.isIdleTimerDisabled = player.status == .playing
             }
-            self.playingNode = nil
-        }
-    }
-    
-    private func isPlayingChanged() {
-        let isPlaying = player.isPlaying
-        DispatchQueue.main.async {
-            UIApplication.shared.isIdleTimerDisabled = isPlaying
-        }
-        if !isPlaying, let playingNode = playingNode {
-            performSynchronouslyOnMainThread {
-                cells.object(forKey: playingNode.message.messageId as NSString)?.isPlaying = false
-            }
-            if let nextNode = self.node(nextTo: playingNode) {
-                performSynchronouslyOnMainThread {
-                    let userInfo = [AudioManager.conversationIdUserInfoKey: nextNode.message.conversationId,
-                                    AudioManager.messageIdUserInfoKey: nextNode.message.messageId]
-                    NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: nil, userInfo: userInfo)
-                    play(node: nextNode)
+            if player.status == .didReachEnd, let playingNode = playingNode {
+                DispatchQueue.main.sync {
+                    cells[playingNode.message.messageId]?.object?.isPlaying = false
                 }
-            } else {
-                updateCellsAndPlayingNodeForStopping()
-                NotificationCenter.default.removeObserver(self)
-                try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+                if let nextNode = self.node(nextTo: playingNode) {
+                    DispatchQueue.main.sync {
+                        let userInfo = [AudioManager.conversationIdUserInfoKey: nextNode.message.conversationId,
+                                        AudioManager.messageIdUserInfoKey: nextNode.message.messageId]
+                        NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: nil, userInfo: userInfo)
+                        play(node: nextNode)
+                    }
+                } else {
+                    DispatchQueue.main.sync {
+                        cells[playingNode.message.messageId]?.object?.isPlaying = false
+                    }
+                    self.playingNode = nil
+                    NotificationCenter.default.removeObserver(self)
+                    try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+                }
             }
+        }
+        
+        if DispatchQueue.getSpecific(key: queueSpecificKey) == nil {
+            queue.async(execute: handleStatusChange)
+        } else {
+            handleStatusChange()
         }
     }
     

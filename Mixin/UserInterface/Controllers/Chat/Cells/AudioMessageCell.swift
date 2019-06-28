@@ -96,7 +96,9 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     }
     
     private func updateWaveformProgress() {
-        let player = AudioManager.shared.player
+        guard let player = AudioManager.shared.player else {
+            return
+        }
         let progress = player.currentTime * millisecondsPerSecond / (duration - waveformUpdateInterval * millisecondsPerSecond)
         let oldWidth = waveformMaskView.frame.width
         let newWidth = highlightedWaveformView.frame.width * CGFloat(progress)

@@ -71,7 +71,6 @@
 		7B0BE46021A5630500B91A1E /* SearchAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */; };
 		7B0BE46221A57C7100B91A1E /* TopAssetsDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE46121A57C7100B91A1E /* TopAssetsDAO.swift */; };
 		7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */; };
-		7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */; };
 		7B0D6AD920D0CB1400C2672E /* HittestBypassWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */; };
 		7B0E67082179931C0056DE3A /* AssetKeyConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0E67072179931C0056DE3A /* AssetKeyConvertible.swift */; };
 		7B11788C2293D53B000F934E /* BalanceInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */; };
@@ -86,6 +85,7 @@
 		7B1CCBA31FEE63C300137644 /* UserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1CCBA21FEE63C300137644 /* UserRequest.swift */; };
 		7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */; };
 		7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */; };
+		7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B21782022C4E70B00C08106 /* AudioPlayer.swift */; };
 		7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */; };
 		7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */; };
 		7B287A3420EA5770007278A3 /* AssetExportSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B287A3320EA5770007278A3 /* AssetExportSession.swift */; };
@@ -306,7 +306,6 @@
 		7BC8503120CBA69B00A57B83 /* MXNOggOpusError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502420CBA69900A57B83 /* MXNOggOpusError.m */; };
 		7BC8503220CBA69B00A57B83 /* MXNOggOpusWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502620CBA69900A57B83 /* MXNOggOpusWriter.m */; };
 		7BC8503320CBA69B00A57B83 /* MXNAudioMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502A20CBA69A00A57B83 /* MXNAudioMetadata.m */; };
-		7BC8503420CBA69B00A57B83 /* MXNAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502B20CBA69A00A57B83 /* MXNAudioPlayer.m */; };
 		7BC8503520CBA69B00A57B83 /* MXNAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */; };
 		7BC850C020CBB3AE00A57B83 /* liboggopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC850BF20CBB3AD00A57B83 /* liboggopus.a */; };
 		7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */; };
@@ -749,7 +748,6 @@
 		7B0BE45F21A5630500B91A1E /* SearchAssetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAssetCell.swift; sourceTree = "<group>"; };
 		7B0BE46121A57C7100B91A1E /* TopAssetsDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopAssetsDAO.swift; sourceTree = "<group>"; };
 		7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTopAssetsJob.swift; sourceTree = "<group>"; };
-		7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MXNAudioPlayerError.swift; sourceTree = "<group>"; };
 		7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HittestBypassWrapperView.swift; sourceTree = "<group>"; };
 		7B0E67072179931C0056DE3A /* AssetKeyConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetKeyConvertible.swift; sourceTree = "<group>"; };
 		7B11788B2293D53B000F934E /* BalanceInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceInputAccessoryView.swift; sourceTree = "<group>"; };
@@ -764,6 +762,7 @@
 		7B1CCBA21FEE63C300137644 /* UserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRequest.swift; sourceTree = "<group>"; };
 		7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCornerSelectionView.swift; sourceTree = "<group>"; };
+		7B21782022C4E70B00C08106 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputAlbumCell.swift; sourceTree = "<group>"; };
 		7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteTopView.swift; sourceTree = "<group>"; };
 		7B287A3320EA5770007278A3 /* AssetExportSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetExportSession.swift; sourceTree = "<group>"; };
@@ -984,10 +983,8 @@
 		7BC8502520CBA69900A57B83 /* MXNOggOpusWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNOggOpusWriter.h; sourceTree = "<group>"; };
 		7BC8502620CBA69900A57B83 /* MXNOggOpusWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNOggOpusWriter.m; sourceTree = "<group>"; };
 		7BC8502720CBA69A00A57B83 /* MXNOggOpusReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNOggOpusReader.h; sourceTree = "<group>"; };
-		7BC8502820CBA69A00A57B83 /* MXNAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNAudioPlayer.h; sourceTree = "<group>"; };
 		7BC8502920CBA69A00A57B83 /* MXNAudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNAudioRecorder.h; sourceTree = "<group>"; };
 		7BC8502A20CBA69A00A57B83 /* MXNAudioMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNAudioMetadata.m; sourceTree = "<group>"; };
-		7BC8502B20CBA69A00A57B83 /* MXNAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNAudioPlayer.m; sourceTree = "<group>"; };
 		7BC8502C20CBA69A00A57B83 /* MXNAudioMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNAudioMetadata.h; sourceTree = "<group>"; };
 		7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXNAudioRecorder.m; sourceTree = "<group>"; };
 		7BC8502F20CBA69B00A57B83 /* MXNOggOpusError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXNOggOpusError.h; sourceTree = "<group>"; };
@@ -1790,9 +1787,7 @@
 				7BC8502A20CBA69A00A57B83 /* MXNAudioMetadata.m */,
 				7BC8502920CBA69A00A57B83 /* MXNAudioRecorder.h */,
 				7BC8502D20CBA69A00A57B83 /* MXNAudioRecorder.m */,
-				7BC8502820CBA69A00A57B83 /* MXNAudioPlayer.h */,
-				7BC8502B20CBA69A00A57B83 /* MXNAudioPlayer.m */,
-				7B0BF77E20CE806B0004CFA7 /* MXNAudioPlayerError.swift */,
+				7B21782022C4E70B00C08106 /* AudioPlayer.swift */,
 				7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */,
 			);
 			path = Audio;
@@ -3317,6 +3312,7 @@
 				DF6175C72223E5D000624609 /* BlazeSessionMessageParam.swift in Sources */,
 				7B51DDB2223A408A008ACDBB /* LoginMobileNumberViewController.swift in Sources */,
 				DFF353001FEE516F00058453 /* Asset.swift in Sources */,
+				7B21782122C4E70B00C08106 /* AudioPlayer.swift in Sources */,
 				DFF5D3F6207B759E008B9B75 /* TransferContactData.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
 				273FACB7205FB9A800513327 /* SignalStore.swift in Sources */,
@@ -3385,7 +3381,6 @@
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
 				DF8DA1981FD5301200425CEC /* Participant.swift in Sources */,
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
-				7B0BF77F20CE806B0004CFA7 /* MXNAudioPlayerError.swift in Sources */,
 				7B2BB2CB2187FD3B00E02296 /* CallAPI.swift in Sources */,
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
@@ -3543,7 +3538,6 @@
 				7B81BF2522893F5D00266A77 /* GroupParticipantsViewController.swift in Sources */,
 				DF503D321FECF71400C008E7 /* SenderKey.swift in Sources */,
 				DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */,
-				7BC8503420CBA69B00A57B83 /* MXNAudioPlayer.m in Sources */,
 				DFE356271FB40C4700E0E3A8 /* NotificationCenterExtension.swift in Sources */,
 				7B4A430620AC9ABA007D6936 /* GalleryVideoView.swift in Sources */,
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,

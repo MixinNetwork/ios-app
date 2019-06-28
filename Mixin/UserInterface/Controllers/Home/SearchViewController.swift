@@ -22,6 +22,7 @@ class SearchViewController: UIViewController, SearchableViewController {
     private let phoneNumberKit = PhoneNumberKit()
     
     private var queue = OperationQueue()
+    private var showSearchNumber = false
     private var assets = [AssetSearchResult]()
     private var users = [SearchResult]()
     private var conversationsByName = [SearchResult]()
@@ -32,27 +33,6 @@ class SearchViewController: UIViewController, SearchableViewController {
     private var lastSearchFieldText: String?
     
     private lazy var userWindow = UserWindow.instance()
-    
-    private var keywordMaybeIdOrPhone: Bool {
-        guard let keyword = trimmedLowercaseKeyword else {
-            return false
-        }
-        guard keyword.count >= 4 else {
-            return false
-        }
-        guard idOrPhoneCharacterSet.isSuperset(of: keyword) else {
-            return false
-        }
-        if keyword.contains("+") {
-            return (try? phoneNumberKit.parse(keyword)) != nil
-        } else {
-            return true
-        }
-    }
-    
-    private var shouldShowSearchNumber: Bool {
-        return users.isEmpty && keywordMaybeIdOrPhone
-    }
     
     private var searchNumberCell: SearchNumberCell? {
         let indexPath = IndexPath(row: 0, section: Section.searchNumber.rawValue)
@@ -111,10 +91,11 @@ class SearchViewController: UIViewController, SearchableViewController {
             navigationSearchBoxView.isBusy = false
             return
         }
+        queue.cancelAllOperations()
         guard keyword != lastKeyword else {
+            navigationSearchBoxView.isBusy = false
             return
         }
-        queue.cancelAllOperations()
         searchNumberRequest?.cancel()
         searchNumberRequest = nil
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
@@ -135,12 +116,14 @@ class SearchViewController: UIViewController, SearchableViewController {
                 return
             }
             DispatchQueue.main.sync {
+                self.showSearchNumber = users.isEmpty && self.keywordMaybeIdOrPhone(keyword)
                 self.assets = assets
                 self.users = users
                 self.conversationsByName = conversationsByName
                 self.conversationsByMessage = []
                 self.tableView.reloadData()
                 self.showSearchResults()
+                self.lastKeyword = keyword
             }
             guard !op.isCancelled else {
                 return
@@ -156,7 +139,6 @@ class SearchViewController: UIViewController, SearchableViewController {
                     self.tableView.reloadSections(Section.conversation.indexSet, with: .none)
                 }
                 if !op.isCancelled {
-                    self.lastKeyword = keyword
                     self.navigationSearchBoxView.isBusy = false
                 }
             }
@@ -195,7 +177,7 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
         case .searchNumber:
-            return shouldShowSearchNumber ? 1 : 0
+            return showSearchNumber ? 1 : 0
         case .asset:
             return min(resultLimit, assets.count)
         case .user:
@@ -391,6 +373,20 @@ extension SearchViewController {
         
     }
     
+    private func keywordMaybeIdOrPhone(_ keyword: String) -> Bool {
+        guard keyword.count >= 4 else {
+            return false
+        }
+        guard idOrPhoneCharacterSet.isSuperset(of: keyword) else {
+            return false
+        }
+        if keyword.contains("+") {
+            return (try? phoneNumberKit.parse(keyword)) != nil
+        } else {
+            return true
+        }
+    }
+    
     private func showSearchResults() {
         tableView.isHidden = false
         recentAppsContainerView.isHidden = true
@@ -420,7 +416,7 @@ extension SearchViewController {
     private func isEmptySection(_ section: Section) -> Bool {
         switch section {
         case .searchNumber:
-            return !shouldShowSearchNumber
+            return !showSearchNumber
         case .asset, .user, .group, .conversation:
             return models(forSection: section).isEmpty
         }
@@ -429,15 +425,15 @@ extension SearchViewController {
     private func isFirstSection(_ section: Section) -> Bool {
         switch section {
         case .searchNumber:
-            return shouldShowSearchNumber
+            return showSearchNumber
         case .asset:
-            return !shouldShowSearchNumber
+            return !showSearchNumber
         case .user:
-            return !shouldShowSearchNumber && assets.isEmpty
+            return !showSearchNumber && assets.isEmpty
         case .group:
-            return !shouldShowSearchNumber && assets.isEmpty && users.isEmpty
+            return !showSearchNumber && assets.isEmpty && users.isEmpty
         case .conversation:
-            return !shouldShowSearchNumber && assets.isEmpty && users.isEmpty && conversationsByName.isEmpty
+            return !showSearchNumber && assets.isEmpty && users.isEmpty && conversationsByName.isEmpty
         }
     }
     

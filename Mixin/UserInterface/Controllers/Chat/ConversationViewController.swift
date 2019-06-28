@@ -151,6 +151,7 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(menuControllerDidHideMenu(_:)), name: UIMenuController.didHideMenuNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNodeNotification, object: nil)
     }
     
     override var prefersHomeIndicatorAutoHidden: Bool {
@@ -395,8 +396,13 @@ class ConversationViewController: UIViewController {
                 }
             } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue, let filename = message.mediaUrl {
                 let url = MixinFile.url(ofChatDirectory: .audios, filename: filename)
-                let node = AudioManager.Node(message: message, path: url.path)
-                AudioManager.shared.playOrStop(node: node)
+                if AudioManager.shared.playingNode?.message.messageId == message.messageId {
+                    (cell as? AudioMessageCell)?.isPlaying = false
+                    AudioManager.shared.stop(deactivateAudioSession: true)
+                } else {
+                    let node = AudioManager.Node(message: message, path: url.path)
+                    AudioManager.shared.play(node: node)
+                }
             } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue, let item = GalleryItem(message: message) {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
                 conversationInputViewController.dismiss()
@@ -522,6 +528,28 @@ class ConversationViewController: UIViewController {
             return
         }
         unreadBadgeValue += count
+    }
+    
+    @objc func audioManagerWillPlayNextNode(_ notification: Notification) {
+        guard !tableView.isTracking else {
+            return
+        }
+        guard let conversationId = notification.userInfo?[AudioManager.conversationIdUserInfoKey] as? String, conversationId == dataSource.conversationId else {
+            return
+        }
+        guard let messageId = notification.userInfo?[AudioManager.messageIdUserInfoKey] as? String else {
+            return
+        }
+        if let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) {
+            let cellFrame = tableView.convert(tableView.rectForRow(at: indexPath), to: view)
+            let isCellInvisible = cellFrame.minY < navigationBarView.frame.height
+                || cellFrame.maxY > view.bounds.height - inputWrapperView.frame.height
+            if isCellInvisible {
+                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+            }
+        } else {
+            dataSource.scrollToBottomAndReload(initialMessageId: messageId, completion: nil)
+        }
     }
     
     // MARK: - Interface

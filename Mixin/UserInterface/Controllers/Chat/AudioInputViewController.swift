@@ -195,6 +195,7 @@ extension AudioInputViewController {
         let tempUrl = URL.createTempUrl(fileExtension: ExtensionName.ogg.rawValue)
         do {
             recorder = try MXNAudioRecorder(path: tempUrl.path)
+            UIApplication.shared.isIdleTimerDisabled = true
             recorder!.record(forDuration: AudioInputViewController.maxRecordDuration, progress: { (progress) in
                 switch progress {
                 case .waitingForActivation:
@@ -212,6 +213,7 @@ extension AudioInputViewController {
                     self.recorder?.cancel()
                 }
             }) { (completion, metadata, error) in
+                UIApplication.shared.isIdleTimerDisabled = false
                 self.recordDurationTimer?.invalidate()
                 self.recordDurationTimer = nil
                 switch completion {

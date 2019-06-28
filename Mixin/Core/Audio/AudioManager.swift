@@ -9,6 +9,9 @@ class AudioManager {
     }
     
     static let shared = AudioManager()
+    static let willPlayNextNodeNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_next")
+    static let conversationIdUserInfoKey = "conversation_id"
+    static let messageIdUserInfoKey = "message_id"
     
     let player = MXNAudioPlayer.shared()
     
@@ -29,45 +32,44 @@ class AudioManager {
         isPlayingObservation?.invalidate()
     }
     
-    func playOrStop(node: Node) {
+    func play(node: Node) {
         let key = node.message.messageId as NSString
-        if playingNode?.message.messageId == node.message.messageId {
-            cells.object(forKey: key)?.isPlaying = false
-            stop(deactivateAudioSession: true)
-        } else {
-            if let cells = cells.objectEnumerator()?.allObjects as? [AudioMessageCell] {
-                cells.forEach {
-                    $0.isPlaying = false
+        (cells.objectEnumerator()?.allObjects as? [AudioMessageCell])?.forEach {
+            $0.isPlaying = false
+        }
+        cells.object(forKey: key)?.isPlaying = true
+        queue.async {
+            let center = NotificationCenter.default
+            do {
+                let session = AVAudioSession.sharedInstance()
+                try session.setCategory(.playback, mode: .default, options: [])
+                try session.setActive(true, options: [])
+                
+                center.addObserver(self,
+                                   selector: #selector(AudioManager.audioSessionInterruption(_:)),
+                                   name: AVAudioSession.interruptionNotification,
+                                   object: nil)
+                center.addObserver(self,
+                                   selector: #selector(AudioManager.audioSessionRouteChange(_:)),
+                                   name: AVAudioSession.routeChangeNotification,
+                                   object: nil)
+                center.addObserver(self,
+                                   selector: #selector(AudioManager.audioSessionMediaServicesWereReset(_:)),
+                                   name: AVAudioSession.mediaServicesWereResetNotification,
+                                   object: nil)
+                
+                self.playingNode = nil
+                try self.player.loadFile(atPath: node.path)
+                self.player.play()
+                self.playingNode = node
+                if let nextNode = self.node(nextTo: node), nextNode.message.mediaStatus != MediaStatus.DONE.rawValue {
+                    let job = AudioDownloadJob(messageId: nextNode.message.messageId,
+                                               mediaMimeType: nextNode.message.mediaMimeType)
+                    AudioJobQueue.shared.addJob(job: job)
                 }
-            }
-            cells.object(forKey: key)?.isPlaying = true
-            queue.async {
-                let center = NotificationCenter.default
-                do {
-                    let session = AVAudioSession.sharedInstance()
-                    try session.setCategory(.playback, mode: .default, options: [])
-                    try session.setActive(true, options: [])
-                    center.addObserver(self,
-                                       selector: #selector(AudioManager.audioSessionInterruption(_:)),
-                                       name: AVAudioSession.interruptionNotification,
-                                       object: nil)
-                    center.addObserver(self,
-                                       selector: #selector(AudioManager.audioSessionRouteChange(_:)),
-                                       name: AVAudioSession.routeChangeNotification,
-                                       object: nil)
-                    center.addObserver(self,
-                                       selector: #selector(AudioManager.audioSessionMediaServicesWereReset(_:)),
-                                       name: AVAudioSession.mediaServicesWereResetNotification,
-                                       object: nil)
-                    self.playingNode = nil
-                    try self.player.loadFile(atPath: node.path)
-                    self.player.play()
-                    self.playingNode = node
-                } catch {
-                    self.cells.object(forKey: key)?.isPlaying = false
-                    center.removeObserver(self)
-                    return
-                }
+            } catch {
+                self.cells.object(forKey: key)?.isPlaying = false
+                center.removeObserver(self)
             }
         }
     }
@@ -104,7 +106,12 @@ class AudioManager {
     }
     
     @objc func audioSessionRouteChange(_ notification: Notification) {
-        guard let reason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? AVAudioSession.RouteChangeReason else {
+        let previousOutput = (notification.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription)?.outputs.first
+        let output = AVAudioSession.sharedInstance().currentRoute.outputs.first
+        if previousOutput?.portType == .headphones, output?.portType != .headphones {
+            stop(deactivateAudioSession: false)
+        }
+        guard let value = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? AVAudioSession.RouteChangeReason.RawValue, let reason = AVAudioSession.RouteChangeReason(rawValue: value) else {
             return
         }
         switch reason {
@@ -135,31 +142,31 @@ class AudioManager {
     }
     
     private func isPlayingChanged() {
-        guard !player.isPlaying else {
-            return
+        let isPlaying = player.isPlaying
+        DispatchQueue.main.async {
+            UIApplication.shared.isIdleTimerDisabled = isPlaying
         }
-        guard let messageId = playingNode?.message.messageId else {
-            return
-        }
-        performSynchronouslyOnMainThread {
-            cells.object(forKey: messageId as NSString)?.isPlaying = false
-        }
-        if let node = playingNode, let nextNode = self.node(nextTo: node) {
+        if !isPlaying, let playingNode = playingNode {
             performSynchronouslyOnMainThread {
-                playOrStop(node: nextNode)
+                cells.object(forKey: playingNode.message.messageId as NSString)?.isPlaying = false
             }
-        } else {
-            updateCellsAndPlayingNodeForStopping()
-            NotificationCenter.default.removeObserver(self)
-            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            if let nextNode = self.node(nextTo: playingNode) {
+                performSynchronouslyOnMainThread {
+                    let userInfo = [AudioManager.conversationIdUserInfoKey: nextNode.message.conversationId,
+                                    AudioManager.messageIdUserInfoKey: nextNode.message.messageId]
+                    NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: nil, userInfo: userInfo)
+                    play(node: nextNode)
+                }
+            } else {
+                updateCellsAndPlayingNodeForStopping()
+                NotificationCenter.default.removeObserver(self)
+                try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            }
         }
     }
     
     private func node(nextTo node: Node) -> Node? {
-        guard let nextMessage = MessageDAO.shared.getMessages(conversationId: node.message.conversationId, belowMessage: node.message, count: 1).first else {
-            return nil
-        }
-        guard nextMessage.category.hasSuffix("_AUDIO"), nextMessage.userId == node.message.userId else {
+        guard let nextMessage = MessageDAO.shared.getFirstAudioMessage(conversationId: node.message.conversationId, belowMessage: node.message) else {
             return nil
         }
         guard let filename = nextMessage.mediaUrl else {

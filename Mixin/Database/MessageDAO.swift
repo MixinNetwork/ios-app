@@ -70,6 +70,12 @@ final class MessageDAO {
     ORDER BY m.created_at ASC
     LIMIT ?
     """
+    static let sqlQueryAudioMessageAfterRowId = """
+    \(sqlQueryFullMessage)
+    WHERE m.conversation_id = ? AND m.ROWID > ? AND m.category LIKE '%_AUDIO'
+    ORDER BY m.created_at ASC
+    LIMIT 1
+    """
     static let sqlQueryFullMessageById = sqlQueryFullMessage + " WHERE m.id = ?"
     private static let sqlQueryPendingMessages = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
@@ -292,6 +298,13 @@ final class MessageDAO {
         let messages: [MessageItem] = MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryFullMessageAfterRowId,
                                                                        values: [conversationId, rowId, count])
         return messages
+    }
+    
+    func getFirstAudioMessage(conversationId: String, belowMessage location: MessageItem) -> MessageItem? {
+        let rowId = MixinDatabase.shared.getRowId(tableName: Message.tableName,
+                                                  condition: Message.Properties.messageId == location.messageId)
+        return MixinDatabase.shared.getCodables(sql: MessageDAO.sqlQueryAudioMessageAfterRowId,
+                                                values: [conversationId, rowId]).first
     }
     
     func getFirstNMessages(conversationId: String, count: Int) -> [MessageItem] {

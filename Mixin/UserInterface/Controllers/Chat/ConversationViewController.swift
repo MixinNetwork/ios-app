@@ -534,26 +534,21 @@ class ConversationViewController: UIViewController {
         guard !tableView.isTracking else {
             return
         }
-        guard let messageId = notification.object as? String else {
+        guard let conversationId = notification.userInfo?[AudioManager.conversationIdUserInfoKey] as? String, conversationId == dataSource.conversationId else {
             return
         }
-        guard let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows else {
+        guard let messageId = notification.userInfo?[AudioManager.messageIdUserInfoKey] as? String else {
             return
         }
-        for indexPath in indexPathsForVisibleRows {
-            guard let viewModel = dataSource.viewModel(for: indexPath) else {
-                continue
-            }
-            guard viewModel.message.messageId == messageId else {
-                continue
-            }
+        if let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) {
             let cellFrame = tableView.convert(tableView.rectForRow(at: indexPath), to: view)
-            let cellIntersectsContentInset = cellFrame.minY < navigationBarView.frame.height
+            let isCellInvisible = cellFrame.minY < navigationBarView.frame.height
                 || cellFrame.maxY > view.bounds.height - inputWrapperView.frame.height
-            if cellIntersectsContentInset {
+            if isCellInvisible {
                 tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
             }
-            break
+        } else {
+            dataSource.scrollToBottomAndReload(initialMessageId: messageId, completion: nil)
         }
     }
     

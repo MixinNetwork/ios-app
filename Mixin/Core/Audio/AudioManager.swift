@@ -10,6 +10,8 @@ class AudioManager {
     
     static let shared = AudioManager()
     static let willPlayNextNodeNotification = Notification.Name("one.mixin.messenger.audio_manager.will_play_next")
+    static let conversationIdUserInfoKey = "conversation_id"
+    static let messageIdUserInfoKey = "message_id"
     
     let player = MXNAudioPlayer.shared()
     
@@ -144,24 +146,22 @@ class AudioManager {
         DispatchQueue.main.async {
             UIApplication.shared.isIdleTimerDisabled = isPlaying
         }
-        guard !isPlaying else {
-            return
-        }
-        guard let messageId = playingNode?.message.messageId else {
-            return
-        }
-        performSynchronouslyOnMainThread {
-            cells.object(forKey: messageId as NSString)?.isPlaying = false
-        }
-        if let node = playingNode, let nextNode = self.node(nextTo: node) {
+        if !isPlaying, let playingNode = playingNode {
             performSynchronouslyOnMainThread {
-                NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: nextNode.message.messageId)
-                play(node: nextNode)
+                cells.object(forKey: playingNode.message.messageId as NSString)?.isPlaying = false
             }
-        } else {
-            updateCellsAndPlayingNodeForStopping()
-            NotificationCenter.default.removeObserver(self)
-            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            if let nextNode = self.node(nextTo: playingNode) {
+                performSynchronouslyOnMainThread {
+                    let userInfo = [AudioManager.conversationIdUserInfoKey: nextNode.message.conversationId,
+                                    AudioManager.messageIdUserInfoKey: nextNode.message.messageId]
+                    NotificationCenter.default.post(name: AudioManager.willPlayNextNodeNotification, object: nil, userInfo: userInfo)
+                    play(node: nextNode)
+                }
+            } else {
+                updateCellsAndPlayingNodeForStopping()
+                NotificationCenter.default.removeObserver(self)
+                try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            }
         }
     }
     

@@ -76,19 +76,11 @@ class ImageUploadJob: AttachmentUploadJob {
             uti = kUTTypeJPEG
         }
         
-        let fileExtension: String
-        if let tag = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassFilenameExtension)?.takeRetainedValue() {
-            fileExtension = tag as String
-        } else {
-            fileExtension = ExtensionName.jpeg.rawValue
-        }
-        message.mediaMimeType = FileManager.default.mimeType(ext: fileExtension)
-        let filename = message.messageId + "." + fileExtension
-        let url = MixinFile.url(ofChatDirectory: .photos, filename: filename)
-        
+        let extensionName: String
         var image: UIImage?
         var imageData: Data?
         if UTTypeConformsTo(uti, kUTTypeGIF) {
+            extensionName = ExtensionName.gif.rawValue
             let options = PHImageRequestOptions()
             options.isNetworkAccessAllowed = true
             options.isSynchronous = true
@@ -96,6 +88,7 @@ class ImageUploadJob: AttachmentUploadJob {
                 imageData = data
             }
         } else {
+            extensionName = ExtensionName.jpeg.rawValue
             let options = PHImageRequestOptions()
             options.resizeMode = .exact
             options.isNetworkAccessAllowed = true
@@ -106,6 +99,10 @@ class ImageUploadJob: AttachmentUploadJob {
             }
             imageData = image?.jpegData(compressionQuality: jpegCompressionQuality)
         }
+        
+        message.mediaMimeType = FileManager.default.mimeType(ext: extensionName)
+        let filename = "\(message.messageId).\(extensionName)"
+        let url = MixinFile.url(ofChatDirectory: .photos, filename: filename)
         
         guard !isCancelled, let data = imageData else {
             return

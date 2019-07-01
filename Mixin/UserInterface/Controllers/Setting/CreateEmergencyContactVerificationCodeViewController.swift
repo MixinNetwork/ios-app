@@ -35,17 +35,14 @@ class CreateEmergencyContactVerificationCodeViewController: VerificationCodeView
     private func verify() {
         isBusy = true
         EmergencyAPI.shared.verifyContact(pin: pin, id: verificationId, code: verificationCodeField.text) { [weak self] (result) in
-            guard let weakSelf = self else {
-                return
-            }
             switch result {
             case .success(let account):
                 AccountAPI.shared.account = account
-                weakSelf.showSuccessAlert()
+                self?.showSuccessAlert()
             case .failure(let error):
-                weakSelf.handleVerificationCodeError(error)
+                self?.handleVerificationCodeError(error)
             }
-            weakSelf.isBusy = false
+            self?.isBusy = false
         }
     }
     

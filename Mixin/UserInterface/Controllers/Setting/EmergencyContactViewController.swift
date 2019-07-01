@@ -8,6 +8,10 @@ final class EmergencyContactViewController: UITableViewController {
         return AccountAPI.shared.account?.has_emergency_contact ?? false
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     class func instance() -> UIViewController {
         let vc = R.storyboard.setting.emergency_contact()!
         let container = ContainerViewController.instance(viewController: vc, title: R.string.localizable.setting_emergency_contact())
@@ -19,6 +23,7 @@ final class EmergencyContactViewController: UITableViewController {
         tableView.register(R.nib.settingCell)
         tableView.register(SeparatorShadowFooterView.self,
                            forHeaderFooterViewReuseIdentifier: footerReuseId)
+        NotificationCenter.default.addObserver(self, selector: #selector(accountDidChange(_:)), name: .AccountDidChange, object: nil)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -64,6 +69,10 @@ final class EmergencyContactViewController: UITableViewController {
         } else {
             enableEmergencyContact()
         }
+    }
+    
+    @objc func accountDidChange(_ notification: Notification) {
+        tableView.reloadData()
     }
     
     private func viewEmergencyContact() {

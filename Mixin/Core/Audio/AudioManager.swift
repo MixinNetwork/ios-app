@@ -30,10 +30,17 @@ class AudioManager {
     }
     
     func play(node: Node) {
+        cells[node.message.messageId]?.object?.style = .playing
         if let playingMessageId = playingNode?.message.messageId {
-            cells[playingMessageId]?.object?.isPlaying = false
+            if playingMessageId == node.message.messageId {
+                queue.async {
+                    self.player?.play()
+                }
+                return
+            } else {
+                cells[playingMessageId]?.object?.style = .stopped
+            }
         }
-        cells[node.message.messageId]?.object?.isPlaying = true
         queue.async {
             let center = NotificationCenter.default
             do {
@@ -70,38 +77,57 @@ class AudioManager {
                 }
             } catch {
                 DispatchQueue.main.sync {
-                    self.cells[node.message.messageId]?.object?.isPlaying = false
+                    self.cells[node.message.messageId]?.object?.style = .stopped
                 }
                 center.removeObserver(self)
             }
         }
     }
     
-    func stop(deactivateAudioSession: Bool) {
+    func pause() {
+        guard let playingNode = playingNode else {
+            return
+        }
+        cells[playingNode.message.messageId]?.object?.style = .paused
+        queue.async {
+            self.player?.pause()
+        }
+    }
+    
+    func stop() {
         guard let player = player else {
             return
         }
         queue.async {
-            guard player.status == .playing else {
+            guard player.status == .playing || player.status == .paused else {
                 return
             }
             if let playingNode = self.playingNode {
                 DispatchQueue.main.sync {
-                    self.cells[playingNode.message.messageId]?.object?.isPlaying = false
+                    self.cells[playingNode.message.messageId]?.object?.style = .stopped
                 }
                 self.playingNode = nil
             }
             player.stop()
             NotificationCenter.default.removeObserver(self)
-            if deactivateAudioSession {
-                try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-            }
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         }
     }
     
     func register(cell: AudioMessageCell, forMessageId messageId: String) {
         cells[messageId] = WeakReference(object: cell)
-        cell.isPlaying = messageId == playingNode?.message.messageId
+        if messageId == playingNode?.message.messageId, let player = player {
+            switch player.status {
+            case .playing:
+                cell.style = .playing
+            case .paused:
+                cell.style = .paused
+            case .readyToPlay, .didReachEnd:
+                cell.style = .stopped
+            }
+        } else {
+            cell.style = .stopped
+        }
     }
     
     func unregister(cell: AudioMessageCell, forMessageId messageId: String) {
@@ -109,14 +135,19 @@ class AudioManager {
     }
     
     @objc func audioSessionInterruption(_ notification: Notification) {
-        stop(deactivateAudioSession: true)
+        guard let value = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt, let type = AVAudioSession.InterruptionType(rawValue: value) else {
+            return
+        }
+        if type == .began {
+            pause()
+        }
     }
     
     @objc func audioSessionRouteChange(_ notification: Notification) {
         let previousOutput = (notification.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription)?.outputs.first
         let output = AVAudioSession.sharedInstance().currentRoute.outputs.first
         if previousOutput?.portType == .headphones, output?.portType != .headphones {
-            stop(deactivateAudioSession: false)
+            pause()
         }
         guard let value = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? AVAudioSession.RouteChangeReason.RawValue, let reason = AVAudioSession.RouteChangeReason(rawValue: value) else {
             return
@@ -128,10 +159,10 @@ class AudioManager {
             let newCategory = AVAudioSession.sharedInstance().category
             let canContinue = newCategory == .playback || newCategory == .playAndRecord
             if !canContinue {
-                stop(deactivateAudioSession: true)
+                pause()
             }
         case .unknown, .oldDeviceUnavailable, .wakeFromSleep, .noSuitableRouteForCategory:
-            stop(deactivateAudioSession: true)
+            pause()
         }
     }
     
@@ -148,7 +179,7 @@ class AudioManager {
             }
             if player.status == .didReachEnd, let playingNode = playingNode {
                 DispatchQueue.main.sync {
-                    cells[playingNode.message.messageId]?.object?.isPlaying = false
+                    cells[playingNode.message.messageId]?.object?.style = .stopped
                 }
                 if let nextNode = self.node(nextTo: playingNode) {
                     DispatchQueue.main.sync {
@@ -158,9 +189,6 @@ class AudioManager {
                         play(node: nextNode)
                     }
                 } else {
-                    DispatchQueue.main.sync {
-                        cells[playingNode.message.messageId]?.object?.isPlaying = false
-                    }
                     self.playingNode = nil
                     NotificationCenter.default.removeObserver(self)
                     try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)

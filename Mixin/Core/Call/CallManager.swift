@@ -258,7 +258,7 @@ extension CallManager {
         guard let user = UserDAO.shared.getUser(userId: data.userId) else {
             throw CallError.missingUser(userId: data.userId)
         }
-        AudioManager.shared.stop(deactivateAudioSession: false)
+        AudioManager.shared.pause()
         pendingRemoteSdp = sdp
         call = Call(uuid: uuid, opponentUser: user, isOutgoing: false)
         if reportIncomingCallToInterface {
@@ -404,7 +404,7 @@ extension CallManager {
     }
     
     private func call(opponentUser: UserItem) {
-        AudioManager.shared.stop(deactivateAudioSession: false)
+        AudioManager.shared.pause()
         queue.async {
             guard WebSocketService.shared.connected && self.lineIsIdle else {
                 self.alertNetworkFailureOrLineBusy()

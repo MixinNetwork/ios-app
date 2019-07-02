@@ -68,7 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        AudioManager.shared.stop(deactivateAudioSession: true)
+        AudioManager.shared.pause()
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {

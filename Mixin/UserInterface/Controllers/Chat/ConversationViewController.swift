@@ -194,7 +194,7 @@ class ConversationViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        AudioManager.shared.stop(deactivateAudioSession: true)
+        AudioManager.shared.stop()
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             if let lastIndexPath = dataSource?.lastIndexPath, visibleIndexPaths.contains(lastIndexPath), tableView.rectForRow(at: lastIndexPath).origin.y < tableView.contentOffset.y + tableView.frame.height - tableView.contentInset.bottom {
                 ConversationViewController.positions[conversationId] = nil
@@ -396,9 +396,8 @@ class ConversationViewController: UIViewController {
                 }
             } else if message.category.hasSuffix("_AUDIO"), message.mediaStatus == MediaStatus.DONE.rawValue, let filename = message.mediaUrl {
                 let url = MixinFile.url(ofChatDirectory: .audios, filename: filename)
-                if AudioManager.shared.playingNode?.message.messageId == message.messageId {
-                    (cell as? AudioMessageCell)?.isPlaying = false
-                    AudioManager.shared.stop(deactivateAudioSession: true)
+                if AudioManager.shared.playingNode?.message.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
+                    AudioManager.shared.pause()
                 } else {
                     let node = AudioManager.Node(message: message, path: url.path)
                     AudioManager.shared.play(node: node)
@@ -781,7 +780,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
         case .delete:
             (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(markMediaStatusCancelled: false)
             if viewModel.message.messageId == AudioManager.shared.playingNode?.message.messageId {
-                AudioManager.shared.stop(deactivateAudioSession: true)
+                AudioManager.shared.stop()
             }
 
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

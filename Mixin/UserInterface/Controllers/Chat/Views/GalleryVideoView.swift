@@ -69,7 +69,7 @@ class GalleryVideoView: UIView {
             }
         } else {
             if playAfterLoaded, player.timeControlStatus != .playing, let item = player.currentItem, item.asset.isPlayable {
-                AudioManager.shared.stop(deactivateAudioSession: false)
+                AudioManager.shared.pause()
                 player.play()
             }
         }
@@ -89,7 +89,7 @@ class GalleryVideoView: UIView {
         if isPlayable {
             player.replaceCurrentItem(with: item)
             if playAfterLoaded {
-                AudioManager.shared.stop(deactivateAudioSession: false)
+                AudioManager.shared.pause()
                 player.play()
             }
         } else {
@@ -108,7 +108,7 @@ class GalleryVideoView: UIView {
         guard player.currentItem != nil, player.status == .readyToPlay else {
             return
         }
-        AudioManager.shared.stop(deactivateAudioSession: false)
+        AudioManager.shared.pause()
         player.play()
     }
 

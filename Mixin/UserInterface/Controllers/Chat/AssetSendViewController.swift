@@ -106,7 +106,7 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
     }
     
     @IBAction func playAction(_ sender: Any) {
-        AudioManager.shared.stop(deactivateAudioSession: false)
+        AudioManager.shared.pause()
         if seekToZero {
             seekToZero = false
             videoView.seek(to: .zero)

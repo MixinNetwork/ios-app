@@ -141,9 +141,6 @@ fileprivate func aqBufferCallback(inUserData: UnsafeMutableRawPointer?, inAq: Au
         return
     }
     let player = Unmanaged<AudioPlayer>.fromOpaque(ptr).takeUnretainedValue()
-    guard player.status == .playing else {
-        return
-    }
     if let pcmData = try? player.reader.pcmData(withMaxLength: UInt(player.audioQueueBufferSize)), pcmData.count > 0 {
         inBuffer.pointee.mAudioDataByteSize = UInt32(pcmData.count)
         pcmData.copyBytes(to: inBuffer.pointee.mAudioData.assumingMemoryBound(to: UInt8.self),

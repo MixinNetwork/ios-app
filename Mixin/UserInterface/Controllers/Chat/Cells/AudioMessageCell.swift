@@ -2,6 +2,12 @@ import UIKit
 
 class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     
+    enum Style {
+        case playing
+        case paused
+        case stopped
+    }
+    
     private static let playImage = UIImage(named: "ic_play")
     private static let stopImage = UIImage(named: "ic_file_cancel")
 
@@ -19,26 +25,29 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     private var timer: Timer?
     private var duration: Float64 = 0
     
-    var isPlaying = false {
+    var style: Style = .stopped {
         didSet {
-            guard isPlaying != oldValue else {
-                return
-            }
-            let image = isPlaying ? AudioMessageCell.stopImage : AudioMessageCell.playImage
-            playbackStateImageView.image = image
-            if isPlaying {
+            switch style {
+            case .playing:
+                playbackStateImageView.image = AudioMessageCell.stopImage
                 timer = Timer(timeInterval: waveformUpdateInterval, repeats: true, block: { [weak self] (_) in
                     self?.updateWaveformProgress()
                 })
                 RunLoop.main.add(timer!, forMode: .common)
-            } else {
-                waveformMaskView.frame = .zero
+            case .stopped:
+                playbackStateImageView.image = AudioMessageCell.playImage
                 timer?.invalidate()
                 timer = nil
+                waveformMaskView.frame = .zero
+            case .paused:
+                playbackStateImageView.image = AudioMessageCell.playImage
+                timer?.invalidate()
+                timer = nil
+                updateWaveformProgress()
             }
         }
     }
-        
+    
     deinit {
         timer?.invalidate()
         timer = nil
@@ -59,7 +68,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        isPlaying = false
+        style = .stopped
         waveformMaskView.frame = .zero
         timer?.invalidate()
         timer = nil

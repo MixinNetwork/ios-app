@@ -124,7 +124,7 @@ class GalleryItemViewController: UIViewController {
     }
     
     @IBAction func playAction(_ sender: Any) {
-        AudioManager.shared.stop(deactivateAudioSession: false)
+        AudioManager.shared.pause()
         if seekToZeroBeforePlaying {
             videoView.player.seek(to: .zero)
             seekToZeroBeforePlaying = false

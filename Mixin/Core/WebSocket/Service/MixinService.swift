@@ -234,7 +234,7 @@ class MixinService {
         }
 
         if messageId == AudioManager.shared.playingNode?.message.messageId {
-            AudioManager.shared.stop(deactivateAudioSession: true)
+            AudioManager.shared.stop()
         }
 
         FileJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))

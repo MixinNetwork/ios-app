@@ -17,6 +17,7 @@ final class UserAPI: BaseAPI {
         }
         static let users = "users/fetch"
         static let relationships = "relationships"
+        static let reports = "reports"
     }
 
     func codes(codeId: String, completion: @escaping (APIResult<QRCodeResponse>) -> Void) {
@@ -73,6 +74,11 @@ final class UserAPI: BaseAPI {
     func blockUser(userId: String) -> APIResult<UserResponse> {
         let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
         return request(method: .post, url: url.relationships, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>())
+    }
+
+    func reportUser(userId: String) -> APIResult<UserResponse> {
+        let relationshipRequest = RelationshipRequest(user_id: userId, full_name: nil, action: .BLOCK)
+        return request(method: .post, url: url.reports, parameters: relationshipRequest.toParameters(), encoding: EncodableParameterEncoding<RelationshipRequest>())
     }
 
     func unblockUser(userId: String, completion: @escaping (APIResult<UserResponse>) -> Void) {

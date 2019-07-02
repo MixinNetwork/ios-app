@@ -280,18 +280,15 @@ class UserView: CornerView {
 
     private func reportContactAction() {
         showLoading()
-        let blocked = user.relationship == Relationship.BLOCKING.rawValue
         let userId = user.userId
         let conversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: user.userId)
 
         DispatchQueue.global().async {
-            if !blocked {
-                switch UserAPI.shared.blockUser(userId: userId) {
-                case let .success(user):
-                    UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
-                case .failure:
-                    break
-                }
+            switch UserAPI.shared.reportUser(userId: userId) {
+            case let .success(user):
+                UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
+            case .failure:
+                break
             }
             ConversationDAO.shared.deleteConversationAndMessages(conversationId: conversationId)
             MixinFile.cleanAllChatDirectories()

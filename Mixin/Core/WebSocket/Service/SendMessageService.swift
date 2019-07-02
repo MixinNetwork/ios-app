@@ -500,6 +500,7 @@ class SendMessageService: MixinService {
                 }
                 return true
             } catch {
+                UIApplication.traceError(error)
                 checkNetworkAndWebSocket()
 
                 var blazeMessage = ""

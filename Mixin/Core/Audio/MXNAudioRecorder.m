@@ -157,28 +157,11 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 }
 
 - (void)audioSessionRouteChange:(NSNotification *)notification {
-    AVAudioSessionRouteChangeReason reason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
-    switch (reason) {
-        case AVAudioSessionRouteChangeReasonOverride:
-        case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
-        case AVAudioSessionRouteChangeReasonRouteConfigurationChange: {
-            break;
-        }
-        case AVAudioSessionRouteChangeReasonCategoryChange: {
-            NSString *newCategory = [[AVAudioSession sharedInstance] category];
-            BOOL canContinue = [newCategory isEqualToString:AVAudioSessionCategoryRecord] || [newCategory isEqualToString:AVAudioSessionCategoryPlayAndRecord];
-            if (!canContinue) {
-                [self cancel];
-            }
-            break;
-        }
-        case AVAudioSessionRouteChangeReasonUnknown:
-        case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
-        case AVAudioSessionRouteChangeReasonWakeFromSleep:
-        case AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory: {
-            [self cancel];
-            break;
-        }
+    NSString *category = [[AVAudioSession sharedInstance] category];
+    BOOL categoryIsAvailable = [category isEqualToString:AVAudioSessionCategoryRecord] || [category isEqualToString:AVAudioSessionCategoryPlayAndRecord];
+    BOOL hasInput = [AVAudioSession sharedInstance].currentRoute.inputs.count;
+    if (!hasInput || !categoryIsAvailable) {
+        [self cancel];
     }
 }
 

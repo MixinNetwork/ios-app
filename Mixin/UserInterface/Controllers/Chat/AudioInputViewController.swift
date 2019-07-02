@@ -194,15 +194,20 @@ extension AudioInputViewController: MXNAudioRecorderDelegate {
     
     func audioRecorderDidCancelRecording(_ recorder: MXNAudioRecorder) {
         resetTimerAndRecorder()
+        layoutForStopping()
+        stopRedDotAnimation()
     }
     
     func audioRecorder(_ recorder: MXNAudioRecorder, didFailRecordingWithError error: Error) {
         resetTimerAndRecorder()
+        layoutForStopping()
+        stopRedDotAnimation()
     }
     
     func audioRecorder(_ recorder: MXNAudioRecorder, didFinishRecordingWithMetadata metadata: MXNAudioMetadata) {
         resetTimerAndRecorder()
         layoutForStopping()
+        stopRedDotAnimation()
         let url = URL(fileURLWithPath: recorder.path)
         if Double(metadata.duration) > millisecondsPerSecond {
             dataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (url, metadata))

@@ -5,6 +5,8 @@ import Crashlytics
 
 class HomeNavigationController: UINavigationController {
     
+    lazy var floatVideoController = FloatVideoController()
+    
     private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
     
     override func viewDidLoad() {

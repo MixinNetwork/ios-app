@@ -1,6 +1,7 @@
 import UIKit
 import UserNotifications
 import Bugsnag
+import Crashlytics
 
 enum MixinNavigationPushAnimation {
     case push
@@ -120,6 +121,8 @@ extension MixinNavigationController {
         }
         if let account = AccountAPI.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
+            Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
+            Crashlytics.sharedInstance().setUserName(account.full_name)
         }
         if AccountUserDefault.shared.hasRestoreFilesAndVideos {
             BackupJobQueue.shared.addJob(job: RestoreJob())

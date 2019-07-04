@@ -44,7 +44,6 @@ class BaseDatabase {
             case .warning, .sqliteGlobal:
                 break
             default:
-                FileManager.default.writeLog(log: "[WCDB][ERROR]\(error.description)", newSection: true)
                 UIApplication.traceError(error)
             }
             #if DEBUG

@@ -53,8 +53,16 @@ extension UIApplication {
         Crashlytics.sharedInstance().recordError(error)
     }
 
-    static func getTrackUserInfo() -> [AnyHashable: Any] {
-        var userInfo = [AnyHashable: Any]()
+    static func traceError(code: Int, userInfo: [String: Any]) {
+        let error = NSError(domain: "one.mixin.messenger.error", code: code, userInfo: userInfo)
+        Bugsnag.notifyError(error, block: { (report) in
+            report.addMetadata(userInfo, toTabWithName: "Track")
+        })
+        Crashlytics.sharedInstance().recordError(error)
+    }
+
+    static func getTrackUserInfo() -> [String: Any] {
+        var userInfo = [String: Any]()
         userInfo["didLogin"] = AccountAPI.shared.didLogin
         if let account = AccountAPI.shared.account {
             userInfo["full_name"] = account.full_name

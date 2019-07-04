@@ -1,6 +1,5 @@
 import Foundation
 import WCDBSwift
-import Bugsnag
 
 class SendMessageService: MixinService {
 
@@ -500,7 +499,6 @@ class SendMessageService: MixinService {
                 }
                 return true
             } catch {
-                UIApplication.traceError(error)
                 checkNetworkAndWebSocket()
 
                 var blazeMessage = ""
@@ -511,12 +509,14 @@ class SendMessageService: MixinService {
                 print("======SendMessageService...handlerJob...\(error)...currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
                 #endif
                 FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...isSessionMessage:\(job.isSessionMessage)...blazeMessage:\(blazeMessage)...\(error)")
-                Bugsnag.notifyError(error, block: { (report) in
-                    report.addMetadata(["JobAction": job.action], toTabWithName: "Track")
-                    report.addMetadata(["conversationId": job.conversationId ?? ""], toTabWithName: "Track")
-                    report.addMetadata(["blazeMessage": blazeMessage], toTabWithName: "Track")
-                    report.addMetadata(["isSessionMessage": "\(job.isSessionMessage)"], toTabWithName: "Track")
-                })
+                var userInfo = [String: Any]()
+                userInfo["errorCode"] = error.errorCode
+                userInfo["errorDescription"] = error.localizedDescription
+                userInfo["JobAction"] = job.action
+                userInfo["conversationId"] = job.conversationId ?? ""
+                userInfo["blazeMessage"] = blazeMessage
+                userInfo["isSessionMessage"] = "\(job.isSessionMessage)"
+                UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
 
                 if let err = error as? APIError, err.code == 10002 {
                     return true

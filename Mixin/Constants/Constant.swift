@@ -55,6 +55,11 @@ enum NotificationRequestIdentifier {
     static let call = "call"
 }
 
+enum ReportErrorCode {
+    static let sendMessengerError = 100001
+    static let sendCodeByLoginError = 100002
+}
+
 struct ConversationChange {
     
     let conversationId: String

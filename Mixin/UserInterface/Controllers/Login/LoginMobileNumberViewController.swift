@@ -1,5 +1,4 @@
 import UIKit
-import Bugsnag
 import Alamofire
 
 class LoginMobileNumberViewController: MobileNumberViewController {
@@ -79,17 +78,18 @@ class LoginMobileNumberViewController: MobileNumberViewController {
                         }
                     })
                 } else {
-                    Bugsnag.notifyError(error, block: { (report) in
-                        if let requestId = weakSelf.request?.response?.allHeaderFields["x-request-id"]  {
-                            report.addMetadata(["requestId": requestId], toTabWithName: "Track")
-                        }
-                        if let statusCode = weakSelf.request?.response?.statusCode {
-                            report.addMetadata(["statusCode": "\(statusCode)"], toTabWithName: "Track")
-                        }
-                        report.addMetadata(["phone": ctx.mobileNumber], toTabWithName: "Track")
-                        report.addMetadata(["phoneCountryCode": ctx.callingCode], toTabWithName: "Track")
-                    })
-                    UIApplication.traceError(error)
+                    var userInfo = [String: Any]()
+                    userInfo["errorCode"] = error.code
+                    userInfo["errorDescription"] = error.description
+                    if let requestId = weakSelf.request?.response?.allHeaderFields["x-request-id"]  {
+                        userInfo["requestId"] = requestId
+                    }
+                    if let statusCode = weakSelf.request?.response?.statusCode {
+                        userInfo["statusCode"] = "\(statusCode)"
+                    }
+                    userInfo["phone"] = ctx.mobileNumber
+                    userInfo["phoneCountryCode"] = ctx.callingCode
+                    UIApplication.traceError(code: ReportErrorCode.sendCodeByLoginError, userInfo: userInfo)
                     weakSelf.alert(error.localizedDescription)
                     weakSelf.continueButton.isBusy = false
                 }

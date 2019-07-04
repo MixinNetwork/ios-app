@@ -28,13 +28,6 @@ class JobQueue {
         }
         let jobId = job.getJobId()
         guard !isExistJob(jodId: jobId) else {
-            if jobId.hasPrefix("refresh-") || jobId.hasPrefix("file-") || jobId.hasPrefix("attachment-") || jobId.hasPrefix("load-more-snapshot-") {
-                return false
-            }
-            var userInfo = UIApplication.getTrackUserInfo()
-            userInfo["jobId"] = jobId
-            userInfo["debugDescription"] = job.debugDescription
-            UIApplication.trackError("JobQueue", action: "addJob failded", userInfo: userInfo)
             return false
         }
         queue.addOperation(job)

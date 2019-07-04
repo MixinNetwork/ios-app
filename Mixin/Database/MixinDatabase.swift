@@ -18,6 +18,7 @@ class MixinDatabase: BaseDatabase {
             _database = Database(withPath: MixinFile.databaseURL.path)
         }
         do {
+            database.setSynchronous(isFull: true)
             try database.run(transaction: {
                 let currentVersion = DatabaseUserDefault.shared.mixinDatabaseVersion
                 try self.createBefore(database: database, currentVersion: currentVersion)

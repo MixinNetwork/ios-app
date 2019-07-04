@@ -204,10 +204,10 @@ class AudioManager {
     }
     
     private func node(nextTo node: Node) -> Node? {
-        guard let nextMessage = MessageDAO.shared.getFirstAudioMessage(conversationId: node.message.conversationId, belowMessage: node.message) else {
+        guard let nextMessage = MessageDAO.shared.getMessages(conversationId: node.message.conversationId, belowMessage: node.message, count: 1).first else {
             return nil
         }
-        guard let filename = nextMessage.mediaUrl else {
+        guard nextMessage.category.hasSuffix("_AUDIO"), let filename = nextMessage.mediaUrl else {
             return nil
         }
         let path = MixinFile.url(ofChatDirectory: .audios, filename: filename).path

@@ -84,6 +84,8 @@ class HomeViewController: UIViewController {
                 }
             }
         }
+        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+        ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -118,8 +118,6 @@ extension MixinNavigationController {
         guard AccountAPI.shared.didLogin else {
             return
         }
-        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
-        ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob())
         if let account = AccountAPI.shared.account {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name , andEmail: account.identity_number)
         }

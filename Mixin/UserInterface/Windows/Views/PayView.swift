@@ -237,6 +237,7 @@ extension PayView: PinFieldDelegate {
         guard error.status != NSURLErrorCancelled else {
             return
         }
+        UIApplication.traceError(error)
         if (superView as? UrlWindow)?.fromWeb ?? false {
             showHud(style: .error, text: error.localizedDescription)
         } else {

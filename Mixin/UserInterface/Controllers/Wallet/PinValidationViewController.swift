@@ -55,6 +55,7 @@ class PinValidationViewController: UIViewController {
                 self.onSuccess?(pin)
                 self.dismiss(animated: true, completion: nil)
             case let .failure(error):
+                UIApplication.traceError(error)
                 self.pinField.clear()
                 self.pinField.receivesInput = true
                 if error.code == 429 {

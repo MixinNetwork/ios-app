@@ -373,7 +373,7 @@ class SendMessageService: MixinService {
                     }
 
                     let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeMessageReceipts.rawValue)
-                    if SendMessageService.shared.deliverMessages(blazeMessage: blazeMessage) {
+                    if SendMessageService.shared.deliverLowPriorityMessages(blazeMessage: blazeMessage) {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
                     }
                 } else if job.action == JobAction.SEND_SESSION_MESSAGE.rawValue {
@@ -395,7 +395,7 @@ class SendMessageService: MixinService {
                         continue
                     }
                     let blazeMessage = BlazeMessage(params: BlazeMessageParam(sessionId: sessionId, messages: messages), action: BlazeMessageAction.createSessionMessage.rawValue)
-                    if SendMessageService.shared.deliverMessages(blazeMessage: blazeMessage) {
+                    if SendMessageService.shared.deliverLowPriorityMessages(blazeMessage: blazeMessage) {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
                     }
                 } else if job.action == JobAction.SEND_SESSION_ACK_MESSAGE.rawValue {
@@ -413,7 +413,7 @@ class SendMessageService: MixinService {
                     }
 
                     let blazeMessage = BlazeMessage(params: BlazeMessageParam(messages: messages), action: BlazeMessageAction.acknowledgeSessionMessageReceipts.rawValue)
-                    if SendMessageService.shared.deliverMessages(blazeMessage: blazeMessage) {
+                    if SendMessageService.shared.deliverLowPriorityMessages(blazeMessage: blazeMessage) {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
                     }
                 } else {
@@ -427,20 +427,27 @@ class SendMessageService: MixinService {
         }
     }
 
-    private func deliverMessages(blazeMessage: BlazeMessage) -> Bool {
-        repeat {
-            guard AccountAPI.shared.didLogin else {
-                return false
+    private func deliverLowPriorityMessages(blazeMessage: BlazeMessage) -> Bool {
+        do {
+            return try WebSocketService.shared.syncSendMessage(blazeMessage: blazeMessage) != nil
+        } catch {
+            if let err = error as? APIError {
+                if err.code == 403 {
+                    return true
+                } else if err.code == 401 {
+                    return false
+                } else if err.isClientError {
+                    Thread.sleep(forTimeInterval: 2)
+                } else {
+                    UIApplication.traceError(error)
+                }
             }
 
-            do {
-                try deliver(blazeMessage: blazeMessage)
-                return true
-            } catch {
-                checkNetworkAndWebSocket()
-                UIApplication.traceError(error)
+            while AccountAPI.shared.didLogin && (!NetworkManager.shared.isReachable || !WebSocketService.shared.connected) {
+                Thread.sleep(forTimeInterval: 2)
             }
-        } while true
+            return false
+        }
     }
 
     private func handlerJob(job: Job) -> Bool {

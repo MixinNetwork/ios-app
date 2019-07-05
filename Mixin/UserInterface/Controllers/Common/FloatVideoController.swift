@@ -17,13 +17,8 @@ final class FloatVideoController: NSObject {
     }
     
     private var url: URL?
-    private var sliderObserver: Any?
-    private var timeLabelObserver: Any?
-    private var isSeeking = false
-    private var rateBeforeSeeking: Float?
     private var itemStatusObserver: NSKeyValueObservation?
     private var rateObserver: NSKeyValueObservation?
-    private var seekToZeroBeforePlaying = false
     
     private var controlView: FloatVideoControlView {
         return view.controlView
@@ -49,13 +44,6 @@ final class FloatVideoController: NSObject {
         controlView.pauseButton.addTarget(self, action: #selector(pauseAction(_:)), for: .touchUpInside)
         controlView.playButton.addTarget(self, action: #selector(playAction(_:)), for: .touchUpInside)
         
-        let slider = controlView.slider!
-        slider.addTarget(self, action: #selector(beginScrubbingAction(_:)), for: .touchDown)
-        slider.addTarget(self, action: #selector(scrubAction(_:)), for: .valueChanged)
-        for event: UIControl.Event in [.touchCancel, .touchUpInside, .touchUpOutside] {
-            slider.addTarget(self, action: #selector(endScrubbingAction(_:)), for: event)
-        }
-        
         panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
         panRecognizer.cancelsTouchesInView = false
         panRecognizer.delegate = self
@@ -74,7 +62,6 @@ final class FloatVideoController: NSObject {
         self.videoRatio = videoRatio
         isPipMode = false
         view.layoutFullsized(on: window, videoRatio: videoRatio)
-        updateSliderPosition(time: .zero)
         
         if view.window != window {
             view.removeFromSuperview()
@@ -134,51 +121,7 @@ final class FloatVideoController: NSObject {
     }
     
     @objc func playAction(_ sender: Any) {
-        if seekToZeroBeforePlaying {
-            player.seek(to: .zero)
-            seekToZeroBeforePlaying = false
-        }
         player.play()
-    }
-    
-    @objc func beginScrubbingAction(_ sender: Any) {
-        rateBeforeSeeking = player.rate
-        player.rate = 0
-        removeTimeObservers()
-    }
-    
-    @objc func scrubAction(_ sender: Any) {
-        guard !isSeeking else {
-            return
-        }
-        isSeeking = true
-        guard playerItemDuration.isValid else {
-            return
-        }
-        let duration = CMTimeGetSeconds(playerItemDuration)
-        guard duration.isFinite else {
-            return
-        }
-        let minValue = controlView.slider.minimumValue
-        let maxValue = controlView.slider.maximumValue
-        let value = controlView.slider.value
-        let time = duration * Double(value - minValue) / Double(maxValue - minValue)
-        let cmTime = CMTime(seconds: time, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        player.seek(to: cmTime) { [weak self] (_) in
-            DispatchQueue.main.async {
-                self?.isSeeking = false
-            }
-        }
-    }
-    
-    @objc func endScrubbingAction(_ sender: Any) {
-        if sliderObserver == nil && timeLabelObserver == nil {
-            addTimeObservers()
-        }
-        if let rate = rateBeforeSeeking {
-            player.rate = rate
-        }
-        rateBeforeSeeking = nil
     }
     
     @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
@@ -198,7 +141,7 @@ final class FloatVideoController: NSObject {
     }
     
     @objc func playerItemDidReachEnd(_ notification: Notification) {
-        seekToZeroBeforePlaying = true
+        
     }
     
     private func play(asset: AVURLAsset) {
@@ -207,13 +150,12 @@ final class FloatVideoController: NSObject {
             return
         }
         removeAllObservers()
-        seekToZeroBeforePlaying = false
         
         let item = AVPlayerItem(asset: asset)
         itemStatusObserver = item.observe(\.status, options: [.initial, .new]) { [weak self] (item, change) in
             // Known issue: https://bugs.swift.org/browse/SR-5872
             // 'change' are always nil here
-            self?.update(playerItemStatus: item.status)
+            
         }
         
         NotificationCenter.default.addObserver(self,
@@ -232,86 +174,15 @@ final class FloatVideoController: NSObject {
         player.play()
     }
     
-    private func update(playerItemStatus status: AVPlayerItem.Status) {
-        switch status {
-        case .unknown:
-            controlView.slider.isEnabled = false
-        case .readyToPlay:
-            addTimeObservers()
-            controlView.slider.isEnabled = true
-        case .failed:
-            break
-        }
-    }
-    
-    private func updateSliderPosition(time: CMTime) {
-        guard playerItemDuration.isValid else {
-            return
-        }
-        let duration = CMTimeGetSeconds(playerItemDuration)
-        guard duration.isFinite else {
-            return
-        }
-        let time = CMTimeGetSeconds(time)
-        let slider = controlView.slider!
-        let maxSliderValue = slider.maximumValue
-        let minSliderValue = slider.minimumValue
-        let sliderValue = Float(Double(maxSliderValue - minSliderValue) * time / duration + Double(minSliderValue))
-        slider.setValue(sliderValue, animated: false)
-    }
-    
-    private func updateTimeLabel(time: CMTime) {
-        guard playerItemDuration.isValid else {
-            return
-        }
-        let duration = CMTimeGetSeconds(playerItemDuration)
-        guard duration.isFinite else {
-            return
-        }
-        let time = CMTimeGetSeconds(time)
-        
-        controlView.playedTimeLabel.text = mediaDurationFormatter.string(from: time)
-        controlView.remainingTimeLabel.text = mediaDurationFormatter.string(from: duration - time)
-    }
-    
     private func updatePlayPauseButton(isPlaying: Bool) {
         controlView.playButton.isHidden = isPlaying
         controlView.pauseButton.isHidden = !isPlaying
     }
     
     private func removeAllObservers() {
-        removeTimeObservers()
         itemStatusObserver?.invalidate()
         rateObserver?.invalidate()
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    private func addTimeObservers() {
-        let timescale = CMTimeScale(600)
-        
-        let sliderInterval = CMTime(seconds: 0.1, preferredTimescale: timescale)
-        sliderObserver = player.addPeriodicTimeObserver(forInterval: sliderInterval, queue: .main, using: { [weak self] (time) in
-            guard let weakSelf = self, weakSelf.player.rate > 0 else {
-                return
-            }
-            weakSelf.updateSliderPosition(time: time)
-        })
-        
-        let timeLabelInterval = CMTime(seconds: 1, preferredTimescale: timescale)
-        timeLabelObserver = player.addPeriodicTimeObserver(forInterval: timeLabelInterval, queue: .main, using: { [weak self] (time) in
-            guard let weakSelf = self, weakSelf.player.rate > 0 else {
-                return
-            }
-            weakSelf.updateTimeLabel(time: time)
-        })
-    }
-    
-    private func removeTimeObservers() {
-        [sliderObserver, timeLabelObserver]
-            .compactMap({ $0 })
-            .forEach(player.removeTimeObserver)
-        sliderObserver = nil
-        timeLabelObserver = nil
     }
     
 }

@@ -21,6 +21,7 @@ class LoginView: UIView {
         case APPS_READ = "APPS:READ"
         case APPS_WRITE = "APPS:WRITE"
         case CONTACTS_READ = "CONTACTS:READ"
+        case MESSAGES_REPRESENT = "MESSAGES:REPRESENT"
     }
     private lazy var scopes: [(scope: Scope, name: String, desc: String)] = {
         guard let account = AccountAPI.shared.account else {
@@ -32,6 +33,10 @@ class LoginView: UIView {
         if authInfo.scopes.contains(Scope.PHONE.rawValue) {
             result.append((.PHONE, Localized.AUTH_PERMISSION_PHONE, account.phone))
             selectedScopes.append(Scope.PHONE.rawValue)
+        }
+        if authInfo.scopes.contains(Scope.MESSAGES_REPRESENT.rawValue) {
+            result.append((.APPS_WRITE, R.string.localizable.auth_permission_messages_represent(), R.string.localizable.auth_permission_messages_represent_description()))
+            selectedScopes.append(Scope.MESSAGES_REPRESENT.rawValue)
         }
         if authInfo.scopes.contains(Scope.CONTACTS_READ.rawValue) {
             result.append((.APPS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ, Localized.AUTH_PERMISSION_CONTACTS_READ_DESCRIPTION))

@@ -446,6 +446,8 @@
 "auth_permission_apps_write_description" = "管理你所有的应用";
 "auth_permission_contacts_read" = "读取联系人";
 "auth_permission_contacts_read_description" = "访问你的联系人列表";
+"auth_permission_messages_represent" = "代发消息";
+"auth_permission_messages_represent_description" = "允许机器人代表你发消息";
 "auth_assets_more" = "等";
 "auth_profile_description" = "%@, %@, 头像";
 "auth_success" = "成功登录 %@";

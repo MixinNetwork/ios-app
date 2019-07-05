@@ -444,6 +444,8 @@
 "auth_permission_apps_write_description" = "mange all your apps";
 "auth_permission_contacts_read" = "Read contacts";
 "auth_permission_contacts_read_description" = "access your contacts list";
+"auth_permission_messages_represent" = "Represent messages";
+"auth_permission_messages_represent_description" = "allow bot to send messages represent of you";
 "auth_assets_more" = " and more";
 "auth_profile_description" = "%@, %@, profile photo";
 "auth_success" = "Successfully log in to %@";

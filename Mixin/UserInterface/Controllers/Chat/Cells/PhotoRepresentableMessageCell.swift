@@ -40,7 +40,6 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         contentView.addSubview(maskingContentView)
         maskingContentView.frame = contentView.bounds
         maskingContentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        contentImageView.contentMode = .scaleAspectFill
         maskingContentView.addSubview(contentImageView)
         shadowImageView.contentMode = .scaleToFill
         shadowImageView.clipsToBounds = true
@@ -155,11 +154,12 @@ extension PhotoRepresentableMessageCell {
             if aspectRatio.width <= 1 {
                 aspectRatio = CGSize(width: 1, height: 1)
             }
-            imageView.frame.size = CGSize(width: bounds.width, height: bounds.width * aspectRatio.height / aspectRatio.width)
             switch position {
             case .center:
+                imageView.frame.size = CGSize(width: bounds.width, height: bounds.height)
                 imageView.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
             case .relativeOffset(let offset):
+                imageView.frame.size = CGSize(width: bounds.width, height: bounds.width * aspectRatio.height / aspectRatio.width)
                 let y = offset * imageView.bounds.size.height
                 imageView.frame.origin = CGPoint(x: 0, y: y)
             }

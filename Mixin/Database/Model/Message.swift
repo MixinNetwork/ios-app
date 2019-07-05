@@ -163,6 +163,7 @@ enum MessageCategory: String {
     case SIGNAL_STICKER
     case SIGNAL_CONTACT
     case SIGNAL_AUDIO
+    case SIGNAL_STREAM
     case PLAIN_TEXT
     case PLAIN_IMAGE
     case PLAIN_VIDEO
@@ -171,6 +172,7 @@ enum MessageCategory: String {
     case PLAIN_CONTACT
     case PLAIN_JSON
     case PLAIN_AUDIO
+    case PLAIN_STREAM
     case APP_CARD
     case APP_BUTTON_GROUP
     case SYSTEM_CONVERSATION

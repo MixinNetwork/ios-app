@@ -403,8 +403,7 @@ class ConversationViewController: UIViewController {
                     let node = AudioManager.Node(message: message, path: url.path)
                     AudioManager.shared.play(node: node)
                 }
-            } else if message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue, let mediaUrl = message.mediaUrl {
-                let url = MixinFile.url(ofChatDirectory: .videos, filename: mediaUrl)
+            } else if message.category.hasSuffix("_STREAM"), let str = message.mediaUrl, let url = URL(string: str) {
                 let width = CGFloat(message.mediaWidth ?? 100)
                 var height = CGFloat(message.mediaHeight ?? 100)
                 if height == 0 {
@@ -412,7 +411,7 @@ class ConversationViewController: UIViewController {
                 }
                 let ratio = width / height
                 UIApplication.homeNavigationController?.floatVideoController.play(url: url, videoRatio: ratio)
-            } else if message.category.hasSuffix("_IMAGE"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue, let item = GalleryItem(message: message) {
+            } else if message.category.hasSuffix("_IMAGE") || message.category.hasSuffix("_VIDEO"), message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue, let item = GalleryItem(message: message) {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
                 conversationInputViewController.dismiss()
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true

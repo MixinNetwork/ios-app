@@ -241,6 +241,8 @@
 		7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47B21197F220039946B /* RecentStickersViewController.swift */; };
 		7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */; };
 		7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47F21198EC20039946B /* StickerInputModelController.swift */; };
+		7B91056022CF4A1E002E3608 /* StreamMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91055F22CF4A1E002E3608 /* StreamMessageViewModel.swift */; };
+		7B91056222CF4A58002E3608 /* StreamMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91056122CF4A58002E3608 /* StreamMessageCell.swift */; };
 		7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */; };
 		7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F6B215F32A500A562C6 /* GiphyViewController.swift */; };
 		7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */; };
@@ -949,6 +951,8 @@
 		7B8ED47B21197F220039946B /* RecentStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47F21198EC20039946B /* StickerInputModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputModelController.swift; sourceTree = "<group>"; };
+		7B91055F22CF4A1E002E3608 /* StreamMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamMessageViewModel.swift; sourceTree = "<group>"; };
+		7B91056122CF4A58002E3608 /* StreamMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamMessageCell.swift; sourceTree = "<group>"; };
 		7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersCollectionViewController.swift; sourceTree = "<group>"; };
 		7B915F6B215F32A500A562C6 /* GiphyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyViewController.swift; sourceTree = "<group>"; };
 		7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchViewController.swift; sourceTree = "<group>"; };
@@ -1649,6 +1653,7 @@
 				7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */,
 				7BD7534B2182CD7A00BAC172 /* CallMessageViewModel.swift */,
 				7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */,
+				7B91055F22CF4A1E002E3608 /* StreamMessageViewModel.swift */,
 				7BFDB73820DA41E3005673CC /* Quote.swift */,
 				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
 				7BF9969420CA6F3800FD948F /* Waveform.swift */,
@@ -2660,6 +2665,7 @@
 				7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */,
 				7B9F06C720A985E70095A51B /* VideoMessageCell.swift */,
 				7B84358820D8DC2E00237242 /* QuoteTextMessageCell.swift */,
+				7B91056122CF4A58002E3608 /* StreamMessageCell.swift */,
 				7BD7534D2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift */,
 				7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */,
 				7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */,
@@ -3251,6 +3257,7 @@
 				DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */,
 				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
 				7BB3855A21E77C380070FF8F /* ProvisioningAPI.swift in Sources */,
+				7B91056022CF4A1E002E3608 /* StreamMessageViewModel.swift in Sources */,
 				DFD995A0207C9D6100621FFA /* AccountUserDefault.swift in Sources */,
 				7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */,
 				273FACC4205FB9A800513327 /* IdentityKeyStoreWrapper.swift in Sources */,
@@ -3611,6 +3618,7 @@
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				7B4EF79F22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift in Sources */,
 				DF2A244E1FC84E3F003A8C1E /* Conversation.swift in Sources */,
+				7B91056222CF4A58002E3608 /* StreamMessageCell.swift in Sources */,
 				273FACBF205FB9A800513327 /* SessionSignedPreKey.swift in Sources */,
 				7B72651C209C5F9300F234BE /* Link.swift in Sources */,
 				DF503D251FECE54100C008E7 /* IdentityDAO.swift in Sources */,

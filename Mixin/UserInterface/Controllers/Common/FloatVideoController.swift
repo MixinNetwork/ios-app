@@ -41,8 +41,7 @@ final class FloatVideoController: NSObject {
         
         controlView.pipButton.addTarget(self, action: #selector(pipAction(_:)), for: .touchUpInside)
         controlView.closeButton.addTarget(self, action: #selector(closeAction(_:)), for: .touchUpInside)
-        controlView.pauseButton.addTarget(self, action: #selector(pauseAction(_:)), for: .touchUpInside)
-        controlView.playButton.addTarget(self, action: #selector(playAction(_:)), for: .touchUpInside)
+        controlView.reloadButton.addTarget(self, action: #selector(reloadAction(_:)), for: .touchUpInside)
         
         panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
         panRecognizer.cancelsTouchesInView = false
@@ -61,6 +60,7 @@ final class FloatVideoController: NSObject {
         self.url = url
         self.videoRatio = videoRatio
         isPipMode = false
+        controlView.set(reloadButtonHidden: true, activityIndicatorHidden: false)
         view.layoutFullsized(on: window, videoRatio: videoRatio)
         
         if view.window != window {
@@ -83,6 +83,7 @@ final class FloatVideoController: NSObject {
             play(asset: asset)
         } else if let error = error {
             report(error: error)
+            controlView.set(reloadButtonHidden: false, activityIndicatorHidden: true)
         } else {
             asset.loadValuesAsynchronously(forKeys: keys) {
                 guard asset.statusOfValue(forKey: playableKey, error: &error) == .loaded else {
@@ -116,12 +117,11 @@ final class FloatVideoController: NSObject {
         view.removeFromSuperview()
     }
     
-    @objc func pauseAction(_ sender: Any) {
-        player.pause()
-    }
-    
-    @objc func playAction(_ sender: Any) {
-        player.play()
+    @objc func reloadAction(_ sender: Any) {
+        guard let url = url else {
+            return
+        }
+        play(url: url, videoRatio: videoRatio)
     }
     
     @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
@@ -155,7 +155,7 @@ final class FloatVideoController: NSObject {
         itemStatusObserver = item.observe(\.status, options: [.initial, .new]) { [weak self] (item, change) in
             // Known issue: https://bugs.swift.org/browse/SR-5872
             // 'change' are always nil here
-            
+            self?.updateControlView()
         }
         
         NotificationCenter.default.addObserver(self,
@@ -163,20 +163,33 @@ final class FloatVideoController: NSObject {
                                                name: .AVPlayerItemDidPlayToEndTime,
                                                object: item)
         
-        rateObserver = player.observe(\.rate, changeHandler: { [weak self] (player, _) in
-            guard let weakSelf = self else {
-                return
-            }
-            weakSelf.updatePlayPauseButton(isPlaying: player.rate > 0)
+        rateObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
+            self?.updateControlView()
         })
         
         player.replaceCurrentItem(with: item)
         player.play()
     }
     
-    private func updatePlayPauseButton(isPlaying: Bool) {
-        controlView.playButton.isHidden = isPlaying
-        controlView.pauseButton.isHidden = !isPlaying
+    private func updateControlView() {
+        if player.timeControlStatus == .playing {
+            controlView.set(reloadButtonHidden: true, activityIndicatorHidden: true)
+        } else {
+            if let item = player.currentItem {
+                switch item.status {
+                case .readyToPlay:
+                    controlView.set(reloadButtonHidden: true, activityIndicatorHidden: false)
+                case .unknown:
+                    controlView.set(reloadButtonHidden: true, activityIndicatorHidden: false)
+                case .failed:
+                    fallthrough
+                @unknown default:
+                    controlView.set(reloadButtonHidden: false, activityIndicatorHidden: true)
+                }
+            } else {
+                controlView.set(reloadButtonHidden: false, activityIndicatorHidden: true)
+            }
+        }
     }
     
     private func removeAllObservers() {

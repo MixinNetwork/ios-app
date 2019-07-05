@@ -87,7 +87,7 @@ final class FloatVideoView: UIView {
                                   y: window.safeAreaInsets.top,
                                   width: layerWidth,
                                   height: layerHeight)
-        set(roundedCorner: false, shadow: false)
+        set(roundedCorner: false)
         
         let viewHeight: CGFloat
         if window.bounds.height - window.safeAreaInsets.top - layerHeight > window.safeAreaInsets.bottom {
@@ -99,6 +99,8 @@ final class FloatVideoView: UIView {
         backgroundView.frame = bounds
         
         controlView.frame = playerView.frame
+        controlView.reloadButton.transform = .identity
+        controlView.activityIndicatorView.transform = .identity
         controlView.setNeedsLayout()
         controlView.layoutIfNeeded()
     }
@@ -117,22 +119,22 @@ final class FloatVideoView: UIView {
                          y: window.safeAreaInsets.top + size.height / 2)
         backgroundView.frame = bounds
         playerView.frame = bounds
-        set(roundedCorner: true, shadow: true)
+        set(roundedCorner: true)
         
         controlView.frame = bounds
+        controlView.reloadButton.transform = CGAffineTransform(scaleX: 0.54, y: 0.54)
+        controlView.activityIndicatorView.transform = CGAffineTransform(scaleX: 0.54, y: 0.54)
         controlView.setNeedsLayout()
         controlView.layoutIfNeeded()
     }
     
-    private func set(roundedCorner: Bool, shadow: Bool) {
+    private func set(roundedCorner: Bool) {
         backgroundView.layer.cornerRadius = roundedCorner ? 8 : 0
-        if shadow {
-            layer.shadowOffset = CGSize(width: 0, height: 3)
-            layer.shadowColor = UIColor.black.cgColor
-            layer.shadowRadius = 8
-            layer.shadowOpacity = 0.35
-            layer.shadowPath = UIBezierPath(roundedRect: layer.bounds, cornerRadius: layer.cornerRadius).cgPath
-        }
+        layer.shadowOffset = CGSize(width: 0, height: 3)
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 8
+        layer.shadowOpacity = 0.35
+        layer.shadowPath = UIBezierPath(roundedRect: layer.bounds, cornerRadius: layer.cornerRadius).cgPath
     }
     
     private func prepare() {

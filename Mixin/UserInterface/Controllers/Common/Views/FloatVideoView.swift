@@ -8,6 +8,8 @@ final class FloatVideoView: UIView {
     let playerView = PlayerView()
     let controlView = R.nib.floatVideoControlView(owner: nil)!
     
+    var zoomsOnTouch = false
+    
     private let minLayerHeight: CGFloat = 240
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,6 +29,9 @@ final class FloatVideoView: UIView {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
+        guard zoomsOnTouch else {
+            return
+        }
         UIView.animate(withDuration: 0.2) {
             self.transform = CGAffineTransform(scaleX: 1.02, y: 1.02)
         }

@@ -30,7 +30,6 @@ class AudioPlayer {
         }
     }
     
-    fileprivate(set) var path = ""
     fileprivate(set) var status: Status = .readyToPlay {
         didSet {
             onStatusChanged?(self)

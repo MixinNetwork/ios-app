@@ -52,10 +52,9 @@ class DepositViewController: UIViewController {
 
         hintLabel.text = asset.depositTips
         if asset.isAccount {
-            warningLabel.text = R.string.localizable.wallet_deposit_account_notice(asset.symbol)
-            warningLabel.isHidden = false
+            warningLabel.text = R.string.localizable.wallet_deposit_account_attention(asset.symbol)
         } else {
-            warningLabel.isHidden = true
+            warningLabel.text = R.string.localizable.wallet_deposit_attention()
         }
 
         if !WalletUserDefault.shared.depositTipRemind.contains(asset.chainId) {

@@ -950,15 +950,15 @@
                                                         <rect key="frame" x="30" y="14.999999999999993" width="354" height="100.33333333333331"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aFl-kr-gDX">
-                                                                <rect key="frame" x="0.0" y="0.0" width="354" height="100.33333333333333"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="354" height="47.333333333333336"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <string key="text">This address supports all base on EOS tokens, such as EOS, IQ, BLACK, KARMA, etc.Deposit will arrive after at least 126 block confirmations. </string>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                 <color key="textColor" red="0.73333333333333328" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEy-2R-8To">
-                                                                <rect key="frame" x="0.0" y="0.0" width="354" height="0.0"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEy-2R-8To">
+                                                                <rect key="frame" x="0.0" y="57.333333333333371" width="354" height="43"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <string key="text">Notice: Both an Account Memo and an AccountName are required to successfully deposit your EOS to Mixin, deposit will arrive after at least 126 block confirmations.</string>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>

@@ -322,7 +322,8 @@
 "wallet_address" = "Address";
 "wallet_account_name" = "Account Name";
 "wallet_account_memo" = "Account Memo";
-"wallet_deposit_account_notice" = "Notice: Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin Messenger";
+"wallet_deposit_attention" = "Please try a small amount for the first deposit.";
+"wallet_deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both an Account Memo and an Account Name are required to successfully deposit your %@ to Mixin Messenger";
 "wallet_menu_show_hidden_assets" = "Hidden assets";
 "wallet_menu_show_asset" = "Show asset";
 "wallet_menu_hide_asset" = "Hide asset";

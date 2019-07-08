@@ -34,8 +34,8 @@
 "action_authorize" = "認証";
 "action_deauthorize" = "認証解除";
 "action_delete_me" = "自分用に削除";
-"action_delete_everyone" = "みんなのために削除";
-"action_learn_more" = "もっと詳しく知る";
+"action_delete_everyone" = "全員分を削除";
+"action_learn_more" = "もっと知りたい";
 "menu_delete" = "デリート";
 "no_result" = "検索結果はありません";
 "all_photos" = "すべての写真";
@@ -49,7 +49,7 @@
 "date_format_transation" = "MMM dd, HH:mm";
 
 // Search
-"search_placeholder_number" = "MIXIN IDまたは電話番号から検索: ";
+"search_placeholder_number" = "Mixin IDか電話番号を検索: ";
 "search_placeholder_address" = "ラベル";
 "search_placeholder_asset" = "名前、シンボル";
 "search_placeholder_home" = "連絡先、資産、チャット";
@@ -79,6 +79,7 @@
 "toast_copied" = "コピーしました";
 "toast_added" = "追加しました";
 "toast_saved" = "セーブしました";
+"toast_deleted" = "削除されました";
 "toast_logined" = "ログインしました";
 "toast_authorized" = "許可された";
 "toast_changed" = "かわった";
@@ -142,7 +143,9 @@
 "contact_my_qr_code" = "私の QR コード";
 "contact_receive_money" = "お金を受け取る";
 "contact_qr_code_save" = "画像を保存";
-"chat_stranger_tip" = "送信者は連絡先に未登録です";
+"chat_stranger_tip" = "この送り主はあなたのコントラクトにありません。";
+"chat_delete_tip" = "最新バージョンのMixinでは、このメッセージはチャット全員から削除されます。";
+
 
 "button_title_search" = "サーチ";
 "placeholder_mixin_id_or_phone" = "MIXIN IDまたは電話番号";
@@ -180,8 +183,8 @@
 "chat_message_call_remote_busy" = "通話中";
 "chat_message_call_failed" = "失敗";
 "chat_message_call_duration" = "継続時間 %@";
-"chat_message_recalled" = "送信取り消しました";
-"chat_message_recalled_by_me" = "メッセージの送信を取り消しました";
+"chat_message_recalled" = "このメッセージは削除されました";
+"chat_message_recalled_by_me" = "あなたがこのメッセージを削除しました。";
 "chat_cell_title_encryption" = "この会話へのメッセージはエンドツーエンドで暗号化されています。詳細についてはクリックしてください";
 "chat_cell_title_unknown_category" = "このタイプのメッセージはサポートされていません。Mixinを最新バージョンにアップグレードしてください。";
 "chat_forward_title" = "転送";
@@ -305,6 +308,11 @@
 "wallet_caption_send" = "送金";
 "wallet_caption_receive" = "受取";
 "wallet_deposit" = "受取";
+"wallet_deposit_eos" = "このアドレスはEOSトーケンズの全てのベース（EOS、IQ、BLACK、OCT、KARMAなど）をサポートしています。";
+"wallet_deposit_eth" = "このアドレスはERC 20トーケンズの全てのベース（ETH、XIN、TUSD、HT、LOOM、DGD、LEOなど）をサポートしています。";
+"wallet_deposit_btc" = "このアドレスはBTCとOmni USDTだけをサポートしています。";
+"wallet_deposit_trx" = "このアドレスはTRC 10トーケンズの全て（TRX、BTTなど）をサポートしています。";
+"wallet_deposit_other" = "このアドレスは%@だけをサポートしています。";
 "wallet_deposit_confirmations" = "入金は少なくとも %@ ブロックの確認後に到着します。";
 "wallet_no_transaction" = "取引なし";
 "wallet_address" = "住所";
@@ -317,9 +325,10 @@
 "wallet_hide_asset_empty" = "隠し資産なし";
 "wallet_send_amount" = "金額";
 "wallet_send_memo" = "メモ（オプション）";
+"wallet_send_tag" = "タグ（オプション）";
 "wallet_button_add_address" = "タップして住所を追加";
 "wallet_hint_transaction_fee" = "%@ を引き出すには、%@ の取引手数料が必要です。";
-"wallet_password_address_tips" = "PINで保存";
+"wallet_password_address_tips" = "PINで保存します";
 "wallet_withdrawal_asset" = "出金 %@ ";
 "wallet_withdrawal_pay_password" = "PINによる引き落とし";
 "wallet_withdrawal_reserve" = "%@ には最低 %@ の予約要件があります。";
@@ -361,6 +370,9 @@
 "transactions_filter_filter_by_all" = "全て";
 "pending_deposit_confirmation" = "確認　%@ ";
 "pending_deposit_hint" = "保留中";
+"wallet_asset_symbol" = "シンボル";
+"wallet_asset_chain" = "チェーン";
+"wallet_asset_key" = "コントラクト";
 
 // Transaction
 "transaction_title" = "取引";
@@ -386,7 +398,10 @@
 "address_new_placeholder_address" = "アドレス";
 "address_new_title" = " %@ の新しいアドレス";
 "address_edit_title" = " %@ アドレスを編集";
+"address_delete_title" = "アドレス%@を削除します";
 "address_format_error" = "無効なアドレス形式です。";
+"address_asset_not_found" = "資産が見つかりませんでした。";
+"address_not_found" = "このアドレスは見つかりませんでした。";
 
 // Transfer
 "transfer_title" = "振込";
@@ -402,12 +417,12 @@
 "transfer_error_fee_insufficient" = "取引手数料が足りない";
 "transfer_error_amount_too_small" = "振込金額が少なすぎます";
 "transfer_error_pin_incorrect" = "PINが正しくありません";
-"transfer_paid" = "お振込み";
+"transfer_paid" = "この支払いリンクは既に他のユーザーに使われました。重複支払いはできません。";
 "transfer_pay_password" = "PINで支払う";
 "pay_transfer_title" = " %@ に振込";
 "pay_withdrawal_title" = " %@ に送金";
-"pay_use_face" = "フェイスペイを使う";
-"pay_use_touch" = "タッチペイを使う";
+"pay_use_face" = "Face Payを使います";
+"pay_use_touch" = "Touch Payを使います";
 
 // QRCode
 "myqrcode_title" = "私のQRコード";
@@ -466,6 +481,7 @@
 "profile_report" = "報告";
 "profile_toast_unmuted" = "消音解除しました";
 "profile_toast_muted" = " %@ まで消音しました";
+"profile_report_tips" = "この連絡先を報告してブロックしますか？このチャットと会話内容も削除されます。";
 
 // Setting
 "setting_title" = "設定";

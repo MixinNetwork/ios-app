@@ -315,7 +315,7 @@
 "wallet_caption_receive" = "转入";
 "wallet_deposit" = "充值";
 "wallet_deposit_eos" = "该充值地址支持所有基于 EOS 发的币，例如 EOS、IQ、BLACK、OCT、KARMA 等。 ";
-"wallet_deposit_eth" = "该充值地址支持所有符合 ERC-20 协议的币，例如 ETH、XIN、HT、LOOM、DGD、LEO、PRS、CANDY 等。 ";
+"wallet_deposit_eth" = "该充值地址支持所有符合 ERC-20 协议的币，例如 ETH、XIN、BOX、HT、LOOM、DGD、LEO、PRS、CANDY 等。 ";
 "wallet_deposit_btc" = "该充值地址仅支持 BTC 和 Omni USDT。 ";
 "wallet_deposit_trx" = "该充值地址支持所有符合 TRC-10 协议的币，例如 TRX、BTT 等。 ";
 "wallet_deposit_other" = "该充值地址仅支持 %@。";

@@ -65,11 +65,15 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
         }
     }
     
-    internal func updateOperationButtonStyle() {
+    func updateOperationButtonStyle() {
         if let mediaStatus = mediaStatus {
             switch mediaStatus {
             case MediaStatus.PENDING.rawValue:
-                operationButtonStyle = .busy(progress: 0)
+                if automaticallyLoadsAttachment {
+                    operationButtonStyle = .busy(progress: 0)
+                } else {
+                    fallthrough
+                }
             case MediaStatus.CANCELED.rawValue:
                 if shouldUpload {
                     operationButtonStyle = .upload

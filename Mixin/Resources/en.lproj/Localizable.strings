@@ -542,7 +542,6 @@
 "setting_header_conversation_source" = "WHO CAN ADD ME TO GROUP CHATS";
 "setting_source_everybody" = "Everybody";
 "setting_source_contacts" = "My Contacts";
-"setting_storage_usage" = "Storage Usage";
 "setting_storage_photos" = "Photos";
 "setting_storage_videos" = "Videos";
 "setting_storage_audios" = "Audios";
@@ -568,6 +567,10 @@
 "setting_backup_last" = "Last backup on %@, total size %@.";
 "setting_backup_progress" = "Uploading %@";
 "setting_restore_progress" = "Restoring %@";
+"setting_auto_download_never" = "Never";
+"setting_auto_download_wifi" = "Wi-Fi";
+"setting_auto_download_wifi_cellular" = "Wi-Fi and Cellular";
+"setting_auto_download_hint" = "Voice messages are always automatically downloaded";
 
 // Notifications
 "notification_reply" = "Reply";

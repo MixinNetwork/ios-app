@@ -534,7 +534,6 @@
 "setting_header_conversation_source" = "谁可以加我入群";
 "setting_source_everybody" = "任何人";
 "setting_source_contacts" = "我的联系人";
-"setting_storage_usage" = "存储空间";
 "setting_storage_photos" = "图片";
 "setting_storage_videos" = "视频";
 "setting_storage_audios" = "音频";
@@ -560,6 +559,10 @@
 "setting_backup_last" = "上次备份是%@，占用空间 %@。";
 "setting_backup_progress" = "正在备份 %@";
 "setting_restore_progress" = "正在恢复 %@";
+"setting_auto_download_never" = "关闭";
+"setting_auto_download_wifi" = "WLAN";
+"setting_auto_download_wifi_cellular" = "WLAN 与蜂窝移动网";
+"setting_auto_download_hint" = "语音消息将自动下载";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";

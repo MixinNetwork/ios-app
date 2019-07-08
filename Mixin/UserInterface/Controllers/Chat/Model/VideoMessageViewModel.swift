@@ -11,7 +11,16 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     var progress: Double?
     
     var automaticallyLoadsAttachment: Bool {
-        return false
+        let shouldAutoDownload: Bool
+        switch CommonUserDefault.shared.autoDownloadVideos {
+        case .never:
+            shouldAutoDownload = false
+        case .wifi:
+            shouldAutoDownload = NetworkManager.shared.isReachableOnWiFi
+        case .wifiAndCellular:
+            shouldAutoDownload = true
+        }
+        return !shouldUpload && shouldAutoDownload
     }
     
     var automaticallyCancelAttachmentLoading: Bool {

@@ -24,7 +24,7 @@ class AboutViewController: UITableViewController {
         case 2:
             UIApplication.shared.openURL(url: "https://fb.com/MixinMessenger")
         case 3:
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/en-us")
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com")
         case 4:
             UIApplication.shared.openURL(url: URL.terms)
         case 5:

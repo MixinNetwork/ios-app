@@ -562,7 +562,7 @@
 "setting_auto_download_never" = "关闭";
 "setting_auto_download_wifi" = "WLAN";
 "setting_auto_download_wifi_cellular" = "WLAN 与蜂窝移动网";
-"setting_auto_download_hint" = "语音消息将自动下载";
+"setting_auto_download_hint" = "修改媒体自动下载设定。语音消息将自动下载";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";

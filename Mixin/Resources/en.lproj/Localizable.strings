@@ -570,7 +570,7 @@
 "setting_auto_download_never" = "Never";
 "setting_auto_download_wifi" = "Wi-Fi";
 "setting_auto_download_wifi_cellular" = "Wi-Fi and Cellular";
-"setting_auto_download_hint" = "Voice messages are always automatically downloaded";
+"setting_auto_download_hint" = "Change auto-download settings for medias. Voice messages are always automatically downloaded";
 
 // Notifications
 "notification_reply" = "Reply";

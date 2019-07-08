@@ -557,7 +557,7 @@
 "setting_auto_download_never" = "オフ";
 "setting_auto_download_wifi" = "WLAN";
 "setting_auto_download_wifi_cellular" = "WLANとモバイルデータ通信";
-"setting_auto_download_hint" = "オーディオメッセージは常に自動でダウンロードされます";
+"setting_auto_download_hint" = "自動ダウンロード設定を変更します。オーディオメッセージは常に自動でダウンロードされます";
 
 // Notifications
 "notification_reply" = "返信";

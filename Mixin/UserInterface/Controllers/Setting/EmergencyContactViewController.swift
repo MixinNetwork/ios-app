@@ -117,8 +117,7 @@ final class EmergencyContactViewController: UITableViewController {
 extension EmergencyContactViewController: ContainerViewControllerDelegate {
     
     func barRightButtonTappedAction() {
-        let vc = EmergencyTipsViewController.instance()
-        present(vc, animated: true, completion: nil)
+        UIApplication.shared.openURL(url: .emergencyContact)
     }
     
     func imageBarRightButton() -> UIImage? {

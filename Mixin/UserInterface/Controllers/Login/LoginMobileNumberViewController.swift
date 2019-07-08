@@ -1,9 +1,12 @@
 import UIKit
 import Alamofire
+import CoreTelephony
 
-class LoginMobileNumberViewController: MobileNumberViewController {
+final class LoginMobileNumberViewController: MobileNumberViewController {
     
-    let introTextView = IntroTextView()
+    private let introTextView = IntroTextView()
+    private let cellularData = CTCellularData()
+    
     private var request: Request?
     
     private let intro: NSAttributedString = {
@@ -27,6 +30,10 @@ class LoginMobileNumberViewController: MobileNumberViewController {
         attributedText.addAttributes([NSAttributedString.Key.link: URL.privacy], range: privacyRange)
         return attributedText
     }()
+    
+    private var isNetworkPermissionRestricted: Bool {
+        return cellularData.restrictedState == .restricted && !NetworkManager.shared.isReachable
+    }
     
     deinit {
         ReCaptchaManager.shared.clean()
@@ -77,6 +84,9 @@ class LoginMobileNumberViewController: MobileNumberViewController {
                             self?.continueButton.isBusy = false
                         }
                     })
+                } else if error.code == NSURLErrorNotConnectedToInternet && weakSelf.isNetworkPermissionRestricted {
+                    weakSelf.alertSettings(R.string.localizable.permission_denied_network())
+                    weakSelf.continueButton.isBusy = false
                 } else {
                     var userInfo = [String: Any]()
                     userInfo["errorCode"] = error.code

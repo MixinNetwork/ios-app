@@ -35,8 +35,8 @@
 "action_copy" = "复制";
 "action_authorize" = "授权";
 "action_deauthorize" = "取消授权";
-"action_delete_me" = "在我的设备上删除";
-"action_delete_everyone" = "在所有人设备上删除";
+"action_delete_me" = "删除";
+"action_delete_everyone" = "撤回";
 "action_learn_more" = "了解更多";
 "action_later" = "稍后";
 "menu_delete" = "删除";
@@ -103,7 +103,7 @@
 "navigation_title_enter_verification_code" = "请输入发送至以下号码的4位验证码： %@";
 "navigation_title_enter_name" = "名字";
 "navigation_title_enter_emergency_contact_id" = "输入紧急联系人的 Mixin ID";
-"navigation_title_enter_emergency_contact_verification_code" = "请输入发送至以下 Mixin ID 的4位验证码：%@";
+"navigation_title_enter_emergency_contact_verification_code" = "请输入发送至以下 Mixin ID 的 4 位验证码：%@";
 "landing_welcome_title" = "欢迎使用 Mixin";
 "text_intro" = "继续使用即表示你同意 %@ 和 %@";
 "text_mobile_number_privacy" = "我们不会公开你的手机号码";
@@ -570,7 +570,7 @@
 "emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
 "emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人取得 Mixin ID 与验证码。阅读紧急联系人了解更多。";
 "emergency_tip_link" = "紧急联系人";
-"emergency_pin_protection_hint" = "紧急联系人经 PIN 加密保护";
+"emergency_pin_protection_hint" = "紧急联系人经支付密码加密保护";
 "emergency_change_number_tip" = "立即更换手机号？";
 "enable_emergency_contact" = "启用紧急联系人";
 

@@ -1680,7 +1680,7 @@
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_emergency" translatesAutoresizingMaskIntoConstraints="NO" id="mGo-Ey-I7z">
                                         <rect key="frame" x="117.5" y="216" width="140" height="162"/>
-                                        <color key="backgroundColor" red="0.97254901959999995" green="0.98431372549999996" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

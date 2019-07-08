@@ -3,9 +3,18 @@ import UIKit
 class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadingViewModel {
     
     var progress: Double?
-
+    
     var automaticallyLoadsAttachment: Bool {
-        return mediaStatus == MediaStatus.PENDING.rawValue && !shouldUpload
+        let shouldAutoDownload: Bool
+        switch CommonUserDefault.shared.autoDownloadPhotos {
+        case .never:
+            shouldAutoDownload = false
+        case .wifi:
+            shouldAutoDownload = NetworkManager.shared.isReachableOnWiFi
+        case .wifiAndCellular:
+            shouldAutoDownload = true
+        }
+        return !shouldUpload && shouldAutoDownload
     }
     
     var automaticallyCancelAttachmentLoading: Bool {

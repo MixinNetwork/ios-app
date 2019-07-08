@@ -331,6 +331,7 @@
 		7BC98FA721EF5B8C004A5D79 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */; };
 		7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */; };
 		7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */; };
+		7BCB8C8422BB56B8002A13CC /* DataStorageUsageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB8C8322BB56B8002A13CC /* DataStorageUsageViewController.swift */; };
 		7BCE296621AC132E00B1A507 /* SnapshotCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE296521AC132E00B1A507 /* SnapshotCell.xib */; };
 		7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532720A41F6A00C36F69 /* RangeExtension.swift */; };
 		7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532920A435D300C36F69 /* CoreTextExtension.swift */; };
@@ -1043,6 +1044,7 @@
 		7BC98FA621EF5B8C004A5D79 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		7BCA3A562057F08E007617C1 /* CATransactionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CATransactionExtension.swift; sourceTree = "<group>"; };
 		7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		7BCB8C8322BB56B8002A13CC /* DataStorageUsageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorageUsageViewController.swift; sourceTree = "<group>"; };
 		7BCE296521AC132E00B1A507 /* SnapshotCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotCell.xib; sourceTree = "<group>"; };
 		7BD0532720A41F6A00C36F69 /* RangeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeExtension.swift; sourceTree = "<group>"; };
 		7BD0532920A435D300C36F69 /* CoreTextExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreTextExtension.swift; sourceTree = "<group>"; };
@@ -2662,6 +2664,7 @@
 				DF8CECE81FC411AB00E40064 /* NotificationSettingsViewController.swift */,
 				DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */,
 				DF8CECEE1FC4240500E40064 /* BlockUserViewController.swift */,
+				7BCB8C8322BB56B8002A13CC /* DataStorageUsageViewController.swift */,
 				DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */,
 				DFE48ADD20EBADEE003E0BF8 /* ClearStorageViewController.swift */,
 				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
@@ -3065,6 +3068,7 @@
 				7BF49DD320C3DBAC00A8510E /* ReCaptchaManager.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
 				7B06F9A22201CE1B0058DE94 /* BackupAvailabilityQuery.swift in Sources */,
+				7BCB8C8422BB56B8002A13CC /* DataStorageUsageViewController.swift in Sources */,
 				9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */,
 				27382EC61FECDF0D00437A1B /* PreKeyUtil.swift in Sources */,
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,

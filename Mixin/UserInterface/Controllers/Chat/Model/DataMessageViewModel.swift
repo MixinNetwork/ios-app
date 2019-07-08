@@ -11,7 +11,16 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     var automaticallyLoadsAttachment: Bool {
-        return false
+        let shouldAutoDownload: Bool
+        switch CommonUserDefault.shared.autoDownloadFiles {
+        case .never:
+            shouldAutoDownload = false
+        case .wifi:
+            shouldAutoDownload = NetworkManager.shared.isReachableOnWiFi
+        case .wifiAndCellular:
+            shouldAutoDownload = true
+        }
+        return !shouldUpload && shouldAutoDownload
     }
     
     var automaticallyCancelAttachmentLoading: Bool {

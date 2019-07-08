@@ -87,7 +87,7 @@ class AudioManager {
                 self.player!.onStatusChanged = self.playerStatusChanged
                 self.player!.play()
                 
-                if let nextNode = self.node(nextTo: node), nextNode.message.mediaStatus != MediaStatus.DONE.rawValue {
+                if let nextNode = self.node(nextTo: node), nextNode.message.mediaStatus != MediaStatus.DONE.rawValue && nextNode.message.mediaStatus != MediaStatus.READ.rawValue {
                     let job = AudioDownloadJob(messageId: nextNode.message.messageId,
                                                mediaMimeType: nextNode.message.mediaMimeType)
                     AudioJobQueue.shared.addJob(job: job)

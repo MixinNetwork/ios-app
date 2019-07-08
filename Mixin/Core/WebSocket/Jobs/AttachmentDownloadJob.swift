@@ -64,7 +64,7 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
         guard !self.messageId.isEmpty else {
             return false
         }
-        guard let message = MessageDAO.shared.getMessage(messageId: self.messageId), (message.mediaUrl == nil || (message.mediaStatus != MediaStatus.DONE.rawValue && message.mediaStatus != MediaStatus.EXPIRED.rawValue && message.category != MessageCategory.MESSAGE_RECALL.rawValue)) else {
+        guard let message = MessageDAO.shared.getMessage(messageId: self.messageId), (message.mediaUrl == nil || (message.mediaStatus != MediaStatus.DONE.rawValue && message.mediaStatus != MediaStatus.EXPIRED.rawValue && message.mediaStatus != MediaStatus.READ.rawValue && message.category != MessageCategory.MESSAGE_RECALL.rawValue)) else {
             return false
         }
         guard let attachmentId = message.content, !attachmentId.isEmpty else {

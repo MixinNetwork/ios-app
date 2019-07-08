@@ -90,7 +90,6 @@ struct GalleryItem: Equatable {
     static func ==(lhs: GalleryItem, rhs: GalleryItem) -> Bool {
         return lhs.messageId == rhs.messageId
             && lhs.url == rhs.url
-            && lhs.mediaStatus == rhs.mediaStatus
     }
     
     static func shouldLayoutImageOfRatioAsAriticle(_ ratio: CGSize) -> Bool {

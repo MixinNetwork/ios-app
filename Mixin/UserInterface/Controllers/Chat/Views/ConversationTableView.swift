@@ -21,13 +21,13 @@ extension MessageItem {
         } else if category.hasSuffix("_CONTACT") {
             actions = [.reply, .forward, .delete]
         } else if category.hasSuffix("_IMAGE") {
-            if mediaStatus == MediaStatus.DONE.rawValue {
+            if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
                 actions = [.addToStickers, .reply, .forward, .delete]
             } else {
                 actions = [.reply, .delete]
             }
         } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") || category.hasSuffix("_AUDIO") {
-            if mediaStatus == MediaStatus.DONE.rawValue {
+            if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
                 actions = [.reply, .forward, .delete]
             } else {
                 actions = [.reply, .delete]

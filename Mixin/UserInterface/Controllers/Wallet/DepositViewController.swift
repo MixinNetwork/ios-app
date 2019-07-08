@@ -90,7 +90,7 @@ extension DepositViewController: ContainerViewControllerDelegate {
         if asset.isAccount {
             UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360023738212")
         } else {
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/en-us/articles/360018789931-How-to-deposit-on-Mixin-Messenger-")
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")
         }
     }
     

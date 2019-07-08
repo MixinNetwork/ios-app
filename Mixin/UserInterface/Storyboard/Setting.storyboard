@@ -1637,7 +1637,7 @@
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <nil key="highlightedColor"/>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="emergency_tip1"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="emergency_tip_before"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                         </subviews>

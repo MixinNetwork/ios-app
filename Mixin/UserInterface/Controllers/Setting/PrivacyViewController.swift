@@ -37,7 +37,7 @@ final class PrivacyViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        var vc: UIViewController!
+        let vc: UIViewController
         switch indexPath.section {
         case 0:
             if indexPath.row == 0 {
@@ -46,6 +46,8 @@ final class PrivacyViewController: UITableViewController {
                 vc = ConversationSettingViewController.instance()
             }
         case 1:
+            vc = WalletSettingViewController.instance()
+        case 2:
             vc = AuthorizationsViewController.instance()
         default:
             vc = EmergencyContactViewController.instance()

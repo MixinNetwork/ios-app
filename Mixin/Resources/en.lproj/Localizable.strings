@@ -88,6 +88,7 @@
 "toast_authorized" = "Authorized";
 "toast_changed" = "Changed";
 "permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
+"permission_denied_network" = "Mixin doesn't have permission to use wireless data. Please tap Setting to open system settings.";
 "toast_error" = "ERROR %@: %@";
 "screen_captured_pin_leaking_hint" = "Screen recorder detected, PIN may be recorded.";
 "biometry_suggestion" = " %@ is suggested.";

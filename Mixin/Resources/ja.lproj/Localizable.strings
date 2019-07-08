@@ -84,6 +84,7 @@
 "toast_authorized" = "許可された";
 "toast_changed" = "かわった";
 "permission_denied_photo_library" = "Mixinはあなたの写真ライブラリを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
+"permission_denied_network" = "Mixinはデータを使用する権限を持っていません。 設定をタップしてシステム設定を開きます。";
 "toast_error" = "エラー %@: %@";
 "screen_captured_pin_leaking_hint" = "スクリーンレコーダーが検出され、PINが記録されている.";
 "biometry_suggestion" = " %@ が提案されています.";

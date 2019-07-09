@@ -8,6 +8,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
     private(set) var fileSize: String?
     private(set) var durationLabelOrigin = CGPoint.zero
     
+    var isLoading = false
     var progress: Double?
     
     var automaticallyLoadsAttachment: Bool {
@@ -39,6 +40,7 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             message.mediaStatus = newValue
             if newValue != MediaStatus.PENDING.rawValue {
                 progress = nil
+                isLoading = false
             }
             updateOperationButtonStyle()
             (duration, fileSize) = VideoMessageViewModel.durationAndFileSizeRepresentation(ofMessage: message)
@@ -78,10 +80,14 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if shouldUpload {
             let msg = Message.createMessage(message: message)
             let job = VideoUploadJob(message: msg)
-            ConcurrentJobQueue.shared.addJob(job: job)
+            if ConcurrentJobQueue.shared.addJob(job: job) {
+                isLoading = true
+            }
         } else {
             let job = VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
-            FileJobQueue.shared.addJob(job: job)
+            if FileJobQueue.shared.addJob(job: job) {
+                isLoading = true
+            }
         }
     }
     

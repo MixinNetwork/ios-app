@@ -960,15 +960,15 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
 extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
     
     func attachmentLoadingCellDidSelectNetworkOperation(_ cell: MessageCell & AttachmentLoadingMessageCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel, let mediaStatus = viewModel.mediaStatus else {
+        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel else {
             return
         }
-        switch mediaStatus {
-        case MediaStatus.CANCELED.rawValue:
+        switch viewModel.operationButtonStyle {
+        case .download, .upload:
             viewModel.beginAttachmentLoading()
-        case MediaStatus.PENDING.rawValue:
+        case .busy:
             viewModel.cancelAttachmentLoading(markMediaStatusCancelled: true)
-        default:
+        case .expired, .finished:
             break
         }
     }

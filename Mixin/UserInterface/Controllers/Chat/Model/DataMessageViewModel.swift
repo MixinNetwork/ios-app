@@ -2,6 +2,7 @@ import UIKit
 
 class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
 
+    var isLoading = false
     var progress: Double?
     var showPlayIconAfterFinished: Bool = false
     var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
@@ -43,7 +44,9 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         } else {
             job = FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
-        FileJobQueue.shared.addJob(job: job)
+        if FileJobQueue.shared.addJob(job: job) {
+            isLoading = true
+        }
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {

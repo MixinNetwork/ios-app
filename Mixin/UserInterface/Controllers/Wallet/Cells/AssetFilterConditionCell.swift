@@ -9,7 +9,7 @@ class AssetFilterConditionCell: UICollectionViewCell {
         
         backgroundView = UIView()
         backgroundView!.clipsToBounds = true
-        backgroundView!.layer.borderColor = UIColor(rgbValue: 0xE5E7EC).cgColor
+        backgroundView!.layer.borderColor = UIColor.disabledGray.cgColor
         backgroundView!.layer.borderWidth = 1
         backgroundView!.layer.cornerRadius = 8
         

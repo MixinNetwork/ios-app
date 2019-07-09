@@ -31,6 +31,7 @@ extension UIColor {
     static let modernCellSelection = UIColor(rgbValue: 0xF6F8FC)
     
     static let indicatorGray = UIColor(displayP3RgbValue: 0xBCBEC3)
+    static let disabledGray = UIColor(displayP3RgbValue: 0xE5E7EC)
     
     static let usernameColors = [UIColor(rgbValue: 0xAA4848),
                                  UIColor(rgbValue: 0xB0665E),

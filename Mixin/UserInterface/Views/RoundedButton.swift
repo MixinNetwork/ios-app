@@ -66,7 +66,7 @@ class RoundedButton: UIButton {
     }
     
     private func updateAppearanceWithIsEnabled() {
-        let color = isEnabled ? UIColor.theme : UIColor(rgbValue: 0xE5E7EC)
+        let color: UIColor = isEnabled ? .theme : .disabledGray
         backgroundLayer.fillColor = color.cgColor
         shadowLayer.isHidden = !isEnabled
     }

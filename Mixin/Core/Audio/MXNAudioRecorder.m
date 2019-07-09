@@ -28,7 +28,6 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     AudioQueueBufferRef buffers[numberOfAudioQueueBuffers];
     NSTimeInterval _duration;
     MXNOggOpusWriter *_writer;
-    MXNAudioRecorderCompletionCallback _completion;
     NSTimer *_timer;
     NSMutableData *_waveformSamples;
     int16_t _waveformPeak;
@@ -39,6 +38,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 - (nullable instancetype)initWithPath:(NSString *)path error:(NSError * _Nullable *)outError {
     self = [super init];
     if (self) {
+        _path = path;
         _vibratesAtBeginning = YES;
         _processingQueue = dispatch_queue_create("one.mixin.queue.audio_recorder", DISPATCH_QUEUE_SERIAL);
         _audioQueue = NULL;
@@ -56,11 +56,11 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
     return self;
 }
 
-- (void)recordForDuration:(NSTimeInterval)duration
-                 progress:(MXNAudioRecorderProgressCallback)progress
-               completion:(MXNAudioRecorderCompletionCallback)completion {
+- (void)recordForDuration:(NSTimeInterval)duration {
     if ([AVAudioSession sharedInstance].secondaryAudioShouldBeSilencedHint) {
-        progress(MXNAudioRecorderProgressWaitingForActivation);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_delegate audioRecorderIsWaitingForActivation:self];
+        });
     }
     __weak MXNAudioRecorder *weakSelf = self;
     dispatch_async(_processingQueue, ^{
@@ -77,7 +77,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
                                       error:&error];
         if (!success) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                completion(MXNAudioRecorderCompletionFailed, nil, error);
+                [_delegate audioRecorder:self didFailRecordingWithError:error];
             });
             return;
         }
@@ -85,7 +85,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         success = [[AVAudioSession sharedInstance] setActive:YES error:&error];
         if (!success) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                completion(MXNAudioRecorderCompletionFailed, nil, error);
+                [_delegate audioRecorder:self didFailRecordingWithError:error];
             });
             return;
         }
@@ -111,14 +111,13 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         strongSelf->_duration = duration;
         success = [self performRecording:&error];
         if (success) {
-            strongSelf->_completion = [completion copy];
             dispatch_sync(dispatch_get_main_queue(), ^{
-                progress(MXNAudioRecorderProgressStarted);
+                [_delegate audioRecorderDidStartRecording:self];
             });
         } else {
             [strongSelf deactivateAudioSessionAndRemoveObservers];
             dispatch_sync(dispatch_get_main_queue(), ^{
-                completion(MXNAudioRecorderCompletionFailed, nil, error);
+                [_delegate audioRecorder:self didFailRecordingWithError:error];
             });
         }
     });
@@ -134,7 +133,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         MXNAudioMetadata *metadata = [MXNAudioMetadata metadataWithDuration:duration waveform:waveform];
         [self cleanUp];
         dispatch_sync(dispatch_get_main_queue(), ^{
-            self->_completion(MXNAudioRecorderCompletionFinished, metadata, nil);
+            [_delegate audioRecorder:self didFinishRecordingWithMetadata:metadata];
         });
     });
 }
@@ -147,7 +146,7 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
         [self cleanUp];
         [self->_writer removeFile];
         dispatch_sync(dispatch_get_main_queue(), ^{
-            self->_completion(MXNAudioRecorderCompletionCancelled, nil, nil);
+            [_delegate audioRecorderDidCancelRecording:self];
         });
     });
 }
@@ -158,28 +157,11 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
 }
 
 - (void)audioSessionRouteChange:(NSNotification *)notification {
-    AVAudioSessionRouteChangeReason reason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
-    switch (reason) {
-        case AVAudioSessionRouteChangeReasonOverride:
-        case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
-        case AVAudioSessionRouteChangeReasonRouteConfigurationChange: {
-            break;
-        }
-        case AVAudioSessionRouteChangeReasonCategoryChange: {
-            NSString *newCategory = [[AVAudioSession sharedInstance] category];
-            BOOL canContinue = [newCategory isEqualToString:AVAudioSessionCategoryRecord] || [newCategory isEqualToString:AVAudioSessionCategoryPlayAndRecord];
-            if (!canContinue) {
-                [self cancel];
-            }
-            break;
-        }
-        case AVAudioSessionRouteChangeReasonUnknown:
-        case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
-        case AVAudioSessionRouteChangeReasonWakeFromSleep:
-        case AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory: {
-            [self cancel];
-            break;
-        }
+    NSString *category = [[AVAudioSession sharedInstance] category];
+    BOOL categoryIsAvailable = [category isEqualToString:AVAudioSessionCategoryRecord] || [category isEqualToString:AVAudioSessionCategoryPlayAndRecord];
+    BOOL hasInput = [AVAudioSession sharedInstance].currentRoute.inputs.count;
+    if (!hasInput || !categoryIsAvailable) {
+        [self cancel];
     }
 }
 
@@ -188,7 +170,9 @@ NS_INLINE AudioStreamBasicDescription CreateFormat(void);
                                          code:MXNAudioRecorderErrorCodeMediaServiceWereReset
                                      userInfo:nil];
     _recording = NO;
-    _completion(MXNAudioRecorderCompletionFailed, nil, error);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate audioRecorder:self didFailRecordingWithError:error];
+    });
 }
 
 - (BOOL)performRecording:(NSError **)outError {

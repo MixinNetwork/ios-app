@@ -3,6 +3,8 @@ import AVFoundation
 
 class AudioInputViewController: UIViewController, ConversationAccessible {
     
+    static let maxRecordDuration: TimeInterval = 60
+    
     @IBOutlet weak var recordingIndicatorView: UIView!
     @IBOutlet weak var recordingRedDotView: UIView!
     @IBOutlet weak var timeLabel: UILabel!
@@ -19,7 +21,13 @@ class AudioInputViewController: UIViewController, ConversationAccessible {
     @IBOutlet var recordGestureRecognizer: UILongPressGestureRecognizer!
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
     
-    static let maxRecordDuration: TimeInterval = 60
+    var isRecording: Bool {
+        if let recorder = recorder {
+            return recorder.isRecording
+        } else {
+            return false
+        }
+    }
     
     private let animationDuration: TimeInterval = 0.2
     private let updateTimeLabelInterval: TimeInterval = 1
@@ -44,14 +52,6 @@ class AudioInputViewController: UIViewController, ConversationAccessible {
     
     private lazy var longPressHintView = RecorderLongPressHintView()
     
-    var isRecording: Bool {
-        if let recorder = recorder {
-            return recorder.isRecording
-        } else {
-            return false
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         recordGestureRecognizer.delegate = self
@@ -69,7 +69,7 @@ class AudioInputViewController: UIViewController, ConversationAccessible {
         }
         switch recordGestureRecognizer.state {
         case .began:
-            AudioManager.shared.stop(deactivateAudioSession: false)
+            AudioManager.shared.pause()
             isLocked = false
             lockView.progress = 0
             hideLongPressHint()
@@ -175,6 +175,50 @@ extension AudioInputViewController: UIGestureRecognizerDelegate {
     
 }
 
+extension AudioInputViewController: MXNAudioRecorderDelegate {
+    
+    func audioRecorderIsWaitingForActivation(_ recorder: MXNAudioRecorder) {
+        
+    }
+    
+    func audioRecorderDidStartRecording(_ recorder: MXNAudioRecorder) {
+        let timer = Timer(timeInterval: updateTimeLabelInterval,
+                          target: self,
+                          selector: #selector(AudioInputViewController.updateTimeLabelAction(_:)),
+                          userInfo: nil,
+                          repeats: true)
+        RunLoop.main.add(timer, forMode: .common)
+        recordDurationTimer = timer
+        startRedDotAnimation()
+    }
+    
+    func audioRecorderDidCancelRecording(_ recorder: MXNAudioRecorder) {
+        resetTimerAndRecorder()
+        layoutForStopping()
+        stopRedDotAnimation()
+    }
+    
+    func audioRecorder(_ recorder: MXNAudioRecorder, didFailRecordingWithError error: Error) {
+        resetTimerAndRecorder()
+        layoutForStopping()
+        stopRedDotAnimation()
+    }
+    
+    func audioRecorder(_ recorder: MXNAudioRecorder, didFinishRecordingWithMetadata metadata: MXNAudioMetadata) {
+        resetTimerAndRecorder()
+        layoutForStopping()
+        stopRedDotAnimation()
+        let url = URL(fileURLWithPath: recorder.path)
+        if Double(metadata.duration) > millisecondsPerSecond {
+            dataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (url, metadata))
+        } else {
+            try? FileManager.default.removeItem(at: url)
+            flashLongPressHint()
+        }
+    }
+    
+}
+
 extension AudioInputViewController {
     
     private func startRecordingIfGranted() {
@@ -194,47 +238,21 @@ extension AudioInputViewController {
         setTimeLabelValue(0)
         let tempUrl = URL.createTempUrl(fileExtension: ExtensionName.ogg.rawValue)
         do {
-            recorder = try MXNAudioRecorder(path: tempUrl.path)
+            let recorder = try MXNAudioRecorder(path: tempUrl.path)
             UIApplication.shared.isIdleTimerDisabled = true
-            recorder!.record(forDuration: AudioInputViewController.maxRecordDuration, progress: { (progress) in
-                switch progress {
-                case .waitingForActivation:
-                    break
-                case .started:
-                    let timer = Timer(timeInterval: self.updateTimeLabelInterval,
-                                      target: self,
-                                      selector: #selector(AudioInputViewController.updateTimeLabelAction(_:)),
-                                      userInfo: nil,
-                                      repeats: true)
-                    RunLoop.main.add(timer, forMode: .common)
-                    self.recordDurationTimer = timer
-                    self.startRedDotAnimation()
-                case .interrupted:
-                    self.recorder?.cancel()
-                }
-            }) { (completion, metadata, error) in
-                UIApplication.shared.isIdleTimerDisabled = false
-                self.recordDurationTimer?.invalidate()
-                self.recordDurationTimer = nil
-                switch completion {
-                case .failed:
-                    break
-                case .finished:
-                    self.layoutForStopping()
-                    if let duration = metadata?.duration, Double(duration) > millisecondsPerSecond {
-                        self.dataSource?.sendMessage(type: .SIGNAL_AUDIO, value: (tempUrl, metadata))
-                    } else {
-                        try? FileManager.default.removeItem(at: tempUrl)
-                        self.flashLongPressHint()
-                    }
-                case .cancelled:
-                    break
-                }
-                self.recorder = nil
-            }
+            recorder.delegate = self
+            recorder.record(for: AudioInputViewController.maxRecordDuration)
+            self.recorder = recorder
         } catch {
             UIApplication.trackError(String(reflecting: self), action: #function, userInfo: ["error": error])
         }
+    }
+    
+    private func resetTimerAndRecorder() {
+        UIApplication.shared.isIdleTimerDisabled = false
+        recordDurationTimer?.invalidate()
+        recordDurationTimer = nil
+        recorder = nil
     }
     
 }

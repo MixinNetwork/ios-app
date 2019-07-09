@@ -44,9 +44,8 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         } else {
             job = FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
-        if FileJobQueue.shared.addJob(job: job) {
-            isLoading = true
-        }
+        FileJobQueue.shared.addJob(job: job)
+        isLoading = true
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {

@@ -44,9 +44,8 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         } else {
             job = AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
-        if ConcurrentJobQueue.shared.addJob(job: job) {
-            isLoading = true
-        }
+        ConcurrentJobQueue.shared.addJob(job: job)
+        isLoading = true
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {

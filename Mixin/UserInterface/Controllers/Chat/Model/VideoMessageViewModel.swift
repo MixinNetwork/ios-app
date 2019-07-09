@@ -80,15 +80,12 @@ class VideoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
         if shouldUpload {
             let msg = Message.createMessage(message: message)
             let job = VideoUploadJob(message: msg)
-            if ConcurrentJobQueue.shared.addJob(job: job) {
-                isLoading = true
-            }
+            ConcurrentJobQueue.shared.addJob(job: job)
         } else {
             let job = VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
-            if FileJobQueue.shared.addJob(job: job) {
-                isLoading = true
-            }
+            FileJobQueue.shared.addJob(job: job)
         }
+        isLoading = true
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {

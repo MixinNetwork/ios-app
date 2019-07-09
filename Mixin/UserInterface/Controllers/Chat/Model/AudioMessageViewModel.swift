@@ -63,9 +63,8 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
         } else {
             job = AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
-        if AudioJobQueue.shared.addJob(job: job) {
-            isLoading = true
-        }
+        AudioJobQueue.shared.addJob(job: job)
+        isLoading = true
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {

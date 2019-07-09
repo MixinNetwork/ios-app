@@ -28,16 +28,25 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
         }
     }
     
+    var attributedText: NSAttributedString? {
+        get {
+            return label.attributedText
+        }
+        set {
+            label.attributedText = newValue
+            label.isHidden = newValue == nil
+            cachedSize = nil
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        contentView.addSubview(shadowView)
-        clipsToBounds = true
+        prepare()
     }
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(shadowView)
-        clipsToBounds = true
+        prepare()
     }
     
     override func prepareForReuse() {
@@ -72,6 +81,13 @@ class SeparatorShadowFooterView: UITableViewHeaderFooterView {
                 return size
             }
         }
+    }
+    
+    private func prepare() {
+        contentView.addSubview(shadowView)
+        clipsToBounds = true
+        backgroundView = UIView(frame: bounds)
+        backgroundView?.backgroundColor = .clear
     }
     
 }

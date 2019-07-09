@@ -5,6 +5,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     let length: String
     let waveform: Waveform
     
+    var isLoading = false
     var progress: Double?
     var showPlayIconAfterFinished: Bool = true
     var operationButtonStyle: NetworkOperationButton.Style = .expired
@@ -27,6 +28,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             message.mediaStatus = newValue
             if newValue != MediaStatus.PENDING.rawValue {
                 progress = nil
+                isLoading = false
             }
             updateOperationButtonStyle()
             updateButtonsHidden()
@@ -62,6 +64,7 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             job = AudioDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
         AudioJobQueue.shared.addJob(job: job)
+        isLoading = true
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {

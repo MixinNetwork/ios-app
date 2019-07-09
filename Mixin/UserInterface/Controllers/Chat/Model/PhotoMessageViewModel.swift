@@ -2,10 +2,20 @@ import UIKit
 
 class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadingViewModel {
     
+    var isLoading = false
     var progress: Double?
-
+    
     var automaticallyLoadsAttachment: Bool {
-        return mediaStatus == MediaStatus.PENDING.rawValue && !shouldUpload
+        let shouldAutoDownload: Bool
+        switch CommonUserDefault.shared.autoDownloadPhotos {
+        case .never:
+            shouldAutoDownload = false
+        case .wifi:
+            shouldAutoDownload = NetworkManager.shared.isReachableOnWiFi
+        case .wifiAndCellular:
+            shouldAutoDownload = true
+        }
+        return !shouldUpload && shouldAutoDownload
     }
     
     var automaticallyCancelAttachmentLoading: Bool {
@@ -27,14 +37,15 @@ class PhotoMessageViewModel: PhotoRepresentableMessageViewModel, AttachmentLoadi
             return
         }
         MessageDAO.shared.updateMediaStatus(messageId: message.messageId, status: .PENDING, conversationId: message.conversationId)
+        let job: BaseJob
         if shouldUpload {
             let msg = Message.createMessage(message: message)
-            let job = ImageUploadJob(message: msg)
-            ConcurrentJobQueue.shared.addJob(job: job)
+            job = ImageUploadJob(message: msg)
         } else {
-            let job = AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
-            ConcurrentJobQueue.shared.addJob(job: job)
+            job = AttachmentDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
+        ConcurrentJobQueue.shared.addJob(job: job)
+        isLoading = true
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {

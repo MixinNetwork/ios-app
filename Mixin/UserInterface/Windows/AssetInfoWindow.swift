@@ -37,7 +37,7 @@ class AssetInfoWindow: BottomSheetView {
             return
         }
         UIPasteboard.general.string = asset.assetKey
-        showHud(style: .notification, text: Localized.TOAST_COPIED)
+        showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
     }
 
     @IBAction func dismissAction(_ sender: Any) {

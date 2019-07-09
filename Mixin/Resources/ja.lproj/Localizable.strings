@@ -36,9 +36,11 @@
 "action_delete_me" = "自分用に削除";
 "action_delete_everyone" = "全員分を削除";
 "action_learn_more" = "もっと知りたい";
+"action_later" = "後で";
 "menu_delete" = "デリート";
 "no_result" = "検索結果はありません";
 "all_photos" = "すべての写真";
+"title_help" = "お手伝い";
 
 "connection_hint_connecting" = "接続中";
 "connection_hint_progress" = "同期中 %@%%";
@@ -94,8 +96,10 @@
 // Login
 "navigation_title_select_country" = "国を選択";
 "navigation_title_enter_mobile_number" = "電話番号を入力してください";
-"navigation_title_enter_verification_code" = " %@ に送られてきた4桁のコードを入力してください。";
+"navigation_title_enter_verification_code" = " %@ に送られてきた4桁のコードを入力してください";
 "navigation_title_enter_name" = "お名前は何ですか？";
+"navigation_title_enter_emergency_contact_id" = "緊急連絡先のMixin IDを入力してください";
+"navigation_title_enter_emergency_contact_verification_code" = "Mixin ID：%@ に送られてきた4桁のコードを入力してください";
 "landing_welcome_title" = "Mixin へようこそ";
 "text_intro" = "引き続きがあなたは%@及び%@を同意すると意味します";
 "text_mobile_number_privacy" = "私たちはあなたの電話番号を公に表示することはありません。";
@@ -106,6 +110,9 @@
 "button_title_privacy_policy" = "個人情報保護方針";
 "button_title_resend_code" = "コードを再送信";
 "button_title_resend_code_pending" = "%@ でコードを再送信";
+"button_title_help" = "お手伝いしましょうか";
+"button_title_cant_receive_code" = "コードが送られて来ない";
+"button_title_phone_number_lost" = "携帯電話を紛失した";
 "header_title_current_selected" = "現在選択されている";
 "header_title_current_location" = "現在位置";
 "placeholder_search_bar" = "国を検索します";
@@ -484,6 +491,16 @@
 "profile_toast_muted" = " %@ まで消音しました";
 "profile_report_tips" = "この連絡先を報告してブロックしますか？このチャットと会話内容も削除されます。";
 
+// Emergency
+"emergency_view" = "緊急連絡先を表示";
+"emergency_change" = "緊急連絡先を変更";
+"emergency_tip_before" = "The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
+"emergency_tip_after" = "When you lose your mobile number, please contact your emergency contact by phone or other means to get the Mixin ID and verification code. Read our Emergency Contact to learn more.";
+"emergency_tip_link" = "Emergency Contact";
+"emergency_pin_protection_hint" = "緊急連絡先はPINで保護されています";
+"emergency_change_number_tip" = "携帯番号を変更したいんですか";
+"enable_emergency_contact" = "緊急連絡先を有効にする";
+
 // Setting
 "setting_title" = "設定";
 "setting_notification" = "通知";
@@ -497,6 +514,7 @@
 "setting_privacy_and_security" = "プライバシーとセキュリティ";
 "setting_privacy_and_security_title" = "プライバシー";
 "setting_privacy_and_security_summary" = "会話やグループにあなたを追加できるユーザーを変更します。";
+"setting_data_and_storage" = "データとストレージの使用";
 "setting_blocked_user_count_suffix" = "連絡先";
 "setting_blocked_user_count_none" = "無し";
 "setting_about" = "について";
@@ -513,11 +531,13 @@
 "setting_header_conversation_source" = "グループチャットに私を追加できるのは誰ですか";
 "setting_source_everybody" = "みんな";
 "setting_source_contacts" = "私の連絡先";
-"setting_storage_usage" = "ストレージ使用量";
 "setting_storage_photos" = "写真";
 "setting_storage_videos" = "ビデオ";
 "setting_storage_audios" = "オーディオ";
 "setting_storage_files" = "ファイル";
+"setting_emergency_contact" = "緊急連絡先";
+"setting_title_select_emergency_contact" = "緊急連絡先を選択";
+"setting_change_emergency_contact_success" = "緊急連絡先を変更しました";
 "setting_logout" = "ログアウト";
 "setting_notification_message_preview" = "メッセージプレビュー";
 "setting_backup_title" = "チャットバックアップ";
@@ -534,6 +554,10 @@
 "setting_backup_tips" = "チャット履歴をiCloudにバックアップします。 iPhoneを紛失した場合や新しいiPhoneに切り替えた場合は、Mixin Messengerをインストールしたときにチャット履歴を復元できます。 バックアップしたメッセージは、iCloudにいる間はMixin Messengerのエンドツーエンドの暗号化によって保護されません。";
 "setting_backup_auto_tips" = "Wi-Fi経由でのみiCloudに自動的にバックアップします。";
 "setting_backup_last" = "最後のバックアップは %@ 、合計サイズは %@ です。";
+"setting_auto_download_never" = "オフ";
+"setting_auto_download_wifi" = "WLAN";
+"setting_auto_download_wifi_cellular" = "WLANとモバイルデータ通信";
+"setting_auto_download_hint" = "自動ダウンロード設定を変更します。オーディオメッセージは常に自動でダウンロードされます";
 
 // Notifications
 "notification_reply" = "返信";

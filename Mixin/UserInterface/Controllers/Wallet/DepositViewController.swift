@@ -90,7 +90,7 @@ extension DepositViewController: ContainerViewControllerDelegate {
         if asset.isAccount {
             UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360023738212")
         } else {
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/en-us/articles/360018789931-How-to-deposit-on-Mixin-Messenger-")
+            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")
         }
     }
     
@@ -99,7 +99,7 @@ extension DepositViewController: ContainerViewControllerDelegate {
 extension DepositViewController: DepositFieldViewDelegate {
     
     func depositFieldViewDidCopyContent(_ view: DepositFieldView) {
-        showHud(style: .notification, text: Localized.TOAST_COPIED)
+        showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
     }
     
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView) {

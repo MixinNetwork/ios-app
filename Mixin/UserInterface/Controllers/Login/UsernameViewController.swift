@@ -1,27 +1,16 @@
 import UIKit
 
-class UsernameViewController: ContinueButtonViewController {
-    
-    @IBOutlet weak var contentStackView: UIStackView!
-    @IBOutlet weak var textField: UITextField!
-    
-    private var username: String {
-        return textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-    }
+class UsernameViewController: LoginInfoInputViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if ScreenSize.current == .inch3_5 {
-            contentStackView.spacing = 30
-        }
+        titleLabel.text = R.string.localizable.navigation_title_enter_name()
         textField.text = defaultUsername()
-        textField.becomeFirstResponder()
-        updateContinueButtonStatusAction(self)
     }
     
     override func continueAction(_ sender: Any) {
         continueButton.isBusy = true
-        AccountAPI.shared.update(fullName: username) { [weak self] (account) in
+        AccountAPI.shared.update(fullName: trimmedText) { [weak self] (account) in
             guard let weakSelf = self else {
                 return
             }
@@ -35,13 +24,9 @@ class UsernameViewController: ContinueButtonViewController {
                 AppDelegate.current.window?.rootViewController = makeInitialViewController()
             case let .failure(error):
                 UIApplication.traceError(error)
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
-    }
-    
-    @IBAction func updateContinueButtonStatusAction(_ sender: Any) {
-        continueButton.isHidden = username.isEmpty
     }
     
     private func defaultUsername() -> String? {

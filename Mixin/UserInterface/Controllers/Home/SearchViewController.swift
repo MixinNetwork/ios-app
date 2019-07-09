@@ -460,7 +460,7 @@ extension SearchViewController {
                 }
             case let .failure(error):
                 let text = error.code == 404 ? Localized.CONTACT_SEARCH_NOT_FOUND : error.localizedDescription
-                showHud(style: .error, text: text)
+                showAutoHiddenHud(style: .error, text: text)
             }
         }
     }

@@ -38,11 +38,13 @@
 "action_delete_me" = "Delete for Me";
 "action_delete_everyone" = "Delete for Everyone";
 "action_learn_more" = "Learn More";
+"action_later" = "Later";
 "menu_delete" = "Delete";
 "menu_edit" = "Edit";
 "no_result" = "No result";
 "title_loading" = "Loading...";
 "all_photos" = "All Photos";
+"title_help" = "Help";
 
 "connection_hint_connecting" = "Connecting";
 "connection_hint_progress" = "Syncing %@%%";
@@ -100,16 +102,22 @@
 "navigation_title_enter_mobile_number" = "Enter your phone number";
 "navigation_title_enter_verification_code" = "Enter the 4-digit code sent to you at %@";
 "navigation_title_enter_name" = "What's your name?";
+"navigation_title_enter_emergency_contact_id" = "Enter your emergency contact's Mixin ID";
+"navigation_title_enter_emergency_contact_verification_code" = "Enter the 4-digit code sent to Mixin ID %@";
 "landing_welcome_title" = "Welcome to Mixin";
 "text_intro" = "By proceeding, you agree to the %@ and %@.";
 "text_mobile_number_privacy" = "We will never display your phone number publicly";
 "text_confirm_send_code" = "Please confirm the phone number %@";
 "text_invalid_verification_code" = "The code is incorrect.";
+"text_invalid_emergency_id" = "Invalid emergency contact.";
 "button_title_agree_and_continue" = "Agree & Continue";
 "button_title_terms_of_service" = "Terms of Service";
 "button_title_privacy_policy" = "Privacy Policy";
 "button_title_resend_code" = "Resend code";
 "button_title_resend_code_pending" = "Resend code in %@";
+"button_title_help" = "Need help?";
+"button_title_cant_receive_code" = "Can't receive the code";
+"button_title_phone_number_lost" = "Lost your mobile number?";
 "header_title_current_selected" = "Current Selected";
 "header_title_current_location" = "Current Location";
 "placeholder_search_bar" = "Search for a country";
@@ -491,6 +499,16 @@
 "profile_toast_muted" = "Muted until %@";
 "profile_report_tips" = "Do you want to report and block this contact? your chat with this conversation will also be deleted.";
 
+// Emergency
+"emergency_view" = "View emergency contact";
+"emergency_change" = "Change emergency contact";
+"emergency_tip_before" = "The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
+"emergency_tip_after" = "When you lose your mobile number, please contact your emergency contact by phone or other means to get the Mixin ID and verification code. Read our Emergency Contact to learn more.";
+"emergency_tip_link" = "Emergency Contact";
+"emergency_pin_protection_hint" = "Your emergency contact is protected by PIN";
+"emergency_change_number_tip" = "Do you want to change your mobile number now?";
+"enable_emergency_contact" = "Enable Emergency Contact";
+
 // Setting
 "setting_title" = "Setting";
 "setting_notification" = "Notifications";
@@ -503,6 +521,7 @@
 "setting_privacy_and_security" = "Privacy and Security";
 "setting_privacy_and_security_title" = "PRIVACY";
 "setting_privacy_and_security_summary" = "Change who can add you to conversation and groups.";
+"setting_data_and_storage" = "Data and Storage Usage";
 "setting_blocked_user_count_suffix" = " contacts";
 "setting_blocked_user_count_none" = "None";
 "setting_about" = "About";
@@ -523,11 +542,13 @@
 "setting_header_conversation_source" = "WHO CAN ADD ME TO GROUP CHATS";
 "setting_source_everybody" = "Everybody";
 "setting_source_contacts" = "My Contacts";
-"setting_storage_usage" = "Storage Usage";
 "setting_storage_photos" = "Photos";
 "setting_storage_videos" = "Videos";
 "setting_storage_audios" = "Audios";
 "setting_storage_files" = "Files";
+"setting_emergency_contact" = "Emergency Contact";
+"setting_title_select_emergency_contact" = "Select Emergency Contact";
+"setting_change_emergency_contact_success" = "Successfully changed emergency contact";
 "setting_logout" = "Log Out";
 "setting_notification_message_preview" = "Message Preview";
 "setting_backup_title" = "Chat Backup";
@@ -546,6 +567,10 @@
 "setting_backup_last" = "Last backup on %@, total size %@.";
 "setting_backup_progress" = "Uploading %@";
 "setting_restore_progress" = "Restoring %@";
+"setting_auto_download_never" = "Never";
+"setting_auto_download_wifi" = "Wi-Fi";
+"setting_auto_download_wifi_cellular" = "Wi-Fi and Cellular";
+"setting_auto_download_hint" = "Change auto-download settings for medias. Voice messages are always automatically downloaded";
 
 // Notifications
 "notification_reply" = "Reply";

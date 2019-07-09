@@ -102,7 +102,7 @@ class UserView: CornerView {
                         UserDAO.shared.updateUsers(users: [user], sendNotificationAfterFinished: false)
                         creator = UserItem.createUser(from: user)
                     case let .failure(error):
-                        showHud(style: .error, text: error.localizedDescription)
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
                     }
                 }
                 self?.appCreator = creator
@@ -388,7 +388,7 @@ class UserView: CornerView {
     
     private func changeNumber() {
         if AccountAPI.shared.account?.has_pin ?? false {
-            let viewController = ChangeNumberNavigationController(rootViewController: R.storyboard.contact.verifyPin()!)
+            let viewController = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
             UIApplication.rootNavigationController()?.present(viewController, animated: true, completion: nil)
         } else {
             let viewController = WalletPasswordViewController.instance(dismissTarget: .changePhone)
@@ -442,9 +442,9 @@ class UserView: CornerView {
                     DispatchQueue.global().async {
                         UserDAO.shared.updateAccount(account: account)
                     }
-                    showHud(style: .notification, text: Localized.TOAST_CHANGED)
+                    showAutoHiddenHud(style: .notification, text: Localized.TOAST_CHANGED)
                 case let .failure(error):
-                    showHud(style: .error, text: error.localizedDescription)
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
         } else {
@@ -505,9 +505,9 @@ class UserView: CornerView {
                 } else {
                     toastMessage = Localized.PROFILE_TOAST_MUTED(muteUntil: DateFormatter.dateSimple.string(from: response.muteUntil.toUTCDate()))
                 }
-                showHud(style: .notification, text: toastMessage)
+                showAutoHiddenHud(style: .notification, text: toastMessage)
             case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -531,7 +531,7 @@ class UserView: CornerView {
             updateUser(user: UserItem.createUser(from: user), animated: true, refreshUser: false, superView: superView)
         case let .failure(error):
             if showError {
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
         completion?()
@@ -542,7 +542,7 @@ class UserView: CornerView {
         DispatchQueue.global().async {
             MessageDAO.shared.clearChat(conversationId: conversationId)
             DispatchQueue.main.async {
-                showHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
+                showAutoHiddenHud(style: .notification, text: Localized.GROUP_CLEAR_SUCCESS)
             }
         }
     }
@@ -661,9 +661,9 @@ extension UserView: ImagePickerControllerDelegate {
                 DispatchQueue.global().async {
                     UserDAO.shared.updateAccount(account: account)
                 }
-                showHud(style: .notification, text: Localized.TOAST_CHANGED)
+                showAutoHiddenHud(style: .notification, text: Localized.TOAST_CHANGED)
             case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         })
     }

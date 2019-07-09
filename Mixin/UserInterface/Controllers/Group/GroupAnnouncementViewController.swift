@@ -41,10 +41,10 @@ class GroupAnnouncementViewController: KeyboardBasedLayoutViewController {
             case let .success(conversation):
                 let change = ConversationChange(conversationId: conversation.conversationId, action: .updateConversation(conversation: conversation))
                 NotificationCenter.default.post(name: .ConversationDidChange, object: change)
-                showHud(style: .notification, text: Localized.TOAST_SAVED)
+                showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
                 self?.navigationController?.popViewController(animated: true)
             case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.saveButton.isBusy = false
                 self?.textView.isUserInteractionEnabled = true
                 self?.textView.becomeFirstResponder()

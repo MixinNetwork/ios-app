@@ -30,10 +30,29 @@ class AudioManager {
     }
     
     func play(node: Node) {
+        
+        func handle(error: Error) {
+            DispatchQueue.main.sync {
+                self.cells[node.message.messageId]?.object?.style = .stopped
+            }
+            NotificationCenter.default.removeObserver(self)
+        }
+        
+        func resetAudioSession() {
+            do {
+                let session = AVAudioSession.sharedInstance()
+                try session.setCategory(.playback, mode: .default, options: [])
+                try session.setActive(true, options: [])
+            } catch {
+                handle(error: error)
+            }
+        }
+        
         cells[node.message.messageId]?.object?.style = .playing
         if let playingMessageId = playingNode?.message.messageId {
             if playingMessageId == node.message.messageId {
                 queue.async {
+                    resetAudioSession()
                     self.player?.play()
                 }
                 return
@@ -42,16 +61,14 @@ class AudioManager {
             }
         }
         queue.async {
-            let center = NotificationCenter.default
             do {
                 self.playingNode = nil
                 self.player?.stop()
                 self.player = nil
                 
-                let session = AVAudioSession.sharedInstance()
-                try session.setCategory(.playback, mode: .default, options: [])
-                try session.setActive(true, options: [])
+                resetAudioSession()
                 
+                let center = NotificationCenter.default
                 center.addObserver(self,
                                    selector: #selector(AudioManager.audioSessionInterruption(_:)),
                                    name: AVAudioSession.interruptionNotification,
@@ -76,10 +93,7 @@ class AudioManager {
                     AudioJobQueue.shared.addJob(job: job)
                 }
             } catch {
-                DispatchQueue.main.sync {
-                    self.cells[node.message.messageId]?.object?.style = .stopped
-                }
-                center.removeObserver(self)
+                handle(error: error)
             }
         }
     }

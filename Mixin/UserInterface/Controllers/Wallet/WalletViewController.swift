@@ -65,9 +65,6 @@ extension WalletViewController: ContainerViewControllerDelegate {
         alc.addAction(UIAlertAction(title: Localized.WALLET_MENU_SHOW_HIDDEN_ASSETS, style: .default, handler: { [weak self](_) in
             self?.navigationController?.pushViewController(HiddenAssetViewController.instance(), animated: true)
         }))
-        alc.addAction(UIAlertAction(title: Localized.WALLET_SETTING, style: .default, handler: { [weak self](_) in
-            self?.navigationController?.pushViewController(WalletSettingViewController.instance(), animated: true)
-        }))
         alc.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
     }

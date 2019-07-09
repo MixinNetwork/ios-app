@@ -27,22 +27,21 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     
     var style: Style = .stopped {
         didSet {
+            timer?.invalidate()
+            timer = nil
             switch style {
             case .playing:
                 playbackStateImageView.image = AudioMessageCell.stopImage
+                updateWaveformProgress()
                 timer = Timer(timeInterval: waveformUpdateInterval, repeats: true, block: { [weak self] (_) in
                     self?.updateWaveformProgress()
                 })
                 RunLoop.main.add(timer!, forMode: .common)
             case .stopped:
                 playbackStateImageView.image = AudioMessageCell.playImage
-                timer?.invalidate()
-                timer = nil
                 waveformMaskView.frame = .zero
             case .paused:
                 playbackStateImageView.image = AudioMessageCell.playImage
-                timer?.invalidate()
-                timer = nil
                 updateWaveformProgress()
             }
         }
@@ -105,7 +104,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     }
     
     private func updateWaveformProgress() {
-        guard let player = AudioManager.shared.player else {
+        guard let player = AudioManager.shared.player, AudioManager.shared.playingNode?.message.messageId == viewModel?.message.messageId else {
             return
         }
         let progress = player.currentTime * millisecondsPerSecond / (duration - waveformUpdateInterval * millisecondsPerSecond)

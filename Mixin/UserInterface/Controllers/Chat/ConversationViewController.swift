@@ -347,7 +347,7 @@ class ConversationViewController: UIViewController {
             case .success(let userResponse):
                 weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
             case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -366,7 +366,7 @@ class ConversationViewController: UIViewController {
             case .success(let userResponse):
                 weakSelf.updateOwnerUser(withUserResponse: userResponse, updateDatabase: true)
             case let .failure(error):
-                showHud(style: .error, text: error.localizedDescription)
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
     }
@@ -811,10 +811,10 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                     case let .success(sticker):
                         DispatchQueue.global().async {
                             StickerDAO.shared.insertOrUpdateFavoriteSticker(sticker: sticker)
-                            showHud(style: .notification, text: Localized.TOAST_ADDED)
+                            showAutoHiddenHud(style: .notification, text: Localized.TOAST_ADDED)
                         }
                     case let .failure(error):
-                        showHud(style: .error, text: error.localizedDescription)
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
                     }
                 })
             } else {
@@ -960,15 +960,15 @@ extension ConversationViewController: AppButtonGroupMessageCellDelegate {
 extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
     
     func attachmentLoadingCellDidSelectNetworkOperation(_ cell: MessageCell & AttachmentLoadingMessageCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel, let mediaStatus = viewModel.mediaStatus else {
+        guard let indexPath = tableView.indexPath(for: cell), let viewModel = dataSource?.viewModel(for: indexPath) as? MessageViewModel & AttachmentLoadingViewModel else {
             return
         }
-        switch mediaStatus {
-        case MediaStatus.CANCELED.rawValue:
+        switch viewModel.operationButtonStyle {
+        case .download, .upload:
             viewModel.beginAttachmentLoading()
-        case MediaStatus.PENDING.rawValue:
+        case .busy:
             viewModel.cancelAttachmentLoading(markMediaStatusCancelled: true)
-        default:
+        case .expired, .finished:
             break
         }
     }
@@ -992,7 +992,7 @@ extension ConversationViewController: CoreTextLabelDelegate {
         }))
         alert.addAction(UIAlertAction(title: Localized.CHAT_MESSAGE_MENU_COPY, style: .default, handler: { (_) in
             UIPasteboard.general.string = url.absoluteString
-            showHud(style: .notification, text: Localized.TOAST_COPIED)
+            showAutoHiddenHud(style: .notification, text: Localized.TOAST_COPIED)
 
         }))
         alert.addAction(UIAlertAction(title: Localized.DIALOG_BUTTON_CANCEL, style: .cancel, handler: nil))

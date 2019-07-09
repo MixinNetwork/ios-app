@@ -115,9 +115,9 @@ extension AddressView: PinFieldDelegate {
                     self?.pinField.resignFirstResponder()
                     AddressDAO.shared.deleteAddress(assetId: assetId, addressId: addressId)
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
-                    showHud(style: .notification, text: R.string.localizable.toast_deleted())
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.toast_deleted())
                 case let .failure(error):
-                    showHud(style: .error, text: error.localizedDescription)
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                     self?.superView?.dismissPopupControllerAnimated()
                 }
             }
@@ -133,9 +133,9 @@ extension AddressView: PinFieldDelegate {
                     self?.pinField.resignFirstResponder()
                     AddressDAO.shared.insertOrUpdateAddress(addresses: [address])
                     WalletUserDefault.shared.lastInputPinTime = Date().timeIntervalSince1970
-                    showHud(style: .notification, text: Localized.TOAST_SAVED)
+                    showAutoHiddenHud(style: .notification, text: Localized.TOAST_SAVED)
                 case let .failure(error):
-                    showHud(style: .error, text: error.localizedDescription)
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
                     self?.superView?.dismissPopupControllerAnimated()
                 }
             }

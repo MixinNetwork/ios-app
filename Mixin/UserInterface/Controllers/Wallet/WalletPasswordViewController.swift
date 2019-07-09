@@ -21,6 +21,7 @@ class WalletPasswordViewController: ContinueButtonViewController {
         case wallet
         case transfer(user: UserItem)
         case changePhone
+        case setEmergencyContact
     }
 
     private var dismissTarget: DismissTarget?
@@ -116,27 +117,31 @@ class WalletPasswordViewController: ContinueButtonViewController {
                 case let .transfer(user):
                     self?.navigationController?.pushViewController(withBackChat: SendViewController.instance(asset: nil, type: .contact(user)))
                 case .changePhone:
-                    guard let navigation = weakSelf.navigationController else {
-                        return
-                    }
-                    var viewControllers: [UIViewController] = navigation.viewControllers
-                    while (viewControllers.count > 0 && viewControllers.last is WalletPasswordViewController) {
-                        viewControllers.removeLast()
-                    }
-                    let viewController = ChangeNumberNavigationController(rootViewController: R.storyboard.contact.verifyPin()!)
-                    navigation.present(viewController, animated: true, completion: {
-                        navigation.setViewControllers(viewControllers, animated: false)
-                    })
+                    let vc = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
+                    self?.removeWalletPasswordAndPresent(vc)
+                case .setEmergencyContact:
+                    let vc = VerifyPinNavigationController(rootViewController: EmergencyContactVerifyPinViewController())
+                    self?.removeWalletPasswordAndPresent(vc)
                 }
             } else {
                 weakSelf.popToLastController()
             }
         })
     }
-
-    struct PasswordTransferData {
-        let user: UserItem!
+    
+    private func removeWalletPasswordAndPresent(_ viewController: UIViewController) {
+        guard let navigationController = navigationController else {
+            return
+        }
+        var viewControllers: [UIViewController] = navigationController.viewControllers
+        while (viewControllers.count > 0 && viewControllers.last is WalletPasswordViewController) {
+            viewControllers.removeLast()
+        }
+        navigationController.present(viewController, animated: true, completion: {
+            navigationController.setViewControllers(viewControllers, animated: false)
+        })
     }
+    
 }
 
 extension WalletPasswordViewController: MixinNavigationAnimating {

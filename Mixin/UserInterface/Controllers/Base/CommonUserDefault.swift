@@ -53,6 +53,15 @@ class CommonUserDefault {
     private var keyRecallTips: String {
         return "default_recall_tips_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyAutoDownloadPhotos: String {
+        return "auto_download_photos_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyAutoDownloadVideos: String {
+        return "auto_download_videos_\(AccountAPI.shared.accountIdentityNumber)"
+    }
+    private var keyAutoDownloadFiles: String {
+        return "auto_download_files_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     
     enum BackupCategory: String {
         case daily
@@ -61,8 +70,25 @@ class CommonUserDefault {
         case off
     }
     
+    enum AutoDownload: Int {
+        case never = 0
+        case wifi
+        case wifiAndCellular
+        
+        var description: String {
+            switch self {
+            case .never:
+                return R.string.localizable.setting_auto_download_never()
+            case .wifi:
+                return R.string.localizable.setting_auto_download_wifi()
+            case .wifiAndCellular:
+                return R.string.localizable.setting_auto_download_wifi_cellular()
+            }
+        }
+    }
+    
     private let session = UserDefaults(suiteName: SuiteName.common)!
-
+    
     var isRecallTips: Bool {
         get {
             return session.bool(forKey: keyRecallTips)
@@ -257,6 +283,45 @@ class CommonUserDefault {
         }
         recentlyUsedAppIds = ids
         NotificationCenter.default.post(name: CommonUserDefault.didChangeRecentlyUsedAppIdsNotification, object: ids)
+    }
+    
+    var autoDownloadPhotos: AutoDownload {
+        get {
+            if let value = session.object(forKey: keyAutoDownloadPhotos) as? Int, let status = AutoDownload(rawValue: value) {
+                return status
+            } else {
+                return .wifiAndCellular
+            }
+        }
+        set {
+            session.set(newValue.rawValue, forKey: keyAutoDownloadPhotos)
+        }
+    }
+    
+    var autoDownloadVideos: AutoDownload {
+        get {
+            if let value = session.object(forKey: keyAutoDownloadVideos) as? Int, let status = AutoDownload(rawValue: value) {
+                return status
+            } else {
+                return .never
+            }
+        }
+        set {
+            session.set(newValue.rawValue, forKey: keyAutoDownloadVideos)
+        }
+    }
+    
+    var autoDownloadFiles: AutoDownload {
+        get {
+            if let value = session.object(forKey: keyAutoDownloadFiles) as? Int, let status = AutoDownload(rawValue: value) {
+                return status
+            } else {
+                return .never
+            }
+        }
+        set {
+            session.set(newValue.rawValue, forKey: keyAutoDownloadFiles)
+        }
     }
     
 }

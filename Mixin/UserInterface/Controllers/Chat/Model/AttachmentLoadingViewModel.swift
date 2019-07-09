@@ -1,6 +1,7 @@
 import Foundation
 
 protocol AttachmentLoadingViewModel: class {
+    var isLoading: Bool { get set }
     var progress: Double? { get set }
     var showPlayIconAfterFinished: Bool { get }
     var operationButtonStyle: NetworkOperationButton.Style { get set }
@@ -49,6 +50,7 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
             message.mediaStatus = newValue
             if newValue != MediaStatus.PENDING.rawValue {
                 progress = nil
+                isLoading = false
             }
             updateOperationButtonStyle()
         }
@@ -65,11 +67,15 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
         }
     }
     
-    internal func updateOperationButtonStyle() {
+    func updateOperationButtonStyle() {
         if let mediaStatus = mediaStatus {
             switch mediaStatus {
             case MediaStatus.PENDING.rawValue:
-                operationButtonStyle = .busy(progress: 0)
+                if isLoading || shouldUpload {
+                    operationButtonStyle = .busy(progress: 0)
+                } else {
+                    fallthrough
+                }
             case MediaStatus.CANCELED.rawValue:
                 if shouldUpload {
                     operationButtonStyle = .upload

@@ -2,6 +2,7 @@ import UIKit
 
 class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
 
+    var isLoading = false
     var progress: Double?
     var showPlayIconAfterFinished: Bool = false
     var operationButtonStyle: NetworkOperationButton.Style = .finished(showPlayIcon: false)
@@ -11,7 +12,16 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     var automaticallyLoadsAttachment: Bool {
-        return false
+        let shouldAutoDownload: Bool
+        switch CommonUserDefault.shared.autoDownloadFiles {
+        case .never:
+            shouldAutoDownload = false
+        case .wifi:
+            shouldAutoDownload = NetworkManager.shared.isReachableOnWiFi
+        case .wifiAndCellular:
+            shouldAutoDownload = true
+        }
+        return !shouldUpload && shouldAutoDownload
     }
     
     var automaticallyCancelAttachmentLoading: Bool {
@@ -35,6 +45,7 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
             job = FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType)
         }
         FileJobQueue.shared.addJob(job: job)
+        isLoading = true
     }
     
     func cancelAttachmentLoading(markMediaStatusCancelled: Bool) {

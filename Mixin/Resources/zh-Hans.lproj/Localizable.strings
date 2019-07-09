@@ -35,14 +35,16 @@
 "action_copy" = "复制";
 "action_authorize" = "授权";
 "action_deauthorize" = "取消授权";
-"action_delete_me" = "在我的设备上删除";
-"action_delete_everyone" = "在所有人设备上删除";
+"action_delete_me" = "删除";
+"action_delete_everyone" = "撤回";
 "action_learn_more" = "了解更多";
+"action_later" = "稍后";
 "menu_delete" = "删除";
 "menu_edit" = "编辑";
 "no_result" = "未找到相关内容";
 "title_loading" = "正在加载...";
 "all_photos" = "所有照片";
+"title_help" = "帮助";
 
 "connection_hint_connecting" = "正在连接";
 "connection_hint_progress" = "正在同步 %@%%";
@@ -98,18 +100,24 @@
 // Login
 "navigation_title_select_country" = "选择一个国家";
 "navigation_title_enter_mobile_number" = "输入你的手机号码";
-"navigation_title_enter_verification_code" = "请输入发送至以下号码的 4 位验证码： %@";
+"navigation_title_enter_verification_code" = "请输入发送至以下号码的4位验证码： %@";
 "navigation_title_enter_name" = "名字";
+"navigation_title_enter_emergency_contact_id" = "输入紧急联系人的 Mixin ID";
+"navigation_title_enter_emergency_contact_verification_code" = "请输入发送至以下 Mixin ID 的 4 位验证码：%@";
 "landing_welcome_title" = "欢迎使用 Mixin";
 "text_intro" = "继续使用即表示你同意 %@ 和 %@";
 "text_mobile_number_privacy" = "我们不会公开你的手机号码";
 "text_confirm_send_code" = "确认你的手机号码 %@";
 "text_invalid_verification_code" = "验证码不正确。";
+"text_invalid_emergency_id" = "紧急联系人不正确";
 "button_title_agree_and_continue" = "同意并继续";
 "button_title_terms_of_service" = "服务条款";
 "button_title_privacy_policy" = "隐私政策";
 "button_title_resend_code" = "重发验证码";
 "button_title_resend_code_pending" = "%@ 后重新发送验证码";
+"button_title_help" = "需要帮助？";
+"button_title_cant_receive_code" = "没有收到验证码";
+"button_title_phone_number_lost" = "手机号码丢失了？";
 "header_title_current_selected" = "当前选择";
 "header_title_current_location" = "当前位置";
 "placeholder_search_bar" = "搜索国家";
@@ -505,6 +513,7 @@
 "setting_privacy_and_security" = "隐私和安全";
 "setting_privacy_and_security_title" = "隐私";
 "setting_privacy_and_security_summary" = "设置谁可以给你发消息或添加到群组";
+"setting_data_and_storage" = "数据和存储";
 "setting_blocked_user_count_suffix" = " 联系人";
 "setting_blocked_user_count_none" = "无";
 "setting_about" = "关于";
@@ -525,11 +534,13 @@
 "setting_header_conversation_source" = "谁可以加我入群";
 "setting_source_everybody" = "任何人";
 "setting_source_contacts" = "我的联系人";
-"setting_storage_usage" = "存储空间";
 "setting_storage_photos" = "图片";
 "setting_storage_videos" = "视频";
 "setting_storage_audios" = "音频";
 "setting_storage_files" = "文件";
+"setting_emergency_contact" = "紧急联系人";
+"setting_title_select_emergency_contact" = "选择紧急联系人";
+"setting_change_emergency_contact_success" = "成功设置紧急联系人";
 "setting_logout" = "退出登录";
 "setting_notification_message_preview" = "显示消息内容";
 "setting_backup_title" = "聊天记录备份";
@@ -548,6 +559,20 @@
 "setting_backup_last" = "上次备份是%@，占用空间 %@。";
 "setting_backup_progress" = "正在备份 %@";
 "setting_restore_progress" = "正在恢复 %@";
+"setting_auto_download_never" = "关闭";
+"setting_auto_download_wifi" = "WLAN";
+"setting_auto_download_wifi_cellular" = "WLAN 与蜂窝移动网";
+"setting_auto_download_hint" = "媒体自动下载设定，所有语音消息将自动下载。";
+
+// Emergency
+"emergency_view" = "查看紧急联系人";
+"emergency_change" = "修改紧急联系人";
+"emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
+"emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人索取 Mixin ID 与验证码。阅读紧急联系人了解更多。";
+"emergency_tip_link" = "紧急联系人";
+"emergency_pin_protection_hint" = "紧急联系人经支付密码加密保护";
+"emergency_change_number_tip" = "立即更换手机号？";
+"enable_emergency_contact" = "启用紧急联系人";
 
 // Notifications
 "notification_reply" = "回复";

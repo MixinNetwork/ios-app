@@ -109,7 +109,7 @@
 "text_mobile_number_privacy" = "我们不会公开你的手机号码";
 "text_confirm_send_code" = "确认你的手机号码 %@";
 "text_invalid_verification_code" = "验证码不正确。";
-"text_invalid_emergency_id" = "紧急联系人不正确。";
+"text_invalid_emergency_id" = "紧急联系人不正确";
 "button_title_agree_and_continue" = "同意并继续";
 "button_title_terms_of_service" = "服务条款";
 "button_title_privacy_policy" = "隐私政策";
@@ -562,13 +562,13 @@
 "setting_auto_download_never" = "关闭";
 "setting_auto_download_wifi" = "WLAN";
 "setting_auto_download_wifi_cellular" = "WLAN 与蜂窝移动网";
-"setting_auto_download_hint" = "修改媒体自动下载设定。语音消息将自动下载";
+"setting_auto_download_hint" = "媒体自动下载设定，所有语音消息将自动下载。";
 
 // Emergency
 "emergency_view" = "查看紧急联系人";
 "emergency_change" = "修改紧急联系人";
 "emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
-"emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人取得 Mixin ID 与验证码。阅读紧急联系人了解更多。";
+"emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人索取 Mixin ID 与验证码。阅读紧急联系人了解更多。";
 "emergency_tip_link" = "紧急联系人";
 "emergency_pin_protection_hint" = "紧急联系人经支付密码加密保护";
 "emergency_change_number_tip" = "立即更换手机号？";

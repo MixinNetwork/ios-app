@@ -62,6 +62,10 @@ class AudioManager {
         }
         queue.async {
             do {
+                MessageDAO.shared.updateMediaStatus(messageId: node.message.messageId,
+                                                    status: .READ,
+                                                    conversationId: node.message.conversationId)
+                
                 self.playingNode = nil
                 self.player?.stop()
                 self.player = nil

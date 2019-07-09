@@ -201,9 +201,9 @@ final class MessageDAO {
         guard MixinDatabase.shared.update(maps: [(Message.Properties.mediaStatus, status.rawValue)], tableName: Message.tableName, condition: Message.Properties.messageId == messageId && Message.Properties.category != MessageCategory.MESSAGE_RECALL.rawValue) else {
             return
         }
-
+        
         let change = ConversationChange(conversationId: conversationId, action: .updateMediaStatus(messageId: messageId, mediaStatus: status))
-        NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
+        NotificationCenter.default.postOnMain(name: .ConversationDidChange, object: change)
     }
 
     func updateOldStickerMessages() {

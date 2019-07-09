@@ -399,6 +399,8 @@ class ConversationViewController: UIViewController {
                 if AudioManager.shared.playingNode?.message.messageId == message.messageId, AudioManager.shared.player?.status == .playing {
                     AudioManager.shared.pause()
                 } else {
+                    (viewModel as? AudioMessageViewModel)?.mediaStatus = MediaStatus.READ.rawValue
+                    (cell as? AudioMessageCell)?.updateUnreadStyle()
                     let node = AudioManager.Node(message: message, path: url.path)
                     AudioManager.shared.play(node: node)
                 }

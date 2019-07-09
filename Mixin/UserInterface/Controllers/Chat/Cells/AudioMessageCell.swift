@@ -27,6 +27,8 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
     
     var style: Style = .stopped {
         didSet {
+            timer?.invalidate()
+            timer = nil
             switch style {
             case .playing:
                 playbackStateImageView.image = AudioMessageCell.stopImage
@@ -36,13 +38,9 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
                 RunLoop.main.add(timer!, forMode: .common)
             case .stopped:
                 playbackStateImageView.image = AudioMessageCell.playImage
-                timer?.invalidate()
-                timer = nil
                 waveformMaskView.frame = .zero
             case .paused:
                 playbackStateImageView.image = AudioMessageCell.playImage
-                timer?.invalidate()
-                timer = nil
                 updateWaveformProgress()
             }
         }

@@ -71,7 +71,7 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
         if let mediaStatus = mediaStatus {
             switch mediaStatus {
             case MediaStatus.PENDING.rawValue:
-                if isLoading {
+                if isLoading || shouldUpload {
                     operationButtonStyle = .busy(progress: 0)
                 } else {
                     fallthrough

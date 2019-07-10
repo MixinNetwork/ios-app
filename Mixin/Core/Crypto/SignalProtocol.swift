@@ -22,12 +22,15 @@ class SignalProtocol {
         }
         UserDefaults.standard.set(localRegistrationId, forKey: PreKeyUtil.LOCAL_REGISTRATION_ID)
 
-        guard let identityKeyPair = try? Signal.generateIdentityKeyPair() else {
-            return
+        do {
+            let identityKeyPair = try Signal.generateIdentityKeyPair()
+            DispatchQueue.global().async {
+                try? FileManager.default.removeItem(atPath: MixinFile.signalDatabasePath)
+                IdentityDao.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
+            }
+        } catch {
+            UIApplication.traceError(error)
         }
-
-        IdentityDao.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
-        print("insert success identitiy")
     }
 
     func getRegistrationId() -> UInt32 {

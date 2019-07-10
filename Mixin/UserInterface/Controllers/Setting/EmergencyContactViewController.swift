@@ -66,6 +66,7 @@ final class EmergencyContactViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if hasEmergencyContact {
             switch indexPath.section {
             case 0:
@@ -104,8 +105,13 @@ final class EmergencyContactViewController: UITableViewController {
     }
     
     private func removeEmergencyContact() {
-        let validator = RemoveEmergencyContactValidationViewController()
-        present(validator, animated: true, completion: nil)
+        let alert = UIAlertController(title: R.string.localizable.emergency_tip_remove(), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.action_remove(), style: .destructive, handler: { (_) in
+            let validator = RemoveEmergencyContactValidationViewController()
+            self.present(validator, animated: true, completion: nil)
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
     private func enableEmergencyContact() {

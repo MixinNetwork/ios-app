@@ -503,6 +503,7 @@
 "emergency_view" = "View emergency contact";
 "emergency_change" = "Change emergency contact";
 "emergency_remove" = "Remove emergency contact";
+"emergency_tip_remove" = "Remove emergency contact for sure?";
 "emergency_tip_before" = "The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
 "emergency_tip_after" = "When you lose your mobile number, please contact your emergency contact by phone or other means to get the Mixin ID and verification code. Read our Emergency Contact to learn more.";
 "emergency_tip_link" = "Emergency Contact";

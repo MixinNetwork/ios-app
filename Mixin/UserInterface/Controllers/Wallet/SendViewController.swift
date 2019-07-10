@@ -38,6 +38,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
     private var targetAddress: Address?
     private var isInputAssetAmount = true
     private var adjustBottomConstraintWhenKeyboardFrameChanges = true
+    private var newAddressTips = false
     
     private lazy var tranceId = UUID().uuidString.lowercased()
     private lazy var balanceInputAccessoryView: BalanceInputAccessoryView = {
@@ -146,6 +147,22 @@ class SendViewController: KeyboardBasedLayoutViewController {
         
         continueButton.isEnabled = amountText.doubleValue > 0
     }
+
+    private func hasFirstWithdrawal(asset: AssetItem, addressId: String) -> Bool {
+        guard !newAddressTips else {
+            return false
+        }
+        guard !WalletUserDefault.shared.depositWithdrawalTip.contains(addressId) else {
+            return false
+        }
+
+        let amountText = amountTextField.text ?? ""
+        if isInputAssetAmount {
+            return amountText.doubleValue * asset.priceUsd.doubleValue > 10
+        } else {
+            return amountText.doubleValue > 10
+        }
+    }
     
     @IBAction func continueAction(_ sender: Any) {
         guard let asset = self.asset else {
@@ -178,6 +195,21 @@ class SendViewController: KeyboardBasedLayoutViewController {
                 showAutoHiddenHud(style: .error, text: Localized.WITHDRAWAL_MINIMUM_AMOUNT(amount: address.dust, symbol: asset.symbol))
                 return
             }
+            guard !hasFirstWithdrawal(asset: asset, addressId: address.addressId) else {
+                newAddressTips = true
+                WithdrawalTipWindow.instance().render(asset: asset) { [weak self](isContinue: Bool) in
+                    guard let weakSelf = self else {
+                        return
+                    }
+                    if isContinue {
+                        payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: weakSelf.tranceId, amountUsd: amountUsd, textfield: weakSelf.amountTextField)
+                    } else {
+                        weakSelf.amountTextField.becomeFirstResponder()
+                    }
+                }.presentPopupControllerAnimated()
+                return
+            }
+
             payWindow.presentPopupControllerAnimated(asset: asset, address: address, amount: amount, memo: memo, trackId: tranceId, amountUsd: amountUsd, textfield: amountTextField)
         }
     }

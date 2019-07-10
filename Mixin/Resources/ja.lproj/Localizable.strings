@@ -494,6 +494,7 @@
 // Emergency
 "emergency_view" = "緊急連絡先を表示";
 "emergency_change" = "緊急連絡先を変更";
+"emergency_remove" = "緊急連絡先を削除";
 "emergency_tip_before" = "The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
 "emergency_tip_after" = "When you lose your mobile number, please contact your emergency contact by phone or other means to get the Mixin ID and verification code. Read our Emergency Contact to learn more.";
 "emergency_tip_link" = "Emergency Contact";

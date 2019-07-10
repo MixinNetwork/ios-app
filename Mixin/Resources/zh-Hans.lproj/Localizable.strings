@@ -567,6 +567,7 @@
 // Emergency
 "emergency_view" = "查看紧急联系人";
 "emergency_change" = "修改紧急联系人";
+"emergency_remove" = "移除紧急联系人";
 "emergency_tip_before" = "紧急联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
 "emergency_tip_after" = "当您的电话号码无法使用时，请向紧急联系人索取 Mixin ID 与验证码。阅读紧急联系人了解更多。";
 "emergency_tip_link" = "紧急联系人";

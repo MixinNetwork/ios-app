@@ -27,7 +27,7 @@ final class EmergencyContactViewController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return hasEmergencyContact ? 2 : 1
+        return hasEmergencyContact ? 3 : 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -37,13 +37,20 @@ final class EmergencyContactViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.setting, for: indexPath)!
         if hasEmergencyContact {
-            if indexPath.section == 0 {
+            switch indexPath.section {
+            case 0:
                 cell.titleLabel.text = R.string.localizable.emergency_view()
-            } else {
+                cell.accessoryImageView.isHidden = false
+                cell.titleLabel.textColor = .darkText
+            case 1:
                 cell.titleLabel.text = R.string.localizable.emergency_change()
+                cell.accessoryImageView.isHidden = false
+                cell.titleLabel.textColor = .darkText
+            default:
+                cell.titleLabel.text = R.string.localizable.emergency_remove()
+                cell.accessoryImageView.isHidden = true
+                cell.titleLabel.textColor = .walletRed
             }
-            cell.accessoryImageView.isHidden = false
-            cell.titleLabel.textColor = .darkText
         } else {
             cell.titleLabel.text = R.string.localizable.enable_emergency_contact()
             cell.accessoryImageView.isHidden = true
@@ -60,10 +67,13 @@ final class EmergencyContactViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if hasEmergencyContact {
-            if indexPath.section == 0 {
+            switch indexPath.section {
+            case 0:
                 viewEmergencyContact()
-            } else {
+            case 1:
                 changeEmergencyContact()
+            default:
+                removeEmergencyContact()
             }
         } else {
             enableEmergencyContact()
@@ -91,6 +101,11 @@ final class EmergencyContactViewController: UITableViewController {
             let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact)
             navigationController?.pushViewController(vc, animated: true)
         }
+    }
+    
+    private func removeEmergencyContact() {
+        let validator = RemoveEmergencyContactValidationViewController()
+        present(validator, animated: true, completion: nil)
     }
     
     private func enableEmergencyContact() {

@@ -9,7 +9,7 @@ class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewC
     override func viewDidLoad() {
         super.viewDidLoad()
         helpButton.setTitle(R.string.localizable.button_title_help(), for: .normal)
-        helpButton.setTitleColor(UIColor(displayP3RgbValue: 0xF67070), for: .normal)
+        helpButton.setTitleColor(.walletRed, for: .normal)
         helpButton.titleLabel?.font = .systemFont(ofSize: 14)
         helpButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         helpButton.addTarget(self, action: #selector(helpAction), for: .touchUpInside)

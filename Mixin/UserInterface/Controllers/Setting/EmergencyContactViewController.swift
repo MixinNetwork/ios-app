@@ -27,7 +27,7 @@ final class EmergencyContactViewController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return hasEmergencyContact ? 2 : 1
+        return hasEmergencyContact ? 3 : 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -37,13 +37,20 @@ final class EmergencyContactViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.setting, for: indexPath)!
         if hasEmergencyContact {
-            if indexPath.section == 0 {
+            switch indexPath.section {
+            case 0:
                 cell.titleLabel.text = R.string.localizable.emergency_view()
-            } else {
+                cell.accessoryImageView.isHidden = false
+                cell.titleLabel.textColor = .darkText
+            case 1:
                 cell.titleLabel.text = R.string.localizable.emergency_change()
+                cell.accessoryImageView.isHidden = false
+                cell.titleLabel.textColor = .darkText
+            default:
+                cell.titleLabel.text = R.string.localizable.emergency_remove()
+                cell.accessoryImageView.isHidden = true
+                cell.titleLabel.textColor = .walletRed
             }
-            cell.accessoryImageView.isHidden = false
-            cell.titleLabel.textColor = .darkText
         } else {
             cell.titleLabel.text = R.string.localizable.enable_emergency_contact()
             cell.accessoryImageView.isHidden = true
@@ -54,17 +61,20 @@ final class EmergencyContactViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
-        view.text = hasEmergencyContact ? nil : R.string.localizable.emergency_tip_before()
         view.shadowView.hasLowerShadow = false
         return view
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if hasEmergencyContact {
-            if indexPath.section == 0 {
+            switch indexPath.section {
+            case 0:
                 viewEmergencyContact()
-            } else {
+            case 1:
                 changeEmergencyContact()
+            default:
+                removeEmergencyContact()
             }
         } else {
             enableEmergencyContact()
@@ -92,6 +102,16 @@ final class EmergencyContactViewController: UITableViewController {
             let vc = WalletPasswordViewController.instance(dismissTarget: .setEmergencyContact)
             navigationController?.pushViewController(vc, animated: true)
         }
+    }
+    
+    private func removeEmergencyContact() {
+        let alert = UIAlertController(title: R.string.localizable.emergency_tip_remove(), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.action_remove(), style: .destructive, handler: { (_) in
+            let validator = RemoveEmergencyContactValidationViewController()
+            self.present(validator, animated: true, completion: nil)
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
     private func enableEmergencyContact() {

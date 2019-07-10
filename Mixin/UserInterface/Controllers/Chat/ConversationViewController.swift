@@ -884,6 +884,7 @@ extension ConversationViewController: UITableViewDelegate {
         }
         if let viewModel = dataSource.viewModel(for: indexPath) as? AttachmentLoadingViewModel, viewModel.automaticallyLoadsAttachment {
             viewModel.beginAttachmentLoading()
+            (cell as? AttachmentLoadingMessageCell)?.updateOperationButtonStyle()
         }
     }
     
@@ -972,6 +973,7 @@ extension ConversationViewController: AttachmentLoadingMessageCellDelegate {
         case .expired, .finished:
             break
         }
+        cell.updateOperationButtonStyle()
     }
     
 }

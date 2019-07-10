@@ -7,6 +7,7 @@ final class EmergencyAPI: BaseAPI {
     private enum Url {
         static let create = "emergency_verifications"
         static let show = "emergency_contact"
+        static let delete = "emergency_contact/delete"
         static func verify(id: String) -> String {
             return "emergency_verifications/" + id
         }
@@ -70,6 +71,13 @@ final class EmergencyAPI: BaseAPI {
         KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
             let param = ["pin": encryptedPin]
             request(method: .post, url: Url.show, parameters: param, completion: completion)
+        }
+    }
+    
+    func delete(pin: String, completion: @escaping (APIResult<Account>) -> Void) {
+        KeyUtil.aesEncrypt(pin: pin, completion: completion) { (encryptedPin) in
+            let param = ["pin": encryptedPin]
+            request(method: .post, url: Url.delete, parameters: param, completion: completion)
         }
     }
     

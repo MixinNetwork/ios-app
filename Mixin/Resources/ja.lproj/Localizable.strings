@@ -494,6 +494,8 @@
 // Emergency
 "emergency_view" = "緊急連絡先を表示";
 "emergency_change" = "緊急連絡先を変更";
+"emergency_remove" = "緊急連絡先を削除";
+"emergency_tip_remove" = "緊急連絡先の削除を確認してください";
 "emergency_tip_before" = "The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
 "emergency_tip_after" = "When you lose your mobile number, please contact your emergency contact by phone or other means to get the Mixin ID and verification code. Read our Emergency Contact to learn more.";
 "emergency_tip_link" = "Emergency Contact";
@@ -507,8 +509,7 @@
 "setting_notification_show" = "通知を表示";
 "setting_notification_sound" = "音声";
 "setting_notification_message" = "メッセージ通知";
-"setting_notification_message_summary" = "連絡先ページで特定のユーザーにカスタム通知を設定できます。
-";
+"setting_notification_message_summary" = "連絡先ページで特定のユーザーにカスタム通知を設定できます。";
 "setting_notification_group" = "グループ通知";
 "setting_notification_group_summary" = "グループ情報ページで特定のグループにカスタム通知を設定できます。";
 "setting_privacy_and_security" = "プライバシーとセキュリティ";

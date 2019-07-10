@@ -34,6 +34,9 @@ class DataMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     }
     
     func beginAttachmentLoading() {
+        defer {
+            updateOperationButtonStyle()
+        }
         guard message.mediaStatus == MediaStatus.PENDING.rawValue || message.mediaStatus == MediaStatus.CANCELED.rawValue else {
             return
         }

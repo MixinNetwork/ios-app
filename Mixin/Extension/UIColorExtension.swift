@@ -21,7 +21,7 @@ extension UIColor {
     static let shadow = UIColor(rgbValue: 0xC3C3C3)
     
     static let walletGreen = UIColor(rgbValue: 0x29BE73)
-    static let walletRed = UIColor(rgbValue: 0xF67070)
+    static let walletRed = UIColor(displayP3RgbValue: 0xF67070)
     static let walletGray = UIColor(rgbValue: 0xAAAAAA)
     
     static let hintBlue = UIColor(rgbValue: 0x1FB4FC)

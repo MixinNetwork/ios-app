@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="vpk-7x-aS6" customClass="WithdrawalTipWindow" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fuC-N5-Rgi">
+                    <rect key="frame" x="0.0" y="313" width="414" height="596"/>
+                    <subviews>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eUF-TX-avq">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="o6A-Tl-RqM"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="13"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="65Q-3F-reP">
+                            <rect key="frame" x="30" y="70" width="354" height="260"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EOS Withdrawal" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bma-M8-FfU">
+                                    <rect key="frame" x="109" y="0.0" width="136" height="21.5"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SKu-Fm-v5y">
+                                    <rect key="frame" x="57" y="21.5" width="240" height="16"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="16" id="ibW-4P-Qjy"/>
+                                    </constraints>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For the first withdraw to the new address, please try a small amount." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rm3-Re-MC5">
+                                    <rect key="frame" x="1.5" y="37.5" width="351.5" height="33.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" red="0.96470588239999999" green="0.43921568630000002" blue="0.43921568630000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <nil key="highlightedColor"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet_withdrawal_address_tips"/>
+                                    </userDefinedRuntimeAttributes>
+                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cZL-uy-KDo">
+                                    <rect key="frame" x="57" y="71" width="240" height="40"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="40" id="MAG-Nu-cHg"/>
+                                    </constraints>
+                                </view>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_withdrawal_tips" translatesAutoresizingMaskIntoConstraints="NO" id="J85-Um-8kl">
+                                    <rect key="frame" x="102" y="111" width="150" height="149"/>
+                                </imageView>
+                            </subviews>
+                        </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hCZ-b5-DO0" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="105.5" y="406" width="203" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="42" id="0pe-Si-ppZ"/>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="3Ng-EL-Ic6"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
+                            <state key="normal" title="Change Amount (3)"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="dialog_button_got_it"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="changeAmountAction:" destination="vpk-7x-aS6" eventType="touchUpInside" id="UKK-vn-hIy"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Lr-oD-oU5">
+                            <rect key="frame" x="151.5" y="478" width="111" height="41"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="contentEdgeInsets" minX="26" minY="12" maxX="26" maxY="12"/>
+                            <state key="normal" title="Continue">
+                                <color key="titleColor" red="0.23921568630000001" green="0.45882352939999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </state>
+                            <state key="disabled">
+                                <color key="titleColor" red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="action_continue"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="continueAction:" destination="vpk-7x-aS6" eventType="touchUpInside" id="hCe-IP-2qi"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="hCZ-b5-DO0" firstAttribute="top" secondItem="65Q-3F-reP" secondAttribute="bottom" constant="76" id="4ez-HI-OWm"/>
+                        <constraint firstItem="hCZ-b5-DO0" firstAttribute="centerX" secondItem="fuC-N5-Rgi" secondAttribute="centerX" id="8FP-dx-iRY"/>
+                        <constraint firstAttribute="trailing" secondItem="65Q-3F-reP" secondAttribute="trailing" constant="30" id="90Q-db-TVk"/>
+                        <constraint firstItem="65Q-3F-reP" firstAttribute="leading" secondItem="fuC-N5-Rgi" secondAttribute="leading" constant="30" id="Kg5-3x-EyE"/>
+                        <constraint firstItem="eUF-TX-avq" firstAttribute="leading" secondItem="fuC-N5-Rgi" secondAttribute="leading" id="Nag-Ur-vRq"/>
+                        <constraint firstItem="0Lr-oD-oU5" firstAttribute="centerX" secondItem="fuC-N5-Rgi" secondAttribute="centerX" id="P24-xa-AkH"/>
+                        <constraint firstItem="65Q-3F-reP" firstAttribute="top" secondItem="eUF-TX-avq" secondAttribute="bottom" id="iM4-5b-r64"/>
+                        <constraint firstItem="0Lr-oD-oU5" firstAttribute="top" secondItem="hCZ-b5-DO0" secondAttribute="bottom" constant="30" id="mGt-D0-beD"/>
+                        <constraint firstAttribute="trailing" secondItem="eUF-TX-avq" secondAttribute="trailing" id="pHj-HJ-Ufu"/>
+                        <constraint firstItem="eUF-TX-avq" firstAttribute="top" secondItem="fuC-N5-Rgi" secondAttribute="top" id="tTq-1C-Jhb"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="13"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="fuC-N5-Rgi" firstAttribute="leading" secondItem="N35-7Y-xiH" secondAttribute="leading" id="BJx-dT-QCh"/>
+                <constraint firstAttribute="bottom" secondItem="fuC-N5-Rgi" secondAttribute="bottom" constant="-13" id="Gnc-SQ-TVz"/>
+                <constraint firstItem="N35-7Y-xiH" firstAttribute="trailing" secondItem="fuC-N5-Rgi" secondAttribute="trailing" id="Zcb-kA-3Ec"/>
+                <constraint firstItem="N35-7Y-xiH" firstAttribute="bottom" secondItem="0Lr-oD-oU5" secondAttribute="bottom" constant="30" id="eag-UC-AmA" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4">
+                            <real key="value" value="38"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
+                            <real key="value" value="32"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="inch4_7">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="N35-7Y-xiH"/>
+            <connections>
+                <outlet property="changeButton" destination="hCZ-b5-DO0" id="ILd-hL-oux"/>
+                <outlet property="continueButton" destination="0Lr-oD-oU5" id="Jql-8a-nBo"/>
+                <outlet property="popupView" destination="fuC-N5-Rgi" id="f7C-hb-8CK"/>
+                <outlet property="titleLabel" destination="bma-M8-FfU" id="xYB-cN-gJM"/>
+            </connections>
+            <point key="canvasLocation" x="25.5" y="52.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_withdrawal_tips" width="150" height="149"/>
+    </resources>
+</document>

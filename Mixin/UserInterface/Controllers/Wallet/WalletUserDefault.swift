@@ -31,6 +31,9 @@ class WalletUserDefault {
     private var keyDepositTipRemind: String {
         return "asset_deposit_tip_remind_\(AccountAPI.shared.accountIdentityNumber)"
     }
+    private var keyWithdrawalTip: String {
+        return "asset_withdrawal_tip_\(AccountAPI.shared.accountIdentityNumber)"
+    }
     
     let session = UserDefaults(suiteName: SuiteName.wallet)!
     let checkMaxInterval: Double = 60 * 60 * 24
@@ -44,6 +47,15 @@ class WalletUserDefault {
         }
         set {
             session.set(newValue, forKey: keyDepositTipRemind)
+        }
+    }
+
+    var depositWithdrawalTip: [String] {
+        get {
+            return session.stringArray(forKey: keyWithdrawalTip) ?? []
+        }
+        set {
+            session.set(newValue, forKey: keyWithdrawalTip)
         }
     }
 

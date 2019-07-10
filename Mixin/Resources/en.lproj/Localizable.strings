@@ -344,6 +344,9 @@
 "wallet_button_add_address" = "Tap to add address";
 "wallet_hint_transaction_fee" = "A transaction fee of %@ is required for withdrawing %@.";
 "wallet_password_address_tips" = "Save by PIN";
+"wallet_withdrawal_change_amount" = "Change Amount";
+"wallet_withdrawal_change_amount_count" = "Change Amount (%@)";
+"wallet_withdrawal_address_tips" = "For the first withdraw to the new address, please try a small amount.";
 "wallet_withdrawal_asset" = "%@ Withdrawal";
 "wallet_withdrawal_pay_password" = "Withdrawal with PIN";
 "wallet_withdrawal_reserve" = " %@ has a minimum %@ reserve requirement.";

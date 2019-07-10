@@ -273,6 +273,10 @@ extension PayView: PinFieldDelegate {
             switch result {
             case let .success(snapshot):
                 if weakSelf.isWithdrawal {
+                    if let address = weakSelf.address {
+                        WalletUserDefault.shared.depositWithdrawalTip.removeAll( where: { $0 == address.addressId })
+                        WalletUserDefault.shared.depositWithdrawalTip.append(address.addressId)
+                    }
                     ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(assetId: snapshot.assetId))
                 } else {
                     WalletUserDefault.shared.defalutTransferAssetId = assetId

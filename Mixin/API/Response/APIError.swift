@@ -51,6 +51,8 @@ extension APIError {
             return Localized.TRANSFER_ERROR_PIN_INCORRECT
         case 20120:
             return Localized.TRANSFER_ERROR_AMOUNT_TOO_SMALL
+        case 20129:
+            return R.string.localizable.text_invalid_code_too_frequent()
         case 20116:
             return Localized.GROUP_JOIN_FAIL_FULL
         case 20122:

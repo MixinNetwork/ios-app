@@ -110,6 +110,7 @@
 "text_confirm_send_code" = "确认你的手机号码 %@";
 "text_invalid_verification_code" = "验证码不正确。";
 "text_invalid_emergency_id" = "紧急联系人不正确";
+"text_invalid_code_too_frequent" = "发送验证码太频繁，请稍后再试";
 "button_title_agree_and_continue" = "同意并继续";
 "button_title_terms_of_service" = "服务条款";
 "button_title_privacy_policy" = "隐私政策";

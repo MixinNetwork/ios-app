@@ -38,7 +38,7 @@ class EmergencyContactIdVerificationViewController: LoginInfoInputViewController
                 if error.code == 20130 {
                     weakSelf.alert(R.string.localizable.text_invalid_emergency_id())
                 } else {
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    weakSelf.alert(error.localizedDescription)
                 }
             }
             weakSelf.continueButton.isBusy = false

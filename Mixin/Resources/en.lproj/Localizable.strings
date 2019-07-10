@@ -110,6 +110,7 @@
 "text_confirm_send_code" = "Please confirm the phone number %@";
 "text_invalid_verification_code" = "The code is incorrect.";
 "text_invalid_emergency_id" = "Invalid emergency contact.";
+"text_invalid_code_too_frequent" = "Send verification code too frequent, please try again later.";
 "button_title_agree_and_continue" = "Agree & Continue";
 "button_title_terms_of_service" = "Terms of Service";
 "button_title_privacy_policy" = "Privacy Policy";

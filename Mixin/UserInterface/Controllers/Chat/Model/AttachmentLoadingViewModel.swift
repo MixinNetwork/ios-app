@@ -82,7 +82,7 @@ extension AttachmentLoadingViewModel where Self: MessageViewModel {
                 } else {
                     operationButtonStyle = .download
                 }
-            case MediaStatus.DONE.rawValue:
+            case MediaStatus.DONE.rawValue, MediaStatus.READ.rawValue:
                 operationButtonStyle = .finished(showPlayIcon: showPlayIconAfterFinished)
             case MediaStatus.EXPIRED.rawValue:
                 operationButtonStyle = .expired

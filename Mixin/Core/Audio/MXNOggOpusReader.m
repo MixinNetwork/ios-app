@@ -21,7 +21,7 @@
         _file = op_open_file([_path UTF8String], &result);
         if (result != OPUS_OK) {
             if (outError) {
-                *outError = ErrorWithCodeAndOpusErrorCode(result, result);
+                *outError = ErrorWithCodeAndOpusErrorCode(MXNOggOpusErrorCodeOpenFile, result);
             }
             return nil;
         }

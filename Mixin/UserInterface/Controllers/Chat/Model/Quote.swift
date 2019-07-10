@@ -37,7 +37,7 @@ struct Quote {
             subtitle = message.quoteSubtitle
             
             var image: Image?
-            if message.mediaStatus == MediaStatus.DONE.rawValue {
+            if message.mediaStatus == MediaStatus.DONE.rawValue || message.mediaStatus == MediaStatus.READ.rawValue {
                 if message.category.hasSuffix("_IMAGE"), let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {
                     let url = MixinFile.url(ofChatDirectory: .photos, filename: mediaUrl)
                     image = .url(url)

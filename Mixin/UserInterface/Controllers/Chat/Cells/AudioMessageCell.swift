@@ -86,6 +86,7 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
             operationButton.isHidden = viewModel.operationButtonIsHidden
             playbackStateImageView.isHidden = viewModel.playbackStateIsHidden
             duration = Float64(viewModel.message.mediaDuration ?? 0)
+            updateUnreadStyle()
         }
         AudioManager.shared.register(cell: self, forMessageId: viewModel.message.messageId)
     }
@@ -101,6 +102,19 @@ class AudioMessageCell: CardMessageCell, AttachmentLoadingMessageCell {
         operationButton.style = viewModel.operationButtonStyle
         operationButton.isHidden = viewModel.operationButtonIsHidden
         playbackStateImageView.isHidden = viewModel.playbackStateIsHidden
+    }
+    
+    func updateUnreadStyle() {
+        guard let viewModel = viewModel as? AudioMessageViewModel else {
+            return
+        }
+        if viewModel.isUnread {
+            waveformView.tintColor = .highlightedText
+            lengthLabel.textColor = .highlightedText
+        } else {
+            waveformView.tintColor = .disabledGray
+            lengthLabel.textColor = UIColor(displayP3RgbValue: 0xB8BDC7)
+        }
     }
     
     private func updateWaveformProgress() {

@@ -25,7 +25,7 @@ class VideoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
         contentImageView.image = viewModel.thumbnail
         if let viewModel = viewModel as? VideoMessageViewModel, viewModel.duration != nil || viewModel.fileSize != nil {
-            let length = viewModel.message.mediaStatus == MediaStatus.DONE.rawValue
+            let length = viewModel.message.mediaStatus == MediaStatus.DONE.rawValue || viewModel.message.mediaStatus == MediaStatus.READ.rawValue
                 ? (viewModel.duration ?? viewModel.fileSize)
                 : (viewModel.fileSize ?? viewModel.duration)
             lengthLabel.text = length

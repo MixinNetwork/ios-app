@@ -49,19 +49,27 @@ class AudioManager {
         }
         
         cells[node.message.messageId]?.object?.style = .playing
-        if let playingMessageId = playingNode?.message.messageId {
-            if playingMessageId == node.message.messageId {
-                queue.async {
-                    resetAudioSession()
-                    self.player?.play()
-                }
-                return
-            } else {
-                cells[playingMessageId]?.object?.style = .stopped
+        
+        if node.message.messageId == playingNode?.message.messageId, let player = player {
+            queue.async {
+                resetAudioSession()
+                player.play()
             }
+            return
         }
+        
+        if let playingMessageId = playingNode?.message.messageId {
+            cells[playingMessageId]?.object?.style = .stopped
+        }
+        
         queue.async {
             do {
+                if node.message.mediaStatus != MediaStatus.READ.rawValue {
+                    MessageDAO.shared.updateMediaStatus(messageId: node.message.messageId,
+                                                        status: .READ,
+                                                        conversationId: node.message.conversationId)
+                }
+                
                 self.playingNode = nil
                 self.player?.stop()
                 self.player = nil
@@ -87,11 +95,7 @@ class AudioManager {
                 self.player!.onStatusChanged = self.playerStatusChanged
                 self.player!.play()
                 
-                if let nextNode = self.node(nextTo: node), nextNode.message.mediaStatus != MediaStatus.DONE.rawValue {
-                    let job = AudioDownloadJob(messageId: nextNode.message.messageId,
-                                               mediaMimeType: nextNode.message.mediaMimeType)
-                    AudioJobQueue.shared.addJob(job: job)
-                }
+                self.preloadAudio(nextTo: node.message)
             } catch {
                 handle(error: error)
             }
@@ -226,6 +230,17 @@ class AudioManager {
         }
         let path = MixinFile.url(ofChatDirectory: .audios, filename: filename).path
         return Node(message: nextMessage, path: path)
+    }
+    
+    private func preloadAudio(nextTo message: MessageItem) {
+        guard let next = MessageDAO.shared.getMessages(conversationId: message.conversationId, belowMessage: message, count: 1).first else {
+            return
+        }
+        guard next.category.hasSuffix("_AUDIO"), next.mediaStatus != MediaStatus.DONE.rawValue && next.mediaStatus != MediaStatus.READ.rawValue else {
+            return
+        }
+        let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
+        AudioJobQueue.shared.addJob(job: job)
     }
     
 }

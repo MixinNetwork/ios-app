@@ -2,6 +2,19 @@ import UIKit
 
 class WaveformView: UIView {
     
+    override var tintColor: UIColor! {
+        didSet {
+            guard tintColor != oldValue else {
+                return
+            }
+            CATransaction.performWithoutAnimation {
+                barLayers.forEach { (layer) in
+                    layer.fillColor = tintColor.cgColor
+                }
+            }
+        }
+    }
+    
     var waveform: Waveform? {
         didSet {
             guard waveform != oldValue else {

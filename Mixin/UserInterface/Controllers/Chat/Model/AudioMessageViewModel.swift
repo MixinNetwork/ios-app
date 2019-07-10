@@ -12,6 +12,11 @@ class AudioMessageViewModel: CardMessageViewModel, AttachmentLoadingViewModel {
     var operationButtonIsHidden = false
     var playbackStateIsHidden = true
     
+    var isUnread: Bool {
+        return message.userId != AccountAPI.shared.accountUserId
+            && mediaStatus != MediaStatus.READ.rawValue
+    }
+    
     var automaticallyLoadsAttachment: Bool {
         return true
     }

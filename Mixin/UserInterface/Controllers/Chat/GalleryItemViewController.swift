@@ -522,7 +522,7 @@ extension GalleryItemViewController {
                 mediaStatusView.isHidden = false
                 expiredHintLabel.isHidden = true
                 operationButton.style = .download
-            case .DONE:
+            case .DONE, .READ:
                 mediaStatusView.isHidden = true
                 expiredHintLabel.isHidden = true
                 operationButton.style = .finished(showPlayIcon: false)

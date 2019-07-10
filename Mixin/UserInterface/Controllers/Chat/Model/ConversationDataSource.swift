@@ -426,6 +426,9 @@ extension ConversationDataSource {
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, let cell = cell as? PhotoRepresentableMessageCell {
             cell.reloadMedia(viewModel: viewModel)
         }
+        if let cell = cell as? AudioMessageCell {
+            cell.updateUnreadStyle()
+        }
     }
     
     private func updateMediaProgress(messageId: String, progress: Double) {

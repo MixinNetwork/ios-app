@@ -263,4 +263,5 @@ enum MediaStatus: String {
     case DONE
     case CANCELED
     case EXPIRED
+    case READ
 }

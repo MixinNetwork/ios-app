@@ -318,6 +318,16 @@ extension GalleryItemViewController {
         }
     }
     
+    private var autoDownloadImages: Bool {
+        return CommonUserDefault.shared.autoDownloadPhotos == .wifiAndCellular
+            || (CommonUserDefault.shared.autoDownloadPhotos == .wifi && NetworkManager.shared.isReachableOnWiFi)
+    }
+    
+    private var autoDownloadVideos: Bool {
+        return CommonUserDefault.shared.autoDownloadVideos == .wifiAndCellular
+            || (CommonUserDefault.shared.autoDownloadVideos == .wifi && NetworkManager.shared.isReachableOnWiFi)
+    }
+    
     private func prepareForReuse() {
         scrollView.zoomScale = 1
         urlFromQRCode = nil
@@ -342,14 +352,17 @@ extension GalleryItemViewController {
             switch item.category {
             case .image:
                 loadImage(item: item)
+                if item.mediaStatus == .PENDING && autoDownloadImages {
+                    beginDownload()
+                }
             case .video:
                 loadVideo(item: item)
+                if item.mediaStatus == .PENDING && autoDownloadImages {
+                    beginDownload()
+                }
             }
             layoutImageView()
             layout(mediaStatus: item.mediaStatus)
-            if item.mediaStatus == .PENDING {
-                beginDownload()
-            }
         }
     }
     
@@ -496,17 +509,23 @@ extension GalleryItemViewController {
         if let mediaStatus = mediaStatus {
             switch mediaStatus {
             case .PENDING:
-                mediaStatusView.isHidden = false
-                expiredHintLabel.isHidden = true
-                operationButton.style = .busy(progress: 0)
-            case .DONE:
-                mediaStatusView.isHidden = true
-                expiredHintLabel.isHidden = true
-                operationButton.style = .finished(showPlayIcon: false)
+                let shouldAutoDownload = (item?.category == .image && autoDownloadImages)
+                    || (item?.category == .video && autoDownloadVideos)
+                if shouldAutoDownload {
+                    mediaStatusView.isHidden = false
+                    expiredHintLabel.isHidden = true
+                    operationButton.style = .busy(progress: 0)
+                } else {
+                    fallthrough
+                }
             case .CANCELED:
                 mediaStatusView.isHidden = false
                 expiredHintLabel.isHidden = true
                 operationButton.style = .download
+            case .DONE:
+                mediaStatusView.isHidden = true
+                expiredHintLabel.isHidden = true
+                operationButton.style = .finished(showPlayIcon: false)
             case .EXPIRED:
                 mediaStatusView.isHidden = false
                 expiredHintLabel.isHidden = false

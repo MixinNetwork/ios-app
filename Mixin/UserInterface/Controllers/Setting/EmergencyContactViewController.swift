@@ -54,7 +54,6 @@ final class EmergencyContactViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: footerReuseId) as! SeparatorShadowFooterView
-        view.text = hasEmergencyContact ? nil : R.string.localizable.emergency_tip_before()
         view.shadowView.hasLowerShadow = false
         return view
     }

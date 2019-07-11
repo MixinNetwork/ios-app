@@ -25,6 +25,14 @@ extension String {
             ?? 0
     }
     
+    var sqlEscaped: String {
+        return replacingOccurrences(of: "/", with: "//")
+            .replacingOccurrences(of: "%", with: "/%")
+            .replacingOccurrences(of: "_", with: "/_")
+            .replacingOccurrences(of: "[", with: "/[")
+            .replacingOccurrences(of: "]", with: "/]")
+    }
+    
     func md5() -> String {
         guard let messageData = data(using: .utf8) else {
             return self

@@ -103,7 +103,7 @@ final class MessageDAO {
     FROM messages m
     LEFT JOIN users u ON m.user_id = u.user_id
     WHERE conversation_id = ? AND m.status <> '\(MessageStatus.FAILED.rawValue)' AND (
-        (m.category LIKE '%_TEXT' AND m.content LIKE ?) OR (m.category LIKE '%_DATA' AND m.name LIKE ?)
+        (m.category LIKE '%_TEXT' AND m.content LIKE ? ESCAPE '/') OR (m.category LIKE '%_DATA' AND m.name LIKE ? ESCAPE '/')
     )
     """
     
@@ -338,7 +338,7 @@ final class MessageDAO {
             let cs = try MixinDatabase.shared.database.prepare(stmt)
             
             let bindingCounter = Counter(value: 0)
-            let wildcardedKeyword = "%\(keyword)%"
+            let wildcardedKeyword = "%\(keyword.sqlEscaped)%"
             cs.bind(conversationId, toIndex: bindingCounter.advancedValue)
             cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)
             cs.bind(wildcardedKeyword, toIndex: bindingCounter.advancedValue)

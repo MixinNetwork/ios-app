@@ -13,7 +13,7 @@ final class UserDAO {
     private static let sqlQueryContacts = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
     private static let sqlQueryUserById = "\(sqlQueryColumns) WHERE u.user_id = ?"
     private static let sqlQueryUserByIdentityNumber = "\(sqlQueryColumns) WHERE u.identity_number = ?"
-    private static let sqlQueryUserByKeyword = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND ((u.full_name LIKE ?) OR (u.identity_number LIKE ?) OR (u.phone LIKE ?))"
+    private static let sqlQueryUserByKeyword = "\(sqlQueryColumns) WHERE u.relationship = 'FRIEND' AND u.identity_number > '0' AND ((u.full_name LIKE ? ESCAPE '/') OR (u.identity_number LIKE ? ESCAPE '/') OR (u.phone LIKE ? ESCAPE '/'))"
     private static let sqlQueryUserByAppId = "\(sqlQueryColumns) WHERE u.app_id = ? LIMIT 1"
     private static let sqlQueryBlockedUsers = "\(sqlQueryColumns) WHERE relationship = 'BLOCKING'"
 
@@ -45,7 +45,7 @@ final class UserDAO {
     }
     
     func getUsers(keyword: String, limit: Int?) -> [UserItem] {
-        let keyword = "%\(keyword)%"
+        let keyword = "%\(keyword.sqlEscaped)%"
         var sql = UserDAO.sqlQueryUserByKeyword
         if let limit = limit {
             sql += " LIMIT \(limit)"

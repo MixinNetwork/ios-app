@@ -388,8 +388,8 @@ public class Localized {
     }
     public static let WALLET_NO_TRANSACTION = LocalizedString("wallet_no_transaction", comment: "No transaction")
     public static let WALLET_ADDRESS = LocalizedString("wallet_address", comment: "Address")
-    public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name")
-    public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo")
+    public static let WALLET_ACCOUNT_NAME = LocalizedString("wallet_account_name", comment: "Account Name (Address)")
+    public static let WALLET_ACCOUNT_MEMO = LocalizedString("wallet_account_memo", comment: "Account Memo (Tag)")
     public static let WALLET_MENU_SHOW_HIDDEN_ASSETS = LocalizedString("wallet_menu_show_hidden_assets", comment: "Hidden assets")
     public static let WALLET_MENU_SHOW_ASSET = LocalizedString("wallet_menu_show_asset", comment: "Show asset")
     public static let WALLET_MENU_HIDE_ASSET = LocalizedString("wallet_menu_hide_asset", comment: "Hide asset")

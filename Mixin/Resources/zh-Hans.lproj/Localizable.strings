@@ -332,10 +332,10 @@
 "wallet_deposit_confirmations" = "充值到账至少需要 %@ 个区块确认。";
 "wallet_no_transaction" = "暂无转账记录";
 "wallet_address" = "地址";
-"wallet_account_name" = "账号名（地址）";
+"wallet_account_name" = "地址";
 "wallet_account_memo" = "Memo（标签）";
 "wallet_deposit_attention" = "首次充值请小额尝试！";
-"wallet_deposit_account_attention" = "注意：首次充值请小额尝试！账号名（地址）和 Memo（标签）同时使用才能充值 %@ 到 Mixin Messenger。";
+"wallet_deposit_account_attention" = "注意：首次充值请小额尝试！地址和 Memo（标签）同时使用才能充值 %@ 到 Mixin Messenger。";
 "wallet_menu_show_hidden_assets" = "隐藏资产";
 "wallet_menu_show_asset" = "显示资产";
 "wallet_menu_hide_asset" = "隐藏资产";

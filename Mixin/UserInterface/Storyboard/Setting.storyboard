@@ -1653,22 +1653,22 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Swr-M8-nCZ">
-                                <rect key="frame" x="0.0" y="115" width="375" height="565"/>
+                                <rect key="frame" x="0.0" y="71.5" width="375" height="608.5"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="1jz-c0-1oi">
-                                        <rect key="frame" x="30" y="70" width="315" height="88"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Emergency Contact" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ug6-5I-fh2">
+                                        <rect key="frame" x="30" y="70" width="315" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_emergency_contact"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1jz-c0-1oi">
+                                        <rect key="frame" x="30" y="107.5" width="315" height="94"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Emergency Contact" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ug6-5I-fh2">
-                                                <rect key="frame" x="74" y="0.0" width="167" height="21.5"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="setting_emergency_contact"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The emergency contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0LO-fL-fXU">
-                                                <rect key="frame" x="2.5" y="37.5" width="310.5" height="50.5"/>
+                                                <rect key="frame" x="2.5" y="0.0" width="310.5" height="50.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <nil key="highlightedColor"/>
@@ -1676,18 +1676,30 @@
                                                     <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="emergency_tip_before"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attention: the Emergency Contact cannot help you to recover PIN" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFl-dr-mNd">
+                                                <rect key="frame" x="6.5" y="60.5" width="302.5" height="33.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" red="0.96470588235294119" green="0.4392156862745098" blue="0.4392156862745098" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="emergency_tip_pin"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
                                         </subviews>
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_emergency" translatesAutoresizingMaskIntoConstraints="NO" id="mGo-Ey-I7z">
-                                        <rect key="frame" x="117.5" y="216" width="140" height="162"/>
+                                        <rect key="frame" x="117.5" y="259.5" width="140" height="162"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="mGo-Ey-I7z" firstAttribute="centerX" secondItem="Swr-M8-nCZ" secondAttribute="centerX" id="ERG-XE-BE0"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ug6-5I-fh2" secondAttribute="trailing" constant="30" id="TPP-HF-ir7"/>
+                                    <constraint firstItem="1jz-c0-1oi" firstAttribute="top" secondItem="Ug6-5I-fh2" secondAttribute="bottom" constant="16" id="gIz-73-spU"/>
                                     <constraint firstAttribute="trailing" secondItem="1jz-c0-1oi" secondAttribute="trailing" constant="30" id="ii4-8E-eqm"/>
                                     <constraint firstItem="1jz-c0-1oi" firstAttribute="leading" secondItem="Swr-M8-nCZ" secondAttribute="leading" constant="30" id="jyq-Jz-Fvf"/>
+                                    <constraint firstItem="Ug6-5I-fh2" firstAttribute="leading" secondItem="Swr-M8-nCZ" secondAttribute="leading" constant="30" id="sct-RZ-5Qe"/>
                                     <constraint firstItem="mGo-Ey-I7z" firstAttribute="top" secondItem="1jz-c0-1oi" secondAttribute="bottom" constant="58" id="sfw-CY-tfJ" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
@@ -1698,7 +1710,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </constraint>
-                                    <constraint firstItem="1jz-c0-1oi" firstAttribute="top" secondItem="Swr-M8-nCZ" secondAttribute="top" constant="70" id="uYK-vZ-CWD" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <constraint firstItem="Ug6-5I-fh2" firstAttribute="top" secondItem="Swr-M8-nCZ" secondAttribute="top" constant="70" id="uaL-6X-E6A" customClass="ScreenSizeCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="inch3_5">
                                                 <real key="value" value="20"/>

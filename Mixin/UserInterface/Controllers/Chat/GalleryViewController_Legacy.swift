@@ -1,19 +1,19 @@
 import UIKit
 import AVKit
 
-protocol GalleryViewControllerDelegate: class {
-    func galleryViewController(_ viewController: GalleryViewController, showContextForItemOfMessageId id: String) -> GalleryViewController.ShowContext?
-    func galleryViewController(_ viewController: GalleryViewController, dismissContextForItemOfMessageId id: String) -> GalleryViewController.DismissContext?
-    func galleryViewController(_ viewController: GalleryViewController, willShowForItemOfMessageId id: String?)
-    func galleryViewController(_ viewController: GalleryViewController, didShowForItemOfMessageId id: String?)
-    func galleryViewController(_ viewController: GalleryViewController, willDismissForItemOfMessageId id: String?)
-    func galleryViewController(_ viewController: GalleryViewController, willDismissArticleForItemOfMessageId id: String?, atRelativeOffset offset: CGFloat)
-    func galleryViewController(_ viewController: GalleryViewController, didDismissForItemOfMessageId id: String?)
-    func galleryViewController(_ viewController: GalleryViewController, willBeginInteractivelyDismissingForItemOfMessageId id: String?)
-    func galleryViewController(_ viewController: GalleryViewController, didCancelInteractivelyDismissingForItemOfMessageId id: String?)
+protocol GalleryViewControllerDelegate_Legacy: class {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, showContextForItemOfMessageId id: String) -> GalleryViewController_Legacy.ShowContext?
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, dismissContextForItemOfMessageId id: String) -> GalleryViewController_Legacy.DismissContext?
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, willShowForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, didShowForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, willDismissForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, willDismissArticleForItemOfMessageId id: String?, atRelativeOffset offset: CGFloat)
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, didDismissForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, willBeginInteractivelyDismissingForItemOfMessageId id: String?)
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, didCancelInteractivelyDismissingForItemOfMessageId id: String?)
 }
 
-class GalleryViewController: UIViewController {
+class GalleryViewController_Legacy: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var backgroundDimmingView: UIView!
@@ -24,7 +24,7 @@ class GalleryViewController: UIViewController {
     @IBOutlet var panRecognizer: UIPanGestureRecognizer!
     @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
     
-    weak var delegate: GalleryViewControllerDelegate?
+    weak var delegate: GalleryViewControllerDelegate_Legacy?
     var item: GalleryItem?
     
     private let scrollViewContentView = UIView()
@@ -34,9 +34,9 @@ class GalleryViewController: UIViewController {
     private let pageSize = UIScreen.main.bounds.size
     
     private var conversationId: String!
-    private var pages = [GalleryItemViewController.instance(),
-                         GalleryItemViewController.instance(),
-                         GalleryItemViewController.instance()]
+    private var pages = [GalleryItemViewController_Legacy.instance(),
+                         GalleryItemViewController_Legacy.instance(),
+                         GalleryItemViewController_Legacy.instance()]
     private var lastContentOffsetX: CGFloat = 0
     private var panToDismissDistance: CGFloat = 0
     private var items = [GalleryItem]()
@@ -50,7 +50,7 @@ class GalleryViewController: UIViewController {
     
     private lazy var separatorWidth = scrollViewTrailingConstraint.constant
    
-    private var currentPage: GalleryItemViewController {
+    private var currentPage: GalleryItemViewController_Legacy {
         assert(pages.count > 0)
         let i = pageIndex(ofContentOffsetX: scrollView.contentOffset.x)
         return pages[i]
@@ -116,7 +116,7 @@ class GalleryViewController: UIViewController {
                 }, completion: { (_) in
                     self.scrollView.isHidden = false
                     self.transitionView.removeFromSuperview()
-                    if let videoView = self.transitionView as? GalleryVideoView {
+                    if let videoView = self.transitionView as? GalleryVideoView_Legacy {
                         self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
                     }
                     self.transitionView = nil
@@ -322,7 +322,7 @@ class GalleryViewController: UIViewController {
             }
         }, completion: { (_) in
             self.transitionView.removeFromSuperview()
-            if let videoView = self.transitionView as? GalleryVideoView {
+            if let videoView = self.transitionView as? GalleryVideoView_Legacy {
                 self.currentPage.view.insertSubview(videoView, belowSubview: self.currentPage.videoControlPanelView)
             }
             self.scrollView.isHidden = false
@@ -341,8 +341,8 @@ class GalleryViewController: UIViewController {
         }
     }
     
-    class func instance(conversationId: String) -> GalleryViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "photo_preview") as! GalleryViewController
+    class func instance(conversationId: String) -> GalleryViewController_Legacy {
+        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "photo_preview") as! GalleryViewController_Legacy
         vc.conversationId = conversationId
         return vc
     }
@@ -350,7 +350,7 @@ class GalleryViewController: UIViewController {
 }
 
 // MARK: - UIScrollViewDelegate
-extension GalleryViewController: UIScrollViewDelegate {
+extension GalleryViewController_Legacy: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let x = scrollView.contentOffset.x
@@ -421,7 +421,7 @@ extension GalleryViewController: UIScrollViewDelegate {
 }
 
 // MARK: - UIGestureRecognizerDelegate
-extension GalleryViewController: UIGestureRecognizerDelegate {
+extension GalleryViewController_Legacy: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard gestureRecognizer == panRecognizer else {
@@ -444,7 +444,7 @@ extension GalleryViewController: UIGestureRecognizerDelegate {
 }
 
 // MARK: - Private works
-extension GalleryViewController {
+extension GalleryViewController_Legacy {
     
     private var currentItemIsVerticallyOversized: Bool {
         guard let item = item else {
@@ -626,7 +626,7 @@ extension GalleryViewController {
 }
 
 // MARK: - Embedded classes
-extension GalleryViewController {
+extension GalleryViewController_Legacy {
     
     struct ShowContext {
         let sourceFrame: CGRect

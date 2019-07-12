@@ -1,7 +1,7 @@
 import Foundation
 import AVKit
 
-class GalleryVideoView: UIView {
+class GalleryVideoView_Legacy: UIView {
     
     override static var layerClass: AnyClass {
         return AVPlayerLayer.self

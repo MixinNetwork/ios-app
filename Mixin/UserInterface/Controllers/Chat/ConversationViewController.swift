@@ -67,8 +67,8 @@ class ConversationViewController: UIViewController {
     private lazy var userWindow = UserWindow.instance()
     private lazy var groupWindow = GroupWindow.instance()
     
-    private lazy var galleryViewController: GalleryViewController = {
-        let controller = GalleryViewController.instance(conversationId: conversationId)
+    private lazy var galleryViewController_Legacy: GalleryViewController_Legacy = {
+        let controller = GalleryViewController_Legacy.instance(conversationId: conversationId)
         controller.delegate = self
         addChild(controller)
         galleryWrapperView.addSubview(controller.view)
@@ -417,9 +417,9 @@ class ConversationViewController: UIViewController {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
                 view.bringSubviewToFront(galleryWrapperView)
                 if let viewModel = viewModel as? PhotoRepresentableMessageViewModel, case let .relativeOffset(offset) = viewModel.layoutPosition {
-                    galleryViewController.show(item: item, offset: offset)
+                    galleryViewController_Legacy.show(item: item, offset: offset)
                 } else {
-                    galleryViewController.show(item: item, offset: 0)
+                    galleryViewController_Legacy.show(item: item, offset: 0)
                 }
                 homeIndicatorAutoHidden = true
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
@@ -645,7 +645,7 @@ class ConversationViewController: UIViewController {
             previewDocumentController = nil
             previewDocumentMessageId = nil
         } else {
-            galleryViewController.handleMessageRecalling(messageId: messageId)
+            galleryViewController_Legacy.handleMessageRecalling(messageId: messageId)
         }
     }
     
@@ -1056,20 +1056,20 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
     
 }
 
-// MARK: - GalleryViewControllerDelegate
-extension ConversationViewController: GalleryViewControllerDelegate {
+// MARK: - GalleryViewControllerDelegate_Legacy
+extension ConversationViewController: GalleryViewControllerDelegate_Legacy {
     
-    func galleryViewController(_ viewController: GalleryViewController, showContextForItemOfMessageId id: String) -> GalleryViewController.ShowContext? {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, showContextForItemOfMessageId id: String) -> GalleryViewController_Legacy.ShowContext? {
         guard let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let viewModel = dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel, let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell else {
             return nil
         }
-        return GalleryViewController.ShowContext(sourceFrame: frameOfPhotoRepresentableCell(cell),
+        return GalleryViewController_Legacy.ShowContext(sourceFrame: frameOfPhotoRepresentableCell(cell),
                                                  placeholder: cell.contentImageView.image,
                                                  viewModel: viewModel,
                                                  statusSnapshot: cell.statusSnapshot())
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, dismissContextForItemOfMessageId id: String) -> GalleryViewController.DismissContext? {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, dismissContextForItemOfMessageId id: String) -> GalleryViewController_Legacy.DismissContext? {
         guard let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let viewModel = dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel else {
             return nil
         }
@@ -1079,19 +1079,19 @@ extension ConversationViewController: GalleryViewControllerDelegate {
             frame = frameOfPhotoRepresentableCell(cell)
             snapshot = cell.statusSnapshot()
         }
-        return GalleryViewController.DismissContext(sourceFrame: frame, viewModel: viewModel, statusSnapshot: snapshot)
+        return GalleryViewController_Legacy.DismissContext(sourceFrame: frame, viewModel: viewModel, statusSnapshot: snapshot)
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, willShowForItemOfMessageId id: String?) {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, willShowForItemOfMessageId id: String?) {
         setCell(ofMessageId: id, contentViewHidden: true)
         statusBarHidden = true
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, didShowForItemOfMessageId id: String?) {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, didShowForItemOfMessageId id: String?) {
         setCell(ofMessageId: id, contentViewHidden: false)
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, willDismissArticleForItemOfMessageId id: String?, atRelativeOffset offset: CGFloat) {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, willDismissArticleForItemOfMessageId id: String?, atRelativeOffset offset: CGFloat) {
         guard let id = id, let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell else {
             return
         }
@@ -1100,23 +1100,23 @@ extension ConversationViewController: GalleryViewControllerDelegate {
         cell.contentImageView.layoutIfNeeded()
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, willDismissForItemOfMessageId id: String?) {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, willDismissForItemOfMessageId id: String?) {
         setCell(ofMessageId: id, contentViewHidden: true)
         statusBarHidden = false
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, didDismissForItemOfMessageId id: String?) {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, didDismissForItemOfMessageId id: String?) {
         setCell(ofMessageId: id, contentViewHidden: false)
         view.sendSubviewToBack(galleryWrapperView)
         statusBarHidden = false
         homeIndicatorAutoHidden = false
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, willBeginInteractivelyDismissingForItemOfMessageId id: String?) {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, willBeginInteractivelyDismissingForItemOfMessageId id: String?) {
         setCell(ofMessageId: id, contentViewHidden: true)
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, didCancelInteractivelyDismissingForItemOfMessageId id: String?) {
+    func galleryViewController(_ viewController: GalleryViewController_Legacy, didCancelInteractivelyDismissingForItemOfMessageId id: String?) {
         setCell(ofMessageId: id, contentViewHidden: false)
     }
 

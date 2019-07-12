@@ -5,9 +5,9 @@ import SnapKit
 import FirebaseMLCommon
 import FirebaseMLVision
 
-class GalleryItemViewController: UIViewController {
+class GalleryItemViewController_Legacy: UIViewController {
     
-    @IBOutlet weak var videoView: GalleryVideoView!
+    @IBOutlet weak var videoView: GalleryVideoView_Legacy!
     @IBOutlet weak var videoControlPanelView: UIView!
     @IBOutlet weak var playedTimeLabel: UILabel!
     @IBOutlet weak var slider: GalleryVideoSlider!
@@ -247,14 +247,14 @@ class GalleryItemViewController: UIViewController {
         stopDownload()
     }
     
-    class func instance() -> GalleryItemViewController {
-        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "photo_preview_page") as! GalleryItemViewController
+    class func instance() -> GalleryItemViewController_Legacy {
+        let vc = Storyboard.chat.instantiateViewController(withIdentifier: "photo_preview_page") as! GalleryItemViewController_Legacy
         return vc
     }
     
 }
 
-extension GalleryItemViewController: UIGestureRecognizerDelegate {
+extension GalleryItemViewController_Legacy: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard gestureRecognizer == tapRecognizer else {
@@ -265,7 +265,7 @@ extension GalleryItemViewController: UIGestureRecognizerDelegate {
     
 }
 
-extension GalleryItemViewController: UIScrollViewDelegate {
+extension GalleryItemViewController_Legacy: UIScrollViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         scrollViewDidDragAfterLoading = true
@@ -292,10 +292,10 @@ extension GalleryItemViewController: UIScrollViewDelegate {
     
 }
 
-extension GalleryItemViewController {
+extension GalleryItemViewController_Legacy {
     
-    private var galleryViewController: GalleryViewController? {
-        return parent as? GalleryViewController
+    private var galleryViewController: GalleryViewController_Legacy? {
+        return parent as? GalleryViewController_Legacy
     }
 
     private var pageSize: CGSize {

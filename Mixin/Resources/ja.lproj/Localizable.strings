@@ -153,7 +153,7 @@
 "contact_qr_code_save" = "画像を保存";
 "chat_stranger_tip" = "この送り主はあなたのコントラクトにありません。";
 "chat_delete_tip" = "最新バージョンのMixinでは、このメッセージはチャット全員から削除されます。";
-
+"chat_badge_live" = "生放送";
 
 "button_title_search" = "サーチ";
 "placeholder_mixin_id_or_phone" = "MIXIN IDまたは電話番号";

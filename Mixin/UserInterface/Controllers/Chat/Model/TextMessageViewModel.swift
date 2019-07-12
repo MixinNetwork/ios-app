@@ -23,98 +23,64 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     var content: CoreTextLabel.Content?
     var contentLabelFrame = CGRect.zero
     var highlightPaths = [UIBezierPath]()
+    var textSize = CGSize.zero
     
     private let timeLeftMargin: CGFloat = 20
     private let minimumTextSize = CGSize(width: 5, height: 18)
     private let linkColor = UIColor.systemTint
     private let hightlightPathCornerRadius: CGFloat = 4
     
-    private var textSize = CGSize.zero
     private var contentSize = CGSize.zero // contentSize is textSize concatenated with additionalTrailingSize and fullname width
     
     override var debugDescription: String {
         return super.debugDescription + ", textSize: \(textSize), contentSize: \(contentSize), contentLength: \(message.content.count)"
     }
     
-    internal var fullnameHeight: CGFloat {
+    var fullnameHeight: CGFloat {
         return style.contains(.fullname) ? fullnameFrame.height : 0
     }
 
-    internal var backgroundWidth: CGFloat {
+    var backgroundWidth: CGFloat {
         return contentAdditionalLeadingMargin + contentSize.width + contentMargin.horizontal
     }
     
-    internal var contentLabelTopMargin: CGFloat {
+    var contentLabelTopMargin: CGFloat {
         return style.contains(.fullname) ? fullnameHeight : contentMargin.top
     }
     
-    internal var contentAdditionalLeadingMargin: CGFloat {
+    var contentAdditionalLeadingMargin: CGFloat {
         return 0
     }
     
-    // Link detection will be disabled if subclasses override this var and return a non-nil value
-    internal var fixedLinks: [NSRange: URL]? {
-        return nil
+    var rawContent: String {
+        return message.content
     }
     
-    internal var rawContent: String {
-        return message.content
+    var timeStatusSize: CGSize {
+        let statusImageWidth = showStatusImage
+            ? DetailInfoMessageViewModel.statusImageSize.width
+            : 0
+        let width = timeLeftMargin
+            + timeSize.width
+            + statusImageWidth
+            + DetailInfoMessageViewModel.statusLeftMargin
+        return CGSize(width: width, height: 16)
     }
     
     override init(message: MessageItem, style: Style, fits layoutWidth: CGFloat) {
         super.init(message: message, style: style, fits: layoutWidth)
         let str = NSMutableAttributedString(string: rawContent)
-        // Detect links
-        let linksMap: [NSRange: URL]
-        if let fixedLinks = fixedLinks {
-            linksMap = fixedLinks
-        } else {
-            var map = [NSRange: URL]()
-            Link.detector.enumerateMatches(in: str, options: [], using: { (result, _, _) in
-                guard let result = result, let url = result.url else {
-                    return
-                }
-                map[result.range] = url
-            })
-            linksMap = map
-        }
-        // Set attributes
         let cfStr = str as CFMutableAttributedString
-        let fullRange = CFRange(location: 0, length: CFAttributedStringGetLength(cfStr))
-        CFAttributedStringSetAttribute(cfStr, fullRange, kCTFontAttributeName, type(of: self).ctFont)
-        CFAttributedStringSetAttribute(cfStr, fullRange, kCTForegroundColorAttributeName, type(of: self).textColor)
+        // Detect links
+        let linksMap = self.linksMap(from: str)
+        // Set attributes
+        setDefaultAttributes(on: cfStr)
         for link in linksMap {
             let range = CFRange(nsRange: link.key)
             CFAttributedStringSetAttribute(cfStr, range, kCTForegroundColorAttributeName, linkColor)
         }
         // Make CTLine and Origins
-        let typesetter = CTTypesetterCreateWithAttributedString(str as CFAttributedString)
-        var lines = [CTLine]()
-        var lineOrigins = [CGPoint]()
-        var lineRanges = [CFRange]()
-        var characterIndex: CFIndex = 0
-        var y: CGFloat = 4
-        var lastLineWidth: CGFloat = 0
-        while true {
-            let lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, Double(maxContentWidth))
-            if lineCharacterCount > 0 {
-                let lineRange = CFRange(location: characterIndex, length: lineCharacterCount)
-                let line = CTTypesetterCreateLine(typesetter, lineRange)
-                let lineWidth = ceil(CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil) - CTLineGetTrailingWhitespaceWidth(line)))
-                let lineOrigin = CGPoint(x: 0, y: y)
-                lines.append(line)
-                lineOrigins.append(lineOrigin)
-                lineRanges.append(lineRange)
-                textSize.height += type(of: self).lineHeight
-                textSize.width = max(textSize.width, lineWidth)
-                y += type(of: self).lineHeight
-                lastLineWidth = lineWidth
-                characterIndex += lineCharacterCount
-            } else {
-                break
-            }
-        }
-        lineOrigins = lineOrigins.reversed()
+        let (lines, lineOrigins, lineRanges, lastLineWidth) = typeset(attributedString: cfStr)
         if textSize.height < minimumTextSize.height {
             textSize = minimumTextSize
         }
@@ -146,8 +112,7 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         // Make content
         self.content = CoreTextLabel.Content(lines: lines, lineOrigins: lineOrigins, links: links)
         // Calculate content size
-        let statusImageWidth = showStatusImage ? DetailInfoMessageViewModel.statusImageSize.width : 0
-        let additionalTrailingSize = CGSize(width: timeLeftMargin + timeSize.width + statusImageWidth + DetailInfoMessageViewModel.statusLeftMargin, height: 16)
+        let additionalTrailingSize = timeStatusSize
         var contentSize = textSize
         let lastLineWithTrailingWidth = lastLineWidth + additionalTrailingSize.width
         if lastLineWithTrailingWidth > maxContentWidth {
@@ -226,5 +191,56 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
     func removeHighlights() {
         highlightPaths = []
     }
-
+    
+    func linksMap(from attributedString: NSAttributedString) -> [NSRange: URL] {
+        var map = [NSRange: URL]()
+        Link.detector.enumerateMatches(in: attributedString, options: [], using: { (result, _, _) in
+            guard let result = result, let url = result.url else {
+                return
+            }
+            map[result.range] = url
+        })
+        return map
+    }
+    
+    func setDefaultAttributes(on string: CFMutableAttributedString) {
+        let fullRange = CFRange(location: 0, length: CFAttributedStringGetLength(string))
+        CFAttributedStringSetAttribute(string, fullRange, kCTFontAttributeName, type(of: self).ctFont)
+        CFAttributedStringSetAttribute(string, fullRange, kCTForegroundColorAttributeName, type(of: self).textColor)
+    }
+    
+    typealias TypesetResult = (lines: [CTLine], lineOrigins: [CGPoint], lineRanges: [CFRange], lastLineWidth: CGFloat)
+    func typeset(attributedString: CFAttributedString) -> TypesetResult {
+        let typesetter = CTTypesetterCreateWithAttributedString(attributedString)
+        
+        var lines = [CTLine]()
+        var lineOrigins = [CGPoint]()
+        var lineRanges = [CFRange]()
+        var characterIndex: CFIndex = 0
+        var y: CGFloat = 4
+        var lastLineWidth: CGFloat = 0
+        
+        while true {
+            let lineCharacterCount = CTTypesetterSuggestLineBreak(typesetter, characterIndex, Double(maxContentWidth))
+            if lineCharacterCount > 0 {
+                let lineRange = CFRange(location: characterIndex, length: lineCharacterCount)
+                let line = CTTypesetterCreateLine(typesetter, lineRange)
+                let lineWidth = ceil(CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil) - CTLineGetTrailingWhitespaceWidth(line)))
+                let lineOrigin = CGPoint(x: 0, y: y)
+                lines.append(line)
+                lineOrigins.append(lineOrigin)
+                lineRanges.append(lineRange)
+                textSize.height += type(of: self).lineHeight
+                textSize.width = max(textSize.width, lineWidth)
+                y += type(of: self).lineHeight
+                lastLineWidth = lineWidth
+                characterIndex += lineCharacterCount
+            } else {
+                break
+            }
+        }
+        
+        return (lines, lineOrigins.reversed(), lineRanges, lastLineWidth)
+    }
+    
 }

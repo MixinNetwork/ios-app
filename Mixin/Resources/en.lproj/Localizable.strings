@@ -227,6 +227,7 @@
 "chat_restore_subtitle" = "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.";
 "chat_stranger_tip" = "This sender is not in your contacts";
 "chat_delete_tip" = "The message will be deleted for everyone on the latest version of Mixin Messenger in this chat.";
+"chat_badge_live" = "LIVE";
 
 // Call
 "call_hint_on_another_call" = "You are already on another call. Try after it was ended.";

@@ -578,6 +578,7 @@
 "emergency_tip_link" = "紧急联系人";
 "emergency_pin_protection_hint" = "紧急联系人经支付密码加密保护";
 "emergency_change_number_tip" = "立即更换手机号？";
+"emergency_tip_pin" = "注意：紧急联系人无法帮助找回支付密码";
 "enable_emergency_contact" = "启用紧急联系人";
 
 // Notifications

@@ -619,6 +619,7 @@ class ConversationViewController: UIViewController {
         guard let url = URL(string: app.homeUri), !conversationId.isEmpty else {
             return
         }
+        UIApplication.logEvent(eventName: "open_app", parameters: ["source": "Conversation", "identityNumber": app.appNumber])
         let window = WebWindow.instance(conversationId: conversationId, app: app)
         window.presentPopupControllerAnimated(url: url)
     }

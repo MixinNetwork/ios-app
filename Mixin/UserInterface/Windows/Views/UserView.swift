@@ -408,6 +408,7 @@ class UserView: CornerView {
             guard let app = AppDAO.shared.getApp(ofUserId: userId), let url = URL(string: app.homeUri) else {
                 return
             }
+            UIApplication.logEvent(eventName: "open_app", parameters: ["source": "UserWindow", "identityNumber": app.appNumber])
             DispatchQueue.main.async {
                 WebWindow.instance(conversationId: conversationId, app: app).presentPopupControllerAnimated(url: url)
             }

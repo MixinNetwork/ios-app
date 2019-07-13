@@ -1,4 +1,5 @@
 import UIKit
+import Firebase
 
 class LoginVerificationCodeViewController: VerificationCodeViewController {
     
@@ -87,6 +88,14 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
             AccountUserDefault.shared.storePinToken(pinToken: pinToken)
             AccountUserDefault.shared.storeToken(token: privateKeyPem)
             AccountAPI.shared.account = account
+
+            if account.full_name.isEmpty {
+                UIApplication.logEvent(eventName: AnalyticsEventSignUp)
+            } else if HomeViewController.showChangePhoneNumberTips {
+                UIApplication.logEvent(eventName: AnalyticsEventLogin, parameters: ["source": "emergency"])
+            } else {
+                UIApplication.logEvent(eventName: AnalyticsEventLogin, parameters: ["source": "normal"])
+            }
             
             let sema = DispatchSemaphore(value: 0)
             var backupExist = false

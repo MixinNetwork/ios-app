@@ -105,6 +105,7 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
         } else {
             let app = apps[indexPath.row - fixedExtensions.count]
             if let url = URL(string: app.homeUri), let conversationId = dataSource?.conversationId {
+                UIApplication.logEvent(eventName: "open_app", parameters: ["source": "ConversationExtension", "identityNumber": app.appNumber])
                 WebWindow.instance(conversationId: conversationId, app: app)
                     .presentPopupControllerAnimated(url: url)
             }

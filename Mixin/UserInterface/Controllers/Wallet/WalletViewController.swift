@@ -8,18 +8,12 @@ class WalletViewController: UIViewController {
     
     private var assets = [AssetItem]()
     
-    private lazy var assetAction: UITableViewRowAction = {
+    private lazy var assetActions: [UITableViewRowAction] = {
         let action = UITableViewRowAction(style: .destructive, title: Localized.ACTION_HIDE, handler: { [weak self] (_, indexPath) in
-            guard let weakSelf = self else {
-                return
-            }
-            let assetId = weakSelf.assets[indexPath.row].assetId
-            weakSelf.assets.remove(at: indexPath.row)
-            weakSelf.tableView.deleteRows(at: [indexPath], with: .fade)
-            WalletUserDefault.shared.hiddenAssets[assetId] = assetId
+            self?.confirmHideAsset(at: indexPath)
         })
         action.backgroundColor = .theme
-        return action
+        return [action]
     }()
     
     deinit {
@@ -115,7 +109,7 @@ extension WalletViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         if indexPath.section == 0 {
-            return [assetAction]
+            return assetActions
         } else {
             return []
         }
@@ -170,6 +164,25 @@ extension WalletViewController {
                 break
             }
         }
+    }
+    
+    private func confirmHideAsset(at indexPath: IndexPath) {
+        let assetId = assets[indexPath.row].assetId
+        let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.action_hide(), style: .default, handler: { (_) in
+            self.hideAsset(of: assetId)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func hideAsset(of assetId: String) {
+        guard let index = assets.firstIndex(where: { $0.assetId == assetId }) else {
+            return
+        }
+        assets.remove(at: index)
+        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+        WalletUserDefault.shared.hiddenAssets[assetId] = assetId
     }
     
 }

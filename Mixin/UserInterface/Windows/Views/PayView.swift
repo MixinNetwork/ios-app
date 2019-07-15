@@ -238,10 +238,12 @@ extension PayView: PinFieldDelegate {
             return
         }
         UIApplication.traceError(error)
+
+        let errorMsg = error.code == 429 ? R.string.localizable.wallet_password_too_many_requests() : error.localizedDescription
         if (superView as? UrlWindow)?.fromWeb ?? false {
-            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            showAutoHiddenHud(style: .error, text: errorMsg)
         } else {
-            UIApplication.currentActivity()?.alert(error.localizedDescription, message: nil)
+            UIApplication.currentActivity()?.alert(errorMsg, message: nil)
         }
     }
 

@@ -512,6 +512,15 @@ class SendMessageService: MixinService {
                 if let bm = job.blazeMessage {
                     blazeMessage = String(data: bm, encoding: .utf8) ?? ""
                 }
+
+                if let err = error as? SignalError, err == SignalError.noData {
+                    if IdentityDao.shared.getLocalIdentity() == nil {
+                        AccountAPI.shared.logout()
+                        Thread.sleep(forTimeInterval: 1)
+                        return false
+                    }
+                }
+
                 #if DEBUG
                 print("======SendMessageService...handlerJob...\(error)...currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
                 #endif

@@ -325,6 +325,13 @@ class ReceiveMessageService: MixinService {
             let message = Message.createMessage(mediaData: transferMediaData, data: data)
             MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
             SendMessageService.shared.sendSessionMessage(message: message, representativeId: dataUserId, data: plainText)
+        } else if data.category.hasSuffix("_LIVE") {
+            guard let base64Data = Data(base64Encoded: plainText), let live = (try? jsonDecoder.decode(TransferLiveData.self, from: base64Data)) else {
+                return
+            }
+            let message = Message.createMessage(liveData: live, data: data)
+            MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
+            SendMessageService.shared.sendSessionMessage(message: message, representativeId: dataUserId, data: plainText)
         } else if data.category.hasSuffix("_DATA")  {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
@@ -365,7 +372,7 @@ class ReceiveMessageService: MixinService {
     }
 
     private func insertFailedMessage(data: BlazeMessageData) {
-        guard data.category == MessageCategory.SIGNAL_TEXT.rawValue || data.category == MessageCategory.SIGNAL_IMAGE.rawValue || data.category == MessageCategory.SIGNAL_DATA.rawValue || data.category == MessageCategory.SIGNAL_VIDEO.rawValue || data.category == MessageCategory.SIGNAL_AUDIO.rawValue || data.category == MessageCategory.SIGNAL_CONTACT.rawValue || data.category == MessageCategory.SIGNAL_STICKER.rawValue else {
+        guard data.category == MessageCategory.SIGNAL_TEXT.rawValue || data.category == MessageCategory.SIGNAL_IMAGE.rawValue || data.category == MessageCategory.SIGNAL_DATA.rawValue || data.category == MessageCategory.SIGNAL_VIDEO.rawValue || data.category == MessageCategory.SIGNAL_LIVE.rawValue || data.category == MessageCategory.SIGNAL_AUDIO.rawValue || data.category == MessageCategory.SIGNAL_CONTACT.rawValue || data.category == MessageCategory.SIGNAL_STICKER.rawValue else {
             return
         }
         var failedMessage = Message.createMessage(messageId: data.messageId, category: data.category, conversationId: data.conversationId, createdAt: data.createdAt, userId: data.userId)
@@ -403,6 +410,12 @@ class ReceiveMessageService: MixinService {
                 ConcurrentJobQueue.shared.addJob(job: job)
             }
             SendMessageService.shared.sendSessionMessage(message: Message.createMessage(mediaData: transferMediaData, data: data), data: plainText)
+        case MessageCategory.SIGNAL_LIVE.rawValue:
+            guard let base64Data = Data(base64Encoded: plainText), let liveData = (try? jsonDecoder.decode(TransferLiveData.self, from: base64Data)) else {
+                return
+            }
+            MessageDAO.shared.updateLiveMessage(liveData: liveData, status:  MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId, messageSource: data.source)
+            SendMessageService.shared.sendSessionMessage(message: Message.createMessage(liveData: liveData, data: data), data: plainText)
         case MessageCategory.SIGNAL_STICKER.rawValue:
             guard let transferStickerData = parseSticker(plainText) else {
                 return
@@ -570,7 +583,7 @@ class ReceiveMessageService: MixinService {
             default:
                 break
             }
-        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
+        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
             _ = syncUser(userId: data.getSenderId())
             processDecryptSuccess(data: data, plainText: data.data, dataUserId: data.getDataUserId())
             updateRemoteMessageStatus(messageId: data.messageId, status: .DELIVERED)
@@ -800,7 +813,7 @@ extension ReceiveMessageService {
                 ConversationDAO.shared.showBadgeNumber()
                 SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)
             }
-        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
+        case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_IMAGE.rawValue, MessageCategory.PLAIN_DATA.rawValue, MessageCategory.PLAIN_VIDEO.rawValue, MessageCategory.PLAIN_LIVE.rawValue, MessageCategory.PLAIN_AUDIO.rawValue, MessageCategory.PLAIN_STICKER.rawValue, MessageCategory.PLAIN_CONTACT.rawValue:
             _ = syncUser(userId: data.getSenderId())
             processSessionDecryptSuccess(data: data, plainText: data.data)
             SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_ACK_MESSAGE, messageId: data.messageId, status: MessageStatus.DELIVERED.rawValue)

@@ -347,7 +347,7 @@ extension GalleryItemViewController_Legacy {
     
     private func loadItem(_ item: GalleryItem?) {
         prepareForReuse()
-        imageView.image = item?.thumbnail
+//        imageView.image = item?.thumbnail
         if let item = item {
             switch item.category {
             case .image:
@@ -360,6 +360,8 @@ extension GalleryItemViewController_Legacy {
                 if item.mediaStatus == .PENDING && autoDownloadImages {
                     beginDownload()
                 }
+            case .stream:
+                break
             }
             layoutImageView()
             layout(mediaStatus: item.mediaStatus)
@@ -431,7 +433,7 @@ extension GalleryItemViewController_Legacy {
             })
             videoView.player.addObserver(self, forKeyPath: rateKey, options: [.initial, .new], context: &ObserveContext.rateObservingContext)
             isObservingRate = true
-            videoView.loadVideo(url: url, playAfterLoaded: playAfterLoaded, thumbnail: item.thumbnail)
+//            videoView.loadVideo(url: url, playAfterLoaded: playAfterLoaded, thumbnail: item.thumbnail)
             if let item = videoView.player.currentItem {
                 let duration = CMTimeGetSeconds(item.asset.duration)
                 if duration.isFinite {
@@ -443,7 +445,7 @@ extension GalleryItemViewController_Legacy {
             setPlayButtonHidden(true, otherControlsHidden: true, animated: false)
             scrollView.isHidden = false
             videoView.isHidden = true
-            imageView.image = item.thumbnail
+//            imageView.image = item.thumbnail
         }
     }
     
@@ -483,7 +485,7 @@ extension GalleryItemViewController_Legacy {
             return
         }
         layout(mediaStatus: .PENDING)
-        imageView.image = photo.thumbnail
+//        imageView.image = photo.thumbnail
         if item?.category == .image {
             ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: photo.messageId, mediaMimeType: photo.mediaMimeType))
         } else {

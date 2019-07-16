@@ -49,6 +49,11 @@ class QuotePreviewView: UIView, XibDesignable {
             }
         } else if message.category.hasSuffix("_VIDEO") {
             contentImageView.image = contentImageThumbnail
+        } else if message.category.hasSuffix("_LIVE") {
+            if let thumbUrl = message.thumbUrl {
+                contentImageView.contentMode = .scaleAspectFit
+                contentImageView.sd_setImage(with: URL(string: thumbUrl), completed: nil)
+            }
         } else if message.category.hasSuffix("_CONTACT") {
             contentImageView.setImage(with: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
         }

@@ -150,6 +150,12 @@ fileprivate extension UNMutableNotificationContent {
             } else {
                 body = Localized.ALERT_KEY_CONTACT_VIDEO_MESSAGE
             }
+        } else if message.category.hasSuffix("_LIVE") {
+            if conversation.isGroup() || isRepresentativeMessage {
+                body = R.string.localizable.alert_key_group_live_message(message.userFullName)
+            } else {
+                body = R.string.localizable.alert_key_contact_live_message()
+            }
         } else if message.category.hasSuffix("_AUDIO") {
             if conversation.isGroup() || isRepresentativeMessage {
                 body = Localized.ALERT_KEY_GROUP_AUDIO_MESSAGE(fullname: message.userFullName)

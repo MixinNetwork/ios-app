@@ -403,7 +403,7 @@ class ConversationViewController: UIViewController {
                     let node = AudioManager.Node(message: message, path: url.path)
                     AudioManager.shared.play(node: node)
                 }
-            } else if message.category.hasSuffix("_STREAM"), let str = message.mediaUrl, let url = URL(string: str) {
+            } else if message.category.hasSuffix("_LIVE"), let str = message.mediaUrl, let url = URL(string: str) {
                 let width = CGFloat(message.mediaWidth ?? 100)
                 var height = CGFloat(message.mediaHeight ?? 100)
                 if height == 0 {

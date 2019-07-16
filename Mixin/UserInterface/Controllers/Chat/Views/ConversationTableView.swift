@@ -18,7 +18,7 @@ extension MessageItem {
             actions = [.reply, .forward, .copy, .delete]
         } else if category.hasSuffix("_STICKER") {
             actions = [.addToStickers, .reply, .forward, .delete]
-        } else if category.hasSuffix("_CONTACT") {
+        } else if category.hasSuffix("_CONTACT") || category.hasSuffix("_LIVE") {
             actions = [.reply, .forward, .delete]
         } else if category.hasSuffix("_IMAGE") {
             if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
@@ -274,7 +274,7 @@ class ConversationTableView: UITableView {
         register(VideoMessageCell.self, forCellReuseIdentifier: ReuseId.video.rawValue)
         register(QuoteTextMessageCell.self, forCellReuseIdentifier: ReuseId.quoteText.rawValue)
         register(IconPrefixedTextMessageCell.self, forCellReuseIdentifier: ReuseId.iconPrefixedText.rawValue)
-        register(StreamMessageCell.self, forCellReuseIdentifier: ReuseId.stream.rawValue)
+        register(LiveMessageCell.self, forCellReuseIdentifier: ReuseId.live.rawValue)
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
         longPressRecognizer.delegate = TextMessageLabel.gestureRecognizerBypassingDelegateObject
         addGestureRecognizer(longPressRecognizer)
@@ -313,7 +313,7 @@ extension ConversationTableView {
         case video = "VideoMessageCell"
         case appCard = "AppCardMessageCell"
         case audio = "AudioMessageCell"
-        case stream = "StreamMessageCell"
+        case live = "LiveMessageCell"
         case quoteText = "QuoteTextMessageCell"
         case iconPrefixedText = "IconPrefixedTextMessageCell"
         case header = "DateHeader"
@@ -333,8 +333,8 @@ extension ConversationTableView {
                 self = .video
             } else if category.hasSuffix("_AUDIO") {
                 self = .audio
-            } else if category.hasSuffix("_STREAM") {
-                self = .stream
+            } else if category.hasSuffix("_LIVE") {
+                self = .live
             } else if category.hasPrefix("WEBRTC_") || category == MessageCategory.MESSAGE_RECALL.rawValue {
                 self = .iconPrefixedText
             } else if category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {

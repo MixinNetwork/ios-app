@@ -4,6 +4,8 @@ import WCDBSwift
 class SendMessageService: MixinService {
 
     static let shared = SendMessageService()
+    static let recallableSuffices = ["_TEXT", "_STICKER", "_CONTACT", "_IMAGE", "_DATA", "_AUDIO", "_VIDEO", "_LIVE"]
+    
     private let dispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.send.messages")
     private let saveDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.send")
 
@@ -54,6 +56,8 @@ class SendMessageService: MixinService {
                         msg.category = MessageCategory.PLAIN_CONTACT.rawValue
                     case MessageCategory.SIGNAL_VIDEO.rawValue:
                         msg.category = MessageCategory.PLAIN_VIDEO.rawValue
+                    case MessageCategory.SIGNAL_LIVE.rawValue:
+                        msg.category = MessageCategory.PLAIN_LIVE.rawValue
                     case MessageCategory.SIGNAL_AUDIO.rawValue:
                         msg.category = MessageCategory.PLAIN_AUDIO.rawValue
                     default:
@@ -80,7 +84,7 @@ class SendMessageService: MixinService {
         if !message.category.hasPrefix("WEBRTC_") {
             MessageDAO.shared.insertMessage(message: msg, messageSource: "")
         }
-        if msg.category.hasSuffix("_TEXT") || msg.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") {
+        if msg.category.hasSuffix("_TEXT") || msg.category.hasSuffix("_STICKER") || message.category.hasSuffix("_CONTACT") || message.category.hasSuffix("_LIVE") {
             SendMessageService.shared.sendMessage(message: msg, data: message.content)
             SendMessageService.shared.sendSessionMessage(message: msg, data: message.content)
         } else if msg.category.hasSuffix("_IMAGE") {
@@ -97,16 +101,10 @@ class SendMessageService: MixinService {
     }
 
     func recallMessage(messageId: String, category: String, mediaUrl: String?, conversationId: String, status: String, sendToSession: Bool) {
-        guard category.hasSuffix("_TEXT") ||
-            category.hasSuffix("_STICKER") ||
-            category.hasSuffix("_CONTACT") ||
-            category.hasSuffix("_IMAGE") ||
-            category.hasSuffix("_DATA") ||
-            category.hasSuffix("_AUDIO") ||
-            category.hasSuffix("_VIDEO") else {
-                return
+        guard SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
+            return
         }
-
+        
         saveDispatchQueue.async {
             let blazeMessage = BlazeMessage(recallMessageId: messageId, conversationId: conversationId)
             var jobs = [Job]()
@@ -157,6 +155,7 @@ class SendMessageService: MixinService {
             message.category.hasSuffix("_DATA") ||
             message.category.hasSuffix("_AUDIO") ||
             message.category.hasSuffix("_VIDEO") ||
+            message.category.hasSuffix("_LIVE") ||
             message.category.hasPrefix("APP_") ||
             message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue ||
             message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue else {

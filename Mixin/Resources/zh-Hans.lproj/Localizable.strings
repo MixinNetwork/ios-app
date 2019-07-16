@@ -221,6 +221,7 @@
 "chat_quote_type_sticker" = "贴纸";
 "chat_quote_type_photo" = "图片";
 "chat_quote_type_video" = "视频";
+"chat_quote_type_live" = "直播";
 "chat_search_giphy" = "在 GIPHY 上搜索";
 "chat_restore" = "恢复";
 "chat_restore_title" = "从 iCloud 恢复\n您的聊天记录";
@@ -598,11 +599,13 @@
 "notification_content_rebate" = "[退款]";
 "notification_content_video" = "[视频]";
 "notification_content_audio" = "[语音]";
+"notification_content_live" = "[直播]";
 "notification_content_voice_call" = "[语音通话]";
 "alert_key_group_message" = "%@发来一条信息";
 "alert_key_group_text_message" = "%@发来一条信息";
 "alert_key_group_image_message" = "%@发来一张图片";
 "alert_key_group_video_message" = "%@发来一个视频";
+"alert_key_group_live_message" = "%@发来一个直播";
 "alert_key_group_data_message" = "%@发来了一个文件";
 "alert_key_group_sticker_message" = "%@发来了一个贴纸";
 "alert_key_group_contact_message" = "%@分享了一个联系人";
@@ -611,6 +614,7 @@
 "alert_key_contact_text_message" = "发来一条信息";
 "alert_key_contact_image_message" = "发来一张图片";
 "alert_key_contact_video_message" = "发来一个视频";
+"alert_key_contact_live_message" = "发来一个直播";
 "alert_key_contact_transfer_message" = "发来一笔转账";
 "alert_key_contact_data_message" = "发来了一个文件";
 "alert_key_contact_sticker_message" = "发来了一个贴纸";

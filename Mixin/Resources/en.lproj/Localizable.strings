@@ -221,6 +221,7 @@
 "chat_quote_type_sticker" = "Sticker";
 "chat_quote_type_photo" = "Photo";
 "chat_quote_type_video" = "Video";
+"chat_quote_type_live" = "Live";
 "chat_search_giphy" = "Search GIPHY";
 "chat_restore" = "Restore";
 "chat_restore_title" = "Restore your\nchat history from iCloud";
@@ -595,12 +596,14 @@
 "notification_content_withdrawal" = "[Withdrawal]";
 "notification_content_rebate" = "[Rebate]";
 "notification_content_video" = "[Video]";
+"notification_content_live" = "[Live]";
 "notification_content_audio" = "[Audio]";
 "notification_content_voice_call" = "[Voice Call]";
 "alert_key_group_message" = "%@ send a message";
 "alert_key_group_text_message" = "%@ send a message";
 "alert_key_group_image_message" = "%@ send a photo";
 "alert_key_group_video_message" = "%@ send a video";
+"alert_key_group_live_message" = "%@ send a live stream";
 "alert_key_group_data_message" = "%@ send a file";
 "alert_key_group_sticker_message" = "%@ send a sticker";
 "alert_key_group_contact_message" = "%@ send a contact";
@@ -609,6 +612,7 @@
 "alert_key_contact_text_message" = "send you a message";
 "alert_key_contact_image_message" = "send you a photo";
 "alert_key_contact_video_message" = "send you a video";
+"alert_key_contact_live_message" = "send you a live stream";
 "alert_key_contact_transfer_message" = "send you a transfer";
 "alert_key_contact_data_message" = "send you a file";
 "alert_key_contact_sticker_message" = "send you a sticker";

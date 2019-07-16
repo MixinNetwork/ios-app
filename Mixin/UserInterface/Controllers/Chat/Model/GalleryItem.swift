@@ -9,6 +9,7 @@ protocol GalleryItemRepresentable {
     var mediaHeight: Int? { get }
     var mediaStatus: String? { get }
     var thumbImage: String? { get }
+    var thumbUrl: String? { get }
     var createdAt: String { get }
 }
 
@@ -20,29 +21,39 @@ struct GalleryItem: Equatable {
     enum Category {
         case image
         case video
+        case live
+    }
+    
+    enum Thumbnail {
+        case url(URL)
+        case image(UIImage)
+        case none
     }
     
     private static let imageCategories: [String] = [
         MessageCategory.SIGNAL_IMAGE.rawValue,
         MessageCategory.PLAIN_IMAGE.rawValue
     ]
-    
     private static let videoCategories: [String] = [
         MessageCategory.SIGNAL_VIDEO.rawValue,
         MessageCategory.PLAIN_VIDEO.rawValue
+    ]
+    private static let streamCategories: [String] = [
+        MessageCategory.SIGNAL_LIVE.rawValue,
+        MessageCategory.PLAIN_LIVE.rawValue
     ]
     
     let category: Category
     let messageId: String
     let url: URL?
     let size: CGSize
-    let thumbnail: UIImage?
+    let thumbnail: Thumbnail
     let mediaMimeType: String?
     let createdAt: String
     let shouldLayoutAsArticle: Bool
     var mediaStatus: MediaStatus?
     
-    init?(messageId: String, category: String, mediaUrl: String?, mediaMimeType: String?, mediaWidth: Int?, mediaHeight: Int?, mediaStatus: String?, thumbImage: String?, createdAt: String) {
+    init?(messageId: String, category: String, mediaUrl: String?, mediaMimeType: String?, mediaWidth: Int?, mediaHeight: Int?, mediaStatus: String?, thumbImage: String?, thumbUrl: String?, createdAt: String) {
         if GalleryItem.imageCategories.contains(category) {
             self.category = .image
             if let mediaUrl = mediaUrl {
@@ -57,6 +68,13 @@ struct GalleryItem: Equatable {
             } else {
                 self.url = nil
             }
+        } else if GalleryItem.streamCategories.contains(category) {
+            if let mediaUrl = mediaUrl, let url = URL(string: mediaUrl) {
+                self.url = url
+            } else {
+                return nil
+            }
+            self.category = .live
         } else {
             return nil
         }
@@ -65,10 +83,14 @@ struct GalleryItem: Equatable {
         let width = max(1, mediaWidth ?? 1)
         let height = max(1, mediaHeight ?? 1)
         self.size = CGSize(width: width, height: height)
-        if let thumbImage = thumbImage, let data = Data(base64Encoded: thumbImage) {
-            self.thumbnail = UIImage(data: data)
+        if let thumbUrl = thumbUrl, let url = URL(string: thumbUrl) {
+            self.thumbnail = .url(url)
+        } else if self.category == .video, let url = url, let coverUrl = GalleryItem.videoCoverUrl(mediaUrl: url) {
+            self.thumbnail = .url(coverUrl)
+        } else if let thumbImage = thumbImage, let data = Data(base64Encoded: thumbImage), let image = UIImage(data: data) {
+            self.thumbnail = .image(image)
         } else {
-            self.thumbnail = nil
+            self.thumbnail = .none
         }
         self.createdAt = createdAt
         self.shouldLayoutAsArticle = GalleryItem.shouldLayoutImageOfRatioAsAriticle(size)
@@ -84,12 +106,20 @@ struct GalleryItem: Equatable {
                   mediaHeight: m.mediaHeight,
                   mediaStatus: m.mediaStatus,
                   thumbImage: m.thumbImage,
+                  thumbUrl: m.thumbUrl,
                   createdAt: m.createdAt)
+    }
+    
+    static func videoCoverUrl(mediaUrl: URL) -> URL? {
+        guard let filename = mediaUrl.path.components(separatedBy: ".").first else {
+            return nil
+        }
+        let path = filename + ExtensionName.jpeg.withDot
+        return URL(fileURLWithPath: path)
     }
     
     static func ==(lhs: GalleryItem, rhs: GalleryItem) -> Bool {
         return lhs.messageId == rhs.messageId
-            && lhs.url == rhs.url
     }
     
     static func shouldLayoutImageOfRatioAsAriticle(_ ratio: CGSize) -> Bool {

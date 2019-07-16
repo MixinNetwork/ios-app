@@ -241,8 +241,8 @@
 		7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47B21197F220039946B /* RecentStickersViewController.swift */; };
 		7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */; };
 		7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8ED47F21198EC20039946B /* StickerInputModelController.swift */; };
-		7B91056022CF4A1E002E3608 /* StreamMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91055F22CF4A1E002E3608 /* StreamMessageViewModel.swift */; };
-		7B91056222CF4A58002E3608 /* StreamMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91056122CF4A58002E3608 /* StreamMessageCell.swift */; };
+		7B91056022CF4A1E002E3608 /* LiveMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91055F22CF4A1E002E3608 /* LiveMessageViewModel.swift */; };
+		7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91056122CF4A58002E3608 /* LiveMessageCell.swift */; };
 		7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */; };
 		7B915F6C215F32A500A562C6 /* GiphyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F6B215F32A500A562C6 /* GiphyViewController.swift */; };
 		7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */; };
@@ -324,6 +324,7 @@
 		7BBF395E205A624F00390712 /* Fee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBF395D205A624F00390712 /* Fee.swift */; };
 		7BC022E5214A13DC00B7A398 /* AuthorizationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */; };
 		7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */; };
+		7BC24E3B22E81052007BF194 /* TransferLiveData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC24E3A22E81052007BF194 /* TransferLiveData.swift */; };
 		7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC26533207B595500EA7DFF /* ContactMessageCell.swift */; };
 		7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */; };
 		7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */; };
@@ -952,8 +953,8 @@
 		7B8ED47B21197F220039946B /* RecentStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteStickersViewController.swift; sourceTree = "<group>"; };
 		7B8ED47F21198EC20039946B /* StickerInputModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerInputModelController.swift; sourceTree = "<group>"; };
-		7B91055F22CF4A1E002E3608 /* StreamMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamMessageViewModel.swift; sourceTree = "<group>"; };
-		7B91056122CF4A58002E3608 /* StreamMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamMessageCell.swift; sourceTree = "<group>"; };
+		7B91055F22CF4A1E002E3608 /* LiveMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMessageViewModel.swift; sourceTree = "<group>"; };
+		7B91056122CF4A58002E3608 /* LiveMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMessageCell.swift; sourceTree = "<group>"; };
 		7B915F69215F315A00A562C6 /* StickersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersCollectionViewController.swift; sourceTree = "<group>"; };
 		7B915F6B215F32A500A562C6 /* GiphyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GiphyViewController.swift; sourceTree = "<group>"; };
 		7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchViewController.swift; sourceTree = "<group>"; };
@@ -1035,6 +1036,7 @@
 		7BBF395D205A624F00390712 /* Fee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fee.swift; sourceTree = "<group>"; };
 		7BC022E4214A13DC00B7A398 /* AuthorizationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationsViewController.swift; sourceTree = "<group>"; };
 		7BC022E6214A150400B7A398 /* AuthorizationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationTableViewCell.swift; sourceTree = "<group>"; };
+		7BC24E3A22E81052007BF194 /* TransferLiveData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TransferLiveData.swift; path = ../../../../../../../../../System/Volumes/Data/Users/wuyuehyang/develop/Mixin/mixin/Mixin/Core/WebSocket/Model/TransferLiveData.swift; sourceTree = "<group>"; };
 		7BC26533207B595500EA7DFF /* ContactMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessageCell.swift; sourceTree = "<group>"; };
 		7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotCell.swift; sourceTree = "<group>"; };
 		7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragDownIndicator.swift; sourceTree = "<group>"; };
@@ -1655,7 +1657,7 @@
 				7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */,
 				7BD7534B2182CD7A00BAC172 /* CallMessageViewModel.swift */,
 				7B7FBF8E2282D75400644693 /* RecalledMessageViewModel.swift */,
-				7B91055F22CF4A1E002E3608 /* StreamMessageViewModel.swift */,
+				7B91055F22CF4A1E002E3608 /* LiveMessageViewModel.swift */,
 				7BFDB73820DA41E3005673CC /* Quote.swift */,
 				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
 				7BF9969420CA6F3800FD948F /* Waveform.swift */,
@@ -2544,6 +2546,7 @@
 				DF2A3CD920173F2D0095F024 /* TransferStickerData.swift */,
 				DF7FB63922801B4E00F4782F /* TransferRecallData.swift */,
 				DFF5D3F5207B759E008B9B75 /* TransferContactData.swift */,
+				7BC24E3A22E81052007BF194 /* TransferLiveData.swift */,
 				DF22D94C1FDE500500243CAE /* SystemConversationData.swift */,
 				DF6DB8402028C1A60060CF31 /* AppButtonData.swift */,
 				7BA4193B209AF7E600DFCD39 /* AppCardData.swift */,
@@ -2668,7 +2671,7 @@
 				7BA4193D209AFAB500DFCD39 /* AppCardMessageCell.swift */,
 				7B9F06C720A985E70095A51B /* VideoMessageCell.swift */,
 				7B84358820D8DC2E00237242 /* QuoteTextMessageCell.swift */,
-				7B91056122CF4A58002E3608 /* StreamMessageCell.swift */,
+				7B91056122CF4A58002E3608 /* LiveMessageCell.swift */,
 				7BD7534D2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift */,
 				7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */,
 				7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */,
@@ -3261,7 +3264,7 @@
 				DF5D9F311F9C95410036D5FD /* CountryCodeLibrary.swift in Sources */,
 				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
 				7BB3855A21E77C380070FF8F /* ProvisioningAPI.swift in Sources */,
-				7B91056022CF4A1E002E3608 /* StreamMessageViewModel.swift in Sources */,
+				7B91056022CF4A1E002E3608 /* LiveMessageViewModel.swift in Sources */,
 				DFD995A0207C9D6100621FFA /* AccountUserDefault.swift in Sources */,
 				7B3936CF20C15BA00075A97A /* MixinKeys.swift in Sources */,
 				273FACC4205FB9A800513327 /* IdentityKeyStoreWrapper.swift in Sources */,
@@ -3622,7 +3625,7 @@
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
 				7B4EF79F22D5E55400F19F6A /* RemoveEmergencyContactValidationViewController.swift in Sources */,
 				DF2A244E1FC84E3F003A8C1E /* Conversation.swift in Sources */,
-				7B91056222CF4A58002E3608 /* StreamMessageCell.swift in Sources */,
+				7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */,
 				273FACBF205FB9A800513327 /* SessionSignedPreKey.swift in Sources */,
 				7B72651C209C5F9300F234BE /* Link.swift in Sources */,
 				DF503D251FECE54100C008E7 /* IdentityDAO.swift in Sources */,
@@ -3654,6 +3657,7 @@
 				DF8DA1A41FD64C5800425CEC /* BlazeMessageData.swift in Sources */,
 				DF503D3C1FECFD9800C008E7 /* SignalDatabase.swift in Sources */,
 				DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */,
+				7BC24E3B22E81052007BF194 /* TransferLiveData.swift in Sources */,
 				DF8DA1AF1FD6832000425CEC /* RefreshUserJob.swift in Sources */,
 				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,
 				7B5843452175D3EC0053332F /* PendingDeposit.swift in Sources */,

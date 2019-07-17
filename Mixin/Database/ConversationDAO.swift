@@ -28,7 +28,7 @@ final class ConversationDAO {
     private static let sqlQueryConversationList = String(format: sqlQueryConversation, "")
     private static let sqlQueryConversationByOwnerId = String(format: sqlQueryConversation, " AND c.owner_id = ? AND c.category = 'CONTACT'")
     private static let sqlQueryConversationByCoversationId = String(format: sqlQueryConversation, " AND c.conversation_id = ? ")
-    private static let sqlQueryGroupOrStrangerConversationByName = String(format: sqlQueryConversation, " AND ((c.category = 'GROUP' AND c.name LIKE ?) OR (c.category = 'CONTACT' AND u1.relationship = 'STRANGER' AND u1.full_name LIKE ?))")
+    private static let sqlQueryGroupOrStrangerConversationByName = String(format: sqlQueryConversation, " AND ((c.category = 'GROUP' AND c.name LIKE ? ESCAPE '/') OR (c.category = 'CONTACT' AND u1.relationship = 'STRANGER' AND u1.full_name LIKE ? ESCAPE '/'))")
     private static let sqlQueryStorageUsage = """
     SELECT c.conversation_id as conversationId, c.owner_id as ownerId, c.category, c.icon_url as iconUrl, c.name, u.identity_number as ownerIdentityNumber,
     u.full_name as ownerFullName, u.avatar_url as ownerAvatarUrl, u.is_verified as ownerIsVerified, m.mediaSize
@@ -161,12 +161,12 @@ final class ConversationDAO {
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        let keyword = "%\(keyword)%"
+        let keyword = "%\(keyword.sqlEscaped)%"
         return MixinDatabase.shared.getCodables(sql: sql, values: [keyword, keyword])
     }
     
     func getConversation(withMessageLike keyword: String, limit: Int?) -> [MessagesWithinConversationSearchResult] {
-        let keyword = "%\(keyword)%"
+        let keyword = "%\(keyword.sqlEscaped)%"
         let name = Expression.case(Conversation.Properties.category.in(table: Conversation.tableName),
                                    [(when: "'\(ConversationCategory.CONTACT.rawValue)'",
                                     then: User.Properties.fullName.in(table: User.tableName))],
@@ -196,9 +196,9 @@ final class ConversationDAO {
                 == User.Properties.userId.in(table: User.tableName))
         let messageIsDecrypted = Message.Properties.status.in(table: Message.tableName) != MessageStatus.FAILED.rawValue
         let textMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_TEXT")
-            && Message.Properties.content.in(table: Message.tableName).like(keyword)
+            && Message.Properties.content.in(table: Message.tableName).like(keyword, escape: "/")
         let dataMessageContainsKeyword = Message.Properties.category.in(table: Message.tableName).like("%_DATA")
-            && Message.Properties.name.in(table: Message.tableName).like(keyword)
+            && Message.Properties.name.in(table: Message.tableName).like(keyword, escape: "/")
         let condition = messageIsDecrypted && (textMessageContainsKeyword || dataMessageContainsKeyword)
         let order = [Conversation.Properties.pinTime.in(table: Conversation.tableName).asOrder(by: .descending),
                      Conversation.Properties.lastMessageCreatedAt.in(table: Conversation.tableName).asOrder(by: .descending)]

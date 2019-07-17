@@ -14,7 +14,7 @@ final class AssetDAO {
     private static let sqlQuery = "\(sqlQueryTable) WHERE 1 = 1 \(sqlOrder)"
     private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a1.balance > 0 \(sqlOrder) LIMIT 1"
     private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a1.balance > 0 \(sqlOrder)"
-    private static let sqlQuerySearch = "\(sqlQueryTable) WHERE a1.balance > 0 AND (a1.name like ? OR a1.symbol like ?) \(sqlOrder)"
+    private static let sqlQuerySearch = "\(sqlQueryTable) WHERE a1.balance > 0 AND (a1.name LIKE ? ESCAPE '/' OR a1.symbol LIKE ? ESCAPE '/') \(sqlOrder)"
     private static let sqlQueryById = "\(sqlQueryTable) WHERE a1.asset_id = ?"
 
     func getAsset(assetId: String) -> AssetItem? {
@@ -47,7 +47,7 @@ final class AssetDAO {
     }
     
     func getAssets(keyword: String, limit: Int?) -> [AssetItem] {
-        let keyword = "%\(keyword)%"
+        let keyword = "%\(keyword.sqlEscaped)%"
         var sql = AssetDAO.sqlQuerySearch
         if let limit = limit {
             sql += " LIMIT \(limit)"

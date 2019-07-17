@@ -167,11 +167,11 @@ extension WalletViewController {
     }
     
     private func confirmHideAsset(at indexPath: IndexPath) {
-        let assetId = assets[indexPath.row].assetId
-        let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(), message: nil, preferredStyle: .alert)
+        let asset = assets[indexPath.row]
+        let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(asset.symbol), message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.dialog_button_cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.action_hide(), style: .default, handler: { (_) in
-            self.hideAsset(of: assetId)
+            self.hideAsset(of: asset.assetId)
         }))
         present(alert, animated: true, completion: nil)
     }

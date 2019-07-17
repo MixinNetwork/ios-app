@@ -381,7 +381,7 @@
 "wallet_asset_symbol" = "シンボル";
 "wallet_asset_chain" = "チェーン";
 "wallet_asset_key" = "コントラクト";
-"wallet_hide_asset_confirmation" = "資産を隠すを確認してください";
+"wallet_hide_asset_confirmation" = "%@を隠すを確認してください";
 
 // Transaction
 "transaction_title" = "取引";

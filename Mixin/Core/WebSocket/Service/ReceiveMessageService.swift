@@ -279,11 +279,17 @@ class ReceiveMessageService: MixinService {
         guard let count = deliverKeys(blazeMessage: countBlazeMessage)?.toSignalKeyCount(), count.preKeyCount <= prekeyMiniNum else {
             return
         }
-        guard let request = (try? PreKeyUtil.generateKeys()) else {
-            return
+        do {
+            let request = try PreKeyUtil.generateKeys()
+            let blazeMessage = BlazeMessage(params: BlazeMessageParam(syncSignalKeys: request), action: BlazeMessageAction.syncSignalKeys.rawValue)
+            deliverNoThrow(blazeMessage: blazeMessage)
+        } catch {
+            if let err = error as? SignalError, err == SignalError.noData, IdentityDao.shared.getLocalIdentity() == nil {
+                AccountAPI.shared.logout()
+            } else {
+                UIApplication.traceError(error)
+            }
         }
-        let blazeMessage = BlazeMessage(params: BlazeMessageParam(syncSignalKeys: request), action: BlazeMessageAction.syncSignalKeys.rawValue)
-        deliverNoThrow(blazeMessage: blazeMessage)
     }
 
     private func checkSignalKey() {

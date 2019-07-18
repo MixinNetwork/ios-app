@@ -44,12 +44,6 @@ class MixinIdentityKeyStore: IdentityKeyStore {
     }
 }
 
-extension IdentityKeyStore {
-    func removeIdentity(address: SignalAddress) {
-        IdentityDao.shared.deleteIdentity(address: address.name)
-    }
-}
-
 
 
 

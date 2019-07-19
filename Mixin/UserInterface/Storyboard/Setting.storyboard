@@ -1638,6 +1638,7 @@
                     <connections>
                         <outlet property="blockLabel" destination="xXs-fD-pqa" id="jiF-xP-6dr"/>
                         <outlet property="emergencyLabel" destination="oJw-oe-hef" id="jiA-73-O39"/>
+                        <outlet property="passwordLabel" destination="sOZ-ts-cDk" id="nve-n4-jxJ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="p6J-0F-Qts" userLabel="First Responder" sceneMemberID="firstResponder"/>

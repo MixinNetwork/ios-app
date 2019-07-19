@@ -4,6 +4,7 @@ final class PrivacyViewController: UITableViewController {
     
     @IBOutlet weak var blockLabel: UILabel!
     @IBOutlet weak var emergencyLabel: UILabel!
+    @IBOutlet weak var passwordLabel: UILabel!
     
     private let blockedUsersIndexPath = IndexPath(row: 0, section: 0)
     private let footerReuseId = "footer"
@@ -26,7 +27,9 @@ final class PrivacyViewController: UITableViewController {
         tableView.estimatedSectionFooterHeight = 10
         tableView.sectionFooterHeight = UITableView.automaticDimension
         NotificationCenter.default.addObserver(self, selector: #selector(updateBlockedUserCell), name: .UserDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updatePasswordCell), name: .AccountDidChange, object: nil)
         updateBlockedUserCell()
+        updatePasswordCell()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -46,7 +49,11 @@ final class PrivacyViewController: UITableViewController {
                 vc = ConversationSettingViewController.instance()
             }
         case 1:
-            vc = WalletSettingViewController.instance()
+            if AccountAPI.shared.account?.has_pin ?? false {
+                vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
+            } else {
+                vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
+            }
         case 2:
             vc = AuthorizationsViewController.instance()
         default:
@@ -74,6 +81,12 @@ final class PrivacyViewController: UITableViewController {
             DispatchQueue.main.async { [weak self] in
                 self?.blockLabel.text = blocked.count > 0 ? "\(blocked.count)" + Localized.SETTING_BLOCKED_USER_COUNT_SUFFIX : Localized.SETTING_BLOCKED_USER_COUNT_NONE
             }
+        }
+    }
+
+    @objc func updatePasswordCell() {
+        DispatchQueue.main.async { [weak self] in
+            self?.passwordLabel.text = AccountAPI.shared.account?.has_pin ?? false ? R.string.localizable.wallet_change_password() : R.string.localizable.wallet_setting()
         }
     }
     

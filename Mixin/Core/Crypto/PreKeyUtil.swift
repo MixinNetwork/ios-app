@@ -23,8 +23,12 @@ class PreKeyUtil {
         return dict
     }
 
-    static func getIdentityKeyPair() -> KeyPair {
-        return IdentityDao.shared.getLocalIdentity()!.getIdentityKeyPair()
+    static func getIdentityKeyPair() throws -> KeyPair {
+        guard let identity = IdentityDao.shared.getLocalIdentity() else {
+            AccountAPI.shared.logout()
+            throw SignalError.noData
+        }
+        return identity.getIdentityKeyPair()
     }
 
     static func generateSignedPreKey(identityKeyPair : KeyPair) throws -> SessionSignedPreKey {
@@ -37,7 +41,7 @@ class PreKeyUtil {
     }
 
     static func generateKeys() throws -> SignalKeyRequest {
-        let identityKeyPair = PreKeyUtil.getIdentityKeyPair()
+        let identityKeyPair = try PreKeyUtil.getIdentityKeyPair()
         let preKeys = try PreKeyUtil.generatePreKeys()
         let signedPreKey = try PreKeyUtil.generateSignedPreKey(identityKeyPair: identityKeyPair)
 

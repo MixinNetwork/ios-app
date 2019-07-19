@@ -5,7 +5,9 @@ class ProvisionManager {
     static func updateProvision(uuid: String, base64EncodedPublicKey: String, completion: @escaping (Bool) -> Void) {
         let cryptor = MXNProvisionCryptor(signalContext: Signal.context,
                                           base64EncodedPublicKey: base64EncodedPublicKey)
-        let identityKeyPair = PreKeyUtil.getIdentityKeyPair()
+        guard let identityKeyPair = try? PreKeyUtil.getIdentityKeyPair() else {
+            return
+        }
         ProvisioningAPI.shared.code { (response) in
             switch response {
             case .success(let response):

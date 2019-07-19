@@ -284,11 +284,7 @@ class ReceiveMessageService: MixinService {
             let blazeMessage = BlazeMessage(params: BlazeMessageParam(syncSignalKeys: request), action: BlazeMessageAction.syncSignalKeys.rawValue)
             deliverNoThrow(blazeMessage: blazeMessage)
         } catch {
-            if let err = error as? SignalError, err == SignalError.noData, IdentityDao.shared.getLocalIdentity() == nil {
-                AccountAPI.shared.logout()
-            } else {
-                UIApplication.traceError(error)
-            }
+            UIApplication.traceError(error)
         }
     }
 

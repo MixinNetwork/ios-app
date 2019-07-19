@@ -7,7 +7,7 @@ class RotateSignedPreKeyJob: BaseJob {
     }
 
     override func run() throws {
-        let identityKeyPair = PreKeyUtil.getIdentityKeyPair()
+        let identityKeyPair = try PreKeyUtil.getIdentityKeyPair()
         let signedPreKey = try PreKeyUtil.generateSignedPreKey(identityKeyPair: identityKeyPair)
 
         let request = SignalKeyRequest(identityKey: identityKeyPair.publicKey.base64EncodedString(),

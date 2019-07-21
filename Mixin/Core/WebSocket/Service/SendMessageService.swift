@@ -103,7 +103,7 @@ class SendMessageService: MixinService {
             ConcurrentJobQueue.shared.addJob(job: job)
         } else if msg.category.hasSuffix("_VIDEO") {
             let job = VideoUploadJob(message: msg)
-            ConcurrentJobQueue.shared.addJob(job: job)
+            FileJobQueue.shared.addJob(job: job)
         } else if msg.category.hasSuffix("_DATA") {
             FileJobQueue.shared.addJob(job: FileUploadJob(message: msg))
         } else if msg.category.hasSuffix("_AUDIO") {

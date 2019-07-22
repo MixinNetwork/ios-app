@@ -559,9 +559,6 @@ class ReceiveMessageService: MixinService {
             }
             switch plainData.action {
             case PlainDataAction.RESEND_KEY.rawValue:
-                guard !JobDAO.shared.isExist(conversationId: data.conversationId, userId: data.userId, action: .RESEND_KEY) else {
-                    return
-                }
                 guard SignalProtocol.shared.containsSession(recipient: data.userId) else {
                     return
                 }

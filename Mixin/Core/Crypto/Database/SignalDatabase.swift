@@ -18,6 +18,7 @@ class SignalDatabase: BaseDatabase {
             self._database = Database(withPath: MixinFile.signalDatabasePath)
         }
         do {
+            database.setSynchronous(isFull: true)
             try database.run(transaction: {
                 try database.create(of: Identity.self)
                 try database.create(of: PreKey.self)

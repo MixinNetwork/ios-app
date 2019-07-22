@@ -85,9 +85,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.cancelBackgroundTask()
         })
         let timeInterval: TimeInterval = !isPushKit || BlazeMessageDAO.shared.getCount() + JobDAO.shared.getCount() > 50 ? 120 : 20
-        if isPushKit {
-            FileManager.default.writeLog(log: "\n-----------------------\nAppDelegate...didReceiveIncomingPushWith...timeInterval:\(timeInterval)")
-        }
         self.backgroundTime = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { (time) in
             self.cancelBackgroundTask()
         }

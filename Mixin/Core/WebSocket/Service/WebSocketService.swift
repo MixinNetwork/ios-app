@@ -120,7 +120,6 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     func webSocketRequestHeaders(_ request: URLRequest!) -> [String : String]! {
-        FileManager.default.writeLog(log: "WebSocketService...webSocketWillOpen")
         requestHeaderTime = Date().timeIntervalSince1970
         return MixinRequest.getHeaders(request: request)
     }
@@ -145,7 +144,6 @@ extension WebSocketService: SRWebSocketDelegate {
             }
         }
 
-        FileManager.default.writeLog(log: "WebSocketService...webSocketDidOpen")
         connected = true
         NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: true)
 
@@ -226,7 +224,6 @@ extension WebSocketService: SRWebSocketDelegate {
     }
 
     func reconnect(didClose: Bool) {
-        FileManager.default.writeLog(log: "WebSocketService...reconnect")
         connected = false
         NotificationCenter.default.postOnMain(name: .SocketStatusChanged, object: false)
         ReceiveMessageService.shared.refreshRefreshOneTimePreKeys = [String: TimeInterval]()

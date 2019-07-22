@@ -130,7 +130,7 @@ class MixinService {
         if result {
             SentSenderKeyDAO.shared.replace(SentSenderKey(conversationId: conversationId, userId: recipientId, sentToServer: SentSenderKeyStatus.SENT.rawValue))
         }
-        FileManager.default.writeLog(conversationId: conversationId, log: "[DeliverSenderKey]...recipientId:\(recipientId)...\(result)")
+        FileManager.default.writeLog(conversationId: conversationId, log: "[DeliverSenderKey]...messageId:\(blazeMessage.params?.messageId ?? "")...recipientId:\(recipientId)...\(result)")
         return result
     }
 

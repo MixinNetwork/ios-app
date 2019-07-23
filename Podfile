@@ -20,7 +20,7 @@ target 'Mixin' do
   pod 'GzipSwift'
   pod 'RSKImageCropper'
   pod 'DeviceGuru'
-  pod 'Zip', '~> 1.1'
+  pod 'Zip', '~> 1.1.0'
   pod 'SignalProtocolC', :git => 'git@github.com:MixinMessenger/SignalProtocolC.git', :submodules => true
   pod 'WCDB.swift', :git => 'git@github.com:MixinNetwork/wcdb.git', :branch => 'xcode10.2+swift4.2'
   pod 'GiphyCoreSDK'

@@ -1,43 +1,43 @@
 PODS:
   - Alamofire (4.8.2)
   - AlignedCollectionViewFlowLayout (1.1.2)
-  - Bugsnag (5.22.2)
-  - Crashlytics (3.13.3):
+  - Bugsnag (5.22.3)
+  - Crashlytics (3.13.4):
     - Fabric (~> 1.10.2)
   - DeviceGuru (5.1.4)
   - Fabric (1.10.2)
-  - Firebase/Analytics (6.4.0):
+  - Firebase/Analytics (6.5.0):
     - Firebase/Core
-  - Firebase/Core (6.4.0):
+  - Firebase/Core (6.5.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 6.0.3)
-  - Firebase/CoreOnly (6.4.0):
-    - FirebaseCore (= 6.0.4)
-  - Firebase/MLVision (6.4.0):
+    - FirebaseAnalytics (= 6.0.4)
+  - Firebase/CoreOnly (6.5.0):
+    - FirebaseCore (= 6.1.0)
+  - Firebase/MLVision (6.5.0):
     - Firebase/CoreOnly
     - FirebaseMLVision (~> 0.17.0)
-  - Firebase/MLVisionBarcodeModel (6.4.0):
+  - Firebase/MLVisionBarcodeModel (6.5.0):
     - Firebase/CoreOnly
     - FirebaseMLVisionBarcodeModel (~> 0.17.0)
-  - Firebase/Performance (6.4.0):
+  - Firebase/Performance (6.5.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 3.1.1)
   - FirebaseABTesting (3.0.0):
     - FirebaseCore (~> 6.0)
     - Protobuf (~> 3.5)
-  - FirebaseAnalytics (6.0.3):
-    - FirebaseCore (~> 6.0)
+  - FirebaseAnalytics (6.0.4):
+    - FirebaseCore (~> 6.1)
     - FirebaseInstanceID (~> 4.2)
-    - GoogleAppMeasurement (= 6.0.3)
+    - GoogleAppMeasurement (= 6.0.4)
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
     - GoogleUtilities/Network (~> 6.0)
     - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (~> 0.3)
-  - FirebaseCore (6.0.4):
+  - FirebaseCore (6.1.0):
     - GoogleUtilities/Environment (~> 6.0)
     - GoogleUtilities/Logger (~> 6.0)
-  - FirebaseInstanceID (4.2.1):
+  - FirebaseInstanceID (4.2.2):
     - FirebaseCore (~> 6.0)
     - GoogleUtilities/Environment (~> 6.0)
     - GoogleUtilities/UserDefaults (~> 6.0)
@@ -65,9 +65,9 @@ PODS:
     - GoogleUtilities/MethodSwizzler (~> 6.0)
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.5)
-  - FirebaseRemoteConfig (4.2.0):
+  - FirebaseRemoteConfig (4.2.1):
     - FirebaseABTesting (~> 3.0)
-    - FirebaseCore (~> 6.0)
+    - FirebaseCore (~> 6.1)
     - FirebaseInstanceID (~> 4.2)
     - GoogleUtilities/Environment (~> 6.0)
     - "GoogleUtilities/NSData+zlib (~> 6.0)"
@@ -78,7 +78,7 @@ PODS:
   - GoogleAPIClientForREST/Vision (1.3.9):
     - GoogleAPIClientForREST/Core
     - GTMSessionFetcher (>= 1.1.7)
-  - GoogleAppMeasurement (6.0.3):
+  - GoogleAppMeasurement (6.0.4):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
     - GoogleUtilities/Network (~> 6.0)
@@ -96,26 +96,26 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.2.1)
   - "GoogleToolboxForMac/NSData+zlib (2.2.1)":
     - GoogleToolboxForMac/Defines (= 2.2.1)
-  - GoogleUtilities/AppDelegateSwizzler (6.2.1):
+  - GoogleUtilities/AppDelegateSwizzler (6.2.3):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (6.2.1)
-  - GoogleUtilities/ISASwizzler (6.2.1)
-  - GoogleUtilities/Logger (6.2.1):
+  - GoogleUtilities/Environment (6.2.3)
+  - GoogleUtilities/ISASwizzler (6.2.3)
+  - GoogleUtilities/Logger (6.2.3):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (6.2.1):
+  - GoogleUtilities/MethodSwizzler (6.2.3):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (6.2.1):
+  - GoogleUtilities/Network (6.2.3):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (6.2.1)"
-  - GoogleUtilities/Reachability (6.2.1):
+  - "GoogleUtilities/NSData+zlib (6.2.3)"
+  - GoogleUtilities/Reachability (6.2.3):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (6.2.1):
+  - GoogleUtilities/UserDefaults (6.2.3):
     - GoogleUtilities/Logger
-  - GoogleWebRTC (1.1.28408)
+  - GoogleWebRTC (1.1.28604)
   - GTMSessionFetcher (1.2.2):
     - GTMSessionFetcher/Full (= 1.2.2)
   - GTMSessionFetcher/Core (1.2.2)
@@ -133,7 +133,7 @@ PODS:
   - PhoneNumberKit/PhoneNumberKitCore (2.6.0)
   - PhoneNumberKit/UIKit (2.6.0):
     - PhoneNumberKit/PhoneNumberKitCore
-  - Protobuf (3.8.0)
+  - Protobuf (3.9.0)
   - R.swift (5.0.3):
     - R.swift.Library (~> 5.0.0)
   - R.swift.Library (5.0.1)
@@ -180,7 +180,7 @@ DEPENDENCIES:
   - "SocketRocket (from `git@github.com:over140/SocketRocket.git`, branch `feature/request`)"
   - "WCDB.swift (from `git@github.com:MixinNetwork/wcdb.git`, branch `xcode10.2+swift4.2`)"
   - YYImage/WebP
-  - Zip (~> 1.1)
+  - Zip (~> 1.1.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -249,32 +249,32 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   AlignedCollectionViewFlowLayout: ee2ef451e741ec08f8e0967d828001e2f051c20a
-  Bugsnag: 3e9e2b563f1e99ce447de123c65e851bd109fa9f
-  Crashlytics: 2aa08cd61fb1d62718c4e653169461d1d7377de2
+  Bugsnag: ba9fec5ebe711cb2e1da5225d89654d72e7254e3
+  Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
   DeviceGuru: 76fbfd16d5241bc292730cd38190d52a3b8820fc
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
-  Firebase: 9445469655a98e9010737f4bc4720e5bda465873
+  Firebase: dedc9e48ea3f3649ad5f6b982f8a0c73508a14b5
   FirebaseABTesting: a32c488eb75089a61eb3d86db061dfb909d765db
-  FirebaseAnalytics: 69fe25866d2ec87c6f02d72c3c9a82bce9c065a0
-  FirebaseCore: 7ea99e200f0024262650be56623fbe6a7bef1707
-  FirebaseInstanceID: 9782fcfb89e4d7da76cc28eac4b8543dc7be4a4b
+  FirebaseAnalytics: 3fb375bc9d13779add4039716f868d233a473fad
+  FirebaseCore: aecf02fb2274ec361b9bebeac112f5daa18273bd
+  FirebaseInstanceID: 662b8108a09fe9ed01aafdedba100fde8536b0f6
   FirebaseMLCommon: b236f9bc8a020d4c36744d6e402b2fb9d6fe3f6d
   FirebaseMLVision: ff6a597d10017c5dfe1cc6d24293b77f84808060
   FirebaseMLVisionBarcodeModel: 4ac90a8ed5a92e1ed8d9278b92d794230a01dd16
   FirebasePerformance: bd3666700af4d43caf2a13b93718f3b532b8a5ff
-  FirebaseRemoteConfig: 7f6a0899f51953999667cb34a13b2e479c17d840
+  FirebaseRemoteConfig: ed74d16d7e5b19e77a4c3e3eee4fe363039b0834
   GiphyCoreSDK: 1a89e03e55dc6b636b9d40fde76107867dbb9da5
   GoogleAPIClientForREST: 44c7b678cbab11d26a47eab7309d6179b1a61f0c
-  GoogleAppMeasurement: 1e45fa601e6280c180880d57010390f6679cd971
+  GoogleAppMeasurement: 183bd916af7f80deb67c01888368f1108d641832
   GoogleMobileVision: 31cfb4319fd0c03d80105680abd9eae9da5e3b47
   GoogleToolboxForMac: b3553629623a3b1bff17f555e736cd5a6d95ad55
-  GoogleUtilities: c7a0b08bda3bf808be823ed151f0e28ac6866e71
-  GoogleWebRTC: ac5f7a5a264b4873f09454af79f938e283e02aa0
+  GoogleUtilities: d2b0e277a95962e09bb27f5cd42f5f0b6a506c7d
+  GoogleWebRTC: 006112977cf03b7ee4fb898ae1e2016e2312ee0b
   GTMSessionFetcher: 61bb0f61a4cb560030f1222021178008a5727a23
   GzipSwift: 5592f4d62b641e04d06443ba471f8ed76b1363e4
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   PhoneNumberKit: 167ee1f0bbb6efce7c62559e620eae745595532f
-  Protobuf: 3f617b9a6e73605565086864c9bc26b2bf2dd5a3
+  Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
   R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
   R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
   RSKImageCropper: 05e3b82a18da83ea3c2b7bffa7f2199a621d6802
@@ -289,6 +289,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 2604ded0c453e00ac8bd88d6119246a947835dfc
+PODFILE CHECKSUM: f133bac2f6c36f2d5caf734afd44f73d2b8ede4c
 
 COCOAPODS: 1.7.3

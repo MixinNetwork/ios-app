@@ -78,6 +78,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func checkServerData(isPushKit: Bool = false) {
+        guard AccountAPI.shared.didLogin else {
+            return
+        }
         WebSocketService.shared.checkConnectStatus()
 
         cancelBackgroundTask()

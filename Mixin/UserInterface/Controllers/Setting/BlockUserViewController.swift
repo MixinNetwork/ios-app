@@ -15,6 +15,7 @@ class BlockUserViewController: UIViewController {
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
+        UserAPI.shared.syncBlockingUsers()
         fetchBlockedUsers()
         NotificationCenter.default.addObserver(self, selector: #selector(fetchBlockedUsers), name: .UserDidChange, object: nil)
     }

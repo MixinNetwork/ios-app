@@ -18,6 +18,7 @@ final class UserAPI: BaseAPI {
         static let users = "users/fetch"
         static let relationships = "relationships"
         static let reports = "reports"
+        static let blockingUsers = "blocking_users"
     }
 
     func codes(codeId: String, completion: @escaping (APIResult<QRCodeResponse>) -> Void) {
@@ -31,6 +32,14 @@ final class UserAPI: BaseAPI {
 
     func showUser(userId: String) -> APIResult<UserResponse> {
         return request(method: .get, url: url.users(id: userId))
+    }
+
+    func syncBlockingUsers() {
+        request(method: .get, url: url.blockingUsers) { (result: APIResult<[UserResponse]>) in
+            if case let .success(users) = result {
+                UserDAO.shared.updateUsers(users: users)
+            }
+        }
     }
 
     @discardableResult

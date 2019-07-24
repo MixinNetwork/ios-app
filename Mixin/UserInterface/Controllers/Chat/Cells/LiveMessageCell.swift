@@ -2,7 +2,7 @@ import UIKit
 
 class LiveMessageCell: PhotoRepresentableMessageCell {
     
-    let badgeView = LiveStreamBadgeView()
+    let badgeView = UIImageView(image: R.image.live_badge())
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)

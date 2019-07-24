@@ -25,7 +25,10 @@ class PreKeyUtil {
 
     static func getIdentityKeyPair() throws -> KeyPair {
         guard let identity = IdentityDao.shared.getLocalIdentity() else {
-            AccountAPI.shared.logout()
+            var userInfo = UIApplication.getTrackUserInfo()
+            userInfo["error"] = "local identity nil"
+            userInfo["identityCount"] = "\(IdentityDao.shared.getCount())"
+            UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: userInfo)
             throw SignalError.noData
         }
         return identity.getIdentityKeyPair()

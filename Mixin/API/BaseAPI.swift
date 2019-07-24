@@ -141,6 +141,7 @@ class BaseAPI {
                                 }
                             }
                         }
+                        UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "async request 401"])
                         AccountAPI.shared.logout()
                         return
                     case 429:
@@ -243,6 +244,7 @@ extension BaseAPI {
                     }
                 }
             }
+            UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: ["error": "sync request 401"])
             AccountAPI.shared.logout()
         }
         return result

@@ -56,6 +56,7 @@ enum NotificationRequestIdentifier {
 }
 
 enum ReportErrorCode {
+    static let logoutError = 100000
     static let sendMessengerError = 100001
     static let sendCodeByLoginError = 100002
     static let recaptchaUnrecognized = 100003

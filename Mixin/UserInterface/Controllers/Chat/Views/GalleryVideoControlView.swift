@@ -8,8 +8,15 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         case pause
     }
     
+    struct Style: OptionSet {
+        let rawValue: Int
+        static let pip = Style(rawValue: 1 << 0)
+        static let liveStream = Style(rawValue: 1 << 1)
+    }
+    
     @IBOutlet weak var visualControlWrapperView: UIView!
     @IBOutlet weak var pipButton: UIButton!
+    @IBOutlet weak var liveBadgeView: UIImageView!
     @IBOutlet weak var closeButton: UIButton!
     
     @IBOutlet weak var playControlWrapperView: UIView!
@@ -30,7 +37,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         }
     }
     
-    var isPipMode = false {
+    var style: Style = [] {
         didSet {
             updateControls()
         }
@@ -54,15 +61,20 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     
     private func updatePlayControlButtons() {
         reloadButton.isHidden = playControlStyle != .reload
-        playButton.isHidden = playControlStyle != .play || isPipMode
-        pauseButton.isHidden = playControlStyle != .pause || isPipMode
+        playButton.isHidden = playControlStyle != .play || style.contains(.pip)
+        pauseButton.isHidden = playControlStyle != .pause || style.contains(.pip)
     }
     
     private func updateControls() {
         updatePlayControlButtons()
+        let showLiveBadge = style.contains(.liveStream) && !style.contains(.pip)
+        liveBadgeView.alpha = showLiveBadge ? 1 : 0
         playControlWrapperView.alpha = playControlsHidden ? 0 : 1
         visualControlWrapperView.alpha = otherControlsHidden ? 0 : 1
-        timeControlWrapperView.alpha = otherControlsHidden || isPipMode ? 0 : 1
+        let hideTimeControl = otherControlsHidden
+            || style.contains(.pip)
+            || style.contains(.liveStream)
+        timeControlWrapperView.alpha = hideTimeControl ? 0 : 1
     }
     
 }

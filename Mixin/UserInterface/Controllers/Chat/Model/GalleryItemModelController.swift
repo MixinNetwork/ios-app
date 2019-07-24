@@ -77,6 +77,11 @@ final class GalleryItemModelController: NSObject {
         
         viewController.prepareForReuse()
         viewController.item = item
+        
+        if let vc = viewController as? GalleryVideoItemViewController, vc.isPlayable {
+            vc.controlView.set(playControlsHidden: false, otherControlsHidden: true, animated: false)
+        }
+        
         return viewController
     }
     

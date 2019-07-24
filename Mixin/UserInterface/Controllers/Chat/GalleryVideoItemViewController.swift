@@ -24,6 +24,14 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
     }
     
+    var isPlayable: Bool {
+        if let item = item {
+            return item.mediaStatus == .DONE || item.category == .live
+        } else {
+            return false
+        }
+    }
+    
     var controlView: GalleryVideoControlView {
         return videoView.controlView
     }
@@ -45,7 +53,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             if !isFocused {
                 player.pause()
                 player.seek(to: .zero)
-                controlView.set(playControlsHidden: false, otherControlsHidden: true, animated: false)
+                if isPlayable {
+                    controlView.set(playControlsHidden: false, otherControlsHidden: true, animated: false)
+                }
             }
         }
     }
@@ -104,7 +114,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     override func prepareForReuse() {
         super.prepareForReuse()
         isPipMode = false
-        controlView.activityIndicatorView.startAnimating()
+        controlView.activityIndicatorView.stopAnimating()
         controlView.playControlStyle = .play
         controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
         videoView.coverImageView.sd_cancelCurrentImageLoad()
@@ -150,6 +160,12 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         
         guard let item = item, let url = item.url else {
             return
+        }
+        
+        if item.category == .video {
+            controlView.style.remove(.liveStream)
+        } else if item.category == .live {
+            controlView.style.insert(.liveStream)
         }
         
         let asset = AVURLAsset(url: url)
@@ -220,7 +236,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }, completion: {
             if !isPipMode {
                 self.videoView.removeFromSuperview()
-                self.view.addSubview(self.videoView)
+                self.view.insertSubview(self.videoView, at: 0)
             }
         })
     }
@@ -370,7 +386,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         case .paused:
             controlView.playControlStyle = .play
         case .waitingToPlayAtSpecifiedRate:
-            controlView.activityIndicatorView.startAnimating()
+            if item?.category == .live {
+                controlView.activityIndicatorView.startAnimating()
+            }
         @unknown default:
             controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         }

@@ -11,7 +11,11 @@ final class GalleryVideoView: UIView {
     
     var isPipMode = false {
         didSet {
-            controlView.isPipMode = isPipMode
+            if isPipMode {
+                controlView.style.insert(.pip)
+            } else {
+                controlView.style.remove(.pip)
+            }
             setNeedsLayout()
         }
     }

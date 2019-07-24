@@ -154,6 +154,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                 self.transitionView.frame.origin.y = self.view.bounds.height
             })
         }
+        currentItemViewController?.isFocused = false
         animate(animations: {
             self.backgroundView.alpha = 0
         }, completion: {

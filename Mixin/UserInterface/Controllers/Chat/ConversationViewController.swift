@@ -1256,11 +1256,15 @@ extension ConversationViewController {
             cell.timeLabel,
             cell.statusImageView
         ]
-        if let cell = cell as? AttachmentExpirationHintingMessageCell {
+        switch cell {
+        case let cell as AttachmentExpirationHintingMessageCell:
             contentViews.append(cell.operationButton)
-        }
-        if let cell = cell as? VideoMessageCell {
+        case let cell as VideoMessageCell:
             contentViews.append(cell.lengthLabel)
+        case let cell as LiveMessageCell:
+            contentViews.append(cell.badgeView)
+        default:
+            break
         }
         contentViews.forEach {
             $0.isHidden = hidden

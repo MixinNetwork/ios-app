@@ -32,13 +32,18 @@
                             </constraints>
                             <state key="normal" image="ic_close_shadow"/>
                         </button>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="live_badge" translatesAutoresizingMaskIntoConstraints="NO" id="OSM-5H-FgV">
+                            <rect key="frame" x="176.5" y="7.5" width="45" height="29"/>
+                        </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="Q7h-05-TmK" firstAttribute="leading" secondItem="HPi-eF-W69" secondAttribute="leading" id="6fv-sK-AcP"/>
+                        <constraint firstItem="OSM-5H-FgV" firstAttribute="centerX" secondItem="HPi-eF-W69" secondAttribute="centerX" id="Mgy-CF-54O"/>
                         <constraint firstItem="Q7h-05-TmK" firstAttribute="top" secondItem="HPi-eF-W69" secondAttribute="top" id="flc-7m-1k2"/>
                         <constraint firstAttribute="bottom" secondItem="ykM-27-EvN" secondAttribute="bottom" id="g7H-Vk-jge"/>
                         <constraint firstAttribute="height" constant="44" id="hVG-22-m5p"/>
+                        <constraint firstItem="OSM-5H-FgV" firstAttribute="centerY" secondItem="HPi-eF-W69" secondAttribute="centerY" id="ktA-Mf-dET"/>
                         <constraint firstItem="ykM-27-EvN" firstAttribute="top" secondItem="HPi-eF-W69" secondAttribute="top" id="lM2-FM-rWs"/>
                         <constraint firstAttribute="bottom" secondItem="Q7h-05-TmK" secondAttribute="bottom" id="m4J-CB-Qyt"/>
                         <constraint firstAttribute="trailing" secondItem="ykM-27-EvN" secondAttribute="trailing" id="uZL-Jt-pDo"/>
@@ -149,6 +154,7 @@
             <connections>
                 <outlet property="activityIndicatorView" destination="jT8-96-b2D" id="9He-4Q-IFe"/>
                 <outlet property="closeButton" destination="ykM-27-EvN" id="MJL-ww-ocf"/>
+                <outlet property="liveBadgeView" destination="OSM-5H-FgV" id="HNS-nX-WPn"/>
                 <outlet property="pauseButton" destination="Hyw-t1-hLS" id="LEj-vs-Jdu"/>
                 <outlet property="pipButton" destination="Q7h-05-TmK" id="EGd-AX-cAZ"/>
                 <outlet property="playButton" destination="yED-yG-s6z" id="ZFL-Ks-4Tc"/>
@@ -169,5 +175,6 @@
         <image name="ic_reload" width="38" height="30"/>
         <image name="ic_video_pause" width="22" height="26"/>
         <image name="ic_video_play" width="22" height="28"/>
+        <image name="live_badge" width="45" height="29"/>
     </resources>
 </document>

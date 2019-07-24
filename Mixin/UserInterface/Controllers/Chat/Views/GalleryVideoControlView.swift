@@ -43,10 +43,15 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         }
     }
     
+    private let pipModePlayControlTransform = CGAffineTransform(scaleX: 0.64, y: 0.64)
+    
     private var playControlsHidden = true
     private var otherControlsHidden = true
     
     func set(playControlsHidden: Bool, otherControlsHidden: Bool, animated: Bool) {
+        NSObject.cancelPreviousPerformRequests(withTarget: self,
+                                               selector: #selector(hideControls),
+                                               object: nil)
         self.playControlsHidden = playControlsHidden
         self.otherControlsHidden = otherControlsHidden
         if animated {
@@ -59,10 +64,18 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         }
     }
     
+    func scheduleControlsAutoHiddden() {
+        perform(#selector(hideControls), with: nil, afterDelay: 2)
+    }
+    
+    @objc private func hideControls() {
+        set(playControlsHidden: true, otherControlsHidden: true, animated: true)
+    }
+    
     private func updatePlayControlButtons() {
         reloadButton.isHidden = playControlStyle != .reload
-        playButton.isHidden = playControlStyle != .play || style.contains(.pip)
-        pauseButton.isHidden = playControlStyle != .pause || style.contains(.pip)
+        playButton.isHidden = playControlStyle != .play
+        pauseButton.isHidden = playControlStyle != .pause
     }
     
     private func updateControls() {
@@ -75,6 +88,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
             || style.contains(.pip)
             || style.contains(.liveStream)
         timeControlWrapperView.alpha = hideTimeControl ? 0 : 1
+        playControlWrapperView.transform = style.contains(.pip) ? pipModePlayControlTransform : .identity
     }
     
 }

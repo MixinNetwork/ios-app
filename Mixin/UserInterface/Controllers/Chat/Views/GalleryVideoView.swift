@@ -35,7 +35,9 @@ final class GalleryVideoView: UIView {
         }
     }
     
-    private let minLayerHeight: CGFloat = 240
+    private let stickToEdgeVelocityLimit: CGFloat = 800
+    private let pipModeMinInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+    private let pipModeDefaultTopMargin: CGFloat = 61
     
     private var videoRatio: CGFloat = 1
     
@@ -70,20 +72,22 @@ final class GalleryVideoView: UIView {
         layoutControlView()
     }
     
-    func stickToWindowEdge() {
+    func stickToWindowEdge(horizontalVelocity: CGFloat) {
         guard let superview = superview else {
             return
         }
         let x: CGFloat
-        if center.x > superview.bounds.midX {
-            x = superview.bounds.width - superview.layoutMargins.right - frame.size.width / 2
+        let shouldStickToRightEdge = center.x > superview.bounds.midX && horizontalVelocity > -stickToEdgeVelocityLimit
+            || center.x < superview.bounds.midX && horizontalVelocity > stickToEdgeVelocityLimit
+        if shouldStickToRightEdge {
+            x = superview.bounds.width - pipModeMinInsets.right - frame.size.width / 2
         } else {
-            x = superview.layoutMargins.left + frame.size.width / 2
+            x = pipModeMinInsets.left + frame.size.width / 2
         }
         let y: CGFloat = {
             let halfHeight = frame.size.height / 2
-            let minY = superview.layoutMargins.top + halfHeight
-            let maxY = superview.bounds.height - superview.layoutMargins.bottom - halfHeight
+            let minY = superview.safeAreaInsets.top + pipModeMinInsets.top + halfHeight
+            let maxY = superview.bounds.height - superview.safeAreaInsets.bottom - pipModeMinInsets.bottom - halfHeight
             return min(maxY, max(minY, center.y))
         }()
         UIView.animate(withDuration: 0.3) {
@@ -112,17 +116,15 @@ final class GalleryVideoView: UIView {
         
         let size: CGSize
         if videoRatio > 0.9 {
-            let width = superview.bounds.width / 2
+            let width = superview.bounds.width * (2 / 3)
             size = CGSize(width: width, height: width / videoRatio)
         } else {
             let height = superview.bounds.height / 3
             size = CGSize(width: height * videoRatio, height: height)
         }
         frame.size = size
-        center = CGPoint(x: superview.bounds.width - superview.layoutMargins.right - size.width / 2,
-                         y: superview.safeAreaInsets.top + size.height / 2)
-        controlView.reloadButton.transform = CGAffineTransform(scaleX: 0.54, y: 0.54)
-        controlView.activityIndicatorView.transform = CGAffineTransform(scaleX: 0.54, y: 0.54)
+        center = CGPoint(x: superview.bounds.width - pipModeMinInsets.right - size.width / 2,
+                         y: max(20, superview.safeAreaInsets.top) + pipModeDefaultTopMargin + size.height / 2)
         setNeedsLayout()
         layoutIfNeeded()
         roundCorners = true

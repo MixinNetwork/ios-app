@@ -227,6 +227,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             GalleryVideoItemViewController.currentPipController = nil
             galleryViewController?.show(itemViewController: self)
         }
+        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: true)
         let ratio = self.videoRatio
         let isPipMode = self.isPipMode
         animate(animations: {
@@ -293,7 +294,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                                        y: videoView.center.y + translation.y)
             recognizer.setTranslation(.zero, in: view)
         case .ended, .cancelled:
-            videoView.stickToWindowEdge()
+            let velocity = recognizer.velocity(in: view).x
+            videoView.stickToWindowEdge(horizontalVelocity: velocity)
         default:
             break
         }

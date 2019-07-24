@@ -27,6 +27,7 @@
 "action_share_to" = "に共有";
 "action_hide" = "隠す";
 "action_show" = "見せる";
+"action_unhide" = "表示にする";
 "action_apply" = "アプライ";
 "action_filter" = "フィルタ";
 "action_skip" = "スキップ";
@@ -383,6 +384,8 @@
 "wallet_asset_chain" = "チェーン";
 "wallet_asset_key" = "コントラクト";
 "wallet_hide_asset_confirmation" = "%@を隠すを確認してください";
+"wallet_asset_is_hidden_prompt" = "この資産は隠しました。表示にしますか";
+"wallet_asset_is_unhidden" = "表示にしました";
 
 // Transaction
 "transaction_title" = "取引";

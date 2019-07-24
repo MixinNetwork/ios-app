@@ -1399,7 +1399,7 @@ extension ConversationViewController {
             }
             
             let developConversationId = ConversationDAO.shared.makeConversationId(userId: AccountAPI.shared.accountUserId, ownerUserId: developUser.userId)
-            var message = Message.createMessage(category: MessageCategory.SIGNAL_DATA.rawValue, conversationId: developConversationId, userId: AccountAPI.shared.accountUserId)
+            var message = Message.createMessage(category: MessageCategory.PLAIN_DATA.rawValue, conversationId: developConversationId, userId: AccountAPI.shared.accountUserId)
             message.name = url.lastPathComponent
             message.mediaSize = FileManager.default.fileSize(targetUrl.path)
             message.mediaMimeType = FileManager.default.mimeType(ext: url.pathExtension)

@@ -108,13 +108,12 @@ final class MessageDAO {
     """
     
     static let sqlQueryGalleryItem = """
-    SELECT m.id, m.category, m.media_url, m.media_mime_type, m.media_width,
+    SELECT m.conversation_id, m.id, m.category, m.media_url, m.media_mime_type, m.media_width,
            m.media_height, m.media_status, m.thumb_image, m.thumb_url, m.created_at
     FROM messages m
     WHERE conversation_id = ?
-        AND (category LIKE '%_IMAGE' OR category LIKE '%_VIDEO')
-        AND status != 'FAILED'
-        AND (NOT (user_id = ? AND media_status != 'DONE'))
+        AND ((category LIKE '%_IMAGE' OR category LIKE '%_VIDEO') AND status != 'FAILED' AND (NOT (user_id = ? AND media_status != 'DONE'))
+             OR category LIKE '%_LIVE')
     """
     func getMediaUrls(likeCategory category: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.mediaUrl.asColumnResult(),
@@ -412,7 +411,8 @@ final class MessageDAO {
             
             while try cs.step() {
                 let counter = Counter(value: -1)
-                let item = GalleryItem(messageId: cs.value(atIndex: counter.advancedValue) ?? "",
+                let item = GalleryItem(conversationId: cs.value(atIndex: counter.advancedValue) ?? "",
+                                       messageId: cs.value(atIndex: counter.advancedValue) ?? "",
                                        category: cs.value(atIndex: counter.advancedValue) ?? "",
                                        mediaUrl: cs.value(atIndex: counter.advancedValue),
                                        mediaMimeType: cs.value(atIndex: counter.advancedValue),

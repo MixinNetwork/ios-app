@@ -228,6 +228,9 @@ class MixinService {
             if let chatVC = UIApplication.homeNavigationController?.viewControllers.last as? ConversationViewController, conversationId == chatVC.dataSource?.conversationId {
                 chatVC.handleMessageRecalling(messageId: messageId)
             }
+            if let gallery = UIApplication.homeContainerViewController?.galleryViewController {
+                gallery.handleMessageRecalling(messageId: messageId)
+            }
         }
 
         if messageId == AudioManager.shared.playingNode?.message.messageId {

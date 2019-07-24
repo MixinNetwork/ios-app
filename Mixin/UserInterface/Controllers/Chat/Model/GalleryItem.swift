@@ -1,6 +1,7 @@
 import UIKit
 
 protocol GalleryItemRepresentable {
+    var conversationId: String { get }
     var messageId: String { get }
     var category: String { get }
     var mediaUrl: String? { get }
@@ -44,6 +45,7 @@ struct GalleryItem: Equatable {
     ]
     
     let category: Category
+    let conversationId: String
     let messageId: String
     let url: URL?
     let size: CGSize
@@ -53,7 +55,8 @@ struct GalleryItem: Equatable {
     let shouldLayoutAsArticle: Bool
     var mediaStatus: MediaStatus?
     
-    init?(messageId: String, category: String, mediaUrl: String?, mediaMimeType: String?, mediaWidth: Int?, mediaHeight: Int?, mediaStatus: String?, thumbImage: String?, thumbUrl: String?, createdAt: String) {
+    init?(conversationId: String, messageId: String, category: String, mediaUrl: String?, mediaMimeType: String?, mediaWidth: Int?, mediaHeight: Int?, mediaStatus: String?, thumbImage: String?, thumbUrl: String?, createdAt: String) {
+        self.conversationId = conversationId
         if GalleryItem.imageCategories.contains(category) {
             self.category = .image
             if let mediaUrl = mediaUrl {
@@ -98,7 +101,8 @@ struct GalleryItem: Equatable {
     }
     
     init?(message m: GalleryItemRepresentable) {
-        self.init(messageId: m.messageId,
+        self.init(conversationId: m.conversationId,
+                  messageId: m.messageId,
                   category: m.category,
                   mediaUrl: m.mediaUrl,
                   mediaMimeType: m.mediaMimeType,

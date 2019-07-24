@@ -7,7 +7,7 @@ import FirebaseMLVision
 class AssetSendViewController: UIViewController, MixinNavigationAnimating {
 
     @IBOutlet weak var photoImageView: YYAnimatedImageView!
-    @IBOutlet weak var videoView: GalleryVideoView_Legacy!
+    @IBOutlet weak var videoView: AssetSendVideoView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var sendButton: StateResponsiveButton!

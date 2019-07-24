@@ -11,8 +11,16 @@ extension UIApplication {
         return UIApplication.shared.delegate as! AppDelegate
     }
     
+    static var homeContainerViewController: HomeContainerViewController? {
+        return UIApplication.shared.keyWindow?.rootViewController as? HomeContainerViewController
+    }
+    
     static var homeNavigationController: HomeNavigationController? {
-        return UIApplication.shared.keyWindow?.rootViewController as? HomeNavigationController
+        return homeContainerViewController?.homeNavigationController
+    }
+    
+    static var homeViewController: HomeViewController? {
+        return homeNavigationController?.viewControllers.first as? HomeViewController
     }
     
     static func currentActivity() -> UIViewController? {

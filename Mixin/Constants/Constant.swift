@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import FirebaseMLVision
 
 extension NSNotification.Name {
 
@@ -272,3 +273,8 @@ enum StatusBarHeight {
 let currentDecimalSeparator = Locale.current.decimalSeparator ?? "."
 
 let iTunesAppUrlRegex = try? NSRegularExpression(pattern: "^https://itunes\\.apple\\.com/.*app.*id[0-9]", options: .caseInsensitive)
+
+let qrCodeDetector: VisionBarcodeDetector = {
+    let options = VisionBarcodeDetectorOptions(formats: .qrCode)
+    return Vision.vision().barcodeDetector(options: options)
+}()

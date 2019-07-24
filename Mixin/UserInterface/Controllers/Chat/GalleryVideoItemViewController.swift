@@ -269,7 +269,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func playAction(_ sender: Any) {
-        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: true)
+        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
         if playerDidReachEnd {
             playerDidReachEnd = false
             player.seek(to: .zero)

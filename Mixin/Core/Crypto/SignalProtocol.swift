@@ -22,9 +22,14 @@ class SignalProtocol {
         UserDefaults.standard.set(localRegistrationId, forKey: PreKeyUtil.LOCAL_REGISTRATION_ID)
 
         let identityKeyPair = try! Signal.generateIdentityKeyPair()
-        SignalDatabase.shared.logout(onClosed: {
-            IdentityDao.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
-        })
+        let block = {
+            _ = IdentityDao.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
+        }
+        if FileManager.default.fileExists(atPath: MixinFile.signalDatabasePath) {
+            SignalDatabase.shared.logout(onClosed: block)
+        } else {
+            block()
+        }
     }
 
     func getRegistrationId() -> UInt32 {

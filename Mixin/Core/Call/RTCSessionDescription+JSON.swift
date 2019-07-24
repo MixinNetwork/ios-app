@@ -18,7 +18,7 @@ extension RTCSessionDescription {
     }
     
     convenience init?(jsonString: String) {
-        guard let data = jsonString.data(using: .utf8), case let json?? = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+        guard let data = jsonString.data(using: .utf8), let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
             return nil
         }
         guard let sdp = json[CodingKeys.sdp.rawValue] as? String, let typeValue = json[CodingKeys.type.rawValue] as? String else {

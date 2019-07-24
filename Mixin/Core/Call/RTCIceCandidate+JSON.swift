@@ -32,7 +32,7 @@ extension Array where Element: RTCIceCandidate {
     }
     
     init(jsonString: String) {
-        guard let data = jsonString.data(using: .utf8), case let jsons?? = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] else {
+        guard let data = jsonString.data(using: .utf8), let jsons = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] else {
             self = []
             return
         }

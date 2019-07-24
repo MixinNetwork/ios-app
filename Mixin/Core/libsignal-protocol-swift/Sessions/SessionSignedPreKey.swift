@@ -33,7 +33,7 @@ public struct SessionSignedPreKey {
      */
     public init(from data: Data) throws {
         var signedPreKey: OpaquePointer? = nil
-        let result = data.withUnsafeBytes { dPtr in
+        let result = data.withUnsafeUInt8Pointer { dPtr in
             withUnsafeMutablePointer(to: &signedPreKey) {
                 session_signed_pre_key_deserialize($0, dPtr, data.count, Signal.context)
             }
@@ -68,7 +68,7 @@ public struct SessionSignedPreKey {
 
         // Create pre key
         var signedPreKey: OpaquePointer? = nil
-        var result = signature.withUnsafeBytes { ptr in
+        var result = signature.withUnsafeUInt8Pointer { ptr in
             withUnsafeMutablePointer(to: &signedPreKey) {
                 return session_signed_pre_key_create($0, id, timestamp, keyPairPtr, ptr, signature.count)
             }

@@ -8,7 +8,7 @@ extension FileManager {
         guard let fileSize = try? FileManager.default.attributesOfItem(atPath: path)[FileAttributeKey.size] as? NSNumber else {
             return 0
         }
-        return fileSize?.int64Value ?? 0
+        return fileSize.int64Value
     }
 
     func saveToCloud(from: URL, to: URL) throws {

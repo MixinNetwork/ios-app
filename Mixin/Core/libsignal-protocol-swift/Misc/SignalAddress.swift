@@ -63,7 +63,7 @@ public final class SignalAddress {
         // namePointer.deallocate(capacity: name.utf8.count)
         // TODO
         // signalAddress.deallocate()
-        address.deallocate(capacity: 1)
+        address.deallocate()
     }
 }
 
@@ -81,11 +81,13 @@ extension SignalAddress: Equatable {
 }
 
 extension SignalAddress: Hashable {
-
+    
     /// A hash of the address
-    public var hashValue: Int {
-        return name.hashValue &+ deviceId.hashValue
+    public func hash(into hasher: inout Hasher) {
+        let value = name.hashValue &+ deviceId.hashValue
+        hasher.combine(value)
     }
+    
 }
 
 extension SignalAddress {

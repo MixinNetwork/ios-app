@@ -144,7 +144,7 @@ public class Fingerprint {
 
 
         var localPublicKey: OpaquePointer? = nil
-        var result = localIdentityData.withUnsafeBytes { dPtr in
+        var result = localIdentityData.withUnsafeUInt8Pointer { dPtr in
             withUnsafeMutablePointer(to: &localPublicKey) {
                 curve_decode_point($0, dPtr, localIdentityData.count, Signal.context)
             }
@@ -153,7 +153,7 @@ public class Fingerprint {
         defer { signal_type_unref(localPublicKey) }
 
         var remotePublicKey: OpaquePointer? = nil
-        result = remoteIdentityData.withUnsafeBytes { dPtr in
+        result = remoteIdentityData.withUnsafeUInt8Pointer { dPtr in
             withUnsafeMutablePointer(to: &remotePublicKey) {
                 curve_decode_point($0, dPtr, remoteIdentityData.count, Signal.context)
             }
@@ -222,7 +222,7 @@ public class Fingerprint {
 
     private func pointer(for scannable: Data) throws -> OpaquePointer {
         var ptr: OpaquePointer? = nil
-        let result = scannable.withUnsafeBytes { sPtr in
+        let result = scannable.withUnsafeUInt8Pointer { sPtr in
             withUnsafeMutablePointer(to: &ptr) {
                 scannable_fingerprint_deserialize($0, sPtr, scannable.count, Signal.context)
             }
@@ -283,10 +283,12 @@ private func createFingerprint(
             let remoteData = remote?.data(using: .utf8) else {
                 throw SignalError.invalidArgument
         }
-        result = localData.withUnsafeBytes { lPtr in
-            remoteData.withUnsafeBytes { rPtr in
+        result = localData.withUnsafeBytes { lBuffer in
+            remoteData.withUnsafeBytes { rBuffer in
                 withUnsafeMutablePointer(to: &fingerprint) {
-                    function(generator!, lPtr, localKeys, rPtr, remoteKeys, $0)
+                    let lPtr = lBuffer.bindMemory(to: Int8.self).baseAddress
+                    let rPtr = rBuffer.bindMemory(to: Int8.self).baseAddress
+                    return function(generator!, lPtr, localKeys, rPtr, remoteKeys, $0)
                 }
             }
         }
@@ -307,7 +309,7 @@ private func list(from keyList: [Data]) throws -> OpaquePointer {
     guard let list = ec_public_key_list_alloc() else { throw SignalError.noMemory }
     for item in keyList {
         var key: OpaquePointer? = nil
-        var result = item.withUnsafeBytes { dPtr in
+        var result = item.withUnsafeUInt8Pointer { dPtr in
             withUnsafeMutablePointer(to: &key) {
                 curve_decode_point($0, dPtr, item.count, Signal.context)
             }

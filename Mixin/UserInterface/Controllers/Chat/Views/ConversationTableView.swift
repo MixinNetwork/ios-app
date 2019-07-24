@@ -244,7 +244,7 @@ class ConversationTableView: UITableView {
             if let firstVisibleSection = firstVisibleSection, let firstVisibleHeaderView = firstVisibleHeaderView {
                 let fixedRect = rectForHeader(inSection: firstVisibleSection)
                 let actualRect = firstVisibleHeaderView.frame
-                if abs(fixedRect.origin.y - actualRect.origin.y) > 1, let index = sections.index(of: firstVisibleSection) {
+                if abs(fixedRect.origin.y - actualRect.origin.y) > 1, let index = sections.firstIndex(of: firstVisibleSection) {
                     // header is floating
                     sections.remove(at: index)
                     firstVisibleHeaderView.alpha = 0

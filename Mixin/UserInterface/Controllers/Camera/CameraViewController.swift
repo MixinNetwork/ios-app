@@ -184,6 +184,8 @@ class CameraViewController: UIViewController, MixinNavigationAnimating {
             case .back:
                 preferredPosition = .front
                 preferredDeviceType = .builtInWideAngleCamera
+            @unknown default:
+                return
             }
 
             let devices = self.videoDeviceDiscoverySession.devices
@@ -373,6 +375,8 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
                 }
             })
         case .granted:
+            break
+        @unknown default:
             break
         }
     }

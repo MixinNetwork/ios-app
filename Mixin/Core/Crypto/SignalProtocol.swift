@@ -175,13 +175,13 @@ class SignalProtocol {
     func encodeMessageData(data: ComposeMessageData) -> String {
         if data.resendMessageId == nil {
             let header: [UInt8] = [3, data.keyType, 0, 0, 0, 0, 0, 0]
-            let headerData = Data(bytes: header)
+            let headerData = Data(header)
             let cipherText = headerData + data.cipher
             return cipherText.base64EncodedString()
         } else {
             let header = [3, data.keyType, 1, 0, 0, 0, 0, 0]
             let messageId = data.resendMessageId!
-            let cipherText = Data(bytes: header) + messageId.data(using: .utf8)! + data.cipher
+            let cipherText = Data(header) + messageId.data(using: .utf8)! + data.cipher
             return cipherText.base64EncodedString()
         }
     }

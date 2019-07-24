@@ -39,9 +39,9 @@ extension String {
         }
         var digestData = Data(count: Int(CC_MD5_DIGEST_LENGTH))
 
-        _ = digestData.withUnsafeMutableBytes { digestBytes in
+        _ = digestData.withUnsafeMutableUInt8Pointer { digestBytes in
             messageData.withUnsafeBytes({ messageBytes in
-                CC_MD5(messageBytes, CC_LONG(messageData.count), digestBytes)
+                CC_MD5(messageBytes.baseAddress, CC_LONG(messageData.count), digestBytes)
             })
         }
 
@@ -55,13 +55,13 @@ extension String {
         var hash = [UInt8](repeating: 0,  count: Int(CC_SHA256_DIGEST_LENGTH))
 
         _ = data.withUnsafeBytes {
-            _ = CC_SHA256($0, CC_LONG(data.count), &hash)
+            _ = CC_SHA256($0.baseAddress, CC_LONG(data.count), &hash)
         }
         return hash.map { String(format: "%02x", $0) }.joined()
     }
 
     func substring(endChar: Character) -> String {
-        guard let endIndex = self.index(of: endChar) else {
+        guard let endIndex = self.firstIndex(of: endChar) else {
             return self
         }
         return String(self[..<endIndex])

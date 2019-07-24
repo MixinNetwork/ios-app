@@ -47,8 +47,8 @@ class SendViewController: KeyboardBasedLayoutViewController {
         return view
     }()
     private lazy var transactionLabelAttribute: [NSAttributedString.Key: Any] = {
-        return [.font: transactionFeeHintLabel.font,
-                .foregroundColor: transactionFeeHintLabel.textColor]
+        return [.font: transactionFeeHintLabel.font ?? UIFont.systemFont(ofSize: 12),
+                .foregroundColor: transactionFeeHintLabel.textColor ?? UIColor.infoGray]
     }()
     private lazy var transactionLabelBoldAttribute: [NSAttributedString.Key: Any] = {
         let normalFont = transactionFeeHintLabel.font!
@@ -59,7 +59,7 @@ class SendViewController: KeyboardBasedLayoutViewController {
             boldFont = UIFont.boldSystemFont(ofSize: normalFont.pointSize)
         }
         return [.font: boldFont,
-                .foregroundColor: transactionFeeHintLabel.textColor]
+                .foregroundColor: transactionFeeHintLabel.textColor ?? UIColor.infoGray]
     }()
     
     override func viewDidLoad() {
@@ -233,7 +233,9 @@ class SendViewController: KeyboardBasedLayoutViewController {
         }
         isInputAssetAmount = !isInputAssetAmount
         amountSymbolLabel.text = isInputAssetAmount ? asset.symbol : "USD"
-        amountEditingChanged(amountTextField)
+        if let amountTextField = amountTextField {
+            amountEditingChanged(amountTextField)
+        }
     }
     
     @objc func fillBalanceAction(_ sender: Any) {
@@ -435,9 +437,10 @@ extension SendViewController: TransferTypeViewControllerDelegate {
     func transferTypeViewController(_ viewController: TransferTypeViewController, didSelectAsset asset: AssetItem) {
         self.asset = asset
         isInputAssetAmount = true
-        amountTextField.text = nil
-        amountEditingChanged(amountTextField)
-
+        if let amountTextField = amountTextField {
+            amountTextField.text = nil
+            amountEditingChanged(amountTextField)
+        }
         updateAssetUI()
     }
     

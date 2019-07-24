@@ -62,7 +62,7 @@ public final class GroupSessionBuilder {
 
         // Deserialize message
         var messagePtr: OpaquePointer? = nil
-        var result = message.withUnsafeBytes { mPtr in
+        var result = message.withUnsafeUInt8Pointer { mPtr in
             withUnsafeMutablePointer(to: &messagePtr) {
                 sender_key_distribution_message_deserialize($0, mPtr, message.count, Signal.context)
             }

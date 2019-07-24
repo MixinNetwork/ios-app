@@ -232,7 +232,7 @@ class ConversationDataSource {
             didLoadLatestMessage = messages.count < requiredCount
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
-            if self.canInsertUnreadHint, let firstUnreadMessageId = self.firstUnreadMessageId, let index = messages.index(where: { $0.messageId == firstUnreadMessageId }) {
+            if self.canInsertUnreadHint, let firstUnreadMessageId = self.firstUnreadMessageId, let index = messages.firstIndex(where: { $0.messageId == firstUnreadMessageId }) {
                 let firstUnreadMessage = messages[index]
                 let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessage.createdAt)
                 messages.insert(hint, at: index)
@@ -288,7 +288,7 @@ class ConversationDataSource {
             loadedMessageIds.remove(viewModel.message.messageId)
         }
         if let viewModels = viewModels[date], viewModels.isEmpty {
-            if let index = dates.index(of: date) {
+            if let index = dates.firstIndex(of: date) {
                 didRemoveSection = true
                 dates.remove(at: index)
             }
@@ -661,7 +661,7 @@ extension ConversationDataSource {
             firstUnreadMessageId = nil
         }
         loadedMessageIds = Set(messages.map({ $0.messageId }))
-        if messages.count > 0, highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.index(where: { $0.messageId == firstUnreadMessageId }) {
+        if messages.count > 0, highlight == nil, let firstUnreadMessageId = self.firstUnreadMessageId, let firstUnreadIndex = messages.firstIndex(where: { $0.messageId == firstUnreadMessageId }) {
             let firstUnreadMessge = messages[firstUnreadIndex]
             let hint = MessageItem.createMessage(category: MessageCategory.EXT_UNREAD.rawValue, conversationId: conversationId, createdAt: firstUnreadMessge.createdAt)
             messages.insert(hint, at: firstUnreadIndex)
@@ -893,8 +893,8 @@ extension ConversationDataSource {
         }
         if let viewModels = viewModels[date] {
             needsInsertNewSection = false
-            section = dates.index(of: date)!
-            if let index = viewModels.index(where: { $0.message.createdAt > message.createdAt }) {
+            section = dates.firstIndex(of: date)!
+            if let index = viewModels.firstIndex(where: { $0.message.createdAt > message.createdAt }) {
                 isLastCell = false
                 row = index
             } else {
@@ -947,7 +947,7 @@ extension ConversationDataSource {
                     guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
                         return
                     }
-                    let nextIndexPath = IndexPath(row: row, section: self.dates.index(of: date)!)
+                    let nextIndexPath = IndexPath(row: row, section: self.dates.firstIndex(of: date)!)
                     if let nextCell = tableView.cellForRow(at: nextIndexPath) as? MessageCell {
                         nextCell.render(viewModel: nextViewModel)
                     }
@@ -955,7 +955,7 @@ extension ConversationDataSource {
             }
         } else {
             needsInsertNewSection = true
-            section = dates.index(where: { $0 > date }) ?? dates.count
+            section = dates.firstIndex(where: { $0 > date }) ?? dates.count
             row = 0
             isLastCell = section == dates.count
             if style.contains(.received) && message.isRepresentativeMessage(conversation: conversation) {

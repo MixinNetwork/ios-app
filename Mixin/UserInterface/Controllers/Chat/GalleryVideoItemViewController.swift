@@ -26,7 +26,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     var isPlayable: Bool {
         if let item = item {
-            return item.mediaStatus == .DONE || item.category == .live
+            return item.mediaStatus == .DONE
+                || item.mediaStatus == .READ
+                || item.category == .live
         } else {
             return false
         }

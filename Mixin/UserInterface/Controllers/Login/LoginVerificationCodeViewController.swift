@@ -63,7 +63,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController {
     func login() {
         isBusy = true
         guard let keyPair = KeyUtil.generateRSAKeyPair() else {
-            UIApplication.trackError("KeyUtil", action: "generateRSAKeyPair failed")
+            UIApplication.traceError(code: ReportErrorCode.keyError, userInfo: ["error": "generateRSAKeyPair failed"])
             isBusy = false
             return
         }

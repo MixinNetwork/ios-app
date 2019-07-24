@@ -216,8 +216,6 @@ extension WebWindow: WKNavigationDelegate {
         guard ["http", "https"].contains(url.scheme?.lowercased() ?? "") else {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            } else {
-                UIApplication.trackError("WebWindow", action: "webview navigation canOpenURL false", userInfo: ["url": url.absoluteString])
             }
             decisionHandler(.cancel)
             return

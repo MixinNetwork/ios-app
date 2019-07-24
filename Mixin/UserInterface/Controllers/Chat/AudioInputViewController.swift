@@ -244,7 +244,7 @@ extension AudioInputViewController {
             recorder.record(for: AudioInputViewController.maxRecordDuration)
             self.recorder = recorder
         } catch {
-            UIApplication.trackError(String(reflecting: self), action: #function, userInfo: ["error": error])
+            UIApplication.traceError(error)
         }
     }
     

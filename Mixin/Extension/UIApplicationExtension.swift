@@ -35,19 +35,6 @@ extension UIApplication {
         #endif
     }
 
-    static func trackError(_ category: String, action: String, userInfo aUserInfo: [AnyHashable: Any]? = nil) {
-        #if RELEASE
-        if let aUserInfo = aUserInfo {
-            Bugsnag.notify(NSException(name: NSExceptionName(rawValue: category), reason: action, userInfo: nil)) {
-                (report) -> Void in
-                report.addMetadata(aUserInfo, toTabWithName: "Track")
-            }
-        } else {
-            Bugsnag.notify(NSException(name: NSExceptionName(rawValue: category), reason: action, userInfo: nil))
-        }
-        #endif
-    }
-
     static func traceError(_ error: Error) {
         Bugsnag.notifyError(error)
         Crashlytics.sharedInstance().recordError(error)

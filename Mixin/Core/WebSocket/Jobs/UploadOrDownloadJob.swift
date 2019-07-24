@@ -35,7 +35,6 @@ class UploadOrDownloadJob: AsynchronousJob {
             return
         }
         guard statusCode == 200 else {
-            UIApplication.trackError("UploadOrDownloadJob", action: "completionHandler", userInfo: ["statusCode": "\(statusCode ?? 0)"])
             if weakSelf.retry() {
                 return
             }

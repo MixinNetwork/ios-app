@@ -909,7 +909,6 @@ extension ConversationViewController: UITableViewDelegate {
             return 44
         }
         if viewModel.cellHeight.isNaN || viewModel.cellHeight < 1 {
-            UIApplication.trackError("ConversationViewController", action: "Invalid row height", userInfo: ["viewModel": viewModel.debugDescription])
             return 44
         } else {
             return viewModel.cellHeight
@@ -1339,7 +1338,6 @@ extension ConversationViewController {
         }
         let url = MixinFile.url(ofChatDirectory: .files, filename: mediaUrl)
         guard FileManager.default.fileExists(atPath: url.path)  else {
-            UIApplication.trackError("ConversationViewController", action: "openDocumentAction file not exist")
             return
         }
         previewDocumentController = UIDocumentInteractionController(url: url)

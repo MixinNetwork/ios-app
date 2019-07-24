@@ -45,7 +45,6 @@ class RefreshConversationJob: BaseJob {
         }
         guard participants.count > 0 else {
             ConversationDAO.shared.deleteAndExitConversation(conversationId: conversationId, autoNotification: false)
-            UIApplication.trackError("RefreshConversationJob", action: "create conversation participants count is zero")
             return
         }
 

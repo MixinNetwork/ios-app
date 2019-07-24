@@ -53,7 +53,6 @@ class AttachmentUploadJob: UploadOrDownloadJob {
 
     private func uploadAttachment(attachResponse: AttachmentResponse) -> Bool {
         guard let uploadUrl = attachResponse.uploadUrl, !uploadUrl.isEmpty, var request = try? URLRequest(url: uploadUrl, method: .put) else {
-            UIApplication.trackError("AttachmentUploadJob", action: "uploadAttachment upload_url is nil", userInfo: ["uploadUrl": "\(attachResponse.uploadUrl ?? "")"])
             return false
         }
         guard let fileUrl = fileUrl else {
@@ -67,13 +66,13 @@ class AttachmentUploadJob: UploadOrDownloadJob {
                 contentLength = inputStream.contentLength
                 stream = inputStream
             } else {
-                UIApplication.trackError("AttachmentUploadJob", action: "AttachmentEncryptingInputStream init failed")
+                UIApplication.traceError(code: ReportErrorCode.attachmentUploadError, userInfo: ["error": "AttachmentEncryptingInputStream init failed"])
                 return false
             }
         } else {
             stream = InputStream(url: fileUrl)
             if stream == nil {
-                UIApplication.trackError("AttachmentUploadJob", action: "InputStream init failed")
+                UIApplication.traceError(code: ReportErrorCode.attachmentUploadError, userInfo: ["error": "InputStream init failed"])
                 return false
             } else {
                 contentLength = Int(FileManager.default.fileSize(fileUrl.path))

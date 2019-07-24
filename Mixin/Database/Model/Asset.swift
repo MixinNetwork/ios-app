@@ -52,17 +52,6 @@ struct Asset: BaseCodable, AssetKeyConvertible {
 
 extension Asset {
 
-    var isErrorAddress: Bool {
-        let name = accountName ?? ""
-        let tag = accountTag ?? ""
-        let key = publicKey ?? ""
-        if key.isEmpty {
-            return (name.isEmpty && !tag.isEmpty) || (!name.isEmpty && tag.isEmpty)
-        } else {
-            return !name.isEmpty || !tag.isEmpty
-        }
-    }
-
     static func createAsset(asset: AssetItem) -> Asset {
         return Asset(assetId: asset.assetId, type: asset.type, symbol: asset.symbol, name: asset.name, iconUrl: asset.iconUrl, balance: asset.balance, publicKey: asset.publicKey, priceBtc: asset.priceBtc, priceUsd: asset.priceUsd, changeUsd: asset.changeUsd, chainId: asset.chainId, confirmations: asset.confirmations, accountName: asset.accountName, accountTag: asset.accountTag, assetKey: asset.assetKey)
     }

@@ -104,11 +104,6 @@ class BaseAPI {
     }()
 
     private func getRequest(method: HTTPMethod, url: String, parameters: Parameters? = nil, encoding: ParameterEncoding = BaseAPI.jsonEncoding) -> DataRequest {
-        if url.hasSuffix("/") {
-            assertionFailure("======BaseAPI get request url failed")
-            UIApplication.trackError("BaseAPI", action: "get request url failed", userInfo: ["url": url])
-        }
-        
         do {
             return BaseAPI.sharedSessionManager.request(try MixinRequest(url: BaseAPI.rootURLString + url, method: method, parameters: parameters, encoding: encoding))
         } catch {

@@ -32,7 +32,6 @@ class JobQueue {
         }
         queue.addOperation(job)
         if WebSocketService.shared.connected && queue.isSuspended {
-            UIApplication.trackError("JobQueue", action: "job queue suspended", userInfo: ["operationCount" : queue.operationCount])
             resume()
         }
         return true

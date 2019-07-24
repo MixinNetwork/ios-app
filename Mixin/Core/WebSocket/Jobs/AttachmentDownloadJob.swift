@@ -102,13 +102,13 @@ class AttachmentDownloadJob: UploadOrDownloadJob {
             }
             stream = AttachmentDecryptingOutputStream(url: fileUrl, key: key, digest: digest)
             if stream == nil {
-                UIApplication.trackError(String(describing: type(of: self)), action: "AttachmentDecryptingOutputStream init failed")
+                UIApplication.traceError(code: ReportErrorCode.attachmentDownloadError, userInfo: ["error": "AttachmentDecryptingOutputStream init failed"])
                 return false
             }
         } else {
             stream = OutputStream(url: fileUrl, append: false)
             if stream == nil {
-                UIApplication.trackError(String(describing: type(of: self)), action: "OutputStream init failed")
+                UIApplication.traceError(code: ReportErrorCode.attachmentDownloadError, userInfo: ["error": "OutputStream init failed"])
                 return false
             }
         }

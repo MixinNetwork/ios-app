@@ -75,13 +75,12 @@ class SendMessageService: MixinService {
                     }
                 }
             } else {
-                UIApplication.trackError("SendMessageService", action: "sendMessage owner is nil")
+                UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: ["error": "owner is nil"])
             }
         }
 
         if msg.conversationId.isEmpty || !ConversationDAO.shared.isExist(conversationId: msg.conversationId) {
             guard let user = ownerUser else {
-                UIApplication.trackError("SendMessageService", action: "sendMessage ownerUser is empty")
                 return
             }
             let conversationId = ConversationDAO.shared.makeConversationId(userId: account.user_id, ownerUserId: user.userId)

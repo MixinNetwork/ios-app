@@ -43,7 +43,7 @@ class SignalDatabase: BaseDatabase {
             do {
                 try database.removeFiles()
             } catch {
-                UIApplication.trackError("SignalDatabase", action: "logout remove database failded")
+                UIApplication.traceError(code: ReportErrorCode.databaseRemoveFailed, userInfo: ["database": "signal"])
             }
             DispatchQueue.main.async {
                 CryptoUserDefault.shared.reset()

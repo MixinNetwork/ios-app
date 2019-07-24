@@ -243,7 +243,7 @@ class ReceiveMessageService: MixinService {
         } catch {
             FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSignalMessage][\(username)][\(data.category)][\(CiphertextMessage.MessageType.toString(rawValue: decoded.keyType))]...decrypt failed...\(error)...messageId:\(data.messageId)...\(data.createdAt)...source:\(data.source)...resendMessageId:\(decoded.resendMessageId ?? "")")
             guard !MessageDAO.shared.isExist(messageId: data.messageId) else {
-                UIApplication.trackError("ReceiveMessageService", action: "duplicateMessage")
+                UIApplication.traceError(code: ReportErrorCode.receiveMessageError, userInfo: ["error": "duplicateMessage"])
                 return
             }
             guard decoded.resendMessageId == nil else {
@@ -353,9 +353,6 @@ class ReceiveMessageService: MixinService {
                 return
             }
             guard syncUser(userId: transferData.userId) else {
-                var userInfo = UIApplication.getTrackUserInfo()
-                userInfo["sharedUserId"] = transferData.userId
-                UIApplication.trackError("ReceiveMessageService", action: "share contact failed", userInfo: userInfo)
                 return
             }
             let message = Message.createMessage(contactData: transferData, data: data)
@@ -414,9 +411,6 @@ class ReceiveMessageService: MixinService {
                 return
             }
             guard syncUser(userId: transferData.userId) else {
-                var userInfo = UIApplication.getTrackUserInfo()
-                userInfo["sharedUserId"] = transferData.userId
-                UIApplication.trackError("ReceiveMessageService", action: "processRedecryptMessage share contact failed", userInfo: userInfo)
                 return
             }
             MessageDAO.shared.updateContactMessage(transferData: transferData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId, messageSource: data.source)
@@ -667,7 +661,6 @@ extension ReceiveMessageService {
 
     private func processSystemConversationMessage(data: BlazeMessageData) {
         guard let base64Data = Data(base64Encoded: data.data), let sysMessage = (try? jsonDecoder.decode(SystemConversationData.self, from: base64Data)) else {
-            UIApplication.trackError("ReceiveMessageService", action: "processSystemConversationMessage decode data failed")
             return
         }
 
@@ -697,7 +690,6 @@ extension ReceiveMessageService {
         switch sysMessage.action {
         case SystemConversationAction.ADD.rawValue, SystemConversationAction.JOIN.rawValue:
             guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser else {
-                handlerSystemMessageDataError(action: sysMessage.action, data: base64Data)
                 return
             }
             let status = checkUser(userId: participantId, tryAgain: true)
@@ -712,7 +704,6 @@ extension ReceiveMessageService {
             return
         case SystemConversationAction.REMOVE.rawValue:
             guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser else {
-                handlerSystemMessageDataError(action: sysMessage.action, data: base64Data)
                 return
             }
             SignalProtocol.shared.clearSenderKey(groupId: data.conversationId, senderId: currentAccountId)
@@ -723,7 +714,6 @@ extension ReceiveMessageService {
             return
         case SystemConversationAction.EXIT.rawValue:
             guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser else {
-                handlerSystemMessageDataError(action: sysMessage.action, data: base64Data)
                 return
             }
 
@@ -742,7 +732,6 @@ extension ReceiveMessageService {
             operSuccess = ConversationDAO.shared.updateConversationOwnerId(conversationId: data.conversationId, ownerId: userId)
         case SystemConversationAction.ROLE.rawValue:
             guard let participantId = sysMessage.participantId, !participantId.isEmpty, participantId != User.systemUser, let role = sysMessage.role else {
-                handlerSystemMessageDataError(action: sysMessage.action, data: base64Data)
                 return
             }
             operSuccess = ParticipantDAO.shared.updateParticipantRole(message: message, conversationId: data.conversationId, participantId: participantId, role: role, source: data.source)
@@ -755,13 +744,6 @@ extension ReceiveMessageService {
         }
 
         MessageDAO.shared.insertMessage(message: message, messageSource: data.source)
-    }
-
-    private func handlerSystemMessageDataError(action: String, data: Data) {
-        var userInfo = UIApplication.getTrackUserInfo()
-        userInfo["category"] = action
-        userInfo["SystemConversationData"] = String(data: data, encoding: .utf8) ?? ""
-        UIApplication.trackError("ReceiveMessageService", action: "system conversation data error", userInfo: userInfo)
     }
 }
 

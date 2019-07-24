@@ -28,18 +28,11 @@ class MixinIdentityKeyStore: IdentityKeyStore {
         guard let identityKey = identity else {
             var userInfo = UIApplication.getTrackUserInfo()
             userInfo["address"] = address.name
-            UIApplication.trackError("IdentityKeyStore", action: "Saving new identity failed, identity is nil", userInfo: userInfo)
+            UIApplication.traceError(code: ReportErrorCode.signalError, userInfo: ["error": "Saving new identity failed, identity is nil"])
             return false
         }
-        let signalAddress = address.name
-        #if DEBUG
-        print("======IdentityKeyStore...save...Saving new identity...")
-        #endif
-        if !IdentityDao.shared.insertOrReplace(obj: Identity(address: signalAddress, registrationId: nil, publicKey: identityKey, privateKey: nil, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970)) {
-            var userInfo = UIApplication.getTrackUserInfo()
-            userInfo["address"] = address.name
-            UIApplication.trackError("IdentityKeyStore", action: "Saving new identity failed", userInfo: userInfo)
-        }
+        FileManager.default.writeLog(log: "Saved new identity for: \(address.name)")
+        IdentityDao.shared.insertOrReplace(obj: Identity(address: address.name, registrationId: nil, publicKey: identityKey, privateKey: nil, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
         return true
     }
 }

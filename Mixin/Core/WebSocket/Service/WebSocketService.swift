@@ -86,7 +86,6 @@ extension WebSocketService: SRWebSocketDelegate {
             return
         }
         guard let blazeMessage = (try? jsonDecoder.decode(BlazeMessage.self, from: unzipJson)) else {
-            UIApplication.trackError("WebSocketService", action: "didReceiveMessage", userInfo: ["data": String(data: unzipJson, encoding: .utf8) ?? ""])
             return
         }
 

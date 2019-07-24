@@ -8,8 +8,8 @@ class CryptoUserDefault {
     private let keyIsLoaded = "prekey_is_loaded"
     private let keyRotateSignedPrekey = "rotate_signed_pre_key"
     private let keyStatusOffset = "status_offset"
-    private let NEXT_PREKEY_ID = "next_prekey_id"
-    private let NEXT_SIGNED_PREKEY_ID = "next_signed_prekey_id"
+    private let keyNextPrekeyID = "next_prekey_id"
+    private let keyNextSignedPrekeyID = "next_signed_prekey_id"
     private let keyEncryptIterator = "encrypt_iterator"
 
     let session = UserDefaults(suiteName: SuiteName.crypto)!
@@ -43,19 +43,19 @@ class CryptoUserDefault {
 
     var prekeyOffset: UInt32 {
         get {
-            return (session.object(forKey: NEXT_PREKEY_ID) as? UInt32) ?? random(min: 1000, max: mediumMaxValue)
+            return (session.object(forKey: keyNextPrekeyID) as? UInt32) ?? random(min: 1000, max: mediumMaxValue)
         }
         set {
-            session.set(newValue, forKey: NEXT_PREKEY_ID)
+            session.set(newValue, forKey: keyNextPrekeyID)
         }
     }
 
     var signedPrekeyOffset: UInt32 {
         get {
-            return (session.object(forKey: NEXT_SIGNED_PREKEY_ID) as? UInt32) ?? random(min: 1000, max: mediumMaxValue)
+            return (session.object(forKey: keyNextSignedPrekeyID) as? UInt32) ?? random(min: 1000, max: mediumMaxValue)
         }
         set {
-            session.set(newValue, forKey: NEXT_SIGNED_PREKEY_ID)
+            session.set(newValue, forKey: keyNextSignedPrekeyID)
         }
     }
 
@@ -71,6 +71,8 @@ class CryptoUserDefault {
     func reset() {
         session.removeObject(forKey: keyIsLoaded)
         session.removeObject(forKey: keyRotateSignedPrekey)
+        session.removeObject(forKey: keyNextPrekeyID)
+        session.removeObject(forKey: keyNextSignedPrekeyID)
         session.removeObject(forKey: keyStatusOffset)
         session.removeObject(forKey: keyEncryptIterator)
         session.synchronize()

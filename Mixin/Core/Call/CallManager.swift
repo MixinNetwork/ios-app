@@ -473,7 +473,7 @@ extension CallManager {
                                                         status: .DELIVERED)
         MessageDAO.shared.insertMessage(message: failedMessage, messageSource: "")
         clean()
-        UIApplication.trackError("CallManager", action: action, userInfo: ["error": description])
+        UIApplication.traceError(code: ReportErrorCode.callVoiceError, userInfo: ["action": action, "error": description])
     }
     
     private func sendCandidates(_ candidates: [RTCIceCandidate]) {

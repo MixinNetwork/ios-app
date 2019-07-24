@@ -28,8 +28,6 @@ class MixinRequest {
         var headers = MixinRequest.baseHeaders
         if let signedToken = MixinRequest.getAuthenticationToken(request: request) {
             headers[MixinRequest.headersAuthroizationKey] = signedToken
-        } else {
-            UIApplication.trackError("MixinRequest", action: "getSignedRequest Will 401", userInfo: UIApplication.getTrackUserInfo())
         }
         return headers
     }
@@ -78,7 +76,6 @@ class MixinRequest {
             return nil
         }
         guard let signedToken = signToken(sessionId: account.session_id, userId: account.user_id, authenticationToken: token, request: request) else {
-            UIApplication.trackError("MixinRequest", action: "Will 401", userInfo: ["authenticationToken": token, "session_id": account.session_id, "user_id": account.user_id, "didLogin": "\(AccountAPI.shared.didLogin)"])
             return nil
         }
         return "Bearer " + signedToken

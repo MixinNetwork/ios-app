@@ -58,6 +58,17 @@ enum NotificationRequestIdentifier {
 enum ReportErrorCode {
     static let sendMessengerError = 100001
     static let sendCodeByLoginError = 100002
+    static let recaptchaUnrecognized = 100003
+    static let databaseRemoveFailed = 100004
+    static let databaseSQLError = 100005
+    static let attachmentUploadError = 100006
+    static let attachmentDownloadError = 100007
+    static let pinError = 100008
+    static let callVoiceError = 100009
+    static let callVideoError = 100010
+    static let keyError = 100011
+    static let signalError = 100012
+    static let receiveMessageError = 100013
 }
 
 struct ConversationChange {

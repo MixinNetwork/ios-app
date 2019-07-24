@@ -297,7 +297,7 @@ fileprivate extension Database {
             userInfo["sql"] = err.sql ?? ""
             userInfo["description"] = err.description
             userInfo["callStack"] = Thread.callStackSymbols.first ?? ""
-            UIApplication.trackError("BaseDatabase", action: "track sql error", userInfo: userInfo)
+            UIApplication.traceError(code: ReportErrorCode.databaseSQLError, userInfo: userInfo)
         } else {
             UIApplication.traceError(error)
         }

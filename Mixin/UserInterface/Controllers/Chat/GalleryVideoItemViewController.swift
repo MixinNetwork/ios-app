@@ -390,6 +390,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             }
         case .paused:
             controlView.playControlStyle = .play
+            if UIApplication.shared.applicationState != .active {
+                controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: false)
+            }
         case .waitingToPlayAtSpecifiedRate:
             if item?.category == .live {
                 controlView.activityIndicatorView.startAnimating()

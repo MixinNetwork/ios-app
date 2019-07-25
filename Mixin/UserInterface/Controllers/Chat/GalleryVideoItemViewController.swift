@@ -233,10 +233,11 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func reloadAction(_ sender: Any) {
-        //        guard let url = url else {
-        //            return
-        //        }
-        //        play(url: url, videoRatio: videoRatio)
+        guard let url = item?.url else {
+            return
+        }
+        playerDidReachEnd = false
+        loadAssetIfPlayable(url: url, playAfterLoaded: true)
     }
     
     @objc func playAction(_ sender: Any) {
@@ -285,8 +286,15 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func playerItemDidReachEnd(_ notification: Notification) {
+        guard let item = item else {
+            return
+        }
         playerDidReachEnd = true
-        controlView.playControlStyle = .play
+        if item.category == .video {
+            controlView.playControlStyle = .play
+        } else if item.category == .live {
+            controlView.playControlStyle = .reload
+        }
         controlView.set(playControlsHidden: false, otherControlsHidden: !isPipMode, animated: true)
         removeTimeObservers()
     }
@@ -399,7 +407,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                 controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: true)
             }
         case .paused:
-            controlView.playControlStyle = .play
+            if item?.category == .video || !playerDidReachEnd {
+                controlView.playControlStyle = .play
+            }
             if UIApplication.shared.applicationState != .active {
                 controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: false)
             }

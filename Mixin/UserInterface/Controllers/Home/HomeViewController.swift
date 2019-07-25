@@ -98,6 +98,24 @@ class HomeViewController: UIViewController {
             fetchConversations()
         }
         showCameraButton()
+        checkServerStatus()
+    }
+
+    private func checkServerStatus() {
+        guard AccountAPI.shared.didLogin else {
+            return
+        }
+        guard !WebSocketService.shared.connected else {
+            return
+        }
+        AccountAPI.shared.me { [weak self](result) in
+            guard let weakSelf = self else {
+                return
+            }
+            if case let .failure(error) = result, error.code == 10006 {
+                weakSelf.alert(Localized.TOAST_UPDATE_TIPS)
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

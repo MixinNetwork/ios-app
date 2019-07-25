@@ -111,7 +111,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     override func prepareForReuse() {
         super.prepareForReuse()
         isPipMode = false
-        controlView.activityIndicatorView.stopAnimating()
+        controlView.style.remove(.loading)
         controlView.playControlStyle = .play
         controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
         videoView.coverImageView.sd_cancelCurrentImageLoad()
@@ -166,31 +166,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         }
         videoView.layoutFullsized()
         
-        let asset = AVURLAsset(url: url)
-        let playableKey = #keyPath(AVAsset.isPlayable)
-        var error: NSError?
-        
-        if asset.statusOfValue(forKey: playableKey, error: &error) == .loaded {
-            load(asset: asset)
-        } else if let error = error {
-            UIApplication.traceError(error)
-            controlView.playControlStyle = .reload
-            controlView.activityIndicatorView.stopAnimating()
-        } else {
-            asset.loadValuesAsynchronously(forKeys: [playableKey]) {
-                guard asset.statusOfValue(forKey: playableKey, error: &error) == .loaded else {
-                    if let error = error {
-                        UIApplication.traceError(error)
-                    }
-                    return
-                }
-                DispatchQueue.main.async { [weak self] in
-                    guard let weakSelf = self, weakSelf.item == item else {
-                        return
-                    }
-                    weakSelf.load(asset: asset)
-                }
-            }
+        if item.category == .video {
+            loadAssetIfPlayable(url: url, playAfterLoaded: false)
         }
     }
     
@@ -263,14 +240,21 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func playAction(_ sender: Any) {
-        AudioManager.shared.pause()
-        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
-        if playerDidReachEnd {
-            playerDidReachEnd = false
-            player.seek(to: .zero)
+        guard let item = item else {
+            return
         }
-        addTimeObservers()
-        player.play()
+        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
+        if item.category == .video || player.currentItem != nil {
+            AudioManager.shared.pause()
+            if playerDidReachEnd {
+                playerDidReachEnd = false
+                player.seek(to: .zero)
+            }
+            addTimeObservers()
+            player.play()
+        } else if let url = item.url {
+            loadAssetIfPlayable(url: url, playAfterLoaded: true)
+        }
     }
     
     @objc func pauseAction(_ sender: Any) {
@@ -347,7 +331,36 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         rateBeforeSeeking = nil
     }
     
-    private func load(asset: AVURLAsset) {
+    private func loadAssetIfPlayable(url: URL, playAfterLoaded: Bool) {
+        let asset = AVURLAsset(url: url)
+        let playableKey = #keyPath(AVAsset.isPlayable)
+        var error: NSError?
+        
+        if asset.statusOfValue(forKey: playableKey, error: &error) == .loaded {
+            load(playableAsset: asset, playAfterLoaded: playAfterLoaded)
+        } else if let error = error {
+            UIApplication.traceError(error)
+            controlView.playControlStyle = .reload
+            controlView.activityIndicatorView.stopAnimating()
+        } else {
+            asset.loadValuesAsynchronously(forKeys: [playableKey]) {
+                guard asset.statusOfValue(forKey: playableKey, error: &error) == .loaded else {
+                    if let error = error {
+                        UIApplication.traceError(error)
+                    }
+                    return
+                }
+                DispatchQueue.main.async { [weak self] in
+                    guard let weakSelf = self, weakSelf.item?.url == url else {
+                        return
+                    }
+                    weakSelf.load(playableAsset: asset, playAfterLoaded: playAfterLoaded)
+                }
+            }
+        }
+    }
+    
+    private func load(playableAsset asset: AVURLAsset, playAfterLoaded: Bool) {
         guard asset.isPlayable else {
             // TODO: UI Update
             return
@@ -371,13 +384,17 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         })
         
         player.replaceCurrentItem(with: item)
+        if playAfterLoaded {
+            AudioManager.shared.pause()
+            player.play()
+        }
     }
     
     private func updateControlView() {
         switch player.timeControlStatus {
         case .playing:
             controlView.playControlStyle = .pause
-            controlView.activityIndicatorView.stopAnimating()
+            controlView.style.remove(.loading)
             if !isSeeking {
                 controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: true)
             }
@@ -388,7 +405,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             }
         case .waitingToPlayAtSpecifiedRate:
             if item?.category == .live {
-                controlView.activityIndicatorView.startAnimating()
+                controlView.style.insert(.loading)
             }
         @unknown default:
             controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)

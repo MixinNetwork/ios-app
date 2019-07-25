@@ -12,6 +12,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         let rawValue: Int
         static let pip = Style(rawValue: 1 << 0)
         static let liveStream = Style(rawValue: 1 << 1)
+        static let loading = Style(rawValue: 1 << 2)
     }
     
     @IBOutlet weak var visualControlWrapperView: UIView!
@@ -80,15 +81,20 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     
     private func updateControls() {
         updatePlayControlButtons()
+        
+        visualControlWrapperView.alpha = otherControlsHidden ? 0 : 1
         let showLiveBadge = style.contains(.liveStream) && !style.contains(.pip)
         liveBadgeView.alpha = showLiveBadge ? 1 : 0
-        playControlWrapperView.alpha = playControlsHidden ? 0 : 1
-        visualControlWrapperView.alpha = otherControlsHidden ? 0 : 1
+        
+        playControlWrapperView.alpha = playControlsHidden || style.contains(.loading) ? 0 : 1
+        playControlWrapperView.transform = style.contains(.pip) ? pipModePlayControlTransform : .identity
+        
+        style.contains(.loading) ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
+        
         let hideTimeControl = otherControlsHidden
             || style.contains(.pip)
             || style.contains(.liveStream)
         timeControlWrapperView.alpha = hideTimeControl ? 0 : 1
-        playControlWrapperView.transform = style.contains(.pip) ? pipModePlayControlTransform : .identity
     }
     
 }

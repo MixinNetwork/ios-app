@@ -227,7 +227,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             GalleryVideoItemViewController.currentPipController = nil
             galleryViewController?.show(itemViewController: self)
         }
-        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: true)
+        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
         let ratio = self.videoRatio
         let isPipMode = self.isPipMode
         animate(animations: {
@@ -295,7 +295,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             recognizer.setTranslation(.zero, in: view)
         case .ended, .cancelled:
             let velocity = recognizer.velocity(in: view).x
-            videoView.stickToWindowEdge(horizontalVelocity: velocity)
+            videoView.stickToSuperviewEdge(horizontalVelocity: velocity)
         default:
             break
         }
@@ -309,7 +309,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     @objc func playerItemDidReachEnd(_ notification: Notification) {
         playerDidReachEnd = true
         controlView.playControlStyle = .play
-        controlView.set(playControlsHidden: false, otherControlsHidden: true, animated: true)
+        controlView.set(playControlsHidden: false, otherControlsHidden: !isPipMode, animated: true)
         removeTimeObservers()
     }
     

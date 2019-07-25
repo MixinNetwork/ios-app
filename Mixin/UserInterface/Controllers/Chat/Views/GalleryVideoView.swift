@@ -41,6 +41,14 @@ final class GalleryVideoView: UIView {
     
     private var videoRatio: CGFloat = 1
     
+    private var adjustedSafeAreaInsets: UIEdgeInsets {
+        let insets = superview?.safeAreaInsets ?? .zero
+        return UIEdgeInsets(top: max(20, insets.top),
+                            left: insets.left,
+                            bottom: max(5, insets.bottom),
+                            right: insets.right)
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         prepare()
@@ -72,7 +80,7 @@ final class GalleryVideoView: UIView {
         layoutControlView()
     }
     
-    func stickToWindowEdge(horizontalVelocity: CGFloat) {
+    func stickToSuperviewEdge(horizontalVelocity: CGFloat) {
         guard let superview = superview else {
             return
         }
@@ -86,8 +94,8 @@ final class GalleryVideoView: UIView {
         }
         let y: CGFloat = {
             let halfHeight = frame.size.height / 2
-            let minY = superview.safeAreaInsets.top + pipModeMinInsets.top + halfHeight
-            let maxY = superview.bounds.height - superview.safeAreaInsets.bottom - pipModeMinInsets.bottom - halfHeight
+            let minY = adjustedSafeAreaInsets.top + pipModeMinInsets.top + halfHeight
+            let maxY = superview.bounds.height - adjustedSafeAreaInsets.bottom - pipModeMinInsets.bottom - halfHeight
             return min(maxY, max(minY, center.y))
         }()
         UIView.animate(withDuration: 0.3) {
@@ -124,7 +132,7 @@ final class GalleryVideoView: UIView {
         }
         frame.size = size
         center = CGPoint(x: superview.bounds.width - pipModeMinInsets.right - size.width / 2,
-                         y: max(20, superview.safeAreaInsets.top) + pipModeDefaultTopMargin + size.height / 2)
+                         y: adjustedSafeAreaInsets.top + pipModeDefaultTopMargin + size.height / 2)
         setNeedsLayout()
         layoutIfNeeded()
         roundCorners = true

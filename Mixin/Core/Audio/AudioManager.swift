@@ -48,6 +48,11 @@ class AudioManager {
             }
         }
         
+        if let controller = GalleryVideoItemViewController.currentPipController {
+            controller.pauseAction(self)
+            controller.controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        }
+        
         cells[node.message.messageId]?.object?.style = .playing
         
         if node.message.messageId == playingNode?.message.messageId, let player = player {

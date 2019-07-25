@@ -270,6 +270,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func playAction(_ sender: Any) {
+        AudioManager.shared.pause()
         controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
         if playerDidReachEnd {
             playerDidReachEnd = false

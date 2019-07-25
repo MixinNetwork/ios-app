@@ -1,7 +1,7 @@
 import UIKit
 import AVFoundation
 
-final class GalleryVideoView: UIView {
+final class GalleryVideoView: UIView, GalleryAnimatable {
     
     let backgroundView = UIView()
     let coverImageView = UIImageView()
@@ -9,37 +9,13 @@ final class GalleryVideoView: UIView {
     let playerView = PlayerView()
     let controlView = R.nib.galleryVideoControlView(owner: nil)!
     
-    var isPipMode = false {
-        didSet {
-            if isPipMode {
-                controlView.style.insert(.pip)
-            } else {
-                controlView.style.remove(.pip)
-            }
-            setNeedsLayout()
-        }
-    }
-    
-    var roundCorners = false {
-        didSet {
-            let cornerRadius: CGFloat = roundCorners ? 8 : 0
-            
-            let fromCornerRadius = backgroundView.layer.cornerRadius
-            backgroundView.layer.cornerRadius = cornerRadius
-            let cornerRadiusAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
-            cornerRadiusAnimation.fromValue = fromCornerRadius
-            cornerRadiusAnimation.toValue = cornerRadius
-            cornerRadiusAnimation.duration = 2
-            
-            backgroundView.layer.add(cornerRadiusAnimation, forKey: cornerRadiusAnimation.keyPath)
-        }
-    }
+    var videoRatio: CGFloat = 1
     
     private let stickToEdgeVelocityLimit: CGFloat = 800
     private let pipModeMinInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
     private let pipModeDefaultTopMargin: CGFloat = 61
     
-    private var videoRatio: CGFloat = 1
+    private var isPipMode = false
     
     private var adjustedSafeAreaInsets: UIEdgeInsets {
         let insets = superview?.safeAreaInsets ?? .zero
@@ -103,39 +79,38 @@ final class GalleryVideoView: UIView {
         }
     }
     
-    func layoutFullsized(videoRatio: CGFloat) {
-        self.videoRatio = videoRatio
-        guard let superview = superview else {
-            return
+    func layoutFullsized() {
+        isPipMode = false
+        controlView.style.remove(.pip)
+        if let superview = superview {
+            frame = superview.bounds
         }
-        frame = superview.bounds
         controlView.reloadButton.transform = .identity
         controlView.activityIndicatorView.transform = .identity
         setNeedsLayout()
         layoutIfNeeded()
-        roundCorners = false
+        updateCornerRadiusAndShadow()
     }
     
-    func layoutPip(videoRatio: CGFloat) {
-        self.videoRatio = videoRatio
-        guard let superview = superview else {
-            return
+    func layoutPip() {
+        isPipMode = true
+        controlView.style.insert(.pip)
+        if let superview = superview {
+            let size: CGSize
+            if videoRatio > 0.9 {
+                let width = superview.bounds.width * (2 / 3)
+                size = CGSize(width: width, height: width / videoRatio)
+            } else {
+                let height = superview.bounds.height / 3
+                size = CGSize(width: height * videoRatio, height: height)
+            }
+            frame.size = size
+            center = CGPoint(x: superview.bounds.width - pipModeMinInsets.right - size.width / 2,
+                             y: adjustedSafeAreaInsets.top + pipModeDefaultTopMargin + size.height / 2)
         }
-        
-        let size: CGSize
-        if videoRatio > 0.9 {
-            let width = superview.bounds.width * (2 / 3)
-            size = CGSize(width: width, height: width / videoRatio)
-        } else {
-            let height = superview.bounds.height / 3
-            size = CGSize(width: height * videoRatio, height: height)
-        }
-        frame.size = size
-        center = CGPoint(x: superview.bounds.width - pipModeMinInsets.right - size.width / 2,
-                         y: adjustedSafeAreaInsets.top + pipModeDefaultTopMargin + size.height / 2)
         setNeedsLayout()
         layoutIfNeeded()
-        roundCorners = true
+        updateCornerRadiusAndShadow()
     }
     
     private func layoutControlView() {
@@ -146,10 +121,33 @@ final class GalleryVideoView: UIView {
         }
     }
     
+    private func updateCornerRadiusAndShadow() {
+        let fromCornerRadius = backgroundView.layer.cornerRadius
+        let toCornerRadius: CGFloat = isPipMode ? 8 : 0
+        backgroundView.layer.cornerRadius = toCornerRadius
+        let cornerRadiusAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
+        cornerRadiusAnimation.fromValue = fromCornerRadius
+        cornerRadiusAnimation.toValue = toCornerRadius
+        cornerRadiusAnimation.duration = animationDuration
+        
+        let toShadowOpacity: Float = isPipMode ? 0.35 : 0
+        let fromShadowOpacity = layer.shadowOpacity
+        layer.shadowOpacity = toShadowOpacity
+        let shadowOpacityAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.shadowOpacity))
+        shadowOpacityAnimation.fromValue = fromShadowOpacity
+        shadowOpacityAnimation.toValue = toShadowOpacity
+        shadowOpacityAnimation.duration = animationDuration
+        
+        backgroundView.layer.add(cornerRadiusAnimation, forKey: cornerRadiusAnimation.keyPath)
+        layer.add(shadowOpacityAnimation, forKey: shadowOpacityAnimation.keyPath)
+    }
+    
     private func prepare() {
+        // TODO: Use explicit shadowPath
         layer.shadowOffset = CGSize(width: 0, height: 3)
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowRadius = 8
+        layer.shadowOpacity = 0
         
         backgroundView.frame = bounds
         backgroundView.clipsToBounds = true

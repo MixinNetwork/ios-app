@@ -17,12 +17,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var isSeeking = false
     private var rateBeforeSeeking: Float?
     private var playerDidReachEnd = false
-    
-    private var isPipMode = false {
-        didSet {
-            videoView.isPipMode = isPipMode
-        }
-    }
+    private var isPipMode = false
     
     var isPlayable: Bool {
         if let item = item {
@@ -158,17 +153,18 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         super.load(item: item)
         updateControlView()
         updateSliderPosition(time: .zero)
-        videoView.layoutFullsized(videoRatio: videoRatio)
         
         guard let item = item, let url = item.url else {
             return
         }
         
+        videoView.videoRatio = item.size.width / item.size.height
         if item.category == .video {
             controlView.style.remove(.liveStream)
         } else if item.category == .live {
             controlView.style.insert(.liveStream)
         }
+        videoView.layoutFullsized()
         
         let asset = AVURLAsset(url: url)
         let playableKey = #keyPath(AVAsset.isPlayable)
@@ -228,13 +224,12 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             galleryViewController?.show(itemViewController: self)
         }
         controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
-        let ratio = self.videoRatio
         let isPipMode = self.isPipMode
         animate(animations: {
             if isPipMode {
-                self.videoView.layoutPip(videoRatio: ratio)
+                self.videoView.layoutPip()
             } else {
-                self.videoView.layoutFullsized(videoRatio: ratio)
+                self.videoView.layoutFullsized()
             }
         }, completion: {
             if !isPipMode {
@@ -252,9 +247,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             if let view = view {
                 view.addSubview(videoView)
                 videoView.frame = view.bounds
-                videoView.layoutFullsized(videoRatio: videoRatio)
-            } else {
-                print("")
+                videoView.layoutFullsized()
             }
             GalleryVideoItemViewController.currentPipController = nil
         } else {

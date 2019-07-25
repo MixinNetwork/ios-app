@@ -3,7 +3,7 @@ import AVFoundation
 
 final class GalleryVideoView: UIView, GalleryAnimatable {
     
-    let backgroundView = UIView()
+    let contentView = UIView()
     let coverImageView = UIImageView()
     let player = AVPlayer()
     let playerView = PlayerView()
@@ -42,11 +42,10 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        backgroundView.frame = bounds
+        contentView.bounds.size = CGSize(width: bounds.width , height: ceil(bounds.width / videoRatio))
+        contentView.center = CGPoint(x: bounds.midX, y: bounds.midY)
         for view in [coverImageView, playerView] {
-            let height = bounds.width / videoRatio
-            view.bounds = CGRect(x: 0, y: 0, width: bounds.width, height: height)
-            view.center = CGPoint(x: backgroundView.bounds.midX, y: backgroundView.bounds.midY)
+            view.frame = contentView.bounds
         }
         layoutControlView()
     }
@@ -115,16 +114,16 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     
     private func layoutControlView() {
         if isPipMode {
-            controlView.frame = backgroundView.bounds
+            controlView.frame = bounds
         } else {
-            controlView.frame = backgroundView.bounds.inset(by: safeAreaInsets)
+            controlView.frame = bounds.inset(by: safeAreaInsets)
         }
     }
     
     private func updateCornerRadiusAndShadow() {
-        let fromCornerRadius = backgroundView.layer.cornerRadius
+        let fromCornerRadius = contentView.layer.cornerRadius
         let toCornerRadius: CGFloat = isPipMode ? 8 : 0
-        backgroundView.layer.cornerRadius = toCornerRadius
+        contentView.layer.cornerRadius = toCornerRadius
         let cornerRadiusAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
         cornerRadiusAnimation.fromValue = fromCornerRadius
         cornerRadiusAnimation.toValue = toCornerRadius
@@ -138,7 +137,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         shadowOpacityAnimation.toValue = toShadowOpacity
         shadowOpacityAnimation.duration = animationDuration
         
-        backgroundView.layer.add(cornerRadiusAnimation, forKey: cornerRadiusAnimation.keyPath)
+        contentView.layer.add(cornerRadiusAnimation, forKey: cornerRadiusAnimation.keyPath)
         layer.add(shadowOpacityAnimation, forKey: shadowOpacityAnimation.keyPath)
     }
     
@@ -149,18 +148,21 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         layer.shadowRadius = 8
         layer.shadowOpacity = 0
         
-        backgroundView.frame = bounds
-        backgroundView.clipsToBounds = true
-        backgroundView.backgroundColor = .clear
+        contentView.frame = bounds
+        contentView.clipsToBounds = true
+        contentView.backgroundColor = .clear
         
         coverImageView.contentMode = .scaleAspectFit
-        
+
+        playerView.layer.videoGravity = .resize
         playerView.layer.player = player
         
-        backgroundView.addSubview(coverImageView)
-        backgroundView.addSubview(playerView)
-        backgroundView.addSubview(controlView)
-        addSubview(backgroundView)
+        contentView.addSubview(coverImageView)
+        contentView.addSubview(playerView)
+        addSubview(contentView)
+        
+        controlView.frame = bounds
+        addSubview(controlView)
     }
     
 }

@@ -4,11 +4,11 @@ class DatabaseUserDefault {
 
     static let shared = DatabaseUserDefault()
 
+    private var keySignalDatabaseVersion: String {
+        return "key_database_signal"
+    }
     private var keyMixinDatabaseVersion: String {
         return "key_database_mixin_version_\(AccountAPI.shared.accountIdentityNumber)"
-    }
-    private var keySignalDatabaseVersion: String {
-        return "key_database_signal_version_\(AccountAPI.shared.accountIdentityNumber)"
     }
     private var keyUpgradeStickers: String {
         return "key_upgrade_stickers_\(AccountAPI.shared.accountIdentityNumber)"

@@ -26,11 +26,6 @@ class SignalDatabase: BaseDatabase {
                 try database.create(of: SenderKey.self)
                 try database.create(of: Session.self)
                 try database.create(of: SignedPreKey.self)
-
-                if DatabaseUserDefault.shared.signalDatabaseVersion > 0 && DatabaseUserDefault.shared.signalDatabaseVersion < 2 {
-                    try database.prepareUpdateSQL(sql: "DROP INDEX IF EXISTS sessions_index_id").execute()
-                    try database.prepareUpdateSQL(sql: "UPDATE sessions SET address = substr(address, 1, 36), device = 1 WHERE length(address) = 38").execute()
-                }
                 DatabaseUserDefault.shared.signalDatabaseVersion = SignalDatabase.databaseVersion
             })
         } catch {

@@ -192,11 +192,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     @objc func pipAction() {
         isPipMode.toggle()
         if isPipMode {
+            controlView.pipButton.setImage(R.image.ic_video_pip(), for: .normal)
             videoView.removeFromSuperview()
             GalleryVideoItemViewController.currentPipController = self
             UIApplication.homeContainerViewController?.view.addSubview(videoView)
             galleryViewController?.dismissForPip()
         } else {
+            controlView.pipButton.setImage(R.image.ic_video_fullsize(), for: .normal)
             GalleryVideoItemViewController.currentPipController = nil
             galleryViewController?.show(itemViewController: self)
         }

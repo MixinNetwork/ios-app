@@ -23,7 +23,7 @@
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="Q7h-05-TmK" secondAttribute="height" multiplier="1:1" id="rte-Go-7Hz"/>
                             </constraints>
-                            <state key="normal" image="ic_pip"/>
+                            <state key="normal" image="ic_video_fullsize"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ykM-27-EvN">
                             <rect key="frame" x="370" y="0.0" width="44" height="44"/>
@@ -171,8 +171,8 @@
     </objects>
     <resources>
         <image name="ic_close_shadow" width="44" height="44"/>
-        <image name="ic_pip" width="22" height="22"/>
         <image name="ic_reload" width="38" height="30"/>
+        <image name="ic_video_fullsize" width="24" height="24"/>
         <image name="ic_video_pause" width="22" height="26"/>
         <image name="ic_video_play" width="24" height="24"/>
         <image name="live_badge" width="45" height="29"/>

@@ -174,6 +174,10 @@ struct MixinFile {
         return rootDirectory.appendingPathComponent("mixin.db")
     }
 
+    static var jobDatabaseURL: URL {
+        return rootDirectory.appendingPathComponent("job.db")
+    }
+
     static var signalDatabasePath: String {
         let dir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         return dir.appendingPathComponent("signal.db").path

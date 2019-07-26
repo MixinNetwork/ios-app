@@ -1265,6 +1265,7 @@ extension ConversationViewController {
             contentViews.append(cell.lengthLabel)
         case let cell as LiveMessageCell:
             contentViews.append(cell.badgeView)
+            contentViews.append(cell.playButton)
         default:
             break
         }

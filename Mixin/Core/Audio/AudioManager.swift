@@ -167,10 +167,14 @@ class AudioManager {
     }
     
     @objc func audioSessionRouteChange(_ notification: Notification) {
+        let pause = {
+            DispatchQueue.main.async(execute: self.pause)
+        }
         let previousOutput = (notification.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription)?.outputs.first
         let output = AVAudioSession.sharedInstance().currentRoute.outputs.first
         if previousOutput?.portType == .headphones, output?.portType != .headphones {
             pause()
+            return
         }
         guard let value = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? AVAudioSession.RouteChangeReason.RawValue, let reason = AVAudioSession.RouteChangeReason(rawValue: value) else {
             return

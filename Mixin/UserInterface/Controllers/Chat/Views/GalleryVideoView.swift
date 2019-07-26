@@ -96,7 +96,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         controlView.style.insert(.pip)
         if let superview = superview {
             var size: CGSize
-            if videoRatio > 0.9 {
+            if videoRatio > 1 {
                 let width = superview.bounds.width * (2 / 3)
                 size = CGSize(width: width, height: width / videoRatio)
             } else {

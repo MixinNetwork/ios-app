@@ -234,7 +234,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             isPipMode = false
             videoView.removeFromSuperview()
             if let view = view {
-                view.addSubview(videoView)
+                view.insertSubview(videoView, at: 0)
                 videoView.frame = view.bounds
                 videoView.layoutFullsized()
             }

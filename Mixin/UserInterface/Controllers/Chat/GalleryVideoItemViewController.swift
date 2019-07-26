@@ -153,20 +153,17 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         super.load(item: item)
         updateControlView()
         updateSliderPosition(time: .zero)
-        
-        guard let item = item, let url = item.url else {
+        guard let item = item else {
             return
         }
-        
         videoView.videoRatio = item.size.width / item.size.height
+        videoView.layoutFullsized()
         if item.category == .video {
             controlView.style.remove(.liveStream)
         } else if item.category == .live {
             controlView.style.insert(.liveStream)
         }
-        videoView.layoutFullsized()
-        
-        if item.category == .video {
+        if let url = item.url, item.category == .video {
             loadAssetIfPlayable(url: url, playAfterLoaded: false)
         }
     }

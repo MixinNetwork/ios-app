@@ -397,14 +397,7 @@ class ReceiveMessageService: MixinService {
             guard let base64Data = Data(base64Encoded: plainText), let transferMediaData = (try? jsonDecoder.decode(TransferAttachmentData.self, from: base64Data)) else {
                 return
             }
-            let mediaStatus: MediaStatus
-            switch data.category {
-            case MessageCategory.SIGNAL_IMAGE.rawValue, MessageCategory.SIGNAL_AUDIO.rawValue:
-                mediaStatus = MediaStatus.PENDING
-            default:
-                mediaStatus = MediaStatus.CANCELED
-            }
-            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId, mediaStatus: mediaStatus, messageSource: data.source)
+            MessageDAO.shared.updateMediaMessage(mediaData: transferMediaData, status: MessageStatus.DELIVERED.rawValue, messageId: messageId, conversationId: data.conversationId, mediaStatus: .PENDING, messageSource: data.source)
             if data.category == MessageCategory.SIGNAL_AUDIO.rawValue {
                 let job = AudioDownloadJob(messageId: messageId, mediaMimeType: transferMediaData.mimeType)
                 ConcurrentJobQueue.shared.addJob(job: job)

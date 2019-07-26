@@ -126,8 +126,7 @@ extension Message {
     }
 
     static func createMessage(mediaData: TransferAttachmentData, data: BlazeMessageData) -> Message {
-        let mediaStatus = data.category.hasSuffix("_DATA") || data.category.hasSuffix("_VIDEO") ? MediaStatus.CANCELED.rawValue : MediaStatus.PENDING.rawValue
-        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: mediaData.attachmentId, mediaMimeType: mediaData.mimeType, mediaSize: mediaData.size, mediaDuration: mediaData.duration, mediaWidth: mediaData.width, mediaHeight: mediaData.height, mediaKey: mediaData.key, mediaDigest: mediaData.digest, mediaStatus: mediaStatus, mediaWaveform: mediaData.waveform, thumbImage: mediaData.thumbnail, status: MessageStatus.DELIVERED.rawValue, name: mediaData.name, createdAt: data.createdAt)
+        return createMessage(messageId: data.messageId, conversationId: data.conversationId, userId: data.getSenderId(), category: data.category, content: mediaData.attachmentId, mediaMimeType: mediaData.mimeType, mediaSize: mediaData.size, mediaDuration: mediaData.duration, mediaWidth: mediaData.width, mediaHeight: mediaData.height, mediaKey: mediaData.key, mediaDigest: mediaData.digest, mediaStatus: MediaStatus.PENDING.rawValue, mediaWaveform: mediaData.waveform, thumbImage: mediaData.thumbnail, status: MessageStatus.DELIVERED.rawValue, name: mediaData.name, createdAt: data.createdAt)
     }
     
     static func createMessage(liveData: TransferLiveData, data: BlazeMessageData) -> Message {

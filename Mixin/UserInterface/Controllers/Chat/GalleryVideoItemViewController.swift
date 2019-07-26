@@ -45,6 +45,20 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         return ConcurrentJobQueue.shared.isExistJob(jodId: jobId)
     }
     
+    override var shouldDownloadAutomatically: Bool {
+        guard item?.category == .video else {
+            return false
+        }
+        switch CommonUserDefault.shared.autoDownloadVideos {
+        case .wifiAndCellular:
+            return true
+        case .wifi:
+            return NetworkManager.shared.isReachableOnWiFi
+        case .never:
+            return false
+        }
+    }
+    
     override var isFocused: Bool {
         didSet {
             if !isFocused {
@@ -119,7 +133,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     override func beginDownload() {
-        guard let item = item else {
+        guard let item = item, item.category == .video else {
             return
         }
         let job = VideoDownloadJob(messageId: item.messageId,

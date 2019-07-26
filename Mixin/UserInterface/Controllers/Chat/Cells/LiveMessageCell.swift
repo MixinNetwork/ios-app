@@ -3,7 +3,7 @@ import UIKit
 class LiveMessageCell: PhotoRepresentableMessageCell {
     
     let badgeView = UIImageView(image: R.image.live_badge())
-    let playButton = NetworkOperationButton(type: .custom)
+    let playButton = ModernNetworkOperationButton(type: .custom)
     
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)

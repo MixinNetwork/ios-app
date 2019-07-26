@@ -44,8 +44,6 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         }
     }
     
-    private let pipModePlayControlTransform = CGAffineTransform(scaleX: 0.64, y: 0.64)
-    
     private var playControlsHidden = true
     private var otherControlsHidden = true
     
@@ -87,7 +85,6 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         liveBadgeView.alpha = showLiveBadge ? 1 : 0
         
         playControlWrapperView.alpha = playControlsHidden || style.contains(.loading) ? 0 : 1
-        playControlWrapperView.transform = style.contains(.pip) ? pipModePlayControlTransform : .identity
         
         style.contains(.loading) ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
         

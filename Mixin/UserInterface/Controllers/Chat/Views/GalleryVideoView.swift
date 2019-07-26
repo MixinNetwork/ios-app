@@ -84,8 +84,6 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         if let superview = superview {
             frame = superview.bounds
         }
-        controlView.reloadButton.transform = .identity
-        controlView.activityIndicatorView.transform = .identity
         setNeedsLayout()
         layoutIfNeeded()
         updateCornerRadiusAndShadow()

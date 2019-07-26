@@ -451,21 +451,40 @@
                                                                 <action selector="operationAction:" destination="czT-Am-Bj2" eventType="touchUpInside" id="kVX-AI-nYl"/>
                                                             </connections>
                                                         </button>
-                                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_play" translatesAutoresizingMaskIntoConstraints="NO" id="REs-5L-qBG">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IwE-Fv-UBT">
                                                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                                                        </imageView>
+                                                            <subviews>
+                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_network_op_background_legacy" translatesAutoresizingMaskIntoConstraints="NO" id="QUu-Sl-f0P">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+                                                                </imageView>
+                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gaT-14-e7m">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+                                                                </imageView>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <constraints>
+                                                                <constraint firstItem="gaT-14-e7m" firstAttribute="top" secondItem="IwE-Fv-UBT" secondAttribute="top" id="74Z-eo-UZw"/>
+                                                                <constraint firstItem="QUu-Sl-f0P" firstAttribute="leading" secondItem="IwE-Fv-UBT" secondAttribute="leading" id="C61-G0-uc0"/>
+                                                                <constraint firstItem="QUu-Sl-f0P" firstAttribute="top" secondItem="IwE-Fv-UBT" secondAttribute="top" id="Deg-P2-cJc"/>
+                                                                <constraint firstAttribute="trailing" secondItem="gaT-14-e7m" secondAttribute="trailing" id="N1K-x4-6Qo"/>
+                                                                <constraint firstAttribute="trailing" secondItem="QUu-Sl-f0P" secondAttribute="trailing" id="Nvq-Md-exA"/>
+                                                                <constraint firstAttribute="bottom" secondItem="QUu-Sl-f0P" secondAttribute="bottom" id="YHE-9G-Jl5"/>
+                                                                <constraint firstItem="gaT-14-e7m" firstAttribute="leading" secondItem="IwE-Fv-UBT" secondAttribute="leading" id="biZ-HV-5Sd"/>
+                                                                <constraint firstAttribute="bottom" secondItem="gaT-14-e7m" secondAttribute="bottom" id="fHB-Lp-RuC"/>
+                                                            </constraints>
+                                                        </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="JyQ-fz-ccK" firstAttribute="top" secondItem="wlc-hc-7sd" secondAttribute="top" id="E9Z-3k-zHE"/>
-                                                        <constraint firstItem="REs-5L-qBG" firstAttribute="top" secondItem="wlc-hc-7sd" secondAttribute="top" id="LcG-qG-Gtm"/>
+                                                        <constraint firstItem="IwE-Fv-UBT" firstAttribute="leading" secondItem="wlc-hc-7sd" secondAttribute="leading" id="GiZ-p9-HuV"/>
                                                         <constraint firstAttribute="bottom" secondItem="JyQ-fz-ccK" secondAttribute="bottom" id="N5P-EU-zSA"/>
+                                                        <constraint firstAttribute="bottom" secondItem="IwE-Fv-UBT" secondAttribute="bottom" id="Udl-0H-fha"/>
                                                         <constraint firstItem="JyQ-fz-ccK" firstAttribute="leading" secondItem="wlc-hc-7sd" secondAttribute="leading" id="Vh2-Jm-0dx"/>
-                                                        <constraint firstItem="REs-5L-qBG" firstAttribute="leading" secondItem="wlc-hc-7sd" secondAttribute="leading" id="ceI-xj-lWW"/>
-                                                        <constraint firstAttribute="trailing" secondItem="REs-5L-qBG" secondAttribute="trailing" id="eTK-FF-MUu"/>
+                                                        <constraint firstItem="IwE-Fv-UBT" firstAttribute="top" secondItem="wlc-hc-7sd" secondAttribute="top" id="ZJG-CR-JzY"/>
+                                                        <constraint firstAttribute="trailing" secondItem="IwE-Fv-UBT" secondAttribute="trailing" id="g67-ee-shH"/>
                                                         <constraint firstAttribute="trailing" secondItem="JyQ-fz-ccK" secondAttribute="trailing" id="lYF-ES-BUI"/>
                                                         <constraint firstAttribute="height" constant="48" id="nvj-mY-ZCX"/>
-                                                        <constraint firstAttribute="bottom" secondItem="REs-5L-qBG" secondAttribute="bottom" id="olt-ia-0OV"/>
                                                         <constraint firstAttribute="width" constant="48" id="wmn-Yp-LMj"/>
                                                     </constraints>
                                                 </view>
@@ -534,7 +553,8 @@
                                             <outlet property="leftView" destination="wlc-hc-7sd" id="gUC-ns-egg"/>
                                             <outlet property="lengthLabel" destination="ZUb-hH-eY8" id="O4q-jD-B8r"/>
                                             <outlet property="operationButton" destination="JyQ-fz-ccK" id="quo-vR-KZQ"/>
-                                            <outlet property="playbackStateImageView" destination="REs-5L-qBG" id="p47-km-MeD"/>
+                                            <outlet property="playbackStateImageView" destination="gaT-14-e7m" id="VcD-UO-iCt"/>
+                                            <outlet property="playbackStateWrapperView" destination="IwE-Fv-UBT" id="bfl-7X-RjW"/>
                                             <outlet property="rightView" destination="tzQ-Ot-LBE" id="GET-cE-Sfs"/>
                                             <outlet property="waveformView" destination="qVn-Ti-QpG" id="ker-Vx-e76"/>
                                         </connections>
@@ -1137,7 +1157,7 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cjs-aV-wmR" customClass="AssetSendVideoView">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cjs-aV-wmR" customClass="AssetSendVideoView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -1157,11 +1177,8 @@
                                 </connections>
                             </button>
                             <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6rr-f2-Hvq">
-                                <rect key="frame" x="157.5" y="313.5" width="60" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="iGA-1f-Au3"/>
-                                    <constraint firstAttribute="width" constant="60" id="v1S-bd-b3i"/>
-                                </constraints>
+                                <rect key="frame" x="146.5" y="302.5" width="82" height="82"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" image="ic_preview_play"/>
                                 <connections>
                                     <action selector="playAction:" destination="n44-eU-obg" eventType="touchUpInside" id="hsh-M1-wN0"/>
@@ -2068,6 +2085,7 @@
                                                     </view>
                                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESH-Nk-nNV">
                                                         <rect key="frame" x="126.5" y="126.5" width="82" height="82"/>
+                                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" image="ic_preview_play"/>
                                                         <connections>
                                                             <action selector="playAction:" destination="lA6-Lu-PN4" eventType="touchUpInside" id="1Df-VE-iwU"/>
@@ -2211,7 +2229,7 @@
         <image name="ic_camera_save" width="60" height="60"/>
         <image name="ic_camera_send" width="60" height="60"/>
         <image name="ic_chat_bg" width="375" height="667"/>
-        <image name="ic_play" width="38" height="38"/>
+        <image name="ic_network_op_background_legacy" width="38" height="38"/>
         <image name="ic_preview_play" width="82" height="82"/>
         <image name="ic_sticker_frame" width="325" height="325"/>
         <image name="ic_sticker_normal" width="20" height="20"/>

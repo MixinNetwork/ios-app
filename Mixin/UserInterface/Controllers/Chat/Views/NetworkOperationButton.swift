@@ -2,13 +2,6 @@ import UIKit
 
 class NetworkOperationButton: UIButton {
     
-    static let indicatorLineWidth: CGFloat = 1.5
-    static let buttonSize = #imageLiteral(resourceName: "ic_file_download").size
-    static let indicatorLength: CGFloat = buttonSize.width - indicatorLineWidth
-    
-    private let minProgress: Double = 0.05
-    private let maxProgress: Double = 0.95
-    
     enum Style {
         case finished(showPlayIcon: Bool)
         case upload
@@ -25,54 +18,41 @@ class NetworkOperationButton: UIButton {
         }
     }
     
+    let backgroundSize = CGSize(width: 38, height: 38)
+    
+    lazy var backgroundView: UIView = {
+        let view = type(of: self).makeBackgroundView()
+        view.tintColor = indicatorColor
+        return view
+    }()
+    
     var style = Style.finished(showPlayIcon: false) {
         didSet {
-            if oldValue.isBusy && !style.isBusy {
-                removeBusyAnimation()
-            } else if !oldValue.isBusy && style.isBusy {
-                setNeedsLayout()
-                layoutIfNeeded()
-                addBusyAnimation()
-            }
-            switch style {
-            case .finished(let showPlayIcon):
-                setImage(showPlayIcon ? #imageLiteral(resourceName: "ic_play") : nil, for: .normal)
-                isUserInteractionEnabled = false
-            case .upload:
-                setImage(#imageLiteral(resourceName: "ic_file_upload"), for: .normal)
-                isUserInteractionEnabled = true
-            case .download:
-                setImage(#imageLiteral(resourceName: "ic_file_download"), for: .normal)
-                isUserInteractionEnabled = true
-            case .expired:
-                setImage(#imageLiteral(resourceName: "ic_file_expired"), for: .normal)
-                isUserInteractionEnabled = false
-            case .busy(let progress):
-                if !oldValue.isBusy {
-                    setImage(#imageLiteral(resourceName: "ic_file_cancel"), for: .normal)
-                }
-                let progress = min(max(progress, minProgress), maxProgress)
-                indicatorLayer.path = UIBezierPath(arcCenter: indicatorCenter,
-                                                   radius: NetworkOperationButton.indicatorLength / 2,
-                                                   startAngle: -.pi / 2,
-                                                   endAngle: 2 * .pi * CGFloat(progress) - .pi / 2,
-                                                   clockwise: true).cgPath
-                isUserInteractionEnabled = true
-            }
+            update(with: style, oldStyle: oldValue)
         }
     }
     
-    private let busyAnimationKey = "BusyAnimation"
+    var indicatorLineWidth: CGFloat {
+        return 1.5
+    }
+    
+    var indicatorColor: UIColor {
+        return UIColor(displayP3RgbValue: 0x3D75E3)
+    }
+    
+    private let minProgress: Double = 0.05
+    private let maxProgress: Double = 0.95
+    private let busyAnimationKey = "busy"
     
     private lazy var indicatorLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
         layer.fillColor = UIColor.clear.cgColor
-        layer.strokeColor = UIColor(rgbValue: 0x007AFF).cgColor
+        layer.strokeColor = indicatorColor.cgColor
         layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        layer.lineWidth = NetworkOperationButton.indicatorLineWidth
+        layer.lineWidth = indicatorLineWidth
         layer.lineCap = .round
         layer.path = UIBezierPath(arcCenter: .zero,
-                                  radius: NetworkOperationButton.indicatorLength / 2,
+                                  radius: indicatorLength / 2,
                                   startAngle: -.pi / 2,
                                   endAngle: 3 / 4 * .pi,
                                   clockwise: true).cgPath
@@ -81,15 +61,81 @@ class NetworkOperationButton: UIButton {
     
     private var indicatorCenter = CGPoint.zero
     
+    private var indicatorLength: CGFloat {
+        return backgroundSize.width - indicatorLineWidth
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        prepare()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        prepare()
+    }
+    
+    class func makeBackgroundView() -> UIView {
+        let view = UIImageView(image: R.image.ic_network_op_background_legacy())
+        view.contentMode = .center
+        return view
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
+        backgroundView.bounds.size = backgroundSize
+        backgroundView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        sendSubviewToBack(backgroundView)
         if style.isBusy {
-            let indicatorLength = NetworkOperationButton.indicatorLength
             indicatorCenter = CGPoint(x: indicatorLength / 2, y: indicatorLength / 2)
             indicatorLayer.frame = CGRect(x: bounds.midX - indicatorLength / 2,
                                           y: bounds.midY - indicatorLength / 2,
                                           width: indicatorLength,
                                           height: indicatorLength)
+        }
+    }
+    
+    func update(with newStyle: Style, oldStyle: Style) {
+        if oldStyle.isBusy && !newStyle.isBusy {
+            removeBusyAnimation()
+        } else if !oldStyle.isBusy && newStyle.isBusy {
+            setNeedsLayout()
+            layoutIfNeeded()
+            addBusyAnimation()
+        }
+        switch newStyle {
+        case .finished(let showPlayIcon):
+            backgroundView.isHidden = !showPlayIcon
+            if showPlayIcon {
+                setImage(R.image.ic_play(), for: .normal)
+            } else {
+                setImage(nil, for: .normal)
+            }
+            isUserInteractionEnabled = false
+        case .upload:
+            backgroundView.isHidden = false
+            setImage(R.image.ic_file_upload(), for: .normal)
+            isUserInteractionEnabled = true
+        case .download:
+            backgroundView.isHidden = false
+            setImage(R.image.ic_file_download(), for: .normal)
+            isUserInteractionEnabled = true
+        case .expired:
+            backgroundView.isHidden = false
+            setImage(R.image.ic_file_expired(), for: .normal)
+            isUserInteractionEnabled = false
+        case .busy(let progress):
+            backgroundView.isHidden = false
+            if !oldStyle.isBusy {
+                setImage(R.image.ic_file_cancel(), for: .normal)
+            }
+            let progress = min(max(progress, minProgress), maxProgress)
+            indicatorLayer.path = UIBezierPath(arcCenter: indicatorCenter,
+                                               radius: indicatorLength / 2,
+                                               startAngle: -.pi / 2,
+                                               endAngle: 2 * .pi * CGFloat(progress) - .pi / 2,
+                                               clockwise: true).cgPath
+            isUserInteractionEnabled = true
         }
     }
     
@@ -107,6 +153,12 @@ class NetworkOperationButton: UIButton {
     private func removeBusyAnimation() {
         indicatorLayer.removeAnimation(forKey: busyAnimationKey)
         indicatorLayer.removeFromSuperlayer()
+    }
+    
+    private func prepare() {
+        backgroundView.isUserInteractionEnabled = false
+        insertSubview(backgroundView, at: 0)
+        imageView?.tintColor = indicatorColor
     }
     
 }

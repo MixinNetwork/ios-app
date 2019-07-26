@@ -50,19 +50,22 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TKP-4B-OUV">
-                    <rect key="frame" x="177" y="159.5" width="60" height="60"/>
+                    <rect key="frame" x="188" y="170.5" width="38" height="38"/>
                     <subviews>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VCF-sg-yOy" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                            <rect key="frame" x="0.0" y="0.0" width="38" height="38"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <state key="normal" image="ic_reload"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yED-yG-s6z" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
-                            <state key="normal" image="ic_video_play"/>
+                            <rect key="frame" x="0.0" y="0.0" width="38" height="38"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" image="ic_play"/>
                         </button>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hyw-t1-hLS" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
-                            <state key="normal" image="ic_video_pause"/>
+                            <rect key="frame" x="0.0" y="0.0" width="38" height="38"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" image="ic_pause"/>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -71,13 +74,13 @@
                         <constraint firstItem="Hyw-t1-hLS" firstAttribute="top" secondItem="TKP-4B-OUV" secondAttribute="top" id="IEW-u5-zob"/>
                         <constraint firstItem="yED-yG-s6z" firstAttribute="leading" secondItem="TKP-4B-OUV" secondAttribute="leading" id="JFT-Ft-Z6v"/>
                         <constraint firstItem="VCF-sg-yOy" firstAttribute="leading" secondItem="TKP-4B-OUV" secondAttribute="leading" id="Kgb-8W-DqK"/>
+                        <constraint firstAttribute="width" secondItem="TKP-4B-OUV" secondAttribute="height" id="ZgT-u6-kkF"/>
                         <constraint firstAttribute="bottom" secondItem="Hyw-t1-hLS" secondAttribute="bottom" id="aQC-Pj-L6m"/>
                         <constraint firstItem="Hyw-t1-hLS" firstAttribute="leading" secondItem="TKP-4B-OUV" secondAttribute="leading" id="aVp-N3-kYc"/>
                         <constraint firstAttribute="trailing" secondItem="Hyw-t1-hLS" secondAttribute="trailing" id="dep-4H-UDM"/>
                         <constraint firstAttribute="trailing" secondItem="VCF-sg-yOy" secondAttribute="trailing" id="ec4-L3-uG9"/>
-                        <constraint firstAttribute="height" constant="60" id="ggM-Ig-2gx"/>
                         <constraint firstAttribute="trailing" secondItem="yED-yG-s6z" secondAttribute="trailing" id="nhe-A4-wHs"/>
-                        <constraint firstAttribute="width" constant="60" id="ozL-Oj-cCp"/>
+                        <constraint firstAttribute="width" constant="38" id="ozL-Oj-cCp"/>
                         <constraint firstAttribute="bottom" secondItem="yED-yG-s6z" secondAttribute="bottom" id="ppd-8g-KXF"/>
                         <constraint firstItem="yED-yG-s6z" firstAttribute="top" secondItem="TKP-4B-OUV" secondAttribute="top" id="qMK-pD-yT2"/>
                         <constraint firstAttribute="bottom" secondItem="VCF-sg-yOy" secondAttribute="bottom" id="xvE-j5-iUk"/>
@@ -171,10 +174,10 @@
     </objects>
     <resources>
         <image name="ic_close_shadow" width="44" height="44"/>
-        <image name="ic_reload" width="38" height="30"/>
+        <image name="ic_pause" width="12" height="14"/>
+        <image name="ic_play" width="16" height="16"/>
+        <image name="ic_reload" width="22" height="18"/>
         <image name="ic_video_fullsize" width="24" height="24"/>
-        <image name="ic_video_pause" width="22" height="26"/>
-        <image name="ic_video_play" width="24" height="24"/>
         <image name="live_badge" width="45" height="29"/>
     </resources>
 </document>

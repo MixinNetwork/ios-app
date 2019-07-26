@@ -212,7 +212,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             GalleryVideoItemViewController.currentPipController = nil
             galleryViewController?.show(itemViewController: self)
         }
-        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
+        if player.timeControlStatus == .playing {
+            controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
+        }
         let isPipMode = self.isPipMode
         animate(animations: {
             if isPipMode {
@@ -293,8 +295,12 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func tapAction(_ recognizer: UITapGestureRecognizer) {
-        let isShowingPlayControl = controlView.playControlWrapperView.alpha > 0
-        controlView.set(playControlsHidden: isShowingPlayControl, otherControlsHidden: isShowingPlayControl, animated: true)
+        if player.timeControlStatus == .playing {
+            let isShowingPlayControl = controlView.playControlWrapperView.alpha > 0
+            controlView.set(playControlsHidden: isShowingPlayControl, otherControlsHidden: isShowingPlayControl, animated: true)
+        } else if isPlayable {
+            controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        }
     }
     
     @objc func playerItemDidReachEnd(_ notification: Notification) {

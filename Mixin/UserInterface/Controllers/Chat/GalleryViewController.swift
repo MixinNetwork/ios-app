@@ -51,6 +51,10 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func loadView() {
+        view = GalleryView()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
@@ -65,11 +69,12 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         pageViewController.didMove(toParent: self)
         pageViewController.dataSource = modelController
         pageViewController.delegate = self
-        pageViewController.view.subviews.forEach { (view) in
-            (view as? UIScrollView)?.delaysContentTouches = false
+        if let scrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) {
+            (view as? GalleryView)?.scrollView = scrollView as? UIScrollView
         }
         
         panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
+        panRecognizer.delegate = self
         view.addGestureRecognizer(panRecognizer)
         
         longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction(_:)))
@@ -253,6 +258,15 @@ extension GalleryViewController: UIPageViewControllerDelegate {
         if let vc = pageViewController.viewControllers?.first as? GalleryItemViewController {
             vc.isFocused = true
         }
+    }
+    
+}
+
+extension GalleryViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return panRecognizer.velocity(in: view).y > 0
+            && abs(panRecognizer.velocity(in: view).y) > abs(panRecognizer.velocity(in: view).x)
     }
     
 }

@@ -403,9 +403,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         case .playing:
             controlView.playControlStyle = .pause
             controlView.style.remove(.loading)
-            if !isSeeking {
-                controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: true)
-            }
         case .paused:
             if item?.category == .video || !playerDidReachEnd {
                 controlView.playControlStyle = .play

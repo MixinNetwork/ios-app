@@ -295,7 +295,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         } else if item.category == .live {
             controlView.playControlStyle = .reload
         }
-        controlView.set(playControlsHidden: false, otherControlsHidden: !isPipMode, animated: true)
+        controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
     }
     

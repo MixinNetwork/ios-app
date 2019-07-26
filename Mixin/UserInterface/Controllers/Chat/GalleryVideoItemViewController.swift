@@ -199,6 +199,18 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         })
     }
     
+    override func willBeginInteractiveDismissal() {
+        super.willBeginInteractiveDismissal()
+        controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: true)
+    }
+    
+    override func didCancelInteractiveDismissal() {
+        super.didCancelInteractiveDismissal()
+        if player.timeControlStatus != .playing {
+            controlView.set(playControlsHidden: false, otherControlsHidden: true, animated: true)
+        }
+    }
+    
     @objc func pipAction() {
         isPipMode.toggle()
         if isPipMode {
@@ -295,12 +307,11 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func tapAction(_ recognizer: UITapGestureRecognizer) {
-        if player.timeControlStatus == .playing {
-            let isShowingPlayControl = controlView.playControlWrapperView.alpha > 0
-            controlView.set(playControlsHidden: isShowingPlayControl, otherControlsHidden: isShowingPlayControl, animated: true)
-        } else if isPlayable {
-            controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        guard player.timeControlStatus == .playing else {
+            return
         }
+        let isShowingPlayControl = controlView.playControlWrapperView.alpha > 0
+        controlView.set(playControlsHidden: isShowingPlayControl, otherControlsHidden: isShowingPlayControl, animated: true)
     }
     
     @objc func playerItemDidReachEnd(_ notification: Notification) {

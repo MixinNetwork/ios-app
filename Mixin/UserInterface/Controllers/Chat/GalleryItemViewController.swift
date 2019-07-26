@@ -112,6 +112,14 @@ class GalleryItemViewController: UIViewController {
         }
     }
     
+    func willBeginInteractiveDismissal() {
+        
+    }
+    
+    func didCancelInteractiveDismissal() {
+        
+    }
+    
     @objc func attachmentAction(_ sender: Any) {
         if isDownloadingAttachment {
             cancelDownload()

@@ -198,9 +198,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             if let id = currentItemViewController?.item?.messageId {
                 delegate?.galleryViewController(self, willDismissItemOf: id)
             }
-            if let vc = currentItemViewController as? GalleryVideoItemViewController {
-                vc.controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: true)
-            }
+            currentItemViewController?.willBeginInteractiveDismissal()
             recognizer.setTranslation(.zero, in: view)
         case .changed:
             let y = max(0, translation.y)
@@ -210,6 +208,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             if progress > 0.6 || recognizer.velocity(in: view).y > 800 {
                 dismiss(transitionViewInitialOffsetY: translation.y)
             } else {
+                currentItemViewController?.didCancelInteractiveDismissal()
                 animate(animations: {
                     self.backgroundView.alpha = 1
                     self.pageViewController.view.transform = .identity

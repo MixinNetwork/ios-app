@@ -95,14 +95,22 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         isPipMode = true
         controlView.style.insert(.pip)
         if let superview = superview {
-            let size: CGSize
+            var size: CGSize
             if videoRatio > 0.9 {
                 let width = superview.bounds.width * (2 / 3)
                 size = CGSize(width: width, height: width / videoRatio)
             } else {
                 let height = superview.bounds.height / 3
-                size = CGSize(width: height * videoRatio, height: height)
+                let width = height * videoRatio
+                if width <= superview.bounds.width / 2 {
+                    size = CGSize(width: width, height: height)
+                } else {
+                    let width = superview.bounds.width / 2
+                    let height = width / videoRatio
+                    size = CGSize(width: width, height: height)
+                }
             }
+            size = ceil(size)
             frame.size = size
             center = CGPoint(x: superview.bounds.width - pipModeMinInsets.right - size.width / 2,
                              y: adjustedSafeAreaInsets.top + pipModeDefaultTopMargin + size.height / 2)

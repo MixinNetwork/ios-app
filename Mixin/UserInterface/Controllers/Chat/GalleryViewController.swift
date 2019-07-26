@@ -252,11 +252,14 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
 extension GalleryViewController: UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        previousViewControllers.forEach {
+        let focus = pageViewController.viewControllers?.first as? GalleryItemViewController
+        previousViewControllers.filter({
+            $0 != focus
+        }).forEach({
             ($0 as? GalleryItemViewController)?.isFocused = false
-        }
-        if let vc = pageViewController.viewControllers?.first as? GalleryItemViewController {
-            vc.isFocused = true
+        })
+        if let focus = focus {
+            focus.isFocused = true
         }
     }
     

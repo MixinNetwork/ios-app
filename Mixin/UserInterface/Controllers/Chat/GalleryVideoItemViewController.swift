@@ -49,7 +49,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         didSet {
             if !isFocused {
                 player.pause()
-                player.seek(to: .zero)
                 if isPlayable {
                     controlView.set(playControlsHidden: false, otherControlsHidden: true, animated: false)
                 }

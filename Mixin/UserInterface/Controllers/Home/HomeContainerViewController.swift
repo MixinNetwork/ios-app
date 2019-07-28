@@ -21,7 +21,17 @@ class HomeContainerViewController: UIViewController {
     }
     
     override var childForHomeIndicatorAutoHidden: UIViewController? {
-        return homeNavigationController
+        return isShowingGallery ? galleryViewController : homeNavigationController
+    }
+    
+    private var isShowingGallery: Bool {
+        if view.subviews.last == homeNavigationController.view {
+            return false
+        } else if let (galleryIndex, homeIndex) = indices() {
+            return galleryIndex > homeIndex
+        } else {
+            return false
+        }
     }
     
     deinit {
@@ -43,6 +53,8 @@ class HomeContainerViewController: UIViewController {
             return
         }
         view.exchangeSubview(at: galleryIndex, withSubviewAt: homeIndex)
+        UIApplication.shared.keyWindow?.windowLevel = .statusBar
+        setNeedsUpdateOfHomeIndicatorAutoHidden()
     }
     
     @objc func galleryViewControllerDidDismiss(_ notification: Notification) {
@@ -50,6 +62,8 @@ class HomeContainerViewController: UIViewController {
             return
         }
         view.exchangeSubview(at: galleryIndex, withSubviewAt: homeIndex)
+        UIApplication.shared.keyWindow?.windowLevel = .normal
+        setNeedsUpdateOfHomeIndicatorAutoHidden()
     }
     
     private func indices() -> (gallery: Int, home: Int)? {

@@ -15,6 +15,14 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     static let messageIdUserInfoKey = "message_id"
     static let relativeOffsetUserInfoKey = "relative_offset"
     
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     weak var delegate: GalleryViewControllerDelegate?
     
     var conversationId: String {

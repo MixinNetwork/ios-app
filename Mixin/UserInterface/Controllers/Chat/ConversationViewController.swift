@@ -36,11 +36,6 @@ class ConversationViewController: UIViewController {
             setNeedsStatusBarAppearanceUpdate()
         }
     }
-    var homeIndicatorAutoHidden = false {
-        didSet {
-            setNeedsUpdateOfHomeIndicatorAutoHidden()
-        }
-    }
     
     private let minInputWrapperTopMargin: CGFloat = 112 // Margin to navigation title bar
     private let showScrollToBottomButtonThreshold: CGFloat = 150
@@ -142,10 +137,6 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNodeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(galleryViewControllerWillShow(_:)), name: GalleryViewController.willShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(galleryViewControllerDidDismiss(_:)), name: GalleryViewController.didDismissNotification, object: nil)
-    }
-    
-    override var prefersHomeIndicatorAutoHidden: Bool {
-        return homeIndicatorAutoHidden
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -548,8 +539,6 @@ class ConversationViewController: UIViewController {
         if let messageId = notification.userInfo?[GalleryViewController.messageIdUserInfoKey] as? String {
             setCell(ofMessageId: messageId, contentViewHidden: true)
         }
-        homeIndicatorAutoHidden = true
-        statusBarHidden = true
     }
     
     @objc func galleryViewControllerDidDismiss(_ notification: Notification) {
@@ -560,8 +549,6 @@ class ConversationViewController: UIViewController {
             cell.contentImageView.layoutIfNeeded()
         }
         setCell(ofMessageId: messageId, contentViewHidden: false)
-        statusBarHidden = false
-        homeIndicatorAutoHidden = false
     }
     
     // MARK: - Interface

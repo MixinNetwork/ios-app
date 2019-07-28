@@ -90,6 +90,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                 controller.closeAction()
             }
         }
+        UIApplication.shared.keyWindow?.endEditing(true)
         backgroundView.alpha = 0
         pageViewController.view.alpha = 0
         NotificationCenter.default.post(name: GalleryViewController.willShowNotification,
@@ -122,6 +123,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         guard let item = viewController.item else {
             return
         }
+        UIApplication.shared.keyWindow?.endEditing(true)
         NotificationCenter.default.post(name: GalleryViewController.willShowNotification,
                                         object: self,
                                         userInfo: [GalleryViewController.messageIdUserInfoKey: item.messageId])

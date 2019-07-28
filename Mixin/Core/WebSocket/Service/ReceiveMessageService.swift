@@ -453,7 +453,7 @@ class ReceiveMessageService: MixinService {
     }
 
     private func syncConversation(data: BlazeMessageData) {
-        guard data.category != MessageCategory.SIGNAL_KEY.rawValue && data.conversationId != User.systemUser && data.conversationId != AccountAPI.shared.accountUserId else {
+        guard data.conversationId != User.systemUser && data.conversationId != AccountAPI.shared.accountUserId else {
             return
         }
         if let status = ConversationDAO.shared.getConversationStatus(conversationId: data.conversationId) {

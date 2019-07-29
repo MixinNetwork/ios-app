@@ -525,9 +525,18 @@ class SendMessageService: MixinService {
                 userInfo["errorCode"] = error.errorCode
                 userInfo["errorDescription"] = error.localizedDescription
                 userInfo["JobAction"] = job.action
-                userInfo["conversationId"] = job.conversationId ?? ""
                 userInfo["blazeMessage"] = blazeMessage
                 userInfo["isSessionMessage"] = "\(job.isSessionMessage)"
+                if let err = error as? SignalError {
+                    userInfo["signalErrorCode"] = err.rawValue
+                    if IdentityDao.shared.getLocalIdentity() == nil {
+                        userInfo["signalError"] = "local identity nil"
+                        userInfo["identityCount"] = "\(IdentityDao.shared.getCount())"
+                        UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
+                        AccountAPI.shared.logout()
+                        return false
+                    }
+                }
                 UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
 
                 if let err = error as? APIError, err.code == 10002 {

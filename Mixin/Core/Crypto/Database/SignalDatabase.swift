@@ -40,9 +40,9 @@ class SignalDatabase: BaseDatabase {
             } catch {
                 UIApplication.traceError(code: ReportErrorCode.databaseRemoveFailed, userInfo: ["database": "signal"])
             }
+            CryptoUserDefault.shared.reset()
+            SignalDatabase.shared.configure(reset: true)
             DispatchQueue.main.async {
-                CryptoUserDefault.shared.reset()
-                SignalDatabase.shared.configure(reset: true)
                 onClosed()
             }
         })

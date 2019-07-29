@@ -20,23 +20,23 @@ class BaseJob: Operation {
         guard AccountAPI.shared.didLogin, !isCancelled else {
             return
         }
-        
-        do {
-            try run()
-        } catch {
-            guard !isCancelled else {
+        repeat {
+            do {
+                try run()
                 return
+            } catch {
+                guard !isCancelled else {
+                    return
+                }
+
+                checkNetworkAndWebSocket()
+
+                guard let err = error as? APIError, err.isClientError || err.isServerError else {
+                    return
+                }
+                Thread.sleep(forTimeInterval: 2)
             }
-
-            checkNetworkAndWebSocket()
-
-            guard let err = error as? APIError, err.isClientError || err.isServerError else {
-                return
-            }
-
-            Thread.sleep(forTimeInterval: 2)
-            main()
-        }
+        } while AccountAPI.shared.didLogin && !isCancelled
     }
 
     internal func checkNetworkAndWebSocket() {

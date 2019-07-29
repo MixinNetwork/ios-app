@@ -15,7 +15,8 @@ class SignalDatabase: BaseDatabase {
 
     override func configure(reset: Bool = false) {
         if reset {
-            self._database = Database(withPath: MixinFile.signalDatabasePath)
+            _database.close()
+            _database = Database(withPath: MixinFile.signalDatabasePath)
         }
         do {
             database.setSynchronous(isFull: true)

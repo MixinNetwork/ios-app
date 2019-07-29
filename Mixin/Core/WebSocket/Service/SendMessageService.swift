@@ -221,6 +221,7 @@ class SendMessageService: MixinService {
         var resendMessages = [ResendMessage]()
         for messageId in messageIds {
             guard !ResendMessageDAO.shared.isExist(messageId: messageId, userId: userId) else {
+                FileManager.default.writeLog(conversationId: conversationId, log: "[SendMessageService][ResendMessage][Exist]...resend_messages...messageId:\(messageId)")
                 continue
             }
 
@@ -512,32 +513,36 @@ class SendMessageService: MixinService {
             } catch {
                 checkNetworkAndWebSocket()
 
-                var blazeMessage = ""
-                if let bm = job.blazeMessage {
-                    blazeMessage = String(data: bm, encoding: .utf8) ?? ""
-                }
+                if let err = error as? APIError, err.status == NSURLErrorTimedOut {
 
-                #if DEBUG
-                print("======SendMessageService...handlerJob...\(error)...currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
-                #endif
-                FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...isSessionMessage:\(job.isSessionMessage)...blazeMessage:\(blazeMessage)...\(error)")
-                var userInfo = [String: Any]()
-                userInfo["errorCode"] = error.errorCode
-                userInfo["errorDescription"] = error.localizedDescription
-                userInfo["JobAction"] = job.action
-                userInfo["blazeMessage"] = blazeMessage
-                userInfo["isSessionMessage"] = "\(job.isSessionMessage)"
-                if let err = error as? SignalError {
-                    userInfo["signalErrorCode"] = err.rawValue
-                    if IdentityDao.shared.getLocalIdentity() == nil {
-                        userInfo["signalError"] = "local identity nil"
-                        userInfo["identityCount"] = "\(IdentityDao.shared.getCount())"
-                        UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
-                        AccountAPI.shared.logout()
-                        return false
+                } else {
+                    var blazeMessage = ""
+                    if let bm = job.blazeMessage {
+                        blazeMessage = String(data: bm, encoding: .utf8) ?? ""
                     }
+
+                    #if DEBUG
+                    print("======SendMessageService...handlerJob...\(error)...currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
+                    #endif
+                    FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...isSessionMessage:\(job.isSessionMessage)...blazeMessage:\(blazeMessage)...\(error)")
+                    var userInfo = [String: Any]()
+                    userInfo["errorCode"] = error.errorCode
+                    userInfo["errorDescription"] = error.localizedDescription
+                    userInfo["JobAction"] = job.action
+                    userInfo["blazeMessage"] = blazeMessage
+                    userInfo["isSessionMessage"] = "\(job.isSessionMessage)"
+                    if let err = error as? SignalError {
+                        userInfo["signalErrorCode"] = err.rawValue
+                        if IdentityDao.shared.getLocalIdentity() == nil {
+                            userInfo["signalError"] = "local identity nil"
+                            userInfo["identityCount"] = "\(IdentityDao.shared.getCount())"
+                            UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
+                            AccountAPI.shared.logout()
+                            return false
+                        }
+                    }
+                    UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
                 }
-                UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
 
                 if let err = error as? APIError, err.code == 10002 {
                     return true

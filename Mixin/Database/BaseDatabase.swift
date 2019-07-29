@@ -44,11 +44,19 @@ class BaseDatabase {
             case .warning, .sqliteGlobal:
                 break
             default:
-                UIApplication.traceError(error)
+                var userInfo = [String: Any]()
+                userInfo["error"] = error.description
+                userInfo["path"] = error.path ?? ""
+                userInfo["sql"] = error.sql ?? ""
+                if error.type == .sqlite && (error.code.value == 11 || error.code.value == 26) {
+                    UIApplication.traceError(code: ReportErrorCode.databaseCorrupted, userInfo: userInfo)
+                } else {
+                    UIApplication.traceError(code: ReportErrorCode.databaseError, userInfo: userInfo)
+                }
+                #if DEBUG
+                print("[WCDB][ERROR]\(error.description)")
+                #endif
             }
-            #if DEBUG
-            print("[WCDB][ERROR]\(error.description)")
-            #endif
         })
     }
 
@@ -220,86 +228,34 @@ extension Database {
 fileprivate extension Database {
 
     func runTransaction(_ transaction: () throws -> Void) throws {
-        do {
-            try run(transaction: transaction)
-        } catch {
-            notifyError(error)
-            throw error
-        }
+        try run(transaction: transaction)
     }
 
     func tryGetValue(on result: ColumnResultConvertible, fromTable table: String, where condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, offset: Offset? = nil) throws -> FundamentalValue {
-        do {
-            return try getValue(on: result, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
-        } catch {
-            notifyError(error)
-            throw error
-        }
+        return try getValue(on: result, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
     }
 
     func tryGetObjects<Object: TableDecodable>(on propertyConvertibleList: [PropertyConvertible], fromTable table: String, where condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, offset: Offset? = nil) throws -> [Object] {
-        do {
-            return try getObjects(on: propertyConvertibleList, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
-        } catch {
-            notifyError(error)
-            throw error
-        }
+        return try getObjects(on: propertyConvertibleList, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
     }
 
     func tryGetObject<Object: TableDecodable>(on propertyConvertibleList: [PropertyConvertible], fromTable table: String, where condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, offset: Offset? = nil) throws -> Object? {
-        do {
-            return try getObject(on: propertyConvertibleList, fromTable: table, where: condition, orderBy: orderList, offset: offset)
-        } catch {
-            notifyError(error)
-            throw error
-        }
+        return try getObject(on: propertyConvertibleList, fromTable: table, where: condition, orderBy: orderList, offset: offset)
     }
 
     func tryGetRows(on columnResultConvertibleList: [ColumnResultConvertible], fromTable table: String, where condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, offset: Offset? = nil) throws -> FundamentalRowXColumn {
-        do {
-            return try getRows(on: columnResultConvertibleList, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
-        } catch {
-            notifyError(error)
-            throw error
-        }
+        return try getRows(on: columnResultConvertibleList, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
     }
 
     func tryGetColumn(on result: ColumnResultConvertible, fromTable table: String, where condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, offset: Offset? = nil) throws -> FundamentalColumn {
-        do {
-            return try getColumn(on: result, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
-        } catch {
-            notifyError(error)
-            throw error
-        }
+        return try getColumn(on: result, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
     }
 
     func tryGetDistinctColumn(on result: ColumnResultConvertible, fromTable table: String, where condition: Condition? = nil, orderBy orderList: [OrderBy]? = nil, limit: Limit? = nil, offset: Offset? = nil) throws -> FundamentalColumn {
-        do {
-            return try getDistinctColumn(on: result, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
-        } catch {
-            notifyError(error)
-            throw error
-        }
+        return try getDistinctColumn(on: result, fromTable: table, where: condition, orderBy: orderList, limit: limit, offset: offset)
     }
 
     func execQuery(on propertyConvertibleList: [PropertyConvertible], sql: String, values: [ColumnEncodable] = []) throws -> SelectSQL {
-        do {
-            return try prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values)
-        } catch {
-            notifyError(error)
-            throw error
-        }
-    }
-
-    private func notifyError(_ error: Swift.Error) {
-        if let err = error as? WCDBSwift.Error {
-            var userInfo = UIApplication.getTrackUserInfo()
-            userInfo["sql"] = err.sql ?? ""
-            userInfo["description"] = err.description
-            userInfo["callStack"] = Thread.callStackSymbols.first ?? ""
-            UIApplication.traceError(code: ReportErrorCode.databaseSQLError, userInfo: userInfo)
-        } else {
-            UIApplication.traceError(error)
-        }
+        return try prepareSelectSQL(on: propertyConvertibleList, sql: sql, values: values)
     }
 }

@@ -124,6 +124,7 @@ extension MixinNavigationController {
             Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
             Crashlytics.sharedInstance().setUserName(account.full_name)
             Crashlytics.sharedInstance().setObjectValue(account.identity_number, forKey: "Identity number")
+            Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
         }
         if AccountUserDefault.shared.hasRestoreFilesAndVideos {
             BackupJobQueue.shared.addJob(job: RestoreJob())

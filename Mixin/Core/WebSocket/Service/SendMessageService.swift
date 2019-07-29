@@ -352,6 +352,7 @@ class SendMessageService: MixinService {
             defer {
                 SendMessageService.shared.processing = false
             }
+            var deleteJobId = ""
             repeat {
                 guard let job = JobDAO.shared.nextJob() else {
                     return
@@ -416,10 +417,14 @@ class SendMessageService: MixinService {
                         JobDAO.shared.removeJobs(jobIds: jobs.map{ $0.jobId })
                     }
                 } else {
+                    if deleteJobId == job.jobId {
+                        UIApplication.traceError(code: ReportErrorCode.jobError, userInfo: UIApplication.getTrackUserInfo())
+                    }
                     guard SendMessageService.shared.handlerJob(job: job) else {
                         return
                     }
 
+                    deleteJobId = job.jobId
                     JobDAO.shared.removeJob(jobId: job.jobId)
                 }
             } while true

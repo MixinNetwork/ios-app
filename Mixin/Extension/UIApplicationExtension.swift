@@ -40,6 +40,11 @@ extension UIApplication {
         Crashlytics.sharedInstance().recordError(error)
     }
 
+    static func traceErrorToFirebase(code: Int, userInfo: [String: Any]) {
+        let error = NSError(domain: "one.mixin.messenger.error", code: code, userInfo: userInfo)
+        Crashlytics.sharedInstance().recordError(error)
+    }
+
     static func traceError(code: Int, userInfo: [String: Any]) {
         let error = NSError(domain: "one.mixin.messenger.error", code: code, userInfo: userInfo)
         Bugsnag.notifyError(error, block: { (report) in

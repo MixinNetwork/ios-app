@@ -70,6 +70,9 @@ enum ReportErrorCode {
     static let keyError = 100011
     static let signalError = 100012
     static let receiveMessageError = 100013
+    static let decryptMessageError = 100014
+    static let jobError = 100015
+    static let signalDatabaseResetFailed = 100016
 }
 
 struct ConversationChange {

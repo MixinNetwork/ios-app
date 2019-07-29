@@ -26,7 +26,12 @@ class SignalProtocol {
             _ = IdentityDao.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
         }
         if FileManager.default.fileExists(atPath: MixinFile.signalDatabasePath) {
-            SignalDatabase.shared.logout(onClosed: block)
+            if IdentityDao.shared.getLocalIdentity() == nil {
+                block()
+            } else {
+                UIApplication.traceError(code: ReportErrorCode.signalDatabaseResetFailed, userInfo: UIApplication.getTrackUserInfo())
+                SignalDatabase.shared.logout(onClosed: block)
+            }
         } else {
             block()
         }
@@ -105,12 +110,7 @@ class SignalProtocol {
     func encryptGroupMessageData(conversationId: String, senderId: String, content: String, resendMessageId: String? = nil) throws -> String {
         let senderKeyName = SignalSenderKeyName(groupId: conversationId, sender: SignalAddress(name: senderId, deviceId: DEFAULT_DEVICE_ID))
         let groupCipher = GroupCipher(for: senderKeyName, in: store)
-        var cipher = Data()
-        do {
-            cipher = try groupCipher.encrypt(content.data(using: .utf8)!).message
-        } catch {
-            UIApplication.traceError(error)
-        }
+        let cipher = try groupCipher.encrypt(content.data(using: .utf8)!).message
         let data = encodeMessageData(data: ComposeMessageData(keyType: CiphertextMessage.MessageType.senderKey.rawValue, cipher: cipher, resendMessageId: resendMessageId))
         return data
     }

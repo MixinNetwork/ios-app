@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -54,17 +55,17 @@
                     <subviews>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VCF-sg-yOy" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" name="Color/tint_black"/>
                             <state key="normal" image="ic_reload"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yED-yG-s6z" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" name="Color/tint_black"/>
                             <state key="normal" image="ic_play"/>
                         </button>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hyw-t1-hLS" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" name="Color/tint_black"/>
                             <state key="normal" image="ic_pause"/>
                         </button>
                     </subviews>
@@ -179,5 +180,8 @@
         <image name="ic_reload" width="22" height="18"/>
         <image name="ic_video_fullsize" width="24" height="24"/>
         <image name="live_badge" width="45" height="29"/>
+        <namedColor name="Color/tint_black">
+            <color red="0.22745098039215686" green="0.23529411764705882" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

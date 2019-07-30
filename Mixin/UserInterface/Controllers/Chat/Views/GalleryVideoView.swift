@@ -159,7 +159,8 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
         contentView.backgroundColor = .clear
         
         coverImageView.contentMode = .scaleAspectFit
-
+        
+        playerView.backgroundColor = .black
         playerView.layer.videoGravity = .resize
         playerView.layer.player = player
         

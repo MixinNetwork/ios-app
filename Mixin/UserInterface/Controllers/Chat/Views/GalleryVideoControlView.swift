@@ -34,7 +34,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     
     var playControlStyle: PlayControlStyle = .play {
         didSet {
-             updatePlayControlButtons()
+            updatePlayControlButtons()
         }
     }
     
@@ -46,6 +46,13 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     
     private var playControlsHidden = true
     private var otherControlsHidden = true
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        for button in [reloadButton, playButton, pauseButton] {
+            button!.backgroundSize = CGSize(width: 38, height: 38)
+        }
+    }
     
     func set(playControlsHidden: Bool, otherControlsHidden: Bool, animated: Bool) {
         NSObject.cancelPreviousPerformRequests(withTarget: self,

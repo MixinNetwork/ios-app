@@ -37,7 +37,7 @@ class NetworkOperationButton: UIButton {
     }
     
     var indicatorColor: UIColor {
-        return UIColor(displayP3RgbValue: 0x3D75E3)
+        return R.color.color.tint_black()!
     }
     
     private let minProgress: Double = 0.05
@@ -158,6 +158,7 @@ class NetworkOperationButton: UIButton {
     private func prepare() {
         backgroundView.isUserInteractionEnabled = false
         insertSubview(backgroundView, at: 0)
+        tintColor = indicatorColor
         imageView?.tintColor = indicatorColor
     }
     

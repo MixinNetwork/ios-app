@@ -6,10 +6,6 @@ class ModernNetworkOperationButton: NetworkOperationButton {
         return 2
     }
     
-    override var indicatorColor: UIColor {
-        return R.color.color.tint_black()!
-    }
-    
     override class func makeBackgroundView() -> UIView {
         let view = UIVisualEffectView(effect: .lightBlur)
         view.clipsToBounds = true

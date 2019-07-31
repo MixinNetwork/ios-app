@@ -234,7 +234,7 @@ class MixinService {
             AudioManager.shared.stop()
         }
 
-        FileJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))
+        ConcurrentJobQueue.shared.cancelJob(jobId: AttachmentDownloadJob.jobId(category: category, messageId: messageId))
 
         if let chatDirectory = MixinFile.ChatDirectory.getDirectory(category: category), let mediaUrl = mediaUrl {
             try? FileManager.default.removeItem(at: MixinFile.url(ofChatDirectory: chatDirectory, filename: mediaUrl))

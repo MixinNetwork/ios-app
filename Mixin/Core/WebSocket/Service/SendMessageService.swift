@@ -11,31 +11,17 @@ class SendMessageService: MixinService {
         DispatchQueue.global().async {
             let messages = MessageDAO.shared.getPendingMessages()
             for message in messages {
+                guard message.shouldUpload() else {
+                    continue
+                }
                 if message.category.hasSuffix("_IMAGE") {
-                    let job = ImageUploadJob(message: message)
-                    ConcurrentJobQueue.shared.addJob(job: job)
+                    UploaderQueue.shared.addJob(job: ImageUploadJob(message: message))
                 } else if message.category.hasSuffix("_DATA") {
-                    if message.userId == AccountAPI.shared.accountUserId {
-                        FileJobQueue.shared.addJob(job: FileUploadJob(message: message))
-                    } else {
-                        FileJobQueue.shared.addJob(job: FileDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
-                    }
+                    UploaderQueue.shared.addJob(job: FileUploadJob(message: message))
                 } else if message.category.hasSuffix("_VIDEO") {
-                    if message.userId == AccountAPI.shared.accountUserId {
-                        let job = VideoUploadJob(message: message)
-                        ConcurrentJobQueue.shared.addJob(job: job)
-                    } else {
-                        FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: message.messageId, mediaMimeType: message.mediaMimeType))
-                    }
+                    UploaderQueue.shared.addJob(job: VideoUploadJob(message: message))
                 } else if message.category.hasSuffix("_AUDIO") {
-                    let job: UploadOrDownloadJob
-                    if message.userId == AccountAPI.shared.accountUserId {
-                        job = AudioUploadJob(message: message)
-                    } else {
-                        job = AudioDownloadJob(messageId: message.messageId,
-                                               mediaMimeType: message.mediaMimeType)
-                    }
-                    AudioJobQueue.shared.addJob(job: job)
+                    UploaderQueue.shared.addJob(job: AudioUploadJob(message: message))
                 }
             }
 
@@ -98,15 +84,13 @@ class SendMessageService: MixinService {
             SendMessageService.shared.sendMessage(message: msg, data: message.content)
             SendMessageService.shared.sendSessionMessage(message: msg, data: message.content)
         } else if msg.category.hasSuffix("_IMAGE") {
-            let job = ImageUploadJob(message: msg)
-            ConcurrentJobQueue.shared.addJob(job: job)
+            UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg))
         } else if msg.category.hasSuffix("_VIDEO") {
-            let job = VideoUploadJob(message: msg)
-            FileJobQueue.shared.addJob(job: job)
+            UploaderQueue.shared.addJob(job: VideoUploadJob(message: msg))
         } else if msg.category.hasSuffix("_DATA") {
-            FileJobQueue.shared.addJob(job: FileUploadJob(message: msg))
+            UploaderQueue.shared.addJob(job: FileUploadJob(message: msg))
         } else if msg.category.hasSuffix("_AUDIO") {
-            AudioJobQueue.shared.addJob(job: AudioUploadJob(message: msg))
+            UploaderQueue.shared.addJob(job: AudioUploadJob(message: msg))
         } else if message.category.hasPrefix("WEBRTC_"), let recipient = ownerUser {
             SendMessageService.shared.sendWebRTCMessage(message: message, recipientId: recipient.userId)
         }

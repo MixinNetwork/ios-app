@@ -4,10 +4,9 @@ import UIKit
 class ConcurrentJobQueue: JobQueue {
 
     static let shared = ConcurrentJobQueue()
-    private var concurrentOperationCount = 3
 
     init() {
-        super.init(maxConcurrentOperationCount: concurrentOperationCount)
+        super.init(maxConcurrentOperationCount: 5)
     }
 
     func restoreJobs() {

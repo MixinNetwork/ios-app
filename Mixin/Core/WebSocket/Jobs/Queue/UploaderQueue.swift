@@ -1,11 +1,13 @@
 import Foundation
+import UIKit
 
-class AudioJobQueue: JobQueue {
-    
-    static let shared = AudioJobQueue()
-    
+class UploaderQueue: JobQueue {
+
+    static let shared = UploaderQueue()
+
     init() {
         super.init(maxConcurrentOperationCount: 2)
     }
-    
+
 }
+

@@ -487,7 +487,7 @@ extension GalleryItemViewController {
         if item?.category == .image {
             ConcurrentJobQueue.shared.addJob(job: AttachmentDownloadJob(messageId: photo.messageId, mediaMimeType: photo.mediaMimeType))
         } else {
-            FileJobQueue.shared.addJob(job: VideoDownloadJob(messageId: photo.messageId, mediaMimeType: photo.mediaMimeType))
+            ConcurrentJobQueue.shared.addJob(job: VideoDownloadJob(messageId: photo.messageId, mediaMimeType: photo.mediaMimeType))
         }
     }
     
@@ -496,13 +496,14 @@ extension GalleryItemViewController {
             return
         }
         layout(mediaStatus: .CANCELED)
+
+        let jobId: String
         if item?.category == .image {
-            let jobId = AttachmentDownloadJob.jobId(messageId: messageId)
-            ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
+            jobId = AttachmentDownloadJob.jobId(messageId: messageId)
         } else {
-            let jobId = VideoDownloadJob.jobId(messageId: messageId)
-            FileJobQueue.shared.cancelJob(jobId: jobId)
+            jobId = VideoDownloadJob.jobId(messageId: messageId)
         }
+        ConcurrentJobQueue.shared.cancelJob(jobId: jobId)
     }
     
     private func layout(mediaStatus: MediaStatus?) {

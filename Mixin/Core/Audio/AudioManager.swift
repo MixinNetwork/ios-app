@@ -242,7 +242,7 @@ class AudioManager {
             return
         }
         let job = AudioDownloadJob(messageId: next.messageId, mediaMimeType: next.mediaMimeType)
-        AudioJobQueue.shared.addJob(job: job)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
 }

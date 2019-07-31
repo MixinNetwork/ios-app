@@ -268,6 +268,10 @@
 		7B9A9DB322BA6560006765F1 /* EmergencyTipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */; };
 		7B9C642F2240B62600465A6A /* WhiteBackgroundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */; };
 		7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */; };
+		7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */; };
+		7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */; };
+		7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D825622F1BFEA0099381E /* LargeNetworkOperationIconSet.swift */; };
+		7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */; };
 		7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */; };
 		7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */; };
 		7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */; };
@@ -986,6 +990,10 @@
 		7B9A9DB222BA6560006765F1 /* EmergencyTipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyTipsViewController.swift; sourceTree = "<group>"; };
 		7B9C642E2240B62600465A6A /* WhiteBackgroundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteBackgroundedView.swift; sourceTree = "<group>"; };
 		7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInputAccessible.swift; sourceTree = "<group>"; };
+		7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeModernNetworkOperationButton.swift; sourceTree = "<group>"; };
+		7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalNetworkOperationIconSet.swift; sourceTree = "<group>"; };
+		7B9D825622F1BFEA0099381E /* LargeNetworkOperationIconSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeNetworkOperationIconSet.swift; sourceTree = "<group>"; };
+		7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOperationIconSet.swift; sourceTree = "<group>"; };
 		7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopViewController.swift; sourceTree = "<group>"; };
 		7B9EDF0F1FB588D700D26989 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		7B9F06C520A9858D0095A51B /* VideoMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageViewModel.swift; sourceTree = "<group>"; };
@@ -1682,6 +1690,9 @@
 				7BAB76AB228AAE00009ECB8C /* MessageReceiverSearchResult.swift */,
 				7BF42E3822DCB132005066E6 /* GalleryItemModelController.swift */,
 				7BF42E4022DDF0D9005066E6 /* GalleryAnimatable.swift */,
+				7B9D825722F1BFEA0099381E /* NetworkOperationIconSet.swift */,
+				7B9D825522F1BFE90099381E /* NormalNetworkOperationIconSet.swift */,
+				7B9D825622F1BFEA0099381E /* LargeNetworkOperationIconSet.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2488,6 +2499,7 @@
 				7B75E6461FE0E20000CD66F1 /* InsetLabel.swift */,
 				7B63720F1FE3E849006BCAB8 /* NetworkOperationButton.swift */,
 				7BEB423522EAD209003B4479 /* ModernNetworkOperationButton.swift */,
+				7B9D825322F1BFC40099381E /* LargeModernNetworkOperationButton.swift */,
 				7B0B01971FEA63FA000EEE4F /* StrangerTipsView.swift */,
 				7B0B01951FEA628F000EEE4F /* StrangerTipsView.xib */,
 				7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */,
@@ -3147,6 +3159,7 @@
 				7B1ABB07211968D1009FAA6C /* StickersViewController.swift in Sources */,
 				273FACBB205FB9A800513327 /* SignedPreKeyStore.swift in Sources */,
 				7B4D112E205BDAD50074BF60 /* WithdrawalAPI.swift in Sources */,
+				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
@@ -3367,6 +3380,7 @@
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
 				DF9C9C6522C5E8720090873E /* SafeDictionary.swift in Sources */,
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
+				7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */,
 				DF06D929222FC83200FE7FBC /* LoginConfirmWindow.swift in Sources */,
 				DF92A51D20A5BBAF00427B80 /* ResendMessage.swift in Sources */,
 				7B08CD2C2178700C00FB8CCF /* CallManager.swift in Sources */,
@@ -3516,11 +3530,13 @@
 				DFE1F9851FAB52CE00537D43 /* ContainerViewController.swift in Sources */,
 				DF8DA1851FD1B42100425CEC /* BaseJob.swift in Sources */,
 				7B0BE46421A59AE400B91A1E /* RefreshTopAssetsJob.swift in Sources */,
+				7B9D825422F1BFC40099381E /* LargeModernNetworkOperationButton.swift in Sources */,
 				DF5BF55F1FBB281E0092AFB8 /* AssetViewController.swift in Sources */,
 				7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */,
 				7BB2831C22D88F07000731E8 /* GalleryTransitionView.swift in Sources */,
 				7B59534522670A5800D59DB4 /* SearchNavigationViewController.swift in Sources */,
 				7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */,
+				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,
 				DFEE215C200CAD8800D9B3F7 /* AuthorizationRequest.swift in Sources */,
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,

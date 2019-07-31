@@ -2,7 +2,7 @@ import UIKit
 
 class GalleryItemViewController: UIViewController {
     
-    let operationButton = ModernNetworkOperationButton()
+    let operationButton = LargeModernNetworkOperationButton()
     let expiredHintLabel = UILabel()
     let mediaStatusView = UIStackView()
     

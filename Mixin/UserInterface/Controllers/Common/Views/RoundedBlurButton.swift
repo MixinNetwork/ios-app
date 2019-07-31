@@ -2,7 +2,7 @@ import UIKit
 
 final class RoundedBlurButton: UIButton {
     
-    private let blurView = UIVisualEffectView(effect: .lightBlur)
+    private let blurView = UIVisualEffectView(effect: .darkBlur)
     
     var backgroundSize: CGSize?
     
@@ -32,7 +32,6 @@ final class RoundedBlurButton: UIButton {
     }
     
     private func prepare() {
-        blurView.backgroundColor = R.color.color.blur_background()!
         blurView.isUserInteractionEnabled = false
         blurView.clipsToBounds = true
         insertSubview(blurView, at: 0)

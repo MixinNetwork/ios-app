@@ -18,8 +18,6 @@ class NetworkOperationButton: UIButton {
         }
     }
     
-    let backgroundSize = CGSize(width: 38, height: 38)
-    
     lazy var backgroundView: UIView = {
         let view = type(of: self).makeBackgroundView()
         view.tintColor = indicatorColor
@@ -32,12 +30,20 @@ class NetworkOperationButton: UIButton {
         }
     }
     
+    var backgroundSize: CGSize {
+        return CGSize(width: 38, height: 38)
+    }
+    
+    var iconSet: NetworkOperationIconSet.Type {
+        return NormalNetworkOperationIconSet.self
+    }
+    
     var indicatorLineWidth: CGFloat {
         return 1.5
     }
     
     var indicatorColor: UIColor {
-        return R.color.color.tint_black()!
+        return UIColor(displayP3RgbValue: 0x3D75E3)
     }
     
     private enum AnimationKey {
@@ -118,27 +124,27 @@ class NetworkOperationButton: UIButton {
         case .finished(let showPlayIcon):
             backgroundView.isHidden = !showPlayIcon
             if showPlayIcon {
-                setImage(R.image.ic_play(), for: .normal)
+                setImage(iconSet.play, for: .normal)
             } else {
                 setImage(nil, for: .normal)
             }
             isUserInteractionEnabled = false
         case .upload:
             backgroundView.isHidden = false
-            setImage(R.image.ic_file_upload(), for: .normal)
+            setImage(iconSet.upload, for: .normal)
             isUserInteractionEnabled = true
         case .download:
             backgroundView.isHidden = false
-            setImage(R.image.ic_file_download(), for: .normal)
+            setImage(iconSet.download, for: .normal)
             isUserInteractionEnabled = true
         case .expired:
             backgroundView.isHidden = false
-            setImage(R.image.ic_file_expired(), for: .normal)
+            setImage(iconSet.expired, for: .normal)
             isUserInteractionEnabled = false
         case .busy(let progress):
             backgroundView.isHidden = false
             if !oldStyle.isBusy {
-                setImage(R.image.ic_file_cancel(), for: .normal)
+                setImage(iconSet.cancel, for: .normal)
             }
             let progress = min(max(progress, minProgress), maxProgress)
             updateIndicatorLayer(progress: progress)

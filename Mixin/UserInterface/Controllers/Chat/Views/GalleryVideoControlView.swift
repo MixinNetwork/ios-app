@@ -50,7 +50,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     override func awakeFromNib() {
         super.awakeFromNib()
         for button in [reloadButton, playButton, pauseButton] {
-            button!.backgroundSize = CGSize(width: 38, height: 38)
+            button!.backgroundSize = CGSize(width: 60, height: 60)
         }
     }
     

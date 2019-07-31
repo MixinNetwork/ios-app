@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -218,7 +217,6 @@
                                                         </view>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5M3-fD-xPo" customClass="NetworkOperationButton" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
-                                                            <color key="tintColor" name="Color/tint_black"/>
                                                             <connections>
                                                                 <action selector="operationAction:" destination="PXR-5f-MIR" eventType="touchUpInside" id="elg-gM-R3c"/>
                                                             </connections>
@@ -449,7 +447,6 @@
                                                     <subviews>
                                                         <button clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JyQ-fz-ccK" customClass="NetworkOperationButton" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                                                            <color key="tintColor" name="Color/tint_black"/>
                                                             <connections>
                                                                 <action selector="operationAction:" destination="czT-Am-Bj2" eventType="touchUpInside" id="kVX-AI-nYl"/>
                                                             </connections>
@@ -459,11 +456,9 @@
                                                             <subviews>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_network_op_background_legacy" translatesAutoresizingMaskIntoConstraints="NO" id="QUu-Sl-f0P">
                                                                     <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                                                                    <color key="tintColor" name="Color/tint_black"/>
                                                                 </imageView>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gaT-14-e7m">
                                                                     <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                                                                    <color key="tintColor" name="Color/tint_black"/>
                                                                 </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1181,10 +1176,14 @@
                                     <action selector="saveAction:" destination="n44-eU-obg" eventType="touchUpInside" id="iYy-te-NOB"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6rr-f2-Hvq">
-                                <rect key="frame" x="146.5" y="302.5" width="82" height="82"/>
+                            <button hidden="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6rr-f2-Hvq" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="157.5" y="313.5" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="Nli-zH-URo"/>
+                                    <constraint firstAttribute="width" constant="60" id="sFs-oU-oJt"/>
+                                </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="ic_preview_play"/>
+                                <state key="normal" image="ic_play_large"/>
                                 <connections>
                                     <action selector="playAction:" destination="n44-eU-obg" eventType="touchUpInside" id="hsh-M1-wN0"/>
                                 </connections>
@@ -2088,10 +2087,14 @@
                                                             <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESH-Nk-nNV">
-                                                        <rect key="frame" x="126.5" y="126.5" width="82" height="82"/>
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESH-Nk-nNV" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
+                                                        <rect key="frame" x="137.5" y="137.5" width="60" height="60"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="60" id="85s-PS-6cf"/>
+                                                            <constraint firstAttribute="width" constant="60" id="f5r-Ow-03U"/>
+                                                        </constraints>
                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <state key="normal" image="ic_preview_play"/>
+                                                        <state key="normal" image="ic_play_large"/>
                                                         <connections>
                                                             <action selector="playAction:" destination="lA6-Lu-PN4" eventType="touchUpInside" id="1Df-VE-iwU"/>
                                                         </connections>
@@ -2235,13 +2238,10 @@
         <image name="ic_camera_send" width="60" height="60"/>
         <image name="ic_chat_bg" width="375" height="667"/>
         <image name="ic_network_op_background_legacy" width="38" height="38"/>
-        <image name="ic_preview_play" width="82" height="82"/>
+        <image name="ic_play_large" width="22" height="22"/>
         <image name="ic_sticker_frame" width="325" height="325"/>
         <image name="ic_sticker_normal" width="20" height="20"/>
         <image name="ic_title_back" width="9" height="17"/>
         <image name="ic_user_verified" width="14" height="14"/>
-        <namedColor name="Color/tint_black">
-            <color red="0.0" green="0.0" blue="0.0" alpha="0.69999998807907104" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
     </resources>
 </document>

@@ -40,9 +40,13 @@ class NetworkOperationButton: UIButton {
         return R.color.color.tint_black()!
     }
     
+    private enum AnimationKey {
+        static let rotation = "rotation"
+        static let strokeEnd = "strokeEnd"
+    }
+    
     private let minProgress: Double = 0.05
     private let maxProgress: Double = 0.95
-    private let busyAnimationKey = "busy"
     
     private lazy var indicatorLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
@@ -101,6 +105,13 @@ class NetworkOperationButton: UIButton {
         } else if !oldStyle.isBusy && newStyle.isBusy {
             setNeedsLayout()
             layoutIfNeeded()
+            let path = UIBezierPath(arcCenter: indicatorCenter,
+                                    radius: indicatorLength / 2,
+                                    startAngle: -(1 / 2) * .pi,
+                                    endAngle: (3 / 2) * .pi,
+                                    clockwise: true)
+            indicatorLayer.path = path.cgPath
+            indicatorLayer.strokeEnd = CGFloat(1 * minProgress)
             addBusyAnimation()
         }
         switch newStyle {
@@ -130,11 +141,7 @@ class NetworkOperationButton: UIButton {
                 setImage(R.image.ic_file_cancel(), for: .normal)
             }
             let progress = min(max(progress, minProgress), maxProgress)
-            indicatorLayer.path = UIBezierPath(arcCenter: indicatorCenter,
-                                               radius: indicatorLength / 2,
-                                               startAngle: -.pi / 2,
-                                               endAngle: 2 * .pi * CGFloat(progress) - .pi / 2,
-                                               clockwise: true).cgPath
+            updateIndicatorLayer(progress: progress)
             isUserInteractionEnabled = true
         }
     }
@@ -147,12 +154,24 @@ class NetworkOperationButton: UIButton {
         anim.duration = 1
         anim.repeatCount = .greatestFiniteMagnitude
         anim.isRemovedOnCompletion = false
-        indicatorLayer.add(anim, forKey: busyAnimationKey)
+        indicatorLayer.add(anim, forKey: AnimationKey.rotation)
     }
     
     private func removeBusyAnimation() {
-        indicatorLayer.removeAnimation(forKey: busyAnimationKey)
+        indicatorLayer.removeAnimation(forKey: AnimationKey.rotation)
         indicatorLayer.removeFromSuperlayer()
+    }
+    
+    private func updateIndicatorLayer(progress: Double) {
+        let newStrokeEnd = CGFloat(1 * progress)
+        let anim = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
+        anim.fromValue = indicatorLayer.presentation()?.strokeEnd ?? indicatorLayer.strokeEnd
+        anim.toValue = newStrokeEnd
+        anim.duration = 0.2
+        anim.isRemovedOnCompletion = true
+        indicatorLayer.removeAnimation(forKey: AnimationKey.strokeEnd)
+        indicatorLayer.strokeEnd = newStrokeEnd
+        indicatorLayer.add(anim, forKey: AnimationKey.strokeEnd)
     }
     
     private func prepare() {

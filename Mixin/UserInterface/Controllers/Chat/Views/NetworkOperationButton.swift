@@ -75,6 +75,10 @@ class NetworkOperationButton: UIButton {
         return backgroundSize.width - indicatorLineWidth
     }
     
+    private var minStrokeEnd: CGFloat {
+        return CGFloat(1 * minProgress)
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         prepare()
@@ -107,7 +111,8 @@ class NetworkOperationButton: UIButton {
     
     func update(with newStyle: Style, oldStyle: Style) {
         if oldStyle.isBusy && !newStyle.isBusy {
-            removeBusyAnimation()
+            indicatorLayer.removeAllAnimations()
+            indicatorLayer.removeFromSuperlayer()
         } else if !oldStyle.isBusy && newStyle.isBusy {
             setNeedsLayout()
             layoutIfNeeded()
@@ -117,7 +122,7 @@ class NetworkOperationButton: UIButton {
                                     endAngle: (3 / 2) * .pi,
                                     clockwise: true)
             indicatorLayer.path = path.cgPath
-            indicatorLayer.strokeEnd = CGFloat(1 * minProgress)
+            indicatorLayer.strokeEnd = minStrokeEnd
             addBusyAnimation()
         }
         switch newStyle {
@@ -163,18 +168,19 @@ class NetworkOperationButton: UIButton {
         indicatorLayer.add(anim, forKey: AnimationKey.rotation)
     }
     
-    private func removeBusyAnimation() {
-        indicatorLayer.removeAnimation(forKey: AnimationKey.rotation)
-        indicatorLayer.removeFromSuperlayer()
-    }
-    
     private func updateIndicatorLayer(progress: Double) {
         let newStrokeEnd = CGFloat(1 * progress)
+        var oldStrokeEnd = indicatorLayer.presentation()?.strokeEnd ?? indicatorLayer.strokeEnd
+        if oldStrokeEnd > newStrokeEnd {
+            oldStrokeEnd = minStrokeEnd
+        }
+        
         let anim = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
-        anim.fromValue = indicatorLayer.presentation()?.strokeEnd ?? indicatorLayer.strokeEnd
+        anim.fromValue = oldStrokeEnd
         anim.toValue = newStrokeEnd
         anim.duration = 0.2
         anim.isRemovedOnCompletion = true
+        
         indicatorLayer.removeAnimation(forKey: AnimationKey.strokeEnd)
         indicatorLayer.strokeEnd = newStrokeEnd
         indicatorLayer.add(anim, forKey: AnimationKey.strokeEnd)

@@ -119,7 +119,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     }
     
     private func layoutControlView() {
-        if isPipMode {
+        if isPipMode || safeAreaInsets.top <= 20 {
             controlView.frame = bounds
         } else {
             controlView.frame = bounds.inset(by: safeAreaInsets)

@@ -232,7 +232,23 @@ class CommonUserDefault {
     }
 
     func checkUpdateOrInstallVersion() {
-        if lastUpdateOrInstallVersion != Bundle.main.bundleVersion {
+        let lastVersion = lastUpdateOrInstallVersion
+        if lastVersion != Bundle.main.bundleVersion {
+            if AccountAPI.shared.didLogin {
+                DispatchQueue.global().async {
+                    let sessionCount = SessionDAO.shared.getCount()
+                    let identityCount = IdentityDAO.shared.getCount()
+                    if sessionCount == 0 || identityCount == 0 {
+                        FileManager.default.writeLog(log: "[AppUpgrade]sessionCount:\(sessionCount)...identityCount:\(identityCount)")
+                        var userInfo = UIApplication.getTrackUserInfo()
+                        userInfo["sessionCount"] = "\(sessionCount)"
+                        userInfo["identityCount"] = "\(identityCount)"
+                        userInfo["lastUpdateOrInstallVersion"] = lastVersion ?? ""
+                        userInfo["newVersion"] = Bundle.main.bundleVersion
+                        UIApplication.traceError(code: ReportErrorCode.appUpgradeError, userInfo: userInfo)
+                    }
+                }
+            }
             session.set(Bundle.main.bundleVersion, forKey: keyLastUpdateOrInstallVersion)
             session.set(Date().toUTCString(), forKey: keyLastUpdateOrInstallDate)
         }

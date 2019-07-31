@@ -2,14 +2,14 @@ import Foundation
 
 class PreKeyUtil {
 
-    static let LOCAL_REGISTRATION_ID = "local_registration_id"
-    static let BATCH_SIZE: Int = 700
+    static let localRegistrationId = "local_registration_id"
+    static let batchSize: Int = 700
     static let prekeyMiniNum = 500
 
     static func generatePreKeys() throws -> [OneTimePreKey] {
         let preKeyIdOffset = CryptoUserDefault.shared.prekeyOffset
-        let records = try Signal.generatePreKeys(start: preKeyIdOffset, count: BATCH_SIZE)
-        CryptoUserDefault.shared.prekeyOffset = preKeyIdOffset + UInt32(BATCH_SIZE) + 1
+        let records = try Signal.generatePreKeys(start: preKeyIdOffset, count: batchSize)
+        CryptoUserDefault.shared.prekeyOffset = preKeyIdOffset + UInt32(batchSize) + 1
         let preKeys = try records.map { PreKey(preKeyId: Int($0.id), record: try $0.data()) }
         MixinPreKeyStore().store(preKeys: preKeys)
         return records.map { OneTimePreKey(keyId: $0.id, preKey: $0) }

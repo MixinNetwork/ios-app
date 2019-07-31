@@ -36,8 +36,4 @@ final class JobDAO {
     func removeJobs(jobIds: [String]) {
         MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId.in(jobIds))
     }
-
-    func isExist(conversationId: String, userId: String, action: JobAction) -> Bool {
-        return MixinDatabase.shared.isExist(type: Job.self, condition: Job.Properties.conversationId == conversationId && Job.Properties.userId == userId && Job.Properties.action == action.rawValue)
-    }
 }

@@ -585,9 +585,6 @@ class ReceiveMessageService: MixinService {
             SignalProtocol.shared.deleteRatchetSenderKey(groupId: conversationId, senderId: userId)
             return
         }
-        guard !JobDAO.shared.isExist(conversationId: conversationId, userId: userId, action: .REQUEST_RESEND_MESSAGES) else {
-            return
-        }
 
         FileManager.default.writeLog(conversationId: conversationId, log: "[ReceiveMessageService][REQUEST_REQUEST_MESSAGES]...messages:[\(messages.joined(separator: ","))]")
         let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_MESSAGES.rawValue, messageId: nil, messages: messages, status: nil)
@@ -599,10 +596,6 @@ class ReceiveMessageService: MixinService {
     }
 
     private func requestResendKey(conversationId: String, userId: String, messageId: String) {
-        guard !JobDAO.shared.isExist(conversationId: conversationId, userId: userId, action: .REQUEST_RESEND_KEY) else {
-            return
-        }
-
         let transferPlainData = TransferPlainData(action: PlainDataAction.RESEND_KEY.rawValue, messageId: messageId, messages: nil, status: nil)
         let encoded = (try? jsonEncoder.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
@@ -671,8 +664,9 @@ extension ReceiveMessageService {
         let messageId = data.messageId
         var operSuccess = true
 
-        if let participantId = sysMessage.participantId, let user = UserDAO.shared.getUser(userId: participantId) {
-            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSystemMessage][\(user.fullName)][\(sysMessage.action)]...messageId:\(data.messageId)...\(data.createdAt)")
+        if let participantId = sysMessage.participantId {
+            let usernameOrId = UserDAO.shared.getUser(userId: participantId)?.fullName ?? participantId
+            FileManager.default.writeLog(conversationId: data.conversationId, log: "[ProcessSystemMessage][\(usernameOrId)][\(sysMessage.action)]...messageId:\(data.messageId)...\(data.createdAt)")
         }
 
         if (userId == User.systemUser) {
@@ -699,9 +693,6 @@ extension ReceiveMessageService {
             operSuccess = ParticipantDAO.shared.addParticipant(message: message, conversationId: data.conversationId, participantId: participantId, updatedAt: data.updatedAt, status: status, source: data.source)
 
             if participantId != currentAccountId && SignalProtocol.shared.isExistSenderKey(groupId: data.conversationId, senderId: currentAccountId) {
-                guard !JobDAO.shared.isExist(conversationId: data.conversationId, userId: participantId, action: .SEND_KEY) else {
-                    return
-                }
                 SendMessageService.shared.sendMessage(conversationId: data.conversationId, userId: participantId, action: .SEND_KEY)
             }
             return

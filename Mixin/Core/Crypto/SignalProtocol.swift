@@ -19,7 +19,7 @@ class SignalProtocol {
     func initSignal() {
         let localRegistrationId = try! Signal.generateRegistrationId()
 
-        UserDefaults.standard.set(localRegistrationId, forKey: PreKeyUtil.LOCAL_REGISTRATION_ID)
+        UserDefaults.standard.set(localRegistrationId, forKey: PreKeyUtil.localRegistrationId)
 
         let identityKeyPair = try! Signal.generateIdentityKeyPair()
         let block = {
@@ -38,7 +38,7 @@ class SignalProtocol {
     }
 
     func getRegistrationId() -> UInt32 {
-        let registrationId = UserDefaults.standard.value(forKey: PreKeyUtil.LOCAL_REGISTRATION_ID) as! UInt32
+        let registrationId = UserDefaults.standard.value(forKey: PreKeyUtil.localRegistrationId) as! UInt32
         return registrationId
     }
 

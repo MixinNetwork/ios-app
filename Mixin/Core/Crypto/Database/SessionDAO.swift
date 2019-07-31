@@ -27,7 +27,7 @@ class SessionDAO: SignalDAO {
     }
 
     func getCount() -> Int {
-        return SignalDatabase.shared.getCount(on: Session.Properties.id.count(), fromTable: Identity.tableName)
+        return SignalDatabase.shared.getCount(on: Session.Properties.id.count(), fromTable: Session.tableName)
     }
 
 }

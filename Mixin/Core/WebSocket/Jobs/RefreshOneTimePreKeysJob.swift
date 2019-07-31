@@ -20,18 +20,15 @@ class RefreshOneTimePreKeysJob: BaseJob {
         do {
             let request = try PreKeyUtil.generateKeys()
             _ = SignalKeyAPI.shared.pushSignalKeys(key: request)
+            FileManager.default.writeLog(log: "[RefreshOneTimePreKeysJob]...\(Bundle.main.shortVersion)(\(Bundle.main.bundleVersion))")
         } catch {
-            if let err = error as? SignalError {
+            if let err = error as? SignalError, IdentityDAO.shared.getLocalIdentity() == nil {
                 var userInfo = UIApplication.getTrackUserInfo()
                 userInfo["signalErrorCode"] = err.rawValue
                 userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
-                if IdentityDAO.shared.getLocalIdentity() == nil {
-                    userInfo["signalError"] = "local identity nil"
-                    UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
-                    AccountAPI.shared.logout()
-                } else {
-                    UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: userInfo)
-                }
+                userInfo["signalError"] = "local identity nil"
+                UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: userInfo)
+                AccountAPI.shared.logout()
             } else {
                 UIApplication.traceError(error)
             }

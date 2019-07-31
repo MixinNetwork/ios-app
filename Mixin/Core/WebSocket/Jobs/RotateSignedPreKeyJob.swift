@@ -15,6 +15,7 @@ class RotateSignedPreKeyJob: BaseJob {
                                            signedPreKey: SignedPreKeyRequest(signed: signedPreKey),
                                            oneTimePreKeys: nil)
             _ = SignalKeyAPI.shared.pushSignalKeys(key: request)
+            FileManager.default.writeLog(log: "[RotateSignedPreKeyJob]...signedPrekeyOffset:\(signedPrekeyOffset)->\(CryptoUserDefault.shared.signedPrekeyOffset)")
         } catch {
             if let err = error as? SignalError, err == SignalError.noData, IdentityDAO.shared.getLocalIdentity() == nil {
                 var userInfo = UIApplication.getTrackUserInfo()

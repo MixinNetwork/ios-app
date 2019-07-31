@@ -1,9 +1,9 @@
 import Foundation
 import WCDBSwift
 
-class IdentityDao: SignalDAO {
+class IdentityDAO: SignalDAO {
 
-    static let shared = IdentityDao()
+    static let shared = IdentityDAO()
 
     func getLocalIdentity() -> Identity? {
         return SignalDatabase.shared.getCodable(condition: Identity.Properties.address == "-1")

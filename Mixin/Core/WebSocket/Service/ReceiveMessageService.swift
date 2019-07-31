@@ -9,19 +9,12 @@ class ReceiveMessageService: MixinService {
 
     private let processDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive.messages")
     private let receiveDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.receive")
-    private let prekeyMiniNum = 500
     private let listPendingCallDelay = DispatchTimeInterval.seconds(2)
     private var listPendingCallWorkItems = [String: DispatchWorkItem]()
     private var listPendingCandidates = [String: [BlazeMessageData]]()
     
     let messageDispatchQueue = DispatchQueue(label: "one.mixin.messenger.queue.messages")
     var refreshRefreshOneTimePreKeys = [String: TimeInterval]()
-
-    override init() {
-        processDispatchQueue.async {
-            ReceiveMessageService.shared.checkSignalKey()
-        }
-    }
 
     func receiveMessage(blazeMessage: BlazeMessage, rawData: Data) {
         receiveDispatchQueue.async {
@@ -257,7 +250,8 @@ class ReceiveMessageService: MixinService {
             }
             if data.category == MessageCategory.SIGNAL_KEY.rawValue {
                 userInfo["containsSession"] = "\(SignalProtocol.shared.containsSession(recipient: data.userId))"
-                userInfo["localIentity"] = IdentityDao.shared.getLocalIdentity()?.address ?? ""
+                userInfo["sessionCount"] = "\(SessionDAO.shared.getCount())"
+                userInfo["localIentity"] = IdentityDAO.shared.getLocalIdentity()?.address ?? ""
                 userInfo["ratchetSenderKeyStatus"] =  SignalProtocol.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId) ?? ""
             }
             userInfo["createdAt"] = data.createdAt
@@ -297,7 +291,7 @@ class ReceiveMessageService: MixinService {
 
     private func refreshKeys() {
         let countBlazeMessage = BlazeMessage(action: BlazeMessageAction.countSignalKeys.rawValue)
-        guard let count = deliverKeys(blazeMessage: countBlazeMessage)?.toSignalKeyCount(), count.preKeyCount <= prekeyMiniNum else {
+        guard let count = deliverKeys(blazeMessage: countBlazeMessage)?.toSignalKeyCount(), count.preKeyCount <= PreKeyUtil.prekeyMiniNum else {
             return
         }
         do {
@@ -307,16 +301,6 @@ class ReceiveMessageService: MixinService {
         } catch {
             UIApplication.traceError(error)
         }
-    }
-
-    private func checkSignalKey() {
-        guard case let .success(response) = SignalKeyAPI.shared.getSignalKeyCount() else {
-            return
-        }
-        guard response.preKeyCount < prekeyMiniNum else {
-            return
-        }
-        refreshKeys()
     }
     
     private func processDecryptSuccess(data: BlazeMessageData, plainText: String, dataUserId: String? = nil) {

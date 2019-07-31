@@ -529,9 +529,9 @@ class SendMessageService: MixinService {
                     userInfo["isSessionMessage"] = "\(job.isSessionMessage)"
                     if let err = error as? SignalError {
                         userInfo["signalErrorCode"] = err.rawValue
-                        if IdentityDao.shared.getLocalIdentity() == nil {
+                        if IdentityDAO.shared.getLocalIdentity() == nil {
                             userInfo["signalError"] = "local identity nil"
-                            userInfo["identityCount"] = "\(IdentityDao.shared.getCount())"
+                            userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
                             UIApplication.traceError(code: ReportErrorCode.sendMessengerError, userInfo: userInfo)
                             AccountAPI.shared.logout()
                             return false

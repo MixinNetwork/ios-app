@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Bugsnag.configuration()?.setUser(account.user_id, withName: account.full_name, andEmail: account.identity_number)
             Crashlytics.sharedInstance().setUserIdentifier(account.user_id)
             Crashlytics.sharedInstance().setUserName(account.full_name)
-            Crashlytics.sharedInstance().setObjectValue(account.identity_number, forKey: "Identity number")
+            Crashlytics.sharedInstance().setUserEmail(account.identity_number)
             Crashlytics.sharedInstance().setObjectValue(Bundle.main.bundleIdentifier ?? "", forKey: "Package")
         }
         CommonUserDefault.shared.checkUpdateOrInstallVersion()

@@ -479,6 +479,7 @@
 		DF2F089520B688DB005786CB /* UserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF2F089420B688DB005786CB /* UserView.xib */; };
 		DF30D7441FA22D4E00683C1A /* WebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7431FA22D4E00683C1A /* WebSocketService.swift */; };
 		DF30D7481FA2BDD200683C1A /* CodableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF30D7471FA2BDD200683C1A /* CodableExtension.swift */; };
+		DF3AF36F22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3AF36E22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift */; };
 		DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF3C47441FA071CD00A07C71 /* Home.storyboard */; };
 		DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47461FA071F400A07C71 /* HomeViewController.swift */; };
 		DF3C474A1FA0BECA00A07C71 /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3C47491FA0BECA00A07C71 /* DataExtension.swift */; };
@@ -1194,6 +1195,7 @@
 		DF2F089420B688DB005786CB /* UserView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserView.xib; sourceTree = "<group>"; };
 		DF30D7431FA22D4E00683C1A /* WebSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketService.swift; sourceTree = "<group>"; };
 		DF30D7471FA2BDD200683C1A /* CodableExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableExtension.swift; sourceTree = "<group>"; };
+		DF3AF36E22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshOneTimePreKeysJob.swift; sourceTree = "<group>"; };
 		DF3C47441FA071CD00A07C71 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		DF3C47461FA071F400A07C71 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		DF3C47491FA0BECA00A07C71 /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
@@ -2483,6 +2485,7 @@
 				7B331B6C21B10349000370E9 /* LoadMoreSnapshotsJob.swift */,
 				DF68F1832014CEAB001C4225 /* RefreshStickerJob.swift */,
 				DFB37D9E1FF94864000875BD /* RotateSignedPreKeyJob.swift */,
+				DF3AF36E22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift */,
 				DF3FF0562011EBA3000A0C0A /* UploadOrDownloadJob.swift */,
 				DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */,
 				DFD089DF1FE4040500A7D815 /* AttachmentDownloadJob.swift */,
@@ -3131,6 +3134,7 @@
 				7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */,
 				DFE63CA61FC6B7D700D6E028 /* ConversationResponse.swift in Sources */,
 				DFF353021FEE532300058453 /* AssetDAO.swift in Sources */,
+				DF3AF36F22F17D1A00C5657D /* RefreshOneTimePreKeysJob.swift in Sources */,
 				7B61EB8F20978856001C1985 /* AttachmentEncryptingInputStream.swift in Sources */,
 				7B8ED48021198EC20039946B /* StickerInputModelController.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,

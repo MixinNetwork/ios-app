@@ -16,12 +16,12 @@ class RotateSignedPreKeyJob: BaseJob {
                                            oneTimePreKeys: nil)
             _ = SignalKeyAPI.shared.pushSignalKeys(key: request)
         } catch {
-            if let err = error as? SignalError, err == SignalError.noData, IdentityDao.shared.getLocalIdentity() == nil {
+            if let err = error as? SignalError, err == SignalError.noData, IdentityDAO.shared.getLocalIdentity() == nil {
                 var userInfo = UIApplication.getTrackUserInfo()
                 userInfo["error"] = "local identity nil"
                 userInfo["signedOldPrekeyOffset"] = "\(signedPrekeyOffset)"
                 userInfo["signedNewPrekeyOffset"] = "\(CryptoUserDefault.shared.signedPrekeyOffset)"
-                userInfo["identityCount"] = "\(IdentityDao.shared.getCount())"
+                userInfo["identityCount"] = "\(IdentityDAO.shared.getCount())"
                 UIApplication.traceError(code: ReportErrorCode.logoutError, userInfo: userInfo)
                 AccountAPI.shared.logout()
             } else {

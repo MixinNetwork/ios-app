@@ -285,18 +285,6 @@ extension WebSocketService {
         ConcurrentJobQueue.shared.cancelAllOperations()
     }
 
-    func lanuchInit() {
-        ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
-        let cur = Date().timeIntervalSince1970
-        let last = CryptoUserDefault.shared.rotateSignedPrekey
-        if last < 1 {
-            CryptoUserDefault.shared.rotateSignedPrekey = cur
-        } else if cur - last > 60 * 60 * 24 * 2 {
-            ConcurrentJobQueue.shared.addJob(job: RotateSignedPreKeyJob())
-            CryptoUserDefault.shared.rotateSignedPrekey = cur
-        }
-    }
-
     func sendPendingMessage() {
         let message = BlazeMessage(action: BlazeMessageAction.listPendingMessages.rawValue)
         let transaction = SendJobTransaction(callback: { (result) in
@@ -315,8 +303,6 @@ extension WebSocketService {
 
                 SendMessageService.shared.restoreJobs()
                 ConcurrentJobQueue.shared.restoreJobs()
-
-                WebSocketService.shared.lanuchInit()
             }
         })
         transactions[message.id] = transaction

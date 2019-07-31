@@ -25,6 +25,8 @@ class HomeViewController: UIViewController {
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
     private let feedback = UISelectionFeedbackGenerator()
+    private let rotateSignedPrekeyInterval: TimeInterval = 3600 * 24 * 2
+    private let refreshOneTimePreKeyInterval: TimeInterval = 3600 * 2
     
     private var conversations = [ConversationItem]()
     private var needRefresh = true
@@ -201,10 +203,30 @@ class HomeViewController: UIViewController {
     }
     
     @objc func applicationDidBecomeActive(_ sender: Notification) {
-        guard needRefresh else {
-            return
+        refreshJobs()
+        if needRefresh {
+            fetchConversations()
         }
-        fetchConversations()
+    }
+
+    private func refreshJobs() {
+        let cur = Date().timeIntervalSince1970
+        let lastSignedPrekey = CryptoUserDefault.shared.rotateSignedPrekey
+        if lastSignedPrekey < 1 {
+            CryptoUserDefault.shared.rotateSignedPrekey = cur
+        } else if cur - lastSignedPrekey > rotateSignedPrekeyInterval {
+            ConcurrentJobQueue.shared.addJob(job: RotateSignedPreKeyJob())
+            CryptoUserDefault.shared.rotateSignedPrekey = cur
+        }
+
+        let lastOneTimePreKey = CryptoUserDefault.shared.refreshOneTimePreKey
+        if lastOneTimePreKey < 1 {
+            CryptoUserDefault.shared.refreshOneTimePreKey = cur
+        } else if cur - lastOneTimePreKey > refreshOneTimePreKeyInterval {
+            ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob())
+            ConcurrentJobQueue.shared.addJob(job: RefreshOneTimePreKeysJob())
+            CryptoUserDefault.shared.refreshOneTimePreKey = cur
+        }
     }
     
     @objc func dataDidChange(_ sender: Notification) {

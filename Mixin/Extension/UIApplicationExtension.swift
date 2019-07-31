@@ -56,10 +56,6 @@ extension UIApplication {
     static func getTrackUserInfo() -> [String: Any] {
         var userInfo = [String: Any]()
         userInfo["didLogin"] = AccountAPI.shared.didLogin
-        if let account = AccountAPI.shared.account {
-            userInfo["full_name"] = account.full_name
-            userInfo["identity_number"] = account.identity_number
-        }
         userInfo["lastUpdateOrInstallTime"] = CommonUserDefault.shared.lastUpdateOrInstallTime
         userInfo["clientTime"] = DateFormatter.filename.string(from: Date())
         return userInfo

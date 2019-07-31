@@ -23,10 +23,10 @@ class SignalProtocol {
 
         let identityKeyPair = try! Signal.generateIdentityKeyPair()
         let block = {
-            _ = IdentityDao.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
+            _ = IdentityDAO.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
         }
         if FileManager.default.fileExists(atPath: MixinFile.signalDatabasePath) {
-            if IdentityDao.shared.getLocalIdentity() == nil {
+            if IdentityDAO.shared.getLocalIdentity() == nil {
                 block()
             } else {
                 UIApplication.traceError(code: ReportErrorCode.signalDatabaseResetFailed, userInfo: UIApplication.getTrackUserInfo())

@@ -4,27 +4,19 @@ class PreKeyUtil {
 
     static let LOCAL_REGISTRATION_ID = "local_registration_id"
     static let BATCH_SIZE: Int = 700
+    static let prekeyMiniNum = 500
 
-
-    static func generatePreKeys() throws -> [UInt32 : SessionPreKey] {
+    static func generatePreKeys() throws -> [OneTimePreKey] {
         let preKeyIdOffset = CryptoUserDefault.shared.prekeyOffset
         let records = try Signal.generatePreKeys(start: preKeyIdOffset, count: BATCH_SIZE)
         CryptoUserDefault.shared.prekeyOffset = preKeyIdOffset + UInt32(BATCH_SIZE) + 1
-        let store = MixinPreKeyStore()
-        var dict = [UInt32 : SessionPreKey]()
-        let preKeys = records.compactMap { (record) -> PreKey? in
-            guard let data = try? record.data() else {
-                return nil
-            }
-            dict[record.id] = record
-            return PreKey(preKeyId: Int(record.id), record: data)
-        }
-        store.store(preKeys: preKeys)
-        return dict
+        let preKeys = try records.map { PreKey(preKeyId: Int($0.id), record: try $0.data()) }
+        MixinPreKeyStore().store(preKeys: preKeys)
+        return records.map { OneTimePreKey(keyId: $0.id, preKey: $0) }
     }
 
     static func getIdentityKeyPair() throws -> KeyPair {
-        guard let identity = IdentityDao.shared.getLocalIdentity() else {
+        guard let identity = IdentityDAO.shared.getLocalIdentity() else {
             throw SignalError.noData
         }
         return identity.getIdentityKeyPair()
@@ -41,13 +33,8 @@ class PreKeyUtil {
 
     static func generateKeys() throws -> SignalKeyRequest {
         let identityKeyPair = try PreKeyUtil.getIdentityKeyPair()
-        let preKeys = try PreKeyUtil.generatePreKeys()
+        let oneTimePreKeys = try PreKeyUtil.generatePreKeys()
         let signedPreKey = try PreKeyUtil.generateSignedPreKey(identityKeyPair: identityKeyPair)
-
-        var oneTimePreKeys = [OneTimePreKey]()
-        for p in preKeys {
-            oneTimePreKeys.append(OneTimePreKey(keyId: p.key, preKey: p.value))
-        }
         return SignalKeyRequest(identityKey: identityKeyPair.publicKey.base64EncodedString(),
                                 signedPreKey: SignedPreKeyRequest(signed: signedPreKey),
                                 oneTimePreKeys: oneTimePreKeys)

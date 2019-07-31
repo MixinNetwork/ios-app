@@ -46,18 +46,28 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
     func transition(to containerView: UIView) {
         let containerBounds = containerView.bounds
         let scale = containerBounds.width / bounds.width
-        let ratio: CGFloat
+        let frame: CGRect
+        let bubbleFrame: CGRect
+        
+        let size: CGSize
         if let image = imageView.image {
-            ratio = image.size.width / image.size.height
+            size = CGSize(width: image.size.width, height: image.size.height)
         } else {
-            ratio = imageView.frame.width / imageView.frame.height
+            size = CGSize(width: imageView.frame.width, height: imageView.frame.height)
         }
-        let height = min(containerBounds.height, containerBounds.width / ratio)
-        let size = CGSize(width: containerBounds.width, height: height)
-        let origin = CGPoint(x: 0, y: (containerBounds.height - height) / 2)
-        let frame = CGRect(origin: origin, size: size)
-        let bounds = CGRect(origin: .zero, size: size)
-        maskLayer.setBubble(.none, frame: bounds, animationDuration: animationDuration)
+        
+        if GalleryItem.shouldLayoutImageOfRatioAsAriticle(size) {
+            let height = min(containerBounds.height, containerBounds.width / size.width * size.height)
+            let size = CGSize(width: containerBounds.width, height: height)
+            let origin = CGPoint(x: 0, y: (containerBounds.height - height) / 2)
+            frame = CGRect(origin: origin, size: size)
+            bubbleFrame = CGRect(origin: .zero, size: size)
+        } else {
+            frame = size.rect(fittingSize: containerBounds.size)
+            bubbleFrame = containerBounds
+        }
+        
+        maskLayer.setBubble(.none, frame: bubbleFrame, animationDuration: animationDuration)
         animate(animations: {
             self.frame = frame
             self.imageView.frame = self.bounds

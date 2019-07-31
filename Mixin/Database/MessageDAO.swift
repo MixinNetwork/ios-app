@@ -164,9 +164,24 @@ final class MessageDAO {
     @discardableResult
     func updateMessageStatus(messageId: String, status: String, updateUnseen: Bool = false) -> Bool {
         guard let oldMessage: Message = MixinDatabase.shared.getCodable(condition: Message.Properties.messageId == messageId) else {
+            var userInfo = UIApplication.getTrackUserInfo()
+            userInfo["messageId"] = messageId
+            userInfo["updateUnseen"] = "\(updateUnseen)"
+            userInfo["newStatus"] = status
+            userInfo["isDesktopLoggedIn"] = "\(AccountUserDefault.shared.isDesktopLoggedIn)"
+            userInfo["error"] = "The message does not exist"
+            UIApplication.traceError(code: ReportErrorCode.updateMessageStatusError, userInfo: userInfo)
             return false
         }
         guard MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: oldMessage.status) else {
+            var userInfo = UIApplication.getTrackUserInfo()
+            userInfo["messageId"] = messageId
+            userInfo["updateUnseen"] = "\(updateUnseen)"
+            userInfo["newStatus"] = status
+            userInfo["oldStatus"] = oldMessage.status
+            userInfo["isDesktopLoggedIn"] = "\(AccountUserDefault.shared.isDesktopLoggedIn)"
+            userInfo["error"] = "update message status failed"
+            UIApplication.traceError(code: ReportErrorCode.updateMessageStatusError, userInfo: userInfo)
             return false
         }
 

@@ -74,6 +74,7 @@ enum ReportErrorCode {
     static let decryptMessageError = 100014
     static let jobError = 100015
     static let signalDatabaseResetFailed = 100016
+    static let updateMessageStatusError = 100017
     static let appUpgradeError = 100020
 }
 

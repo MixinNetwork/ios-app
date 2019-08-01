@@ -201,7 +201,7 @@ class AudioManager {
                 DispatchQueue.main.sync {
                     cells[playingNode.message.messageId]?.object?.style = .stopped
                 }
-                if let nextNode = self.node(nextTo: playingNode) {
+                if let nextNode = self.playableNode(nextTo: playingNode) {
                     DispatchQueue.main.sync {
                         let userInfo = [AudioManager.conversationIdUserInfoKey: nextNode.message.conversationId,
                                         AudioManager.messageIdUserInfoKey: nextNode.message.messageId]
@@ -223,11 +223,14 @@ class AudioManager {
         }
     }
     
-    private func node(nextTo node: Node) -> Node? {
+    private func playableNode(nextTo node: Node) -> Node? {
         guard let nextMessage = MessageDAO.shared.getMessages(conversationId: node.message.conversationId, belowMessage: node.message, count: 1).first else {
             return nil
         }
         guard nextMessage.category.hasSuffix("_AUDIO"), let filename = nextMessage.mediaUrl else {
+            return nil
+        }
+        guard nextMessage.mediaStatus == MediaStatus.DONE.rawValue || nextMessage.mediaStatus == MediaStatus.READ.rawValue else {
             return nil
         }
         let path = MixinFile.url(ofChatDirectory: .audios, filename: filename).path

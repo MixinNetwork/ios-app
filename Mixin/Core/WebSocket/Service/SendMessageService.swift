@@ -241,10 +241,11 @@ class SendMessageService: MixinService {
                     let nextPosition = position + pageCount > messageIds.count ? messageIds.count : position + pageCount
                     let ids = Array(messageIds[position..<nextPosition])
                     var jobs = [Job]()
-                    guard let lastMessageId = ids.last, let lastCreatedAt = MixinDatabase.shared.scalar(on: Message.Properties.createdAt.asColumnResult(), fromTable: Message.tableName, condition: Message.Properties.messageId == lastMessageId)?.stringValue
-                        else {
-                            return
+
+                    guard let lastMessageId = ids.last else {
+                        return
                     }
+                    let lastRowID = MixinDatabase.shared.getRowId(tableName: Message.tableName, condition: Message.Properties.messageId == lastMessageId)
                     if ids.count == 1 {
                         let messageId = ids[0]
                         let blazeMessage = BlazeMessage(ackBlazeMessage: messageId, status: MessageStatus.READ.rawValue)
@@ -268,7 +269,7 @@ class SendMessageService: MixinService {
 
                     MixinDatabase.shared.transaction { (database) in
                         try database.insert(objects: jobs, intoTable: Job.tableName)
-                        try database.update(table: Message.tableName, on: [Message.Properties.status], with: [MessageStatus.READ.rawValue], where: Message.Properties.conversationId == conversationId && Message.Properties.status == MessageStatus.DELIVERED.rawValue && Message.Properties.createdAt <= lastCreatedAt && Message.Properties.userId != AccountAPI.shared.accountUserId)
+                        try database.prepareUpdateSQL(sql: "UPDATE messages SET status = '\(MessageStatus.READ.rawValue)' WHERE conversation_id = ? AND status = ? AND user_id != ? AND ROWID <= ?").execute(with: [conversationId, MessageStatus.DELIVERED.rawValue, AccountAPI.shared.accountUserId, lastRowID])
                         try MessageDAO.shared.updateUnseenMessageCount(database: database, conversationId: conversationId)
                     }
 

@@ -225,8 +225,11 @@ class MixinService {
         UNUserNotificationCenter.current().removeNotifications(identifier: messageId)
 
         DispatchQueue.main.sync {
-            if let chatVC = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController, conversationId == chatVC.dataSource?.conversationId {
+            if let chatVC = UIApplication.homeNavigationController?.viewControllers.last as? ConversationViewController, conversationId == chatVC.dataSource?.conversationId {
                 chatVC.handleMessageRecalling(messageId: messageId)
+            }
+            if let gallery = UIApplication.homeContainerViewController?.galleryViewController {
+                gallery.handleMessageRecalling(messageId: messageId)
             }
         }
 

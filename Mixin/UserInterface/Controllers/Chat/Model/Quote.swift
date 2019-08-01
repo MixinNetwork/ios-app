@@ -46,6 +46,8 @@ struct Quote {
                     let url = MixinFile.url(ofChatDirectory: .videos, filename: betterThumbnailFilename)
                     image = .url(url)
                 }
+            } else if message.category.hasSuffix("_LIVE"), let urlString = message.thumbUrl, let url = URL(string: urlString) {
+                image = .url(url)
             } else if message.category.hasSuffix("_STICKER"), let assetUrl = message.assetUrl, let url = URL(string: assetUrl) {
                 image = .url(url)
             } else if message.category.hasSuffix("_CONTACT") {

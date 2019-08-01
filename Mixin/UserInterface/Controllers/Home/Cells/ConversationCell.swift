@@ -102,6 +102,12 @@ class ConversationCell: UITableViewCell {
                 } else {
                     contentLabel.text = Localized.NOTIFICATION_CONTENT_VIDEO
                 }
+            } else if category.hasSuffix("_LIVE") {
+                if item.isGroup() {
+                    contentLabel.text = "\(senderName): \(R.string.localizable.notification_content_live())"
+                } else {
+                    contentLabel.text = R.string.localizable.notification_content_live()
+                }
             } else if category.hasSuffix("_AUDIO") {
                 if item.isGroup() {
                     contentLabel.text = "\(senderName): \(Localized.NOTIFICATION_CONTENT_AUDIO)"

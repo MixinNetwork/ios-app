@@ -33,7 +33,7 @@ final class MessageDAO {
     static let sqlQueryFullMessage = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
+        m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.thumb_url, m.status, m.participant_id, m.snapshot_id, m.name,
         m.sticker_id, m.created_at, u.full_name as userFullName, u.identity_number as userIdentityNumber, u.app_id as appId,
                u1.full_name as participantFullName, u1.user_id as participantUserId,
                s.amount as snapshotAmount, s.asset_id as snapshotAssetId, s.type as snapshotType, a.symbol as assetSymbol, a.icon_url as assetIcon,
@@ -80,7 +80,7 @@ final class MessageDAO {
     private static let sqlQueryPendingMessages = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
         m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-        m.media_digest, m.media_status, m.media_waveform, m.media_local_id,  m.thumb_image, m.status, m.participant_id, m.snapshot_id, m.name,
+        m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.thumb_url, m.status, m.participant_id, m.snapshot_id, m.name,
         m.sticker_id, m.created_at FROM messages m
     INNER JOIN conversations c ON c.conversation_id = m.conversation_id AND c.status = 1
     WHERE m.user_id = ? AND m.status = 'SENDING' AND m.media_status = 'PENDING'
@@ -108,13 +108,12 @@ final class MessageDAO {
     """
     
     static let sqlQueryGalleryItem = """
-    SELECT m.id, m.category, m.media_url, m.media_mime_type, m.media_width,
-           m.media_height, m.media_status, m.thumb_image, m.created_at
+    SELECT m.conversation_id, m.id, m.category, m.media_url, m.media_mime_type, m.media_width,
+           m.media_height, m.media_status, m.thumb_image, m.thumb_url, m.created_at
     FROM messages m
     WHERE conversation_id = ?
-        AND (category LIKE '%_IMAGE' OR category LIKE '%_VIDEO')
-        AND status != 'FAILED'
-        AND (NOT (user_id = ? AND media_status != 'DONE'))
+        AND ((category LIKE '%_IMAGE' OR category LIKE '%_VIDEO') AND status != 'FAILED' AND (NOT (user_id = ? AND media_status != 'DONE'))
+             OR category LIKE '%_LIVE')
     """
     func getMediaUrls(likeCategory category: String) -> [String] {
         return MixinDatabase.shared.getStringValues(column: Message.Properties.mediaUrl.asColumnResult(),
@@ -412,7 +411,8 @@ final class MessageDAO {
             
             while try cs.step() {
                 let counter = Counter(value: -1)
-                let item = GalleryItem(messageId: cs.value(atIndex: counter.advancedValue) ?? "",
+                let item = GalleryItem(conversationId: cs.value(atIndex: counter.advancedValue) ?? "",
+                                       messageId: cs.value(atIndex: counter.advancedValue) ?? "",
                                        category: cs.value(atIndex: counter.advancedValue) ?? "",
                                        mediaUrl: cs.value(atIndex: counter.advancedValue),
                                        mediaMimeType: cs.value(atIndex: counter.advancedValue),
@@ -420,6 +420,7 @@ final class MessageDAO {
                                        mediaHeight: cs.value(atIndex: counter.advancedValue),
                                        mediaStatus: cs.value(atIndex: counter.advancedValue),
                                        thumbImage: cs.value(atIndex: counter.advancedValue),
+                                       thumbUrl: cs.value(atIndex: counter.advancedValue),
                                        createdAt: cs.value(atIndex: counter.advancedValue) ?? "")
                 if let item = item {
                     items.append(item)
@@ -484,6 +485,7 @@ final class MessageDAO {
             values.append((Message.Properties.quoteContent, MixinDatabase.NullValue()))
         } else if category.hasSuffix("_IMAGE") ||
             category.hasSuffix("_VIDEO") ||
+            category.hasSuffix("_LIVE") ||
             category.hasSuffix("_DATA") ||
             category.hasSuffix("_AUDIO") {
             values.append((Message.Properties.content, MixinDatabase.NullValue()))
@@ -495,6 +497,7 @@ final class MessageDAO {
             values.append((Message.Properties.mediaWidth, 0))
             values.append((Message.Properties.mediaHeight, 0))
             values.append((Message.Properties.thumbImage, MixinDatabase.NullValue()))
+            values.append((Message.Properties.thumbUrl, MixinDatabase.NullValue()))
             values.append((Message.Properties.mediaKey, MixinDatabase.NullValue()))
             values.append((Message.Properties.mediaDigest, MixinDatabase.NullValue()))
             values.append((Message.Properties.mediaWaveform, MixinDatabase.NullValue()))
@@ -618,7 +621,25 @@ extension MessageDAO {
             status
         ], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
     }
-
+    
+    func updateLiveMessage(liveData: TransferLiveData, status: String, messageId: String, conversationId: String, messageSource: String) {
+        let keys = [
+            Message.Properties.mediaWidth,
+            Message.Properties.mediaHeight,
+            Message.Properties.mediaUrl,
+            Message.Properties.thumbUrl,
+            Message.Properties.status
+        ]
+        let values: [ColumnEncodable] = [
+            liveData.width,
+            liveData.height,
+            liveData.url,
+            liveData.thumbUrl,
+            status
+        ]
+        updateRedecryptMessage(keys: keys, values: values, messageId: messageId, conversationId: conversationId, messageSource: messageSource)
+    }
+    
     func updateStickerMessage(stickerData: TransferStickerData, status: String, messageId: String, conversationId: String, messageSource: String) {
         updateRedecryptMessage(keys: [Message.Properties.stickerId, Message.Properties.status], values: [stickerData.stickerId, status], messageId: messageId, conversationId: conversationId, messageSource: messageSource)
     }

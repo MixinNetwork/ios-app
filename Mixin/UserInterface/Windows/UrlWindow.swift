@@ -185,9 +185,9 @@ extension UrlWindow {
                     weakSelf.dismissPopupControllerAnimated()
                     let vc = SendViewController.instance(asset: nil, type: .contact(user))
                     if clearNavigationStack {
-                        UIApplication.rootNavigationController()?.pushViewController(withBackRoot: vc)
+                        UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                     } else {
-                        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+                        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
                     }
                 } else {
                     weakSelf.presentUser(user: user, clearNavigationStack: clearNavigationStack, refreshUser: refreshUser)
@@ -489,7 +489,7 @@ extension UrlWindow {
 
     class func checkPayUrl(url: URL, fromWeb: Bool = false) -> Bool {
         guard AccountAPI.shared.account?.has_pin ?? false else {
-            UIApplication.rootNavigationController()?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
         guard let query = url.getKeyVals() else {
@@ -513,7 +513,7 @@ extension UrlWindow {
 
     class func checkAddress(url: URL, fromWeb: Bool = false) -> Bool {
         guard AccountAPI.shared.account?.has_pin ?? false else {
-            UIApplication.rootNavigationController()?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
         guard let query = url.getKeyVals() else {
@@ -530,7 +530,7 @@ extension UrlWindow {
 
     class func checkWithdrawal(url: URL, fromWeb: Bool = false) -> Bool {
         guard AccountAPI.shared.account?.has_pin ?? false else {
-            UIApplication.rootNavigationController()?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
+            UIApplication.homeNavigationController?.pushViewController(WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil), animated: true)
             return true
         }
         guard let query = url.getKeyVals() else {
@@ -561,7 +561,7 @@ extension UrlWindow {
         }
         
         let vc = MessageReceiverViewController.instance(content: .text(text))
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
 
         return true
     }

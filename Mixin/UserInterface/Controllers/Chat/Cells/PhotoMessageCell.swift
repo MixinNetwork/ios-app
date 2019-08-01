@@ -5,7 +5,7 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     weak var attachmentLoadingDelegate: AttachmentLoadingMessageCellDelegate?
 
-    let operationButton: NetworkOperationButton! = NetworkOperationButton(type: .custom)
+    let operationButton: NetworkOperationButton! = ModernNetworkOperationButton(type: .custom)
     let expiredHintLabel = UILabel()
     
     override func prepareForReuse() {

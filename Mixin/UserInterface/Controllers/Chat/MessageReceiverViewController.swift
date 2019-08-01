@@ -284,6 +284,13 @@ extension MessageReceiverViewController {
             newMessage.sharedUserId = sharedUserId
             let transferData = TransferContactData(userId: sharedUserId)
             newMessage.content = try! JSONEncoder().encode(transferData).base64EncodedString()
+        } else if message.category.hasSuffix("_LIVE"), let width = message.mediaWidth, let height = message.mediaHeight, let mediaUrl = message.mediaUrl, let thumbUrl = message.thumbUrl {
+            newMessage.mediaWidth = message.mediaWidth
+            newMessage.mediaHeight = message.mediaHeight
+            newMessage.mediaUrl = message.mediaUrl
+            newMessage.thumbUrl = message.thumbUrl
+            let liveData = TransferLiveData(width: width, height: height, thumbUrl: thumbUrl, url: mediaUrl)
+            newMessage.content = try! JSONEncoder.default.encode(liveData).base64EncodedString()
         } else {
             return nil
         }

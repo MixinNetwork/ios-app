@@ -222,7 +222,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 return
             }
             DispatchQueue.main.async {
-                UIApplication.rootNavigationController()?.pushViewController(withBackRoot: ConversationViewController.instance(conversation: conversation))
+                UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(conversation: conversation))
             }
         }
         UNUserNotificationCenter.current().removeAllNotifications()

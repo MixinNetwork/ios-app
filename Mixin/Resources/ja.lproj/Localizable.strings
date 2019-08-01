@@ -153,7 +153,7 @@
 "contact_qr_code_save" = "画像を保存";
 "chat_stranger_tip" = "この送り主はあなたのコントラクトにありません。";
 "chat_delete_tip" = "最新バージョンのMixinでは、このメッセージはチャット全員から削除されます。";
-
+"chat_badge_live" = "生放送";
 
 "button_title_search" = "サーチ";
 "placeholder_mixin_id_or_phone" = "MIXIN IDまたは電話番号";
@@ -218,6 +218,7 @@
 "chat_quote_type_sticker" = "ステッカー";
 "chat_quote_type_photo" = "写真";
 "chat_quote_type_video" = "ビデオ";
+"chat_quote_type_live" = "生放送";
 "chat_search_giphy" = "GIPHYを検索";
 "chat_restore" = "復元";
 "chat_restore_title" = "iCloudから\nチャット履歴を復元。";
@@ -576,12 +577,14 @@
 "notification_content_withdrawal" = "[出金]";
 "notification_content_rebate" = "[割引]";
 "notification_content_video" = "[ビデオ]";
+"notification_content_live" = "[生放送]";
 "notification_content_audio" = "[オーディオ]";
 "notification_content_voice_call" = "[音声電話]";
 "alert_key_group_message" = "%@ メッセージを送る";
 "alert_key_group_text_message" = "%@ メッセージを送る";
 "alert_key_group_image_message" = "%@ 写真を送る";
 "alert_key_group_video_message" = "%@ ビデオを送る";
+"alert_key_group_live_message" = "%@ 生放送を送る";
 "alert_key_group_data_message" = "%@ ファイルを送る";
 "alert_key_group_sticker_message" = "%@ ステッカーを送る";
 "alert_key_group_contact_message" = "%@ 連絡先を送る";
@@ -590,6 +593,7 @@
 "alert_key_contact_text_message" = "あなたにメッセージを送る";
 "alert_key_contact_image_message" = "あなたに写真を送る";
 "alert_key_contact_video_message" = "あなたにビデオを送る";
+"alert_key_contact_live_message" = "あなたに生放送を送る";
 "alert_key_contact_transfer_message" = "お振込みします";
 "alert_key_contact_data_message" = "あなたにファイルを送る";
 "alert_key_contact_sticker_message" = "あなたにステッカーを送る";

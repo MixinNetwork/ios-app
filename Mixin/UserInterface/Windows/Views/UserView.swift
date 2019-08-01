@@ -294,7 +294,7 @@ class UserView: CornerView {
             MixinFile.cleanAllChatDirectories()
             NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: nil)
             DispatchQueue.main.async {
-                UIApplication.rootNavigationController()?.backToHome()
+                UIApplication.homeNavigationController?.backToHome()
             }
         }
     }
@@ -326,7 +326,7 @@ class UserView: CornerView {
 
     func shareAction() {
         let vc = MessageReceiverViewController.instance(content: .contact(user.userId))
-        UIApplication.rootNavigationController()?.pushViewController(vc, animated: true)
+        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
     }
     
     @IBAction func transferAction(_ sender: Any) {
@@ -338,7 +338,7 @@ class UserView: CornerView {
         } else {
             viewController = WalletPasswordViewController.instance(dismissTarget: .transfer(user: user))
         }
-        UIApplication.rootNavigationController()?.pushViewController(viewController, animated: true)
+        UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
     }
     
     @IBAction func openApp(_ sender: Any) {
@@ -389,17 +389,17 @@ class UserView: CornerView {
     private func changeNumber() {
         if AccountAPI.shared.account?.has_pin ?? false {
             let viewController = VerifyPinNavigationController(rootViewController: ChangeNumberVerifyPinViewController())
-            UIApplication.rootNavigationController()?.present(viewController, animated: true, completion: nil)
+            UIApplication.homeNavigationController?.present(viewController, animated: true, completion: nil)
         } else {
             let viewController = WalletPasswordViewController.instance(dismissTarget: .changePhone)
-            UIApplication.rootNavigationController()?.pushViewController(viewController, animated: true)
+            UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
         }
     }
     
     private func openApp() {
         let userId = user.userId
         let conversationId: String
-        if let vc = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController {
+        if let vc = UIApplication.homeNavigationController?.viewControllers.last as? ConversationViewController {
             conversationId = vc.conversationId
         } else {
             conversationId = self.conversationId
@@ -456,7 +456,7 @@ class UserView: CornerView {
     }
     
     private func transactionsAction() {
-        UIApplication.rootNavigationController()?.pushViewController(PeerTransactionsViewController.instance(opponentId: user.userId), animated: true)
+        UIApplication.homeNavigationController?.pushViewController(PeerTransactionsViewController.instance(opponentId: user.userId), animated: true)
     }
 
     private func unblockAction() {
@@ -550,11 +550,11 @@ class UserView: CornerView {
     
     @IBAction func sendAction(_ sender: Any) {
         superView?.dismissPopupControllerAnimated()
-        if let conversationVC = UIApplication.rootNavigationController()?.viewControllers.last as? ConversationViewController, conversationVC.dataSource?.category == ConversationDataSource.Category.contact && conversationVC.dataSource?.conversation.ownerId == user.userId {
+        if let conversationVC = UIApplication.homeNavigationController?.viewControllers.last as? ConversationViewController, conversationVC.dataSource?.category == ConversationDataSource.Category.contact && conversationVC.dataSource?.conversation.ownerId == user.userId {
             return
         }
 
-        UIApplication.rootNavigationController()?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: user))
+        UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: user))
     }
     
     @IBAction func addAction(_ sender: Any) {

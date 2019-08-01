@@ -48,6 +48,11 @@ class AudioManager {
             }
         }
         
+        if let controller = GalleryVideoItemViewController.currentPipController {
+            controller.pauseAction(self)
+            controller.controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        }
+        
         cells[node.message.messageId]?.object?.style = .playing
         
         if node.message.messageId == playingNode?.message.messageId, let player = player {
@@ -162,10 +167,14 @@ class AudioManager {
     }
     
     @objc func audioSessionRouteChange(_ notification: Notification) {
+        let pause = {
+            DispatchQueue.main.async(execute: self.pause)
+        }
         let previousOutput = (notification.userInfo?[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription)?.outputs.first
         let output = AVAudioSession.sharedInstance().currentRoute.outputs.first
         if previousOutput?.portType == .headphones, output?.portType != .headphones {
             pause()
+            return
         }
         guard let value = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? AVAudioSession.RouteChangeReason.RawValue, let reason = AVAudioSession.RouteChangeReason(rawValue: value) else {
             return

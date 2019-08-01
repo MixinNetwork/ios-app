@@ -64,7 +64,7 @@ class AudioManager {
         
         queue.async {
             do {
-                if node.message.mediaStatus != MediaStatus.READ.rawValue {
+                if node.message.mediaStatus != MediaStatus.READ.rawValue && node.message.userId != AccountAPI.shared.accountUserId {
                     MessageDAO.shared.updateMediaStatus(messageId: node.message.messageId,
                                                         status: .READ,
                                                         conversationId: node.message.conversationId)

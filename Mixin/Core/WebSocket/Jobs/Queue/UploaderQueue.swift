@@ -6,7 +6,7 @@ class UploaderQueue: JobQueue {
     static let shared = UploaderQueue()
 
     init() {
-        super.init(maxConcurrentOperationCount: 2)
+        super.init(maxConcurrentOperationCount: 1)
     }
 
 }

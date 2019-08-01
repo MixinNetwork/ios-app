@@ -310,11 +310,17 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     @objc func tapAction(_ recognizer: UITapGestureRecognizer) {
-        guard player.timeControlStatus == .playing else {
-            return
+        if player.timeControlStatus == .playing {
+            let isShowingPlayControl = controlView.playControlWrapperView.alpha > 0
+            controlView.set(playControlsHidden: isShowingPlayControl,
+                            otherControlsHidden: isShowingPlayControl,
+                            animated: true)
+        } else if controlView.style.contains(.loading) {
+            let isShowingVisualControl = controlView.visualControlWrapperView.alpha > 0
+            controlView.set(playControlsHidden: true,
+                            otherControlsHidden: isShowingVisualControl,
+                            animated: true)
         }
-        let isShowingPlayControl = controlView.playControlWrapperView.alpha > 0
-        controlView.set(playControlsHidden: isShowingPlayControl, otherControlsHidden: isShowingPlayControl, animated: true)
     }
     
     @objc func playerItemDidReachEnd(_ notification: Notification) {

@@ -86,14 +86,10 @@
                         <constraint firstAttribute="bottom" secondItem="VCF-sg-yOy" secondAttribute="bottom" id="xvE-j5-iUk"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" placeholderIntrinsicWidth="37" placeholderIntrinsicHeight="37" translatesAutoresizingMaskIntoConstraints="NO" id="jT8-96-b2D" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                <view contentMode="scaleToFill" placeholderIntrinsicWidth="37" placeholderIntrinsicHeight="37" translatesAutoresizingMaskIntoConstraints="NO" id="jT8-96-b2D" customClass="GalleryActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                     <rect key="frame" x="188.5" y="171" width="37" height="37"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="usesLargerStyle" value="YES"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
-                    </userDefinedRuntimeAttributes>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gga-kw-mqs">
                     <rect key="frame" x="8" y="333" width="398" height="30"/>

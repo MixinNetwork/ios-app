@@ -30,7 +30,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     @IBOutlet weak var slider: GalleryVideoSlider!
     @IBOutlet weak var remainingTimeLabel: UILabel!
     
-    @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
+    @IBOutlet weak var activityIndicatorView: GalleryActivityIndicatorView!
     
     var playControlStyle: PlayControlStyle = .play {
         didSet {
@@ -93,10 +93,12 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
         let showLiveBadge = style.contains(.liveStream) && !style.contains(.pip)
         liveBadgeView.alpha = showLiveBadge ? 1 : 0
         
+        let transform = style.contains(.pip) ? pipModePlayControlTransform : .identity
+        playControlWrapperView.transform = transform
         playControlWrapperView.alpha = playControlsHidden || style.contains(.loading) ? 0 : 1
-        playControlWrapperView.transform = style.contains(.pip) ? pipModePlayControlTransform : .identity
         
-        style.contains(.loading) ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
+        activityIndicatorView.transform = transform
+        activityIndicatorView.isAnimating = style.contains(.loading)
         
         let hideTimeControl = otherControlsHidden
             || style.contains(.pip)

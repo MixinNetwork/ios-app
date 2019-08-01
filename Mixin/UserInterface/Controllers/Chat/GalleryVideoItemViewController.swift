@@ -389,7 +389,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         } else if let error = error {
             UIApplication.traceError(error)
             controlView.playControlStyle = .reload
-            controlView.activityIndicatorView.stopAnimating()
+            controlView.activityIndicatorView.isAnimating = false
         } else {
             asset.loadValuesAsynchronously(forKeys: [playableKey]) {
                 guard asset.statusOfValue(forKey: playableKey, error: &error) == .loaded else {

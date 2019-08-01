@@ -371,6 +371,7 @@
 		7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6B223636B8006220DF /* ShadowImageView.swift */; };
 		7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6D22363E82006220DF /* SettingCell.swift */; };
 		7BDBDE7022365017006220DF /* SettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6F22365017006220DF /* SettingCell.xib */; };
+		7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */; };
 		7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */; };
 		7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */; };
 		7BE6E16C218089F100C32EE5 /* GCDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE6E16B218089F100C32EE5 /* GCDExtension.swift */; };
@@ -1106,6 +1107,7 @@
 		7BDBDE6B223636B8006220DF /* ShadowImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowImageView.swift; sourceTree = "<group>"; };
 		7BDBDE6D22363E82006220DF /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		7BDBDE6F22365017006220DF /* SettingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingCell.xib; sourceTree = "<group>"; };
+		7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		7BE0726D2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupMessageCell.swift; sourceTree = "<group>"; };
 		7BE6E16B218089F100C32EE5 /* GCDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDExtension.swift; sourceTree = "<group>"; };
@@ -2519,6 +2521,7 @@
 				7B362BB422E87D38009BB0BF /* AssetSendVideoView.swift */,
 				7B81DD6722EACF7400A36186 /* GalleryView.swift */,
 				7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */,
+				7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */,
 				7B34A19E22C0E73D00665F41 /* GalleryVideoView.swift */,
 				7B2A115A22C1EAA600AD029C /* GalleryVideoControlView.swift */,
 				7B2A115C22C1EAC900AD029C /* GalleryVideoControlView.xib */,
@@ -3693,6 +3696,7 @@
 				7B1CCBA31FEE63C300137644 /* UserRequest.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
+				7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */,
 				DF8DA1A41FD64C5800425CEC /* BlazeMessageData.swift in Sources */,
 				DF503D3C1FECFD9800C008E7 /* SignalDatabase.swift in Sources */,
 				DF3FF0592011F3BC000A0C0A /* TransferAttachmentData.swift in Sources */,

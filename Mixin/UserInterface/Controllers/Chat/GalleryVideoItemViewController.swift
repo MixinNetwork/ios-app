@@ -17,6 +17,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var isSeeking = false
     private var rateBeforeSeeking: Float?
     private var playerDidReachEnd = false
+    private var playerDidFailedToPlay = false
     private var isPipMode = false
     
     var isPlayable: Bool {
@@ -263,6 +264,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             return
         }
         playerDidReachEnd = false
+        playerDidFailedToPlay = false
         loadAssetIfPlayable(url: url, playAfterLoaded: true)
     }
     
@@ -270,6 +272,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard let item = item else {
             return
         }
+        playerDidFailedToPlay = false
         controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
         if item.category == .video || player.currentItem != nil {
             AudioManager.shared.pause()
@@ -324,6 +327,14 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         } else if item.category == .live {
             controlView.playControlStyle = .reload
         }
+        controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
+        removeTimeObservers()
+    }
+    
+    @objc func playerItemFailedToPlayToEndTime(_ notification: Notification) {
+        playerDidFailedToPlay = true
+        controlView.playControlStyle = .reload
+        controlView.style.remove(.loading)
         controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         removeTimeObservers()
     }
@@ -415,6 +426,10 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
                                                selector: #selector(playerItemDidReachEnd(_:)),
                                                name: .AVPlayerItemDidPlayToEndTime,
                                                object: item)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(playerItemFailedToPlayToEndTime(_:)),
+                                               name: .AVPlayerItemFailedToPlayToEndTime,
+                                               object: item)
         
         rateObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
             self?.updateControlView()
@@ -433,7 +448,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             controlView.playControlStyle = .pause
             controlView.style.remove(.loading)
         case .paused:
-            if item?.category == .video || !playerDidReachEnd {
+            if item?.category == .video || (!playerDidReachEnd && !playerDidFailedToPlay) {
                 controlView.playControlStyle = .play
             }
             if UIApplication.shared.applicationState != .active {

@@ -14,10 +14,6 @@ class SignalDatabase: BaseDatabase {
     }
 
     override func configure(reset: Bool = false) {
-        if reset {
-            _database.close()
-            _database = Database(withPath: MixinFile.signalDatabasePath)
-        }
         do {
             database.setSynchronous(isFull: true)
             try database.run(transaction: {
@@ -29,24 +25,29 @@ class SignalDatabase: BaseDatabase {
                 try database.create(of: SignedPreKey.self)
                 DatabaseUserDefault.shared.signalDatabaseVersion = SignalDatabase.databaseVersion
             })
+        } catch let err as WCDBSwift.Error {
+            UIApplication.traceWCDBError(err)
         } catch {
             UIApplication.traceError(error)
         }
     }
 
-    func logout(onClosed: @escaping () -> Void) {
-        database.close(onClosed: {
-            do {
-                try database.removeFiles()
-            } catch {
-                UIApplication.traceError(code: ReportErrorCode.databaseRemoveFailed, userInfo: ["database": "signal"])
-            }
-            DispatchQueue.main.async {
-                CryptoUserDefault.shared.reset()
-                SignalDatabase.shared.configure(reset: true)
-                onClosed()
-            }
-        })
+    func logout() {
+        do {
+            try database.run(transaction: {
+                try database.delete(fromTable: Identity.tableName)
+                try database.delete(fromTable: PreKey.tableName)
+                try database.delete(fromTable: RatchetSenderKey.tableName)
+                try database.delete(fromTable: SenderKey.tableName)
+                try database.delete(fromTable: Session.tableName)
+                try database.delete(fromTable: SignedPreKey.tableName)
+            })
+        } catch let err as WCDBSwift.Error {
+            UIApplication.traceWCDBError(err)
+        } catch {
+            UIApplication.traceError(error)
+        }
+        CryptoUserDefault.shared.reset()
     }
 
 }

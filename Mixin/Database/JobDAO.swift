@@ -25,10 +25,6 @@ final class JobDAO {
         return MixinDatabase.shared.getCount(on: Job.Properties.jobId.count(), fromTable: Job.tableName)
     }
 
-    func updateJobRunCount(jobId: String, runCount: Int) {
-        MixinDatabase.shared.update(maps: [(Job.Properties.runCount, runCount)], tableName: Job.tableName, condition: Job.Properties.jobId == jobId)
-    }
-
     func removeJob(jobId: String) {
         MixinDatabase.shared.delete(table: Job.tableName, condition: Job.Properties.jobId == jobId)
     }

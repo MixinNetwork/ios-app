@@ -63,7 +63,6 @@ enum ReportErrorCode {
     static let recaptchaUnrecognized = 100003
     static let databaseRemoveFailed = 100004
     static let databaseError = 100005
-    static let databaseCorrupted = 100017
     static let attachmentUploadError = 100006
     static let attachmentDownloadError = 100007
     static let pinError = 100008
@@ -75,7 +74,8 @@ enum ReportErrorCode {
     static let decryptMessageError = 100014
     static let jobError = 100015
     static let signalDatabaseResetFailed = 100016
-    static let updateMessageStatusError = 100017
+    static let databaseCorrupted = 100017
+    static let updateMessageStatusError = 100018
     static let appUpgradeError = 100020
 }
 

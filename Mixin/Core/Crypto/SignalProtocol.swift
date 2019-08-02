@@ -18,23 +18,10 @@ class SignalProtocol {
 
     func initSignal() {
         let localRegistrationId = try! Signal.generateRegistrationId()
+        let identityKeyPair = try! Signal.generateIdentityKeyPair()
 
         UserDefaults.standard.set(localRegistrationId, forKey: PreKeyUtil.localRegistrationId)
-
-        let identityKeyPair = try! Signal.generateIdentityKeyPair()
-        let block = {
-            _ = IdentityDAO.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
-        }
-        if FileManager.default.fileExists(atPath: MixinFile.signalDatabasePath) {
-            if IdentityDAO.shared.getLocalIdentity() == nil {
-                block()
-            } else {
-                UIApplication.traceError(code: ReportErrorCode.signalDatabaseResetFailed, userInfo: UIApplication.getTrackUserInfo())
-                SignalDatabase.shared.logout(onClosed: block)
-            }
-        } else {
-            block()
-        }
+        IdentityDAO.shared.insertOrReplace(obj: Identity(address: "-1", registrationId: Int(localRegistrationId), publicKey: identityKeyPair.publicKey, privateKey: identityKeyPair.privateKey, nextPreKeyId: nil, timestamp: Date().timeIntervalSince1970))
     }
 
     func getRegistrationId() -> UInt32 {

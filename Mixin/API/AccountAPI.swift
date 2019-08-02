@@ -159,7 +159,8 @@ final class AccountAPI: BaseAPI {
             WebSocketService.shared.disconnect()
             AccountUserDefault.shared.clear()
             MixinDatabase.shared.logout()
-            SignalDatabase.shared.logout(onClosed: {
+            SignalDatabase.shared.logout()
+            DispatchQueue.main.async {
                 UIApplication.shared.applicationIconBadgeNumber = 1
                 UIApplication.shared.applicationIconBadgeNumber = 0
                 UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
@@ -169,7 +170,7 @@ final class AccountAPI: BaseAPI {
                 let oldRootViewController = AppDelegate.current.window?.rootViewController
                 AppDelegate.current.window?.rootViewController = LoginNavigationController.instance()
                 oldRootViewController?.navigationController?.removeFromParent()
-            })
+            }
         }
     }
 }

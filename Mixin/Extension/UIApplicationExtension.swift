@@ -4,6 +4,7 @@ import UserNotifications
 import Firebase
 import SafariServices
 import Crashlytics
+import WCDBSwift
 
 extension UIApplication {
 
@@ -43,7 +44,7 @@ extension UIApplication {
         #endif
     }
 
-    static func traceError(_ error: Error) {
+    static func traceError(_ error: Swift.Error) {
         Bugsnag.notifyError(error)
         Crashlytics.sharedInstance().recordError(error)
     }
@@ -51,6 +52,20 @@ extension UIApplication {
     static func traceErrorToFirebase(code: Int, userInfo: [String: Any]) {
         let error = NSError(domain: "one.mixin.messenger.error", code: code, userInfo: userInfo)
         Crashlytics.sharedInstance().recordError(error)
+    }
+
+    static func traceWCDBError(_ error: WCDBSwift.Error) {
+        var userInfo = [String: Any]()
+        userInfo["operationValue"] = error.operationValue ?? ""
+        userInfo["extendedCode"] = error.extendedCode ?? ""
+        userInfo["description"] = error.description
+        userInfo["path"] = error.path ?? ""
+        userInfo["message"] = error.message ?? ""
+        if error.type == .sqlite && (error.code.value == 11 || error.code.value == 26) {
+            UIApplication.traceError(code: ReportErrorCode.databaseCorrupted, userInfo: userInfo)
+        } else {
+            UIApplication.traceError(code: ReportErrorCode.databaseError, userInfo: userInfo)
+        }
     }
 
     static func traceError(code: Int, userInfo: [String: Any]) {

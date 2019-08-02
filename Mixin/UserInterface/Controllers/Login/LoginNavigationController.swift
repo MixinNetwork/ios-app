@@ -10,7 +10,9 @@ class LoginNavigationController: LoneBackButtonNavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        SignalProtocol.shared.initSignal()
+        DispatchQueue.global().async {
+            SignalProtocol.shared.initSignal()
+        }
     }
     
     override func updateBackButtonAlpha(animated: Bool) {

@@ -436,14 +436,10 @@ class SendMessageService: MixinService {
     }
 
     private func handlerJob(job: Job) -> Bool {
-        var job = job
         repeat {
             guard AccountAPI.shared.didLogin else {
                 return false
             }
-            let runCount = job.runCount + 1
-            job.runCount = runCount
-            JobDAO.shared.updateJobRunCount(jobId: job.jobId, runCount: runCount)
 
             do {
                 switch job.action {
@@ -502,7 +498,7 @@ class SendMessageService: MixinService {
                     }
 
                     #if DEBUG
-                    print("======SendMessageService...handlerJob...\(error)...currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
+                    print("======SendMessageService...handlerJob...\(error)...JobAction:\(job.action)...isSessionMessage:\(job.isSessionMessage)...currentUserId:\(AccountAPI.shared.accountUserId)...blazeMessage:\(blazeMessage)")
                     #endif
                     FileManager.default.writeLog(log: "[SendMessageService][HandlerJob]...JobAction:\(job.action)...conversationId:\(job.conversationId ?? "")...isSessionMessage:\(job.isSessionMessage)...blazeMessage:\(blazeMessage)...\(error)")
                     var userInfo = [String: Any]()

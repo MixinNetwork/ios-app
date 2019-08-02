@@ -25,6 +25,16 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
                             right: insets.right)
     }
     
+    private var contentSubviewIndices: (cover: Int, player: Int)? {
+        guard let cover = contentView.subviews.firstIndex(of: coverImageView) else {
+            return nil
+        }
+        guard let player = contentView.subviews.firstIndex(of: playerView) else {
+            return nil
+        }
+        return (cover, player)
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         prepare()
@@ -53,6 +63,26 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         layoutControlView()
+    }
+    
+    func bringCoverToFront() {
+        guard let (cover, player) = contentSubviewIndices else {
+            return
+        }
+        guard cover < player else {
+            return
+        }
+        contentView.exchangeSubview(at: cover, withSubviewAt: player)
+    }
+    
+    func bringPlayerToFront() {
+        guard let (cover, player) = contentSubviewIndices else {
+            return
+        }
+        guard cover > player else {
+            return
+        }
+        contentView.exchangeSubview(at: cover, withSubviewAt: player)
     }
     
     func stickToSuperviewEdge(horizontalVelocity: CGFloat) {

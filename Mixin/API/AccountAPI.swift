@@ -152,6 +152,9 @@ final class AccountAPI: BaseAPI {
     }
     
     func logout() {
+        guard account != nil else {
+            return
+        }
         CommonUserDefault.shared.hasForceLogout = true
         DispatchQueue.main.async {
             self.account = nil

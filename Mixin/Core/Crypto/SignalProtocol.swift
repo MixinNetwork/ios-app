@@ -97,7 +97,20 @@ class SignalProtocol {
     func encryptGroupMessageData(conversationId: String, senderId: String, content: String, resendMessageId: String? = nil) throws -> String {
         let senderKeyName = SignalSenderKeyName(groupId: conversationId, sender: SignalAddress(name: senderId, deviceId: DEFAULT_DEVICE_ID))
         let groupCipher = GroupCipher(for: senderKeyName, in: store)
-        let cipher = try groupCipher.encrypt(content.data(using: .utf8)!).message
+        var cipher = Data()
+        do {
+            cipher = try groupCipher.encrypt(content.data(using: .utf8)!).message
+        } catch {
+            if let err = error as? SignalError {
+                if err != SignalError.noSession {
+                    var userInfo = UIApplication.getTrackUserInfo()
+                    userInfo["signalErrorCode"] = err.rawValue
+                    UIApplication.traceError(code: ReportErrorCode.signalError, userInfo: userInfo)
+                }
+            } else {
+                UIApplication.traceError(error)
+            }
+        }
         let data = encodeMessageData(data: ComposeMessageData(keyType: CiphertextMessage.MessageType.senderKey.rawValue, cipher: cipher, resendMessageId: resendMessageId))
         return data
     }

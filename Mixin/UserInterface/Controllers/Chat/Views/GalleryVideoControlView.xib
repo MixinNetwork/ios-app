@@ -164,6 +164,7 @@
                 <outlet property="slider" destination="7CY-zg-LG0" id="WrQ-QJ-jgr"/>
                 <outlet property="timeControlWrapperView" destination="gga-kw-mqs" id="NdO-Li-2bE"/>
                 <outlet property="visualControlLeadingConstraint" destination="3yd-WU-6CA" id="E1u-UR-Gkq"/>
+                <outlet property="visualControlTopConstraint" destination="UxV-ZI-U3f" id="Gel-Vm-2pA"/>
                 <outlet property="visualControlTrailingConstraint" destination="j8F-lV-H4U" id="R2s-J7-vNF"/>
                 <outlet property="visualControlWrapperView" destination="HPi-eF-W69" id="kKi-Jd-l8j"/>
             </connections>

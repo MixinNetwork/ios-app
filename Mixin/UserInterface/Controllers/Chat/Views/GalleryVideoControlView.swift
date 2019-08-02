@@ -32,6 +32,7 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
     
     @IBOutlet weak var activityIndicatorView: GalleryActivityIndicatorView!
     
+    @IBOutlet weak var visualControlTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var visualControlLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var visualControlTrailingConstraint: NSLayoutConstraint!
     
@@ -108,7 +109,12 @@ final class GalleryVideoControlView: UIView, GalleryAnimatable {
             || style.contains(.liveStream)
         timeControlWrapperView.alpha = hideTimeControl ? 0 : 1
         
-        for constraint in [visualControlLeadingConstraint, visualControlTrailingConstraint] {
+        let constraints = [
+            visualControlLeadingConstraint,
+            visualControlTrailingConstraint,
+            visualControlTopConstraint
+        ]
+        for constraint in constraints {
             constraint?.constant = style.contains(.pip) ? 0 : 12
         }
     }

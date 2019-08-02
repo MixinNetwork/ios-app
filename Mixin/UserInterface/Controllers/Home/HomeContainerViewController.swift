@@ -14,11 +14,17 @@ class HomeContainerViewController: UIViewController {
     }()
     
     override var childForStatusBarHidden: UIViewController? {
-        return isShowingGallery ? galleryViewController : homeNavigationController
+        return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }
     
     override var childForHomeIndicatorAutoHidden: UIViewController? {
-        return isShowingGallery ? galleryViewController : homeNavigationController
+        return galleryIsOnTopMost ? galleryViewController : homeNavigationController
+    }
+    
+    private var galleryIsOnTopMost: Bool {
+        return isShowingGallery
+            && galleryViewController.parent != nil
+            && galleryViewController.parent == homeNavigationController.viewControllers.last
     }
     
     private var isShowingGallery = false

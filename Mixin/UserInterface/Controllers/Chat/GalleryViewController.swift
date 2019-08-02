@@ -86,6 +86,13 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         view.addGestureRecognizer(longPressRecognizer)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if GalleryVideoItemViewController.currentPipController == nil {
+            currentItemViewController?.isFocused = false
+        }
+    }
+    
     func show(item: GalleryItem, from cell: PhotoRepresentableMessageCell) {
         if let controller = GalleryVideoItemViewController.currentPipController {
             if controller.item == item {

@@ -2,18 +2,15 @@ import UIKit
 import Photos
 
 protocol GalleryViewControllerDelegate: class {
-    func galleryViewController(_ viewController: GalleryViewController, cellForItemOf messageId: String) -> PhotoRepresentableMessageCell?
-    func galleryViewController(_ viewController: GalleryViewController, didShowItemOf messageId: String)
-    func galleryViewController(_ viewController: GalleryViewController, willDismissItemOf messageId: String)
-    func galleryViewController(_ viewController: GalleryViewController, didCancelDismissOf messageId: String)
+    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> PhotoRepresentableMessageCell?
+    func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem)
+    func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem)
+    func galleryViewController(_ viewController: GalleryViewController, willDismiss item: GalleryItem)
+    func galleryViewController(_ viewController: GalleryViewController, didDismiss item: GalleryItem, relativeOffset: CGFloat?)
+    func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem)
 }
 
 final class GalleryViewController: UIViewController, GalleryAnimatable {
-    
-    static let willShowNotification = Notification.Name("one.mixin.ios.gallery.will.show")
-    static let didDismissNotification = Notification.Name("one.mixin.ios.gallery.will.dismiss")
-    static let messageIdUserInfoKey = "message_id"
-    static let relativeOffsetUserInfoKey = "relative_offset"
     
     override var prefersHomeIndicatorAutoHidden: Bool {
         return true
@@ -101,9 +98,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         UIApplication.shared.keyWindow?.endEditing(true)
         backgroundView.alpha = 0
         pageViewController.view.alpha = 0
-        NotificationCenter.default.post(name: GalleryViewController.willShowNotification,
-                                        object: self,
-                                        userInfo: [GalleryViewController.messageIdUserInfoKey: item.messageId])
+        delegate?.galleryViewController(self, willShow: item)
         transitionView.load(cell: cell)
         transitionView.alpha = 1
         view.addSubview(transitionView)
@@ -122,7 +117,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             self.transitionView.alpha = 0
             self.pageViewController.view.alpha = 1
             self.transitionView.removeFromSuperview()
-            self.delegate?.galleryViewController(self, didShowItemOf: item.messageId)
+            self.delegate?.galleryViewController(self, didShow: item)
             (viewController as? GalleryVideoItemViewController)?.playAction(self)
         })
     }
@@ -132,16 +127,14 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             return
         }
         UIApplication.shared.keyWindow?.endEditing(true)
-        NotificationCenter.default.post(name: GalleryViewController.willShowNotification,
-                                        object: self,
-                                        userInfo: [GalleryViewController.messageIdUserInfoKey: item.messageId])
+        delegate?.galleryViewController(self, willShow: item)
         backgroundView.alpha = 0
         pageViewController.view.alpha = 0
         animate(animations: {
             self.backgroundView.alpha = 1
         }, completion: {
             self.pageViewController.view.alpha = 1
-            self.delegate?.galleryViewController(self, didShowItemOf: item.messageId)
+            self.delegate?.galleryViewController(self, didShow: item)
         })
         viewController.isFocused = true
         pageViewController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
@@ -151,18 +144,20 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         guard let itemViewController = currentItemViewController, let item = itemViewController.item else {
             return
         }
-        delegate?.galleryViewController(self, willDismissItemOf: item.messageId)
+        delegate?.galleryViewController(self, willDismiss: item)
         pageViewController.view.alpha = 0
         pageViewController.view.transform = .identity
         view.addSubview(transitionView)
         transitionView.load(viewController: itemViewController)
         transitionView.center.y += transitionViewInitialOffsetY
         transitionView.alpha = 1
-        var userInfo: [String: Any] = [GalleryViewController.messageIdUserInfoKey: item.messageId]
+        let relativeOffset: CGFloat?
         if item.shouldLayoutAsArticle, let offset = (itemViewController as? GalleryImageItemViewController)?.relativeOffset {
-            userInfo[GalleryViewController.relativeOffsetUserInfoKey] = offset
+            relativeOffset = offset
+        } else {
+            relativeOffset = nil
         }
-        if let cell = delegate?.galleryViewController(self, cellForItemOf: item.messageId) {
+        if let cell = delegate?.galleryViewController(self, cellFor: item) {
             transitionView.transition(to: cell)
         } else {
             animate(animations: {
@@ -173,24 +168,19 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         animate(animations: {
             self.backgroundView.alpha = 0
         }, completion: {
-            NotificationCenter.default.post(name: GalleryViewController.didDismissNotification,
-                                            object: self,
-                                            userInfo: userInfo)
+            self.delegate?.galleryViewController(self, didDismiss: item, relativeOffset: relativeOffset)
             self.pageViewController.view.alpha = 1
         })
     }
     
     func dismissForPip() {
-        var userInfo = [String: Any]()
-        if let messageId = currentItemViewController?.item?.messageId {
-            userInfo[GalleryViewController.messageIdUserInfoKey] = messageId
+        guard let item = currentItemViewController?.item else {
+            return
         }
         animate(animations: {
             self.backgroundView.alpha = 0
         }, completion: {
-            NotificationCenter.default.post(name: GalleryViewController.didDismissNotification,
-                                            object: self,
-                                            userInfo: userInfo)
+            self.delegate?.galleryViewController(self, didDismiss: item, relativeOffset: nil)
         })
     }
     
@@ -203,10 +193,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     @objc func panAction(_ recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: view)
         let progress = min(1, max(0, translation.y / (view.bounds.height / 3)))
+        let item = currentItemViewController?.item
         switch recognizer.state {
         case .began:
-            if let id = currentItemViewController?.item?.messageId {
-                delegate?.galleryViewController(self, willDismissItemOf: id)
+            if let item = item {
+                delegate?.galleryViewController(self, willDismiss: item)
             }
             currentItemViewController?.willBeginInteractiveDismissal()
             recognizer.setTranslation(.zero, in: view)
@@ -223,8 +214,8 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                     self.backgroundView.alpha = 1
                     self.pageViewController.view.transform = .identity
                 }, completion: {
-                    if let id = self.currentItemViewController?.item?.messageId {
-                        self.delegate?.galleryViewController(self, didCancelDismissOf: id)
+                    if let item = item {
+                        self.delegate?.galleryViewController(self, didCancelDismissalFor: item)
                     }
                 })
             }

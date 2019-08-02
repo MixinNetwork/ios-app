@@ -24,12 +24,12 @@ class ReceiveMessageService: MixinService {
 
             if blazeMessage.action == BlazeMessageAction.acknowledgeMessageReceipt.rawValue {
                 MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
-                ReceiveMessageService.shared.sendSessionStatus(messageId: data.messageId, status: data.status)
+                SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_MESSAGE, messageId: data.messageId, status: data.status)
                 CryptoUserDefault.shared.statusOffset = data.updatedAt.toUTCDate().nanosecond()
             } else if blazeMessage.action == BlazeMessageAction.createMessage.rawValue || blazeMessage.action == BlazeMessageAction.createCall.rawValue {
                 if data.userId == AccountAPI.shared.accountUserId && data.category.isEmpty {
                     MessageDAO.shared.updateMessageStatus(messageId: data.messageId, status: data.status)
-                    ReceiveMessageService.shared.sendSessionStatus(messageId: data.messageId, status: data.status)
+                    SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_MESSAGE, messageId: data.messageId, status: data.status)
                 } else {
                     guard BlazeMessageDAO.shared.insertOrReplace(messageId: data.messageId, data: blazeMessage.data, createdAt: data.createdAt) else {
                         return
@@ -49,13 +49,6 @@ class ReceiveMessageService: MixinService {
                 ReceiveMessageService.shared.updateRemoteMessageStatus(messageId: data.messageId, status: .READ)
             }
         }
-    }
-
-    private func sendSessionStatus(messageId: String, status: String) {
-        guard AccountUserDefault.shared.isDesktopLoggedIn else {
-            return
-        }
-        SendMessageService.shared.sendSessionMessage(action: .SEND_SESSION_MESSAGE, messageId: messageId, status: status)
     }
 
     func processReceiveMessages() {

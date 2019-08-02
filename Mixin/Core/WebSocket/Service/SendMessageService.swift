@@ -169,6 +169,9 @@ class SendMessageService: MixinService {
     }
 
     func sendSessionMessage(action: JobAction, messageId: String, status: String) {
+        guard AccountUserDefault.shared.isDesktopLoggedIn else {
+            return
+        }
         saveDispatchQueue.async {
             let job = Job(action: action, messageId: messageId, status: status, isSessionMessage: true)
             MixinDatabase.shared.insertOrReplace(objects: [job])

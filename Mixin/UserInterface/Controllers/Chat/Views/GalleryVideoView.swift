@@ -128,14 +128,14 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     
     private func updateCornerRadiusAndShadow() {
         let fromCornerRadius = contentView.layer.cornerRadius
-        let toCornerRadius: CGFloat = isPipMode ? 8 : 0
+        let toCornerRadius: CGFloat = isPipMode ? 6 : 0
         contentView.layer.cornerRadius = toCornerRadius
         let cornerRadiusAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.cornerRadius))
         cornerRadiusAnimation.fromValue = fromCornerRadius
         cornerRadiusAnimation.toValue = toCornerRadius
         cornerRadiusAnimation.duration = animationDuration
         
-        let toShadowOpacity: Float = isPipMode ? 0.35 : 0
+        let toShadowOpacity: Float = isPipMode ? 0.14 : 0
         let fromShadowOpacity = layer.shadowOpacity
         layer.shadowOpacity = toShadowOpacity
         let shadowOpacityAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.shadowOpacity))
@@ -149,9 +149,9 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     
     private func prepare() {
         // TODO: Use explicit shadowPath
-        layer.shadowOffset = CGSize(width: 0, height: 3)
+        layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowColor = UIColor.black.cgColor
-        layer.shadowRadius = 8
+        layer.shadowRadius = 4
         layer.shadowOpacity = 0
         
         contentView.frame = bounds

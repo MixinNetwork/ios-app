@@ -9,8 +9,6 @@ class VerticalPositioningImageView: UIView {
         case center
     }
     
-    let imageView = YYAnimatedImageView()
-    
     var position = Position.center {
         didSet {
             setNeedsLayout()
@@ -30,6 +28,8 @@ class VerticalPositioningImageView: UIView {
     
     var aspectRatio = CGSize.zero
     var lastImageLoadOperation: SDWebImageCombinedOperation?
+    
+    private let imageView = YYAnimatedImageView()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -57,18 +57,23 @@ class VerticalPositioningImageView: UIView {
         }
     }
     
-    func setImage(with url: URL, placeholder: UIImage?, ratio: CGSize) {
+    func set(thumbnail: UIImage?, ratio: CGSize) {
         imageView.contentMode = .scaleToFill
-        imageView.image = placeholder
-        lastImageLoadOperation = SDWebImageManager.shared.loadImage(with: url, options: [], progress: nil) { [weak imageView] (image, data, error, cacheType, finished, imageUrl) in
-            guard url == imageUrl, let imageView = imageView else {
-                return
-            }
-            imageView.contentMode = .scaleAspectFill
-            imageView.image = image
-        }
+        imageView.image = thumbnail
         aspectRatio = ratio
         setNeedsLayout()
+    }
+    
+    func setImage(with url: URL, placeholder: UIImage?, ratio: CGSize) {
+        set(thumbnail: placeholder, ratio: ratio)
+        lastImageLoadOperation = SDWebImageManager.shared.loadImage(with: url, options: [], progress: nil) { [weak self] (image, data, error, cacheType, finished, imageUrl) in
+            guard url == imageUrl, let self = self else {
+                return
+            }
+            self.imageView.contentMode = .scaleAspectFill
+            self.imageView.image = image
+            self.setNeedsLayout()
+        }
     }
     
     func cancelCurrentImageLoad() {
@@ -77,7 +82,6 @@ class VerticalPositioningImageView: UIView {
     
     private func prepare() {
         addSubview(imageView)
-        imageView.contentMode = .scaleToFill
         clipsToBounds = true
     }
     

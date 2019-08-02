@@ -135,8 +135,6 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: .ParticipantDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didAddMessageOutOfBounds(_:)), name: ConversationDataSource.didAddMessageOutOfBoundsNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(audioManagerWillPlayNextNode(_:)), name: AudioManager.willPlayNextNodeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(galleryViewControllerWillShow(_:)), name: GalleryViewController.willShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(galleryViewControllerDidDismiss(_:)), name: GalleryViewController.didDismissNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -159,9 +157,6 @@ class ConversationViewController: UIViewController {
                 conversationInputViewController.update(opponentUser: user)
             }
             dataSource.initData(completion: finishInitialLoading)
-            if let galleryViewController = UIApplication.homeContainerViewController?.galleryViewController {
-                galleryViewController.delegate = self
-            }
         }
     }
     
@@ -533,22 +528,6 @@ class ConversationViewController: UIViewController {
         } else {
             dataSource.scrollToBottomAndReload(initialMessageId: messageId, completion: nil)
         }
-    }
-    
-    @objc func galleryViewControllerWillShow(_ notification: Notification) {
-        if let messageId = notification.userInfo?[GalleryViewController.messageIdUserInfoKey] as? String {
-            setCell(ofMessageId: messageId, contentViewHidden: true)
-        }
-    }
-    
-    @objc func galleryViewControllerDidDismiss(_ notification: Notification) {
-        let messageId = notification.userInfo?[GalleryViewController.messageIdUserInfoKey] as? String
-        if let offset = notification.userInfo?[GalleryViewController.relativeOffsetUserInfoKey] as? CGFloat, let id = messageId, let indexPath = dataSource?.indexPath(where: { $0.messageId == id }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
-            (dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel)?.layoutPosition = .relativeOffset(offset)
-            cell.contentImageView.position = .relativeOffset(offset)
-            cell.contentImageView.layoutIfNeeded()
-        }
-        setCell(ofMessageId: messageId, contentViewHidden: false)
     }
     
     // MARK: - Interface
@@ -1048,20 +1027,33 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
 // MARK: - GalleryViewControllerDelegate
 extension ConversationViewController: GalleryViewControllerDelegate {
     
-    func galleryViewController(_ viewController: GalleryViewController, cellForItemOf messageId: String) -> PhotoRepresentableMessageCell? {
-        return visiblePhotoRepresentableCell(of: messageId)
+    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> PhotoRepresentableMessageCell? {
+        return visiblePhotoRepresentableCell(of: item.messageId)
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, didShowItemOf messageId: String) {
-        setCell(ofMessageId: messageId, contentViewHidden: false)
+    func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
+        setCell(ofMessageId: item.messageId, contentViewHidden: true)
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, willDismissItemOf messageId: String) {
-        setCell(ofMessageId: messageId, contentViewHidden: true)
+    func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
+        setCell(ofMessageId: item.messageId, contentViewHidden: false)
     }
     
-    func galleryViewController(_ viewController: GalleryViewController, didCancelDismissOf messageId: String) {
-        setCell(ofMessageId: messageId, contentViewHidden: false)
+    func galleryViewController(_ viewController: GalleryViewController, willDismiss item: GalleryItem) {
+        setCell(ofMessageId: item.messageId, contentViewHidden: true)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {
+        setCell(ofMessageId: item.messageId, contentViewHidden: false)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didDismiss item: GalleryItem, relativeOffset: CGFloat?) {
+        if let offset = relativeOffset, let indexPath = dataSource?.indexPath(where: { $0.messageId == item.messageId }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
+            (dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel)?.layoutPosition = .relativeOffset(offset)
+            cell.contentImageView.position = .relativeOffset(offset)
+            cell.contentImageView.layoutIfNeeded()
+        }
+        setCell(ofMessageId: item.messageId, contentViewHidden: false)
     }
     
 }

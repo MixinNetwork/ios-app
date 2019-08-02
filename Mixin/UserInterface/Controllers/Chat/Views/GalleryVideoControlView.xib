@@ -163,6 +163,8 @@
                 <outlet property="remainingTimeLabel" destination="Hl0-e0-d3X" id="lvN-pH-SOc"/>
                 <outlet property="slider" destination="7CY-zg-LG0" id="WrQ-QJ-jgr"/>
                 <outlet property="timeControlWrapperView" destination="gga-kw-mqs" id="NdO-Li-2bE"/>
+                <outlet property="visualControlLeadingConstraint" destination="3yd-WU-6CA" id="E1u-UR-Gkq"/>
+                <outlet property="visualControlTrailingConstraint" destination="j8F-lV-H4U" id="R2s-J7-vNF"/>
                 <outlet property="visualControlWrapperView" destination="HPi-eF-W69" id="kKi-Jd-l8j"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="187.16517857142856"/>

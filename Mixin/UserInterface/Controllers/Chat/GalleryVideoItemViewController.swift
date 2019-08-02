@@ -130,6 +130,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         controlView.set(playControlsHidden: true, otherControlsHidden: true, animated: false)
         videoView.coverImageView.sd_cancelCurrentImageLoad()
         videoView.coverImageView.image = nil
+        videoView.bringCoverToFront()
         player.replaceCurrentItem(with: nil)
     }
     
@@ -439,6 +440,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         
         rateObserver = player.observe(\.timeControlStatus, changeHandler: { [weak self] (player, _) in
             self?.updateControlView()
+            self?.bringPlayerToFrontIfPlaying()
         })
         
         player.replaceCurrentItem(with: item)
@@ -467,6 +469,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         @unknown default:
             controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         }
+    }
+    
+    private func bringPlayerToFrontIfPlaying() {
+        guard player.timeControlStatus == .playing else {
+            return
+        }
+        videoView.bringPlayerToFront()
     }
     
     private func updateSliderPosition(time: CMTime) {

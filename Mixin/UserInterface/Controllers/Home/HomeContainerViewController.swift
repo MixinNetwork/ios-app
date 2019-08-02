@@ -9,34 +9,25 @@ class HomeContainerViewController: UIViewController {
     
     lazy var galleryViewController: GalleryViewController = {
         let controller = GalleryViewController()
-        addChild(controller)
-        view.insertSubview(controller.view, at: 0)
-        controller.view.snp.makeEdgesEqualToSuperview()
-        controller.didMove(toParent: self)
+        controller.delegate = self
         return controller
     }()
     
     override var childForStatusBarHidden: UIViewController? {
-        return homeNavigationController
+        return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }
     
     override var childForHomeIndicatorAutoHidden: UIViewController? {
-        return isShowingGallery ? galleryViewController : homeNavigationController
+        return galleryIsOnTopMost ? galleryViewController : homeNavigationController
     }
     
-    private var isShowingGallery: Bool {
-        if view.subviews.last == homeNavigationController.view {
-            return false
-        } else if let (galleryIndex, homeIndex) = indices() {
-            return galleryIndex > homeIndex
-        } else {
-            return false
-        }
+    private var galleryIsOnTopMost: Bool {
+        return isShowingGallery
+            && galleryViewController.parent != nil
+            && galleryViewController.parent == homeNavigationController.viewControllers.last
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+    private var isShowingGallery = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,36 +35,74 @@ class HomeContainerViewController: UIViewController {
         view.addSubview(homeNavigationController.view)
         homeNavigationController.view.snp.makeEdgesEqualToSuperview()
         homeNavigationController.didMove(toParent: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(galleryViewControllerWillShow(_:)), name: GalleryViewController.willShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(galleryViewControllerDidDismiss(_:)), name: GalleryViewController.didDismissNotification, object: nil)
     }
     
-    @objc func galleryViewControllerWillShow(_ notification: Notification) {
-        guard let (galleryIndex, homeIndex) = indices(), galleryIndex < homeIndex else {
+    private func conversationViewController(of conversationId: String) -> ConversationViewController? {
+        return homeNavigationController.viewControllers
+            .compactMap({ $0 as? ConversationViewController })
+            .first(where: { $0.conversationId == conversationId })
+    }
+    
+    private func removeGalleryFromItsParentIfNeeded() {
+        guard galleryViewController.parent != nil else {
             return
         }
-        view.exchangeSubview(at: galleryIndex, withSubviewAt: homeIndex)
-        UIApplication.shared.keyWindow?.windowLevel = .statusBar
-        setNeedsUpdateOfHomeIndicatorAutoHidden()
+        galleryViewController.willMove(toParent: nil)
+        galleryViewController.view.removeFromSuperview()
+        galleryViewController.removeFromParent()
     }
     
-    @objc func galleryViewControllerDidDismiss(_ notification: Notification) {
-        guard let (galleryIndex, homeIndex) = indices(), homeIndex < galleryIndex else {
-            return
-        }
-        view.exchangeSubview(at: galleryIndex, withSubviewAt: homeIndex)
-        UIApplication.shared.keyWindow?.windowLevel = .normal
-        setNeedsUpdateOfHomeIndicatorAutoHidden()
+}
+
+extension HomeContainerViewController: GalleryViewControllerDelegate {
+    
+    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> PhotoRepresentableMessageCell? {
+        return conversationViewController(of: item.conversationId)?.galleryViewController(viewController, cellFor: item)
     }
     
-    private func indices() -> (gallery: Int, home: Int)? {
-        guard let gallery = view.subviews.firstIndex(of: galleryViewController.view) else {
-            return nil
+    func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
+        removeGalleryFromItsParentIfNeeded()
+        let topMostViewController = homeNavigationController.viewControllers.last ?? self
+        topMostViewController.addChild(viewController)
+        topMostViewController.view.addSubview(viewController.view)
+        viewController.view.snp.makeEdgesEqualToSuperview()
+        viewController.didMove(toParent: topMostViewController)
+        viewController.view.setNeedsLayout()
+        viewController.view.layoutIfNeeded()
+        if let vc = conversationViewController(of: item.conversationId) {
+            vc.galleryViewController(viewController, willShow: item)
         }
-        guard let home = view.subviews.firstIndex(of: homeNavigationController.view) else {
-            return nil
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
+        isShowingGallery = true
+        setNeedsStatusBarAppearanceUpdate()
+        setNeedsUpdateOfHomeIndicatorAutoHidden()
+        if let vc = conversationViewController(of: item.conversationId) {
+            vc.galleryViewController(viewController, didShow: item)
         }
-        return (gallery, home)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, willDismiss item: GalleryItem) {
+        if let vc = conversationViewController(of: item.conversationId) {
+            vc.galleryViewController(viewController, willDismiss: item)
+        }
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didDismiss item: GalleryItem, relativeOffset: CGFloat?) {
+        removeGalleryFromItsParentIfNeeded()
+        isShowingGallery = false
+        setNeedsStatusBarAppearanceUpdate()
+        setNeedsUpdateOfHomeIndicatorAutoHidden()
+        if let vc = conversationViewController(of: item.conversationId) {
+            vc.galleryViewController(viewController, didDismiss: item, relativeOffset: relativeOffset)
+        }
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {
+        if let vc = conversationViewController(of: item.conversationId) {
+            vc.galleryViewController(viewController, didCancelDismissalFor: item)
+        }
     }
     
 }

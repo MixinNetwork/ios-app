@@ -152,8 +152,8 @@ final class MessageDAO {
         NotificationCenter.default.afterPostOnMain(name: .ConversationDidChange, object: change)
     }
 
-    func updateMessageQuoteContent(quoteMessageId: String, quoteContent: Data) {
-        MixinDatabase.shared.update(maps: [(Message.Properties.quoteContent, quoteContent)], tableName: Message.tableName, condition: Message.Properties.quoteMessageId == quoteContent)
+    func updateMessageQuoteContent(conversationId: String, quoteMessageId: String, quoteContent: Data) {
+        MixinDatabase.shared.update(maps: [(Message.Properties.quoteContent, quoteContent)], tableName: Message.tableName, condition: Message.Properties.conversationId == conversationId && Message.Properties.quoteMessageId == quoteContent)
     }
 
     func isExist(messageId: String) -> Bool {
@@ -469,7 +469,7 @@ final class MessageDAO {
         let messageId = message.messageId
         ReceiveMessageService.shared.stopRecallMessage(messageId: messageId, category: message.category, conversationId: message.conversationId, mediaUrl: message.mediaUrl)
 
-        let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.quoteMessageId == messageId)
+        let quoteMessageIds = MixinDatabase.shared.getStringValues(column: Message.Properties.messageId.asColumnResult(), tableName: Message.tableName, condition: Message.Properties.conversationId == message.conversationId &&  Message.Properties.quoteMessageId == messageId)
         MixinDatabase.shared.transaction { (database) in
             try MessageDAO.shared.recallMessage(database: database, messageId: message.messageId, conversationId: message.conversationId, category: message.category, status: message.status, quoteMessageIds: quoteMessageIds)
         }

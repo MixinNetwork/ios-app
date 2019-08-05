@@ -379,7 +379,7 @@ class ReceiveMessageService: MixinService {
         defer {
             let quoteMessageId = data.quoteMessageId
             if !quoteMessageId.isEmpty, let quoteContent = MessageDAO.shared.getQuoteMessage(messageId: quoteMessageId) {
-                MessageDAO.shared.updateMessageQuoteContent(quoteMessageId: quoteMessageId, quoteContent: quoteContent)
+                MessageDAO.shared.updateMessageQuoteContent(conversationId: data.conversationId, quoteMessageId: quoteMessageId, quoteContent: quoteContent)
             }
         }
         switch data.category {

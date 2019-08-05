@@ -145,7 +145,7 @@ class BaseDatabase {
             return true
         }
         try! database.run(transaction: {
-            try! database.insert(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
+            try database.insert(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
         })
         return true
     }
@@ -156,7 +156,7 @@ class BaseDatabase {
             return true
         }
         try! database.run(transaction: {
-            try! database.insertOrReplace(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
+            try database.insertOrReplace(objects: objects, on: propertyConvertibleList, intoTable: T.tableName)
         })
         return true
     }

@@ -75,7 +75,6 @@ enum ReportErrorCode: Int {
     case jobError = 100015
     case signalDatabaseResetFailed = 100016
     case databaseCorrupted = 100017
-    case updateMessageStatusError = 100018
     case appUpgradeError = 100020
 
     var errorName: String {
@@ -116,8 +115,6 @@ enum ReportErrorCode: Int {
             return "signalDatabaseResetFailed"
         case .databaseCorrupted:
             return "databaseCorrupted"
-        case .updateMessageStatusError:
-            return "updateMessageStatusError"
         case .appUpgradeError:
             return "appUpgradeError"
         }

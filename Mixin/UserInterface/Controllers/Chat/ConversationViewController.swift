@@ -395,6 +395,7 @@ class ConversationViewController: UIViewController {
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     conversationInputViewController.dismiss()
+                    GalleryVideoItemViewController.currentPipController?.pauseAction(self)
                     openDocumentAction(message: message)
                 } else {
                     attachmentLoadingCellDidSelectNetworkOperation(cell)

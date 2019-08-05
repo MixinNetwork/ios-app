@@ -274,6 +274,7 @@ extension CallManager {
             }
             semaphore.wait()
             performSynchronouslyOnMainThread {
+                GalleryVideoItemViewController.currentPipController?.pauseAction(self)
                 view.reload(user: user)
                 view.style = .calling
                 view.show()

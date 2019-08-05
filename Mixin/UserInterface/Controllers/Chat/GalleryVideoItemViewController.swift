@@ -459,9 +459,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             if item?.category == .video || (!playerDidReachEnd && !playerDidFailedToPlay) {
                 controlView.playControlStyle = .play
             }
-            if UIApplication.shared.applicationState != .active {
-                controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: false)
-            }
+            controlView.set(playControlsHidden: false, otherControlsHidden: false, animated: true)
         case .waitingToPlayAtSpecifiedRate:
             if item?.category == .live {
                 controlView.style.insert(.loading)

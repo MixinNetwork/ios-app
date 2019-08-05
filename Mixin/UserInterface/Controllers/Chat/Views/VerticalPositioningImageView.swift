@@ -27,7 +27,6 @@ class VerticalPositioningImageView: UIView {
     }
     
     var aspectRatio = CGSize.zero
-    var lastImageLoadOperation: SDWebImageCombinedOperation?
     
     private let imageView = YYAnimatedImageView()
     
@@ -65,19 +64,17 @@ class VerticalPositioningImageView: UIView {
     }
     
     func setImage(with url: URL, placeholder: UIImage?, ratio: CGSize) {
-        set(thumbnail: placeholder, ratio: ratio)
-        lastImageLoadOperation = SDWebImageManager.shared.loadImage(with: url, options: [], progress: nil) { [weak self] (image, data, error, cacheType, finished, imageUrl) in
-            guard url == imageUrl, let self = self else {
-                return
-            }
+        aspectRatio = ratio
+        imageView.contentMode = .scaleToFill
+        imageView.sd_setImage(with: url, placeholderImage: placeholder, options: []) { (_, _, _, _) in
             self.imageView.contentMode = .scaleAspectFill
-            self.imageView.image = image
             self.setNeedsLayout()
         }
+        setNeedsLayout()
     }
     
     func cancelCurrentImageLoad() {
-        lastImageLoadOperation?.cancel()
+        imageView.sd_cancelCurrentImageLoad()
     }
     
     private func prepare() {

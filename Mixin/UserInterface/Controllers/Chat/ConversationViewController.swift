@@ -759,6 +759,7 @@ extension ConversationViewController: ConversationTableViewActionDelegate {
                 UIPasteboard.general.string = message.content
             }
         case .delete:
+            conversationInputViewController.textView.resignFirstResponder()
             (viewModel as? AttachmentLoadingViewModel)?.cancelAttachmentLoading(markMediaStatusCancelled: false)
             if viewModel.message.messageId == AudioManager.shared.playingNode?.message.messageId {
                 AudioManager.shared.stop()

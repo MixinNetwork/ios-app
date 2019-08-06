@@ -15,15 +15,12 @@ class DepositViewController: UIViewController {
         super.viewDidLoad()
         container?.setSubtitle(subtitle: asset.symbol)
         view.layoutIfNeeded()
-        let iconUrl = URL(string: asset.iconUrl)
-        let chainIconUrl = URL(string: asset.chainIconUrl ?? "")
         if asset.isAccount, let name = asset.accountName, let memo = asset.accountTag {
             upperDepositFieldView.titleLabel.text = Localized.WALLET_ACCOUNT_NAME
             upperDepositFieldView.contentLabel.text = name
             let nameImage = UIImage(qrcode: name, size: upperDepositFieldView.qrCodeImageView.bounds.size)
             upperDepositFieldView.qrCodeImageView.image = nameImage
-            upperDepositFieldView.iconImageView.sd_setImage(with: iconUrl, completed: nil)
-            upperDepositFieldView.chainImageView.sd_setImage(with: chainIconUrl, completed: nil)
+            upperDepositFieldView.assetIconView.setIcon(asset: asset)
             upperDepositFieldView.shadowView.hasLowerShadow = true
             upperDepositFieldView.delegate = self
             
@@ -31,8 +28,7 @@ class DepositViewController: UIViewController {
             lowerDepositFieldView.contentLabel.text = memo
             let memoImage = UIImage(qrcode: memo, size: lowerDepositFieldView.qrCodeImageView.bounds.size)
             lowerDepositFieldView.qrCodeImageView.image = memoImage
-            lowerDepositFieldView.iconImageView.sd_setImage(with: iconUrl, completed: nil)
-            lowerDepositFieldView.chainImageView.sd_setImage(with: chainIconUrl, completed: nil)
+            upperDepositFieldView.assetIconView.setIcon(asset: asset)
             lowerDepositFieldView.shadowView.hasLowerShadow = false
             lowerDepositFieldView.delegate = self
         } else if let publicKey = asset.publicKey, !publicKey.isEmpty {
@@ -40,8 +36,7 @@ class DepositViewController: UIViewController {
             upperDepositFieldView.contentLabel.text = publicKey
             let image = UIImage(qrcode: publicKey, size: upperDepositFieldView.qrCodeImageView.bounds.size)
             upperDepositFieldView.qrCodeImageView.image = image
-            upperDepositFieldView.iconImageView.sd_setImage(with: iconUrl, completed: nil)
-            upperDepositFieldView.chainImageView.sd_setImage(with: chainIconUrl, completed: nil)
+            upperDepositFieldView.assetIconView.setIcon(asset: asset)
             upperDepositFieldView.shadowView.hasLowerShadow = false
             upperDepositFieldView.delegate = self
             

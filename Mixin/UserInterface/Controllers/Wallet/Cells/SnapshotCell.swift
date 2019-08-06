@@ -25,9 +25,7 @@ class SnapshotCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        iconImageView.sd_cancelCurrentImageLoad()
-        iconImageView.image = nil
-        iconImageView.titleLabel.text = nil
+        iconImageView.prepareForReuse()
     }
     
     @IBAction func selectIconAction(_ sender: Any) {

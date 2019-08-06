@@ -1,14 +1,14 @@
 import UIKit
 
-class NavigationAvatarIconView: AvatarShadowIconView {
+class NavigationAvatarIconView: AvatarImageView {
     
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 44, height: 44)
     }
     
-    override func layoutIconImageView() {
-        iconImageView.bounds.size = CGSize(width: 30, height: 30)
-        iconImageView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+    override func layout(imageView: UIImageView) {
+        imageView.bounds.size = CGSize(width: 30, height: 30)
+        imageView.center = CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
 }

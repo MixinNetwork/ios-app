@@ -363,10 +363,8 @@ class UserView: CornerView {
         superView?.dismissPopupControllerAnimated()
 
         qrcodeWindow.render(title: Localized.CONTACT_MY_QR_CODE,
-                      account: account,
-                      description: Localized.MYQRCODE_PROMPT,
-                      qrcode: account.code_url,
-                      qrcodeForegroundColor: UIColor.systemTint)
+                            description: Localized.MYQRCODE_PROMPT,
+                            account: account)
         qrcodeWindow.presentView()
     }
 

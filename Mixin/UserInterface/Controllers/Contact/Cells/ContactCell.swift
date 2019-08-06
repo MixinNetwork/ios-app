@@ -16,7 +16,7 @@ class ContactCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        iconImageView.sd_cancelCurrentImageLoad()
+        iconImageView.prepareForReuse()
     }
     
     func render(user: UserItem) {

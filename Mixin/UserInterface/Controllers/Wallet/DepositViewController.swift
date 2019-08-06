@@ -105,12 +105,18 @@ extension DepositViewController: DepositFieldViewDelegate {
     func depositFieldViewDidSelectShowQRCode(_ view: DepositFieldView) {
         if asset.isAccount {
             if view == upperDepositFieldView {
-                depositWindow.render(title: Localized.WALLET_ACCOUNT_NAME, iconUrl: asset.iconUrl, qrcode: asset.accountName ?? "", leftMarkUrl: asset.chainIconUrl)
+                depositWindow.render(title: Localized.WALLET_ACCOUNT_NAME,
+                                     content: asset.accountName ?? "",
+                                     asset: asset)
             } else {
-                depositWindow.render(title: Localized.WALLET_ACCOUNT_MEMO, iconUrl: asset.iconUrl, qrcode: asset.accountTag ?? "", leftMarkUrl: asset.chainIconUrl)
+                depositWindow.render(title: Localized.WALLET_ACCOUNT_MEMO,
+                                     content: asset.accountTag ?? "",
+                                     asset: asset)
             }
         } else {
-            depositWindow.render(title: Localized.WALLET_ADDRESS, iconUrl: asset.iconUrl, qrcode: asset.publicKey ?? "", leftMarkUrl: asset.chainIconUrl)
+            depositWindow.render(title: Localized.WALLET_ADDRESS,
+                                 content: asset.publicKey ?? "",
+                                 asset: asset)
         }
         depositWindow.presentView()
     }

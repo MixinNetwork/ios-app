@@ -361,6 +361,7 @@
 "wallet_pin_confirm_subtitle" = "如果忘记，你的钱包将无法找回。";
 "wallet_pin_confirm_again_title" = "请再次确认您的 6 位数字支付密码";
 "wallet_pin_confirm_again_subtitle" = "很少看到第三次确认吧！所以请牢记，支付密码丢失是无法找回的。";
+"wallet_pin_title" = "设置支付密码";
 "wallet_pin_new_title" = "设置新的 6 位数字支付密码";
 "wallet_pin_inconsistency" = "密码不一致，请重新设置";
 "wallet_pin_too_simple" = "支付密码过于简单不安全";

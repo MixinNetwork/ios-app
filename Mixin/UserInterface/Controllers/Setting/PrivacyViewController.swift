@@ -50,7 +50,7 @@ final class PrivacyViewController: UITableViewController {
             }
         case 1:
             if AccountAPI.shared.account?.has_pin ?? false {
-                vc = WalletPasswordViewController.instance(walletPasswordType: .changePinStep1, dismissTarget: nil)
+                vc = WalletSettingViewController.instance()
             } else {
                 vc = WalletPasswordViewController.instance(walletPasswordType: .initPinStep1, dismissTarget: nil)
             }
@@ -90,7 +90,7 @@ final class PrivacyViewController: UITableViewController {
 
     @objc func updatePasswordCell() {
         DispatchQueue.main.async { [weak self] in
-            self?.passwordLabel.text = AccountAPI.shared.account?.has_pin ?? false ? R.string.localizable.wallet_change_password() : R.string.localizable.wallet_setting()
+            self?.passwordLabel.text = AccountAPI.shared.account?.has_pin ?? false ? R.string.localizable.wallet_setting() : R.string.localizable.wallet_pin_title()
         }
     }
     

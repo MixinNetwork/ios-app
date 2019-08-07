@@ -63,6 +63,8 @@ extension APIError {
             return Localized.STICKER_ADD_LIMIT
         case 20127:
             return Localized.WITHDRAWAL_AMOUNT_TOO_SMALL
+        case 20131:
+            return R.string.localizable.withdrawal_memo_format_incorrect()
         case 30100:
             return Localized.WALLET_BLOCKCHIAN_NOT_IN_SYNC
         case 30102:

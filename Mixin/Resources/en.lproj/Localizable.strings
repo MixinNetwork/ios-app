@@ -384,6 +384,7 @@
 "wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your PIN for the specified interval.";
 "withdrawal_amount_too_small" = "Withdraw amount too small";
 "withdrawal_minimum_amount" = "Minimum withdraw amount is %@ %@";
+"withdrawal_memo_format_incorrect" = "Withdrawal memo format incorrect";
 "transactions_filter_sort_by" = "Sort by";
 "transactions_filter_sort_by_time" = "Time";
 "transactions_filter_sort_by_amount" = "Amount";

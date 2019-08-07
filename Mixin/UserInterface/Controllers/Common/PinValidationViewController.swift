@@ -62,13 +62,17 @@ class PinValidationViewController: UIViewController {
                 self.onSuccess?(pin)
                 self.dismiss(animated: true, completion: nil)
             case let .failure(error):
+                if !pin.isNumeric || pin.trimmingCharacters(in: .whitespacesAndNewlines).count != 6 {
+                    UIApplication.traceError(code: ReportErrorCode.pinError, userInfo: ["error": "pin validate failed"])
+                } else {
+                    UIApplication.traceError(error)
+                }
                 self.handle(error: error)
             }
         }
     }
     
     func handle(error: APIError) {
-        UIApplication.traceError(error)
         pinField.clear()
         pinField.receivesInput = true
         if error.code == 429 {

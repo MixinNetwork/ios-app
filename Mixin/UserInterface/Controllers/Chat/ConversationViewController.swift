@@ -1052,8 +1052,8 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     func galleryViewController(_ viewController: GalleryViewController, didDismiss item: GalleryItem, relativeOffset: CGFloat?) {
         if let offset = relativeOffset, let indexPath = dataSource?.indexPath(where: { $0.messageId == item.messageId }), let cell = tableView.cellForRow(at: indexPath) as? PhotoRepresentableMessageCell {
             (dataSource.viewModel(for: indexPath) as? PhotoRepresentableMessageViewModel)?.layoutPosition = .relativeOffset(offset)
-            cell.contentImageView.position = .relativeOffset(offset)
-            cell.contentImageView.layoutIfNeeded()
+            cell.contentImageWrapperView.position = .relativeOffset(offset)
+            cell.contentImageWrapperView.layoutIfNeeded()
         }
         setCell(ofMessageId: item.messageId, contentViewHidden: false)
     }

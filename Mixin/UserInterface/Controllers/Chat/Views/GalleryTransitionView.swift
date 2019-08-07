@@ -1,13 +1,18 @@
 import UIKit
+import YYImage
 
 final class GalleryTransitionView: UIView, GalleryAnimatable {
     
-    private let imageView = VerticalPositioningImageView()
+    private let imageWrapperView = VerticalPositioningImageView()
     private let accessoryContainerView = UIView()
     private let shadowImageView = UIImageView(image: PhotoRepresentableMessageViewModel.shadowImage)
     private let timeLabel = UILabel()
     private let statusImageView = UIImageView()
     private let maskLayer = BubbleLayer()
+    
+    private var imageView: YYAnimatedImageView {
+        return imageWrapperView.imageView
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,24 +28,25 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         guard let viewModel = cell.viewModel as? PhotoRepresentableMessageViewModel else {
             return
         }
-        frame = cell.contentView.convert(cell.contentImageView.frame, to: superview)
-        imageView.position = cell.contentImageView.position
+        frame = cell.contentView.convert(cell.contentImageWrapperView.frame, to: superview)
         imageView.image = cell.contentImageView.image
-        imageView.frame = bounds
-        imageView.layoutIfNeeded()
+        imageWrapperView.aspectRatio = cell.contentImageWrapperView.aspectRatio
+        imageWrapperView.position = cell.contentImageWrapperView.position
+        imageWrapperView.frame = bounds
+        imageWrapperView.layoutIfNeeded()
         accessoryContainerView.transform = .identity
         accessoryContainerView.alpha = 1
         accessoryContainerView.frame = bounds
-        shadowImageView.frame.origin = cell.contentView.convert(viewModel.shadowImageOrigin, to: cell.contentImageView)
+        shadowImageView.frame.origin = cell.contentView.convert(viewModel.shadowImageOrigin, to: cell.contentImageWrapperView)
         timeLabel.text = viewModel.time
-        timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageView)
+        timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
         statusImageView.image = viewModel.statusImage
         statusImageView.tintColor = viewModel.statusTintColor
-        statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageView)
+        statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageWrapperView)
         let bubble = BubbleLayer.Bubble(style: viewModel.style)
         maskLayer.setBubble(bubble, frame: bounds, animationDuration: 0)
-        maskLayer.bounds.size = imageView.bounds.size
-        maskLayer.position = CGPoint(x: imageView.bounds.midX, y: imageView.bounds.midY)
+        maskLayer.bounds.size = imageWrapperView.bounds.size
+        maskLayer.position = CGPoint(x: imageWrapperView.bounds.midX, y: imageWrapperView.bounds.midY)
     }
     
     func transition(to containerView: UIView) {
@@ -53,7 +59,7 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         if let image = imageView.image {
             size = CGSize(width: image.size.width, height: image.size.height)
         } else {
-            size = CGSize(width: imageView.frame.width, height: imageView.frame.height)
+            size = CGSize(width: imageWrapperView.frame.width, height: imageWrapperView.frame.height)
         }
         
         if GalleryItem.shouldLayoutImageOfRatioAsAriticle(size) {
@@ -70,7 +76,7 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         maskLayer.setBubble(.none, frame: bubbleFrame, animationDuration: animationDuration)
         animate(animations: {
             self.frame = frame
-            self.imageView.frame = self.bounds
+            self.imageWrapperView.frame = self.bounds
             self.accessoryContainerView.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
             self.accessoryContainerView.transform = CGAffineTransform(scaleX: scale, y: scale)
             self.accessoryContainerView.alpha = 0
@@ -87,11 +93,11 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
             size.height = min(size.height, superview.bounds.height)
             bounds.size = size
             center = CGPoint(x: superview.bounds.midX, y: superview.bounds.midY)
-            imageView.frame = bounds
+            imageWrapperView.frame = bounds
             if item.shouldLayoutAsArticle, let relativeOffset = (viewController as? GalleryImageItemViewController)?.relativeOffset {
-                imageView.position = .relativeOffset(relativeOffset)
+                imageWrapperView.position = .relativeOffset(relativeOffset)
             } else {
-                imageView.position = .center
+                imageWrapperView.position = .center
             }
             
             let scrollView = controller.scrollView
@@ -113,10 +119,10 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
             self.transform = transform
         } else {
             frame = viewController.view.bounds
-            imageView.frame = bounds
-            imageView.position = .center
+            imageWrapperView.frame = bounds
+            imageWrapperView.position = .center
         }
-        imageView.layoutIfNeeded()
+        imageWrapperView.layoutIfNeeded()
         maskLayer.setBubble(.none, frame: bounds, animationDuration: 0)
         maskLayer.frame = bounds
     }
@@ -125,21 +131,21 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         guard let viewModel = cell.viewModel as? PhotoRepresentableMessageViewModel else {
             return
         }
-        let scale = bounds.width / cell.contentImageView.frame.width
+        let scale = bounds.width / cell.contentImageWrapperView.frame.width
         accessoryContainerView.transform = .identity
-        accessoryContainerView.bounds.size = cell.contentImageView.bounds.size
-        shadowImageView.frame.origin = cell.contentView.convert(viewModel.shadowImageOrigin, to: cell.contentImageView)
+        accessoryContainerView.bounds.size = cell.contentImageWrapperView.bounds.size
+        shadowImageView.frame.origin = cell.contentView.convert(viewModel.shadowImageOrigin, to: cell.contentImageWrapperView)
         timeLabel.text = viewModel.time
-        timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageView)
+        timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
         statusImageView.image = viewModel.statusImage
         statusImageView.tintColor = viewModel.statusTintColor
-        statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageView)
+        statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageWrapperView)
         
         accessoryContainerView.transform = CGAffineTransform(scaleX: scale, y: scale)
         accessoryContainerView.center = CGPoint(x: bounds.midX, y: bounds.midY)
         accessoryContainerView.alpha = 0
         
-        let frame = cell.contentView.convert(cell.contentImageView.frame, to: superview)
+        let frame = cell.contentView.convert(cell.contentImageWrapperView.frame, to: superview)
         let bounds = CGRect(origin: .zero, size: frame.size)
 
         let bubble = BubbleLayer.Bubble(style: viewModel.style)
@@ -148,7 +154,7 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
         animate(animations: {
             self.transform = .identity
             self.frame = frame
-            self.imageView.frame = bounds
+            self.imageWrapperView.frame = bounds
             self.accessoryContainerView.transform = .identity
             self.accessoryContainerView.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
             self.accessoryContainerView.alpha = 1
@@ -158,14 +164,13 @@ final class GalleryTransitionView: UIView, GalleryAnimatable {
     
     private func prepare() {
         accessoryContainerView.backgroundColor = .clear
-        imageView.contentMode = .scaleAspectFill
         timeLabel.backgroundColor = .clear
         timeLabel.font = DetailInfoMessageViewModel.timeFont
         timeLabel.textAlignment = .right
         timeLabel.textColor = .white
         statusImageView.contentMode = .left
         shadowImageView.frame.size = shadowImageView.image?.size ?? .zero
-        addSubview(imageView)
+        addSubview(imageWrapperView)
         accessoryContainerView.addSubview(shadowImageView)
         accessoryContainerView.addSubview(timeLabel)
         accessoryContainerView.addSubview(statusImageView)

@@ -5,8 +5,12 @@ import YYImage
 class PhotoRepresentableMessageCell: DetailInfoMessageCell {
     
     let maskingContentView = UIView()
-    let contentImageView = VerticalPositioningImageView()
+    let contentImageWrapperView = VerticalPositioningImageView()
     let shadowImageView = UIImageView(image: PhotoRepresentableMessageViewModel.shadowImage)
+    
+    var contentImageView: UIImageView {
+        return contentImageWrapperView.imageView
+    }
     
     lazy var selectedOverlapView: UIView = {
         let view = SelectedOverlapView()
@@ -15,22 +19,17 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         return view
     }()
     
-    internal lazy var statusViews = [
-        shadowImageView,
-        timeLabel,
-        statusImageView
-    ]
-    
     override var contentFrame: CGRect {
-        return contentImageView.frame
+        return contentImageWrapperView.frame
     }
-
+    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
-            contentImageView.position = viewModel.layoutPosition
-            contentImageView.frame = viewModel.contentFrame
-            selectedOverlapView.frame = contentImageView.bounds
+            contentImageWrapperView.position = viewModel.layoutPosition
+            contentImageWrapperView.frame = viewModel.contentFrame
+            contentImageWrapperView.aspectRatio = viewModel.aspectRatio
+            selectedOverlapView.frame = contentImageWrapperView.bounds
             shadowImageView.frame = CGRect(origin: viewModel.shadowImageOrigin,
                                            size: shadowImageView.image?.size ?? .zero)
         }
@@ -40,13 +39,13 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
         contentView.addSubview(maskingContentView)
         maskingContentView.frame = contentView.bounds
         maskingContentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        maskingContentView.addSubview(contentImageView)
+        maskingContentView.addSubview(contentImageWrapperView)
         shadowImageView.contentMode = .scaleToFill
         shadowImageView.clipsToBounds = true
         maskingContentView.addSubview(shadowImageView)
         timeLabel.textColor = .white
         updateAppearance(highlight: false, animated: false)
-        contentImageView.addSubview(selectedOverlapView)
+        contentImageWrapperView.addSubview(selectedOverlapView)
         super.prepare()
         backgroundImageView.removeFromSuperview()
         maskingContentView.layer.masksToBounds = true
@@ -66,12 +65,12 @@ class PhotoRepresentableMessageCell: DetailInfoMessageCell {
 }
 
 extension PhotoRepresentableMessageCell {
-
+    
     class SelectedOverlapView: UIView {
-
+        
         override var backgroundColor: UIColor? {
             set {
-
+                
             }
             get {
                 return super.backgroundColor
@@ -89,7 +88,7 @@ extension PhotoRepresentableMessageCell {
             super.init(frame: frame)
             super.backgroundColor = dimmingColor
         }
-
+        
     }
     
 }

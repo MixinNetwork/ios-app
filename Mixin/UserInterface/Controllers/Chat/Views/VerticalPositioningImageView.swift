@@ -9,26 +9,19 @@ class VerticalPositioningImageView: UIView {
         case center
     }
     
+    let imageView = YYAnimatedImageView()
+    
     var position = Position.center {
         didSet {
             setNeedsLayout()
         }
     }
     
-    var image: UIImage? {
-        get {
-            return imageView.image
-        }
-        set {
-            aspectRatio = newValue?.size ?? .zero
-            imageView.image = newValue
+    var aspectRatio = CGSize.zero {
+        didSet {
             setNeedsLayout()
         }
     }
-    
-    var aspectRatio = CGSize.zero
-    
-    private let imageView = YYAnimatedImageView()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -56,28 +49,8 @@ class VerticalPositioningImageView: UIView {
         }
     }
     
-    func set(thumbnail: UIImage?, ratio: CGSize) {
-        imageView.contentMode = .scaleToFill
-        imageView.image = thumbnail
-        aspectRatio = ratio
-        setNeedsLayout()
-    }
-    
-    func setImage(with url: URL, placeholder: UIImage?, ratio: CGSize) {
-        aspectRatio = ratio
-        imageView.contentMode = .scaleToFill
-        imageView.sd_setImage(with: url, placeholderImage: placeholder, options: []) { (_, _, _, _) in
-            self.imageView.contentMode = .scaleAspectFill
-            self.setNeedsLayout()
-        }
-        setNeedsLayout()
-    }
-    
-    func cancelCurrentImageLoad() {
-        imageView.sd_cancelCurrentImageLoad()
-    }
-    
     private func prepare() {
+        imageView.contentMode = .scaleToFill
         addSubview(imageView)
         clipsToBounds = true
     }

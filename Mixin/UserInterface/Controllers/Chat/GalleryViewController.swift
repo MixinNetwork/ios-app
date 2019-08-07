@@ -113,7 +113,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         
         let viewController = modelController.dequeueReusableViewController(with: item)
         viewController.isFocused = true
-        if let viewController = viewController as? GalleryImageItemViewController, case let .relativeOffset(offset) = cell.contentImageView.position {
+        if let viewController = viewController as? GalleryImageItemViewController, case let .relativeOffset(offset) = cell.contentImageWrapperView.position {
             viewController.scrollView.contentOffset.y = -offset * viewController.scrollView.contentSize.height
         }
         pageViewController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)

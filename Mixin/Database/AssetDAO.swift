@@ -11,13 +11,13 @@ final class AssetDAO {
     LEFT JOIN assets a2 ON a1.chain_id = a2.asset_id
     """
     private static let sqlOrder = "a1.balance * a1.price_usd DESC, a1.price_usd DESC, cast(a1.balance AS REAL) DESC, a1.name DESC"
-    private static let sqlQuery = "\(sqlQueryTable) WHERE 1 = 1 ORDER BY \(sqlOrder)"
+    private static let sqlQuery = "\(sqlQueryTable) ORDER BY \(sqlOrder)"
     private static let sqlQueryAvailable = "\(sqlQueryTable) WHERE a1.balance > 0 ORDER BY \(sqlOrder) LIMIT 1"
     private static let sqlQueryAvailableList = "\(sqlQueryTable) WHERE a1.balance > 0 ORDER BY \(sqlOrder)"
     private static let sqlQuerySearch = """
     \(sqlQueryTable)
-    WHERE a1.balance > 0 AND (a1.name LIKE ? ESCAPE '/' OR a1.symbol LIKE ? ESCAPE '/')
-    ORDER BY CASE WHEN a1.symbol LIKE ? ESCAPE '/' THEN 1 ELSE 0 END DESC, \(sqlOrder)
+    WHERE a1.balance > 0 AND (a1.name LIKE ? OR a1.symbol LIKE ?)
+    ORDER BY CASE WHEN a1.symbol LIKE ? THEN 1 ELSE 0 END DESC, \(sqlOrder)
     """
     private static let sqlQueryById = "\(sqlQueryTable) WHERE a1.asset_id = ?"
 
@@ -51,7 +51,7 @@ final class AssetDAO {
     }
     
     func getAssets(keyword: String, limit: Int?) -> [AssetItem] {
-        let keyword = "%\(keyword.sqlEscaped)%"
+        let keyword = "%\(keyword)%"
         var sql = AssetDAO.sqlQuerySearch
         if let limit = limit {
             sql += " LIMIT \(limit)"

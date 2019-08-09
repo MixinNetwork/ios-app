@@ -2,19 +2,19 @@ import UIKit
 
 class StickersViewController: StickersCollectionViewController, ConversationInputAccessible {
     
-    var stickers = [Sticker]()
+    var stickers = [StickerItem]()
     
     override var isEmpty: Bool {
         return stickers.isEmpty
     }
     
-    func load(stickers: [Sticker]) {
+    func load(stickers: [StickerItem]) {
         self.stickers = stickers
         collectionView.reloadData()
         collectionView.setContentOffset(.zero, animated: false)
     }
     
-    func send(sticker: Sticker) {
+    func send(sticker: StickerItem) {
         dataSource?.sendMessage(type: .SIGNAL_STICKER, value: sticker)
         if updateUsedAtAfterSent {
             DispatchQueue.global().async {

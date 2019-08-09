@@ -4,7 +4,7 @@ import Photos
 
 class StickerManagerViewController: UICollectionViewController {
 
-    private var stickers = [Sticker]()
+    private var stickers = [StickerItem]()
     private var isDeleteStickers = false
     private var pickerContentOffset = CGPoint.zero
 
@@ -182,7 +182,7 @@ class FavoriteStickerCell: UICollectionViewCell {
         }
     }
 
-    func render(sticker: Sticker, isDeleteStickers: Bool) {
+    func render(sticker: StickerItem, isDeleteStickers: Bool) {
         selectionImageView.isHidden = !isDeleteStickers
         if let url = URL(string: sticker.assetUrl) {
             stickerImageView.sd_setImage(with: url)

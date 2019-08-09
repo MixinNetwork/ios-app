@@ -1,24 +1,33 @@
 import Foundation
 import SDWebImage
 
-let localImageManager = SDWebImageManager(cache: SDImageCache.shared, loader: LocalImageLoader())
+extension SDWebImageManager {
+    
+    static let localImage = SDWebImageManager(cache: SDImageCache.shared, loader: LocalImageLoader())
+    static let assetIcon = SDWebImageManager(cache: SDImageCache.assetIcon, loader: SDImageLoadersManager.shared)
+    static let persistentSticker = SDWebImageManager(cache: SDImageCache.persistentSticker, loader: SDImageLoadersManager.shared)
+    
+}
+
+extension SDImageCache {
+    
+    static let assetIcon = SDImageCache(namespace: "AssetIcon", diskCacheDirectory: documentPath)
+    static let persistentSticker = SDImageCache(namespace: "Sticker", diskCacheDirectory: documentPath)
+    
+    private static let documentPath = (try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true))?.path
+    
+}
 
 let localImageContext: [SDWebImageContextOption: Any] = [
-    .customManager: localImageManager,
+    .customManager: SDWebImageManager.localImage,
     .storeCacheType: SDImageCacheType.memory.rawValue,
     .originalStoreCacheType: SDImageCacheType.memory.rawValue
 ]
 
-let documentPath = (try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true))?.path
-
-let assetIconCache = SDImageCache(namespace: "AssetIcon", diskCacheDirectory: documentPath)
-let assetIconImageManager = SDWebImageManager(cache: assetIconCache, loader: SDImageLoadersManager.shared)
 let assetIconContext: [SDWebImageContextOption: Any] = [
-    .customManager: assetIconImageManager
+    .customManager: SDWebImageManager.assetIcon
 ]
 
-let persistentStickerCache = SDImageCache(namespace: "Sticker", diskCacheDirectory: documentPath)
-let persistentStickerImageManager = SDWebImageManager(cache: persistentStickerCache, loader: SDImageLoadersManager.shared)
 let persistentStickerContext: [SDWebImageContextOption: Any] = [
-    .customManager: persistentStickerImageManager
+    .customManager: SDWebImageManager.persistentSticker
 ]

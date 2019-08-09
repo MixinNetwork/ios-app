@@ -5,7 +5,7 @@ import YYImage
 enum StickerPrefetcher {
     
     static let persistentPrefetcher: SDWebImagePrefetcher = {
-        let prefetcher = SDWebImagePrefetcher(imageManager: persistentStickerImageManager)
+        let prefetcher = SDWebImagePrefetcher(imageManager: .persistentSticker)
         prefetcher.animatedImageClass = YYImage.self
         return prefetcher
     }()

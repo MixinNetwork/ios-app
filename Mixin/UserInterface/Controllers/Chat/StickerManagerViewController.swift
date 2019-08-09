@@ -185,7 +185,8 @@ class FavoriteStickerCell: UICollectionViewCell {
     func render(sticker: StickerItem, isDeleteStickers: Bool) {
         selectionImageView.isHidden = !isDeleteStickers
         if let url = URL(string: sticker.assetUrl) {
-            stickerImageView.sd_setImage(with: url)
+            let context = stickerLoadContext(category: sticker.category)
+            stickerImageView.sd_setImage(with: url, placeholderImage: nil, context: context)
         }
     }
 }

@@ -33,8 +33,10 @@ class StickersViewController: StickersCollectionViewController, ConversationInpu
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! AnimatedImageCollectionViewCell
-        if let url = URL(string: stickers[indexPath.row].assetUrl) {
-            cell.imageView.sd_setImage(with: url, completed: nil)
+        let sticker = stickers[indexPath.row]
+        if let url = URL(string: sticker.assetUrl) {
+            let context = stickerLoadContext(category: sticker.category)
+            cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
         }
         return cell
     }

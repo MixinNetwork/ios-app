@@ -53,7 +53,9 @@ class QuotePreviewView: UIView, XibDesignable {
         
         if message.category.hasSuffix("_STICKER") {
             if let assetUrl = message.assetUrl {
-                imageView.sd_setImage(with: URL(string: assetUrl), completed: nil)
+                let url = URL(string: assetUrl)
+                let context = stickerLoadContext(category: message.assetCategory)
+                imageView.sd_setImage(with: url, placeholderImage: contentImageThumbnail, context: context)
             }
         } else if message.category.hasSuffix("_IMAGE") {
             if let mediaUrl = message.mediaUrl, !mediaUrl.isEmpty {

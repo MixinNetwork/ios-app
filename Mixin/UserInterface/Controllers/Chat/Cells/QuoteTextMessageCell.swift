@@ -34,21 +34,23 @@ class QuoteTextMessageCell: TextMessageCell {
                 quoteSubtitleLabel.text = quote.subtitle
                 if let image = quote.image {
                     switch image {
-                    case let .local(url):
-                        quoteImageView.isHidden = false
-                        quoteAvatarImageView.isHidden = true
-                        quoteImageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
-                    case let .remote(url):
-                        quoteImageView.isHidden = false
-                        quoteAvatarImageView.isHidden = true
-                        quoteImageView.sd_setImage(with: url)
-                    case let .user(url, userId, name):
+                    case .user:
                         quoteImageView.isHidden = true
                         quoteAvatarImageView.isHidden = false
-                        quoteAvatarImageView.setImage(with: url, userId: userId, name: name)
-                    case let .thumbnail(thumbnail):
+                    default:
                         quoteImageView.isHidden = false
                         quoteAvatarImageView.isHidden = true
+                    }
+                    switch image {
+                    case let .local(url):
+                        quoteImageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
+                    case let .purgableRemote(url):
+                        quoteImageView.sd_setImage(with: url)
+                    case let .persistentSticker(url):
+                        quoteImageView.sd_setImage(with: url, placeholderImage: nil, context: persistentStickerContext)
+                    case let .user(url, userId, name):
+                        quoteAvatarImageView.setImage(with: url, userId: userId, name: name)
+                    case let .thumbnail(thumbnail):
                         quoteImageView.image = thumbnail
                     }
                 }

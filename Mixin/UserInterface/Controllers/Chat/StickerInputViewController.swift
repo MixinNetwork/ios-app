@@ -106,8 +106,10 @@ extension StickerInputViewController: UICollectionViewDataSource {
             cell.imageView.image = #imageLiteral(resourceName: "ic_gif")
             cell.imageView.contentMode = .center
         default:
-            if let url = URL(string: officialAlbums[indexPath.row - modelController.numberOfFixedControllers].iconUrl) {
-                cell.imageView.sd_setImage(with: url, completed: nil)
+            let album = officialAlbums[indexPath.row - modelController.numberOfFixedControllers]
+            if let url = URL(string: album.iconUrl) {
+                let context = stickerLoadContext(category: album.category)
+                cell.imageView.sd_setImage(with: url, placeholderImage: nil, context: context)
             }
             cell.imageView.contentMode = .scaleAspectFit
         }

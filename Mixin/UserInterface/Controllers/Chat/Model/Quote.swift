@@ -9,7 +9,8 @@ struct Quote {
     
     enum Image {
         case local(URL)
-        case remote(URL)
+        case persistentSticker(URL)
+        case purgableRemote(URL)
         case user(urlString: String, userId: String, name: String)
         case thumbnail(UIImage)
     }
@@ -48,9 +49,13 @@ struct Quote {
                     image = .local(url)
                 }
             } else if message.category.hasSuffix("_LIVE"), let urlString = message.thumbUrl, let url = URL(string: urlString) {
-                image = .remote(url)
+                image = .purgableRemote(url)
             } else if message.category.hasSuffix("_STICKER"), let assetUrl = message.assetUrl, let url = URL(string: assetUrl) {
-                image = .remote(url)
+                if message.assetCategory == nil {
+                    image = .purgableRemote(url)
+                } else {
+                    image = .persistentSticker(url)
+                }
             } else if message.category.hasSuffix("_CONTACT") {
                 image = .user(urlString: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)
             }

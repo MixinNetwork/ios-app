@@ -16,3 +16,17 @@ let assetIconImageManager = SDWebImageManager(cache: assetIconCache, loader: SDI
 let assetIconContext: [SDWebImageContextOption: Any] = [
     .customManager: assetIconImageManager
 ]
+
+let persistentStickerCache = SDImageCache(namespace: "Sticker", diskCacheDirectory: documentPath)
+let persistentStickerImageManager = SDWebImageManager(cache: persistentStickerCache, loader: SDImageLoadersManager.shared)
+let persistentStickerContext: [SDWebImageContextOption: Any] = [
+    .customManager: persistentStickerImageManager
+]
+
+func stickerLoadContext(category: String?) -> [SDWebImageContextOption: Any]? {
+    if let category = category, !category.isEmpty {
+        return persistentStickerContext
+    } else {
+        return nil
+    }
+}

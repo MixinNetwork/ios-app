@@ -27,6 +27,7 @@
 "action_send" = "Send";
 "action_hide" = "Hide";
 "action_show" = "Show";
+"action_unhide" = "Unhide";
 "action_apply" = "Apply";
 "action_filter" = "Filter";
 "action_skip" = "Skip";
@@ -396,6 +397,8 @@
 "wallet_asset_chain" = "Chain";
 "wallet_asset_key" = "Asset Key";
 "wallet_hide_asset_confirmation" = "Are you sure you want to hide %@?";
+"wallet_asset_is_hidden_prompt" = "The asset is hidden from wallet. Unhide it?";
+"wallet_asset_is_unhidden" = "Unhidden";
 
 // Transaction
 "transaction_title" = "Transaction";

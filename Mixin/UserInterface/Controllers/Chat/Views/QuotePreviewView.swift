@@ -68,7 +68,7 @@ class QuotePreviewView: UIView, XibDesignable {
             imageView.image = contentImageThumbnail
         } else if message.category.hasSuffix("_LIVE") {
             if let thumbUrl = message.thumbUrl {
-                imageView.sd_setImage(with: URL(string: thumbUrl), completed: nil)
+                imageView.sd_setImage(with: URL(string: thumbUrl))
             }
         } else if message.category.hasSuffix("_CONTACT") {
             avatarImageView.setImage(with: message.sharedUserAvatarUrl, userId: message.sharedUserId ?? "", name: message.sharedUserFullName)

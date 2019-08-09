@@ -96,7 +96,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
         case .image(let image):
             imageView.image = image
         case .url(let url):
-            imageView.sd_setImage(with: url, completed: nil)
+            imageView.sd_setImage(with: url)
         case .none:
             break
         }

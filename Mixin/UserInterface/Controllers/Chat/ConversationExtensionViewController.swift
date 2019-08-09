@@ -74,7 +74,7 @@ extension ConversationExtensionViewController: UICollectionViewDataSource {
             cell.label.text = ext.title
         } else {
             let app = apps[indexPath.row - fixedExtensions.count]
-            cell.imageView.sd_setImage(with: URL(string: app.iconUrl), completed: nil)
+            cell.imageView.sd_setImage(with: URL(string: app.iconUrl))
             cell.label.text = app.name
         }
         return cell
